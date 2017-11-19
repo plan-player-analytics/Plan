@@ -2,91 +2,91 @@
 
 .theme-green {
 
-  .navbar {
-    background-color: $theme-green;
-  }
-
-  .navbar-brand {
-    color: $theme-green-navbar-brand;
-
-    &:hover {
-      color: $theme-green-navbar-brand_hover;
+    .navbar {
+        background-color: $theme-green;
     }
 
-    &:active {
-      color: $theme-green-navbar-brand_active;
-    }
-
-    &:focus {
-      color: $theme-green-navbar-brand_focus;
-    }
-  }
-
-  .nav {
-    > li {
-      > a {
-        color: $theme-green-nav-anchor;
+    .navbar-brand {
+        color: $theme-green-navbar-brand;
 
         &:hover {
-          background-color: $theme-green-nav-anchor_hover;
+            color: $theme-green-navbar-brand_hover;
+        }
+
+        &:active {
+            color: $theme-green-navbar-brand_active;
         }
 
         &:focus {
-          background-color: $theme-green-nav-anchor_focus;
+            color: $theme-green-navbar-brand_focus;
         }
-      }
     }
 
-    .open {
-      > a {
-        background-color: $theme-green-nav-anchor-opened;
+    .nav {
+        > li {
+            > a {
+                color: $theme-green-nav-anchor;
 
-        &:hover {
-          background-color: $theme-green-nav-anchor-opened_hover;
-        }
+                &:hover {
+                    background-color: $theme-green-nav-anchor_hover;
+                }
 
-        &:focus {
-          background-color: $theme-green-nav-anchor-opened_focus;
-        }
-      }
-    }
-  }
-
-  .bars {
-    color: $theme-green-bar;
-  }
-
-  .sidebar {
-    .menu {
-      .list {
-        li.active {
-          background-color: $theme-green-menu-list-active;
-
-          > :first-child {
-            i, span {
-              color: $theme-green;
+                &:focus {
+                    background-color: $theme-green-nav-anchor_focus;
+                }
             }
-          }
         }
 
-        .toggled {
-          background-color: $theme-green-menu-list-toggled;
-        }
+        .open {
+            > a {
+                background-color: $theme-green-nav-anchor-opened;
 
-        .ml-menu {
-          background-color: $theme-green-menu-list-submenu;
+                &:hover {
+                    background-color: $theme-green-nav-anchor-opened_hover;
+                }
+
+                &:focus {
+                    background-color: $theme-green-nav-anchor-opened_focus;
+                }
+            }
         }
-      }
     }
 
-    .legal {
-      background-color: $theme-green-legal-bg;
-
-      .copyright {
-        a {
-          color: $theme-green !important;
-        }
-      }
+    .bars {
+        color: $theme-green-bar;
     }
-  }
+
+    .sidebar {
+        .menu {
+            .list {
+                li.active {
+                    background-color: $theme-green-menu-list-active;
+
+                    > :first-child {
+                        i, span {
+                            color: $theme-green;
+                        }
+                    }
+                }
+
+                .toggled {
+                    background-color: $theme-green-menu-list-toggled;
+                }
+
+                .ml-menu {
+                    background-color: $theme-green-menu-list-submenu;
+                }
+            }
+        }
+
+        .legal {
+            background-color: $theme-green-legal-bg;
+
+            .copyright {
+                a {
+                    color: $theme-green !important;
+                }
+            }
+        }
+    }
 }

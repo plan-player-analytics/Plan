@@ -2,91 +2,91 @@
 
 .theme-brown {
 
-  .navbar {
-    background-color: $theme-brown;
-  }
-
-  .navbar-brand {
-    color: $theme-brown-navbar-brand;
-
-    &:hover {
-      color: $theme-brown-navbar-brand_hover;
+    .navbar {
+        background-color: $theme-brown;
     }
 
-    &:active {
-      color: $theme-brown-navbar-brand_active;
-    }
-
-    &:focus {
-      color: $theme-brown-navbar-brand_focus;
-    }
-  }
-
-  .nav {
-    > li {
-      > a {
-        color: $theme-brown-nav-anchor;
+    .navbar-brand {
+        color: $theme-brown-navbar-brand;
 
         &:hover {
-          background-color: $theme-brown-nav-anchor_hover;
+            color: $theme-brown-navbar-brand_hover;
+        }
+
+        &:active {
+            color: $theme-brown-navbar-brand_active;
         }
 
         &:focus {
-          background-color: $theme-brown-nav-anchor_focus;
+            color: $theme-brown-navbar-brand_focus;
         }
-      }
     }
 
-    .open {
-      > a {
-        background-color: $theme-brown-nav-anchor-opened;
+    .nav {
+        > li {
+            > a {
+                color: $theme-brown-nav-anchor;
 
-        &:hover {
-          background-color: $theme-brown-nav-anchor-opened_hover;
-        }
+                &:hover {
+                    background-color: $theme-brown-nav-anchor_hover;
+                }
 
-        &:focus {
-          background-color: $theme-brown-nav-anchor-opened_focus;
-        }
-      }
-    }
-  }
-
-  .bars {
-    color: $theme-brown-bar;
-  }
-
-  .sidebar {
-    .menu {
-      .list {
-        li.active {
-          background-color: $theme-brown-menu-list-active;
-
-          > :first-child {
-            i, span {
-              color: $theme-brown;
+                &:focus {
+                    background-color: $theme-brown-nav-anchor_focus;
+                }
             }
-          }
         }
 
-        .toggled {
-          background-color: $theme-brown-menu-list-toggled;
-        }
+        .open {
+            > a {
+                background-color: $theme-brown-nav-anchor-opened;
 
-        .ml-menu {
-          background-color: $theme-brown-menu-list-submenu;
+                &:hover {
+                    background-color: $theme-brown-nav-anchor-opened_hover;
+                }
+
+                &:focus {
+                    background-color: $theme-brown-nav-anchor-opened_focus;
+                }
+            }
         }
-      }
     }
 
-    .legal {
-      background-color: $theme-brown-legal-bg;
-
-      .copyright {
-        a {
-          color: $theme-brown !important;
-        }
-      }
+    .bars {
+        color: $theme-brown-bar;
     }
-  }
+
+    .sidebar {
+        .menu {
+            .list {
+                li.active {
+                    background-color: $theme-brown-menu-list-active;
+
+                    > :first-child {
+                        i, span {
+                            color: $theme-brown;
+                        }
+                    }
+                }
+
+                .toggled {
+                    background-color: $theme-brown-menu-list-toggled;
+                }
+
+                .ml-menu {
+                    background-color: $theme-brown-menu-list-submenu;
+                }
+            }
+        }
+
+        .legal {
+            background-color: $theme-brown-legal-bg;
+
+            .copyright {
+                a {
+                    color: $theme-brown !important;
+                }
+            }
+        }
+    }
 }

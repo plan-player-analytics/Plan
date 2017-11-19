@@ -1,64 +1,49 @@
 .black {
     color: #000000;
 }
-
 .darkblue {
     color: #0000AA;
 }
-
 .darkgreen {
     color: #00AA00;
 }
-
 .darkaqua {
     color: #00AAAA;
 }
-
 .darkred {
     color: #AA0000;
 }
-
 .darkpurple {
     color: #AA00AA;
 }
-
 .gold {
     color: #FFAA00;
 }
-
 .gray {
     color: #AAAAAA;
 }
-
 .darkgray {
     color: #555555;
 }
-
 .blue {
     color: #5555FF;
 }
-
 .green {
     color: #55FF55;
 }
-
 .aqua {
     color: #55FFFF;
 }
-
 .red {
     color: #FF5555;
 }
-
 .pink {
     color: #FF55FF;
 }
-
 .yellow {
     color: #FFFF55;
-    text-shadow: 0 0 6px #000;
+     text-shadow: 0 0 6px #000;
 }
-
 .white {
     color: #FFFFFF;
     text-shadow: 0 0 8px #000;
@@ -67,11 +52,9 @@
 .g {
     color: #008000;
 }
-
 .o {
-    color: #FFA500;
+   color: #FFA500; 
 }
-
 .r {
     color: #FF4500;
 }
@@ -80,13 +63,12 @@
 }
 
 .sidenav-button:hover {
-    background: #89c471;
+	background: #89c471;
 }
 
 .right {
     float: right;
 }
-
 .left {
     float: left;
 }
@@ -106,7 +88,7 @@
 }
 
 .tab {
-    width: 0;
+	width: 0;
     height: 100%;
     float: left;
 }
@@ -119,16 +101,14 @@
 .session-header h3 {
     margin: 0;
 }
-
 .session-header p {
     margin: 0;
 }
-
 .session {
-
+    
 }
 
-.session-header {
+.session-header {   
     background: #ddd;
     color: #000;
     margin: 1px 3px;
@@ -156,11 +136,9 @@
 .plugins-content {
     display: none;
 }
-
 .plugins-header h2 {
     margin: 0;
 }
-
 .plugins-header p {
     margin: 0;
 }
@@ -179,29 +157,24 @@
         font-size: 19px;
     }
 }
-
 @media only screen and (max-width: 850px) {
-    header h1 {
+    header h1 {    
         font-weight: 400;
         font-size: 30px;
     }
-}
-
-@media only screen and (max-width: 780px) {
+}    
+@media only screen and (max-width: 780px) {    
     .scrollbar {
         overflow-x: auto;
         width: 100%;
     }
-
     .nav-bar {
         flex-direction: row;
     }
-
     .row {
         flex-direction: column;
     }
-
     header p {
         display: none;
-    }
+    }    
 }

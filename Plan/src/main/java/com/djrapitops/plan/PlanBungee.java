@@ -57,14 +57,6 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     private ProcessingQueue processingQueue;
 
-    public static PlanBungee getInstance() {
-        return (PlanBungee) StaticHolder.getInstance(PlanBungee.class);
-    }
-
-    public static UUID getServerUUID() {
-        return getInstance().getServerUuid();
-    }
-
     @Override
     public void onEnable() {
         super.onEnable();
@@ -151,6 +143,10 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         }
     }
 
+    public static PlanBungee getInstance() {
+        return (PlanBungee) StaticHolder.getInstance(PlanBungee.class);
+    }
+
     @Override
     public void onDisable() {
         if (processingQueue != null) {
@@ -212,6 +208,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         return webServer;
     }
 
+
     @Override
     public ProcessingQueue getProcessingQueue() {
         return processingQueue;
@@ -250,6 +247,10 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     @Override
     public ServerVariableHolder getVariable() {
         return variableHolder;
+    }
+
+    public static UUID getServerUUID() {
+        return getInstance().getServerUuid();
     }
 
     public UUID getServerUuid() {

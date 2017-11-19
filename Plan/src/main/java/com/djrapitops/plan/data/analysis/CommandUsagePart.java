@@ -40,6 +40,10 @@ public class CommandUsagePart extends RawData {
         addValue("tableBodyCommands", HtmlUtils.removeXSS(commandUsageTable));
     }
 
+    public void setCommandUsage(Map<String, Integer> commandUsage) {
+        this.commandUsage = commandUsage;
+    }
+
     public void addCommands(Map<String, Integer> commandUsage) {
         this.commandUsage.putAll(commandUsage);
     }
@@ -54,9 +58,5 @@ public class CommandUsagePart extends RawData {
 
     public Map<String, Integer> getCommandUsage() {
         return commandUsage;
-    }
-
-    public void setCommandUsage(Map<String, Integer> commandUsage) {
-        this.commandUsage = commandUsage;
     }
 }

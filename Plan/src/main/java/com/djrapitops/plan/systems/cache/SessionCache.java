@@ -29,21 +29,6 @@ public class SessionCache {
         this.plugin = plugin;
     }
 
-    /**
-     * Used to get the Map of active sessions.
-     * <p>
-     * Used for testing.
-     *
-     * @return key:value UUID:Session
-     */
-    public static Map<UUID, Session> getActiveSessions() {
-        return activeSessions;
-    }
-
-    public static void clear() {
-        activeSessions.clear();
-    }
-
     public void cacheSession(UUID uuid, Session session) {
         Log.debug("Caching a session: " + session.getSessionStart());
         activeSessions.put(uuid, session);
@@ -84,5 +69,20 @@ public class SessionCache {
             return Optional.of(session);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Used to get the Map of active sessions.
+     * <p>
+     * Used for testing.
+     *
+     * @return key:value UUID:Session
+     */
+    public static Map<UUID, Session> getActiveSessions() {
+        return activeSessions;
+    }
+
+    public static void clear() {
+        activeSessions.clear();
     }
 }

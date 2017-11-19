@@ -3,7 +3,8 @@
     margin-bottom: 0;
 }
 
-.twitter-typeahead .tt-hint {
+.twitter-typeahead .tt-hint
+{
     display: none;
 }
 

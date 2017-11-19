@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>${serverName} | Server</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -8,23 +8,23 @@
     <meta name="description" content="Player Analysis window">
     <meta name="author" content="Rsl1122">
     <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon">
-
+    
     <!--Font-->
     <link rel="stylesheet" href="./main.css">
     <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet">
     <script src="https://use.fontawesome.com/df48eb908b.js"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-</head>
+  </head>
 <body>
 <script>
     var worldPieColors = [${worldPieColors}];
     var gmPieColors = [${gmPieColors}];
 </script>
-<header>
-    <div>
-        <div class="right fa-stack fa-lg" style="padding: 23px; margin:8px; box-sizing: content-box;">
+    <header>
+        <div>
+            <div class="right fa-stack fa-lg" style="padding: 23px; margin:8px; box-sizing: content-box;">
             <i style="padding: 0; color: #fff; font-size: 100px;" class="fa fa-square fa-stack-1x"></i>
             <i style="padding: 0; color: #348e0f; font-size: 95px;" class="fa fa-square fa-stack-1x"></i>
             <i style="padding: 0; color: #fff; font-size: 60px;" class="fa fa-circle fa-stack-1x"></i>
@@ -35,527 +35,506 @@
         </div>
         <p class="right">Player Analytics v.${version}</p>
         <h1>${serverName} | Server Analysis</h1>
-    </div>
-</header>
-<div class="headwrap">
-    <div class="sidenav">
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Information" class="sidenav-button">
+        </div>
+    </header>
+    <div class="headwrap">
+        <div class="sidenav">
+            <a class="nav-button" href="javascript:void(0)"><div title="Information" class="sidenav-button">
                 <div><i class="fa fa-info-circle"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Online Activity" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Online Activity" class="sidenav-button">
                 <div><i class="fa fa-area-chart"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Sessions" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Sessions" class="sidenav-button">
                 <div><i class="fa fa-calendar"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Performance" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Performance" class="sidenav-button">
                 <div><i class="fa fa-cogs"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Playerlist" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Playerlist" class="sidenav-button">
                 <div><i class="fa fa-users"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Command Usage" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Command Usage" class="sidenav-button">
                 <div><i class="fa fa-terminal"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Demographics" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Demographics" class="sidenav-button">
                 <div><i class="fa fa-globe"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Plugins" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Plugins" class="sidenav-button">
                 <div><i class="fa fa-cubes"></i></div>
-            </div>
-        </a>
-    </div>
-
-    <div class="content">
-        <div id="limiter" class="main-limiter">
-            <div id="main" class="main-wrapper" style="width: 800%;">
-                <div id="tab-information" class="tab">
-                    <div class="row">
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
-                            </div>
-                            <div class="box-footer">
-                                <div id="playerChartDay" style="width: 100%; height: 400px;"></div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-info-circle"></i> Information</h2>
-                            </div>
-                            <div class="box" style="margin-bottom: 5px;">
-                                <div class="row">
-                                    <div class="column">
-                                        <p>${playersOnline}/${playersMax} Players Online<br>${playersNewDay} New Players
-                                            Today<br>
-                                            <br>
-                                            ${playersActive} Active Players<br>
-                                            ${playersTotal} Total Players<br>
-                                            <br>
-                                            <b>Last Peak:</b>
-                                            ${lastPeakTime}: ${playersLastPeak} Players<br>
-                                            <br>
-                                            <b>All Time Peak:</b><br>
-                                            ${bestPeakTime}: ${playersBestPeak} Players
-                                        </p>
-                                    </div>
-                                    <div class="column">
-                                        <p><b>Averages:</b><br>
-                                            &#x2022; Session Length: ${sessionAverage}<br>
-                                            &#x2022; Players / Day: ${playersAverage}<br>
-                                            &#x2022; New Players / Day: ${playersNewAverage}<br>
-                                            <br>
-                                            <b>Total:</b><br>
-                                            &#x2022; Playtime: ${playtimeTotal}<br>
-                                            &#x2022; Sessions: ${sessionCount}<br>
-                                            &#x2022; Kills: ${killCount}<br>
-                                            &#x2022; Mob Kills: ${mobKillCount}<br>
-                                            &#x2022; Deaths: ${deathCount}<br></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-header">
-                                <h2><i class="fa fa-calendar-check-o"></i> Recent Logins</h2>
-                            </div>
-                            <div class="box-footer" style="padding: 2px;">
-                                <table>
-                                    <thead>
-                                    <tr>
-                                        <th>Player</th>
-                                        <th>Session Started</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    ${tableBodyRecentLogins}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-online-activity" class="tab column">
-                    <div class="row">
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
-                            </div>
-                            <div class="box-footer">
-                                <div id="playerChartMonth" style="width: 100%; height: 400px;"></div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-braille"></i> Player Join PunchCard</h2>
-                            </div>
-                            <div class="box-footer">
-                                <div id="punchcard" style="width: 100%; height: 400px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="column">
-                            <div class="box-header">
-                                <h2>Last 24 Hours</h2>
-                            </div>
-                            <div class="box">
-                                <p>Unique Players: ${playersDay}<br>
-                                    Unique / Day: ${playersAverageDay}</p>
-                                <p>New Players: ${playersNewDay} <br>
-                                    New / Day: ${playersNewAverageDay}</p>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="box-header">
-                                <h2>Last 7 Days</h2>
-                            </div>
-                            <div class="box">
-                                <p>Unique Players: ${playersWeek}<br>
-                                    Unique / Day: ${playersAverageWeek}</p>
-                                <p>New Players: ${playersNewWeek}<br>
-                                    New / Day: ${playersNewAverageWeek}</p>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="box-header">
-                                <h2>Last 30 Days</h2>
-                            </div>
-                            <div class="box">
-                                <p>Unique Players: ${playersMonth}<br>
-                                    Unique / Day: ${playersAverageMonth}</p>
-                                <p>New Players: ${playersNewMonth}<br>
-                                    New / Day: ${playersNewAverageMonth}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-sessions" class="tab">
-                    <div class="row" style="flex-grow: 2; width: 140%;">
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-calendar"></i> 50 Most Recent Sessions</h2>
-                            </div>
-                            ${contentSessions}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-pie-chart"></i> World Playtime</h2>
-                            </div>
-                            <div class="box-footer">
-                                <div id="worldPie" style="width: 100%; height: 350px;"></div>
-                            </div>
-                            <div class="box-header">
-                                <h2><i class="fa fa-pie-chart"></i> Playerbase</h2>
-                            </div>
-                            <div class="box-footer">
-                                <div id="activityPie" style="width: 100%; height: 350px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-performance" class="tab">
+            </div></a>
+        </div>
+        
+        <div class="content">
+            <div id="limiter" class="main-limiter">
+        <div id="main" class="main-wrapper" style="width: 800%;">
+            <div id="tab-information" class="tab">
+                <div class="row">
                     <div class="column">
-                        <div class="row">
-                            <div class="column" style="width: 200%;">
-                                <div class="box-header">
-                                    <h2><i class="fa fa-cogs"></i> Performance</h2>
+                        <div class="box-header">
+                            <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
+                        </div>
+                        <div class="box-footer">
+                            <div id="playerChartDay" style="width: 100%; height: 400px;"></div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-info-circle"></i> Information</h2>
+                        </div>
+                        <div class="box" style="margin-bottom: 5px;">
+                            <div class="row">
+                                <div class="column">
+                                    <p>${playersOnline}/${playersMax} Players Online<br>${playersNewDay} New Players
+                                        Today<br>
+                                        <br>
+                                        ${playersActive} Active Players<br>
+                                        ${playersTotal} Total Players<br>
+                                        <br>
+                                        <b>Last Peak:</b>
+                                        ${lastPeakTime}: ${playersLastPeak} Players<br>
+                                        <br>
+                                        <b>All Time Peak:</b><br>
+                                        ${bestPeakTime}: ${playersBestPeak} Players
+                                    </p>
                                 </div>
-                                <div class="box-footer" style="height: 640px;">
-                                    <div id="tabs">
-                                        <ul style="list-style: none; padding: 0; float: left; position: relative; top: 0; white-space: nowrap;">
-                                            <li style="display: inline;"><a class="button" href="#tabs-1"><i
-                                                    class="fa fa-cogs"></i> All</a></li>
-                                            <li style="display: inline;"><a class="button" href="#tabs-2"><i
-                                                    class="fa fa-tachometer"></i> TPS</a></li>
-                                            <li style="display: inline;"><a class="button" href="#tabs-3"><i
-                                                    class="fa fa-microchip"></i> CPU & RAM</a></li>
-                                            <li style="display: inline;"><a class="button" href="#tabs-4"><i
-                                                    class="fa fa-map"></i> World Load</a></li>
-                                        </ul>
-                                        <div id="tabs-1">
-                                            <div id="performanceGraph" style="width: 100%; height: 550px;"></div>
-                                        </div>
-                                        <div id="tabs-2">
-                                            <div id="tpsGraph" style="width: 100%; height: 550px;"></div>
-                                        </div>
-                                        <div id="tabs-3">
-                                            <div id="resourceGraph" style="width: 100%; height: 550px;"></div>
-                                        </div>
-                                        <div id="tabs-4">
-                                            <div id="worldGraph" style="width: 100%; height: 550px;"></div>
-                                        </div>
+                                <div class="column">
+                                    <p><b>Averages:</b><br>
+                                        &#x2022; Session Length: ${sessionAverage}<br>
+                                        &#x2022; Players / Day: ${playersAverage}<br>
+                                        &#x2022; New Players / Day: ${playersNewAverage}<br>
+                                        <br>
+                                        <b>Total:</b><br>
+                                        &#x2022; Playtime: ${playtimeTotal}<br>
+                                        &#x2022; Sessions: ${sessionCount}<br>
+                                        &#x2022; Kills: ${killCount}<br>
+                                        &#x2022; Mob Kills: ${mobKillCount}<br>
+                                        &#x2022; Deaths: ${deathCount}<br></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-header">
+                            <h2><i class="fa fa-calendar-check-o"></i> Recent Logins</h2>
+                        </div>
+                        <div class="box-footer" style="padding: 2px;">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Session Started</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                ${tableBodyRecentLogins}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-online-activity" class="tab column">
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
+                        </div>
+                        <div class="box-footer">
+                            <div id="playerChartMonth" style="width: 100%; height: 400px;"></div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-braille"></i> Player Join PunchCard</h2>
+                        </div>
+                        <div class="box-footer">
+                            <div id="punchcard" style="width: 100%; height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2>Last 24 Hours</h2>
+                        </div>
+                        <div class="box">
+                            <p>Unique Players: ${playersDay}<br>
+                                Unique / Day: ${playersAverageDay}</p>
+                            <p>New Players: ${playersNewDay} <br>
+                                New / Day: ${playersNewAverageDay}</p>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2>Last 7 Days</h2>
+                        </div>
+                        <div class="box">
+                            <p>Unique Players: ${playersWeek}<br>
+                                Unique / Day: ${playersAverageWeek}</p>
+                            <p>New Players: ${playersNewWeek}<br>
+                                New / Day: ${playersNewAverageWeek}</p>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2>Last 30 Days</h2>
+                        </div>
+                        <div class="box">
+                            <p>Unique Players: ${playersMonth}<br>
+                                Unique / Day: ${playersAverageMonth}</p>
+                            <p>New Players: ${playersNewMonth}<br>
+                                New / Day: ${playersNewAverageMonth}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-sessions" class="tab">
+                <div class="row" style="flex-grow: 2; width: 140%;">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-calendar"></i> 50 Most Recent Sessions</h2>
+                        </div>
+                        ${contentSessions}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-pie-chart"></i> World Playtime</h2>
+                        </div>
+                        <div class="box-footer">
+                            <div id="worldPie" style="width: 100%; height: 350px;"></div>
+                        </div>
+                        <div class="box-header">
+                            <h2><i class="fa fa-pie-chart"></i> Playerbase</h2>
+                        </div>
+                        <div class="box-footer">
+                            <div id="activityPie" style="width: 100%; height: 350px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-performance" class="tab">
+                <div class="column">
+                    <div class="row">
+                        <div class="column" style="width: 200%;">
+                            <div class="box-header">
+                                <h2><i class="fa fa-cogs"></i> Performance</h2>
+                            </div>
+                            <div class="box-footer" style="height: 640px;">
+                                <div id="tabs">
+                                    <ul style="list-style: none; padding: 0; float: left; position: relative; top: 0; white-space: nowrap;">
+                                        <li style="display: inline;"><a class="button" href="#tabs-1"><i class="fa fa-cogs"></i> All</a></li>
+                                        <li style="display: inline;"><a class="button" href="#tabs-2"><i class="fa fa-tachometer"></i> TPS</a></li>
+                                        <li style="display: inline;"><a class="button" href="#tabs-3"><i class="fa fa-microchip"></i> CPU & RAM</a></li>
+                                        <li style="display: inline;"><a class="button" href="#tabs-4"><i class="fa fa-map"></i> World Load</a></li>
+                                    </ul>
+                                    <div id="tabs-1">
+                                        <div id="performanceGraph" style="width: 100%; height: 550px;"></div>
                                     </div>
+                                    <div id="tabs-2">
+                                        <div id="tpsGraph" style="width: 100%; height: 550px;"></div>
+                                    </div>
+                                    <div id="tabs-3">
+                                        <div id="resourceGraph" style="width: 100%; height: 550px;"></div>
+                                    </div>
+                                    <div id="tabs-4">
+                                        <div id="worldGraph" style="width: 100%; height: 550px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2><i class="fa fa-cogs"></i> Last 24 Hours</h2>
+                                </div>
+                                <div class="box">
+                                    <p><b>Averages:</b></p>
+                                    <ul>
+                                        <li>TPS: ${tpsAverageDay}</li>
+                                        <li>CPU: ${cpuAverageDay}</li>
+                                        <li>RAM: ${ramAverageDay}</li>
+                                        <li>Entities: ${entityAverageDay}</li>
+                                        <li>Chunks: ${chunkAverageDay}</li>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="column">
-                                <div class="column">
-                                    <div class="box-header">
-                                        <h2><i class="fa fa-cogs"></i> Last 24 Hours</h2>
-                                    </div>
-                                    <div class="box">
-                                        <p><b>Averages:</b></p>
-                                        <ul>
-                                            <li>TPS: ${tpsAverageDay}</li>
-                                            <li>CPU: ${cpuAverageDay}</li>
-                                            <li>RAM: ${ramAverageDay}</li>
-                                            <li>Entities: ${entityAverageDay}</li>
-                                            <li>Chunks: ${chunkAverageDay}</li>
-                                        </ul>
-                                    </div>
+                                <div class="box-header">
+                                    <h2><i class="fa fa-cogs"></i> Last 7 Days</h2>
                                 </div>
-                                <div class="column">
-                                    <div class="box-header">
-                                        <h2><i class="fa fa-cogs"></i> Last 7 Days</h2>
-                                    </div>
-                                    <div class="box">
-                                        <p><b>Averages:</b></p>
-                                        <ul>
-                                            <li>TPS: ${tpsAverageWeek}</li>
-                                            <li>CPU: ${cpuAverageWeek}</li>
-                                            <li>RAM: ${ramAverageWeek}</li>
-                                            <li>Entities: ${entityAverageWeek}</li>
-                                            <li>Chunks: ${chunkAverageWeek}</li>
-                                        </ul>
-                                    </div>
+                                <div class="box">
+                                    <p><b>Averages:</b></p>
+                                    <ul>
+                                        <li>TPS: ${tpsAverageWeek}</li>
+                                        <li>CPU: ${cpuAverageWeek}</li>
+                                        <li>RAM: ${ramAverageWeek}</li>
+                                        <li>Entities: ${entityAverageWeek}</li>
+                                        <li>Chunks: ${chunkAverageWeek}</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="tab-playerlist" class="tab">
-                    <div class="column">
-                        <div class="box-header">
-                            <h2><i class="fa fa-list"></i> Playerlist</h2>
-                        </div>
-                        <div class="box-footer scrollbar" style="padding: 2px;">
-                            <table class="sortable table">
-                                <thead>
-                                <tr>
-                                    <th><i class="fa fa-user"></i> Player</th>
-                                    <th><i class="fa fa-check"></i> Active</th>
-                                    <th><i class="fa fa-clock-o"></i> Playtime</th>
-                                    <th><i class="fa fa-calendar-plus-o"></i> Sessions</th>
-                                    <th><i class="fa fa-user-plus"></i> Registered</th>
-                                    <th><i class="fa fa-calendar-check-o"></i> Last seen</th>
-                                    <th><i class="fa fa-globe"></i> Geolocation</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                ${tableBodyPlayerList}
-                                </tbody>
-                            </table>
-                        </div>
+            </div>
+            <div id="tab-playerlist" class="tab">
+                <div class="column">
+                    <div class="box-header">
+                        <h2><i class="fa fa-list"></i> Playerlist</h2>
+                    </div>
+                    <div class="box-footer scrollbar" style="padding: 2px;">
+                        <table class="sortable table">
+                            <thead>
+                            <tr>
+                                <th><i class="fa fa-user"></i> Player</th>
+                                <th><i class="fa fa-check"></i> Active</th>
+                                <th><i class="fa fa-clock-o"></i> Playtime</th>
+                                <th><i class="fa fa-calendar-plus-o"></i> Sessions</th>
+                                <th><i class="fa fa-user-plus"></i> Registered</th>
+                                <th><i class="fa fa-calendar-check-o"></i> Last seen</th>
+                                <th><i class="fa fa-globe"></i> Geolocation</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            ${tableBodyPlayerList}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div id="tab-command-usage" class="tab">
-                    <div class="column">
-                        <div class="box-header">
-                            <h2 style="padding: 2px; margin: 0;"><i class="fa fa-terminal"></i> Command Usage</h2>
-                            <p style="padding: 2px; margin: 0;">Unique Commands: ${commandUniqueCount} &#x2022; Total
-                                Command Count: ${commandCount}</p>
-                        </div>
-                        <div class="box-footer scrollbar" style="padding: 2px;">
-                            <table class="sortable table">
-                                <thead>
-                                <tr>
-                                    <th><i class="fa fa-chevron-right"></i> Command</th>
-                                    <th><i class="fa fa-list-ol"></i> Times used</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                ${tableBodyCommands}
-                                </tbody>
-                            </table>
-                        </div>
+            </div>
+            <div id="tab-command-usage" class="tab">
+                <div class="column">
+                    <div class="box-header">
+                        <h2 style="padding: 2px; margin: 0;"><i class="fa fa-terminal"></i> Command Usage</h2>
+                        <p style="padding: 2px; margin: 0;">Unique Commands: ${commandUniqueCount} &#x2022; Total Command Count: ${commandCount}</p>
+                    </div>
+                    <div class="box-footer scrollbar" style="padding: 2px;">
+                        <table class="sortable table">
+                            <thead>
+                            <tr>
+                                <th><i class="fa fa-chevron-right"></i> Command</th>
+                                <th><i class="fa fa-list-ol"></i> Times used</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            ${tableBodyCommands}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div id="tab-demographics" class="tab">
-                    <div class="column">
-                        <div class="box-header">
-                            <h2><i class="fa fa-globe"></i> Geolocations</h2>
-                        </div>
-                        <div class="box-footer" style="padding: 2px;">
-                            <div id="choropleth" style="width: 100%; height: 600px;"></div>
-                        </div>
+            </div>
+            <div id="tab-demographics" class="tab">
+                <div class="column">
+                    <div class="box-header">
+                        <h2><i class="fa fa-globe"></i> Geolocations</h2>
+                    </div>
+                    <div class="box-footer" style="padding: 2px;">
+                        <div id="choropleth" style="width: 100%; height: 600px;"></div>
                     </div>
                 </div>
-                <div id="tab-plugins" class="tab column">
-                    ${tabContentPlugins}
-                </div>
+            </div>
+            <div id="tab-plugins" class="tab column">
+                ${tabContentPlugins}
             </div>
         </div>
     </div>
-</div>
-<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
-<script src="https://code.highcharts.com/stock/highstock.js"></script>
-<script src="https://code.highcharts.com/maps/modules/map.js"></script>
-<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
-<script src="https://code.highcharts.com/modules/drilldown.js"></script>
-<script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
-<script src="./js/activityPie.js"></script>
-<script src="./js/playerGraph.js"></script>
-<script src="./js/punchCard.js"></script>
-<script src="./js/resourceGraph.js"></script>
-<script src="./js/tpsGraph.js"></script>
-<script src="./js/worldGraph.js"></script>
-<script src="./js/performanceGraph.js"></script>
-<script src="./js/worldMap.js"></script>
-<script src="./js/worldPie.js"></script>
-<script src="./js/sessionTabExpand.js"></script>
-<script>
-    Highcharts.setOptions({
-        lang: {noData: "No Data to Display"},
-        global: {
-            timezoneOffset: ${timeZone} * 60
-    }
-    })
-    // Data Variables
-    var playersOnlineSeries = {
-        name: 'Players Online',
-        data: ${playersOnlineSeries},
-        type: 'areaspline',
-        color: '${playersGraphColor}',
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var tpsSeries = {
-        name: 'TPS',
-        data: ${tpsSeries},
-        type: 'spline',
-        zones: [{
-            value: ${tpsMedium},
-            color: '${tpsLowColor}'
-        }, {
-            value: ${tpsHigh},
-            color: '${tpsMediumColor}'
-        }, {
-            value: 30,
-            color: '${tpsHighColor}'
-        }],
-        tooltip: {
-            valueDecimals: 2
-        }
-    };
-    var cpuSeries = {
-        name: 'CPU Usage (%)',
-        data: ${cpuSeries},
-        type: 'spline',
-        color: '#e0d264',
-        tooltip: {
-            valueDecimals: 2
-        }
-    };
-    var ramSeries = {
-        name: 'RAM Usage (MB)',
-        data: ${ramSeries},
-        type: 'spline',
-        color: '#7dcc24',
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var entitySeries = {
-        name: 'Loaded Entities',
-        data: ${entitySeries},
-        type: 'spline',
-        color: '#ac69ef',
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var chunkSeries = {
-        name: 'Loaded Chunks',
-        data: ${chunkSeries},
-        type: 'spline',
-        color: '#b58310',
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var activitySeries = {
-        name: 'Players',
-        colorByPoint: true,
-        colors: [${activityPieColors}],
-        data: [{
-            name: 'Active',
-            y: ${active}
-        }, {
-            name: 'Inactive',
-            y: ${inactive},
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Single Join',
-            y: ${joinLeaver}
-        }, {
-            name: 'Banned',
-            y: ${banned}
-        }]
-    };
-    var worldSeries = {
-        name: 'World Playtime',
-        colorByPoint: true,
-        colors: worldPieColors,
-        data: ${worldSeries}
-    };
-    var gmSeries = ${gmSeries};
-    var mapSeries = {
-        name: 'Players',
-        type: 'map',
-        mapData: Highcharts.maps['custom/world'],
-        data: ${geoMapSeries},
-        joinBy: ['iso-a3', 'code']
-    };
-    var punchcardSeries = {
-        name: 'Relative Activity',
-        color: '#222',
-        data: ${punchCardSeries}
-    };
-</script>
-<script>
-    $(function () {
-        var resourceTab = window.sessionStorage.getItem("AnalysisResourceTab");
-        if (resourceTab == null) {
-            resourceTab = 1;
-        }
-        $("#tabs").tabs({active: resourceTab});
-        $("#tabs").on("tabsactivate", function (event, ui) {
-            window.sessionStorage.setItem("AnalysisResourceTab", $("#tabs").tabs("option", "active"));
+        </div>
+    </div>
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+    <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+    <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+    <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
+    <script src="./js/activityPie.js"></script>
+    <script src="./js/playerGraph.js"></script>
+    <script src="./js/punchCard.js"></script>
+    <script src="./js/resourceGraph.js"></script>
+    <script src="./js/tpsGraph.js"></script>
+    <script src="./js/worldGraph.js"></script>
+    <script src="./js/performanceGraph.js"></script>
+    <script src="./js/worldMap.js"></script>
+    <script src="./js/worldPie.js"></script>
+    <script src="./js/sessionTabExpand.js"></script>
+    <script>
+        Highcharts.setOptions({
+            lang: {noData: "No Data to Display"},
+            global: {
+                timezoneOffset: ${timeZone} *  60
+            }
         });
-    });
-</script>
-<script>
-    var navButtons = document.getElementsByClassName("nav-button");
-    var tabs = document.getElementsByClassName("tab");
-    var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
-    if (slideIndex === null) {
-        slideIndex = 0;
-    }
-    var x = document.getElementById("main");
-    x.style.transform = "translate3d(0px,0px,0)";
-    x.style.width = "" + navButtons.length * 100 + "%";
-    for (var i = 0; i < navButtons.length; i++) {
-        navButtons[i].onclick = openFunc(i);
-        tabs[i].style.width = "" + 100 / navButtons.length + "%";
-    }
-    x.style.opacity = "1";
-    openFunc(slideIndex)();
-    activityPie('activityPie', activitySeries, ${playersTotal}, [${activityPieColors}]);
-    worldPie('worldPie', worldSeries, gmSeries);
-    playersChart('playerChartDay', playersOnlineSeries, 1);
-    playersChart('playerChartMonth', playersOnlineSeries, 4);
-    performanceChart('performanceGraph', playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries);
-    tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
-    resourceChart('resourceGraph', cpuSeries, ramSeries, playersOnlineSeries);
-    worldChart('worldGraph', entitySeries, chunkSeries, playersOnlineSeries);
-    worldMap('choropleth', '#EEFFEE', '#267f00', mapSeries);
-    punchCard('punchcard', punchcardSeries);
-    ${sessionTabGraphViewFunctions}
-    /*countUpTimer();*/
-
-    function openFunc(i) {
-        return function () {
-            var max = navButtons.length;
-            for (var j = 0; j < max; j++) {
-                if (j === i) {
-                    navButtons[j].classList.add('active');
-                    continue;
-                }
-                if (navButtons[j].classList.contains('active')) {
-                    navButtons[j].classList.remove('active');
-                }
+		// Data Variables
+		var playersOnlineSeries = {
+			name: 'Players Online',
+			data: ${playersOnlineSeries},
+			type: 'areaspline',
+			color: '${playersGraphColor}',
+            tooltip: {
+                valueDecimals: 0
             }
-            var percent = -100 / navButtons.length;
-            slideIndex = i;
-            if (slideIndex > max) {
-                slideIndex = 0
-            }
-            if (slideIndex < 0) {
-                slideIndex = max
-            }
-            window.sessionStorage.setItem("AnalysisSlideIndex", slideIndex);
-            var value = slideIndex * percent;
-            x.style.transition = "0.5s";
-            x.style.transform = "translate3d(" + value + "%,0px,0)";
         };
-    }
-</script>
-</body>
+        var tpsSeries = {
+            name: 'TPS',
+            data: ${tpsSeries},
+            type: 'spline',
+            zones: [{
+                value: ${tpsMedium},
+                color: '${tpsLowColor}'
+            }, {
+                value: ${tpsHigh},
+                color: '${tpsMediumColor}'
+            }, {
+                value: 30,
+                color: '${tpsHighColor}'
+            }],
+            tooltip: {
+                valueDecimals: 2
+            }
+        };
+        var cpuSeries = {
+            name: 'CPU Usage (%)',
+            data: ${cpuSeries},
+            type: 'spline',
+            color: '#e0d264',
+            tooltip: {
+                valueDecimals: 2
+            }
+        };
+        var ramSeries = {
+            name: 'RAM Usage (MB)',
+            data: ${ramSeries},
+            type: 'spline',
+            color: '#7dcc24',
+            tooltip: {
+                valueDecimals: 0
+            }
+        };
+        var entitySeries = {
+            name: 'Loaded Entities',
+            data: ${entitySeries},
+            type: 'spline',
+            color: '#ac69ef',
+            tooltip: {
+                valueDecimals: 0
+            }
+        };
+        var chunkSeries = {
+            name: 'Loaded Chunks',
+            data: ${chunkSeries},
+            type: 'spline',
+            color: '#b58310',
+            tooltip: {
+                valueDecimals: 0
+            }
+        };
+        var activitySeries = {
+            name: 'Players',
+            colorByPoint: true,
+            colors: [${activityPieColors}],
+            data: [{
+                name: 'Active',
+                y: ${active}
+            }, {
+                name: 'Inactive',
+                y: ${inactive},
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Single Join',
+                y: ${joinLeaver}
+            }, {
+                name: 'Banned',
+                y: ${banned}
+            }]
+        };
+        var worldSeries = {
+            name: 'World Playtime',
+            colorByPoint: true,
+            colors: worldPieColors,
+            data: ${worldSeries}
+        };
+        var gmSeries = ${gmSeries};
+        var mapSeries = {
+            name: 'Players',
+            type: 'map',
+            mapData: Highcharts.maps['custom/world'],
+            data: ${geoMapSeries},
+            joinBy: ['iso-a3', 'code']
+        };
+        var punchcardSeries = {
+            name: 'Relative Activity',
+            color: '#222',
+            data: ${punchCardSeries}
+        };
+    </script>
+    <script>
+        $( function() {
+            var resourceTab = window.sessionStorage.getItem("AnalysisResourceTab");
+            if (resourceTab == null) {
+                resourceTab = 1;
+            }
+            $( "#tabs" ).tabs({active: resourceTab});
+            $( "#tabs" ).on("tabsactivate", function(event, ui) {
+                window.sessionStorage.setItem("AnalysisResourceTab", $( "#tabs" ).tabs( "option", "active" ));
+            });
+        });
+    </script>
+    <script>
+            var navButtons = document.getElementsByClassName("nav-button");
+            var tabs = document.getElementsByClassName("tab");
+            var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
+            if (slideIndex === null) {
+                slideIndex = 0;
+            }
+            var x = document.getElementById("main");
+            x.style.transform = "translate3d(0px,0px,0)";
+            x.style.width = "" + navButtons.length * 100 + "%";
+            for (var i = 0; i < navButtons.length; i++) {
+                navButtons[i].onclick = openFunc(i);
+                tabs[i].style.width = "" + 100 / navButtons.length + "%";
+            }
+            x.style.opacity = "1";
+            openFunc(slideIndex)();
+            activityPie('activityPie', activitySeries, ${playersTotal}, [${activityPieColors}]);
+            worldPie('worldPie', worldSeries, gmSeries);
+            playersChart('playerChartDay', playersOnlineSeries, 1);
+            playersChart('playerChartMonth', playersOnlineSeries, 4);
+            performanceChart('performanceGraph', playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries);
+            tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
+            resourceChart('resourceGraph', cpuSeries, ramSeries, playersOnlineSeries);
+            worldChart('worldGraph', entitySeries, chunkSeries, playersOnlineSeries);
+            worldMap('choropleth', '#EEFFEE', '#267f00', mapSeries);
+            punchCard('punchcard', punchcardSeries);
+            ${sessionTabGraphViewFunctions}
+            /*countUpTimer();*/
+
+            function openFunc(i) {
+                return function() {                    
+                    var max = navButtons.length;
+                    for (var j = 0; j < max; j++) {
+                        if (j === i) {
+                            navButtons[j].classList.add('active');
+                            continue;
+                        }
+                        if (navButtons[j].classList.contains('active')) {
+                            navButtons[j].classList.remove('active');
+                        }
+                    }
+                    var percent = - 100 / navButtons.length;
+                    slideIndex = i;
+                    if (slideIndex > max) {
+                        slideIndex = 0
+                    }
+                    if (slideIndex < 0) {
+                        slideIndex = max
+                    }
+                    window.sessionStorage.setItem("AnalysisSlideIndex", slideIndex);
+                    var value = slideIndex * percent;
+                    x.style.transition = "0.5s";
+                    x.style.transform = "translate3d(" + value + "%,0px,0)";
+                };
+            }
+    </script>
+  </body>
 </html>

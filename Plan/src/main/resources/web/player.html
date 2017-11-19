@@ -275,8 +275,7 @@
                                     <div class="col-md-6">
                                         <p><i class="col-amber fa fa-user"></i> Activity Index <span
                                                 class="pull-right"><b>${activityIndexNumber}</b></span></p>
-                                        <p>&nbsp;<span class="col-${activityIndexColor} font-bold pull-right">${activityIndex}</span>
-                                        </p>
+                                        <p>&nbsp;<span class="col-${activityIndexColor} font-bold pull-right">${activityIndex}</span></p>
                                         <p>&nbsp;
                                         </p>
                                         <p><i class="col-green fa fa-server"></i> Favorite Server<span
@@ -530,18 +529,18 @@
 <script>
     Highcharts.setOptions({
         global: {
-            timezoneOffset: ${timeZone} * 60
+            timezoneOffset: ${timeZone} *  60
     }
-    })
+    });
     var serverSeries = {
-        name: 'Server Playtime',
-        colorByPoint: true,
+        name:'Server Playtime',
+        colorByPoint:true,
         colors: [${serverPieColors}],
         data: ${serverPieSeries}
-    };
+    }
     var worldSeries = {
-        name: 'World Playtime',
-        colorByPoint: true,
+        name:'World Playtime',
+        colorByPoint:true,
         colors: worldPieColors,
         data: ${worldPieSeries}
     };
@@ -582,7 +581,6 @@
         serverPie('serverPie', serverSeries);
         punchCard('punchCard', punchcardSeries);
         ${sessionTabGraphViewFunctions}
-
         /**/
 
         function openFunc(i) {

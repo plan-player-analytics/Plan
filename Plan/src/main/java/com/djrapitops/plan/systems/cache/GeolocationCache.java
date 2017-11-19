@@ -29,9 +29,10 @@ import java.util.zip.GZIPInputStream;
  */
 public class GeolocationCache {
 
+    private static File geolocationDB = new File(MiscUtils.getIPlan().getDataFolder(), "GeoIP.dat");
+
     private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
             .build();
-    private static File geolocationDB = new File(MiscUtils.getIPlan().getDataFolder(), "GeoIP.dat");
 
     /**
      * Constructor used to hide the public constructor

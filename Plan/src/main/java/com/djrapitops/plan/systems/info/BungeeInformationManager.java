@@ -40,10 +40,11 @@ import java.util.stream.Collectors;
 public class BungeeInformationManager extends InformationManager {
 
     private final PlanBungee plugin;
+    private Map<UUID, ServerInfo> bukkitServers;
+
     private final Map<UUID, String> networkPageContent;
     private final Map<UUID, Map<UUID, String>> pluginsTabContent;
     private final BungeeServerInfoManager serverInfoManager;
-    private Map<UUID, ServerInfo> bukkitServers;
 
     public BungeeInformationManager(PlanBungee plugin) throws SQLException {
         usingAnotherWebServer = false;

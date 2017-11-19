@@ -15,10 +15,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -103,7 +100,7 @@ public class AnalysisUtilsTest {
 
         List<Long> expResult = Arrays.asList(5L, 20L);
         List<Long> result = AnalysisUtils.transformSessionDataToLengths(data);
-
+        
         assertEquals(expResult, result);
     }
 }

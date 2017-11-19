@@ -11,7 +11,7 @@ public class PromptAuthorizationResponse extends ErrorResponse {
     public PromptAuthorizationResponse() {
         super.setHeader("HTTP/1.1 401 Access Denied\r\n"
                 + "WWW-Authenticate: Basic realm=\"/\";");
-        super.setTitle(Html.FONT_AWESOME_ICON.parse("times-circle") + " 401 Unauthorized");
+        super.setTitle(Html.FONT_AWESOME_ICON.parse("times-circle")+" 401 Unauthorized");
         super.setParagraph("Authentication Failed.<br>"
                 + "- Ensure you have registered a user with <b>/plan register</b><br>"
                 + "- Check that the username and password are correct<br>"

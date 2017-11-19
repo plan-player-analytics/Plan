@@ -33,258 +33,250 @@
     </div>
 </header>
 <div class="headwrap">
-    <div class="sidenav">
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Information" class="sidenav-button">
+        <div class="sidenav">
+            <a class="nav-button" href="javascript:void(0)"><div title="Information" class="sidenav-button">
                 <div><i class="fa fa-info-circle"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Sessions" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Sessions" class="sidenav-button">
                 <div><i class="fa fa-calendar"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Overview" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Overview" class="sidenav-button">
                 <div><i class="fa fa-line-chart"></i></div>
-            </div>
-        </a>
-        <a class="nav-button" href="javascript:void(0)">
-            <div title="Plugins" class="sidenav-button">
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Plugins" class="sidenav-button">
                 <div><i class="fa fa-cubes"></i></div>
-            </div>
-        </a>
-    </div>
-
-    <div class="content">
-        <div id="limiter" class="main-limiter">
-            <div id="main" class="main-wrapper" style="width: 500%;">
-                <div id="tab-information" class="tab">
-                    <div class="row">
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-info-circle" aria-hidden="true"></i> Information</h2>
-                            </div>
-                            <div class="box" style="margin-bottom: 5px;">
-                                <div class="row">
-                                    <div class="column">
-                                        <p>${playerClassification}<br>
-                                            <br>
-                                            Also Known As:<br>
-                                            ${nicknames}
-                                            <br>
-                                            Has Logged in From:<br>
-                                            ${geolocations}</p>
-                                    </div>
-                                    <div class="column">
-                                        <p>Registered: ${registered}<br>
-                                            Last Seen: ${lastSeen}<br>
-                                            <br>
-                                            Sessions: ${sessionCount}<br>
-                                            Total Playtime: ${playtimeTotal}<br>
-                                            Session Median: ${sessionLengthMedian}<br>
-                                            <br>
-                                            Longest Session: ${sessionLengthLongest}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="box-header">
-                                <h2><i class="fa fa-drivers-license" aria-hidden="true"></i> ${playerName}</h2>
-                            </div>
-                            <div class="box-footer scrollbar" style="padding: 2px;">
-                                <div class="row" style="flex-direction: row;">
-                                    <div class="column" style="padding: 5px 0 5px 10px;"><p>Times Kicked:
-                                        ${kickCount}<br>
-                                    </p></div>
-                                    <div class="column"><img style="padding: 10px 100px; height: 100px; width: 100px;"
-                                                             src="https://cravatar.eu/avatar/${playerName}/100"></div>
-                                    <div class="column"><p>Player Kills: ${playerKillCount}<br>
-                                        Mob Kills: ${mobKillCount}<br>
-                                        Deaths: ${deathCount}
-                                    </p>
-                                    </div>
-                                </div>
-                                <table class="sortable table">
-                                    <thead>
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>Action</th>
-                                        <th>Info</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    ${tableBodyActions}
-                                    </tbody>
-                                </table>
-                            </div>
+            </div></a>
+        </div>
+        
+        <div class="content">
+            <div id="limiter" class="main-limiter">
+                <div id="main" class="main-wrapper" style="width: 500%;">
+                    <div id="tab-information" class="tab">
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-info-circle" aria-hidden="true"></i> Information</h2>
                         </div>
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-braille" aria-hidden="true"></i> Join PunchCard</h2>
-                            </div>
-                            <div class="box-footer">
-                                <div id="punchcard" style="width: 100%; height: 400px;"></div>
-                            </div>
-                            <div class="box-header">
-                                <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> Server Preference</h2>
-                            </div>
-                            <div class="box-footer">
-                                <div id="serverPie" style="width: 100%; height: 300px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-sessions" class="tab">
-                    <div class="row" style="flex-grow: 2; width: 140%;">
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-calendar" aria-hidden="true"></i> 50 Most Recent Sessions</h2>
-                            </div>
-                            ${contentSessions}
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-overview" class="tab">
-                    <div class="row">
-                        <div class="column"> <!--First row (horizontal)-->
-                            <div class="column">
-                                <div class="box-header">
-                                    <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> World Playtime</h2>
-                                </div>
-                                <div class="box-footer">
-                                    <div id="worldPie" style="height: 400px;"></div>
-                                </div>
-                            </div>
+                        <div class="box" style="margin-bottom: 5px;">
                             <div class="row">
                                 <div class="column">
-                                    <div class="box-header">
-                                        <h2>Last 24 Hours</h2>
-                                    </div>
-                                    <div class="box" style="margin-bottom: 5px;">
-                                        <p>Sessions: ${sessionCountDay}<br>
-                                            Playtime: ${playtimeDay}<br>
-                                            <br>
-                                            Longest Session: ${sessionLengthLongestDay}
-                                        </p>
-                                    </div>
+                                    <p>${playerClassification}<br>
+                                        <br>
+                                        Also Known As:<br>
+                                        ${nicknames}
+                                        <br>
+                                        Has Logged in From:<br>
+                                        ${geolocations}</p>
                                 </div>
                                 <div class="column">
-                                    <div class="box-header">
-                                        <h2>Last 7 Days</h2>
-                                    </div>
-                                    <div class="box" style="margin-bottom: 5px;">
-                                        <p>Sessions: ${sessionCountWeek}<br>
-                                            Playtime: ${playtimeWeek}<br>
-                                            <br>
-                                            Longest Session: ${sessionLengthLongestWeek}
-                                        </p>
-                                    </div>
+                                    <p>Registered: ${registered}<br>
+                                        Last Seen: ${lastSeen}<br>
+                                        <br>
+                                        Sessions: ${sessionCount}<br>
+                                        Total Playtime: ${playtimeTotal}<br>
+                                        Session Median: ${sessionLengthMedian}<br>
+                                        <br>
+                                        Longest Session: ${sessionLengthLongest}
+                                    </p>
                                 </div>
                             </div>
+                        </div>
 
-                        </div> <!--First row (horizontal)-->
-                        <div class="row">
-                            ${contentServerOverview}
+                        <div class="box-header">
+                            <h2><i class="fa fa-drivers-license" aria-hidden="true"></i> ${playerName}</h2>
+                        </div>
+                        <div class="box-footer scrollbar" style="padding: 2px;">
+                            <div class="row" style="flex-direction: row;">
+                                <div class="column" style="padding: 5px 0 5px 10px;"><p>Times Kicked: ${kickCount}<br>
+                                </p></div>
+                                <div class="column"><img style="padding: 10px 100px; height: 100px; width: 100px;"
+                                                         src="https://cravatar.eu/avatar/${playerName}/100"></div>
+                                <div class="column"><p>Player Kills: ${playerKillCount}<br>
+                                    Mob Kills: ${mobKillCount}<br>
+                                    Deaths: ${deathCount}
+                                </p>
+                                </div>
+                            </div>
+                            <table class="sortable table">
+                                <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Action</th>
+                                    <th>Info</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                ${tableBodyActions}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-braille" aria-hidden="true"></i> Join PunchCard</h2>
+                        </div>
+                        <div class="box-footer">
+                            <div id="punchcard" style="width: 100%; height: 400px;"></div>
+                        </div>
+                        <div class="box-header">
+                            <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> Server Preference</h2>
+                        </div>
+                        <div class="box-footer">
+                            <div id="serverPie" style="width: 100%; height: 300px;"></div>
                         </div>
                     </div>
                 </div>
-
-                <div id="tab-plugins" class="tab column">
-                    ${tabContentPlugins}
+            </div>
+            <div id="tab-sessions" class="tab">
+                <div class="row" style="flex-grow: 2; width: 140%;">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-calendar" aria-hidden="true"></i> 50 Most Recent Sessions</h2>
+                        </div>
+                        ${contentSessions}
+                    </div>
                 </div>
             </div>
-        </div>
+            <div id="tab-overview" class="tab">
+                <div class="row">
+                    <div class="column"> <!--First row (horizontal)-->
+                        <div class="column">
+                            <div class="box-header">
+                                <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> World Playtime</h2>
+                            </div>
+                            <div class="box-footer">
+                                <div id="worldPie" style="height: 400px;"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2>Last 24 Hours</h2>
+                                </div>
+                                <div class="box" style="margin-bottom: 5px;">
+                                    <p>Sessions: ${sessionCountDay}<br>
+                                        Playtime: ${playtimeDay}<br>
+                                        <br>
+                                        Longest Session: ${sessionLengthLongestDay}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2>Last 7 Days</h2>
+                                </div>
+                                <div class="box" style="margin-bottom: 5px;">
+                                    <p>Sessions: ${sessionCountWeek}<br>
+                                        Playtime: ${playtimeWeek}<br>
+                                        <br>
+                                        Longest Session: ${sessionLengthLongestWeek}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> <!--First row (horizontal)-->
+                    <div class="row">
+                        ${contentServerOverview}
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-plugins" class="tab column">
+                ${tabContentPlugins}
+            </div>
+                </div>
+            </div>
     </div>
-</div>
-<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
-<script src="https://code.highcharts.com/stock/highstock.js"></script>
-<script src="https://code.highcharts.com/modules/drilldown.js"></script>
-<script src="https://code.highcharts.com/maps/modules/map.js"></script>
-<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
-<script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
-<script src="./js/punchCard.js"></script>
-<script src="./js/serverPie.js"></script>
-<script src="./js/worldPie.js"></script>
-<script src="./js/pluginsTabExpand.js"></script>
-<script src="./js/sessionTabExpand.js"></script>
-<script>
-    Highcharts.setOptions({
-        global: {
-            timezoneOffset: ${timeZone} * 60
-    }
-    })
-    var serverSeries = {
-        name: 'Server Playtime',
-        colorByPoint: true,
-        colors: [${serverPieColors}],
-        data: ${serverPieSeries}
-    };
-    var worldSeries = {
-        name: 'World Playtime',
-        colorByPoint: true,
-        colors: worldPieColors,
-        data: ${worldPieSeries}
-    };
-    var gmSeries = ${gmSeries};
-    var punchcardSeries = {
-        name: 'Relative Activity',
-        color: '#222',
-        data: ${punchCardSeries}
-    };
-
-
-</script>
-<script>
-    var navButtons = document.getElementsByClassName("nav-button");
-    var tabs = document.getElementsByClassName("tab");
-    var slideIndex = window.sessionStorage.getItem("InspectSlideIndex");
-    if (slideIndex === null) {
-        slideIndex = 0;
-    }
-    var x = document.getElementById("main");
-    x.style.transform = "translate3d(0px,0px,0)";
-    x.style.width = "" + navButtons.length * 100 + "%";
-    for (var i = 0; i < navButtons.length; i++) {
-        navButtons[i].onclick = openFunc(i);
-        tabs[i].style.width = "" + 100 / navButtons.length + "%";
-    }
-    x.style.opacity = "1";
-
-    worldPie('worldPie', worldSeries, gmSeries);
-    serverPie('serverPie', serverSeries);
-    punchCard('punchcard', punchcardSeries);
-    ${sessionTabGraphViewFunctions}
-
-    openFunc(slideIndex)();
-
-    function openFunc(i) {
-        return function () {
-            var max = navButtons.length;
-            for (var j = 0; j < max; j++) {
-                if (j === i) {
-                    navButtons[j].classList.add('active');
-                    continue;
-                }
-                if (navButtons[j].classList.contains('active')) {
-                    navButtons[j].classList.remove('active');
-                }
+    </div>
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+    <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+    <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
+    <script src="./js/punchCard.js"></script>
+    <script src="./js/serverPie.js"></script>
+    <script src="./js/worldPie.js"></script>
+    <script src="./js/pluginsTabExpand.js"></script>
+    <script src="./js/sessionTabExpand.js"></script>
+    <script>
+        Highcharts.setOptions({
+            global: {
+                timezoneOffset: ${timeZone} *  60
             }
-            var percent = -100 / navButtons.length;
-            slideIndex = i;
-            if (slideIndex > max) {
+        });
+        var serverSeries = {
+            name:'Server Playtime',
+            colorByPoint:true,
+            colors: [${serverPieColors}],
+            data: ${serverPieSeries}
+        }
+        var worldSeries = {
+             name:'World Playtime',
+             colorByPoint:true,
+             colors: worldPieColors,
+             data: ${worldPieSeries}
+        };
+        var gmSeries = ${gmSeries};
+        var punchcardSeries = {
+            name: 'Relative Activity',
+            color: '#222',
+            data: ${punchCardSeries}
+        };
+
+
+
+    </script>
+    <script>
+            var navButtons = document.getElementsByClassName("nav-button");
+            var tabs = document.getElementsByClassName("tab");
+            var slideIndex = window.sessionStorage.getItem("InspectSlideIndex");
+            if (slideIndex === null) {
                 slideIndex = 0;
             }
-            if (slideIndex < 0) {
-                slideIndex = max;
+            var x = document.getElementById("main");
+            x.style.transform = "translate3d(0px,0px,0)";
+            x.style.width = "" + navButtons.length * 100 + "%";
+            for (var i = 0; i < navButtons.length; i++) {
+                navButtons[i].onclick = openFunc(i);
+                tabs[i].style.width = "" + 100 / navButtons.length + "%";
             }
-            window.sessionStorage.setItem("InspectSlideIndex", slideIndex);
-            var value = slideIndex * percent;
-            x.style.transition = "0.5s";
-            x.style.transform = "translate3d(" + value + "%,0px,0)";
-        };
-    }
-</script>
+            x.style.opacity = "1";
+
+            worldPie('worldPie', worldSeries, gmSeries);
+            serverPie('serverPie', serverSeries);
+            punchCard('punchcard', punchcardSeries);
+            ${sessionTabGraphViewFunctions}
+
+            openFunc(slideIndex)();
+
+            function openFunc(i) {
+                return function() {
+                    var max = navButtons.length;
+                    for (var j = 0; j < max; j++) {
+                        if (j === i) {
+                            navButtons[j].classList.add('active');
+                            continue;
+                        }
+                        if (navButtons[j].classList.contains('active')) {
+                            navButtons[j].classList.remove('active');
+                        }
+                    }
+                    var percent = - 100 / navButtons.length;
+                    slideIndex = i;
+                    if (slideIndex > max) {
+                        slideIndex = 0;
+                    }
+                    if (slideIndex < 0) {
+                        slideIndex = max;
+                    }
+                    window.sessionStorage.setItem("InspectSlideIndex", slideIndex);
+                    var value = slideIndex * percent;
+                    x.style.transition = "0.5s";
+                    x.style.transform = "translate3d(" + value + "%,0px,0)";
+                };
+            }
+    </script>
 </body>
 </html>

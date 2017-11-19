@@ -114,14 +114,6 @@ public enum Settings {
         this.configPath = path;
     }
 
-    public static ServerSpecificSettings serverSpecific() {
-        if (!Check.isBungeeAvailable()) {
-            throw new IllegalStateException("Not supposed to call this method on Bukkit");
-        }
-
-        return serverSpecificSettings;
-    }
-
     /**
      * If the settings is a boolean, this method should be used.
      *
@@ -177,5 +169,13 @@ public enum Settings {
 
     private Config getConfig() {
         return MiscUtils.getIPlan().getMainConfig();
+    }
+
+    public static ServerSpecificSettings serverSpecific() {
+        if (!Check.isBungeeAvailable()) {
+            throw new IllegalStateException("Not supposed to call this method on Bukkit");
+        }
+
+        return serverSpecificSettings;
     }
 }

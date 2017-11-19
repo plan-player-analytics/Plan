@@ -85,10 +85,10 @@
             this.each(function () {
 
                 var isOverPanel, isOverBar, isDragg, queueHide, touchDif,
-                    barHeight, percentScroll, lastScroll,
-                    divS = '<div></div>',
-                    minBarHeight = 30,
-                    releaseScroll = false;
+                  barHeight, percentScroll, lastScroll,
+                  divS = '<div></div>',
+                  minBarHeight = 30,
+                  releaseScroll = false;
 
                 // used in event handlers and for better minification
                 var me = $(this);
@@ -143,13 +143,13 @@
 
                 // wrap content
                 var wrapper = $(divS)
-                    .addClass(o.wrapperClass)
-                    .css({
-                        position: 'relative',
-                        overflow: 'hidden',
-                        width: o.width,
-                        height: o.height
-                    });
+                  .addClass(o.wrapperClass)
+                  .css({
+                      position: 'relative',
+                      overflow: 'hidden',
+                      width: o.width,
+                      height: o.height
+                  });
 
                 // update style for the div
                 me.css({
@@ -160,38 +160,38 @@
 
                 // create scrollbar rail
                 var rail = $(divS)
-                    .addClass(o.railClass)
-                    .css({
-                        width: o.size,
-                        height: '100%',
-                        position: 'absolute',
-                        top: 0,
-                        display: (o.alwaysVisible && o.railVisible) ? 'block' : 'none',
-                        'border-radius': o.railBorderRadius,
-                        background: o.railColor,
-                        opacity: o.railOpacity,
-                        zIndex: 90
-                    });
+                  .addClass(o.railClass)
+                  .css({
+                      width: o.size,
+                      height: '100%',
+                      position: 'absolute',
+                      top: 0,
+                      display: (o.alwaysVisible && o.railVisible) ? 'block' : 'none',
+                      'border-radius': o.railBorderRadius,
+                      background: o.railColor,
+                      opacity: o.railOpacity,
+                      zIndex: 90
+                  });
 
                 // create scrollbar
                 var bar = $(divS)
-                    .addClass(o.barClass)
-                    .css({
-                        background: o.color,
-                        width: o.size,
-                        position: 'absolute',
-                        top: 0,
-                        opacity: o.opacity,
-                        display: o.alwaysVisible ? 'block' : 'none',
-                        'border-radius': o.borderRadius,
-                        BorderRadius: o.borderRadius,
-                        MozBorderRadius: o.borderRadius,
-                        WebkitBorderRadius: o.borderRadius,
-                        zIndex: 99
-                    });
+                  .addClass(o.barClass)
+                  .css({
+                      background: o.color,
+                      width: o.size,
+                      position: 'absolute',
+                      top: 0,
+                      opacity: o.opacity,
+                      display: o.alwaysVisible ? 'block' : 'none',
+                      'border-radius': o.borderRadius,
+                      BorderRadius: o.borderRadius,
+                      MozBorderRadius: o.borderRadius,
+                      WebkitBorderRadius: o.borderRadius,
+                      zIndex: 99
+                  });
 
                 // set position
-                var posCss = (o.position == 'right') ? {right: o.distance} : {left: o.distance};
+                var posCss = (o.position == 'right') ? { right: o.distance } : { left: o.distance };
                 rail.css(posCss);
                 bar.css(posCss);
 
@@ -217,8 +217,7 @@
                         });
 
                         $doc.bind("mouseup.slimscroll", function (e) {
-                            isDragg = false;
-                            hideBar();
+                            isDragg = false; hideBar();
                             $doc.unbind('.slimscroll');
                         });
                         return false;
@@ -281,7 +280,7 @@
                 // check start position
                 if (o.start === 'bottom') {
                     // scroll content to bottom
-                    bar.css({top: me.outerHeight() - bar.outerHeight()});
+                    bar.css({ top: me.outerHeight() - bar.outerHeight() });
                     scrollContent(0, true);
                 }
                 else if (o.start !== 'top') {
@@ -289,9 +288,7 @@
                     scrollContent($(o.start).position().top, null, true);
 
                     // make sure bar stays hidden
-                    if (!o.alwaysVisible) {
-                        bar.hide();
-                    }
+                    if (!o.alwaysVisible) { bar.hide(); }
                 }
 
                 // attach scroll events
@@ -299,19 +296,13 @@
 
                 function _onWheel(e) {
                     // use mouse wheel only when mouse is over
-                    if (!isOverPanel) {
-                        return;
-                    }
+                    if (!isOverPanel) { return; }
 
                     var e = e || window.event;
 
                     var delta = 0;
-                    if (e.wheelDelta) {
-                        delta = -e.wheelDelta / 120;
-                    }
-                    if (e.detail) {
-                        delta = e.detail / 3;
-                    }
+                    if (e.wheelDelta) { delta = -e.wheelDelta / 120; }
+                    if (e.detail) { delta = e.detail / 3; }
 
                     var target = e.target || e.srcTarget || e.srcElement;
                     /* console.log($(target).closest('.' + o.wrapperClass).attr("class"));
@@ -323,12 +314,8 @@
                     }
 
                     // stop window scroll
-                    if (e.preventDefault && !releaseScroll) {
-                        e.preventDefault();
-                    }
-                    if (!releaseScroll) {
-                        e.returnValue = false;
-                    }
+                    if (e.preventDefault && !releaseScroll) { e.preventDefault(); }
+                    if (!releaseScroll) { e.returnValue = false; }
                 }
 
                 function scrollContent(y, isWheel, isJump) {
@@ -351,7 +338,7 @@
                         delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
 
                         // scroll the scrollbar
-                        bar.css({top: delta + 'px'});
+                        bar.css({ top: delta + 'px' });
                     }
 
                     // calculate actual scroll amount
@@ -362,7 +349,7 @@
                         delta = y;
                         var offsetTop = delta / me[0].scrollHeight * me.outerHeight();
                         offsetTop = Math.min(Math.max(offsetTop, 0), maxTop);
-                        bar.css({top: offsetTop + 'px'});
+                        bar.css({ top: offsetTop + 'px' });
                     }
 
                     // scroll content
@@ -392,11 +379,11 @@
                 function getBarHeight() {
                     // calculate scrollbar height and make sure it is not too small
                     barHeight = Math.max((me.outerHeight() / me[0].scrollHeight) * me.outerHeight(), minBarHeight);
-                    bar.css({height: barHeight + 'px'});
+                    bar.css({ height: barHeight + 'px' });
 
                     // hide scrollbar if content is not long enough
                     var display = barHeight == me.outerHeight() ? 'none' : 'block';
-                    bar.css({display: display});
+                    bar.css({ display: display });
                 }
 
                 function showBar() {
@@ -427,9 +414,7 @@
                         return;
                     }
                     bar.stop(true, true).fadeIn('fast');
-                    if (o.railVisible) {
-                        rail.stop(true, true).fadeIn('fast');
-                    }
+                    if (o.railVisible) { rail.stop(true, true).fadeIn('fast'); }
                 }
 
                 function hideBar() {

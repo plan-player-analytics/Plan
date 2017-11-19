@@ -41,10 +41,6 @@ public class PlanPlayerListener implements Listener {
         cache = plugin.getDataCache();
     }
 
-    public static void setCountKicks(boolean value) {
-        countKicks = value;
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLogin(PlayerLoginEvent event) {
         PlayerLoginEvent.Result result = event.getResult();
@@ -137,5 +133,9 @@ public class PlanPlayerListener implements Listener {
             int messagesSent = plugin.getDataCache().getFirstSessionMsgCount(uuid);
             plugin.addToProcessQueue(new FirstLeaveProcessor(uuid, time, messagesSent));
         }
+    }
+
+    public static void setCountKicks(boolean value) {
+        countKicks = value;
     }
 }

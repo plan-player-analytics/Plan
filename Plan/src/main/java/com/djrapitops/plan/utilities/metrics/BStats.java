@@ -32,7 +32,7 @@ public class BStats {
         String serverType = plugin.getServer().getName();
         if ("CraftBukkit".equals(serverType) && Check.isSpigotAvailable()) {
             serverType = "Spigot";
-        }
+        } 
         String databaseType = plugin.getDB().getName();
         String analysisRefreshPeriod = Integer.toString(Settings.ANALYSIS_AUTO_REFRESH.getNumber());
         String themeBase = Settings.THEME_BASE.toString();
@@ -41,7 +41,7 @@ public class BStats {
         addStringSettingPie("database_type", databaseType);
         addStringSettingPie("analysis_periodic_refresh", analysisRefreshPeriod);
         addStringSettingPie("theme_base", themeBase);
-
+        
         addFeatureBarChart("features");
     }
 
@@ -60,7 +60,7 @@ public class BStats {
             if (isConnectedToBungee) {
                 map.put("Copy Bungee Config Values", isEnabled(Settings.BUNGEE_COPY_CONFIG.isTrue()));
                 map.put("Standalone Override", isEnabled(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()));
-            }
+            }            
             map.put("Log Unknown Commands", isEnabled(Settings.LOG_UNKNOWN_COMMANDS.isTrue()));
             map.put("Combine Command Aliases", isEnabled(Settings.COMBINE_COMMAND_ALIASES.isTrue()));
             return map;

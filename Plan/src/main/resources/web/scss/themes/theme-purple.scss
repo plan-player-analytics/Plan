@@ -2,91 +2,91 @@
 
 .theme-purple {
 
-  .navbar {
-    background-color: $theme-purple;
-  }
-
-  .navbar-brand {
-    color: $theme-purple-navbar-brand;
-
-    &:hover {
-      color: $theme-purple-navbar-brand_hover;
+    .navbar {
+        background-color: $theme-purple;
     }
 
-    &:active {
-      color: $theme-purple-navbar-brand_active;
-    }
-
-    &:focus {
-      color: $theme-purple-navbar-brand_focus;
-    }
-  }
-
-  .nav {
-    > li {
-      > a {
-        color: $theme-purple-nav-anchor;
+    .navbar-brand {
+        color: $theme-purple-navbar-brand;
 
         &:hover {
-          background-color: $theme-purple-nav-anchor_hover;
+            color: $theme-purple-navbar-brand_hover;
+        }
+
+        &:active {
+            color: $theme-purple-navbar-brand_active;
         }
 
         &:focus {
-          background-color: $theme-purple-nav-anchor_focus;
+            color: $theme-purple-navbar-brand_focus;
         }
-      }
     }
 
-    .open {
-      > a {
-        background-color: $theme-purple-nav-anchor-opened;
+    .nav {
+        > li {
+            > a {
+                color: $theme-purple-nav-anchor;
 
-        &:hover {
-          background-color: $theme-purple-nav-anchor-opened_hover;
-        }
+                &:hover {
+                    background-color: $theme-purple-nav-anchor_hover;
+                }
 
-        &:focus {
-          background-color: $theme-purple-nav-anchor-opened_focus;
-        }
-      }
-    }
-  }
-
-  .bars {
-    color: $theme-purple-bar;
-  }
-
-  .sidebar {
-    .menu {
-      .list {
-        li.active {
-          background-color: $theme-purple-menu-list-active;
-
-          > :first-child {
-            i, span {
-              color: $theme-purple;
+                &:focus {
+                    background-color: $theme-purple-nav-anchor_focus;
+                }
             }
-          }
         }
 
-        .toggled {
-          background-color: $theme-purple-menu-list-toggled;
-        }
+        .open {
+            > a {
+                background-color: $theme-purple-nav-anchor-opened;
 
-        .ml-menu {
-          background-color: $theme-purple-menu-list-submenu;
+                &:hover {
+                    background-color: $theme-purple-nav-anchor-opened_hover;
+                }
+
+                &:focus {
+                    background-color: $theme-purple-nav-anchor-opened_focus;
+                }
+            }
         }
-      }
     }
 
-    .legal {
-      background-color: $theme-purple-legal-bg;
-
-      .copyright {
-        a {
-          color: $theme-purple !important;
-        }
-      }
+    .bars {
+        color: $theme-purple-bar;
     }
-  }
+
+    .sidebar {
+        .menu {
+            .list {
+                li.active {
+                    background-color: $theme-purple-menu-list-active;
+
+                    > :first-child {
+                        i, span {
+                            color: $theme-purple;
+                        }
+                    }
+                }
+
+                .toggled {
+                    background-color: $theme-purple-menu-list-toggled;
+                }
+
+                .ml-menu {
+                    background-color: $theme-purple-menu-list-submenu;
+                }
+            }
+        }
+
+        .legal {
+            background-color: $theme-purple-legal-bg;
+
+            .copyright {
+                a {
+                    color: $theme-purple !important;
+                }
+            }
+        }
+    }
 }
