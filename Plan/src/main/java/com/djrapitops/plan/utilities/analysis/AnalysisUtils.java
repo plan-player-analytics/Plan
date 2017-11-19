@@ -30,6 +30,7 @@ public class AnalysisUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    @Deprecated
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = 10;
         long twoWeeks = 1209600000;
@@ -50,6 +51,7 @@ public class AnalysisUtils {
         return newPlayers;
     }
 
+    @Deprecated
     public static List<Long> transformSessionDataToLengths(Collection<Session> data) {
         return data.stream()
                 .filter(Objects::nonNull)
@@ -280,15 +282,18 @@ public class AnalysisUtils {
         return day.get(Calendar.DAY_OF_YEAR);
     }
 
+    @Deprecated
     public static long getTotalPlaytime(List<Session> sessions) {
         return sessions.stream().mapToLong(Session::getLength).sum();
     }
 
+    @Deprecated
     public static long getLongestSessionLength(List<Session> sessions) {
         Optional<Session> longest = sessions.stream().sorted(new SessionLengthComparator()).findFirst();
         return longest.map(Session::getLength).orElse(0L);
     }
 
+    @Deprecated
     public static long getLastSeen(List<Session> userSessions) {
         OptionalLong max = userSessions.stream().mapToLong(Session::getSessionEnd).max();
         if (max.isPresent()) {
