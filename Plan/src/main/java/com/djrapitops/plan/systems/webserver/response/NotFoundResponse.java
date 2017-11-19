@@ -10,7 +10,7 @@ public class NotFoundResponse extends ErrorResponse {
 
     public NotFoundResponse() {
         super.setHeader("HTTP/1.1 404 Not Found");
-        super.setTitle(Html.FONT_AWESOME_ICON.parse("exclamation-circle")+" 404 Not Found");
+        super.setTitle(Html.FONT_AWESOME_ICON.parse("exclamation-circle") + " 404 Not Found");
         super.setParagraph("Page does not exist.");
         super.replacePlaceholders();
     }

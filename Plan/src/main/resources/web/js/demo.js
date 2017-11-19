@@ -27,9 +27,9 @@ function setSkinListHeightAndScroll(isFirstTime) {
     var height = $(window).height() - ($('.navbar').innerHeight() + $('.right-sidebar .nav-tabs').outerHeight());
     var $el = $('.demo-choose-skin');
 
-    if (!isFirstTime){
-      $el.slimScroll({ destroy: true }).height('auto');
-      $el.parent().find('.slimScrollBar, .slimScrollRail').remove();
+    if (!isFirstTime) {
+        $el.slimScroll({destroy: true}).height('auto');
+        $el.parent().find('.slimScrollBar, .slimScrollRail').remove();
     }
 
     $el.slimscroll({

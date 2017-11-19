@@ -38,7 +38,6 @@ public abstract class Database {
     protected ServerTable serverTable;
 
 
-
     /**
      * Super constructor.
      *

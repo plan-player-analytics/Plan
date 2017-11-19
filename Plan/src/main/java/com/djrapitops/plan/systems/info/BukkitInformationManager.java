@@ -48,12 +48,10 @@ public class BukkitInformationManager extends InformationManager {
     private final Plan plugin;
     private final DataCache dataCache;
     private final Analysis analysis;
-
+    private final Map<UUID, String> pluginsTabContents;
     private AnalysisData analysisData;
     private String analysisPluginsTab;
     private Long refreshDate;
-
-    private final Map<UUID, String> pluginsTabContents;
 
     public BukkitInformationManager(Plan plugin) {
         this.plugin = plugin;

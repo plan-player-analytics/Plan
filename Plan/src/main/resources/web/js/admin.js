@@ -40,7 +40,7 @@ $.AdminBSB.options = {
         effectIn: 'fadeIn',
         effectOut: 'fadeOut'
     }
-}
+};
 
 /* Left Sidebar - Function =================================================================================================
 *  You can manage the left sidebar menu options
@@ -55,7 +55,9 @@ $.AdminBSB.leftSideBar = {
         //Close sidebar
         $(window).click(function (e) {
             var $target = $(e.target);
-            if (e.target.nodeName.toLowerCase() === 'i') { $target = $(e.target).parent(); }
+            if (e.target.nodeName.toLowerCase() === 'i') {
+                $target = $(e.target).parent();
+            }
 
             if (!$target.hasClass('bars') && _this.isOpen() && $target.parents('#leftsidebar').length === 0) {
                 if (!$target.hasClass('js-right-sidebar')) $overlay.fadeOut();
@@ -124,8 +126,8 @@ $.AdminBSB.leftSideBar = {
 
             //Scroll active menu item when page load, if option set = true
             if ($.AdminBSB.options.leftSideBar.scrollActiveItemWhenPageLoad) {
-                var activeItemOffsetTop = $('.menu .list li.active')[0].offsetTop
-                if (activeItemOffsetTop > 150) $el.slimscroll({ scrollTo: activeItemOffsetTop + 'px' });
+                var activeItemOffsetTop = $('.menu .list li.active')[0].offsetTop;
+                if (activeItemOffsetTop > 150) $el.slimscroll({scrollTo: activeItemOffsetTop + 'px'});
             }
         }
     },
@@ -168,7 +170,9 @@ $.AdminBSB.rightSideBar = {
         //Close sidebar
         $(window).click(function (e) {
             var $target = $(e.target);
-            if (e.target.nodeName.toLowerCase() === 'i') { $target = $(e.target).parent(); }
+            if (e.target.nodeName.toLowerCase() === 'i') {
+                $target = $(e.target).parent();
+            }
 
             if (!$target.hasClass('js-right-sidebar') && _this.isOpen() && $target.parents('#rightsidebar').length === 0) {
                 if (!$target.hasClass('bars')) $overlay.fadeOut();
@@ -178,13 +182,17 @@ $.AdminBSB.rightSideBar = {
 
         $('.js-right-sidebar').on('click', function () {
             $sidebar.toggleClass('open');
-            if (_this.isOpen()) { $overlay.fadeIn(); } else { $overlay.fadeOut(); }
+            if (_this.isOpen()) {
+                $overlay.fadeIn();
+            } else {
+                $overlay.fadeOut();
+            }
         });
     },
     isOpen: function () {
         return $('.right-sidebar').hasClass('open');
     }
-}
+};
 //==========================================================================================================================
 
 /* Searchbar - Function ================================================================================================
@@ -221,7 +229,7 @@ $.AdminBSB.search = {
         $searchBar.removeClass('open');
         $searchBar.find('input[type="text"]').val('');
     }
-}
+};
 //==========================================================================================================================
 
 /* Navbar - Function =======================================================================================================
@@ -236,7 +244,11 @@ $.AdminBSB.navbar = {
         //Open left sidebar panel
         $('.bars').on('click', function () {
             $body.toggleClass('overlay-open');
-            if ($body.hasClass('overlay-open')) { $overlay.fadeIn(); } else { $overlay.fadeOut(); }
+            if ($body.hasClass('overlay-open')) {
+                $overlay.fadeIn();
+            } else {
+                $overlay.fadeOut();
+            }
         });
 
         //Close collapse bar on click event
@@ -251,7 +263,7 @@ $.AdminBSB.navbar = {
             }
         });
     }
-}
+};
 //==========================================================================================================================
 
 /* Input - Function ========================================================================================================
@@ -269,7 +281,9 @@ $.AdminBSB.input = {
         $('.form-control').focusout(function () {
             var $this = $(this);
             if ($this.parents('.form-group').hasClass('form-float')) {
-                if ($this.val() == '') { $this.parents('.form-line').removeClass('focused'); }
+                if ($this.val() == '') {
+                    $this.parents('.form-line').removeClass('focused');
+                }
             }
             else {
                 $this.parents('.form-line').removeClass('focused');
@@ -288,7 +302,7 @@ $.AdminBSB.input = {
             }
         });
     }
-}
+};
 //==========================================================================================================================
 
 /* Form - Select - Function ================================================================================================
@@ -297,9 +311,11 @@ $.AdminBSB.input = {
 */
 $.AdminBSB.select = {
     activate: function () {
-        if ($.fn.selectpicker) { $('select:not(.ms)').selectpicker(); }
+        if ($.fn.selectpicker) {
+            $('select:not(.ms)').selectpicker();
+        }
     }
-}
+};
 //==========================================================================================================================
 
 /* DropdownMenu - Function =================================================================================================
@@ -319,7 +335,8 @@ $.AdminBSB.dropdownMenu = {
             "shown.bs.dropdown": function () {
                 var dropdown = _this.dropdownEffect(this);
                 if (dropdown.effectIn && dropdown.effectOut) {
-                    _this.dropdownEffectEnd(dropdown, function () { });
+                    _this.dropdownEffectEnd(dropdown, function () {
+                    });
                 }
             },
             "hide.bs.dropdown": function (e) {
@@ -345,8 +362,12 @@ $.AdminBSB.dropdownMenu = {
         if (dropdown.length > 0) {
             var udEffectIn = dropdown.data('effect-in');
             var udEffectOut = dropdown.data('effect-out');
-            if (udEffectIn !== undefined) { effectIn = udEffectIn; }
-            if (udEffectOut !== undefined) { effectOut = udEffectOut; }
+            if (udEffectIn !== undefined) {
+                effectIn = udEffectIn;
+            }
+            if (udEffectOut !== undefined) {
+                effectOut = udEffectOut;
+            }
         }
 
         return {
@@ -377,7 +398,7 @@ $.AdminBSB.dropdownMenu = {
             }
         });
     }
-}
+};
 //==========================================================================================================================
 
 /* Browser - Function ======================================================================================================
@@ -441,7 +462,7 @@ $.AdminBSB.browser = {
             return '';
         }
     }
-}
+};
 //==========================================================================================================================
 
 $(function () {
@@ -454,5 +475,7 @@ $(function () {
     $.AdminBSB.select.activate();
     $.AdminBSB.search.activate();
 
-    setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+    setTimeout(function () {
+        $('.page-loader-wrapper').fadeOut();
+    }, 50);
 });

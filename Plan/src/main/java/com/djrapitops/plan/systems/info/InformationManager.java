@@ -86,5 +86,5 @@ public abstract class InformationManager {
 
     public abstract void updateNetworkPageContent();
 
-    public abstract TreeMap<String,List<String>> getErrors() throws IOException;
+    public abstract TreeMap<String, List<String>> getErrors() throws IOException;
 }

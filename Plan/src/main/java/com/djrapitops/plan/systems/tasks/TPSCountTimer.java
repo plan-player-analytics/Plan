@@ -27,10 +27,8 @@ public class TPSCountTimer extends AbsRunnable {
 
     private final IPlan plugin;
     private final List<TPS> history;
-    private long lastCheckNano;
-
     private final boolean usingBungee;
-
+    private long lastCheckNano;
     private int latestPlayersOnline = 0;
 
     public TPSCountTimer(IPlan plugin) {

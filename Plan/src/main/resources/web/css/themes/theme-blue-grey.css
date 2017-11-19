@@ -1,45 +1,72 @@
 ﻿.theme-blue-grey .navbar {
-  background-color: #607D8B; }
+    background-color: #607D8B;
+}
 
 .theme-blue-grey .navbar-brand {
-  color: #fff; }
-  .theme-blue-grey .navbar-brand:hover {
-    color: #fff; }
-  .theme-blue-grey .navbar-brand:active {
-    color: #fff; }
-  .theme-blue-grey .navbar-brand:focus {
-    color: #fff; }
+    color: #fff;
+}
+
+.theme-blue-grey .navbar-brand:hover {
+    color: #fff;
+}
+
+.theme-blue-grey .navbar-brand:active {
+    color: #fff;
+}
+
+.theme-blue-grey .navbar-brand:focus {
+    color: #fff;
+}
 
 .theme-blue-grey .nav > li > a {
-  color: #fff; }
-  .theme-blue-grey .nav > li > a:hover {
-    background-color: transparent; }
-  .theme-blue-grey .nav > li > a:focus {
-    background-color: transparent; }
+    color: #fff;
+}
+
+.theme-blue-grey .nav > li > a:hover {
+    background-color: transparent;
+}
+
+.theme-blue-grey .nav > li > a:focus {
+    background-color: transparent;
+}
 
 .theme-blue-grey .nav .open > a {
-  background-color: transparent; }
-  .theme-blue-grey .nav .open > a:hover {
-    background-color: transparent; }
-  .theme-blue-grey .nav .open > a:focus {
-    background-color: transparent; }
+    background-color: transparent;
+}
+
+.theme-blue-grey .nav .open > a:hover {
+    background-color: transparent;
+}
+
+.theme-blue-grey .nav .open > a:focus {
+    background-color: transparent;
+}
 
 .theme-blue-grey .bars {
-  color: #fff; }
+    color: #fff;
+}
 
 .theme-blue-grey .sidebar .menu .list li.active {
-  background-color: transparent; }
-  .theme-blue-grey .sidebar .menu .list li.active > :first-child i, .theme-blue-grey .sidebar .menu .list li.active > :first-child span {
-    color: #607D8B; }
+    background-color: transparent;
+}
+
+.theme-blue-grey .sidebar .menu .list li.active > :first-child i, .theme-blue-grey .sidebar .menu .list li.active > :first-child span {
+    color: #607D8B;
+}
 
 .theme-blue-grey .sidebar .menu .list .toggled {
-  background-color: transparent; }
+    background-color: transparent;
+}
 
 .theme-blue-grey .sidebar .menu .list .ml-menu {
-  background-color: transparent; }
+    background-color: transparent;
+}
 
 .theme-blue-grey .sidebar .legal {
-  background-color: #fff; }
-  .theme-blue-grey .sidebar .legal .copyright a {
-    color: #607D8B !important; }
+    background-color: #fff;
+}
+
+.theme-blue-grey .sidebar .legal .copyright a {
+    color: #607D8B !important;
+}
 

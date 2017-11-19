@@ -28,9 +28,9 @@ import java.util.UUID;
 public class BukkitServerInfoManager {
 
     private final Plan plugin;
+    private final ServerTable serverTable;
     private ServerInfo serverInfo;
     private ServerInfoFile serverInfoFile;
-    private final ServerTable serverTable;
 
     public BukkitServerInfoManager(Plan plugin) throws PlanEnableException {
         this.plugin = plugin;

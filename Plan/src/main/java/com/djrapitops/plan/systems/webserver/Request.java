@@ -19,11 +19,10 @@ import java.util.List;
  * @author Rsl1122
  */
 public class Request {
-    private String auth;
     private final String requestMethod;
     private final String target;
-
     private final HttpExchange exchange;
+    private String auth;
 
     public Request(HttpExchange exchange) {
         this.requestMethod = exchange.getRequestMethod();

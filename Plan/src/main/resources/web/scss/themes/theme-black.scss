@@ -2,91 +2,91 @@
 
 .theme-black {
 
-    .navbar {
-        background-color: $theme-black;
+  .navbar {
+    background-color: $theme-black;
+  }
+
+  .navbar-brand {
+    color: $theme-black-navbar-brand;
+
+    &:hover {
+      color: $theme-black-navbar-brand_hover;
     }
 
-    .navbar-brand {
-        color: $theme-black-navbar-brand;
+    &:active {
+      color: $theme-black-navbar-brand_active;
+    }
+
+    &:focus {
+      color: $theme-black-navbar-brand_focus;
+    }
+  }
+
+  .nav {
+    > li {
+      > a {
+        color: $theme-black-nav-anchor;
 
         &:hover {
-            color: $theme-black-navbar-brand_hover;
-        }
-
-        &:active {
-            color: $theme-black-navbar-brand_active;
+          background-color: $theme-black-nav-anchor_hover;
         }
 
         &:focus {
-            color: $theme-black-navbar-brand_focus;
+          background-color: $theme-black-nav-anchor_focus;
         }
+      }
     }
 
-    .nav {
-        > li {
-            > a {
-                color: $theme-black-nav-anchor;
+    .open {
+      > a {
+        background-color: $theme-black-nav-anchor-opened;
 
-                &:hover {
-                    background-color: $theme-black-nav-anchor_hover;
-                }
-
-                &:focus {
-                    background-color: $theme-black-nav-anchor_focus;
-                }
-            }
+        &:hover {
+          background-color: $theme-black-nav-anchor-opened_hover;
         }
 
-        .open {
-            > a {
-                background-color: $theme-black-nav-anchor-opened;
-
-                &:hover {
-                    background-color: $theme-black-nav-anchor-opened_hover;
-                }
-
-                &:focus {
-                    background-color: $theme-black-nav-anchor-opened_focus;
-                }
-            }
+        &:focus {
+          background-color: $theme-black-nav-anchor-opened_focus;
         }
+      }
+    }
+  }
+
+  .bars {
+    color: $theme-black-bar;
+  }
+
+  .sidebar {
+    .menu {
+      .list {
+        li.active {
+          background-color: $theme-black-menu-list-active;
+
+          > :first-child {
+            i, span {
+              color: $theme-black;
+            }
+          }
+        }
+
+        .toggled {
+          background-color: $theme-black-menu-list-toggled;
+        }
+
+        .ml-menu {
+          background-color: $theme-black-menu-list-submenu;
+        }
+      }
     }
 
-    .bars {
-        color: $theme-black-bar;
-    }
+    .legal {
+      background-color: $theme-black-legal-bg;
 
-    .sidebar {
-        .menu {
-            .list {
-                li.active {
-                    background-color: $theme-black-menu-list-active;
-
-                    > :first-child {
-                        i, span {
-                            color: $theme-black;
-                        }
-                    }
-                }
-
-                .toggled {
-                    background-color: $theme-black-menu-list-toggled;
-                }
-
-                .ml-menu {
-                    background-color: $theme-black-menu-list-submenu;
-                }
-            }
+      .copyright {
+        a {
+          color: $theme-black !important;
         }
-
-        .legal {
-            background-color: $theme-black-legal-bg;
-
-            .copyright {
-                a {
-                    color: $theme-black !important;
-                }
-            }
-        }
+      }
     }
+  }
 }
