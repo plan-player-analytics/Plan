@@ -1036,16 +1036,16 @@
   margin-bottom: -5px; }
 
 .m-l-0 {
-  margin-left: 0px; }
+  margin-left: 0; }
 
 .m-t-0 {
-  margin-top: 0px; }
+  margin-top: 0; }
 
 .m-r-0 {
-  margin-right: 0px; }
+  margin-right: 0; }
 
 .m-b-0 {
-  margin-bottom: 0px; }
+  margin-bottom: 0; }
 
 .m-l-5 {
   margin-left: 5px; }
@@ -1351,16 +1351,16 @@
   margin: 0; }
 
 .p-l-0 {
-  padding-left: 0px; }
+  padding-left: 0; }
 
 .p-t-0 {
-  padding-top: 0px; }
+  padding-top: 0; }
 
 .p-r-0 {
-  padding-right: 0px; }
+  padding-right: 0; }
 
 .p-b-0 {
-  padding-bottom: 0px; }
+  padding-bottom: 0; }
 
 .p-l-5 {
   padding-left: 5px; }
@@ -2480,7 +2480,7 @@ section.content {
   .btn-circle-lg i {
     font-size: 26px !important;
     position: relative !important;
-    left: 0px !important;
+    left: 0 !important;
     top: 6px !important; }
 
 .btn:not(.btn-link):not(.btn-circle) {
@@ -7658,7 +7658,7 @@ fieldset[disabled] .form-control {
             font-size: 21px;
             height: 20px;
             top: -5px;
-            right: 0px; }
+            right: 0; }
         .sidebar .menu .list .ml-menu li .ml-menu li a {
           padding-left: 80px; }
         .sidebar .menu .list .ml-menu li .ml-menu .ml-menu li a {

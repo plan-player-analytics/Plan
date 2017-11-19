@@ -209,11 +209,10 @@ form p:last-child {
   left: -5px;
   width: 12px;
   height: 22px;
-  border-top: 2px solid transparent;
-  border-left: 2px solid transparent;
-  border-right: 2px solid #26a69a;
-  border-bottom: 2px solid #26a69a;
-  -webkit-transform: rotate(40deg);
+    border: 2px solid transparent;
+    border-right-color: #26a69a;
+    border-bottom-color: #26a69a;
+    -webkit-transform: rotate(40deg);
           transform: rotate(40deg);
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
@@ -280,7 +279,7 @@ form p:last-child {
   width: 20px;
   background-color: transparent;
   border: 2px solid #5a5a5a;
-  top: 0px;
+  top: 0;
   z-index: 0;
 }
 

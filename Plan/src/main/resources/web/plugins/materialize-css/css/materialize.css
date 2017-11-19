@@ -4715,7 +4715,7 @@ small {
 @media only screen and (max-width: 600px) {
   #toast-container {
     min-width: 100%;
-    bottom: 0%;
+    bottom: 0;
   }
 }
 
@@ -4881,8 +4881,8 @@ small {
   border-radius: 0 0 50% 50%;
   background-color: #323232;
   z-index: -1;
-  -webkit-transform-origin: 50% 0%;
-          transform-origin: 50% 0%;
+  -webkit-transform-origin: 50% 0;
+          transform-origin: 50% 0;
   -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
 }
@@ -5579,7 +5579,7 @@ button.btn-floating {
   bottom: 0;
   width: 100%;
   text-align: center;
-  padding: 0% 15%;
+  padding: 0 15%;
   height: 50px;
   z-index: 1000;
   -webkit-font-smoothing: antialiased;
@@ -6322,7 +6322,7 @@ form p:last-child {
   width: 20px;
   background-color: transparent;
   border: 2px solid #5a5a5a;
-  top: 0px;
+  top: 0;
   z-index: 0;
 }
 
@@ -7638,8 +7638,8 @@ input[type=range]:focus::-ms-fill-upper {
           perspective: 500px;
   -webkit-transform-style: preserve-3d;
           transform-style: preserve-3d;
-  -webkit-transform-origin: 0% 50%;
-          transform-origin: 0% 50%;
+  -webkit-transform-origin: 0 50%;
+          transform-origin: 0 50%;
 }
 
 .carousel.carousel-slider {

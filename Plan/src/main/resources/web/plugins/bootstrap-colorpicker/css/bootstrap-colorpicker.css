@@ -173,7 +173,7 @@
   height: 15px;
   float: left;
   cursor: col-resize;
-  margin-left: 0px;
+  margin-left: 0;
   margin-bottom: 4px;
 }
 .colorpicker.colorpicker-horizontal .colorpicker-hue i,
@@ -186,7 +186,7 @@
   left: 0;
   width: 1px;
   border: none;
-  margin-top: 0px;
+  margin-top: 0;
 }
 .colorpicker.colorpicker-horizontal .colorpicker-hue {
   background-image: url("../img/bootstrap-colorpicker/hue-horizontal.png");

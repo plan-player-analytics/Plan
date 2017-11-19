@@ -22,8 +22,6 @@ import main.java.com.djrapitops.plan.utilities.Condition;
  */
 public class ManageImportCommand extends SubCommand {
 
-    private final Plan plugin;
-
     /**
      * Class Constructor.
      *
@@ -35,9 +33,6 @@ public class ManageImportCommand extends SubCommand {
                 Permissions.MANAGE.getPermission(),
                 Locale.get(Msg.CMD_USG_MANAGE_IMPORT).toString(),
                 "<plugin>/list [import args]");
-
-        this.plugin = plugin;
-
     }
 
     @Override
