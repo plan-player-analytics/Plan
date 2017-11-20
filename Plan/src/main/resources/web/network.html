@@ -345,7 +345,7 @@
 
         var navButtons = document.getElementsByClassName("nav-button");
         var tabs = document.getElementsByClassName("tab");
-        var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
+        var slideIndex = window.sessionStorage.getItem("NetworkSlideIndex");
         if (slideIndex === null) {
             slideIndex = 0;
         }
@@ -384,7 +384,7 @@
                 if (slideIndex < 0) {
                     slideIndex = max
                 }
-                window.sessionStorage.setItem("AnalysisSlideIndex", slideIndex);
+                window.sessionStorage.setItem("NetworkSlideIndex", slideIndex);
                 var value = slideIndex * percent;
                 x.style.transition = "0.5s";
                 x.style.transform = "translate3d(" + value + "%,0px,0)";
