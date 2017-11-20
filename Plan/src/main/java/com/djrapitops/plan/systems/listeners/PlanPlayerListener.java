@@ -102,7 +102,7 @@ public class PlanPlayerListener implements Listener {
         cache.cacheSession(uuid, Session.start(time, world, gm));
         plugin.addToProcessQueue(
                 new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
-                        new IPUpdateProcessor(uuid, ip),
+                        new IPUpdateProcessor(uuid, ip, time),
                         new NameProcessor(uuid, playerName, displayName)
                 ),
                 new NetworkPageUpdateProcessor(plugin.getInfoManager())

@@ -40,13 +40,12 @@ public class GeoInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GeoInfo geoInfo = (GeoInfo) o;
-        return lastUsed == geoInfo.lastUsed &&
-                Objects.equal(ip, geoInfo.ip) &&
+        return Objects.equal(ip, geoInfo.ip) &&
                 Objects.equal(geolocation, geoInfo.geolocation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(ip, geolocation, lastUsed);
+        return Objects.hashCode(ip, geolocation);
     }
 }

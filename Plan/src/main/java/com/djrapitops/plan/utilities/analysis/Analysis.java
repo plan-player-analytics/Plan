@@ -293,8 +293,8 @@ public class Analysis {
                 joinInfo.addSessions(sessions);
             }
 
-            Map<UUID, List<String>> geolocations = db.getIpsTable().getAllGeolocations();
-            geolocPart.addGeoLocations(geolocations);
+            Map<UUID, List<GeoInfo>> geolocations = db.getIpsTable().getAllGeoInfo();
+//            geolocPart.addGeoLocations(geolocations);
 
             analysisData.setPlayersTable(PlayersTableCreator.createTable(userInfo, joinInfo, geolocPart));
 

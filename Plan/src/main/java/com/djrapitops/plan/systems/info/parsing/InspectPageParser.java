@@ -88,13 +88,13 @@ public class InspectPageParser extends PageParser {
             addValue("gmPieColors", Settings.THEME_GRAPH_GM_PIE.toString());
             addValue("serverPieColors", Settings.THEME_GRAPH_SERVER_PREF_PIE.toString());
 
-            List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
+//            List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
             List<String> nicknames = db.getNicknamesTable().getNicknames(uuid).stream()
                     .map(HtmlUtils::swapColorsToSpan)
                     .collect(Collectors.toList());
 
             addValue("nicknames", HtmlStructure.createDotList(nicknames.toArray(new String[nicknames.size()])));
-            addValue("geolocations", HtmlStructure.createDotList(geolocations.toArray(new String[geolocations.size()])));
+//            addValue("geolocations", HtmlStructure.createDotList(geolocations.toArray(new String[geolocations.size()])));
 
             Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
             List<Session> allSessions = sessions.values().stream()

@@ -116,7 +116,7 @@ public abstract class SQLDB extends Database {
 
             if (newDatabase) {
                 Log.info("New Database created.");
-                setVersion(12);
+                setVersion(13);
             }
 
             int version = getVersion();
@@ -142,6 +142,10 @@ public abstract class SQLDB extends Database {
                 actionsTable.alterTableV12();
                 ipsTable.alterTableV12();
                 setVersion(12);
+            }
+            if (version < 13) {
+                ipsTable.alterTableV13();
+                setVersion(13);
             }
         } catch (SQLException e) {
             throw new DatabaseInitException("Failed to set-up Database", e);
@@ -249,8 +253,7 @@ public abstract class SQLDB extends Database {
 
         profile.setActions(actionsTable.getActions(uuid));
         profile.setNicknames(nicknamesTable.getAllNicknames(uuid));
-
-        // TODO Add IPs as GeoInfo, requires IPTable changes
+        profile.setGeoInformation(ipsTable.getGeoInfo(uuid));
 
         Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
         profile.setSessions(sessions);
