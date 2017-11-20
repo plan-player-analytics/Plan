@@ -1,6 +1,9 @@
 package main.java.com.djrapitops.plan.utilities.html.graphs;
 
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
+
 import java.util.Map;
+import java.util.UUID;
 
 public class ServerPreferencePieCreator {
 
@@ -8,14 +11,14 @@ public class ServerPreferencePieCreator {
         throw new IllegalStateException("Utility Class");
     }
 
-    public static String createSeriesData(Map<String, Long> serverPlaytimes) {
+    public static String createSeriesData(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
         StringBuilder seriesBuilder = new StringBuilder("[");
         int i = 0;
-        int size = serverPlaytimes.size();
-        for (Map.Entry<String, Long> server : serverPlaytimes.entrySet()) {
-            String serverName = server.getKey();
+        int size = serverWorldTimes.size();
+        for (Map.Entry<UUID, WorldTimes> server : serverWorldTimes.entrySet()) {
+            String serverName = serverNames.getOrDefault(server.getKey(), "Unknown");
             seriesBuilder.append("{name:'").append(serverName)
-                    .append("',y:").append(server.getValue());
+                    .append("',y:").append(server.getValue().getTotal());
 
             seriesBuilder.append("}");
             if (i < size - 1) {

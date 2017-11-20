@@ -156,7 +156,7 @@ public class PlayerProfile implements OfflinePlayer {
         if (longestSession.isPresent()) {
             return longestSession.getAsLong();
         }
-        return 0L;
+        return -1;
     }
 
     public long getSessionMedian() {

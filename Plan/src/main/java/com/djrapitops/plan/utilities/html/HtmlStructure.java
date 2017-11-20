@@ -58,6 +58,7 @@ public class HtmlStructure {
         return builder.toString();
     }
 
+    @Deprecated
     public static String createServerOverviewColumn(Map<String, List<Session>> sessions) {
         StringBuilder builder = new StringBuilder("<div class=\"column\">");
         if (Verify.isEmpty(sessions)) {
@@ -91,6 +92,7 @@ public class HtmlStructure {
         return builder.toString();
     }
 
+    @Deprecated
     public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
         Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
         map.put(uuid, sessions);

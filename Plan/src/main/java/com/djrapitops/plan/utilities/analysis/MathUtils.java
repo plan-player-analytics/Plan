@@ -95,6 +95,9 @@ public class MathUtils {
      * @see #average(int, int)
      */
     public static long averageLong(long total, long size) {
+        if (size == 0) {
+            return -1L;
+        }
         return total / size;
     }
 
