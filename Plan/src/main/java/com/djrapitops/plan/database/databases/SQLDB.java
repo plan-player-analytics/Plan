@@ -256,7 +256,6 @@ public abstract class SQLDB extends Database {
         profile.setSessions(sessions);
         profile.setTotalWorldTimes(worldTimesTable.getWorldTimesOfUser(uuid));
 
-
         return null;
     }
 

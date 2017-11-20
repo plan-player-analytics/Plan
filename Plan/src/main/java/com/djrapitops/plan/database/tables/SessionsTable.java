@@ -286,7 +286,7 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public Map<String, Long> getPlaytimeByServer(UUID uuid, long afterDate) throws SQLException {
-        Map<Integer, String> serverNames = serverTable.getServerNames();
+        Map<Integer, String> serverNames = serverTable.getServerNamesByID();
         String sql = "SELECT " +
                 "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime, " +
                 columnServerID +

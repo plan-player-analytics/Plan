@@ -96,16 +96,16 @@ public class InspectPageParser extends PageParser {
             addValue("nicknames", HtmlStructure.createDotList(nicknames.toArray(new String[nicknames.size()])));
             addValue("geolocations", HtmlStructure.createDotList(geolocations.toArray(new String[geolocations.size()])));
 
-            Map<String, List<Session>> sessions = sessionsTable.getSessions(uuid);
+            Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
             List<Session> allSessions = sessions.values().stream()
                     .flatMap(Collection::stream)
                     .sorted(new SessionStartComparator()) // Sorted Newest first.
                     .collect(Collectors.toList());
 
-            String[] sessionsTabContent = HtmlStructure.createSessionsTabContentInspectPage(sessions, allSessions, uuid);
-            addValue("contentSessions", sessionsTabContent[0]);
-            addValue("sessionTabGraphViewFunctions", sessionsTabContent[1]);
-            addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessions));
+//            String[] sessionsTabContent = HtmlStructure.createSessionsTabContentInspectPage(sessions, allSessions, uuid);
+//            addValue("contentSessions", sessionsTabContent[0]);
+//            addValue("sessionTabGraphViewFunctions", sessionsTabContent[1]);
+//            addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessions));
 
             long now = MiscUtils.getTime();
 

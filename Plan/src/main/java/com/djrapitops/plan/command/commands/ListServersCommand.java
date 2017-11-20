@@ -45,7 +45,7 @@ public class ListServersCommand extends SubCommand {
         String tCol = colorScheme.getTertiaryColor();
         try {
             sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString() + mCol + " Servers");
-            Map<Integer, String> serverNames = plugin.getDB().getServerTable().getServerNames();
+            Map<Integer, String> serverNames = plugin.getDB().getServerTable().getServerNamesByID();
             for (Map.Entry<Integer, String> entry : serverNames.entrySet()) {
                 sender.sendMessage("  " + tCol + entry.getKey() + sCol + " : " + entry.getValue());
             }

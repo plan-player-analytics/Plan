@@ -416,14 +416,12 @@ public class DatabaseTest {
 
         commitTest();
 
-        Map<String, List<Session>> sessions = sessionsTable.getSessions(uuid);
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
 
-        for (Map.Entry<String, List<Session>> entry : sessions.entrySet()) {
-            String key = entry.getKey();
+        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
+            UUID key = entry.getKey();
             if (key == null) {
                 System.out.print("null");
-            } else if (key.isEmpty()) {
-                System.out.print("empty");
             } else {
                 System.out.print(key);
             }
