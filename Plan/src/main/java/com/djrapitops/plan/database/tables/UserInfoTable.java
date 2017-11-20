@@ -127,11 +127,13 @@ public class UserInfoTable extends UserIDTable {
     public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) throws SQLException {
         String usersIDColumn = usersTable + "." + usersTable.getColumnID();
         String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+        String usersNameColumn = usersTable + "." + usersTable.getColumnName() + " as name";
         String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
         String sql = "SELECT " +
                 tableName + "." + columnRegistered + ", " +
                 columnBanned + ", " +
                 columnOP + ", " +
+                usersNameColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
                 " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +

@@ -100,10 +100,10 @@ public class TestInit {
         //  Files
         File config = new File(getClass().getResource("/config.yml").getPath());
         when(planMock.getResource("config.yml")).thenReturn(new FileInputStream(config));
-        File analysis = new File(getClass().getResource("/server.html").getPath());
-        when(planMock.getResource("server.html")).thenReturn(new FileInputStream(analysis));
-        File player = new File(getClass().getResource("/player.html").getPath());
-        when(planMock.getResource("player.html")).thenReturn(new FileInputStream(player));
+        File analysis = new File(getClass().getResource("/web/server.html").getPath());
+        when(planMock.getResource("/web/server.html")).thenReturn(new FileInputStream(analysis));
+        File player = new File(getClass().getResource("/web/player.html").getPath());
+        when(planMock.getResource("/web/player.html")).thenReturn(new FileInputStream(player));
 
         File tempConfigFile = new File(planMock.getDataFolder(), "config.yml");
         Config iConfig = new Config(tempConfigFile, FileUtil.lines(planMock, "config.yml")) {

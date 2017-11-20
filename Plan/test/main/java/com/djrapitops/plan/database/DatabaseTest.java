@@ -428,11 +428,11 @@ public class DatabaseTest {
             System.out.println(" " + entry.getValue());
         }
 
-        List<Session> savedSessions = sessions.get("ServerName");
+        List<Session> savedSessions = sessions.get(Plan.getServerUUID());
 
         assertNotNull(savedSessions);
         assertEquals(1, savedSessions.size());
-        assertNull(sessions.get(worlds.get(1)));
+        assertNull(sessions.get(UUID.randomUUID()));
 
         assertEquals(session, savedSessions.get(0));
 
