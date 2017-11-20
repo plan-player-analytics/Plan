@@ -257,6 +257,7 @@ public abstract class SQLDB extends Database {
 
         Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
         profile.setSessions(sessions);
+        profile.calculateWorldTimesPerServer();
         profile.setTotalWorldTimes(worldTimesTable.getWorldTimesOfUser(uuid));
 
         return profile;

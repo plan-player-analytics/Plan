@@ -107,7 +107,7 @@ public class PlayerProfile implements OfflinePlayer {
         UUID maxServer = null;
         for (Map.Entry<UUID, WorldTimes> entry : getWorldTimesPerServer().entrySet()) {
             long playTime = entry.getValue().getTotal();
-            if (playTime < max) {
+            if (playTime > max) {
                 max = playTime;
                 maxServer = entry.getKey();
             }
@@ -498,5 +498,24 @@ public class PlayerProfile implements OfflinePlayer {
     @Override
     public void setOp(boolean b) {
         /* Do nothing */
+    }
+
+    public void calculateWorldTimesPerServer() {
+        if (worldTimesMap.containsKey(MiscUtils.getIPlan().getServerUuid())) {
+            return;
+        }
+
+        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
+            UUID serverUUID = entry.getKey();
+            List<Session> sessions = entry.getValue();
+
+            WorldTimes times = worldTimesMap.getOrDefault(serverUUID, new WorldTimes(new HashMap<>()));
+            for (Session session : sessions) {
+                WorldTimes worldTimes = session.getWorldTimes();
+                times.add(worldTimes);
+            }
+            worldTimesMap.put(serverUUID, times);
+        }
+
     }
 }

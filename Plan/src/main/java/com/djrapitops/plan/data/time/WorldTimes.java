@@ -158,4 +158,18 @@ public class WorldTimes {
     public String getCurrentWorld() {
         return currentWorld;
     }
+
+    public void add(WorldTimes toAdd) {
+        Map<String, GMTimes> times = toAdd.getWorldTimes();
+        for (Map.Entry<String, GMTimes> entry : times.entrySet()) {
+            String worldName = entry.getKey();
+            GMTimes gmTimes = entry.getValue();
+
+            GMTimes currentGMTimes = getGMTimes(worldName);
+            for (String gm : GMTimes.getGMKeyArray()) {
+                currentGMTimes.addTime(gm, gmTimes.getTime(gm));
+            }
+            worldTimes.put(worldName, currentGMTimes);
+        }
+    }
 }
