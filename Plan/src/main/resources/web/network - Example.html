@@ -72,7 +72,7 @@
             <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse"
                data-target="#navbar-collapse" aria-expanded="false"></a>
             <a href="javascript:void(0);" class="bars"></a>
-            <a class="navbar-brand">${networkName} | Network</a>
+            <a class="navbar-brand">Plan | Network</a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -110,7 +110,7 @@
         <!-- Footer -->
         <div class="legal">
             <div class="version">
-                <b>Player Analytics: </b> v${version}
+                <b>Player Analytics: </b> v4.1.0
             </div>
         </div>
         <!-- #Footer -->
@@ -286,7 +286,133 @@
             </div>
             <!-- #END# Tab Overview -->
             <div id="tab-servers" class="tab">
-                ${tabContentServers}
+                <div class="row clearfix">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <h2><i class="col-light-green fa fa-server"></i> Server 1</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div id="playerChartServer1" style="height: 200px;"></div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <p><i class="fa fa-users"></i> Registered Players <span
+                                                    class="pull-right">1234</span></p>
+                                            <p><i class="col-blue fa fa-user"></i> Players Online <span
+                                                    class="pull-right">5 / 100</span></p>
+                                            <p><i class="col-deep-orange fa fa-compass"></i> Type <span
+                                                    class="pull-right">Spigot 1.12.1</span>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p><i class="fa fa-clock-o"></i> Last Refresh<span
+                                                    class="pull-right"><b>12:42</b></span>
+                                            </p>
+                                            <br>
+                                            <button href="#" type="button" class="pull-right btn bg-light-green waves-effect">
+                                                <i class="material-icons">trending_up</i>
+                                                <span>ANALYSIS</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <h2><i class="col-light-green fa fa-server"></i> Server 2</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div id="playerChartServer2" style="height: 200px;"></div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <p><i class="fa fa-users"></i> Registered Players <span
+                                                    class="pull-right">1234</span></p>
+                                            <p><i class="col-blue fa fa-user"></i> Players Online <span
+                                                    class="pull-right">5 / 100</span></p>
+                                            <p><i class="col-deep-orange fa fa-compass"></i> Type <span
+                                                    class="pull-right">PaperSpigot 1.12.1</span>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p><i class="fa fa-clock-o"></i> Last Refresh<span
+                                                    class="pull-right"><b>13:53</b></span>
+                                            </p>
+                                            <br>
+                                            <button href="#" type="button" class="pull-right btn bg-light-green waves-effect">
+                                                <i class="material-icons">trending_up</i>
+                                                <span>ANALYSIS</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <h2><i class="col-light-green fa fa-server"></i> Server 3</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div id="playerChartServer3" style="height: 200px;"></div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <p><i class="fa fa-users"></i> Registered Players <span
+                                                    class="pull-right">1234</span></p>
+                                            <p><i class="col-blue fa fa-user"></i> Players Online <span
+                                                    class="pull-right">5 / 100</span></p>
+                                            <p><i class="col-deep-orange fa fa-compass"></i> Type <span
+                                                    class="pull-right">Spigot 1.12.1</span>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p><i class="fa fa-clock-o"></i> Last Refresh<span
+                                                    class="pull-right"><b>12:42</b></span>
+                                            </p>
+                                            <br>
+                                            <button href="#" type="button" class="pull-right btn bg-light-green waves-effect">
+                                                <i class="material-icons">trending_up</i>
+                                                <span>ANALYSIS</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- #END# Tab Servers -->
         </div>
