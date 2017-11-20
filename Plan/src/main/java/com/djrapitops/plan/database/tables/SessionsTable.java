@@ -151,44 +151,44 @@ public class SessionsTable extends UserIDTable {
      * @return Map with Sessions that don't contain Kills or WorldTimes.
      * @throws SQLException DB Error
      */
-    private Map<String, List<Session>> getSessionInformation(UUID uuid) throws SQLException {
-        Map<Integer, String> serverNames = serverTable.getServerNames();
+    private Map<UUID, List<Session>> getSessionInformation(UUID uuid) throws SQLException {
+        Map<Integer, UUID> serverUUIDs = serverTable.getServerUuids();
         String sql = Select.from(tableName, "*")
                 .where(columnUserID + "=" + usersTable.statementSelectID)
                 .toString();
 
-        return query(new QueryStatement<Map<String, List<Session>>>(sql, 10000) {
+        return query(new QueryStatement<Map<UUID, List<Session>>>(sql, 10000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
             }
 
             @Override
-            public Map<String, List<Session>> processResults(ResultSet set) throws SQLException {
-                Map<String, List<Session>> sessionsByServer = new HashMap<>();
+            public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<Session>> sessionsByServer = new HashMap<>();
                 while (set.next()) {
                     int id = set.getInt(columnID);
                     long start = set.getLong(columnSessionStart);
                     long end = set.getLong(columnSessionEnd);
-                    String serverName = serverNames.get(set.getInt(columnServerID));
+                    UUID serverUUID = serverUUIDs.get(set.getInt(columnServerID));
 
-                    if (serverName == null) {
+                    if (serverUUID == null) {
                         throw new IllegalStateException("Server not present");
                     }
 
                     int deaths = set.getInt(columnDeaths);
                     int mobKills = set.getInt(columnMobKills);
-                    List<Session> sessions = sessionsByServer.getOrDefault(serverName, new ArrayList<>());
+                    List<Session> sessions = sessionsByServer.getOrDefault(serverUUID, new ArrayList<>());
                     sessions.add(new Session(id, start, end, mobKills, deaths));
-                    sessionsByServer.put(serverName, sessions);
+                    sessionsByServer.put(serverUUID, sessions);
                 }
                 return sessionsByServer;
             }
         });
     }
 
-    public Map<String, List<Session>> getSessions(UUID uuid) throws SQLException {
-        Map<String, List<Session>> sessions = getSessionInformation(uuid);
+    public Map<UUID, List<Session>> getSessions(UUID uuid) throws SQLException {
+        Map<UUID, List<Session>> sessions = getSessionInformation(uuid);
         Map<Integer, Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toMap(Session::getSessionID, Function.identity()));
 
         db.getKillsTable().addKillsToSessions(uuid, allSessions);

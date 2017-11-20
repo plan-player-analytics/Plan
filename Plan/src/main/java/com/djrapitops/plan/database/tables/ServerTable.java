@@ -193,7 +193,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public Map<Integer, String> getServerNames() throws SQLException {
+    public Map<Integer, String> getServerNamesByID() throws SQLException {
         String sql = Select.from(tableName,
                 columnServerID, columnServerName)
                 .toString();
@@ -207,6 +207,42 @@ public class ServerTable extends Table {
                     names.put(id, set.getString(columnServerName));
                 }
                 return names;
+            }
+        });
+    }
+
+    public Map<UUID, String> getServerNames() throws SQLException {
+        String sql = Select.from(tableName,
+                columnServerUUID, columnServerName)
+                .toString();
+
+        return query(new QueryAllStatement<Map<UUID, String>>(sql) {
+            @Override
+            public Map<UUID, String> processResults(ResultSet set) throws SQLException {
+                Map<UUID, String> names = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString(columnServerUUID));
+                    names.put(serverUUID, set.getString(columnServerName));
+                }
+                return names;
+            }
+        });
+    }
+
+    public Map<Integer, UUID> getServerUuids() throws SQLException {
+        String sql = Select.from(tableName,
+                columnServerID, columnServerUUID)
+                .toString();
+
+        return query(new QueryAllStatement<Map<Integer, UUID>>(sql) {
+            @Override
+            public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
+                Map<Integer, UUID> uuids = new HashMap<>();
+                while (set.next()) {
+                    int id = set.getInt(columnServerID);
+                    uuids.put(id, UUID.fromString(set.getString(columnServerUUID)));
+                }
+                return uuids;
             }
         });
     }

@@ -8,6 +8,9 @@ import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import main.java.com.djrapitops.plan.data.PlayerProfile;
+import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.database.tables.move.Version8TransferTable;
@@ -15,6 +18,9 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -156,7 +162,7 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     * Get all tables in a good order.
+     * Get all tables in a create order.
      *
      * @return Table array.
      */
@@ -220,6 +226,53 @@ public abstract class SQLDB extends Database {
     @Override
     public boolean isNewDatabase() throws SQLException {
         return versionTable.isNewDatabase();
+    }
+
+    @Override
+    public PlayerProfile getPlayerProfile(UUID uuid) throws SQLException {
+        if (!wasSeenBefore(uuid)) {
+            return null;
+        }
+
+        String playerName = usersTable.getPlayerName(uuid);
+        Optional<Long> registerDate = usersTable.getRegisterDate(uuid);
+
+        if (!registerDate.isPresent()) {
+            throw new IllegalStateException("User has been saved with null register date to a NOT NULL column");
+        }
+
+        PlayerProfile profile = new PlayerProfile(uuid, playerName, registerDate.get());
+        profile.setTimesKicked(usersTable.getTimesKicked(uuid));
+
+        Map<UUID, UserInfo> userInfo = userInfoTable.getAllUserInfo(uuid);
+        addUserInfoToProfile(profile, userInfo);
+
+        profile.setActions(actionsTable.getActions(uuid));
+        profile.setNicknames(nicknamesTable.getAllNicknames(uuid));
+
+        // TODO Add IPs as GeoInfo, requires IPTable changes
+
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
+        profile.setSessions(sessions);
+        profile.setTotalWorldTimes(worldTimesTable.getWorldTimesOfUser(uuid));
+
+
+        return null;
+    }
+
+    private void addUserInfoToProfile(PlayerProfile profile, Map<UUID, UserInfo> userInfo) {
+        for (Map.Entry<UUID, UserInfo> entry : userInfo.entrySet()) {
+            UUID serverUUID = entry.getKey();
+            UserInfo info = entry.getValue();
+
+            profile.setRegistered(serverUUID, info.getRegistered());
+            if (info.isBanned()) {
+                profile.bannedOnServer(serverUUID);
+            }
+            if (info.isOpped()) {
+                profile.oppedOnServer(serverUUID);
+            }
+        }
     }
 
     @Override

@@ -36,6 +36,7 @@ public class PlayerProfile implements OfflinePlayer {
     private Map<UUID, Long> registeredMap;
     private Set<UUID> bannedOnServers;
     private Set<UUID> oppedOnServers;
+    private int timesKicked;
 
     // Activity related information
     private Map<UUID, List<Session>> sessions;
@@ -310,6 +311,10 @@ public class PlayerProfile implements OfflinePlayer {
         this.sessions.put(serverUUID, sessions);
     }
 
+    public void setSessions(Map<UUID, List<Session>> sessions) {
+        this.sessions.putAll(sessions);
+    }
+
     public void addActiveSession(Session activeSession) {
         UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
         List<Session> sessions = getSessions(serverUUID);
@@ -355,7 +360,15 @@ public class PlayerProfile implements OfflinePlayer {
         this.geoInformation = geoInformation;
     }
 
+    public void setTimesKicked(int timesKicked) {
+        this.timesKicked = timesKicked;
+    }
+
     // Default Getters
+
+    public int getTimesKicked() {
+        return timesKicked;
+    }
 
     public List<String> getNicknames() {
         return nicknames;

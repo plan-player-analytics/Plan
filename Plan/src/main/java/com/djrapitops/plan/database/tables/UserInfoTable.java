@@ -121,39 +121,42 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public UserInfo getUserInfo(UUID uuid) throws SQLException {
-        return getUserInfo(uuid, Plan.getServerUUID());
+        return getAllUserInfo(uuid).get(MiscUtils.getIPlan().getServerUuid());
     }
 
-    public UserInfo getUserInfo(UUID uuid, UUID serverUUID) throws SQLException {
+    public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) throws SQLException {
         String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-        String usersNameColumn = usersTable + "." + usersTable.getColumnName() + " as name";
+        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
         String sql = "SELECT " +
                 tableName + "." + columnRegistered + ", " +
-                columnOP + ", " +
                 columnBanned + ", " +
-                usersNameColumn +
+                columnOP + ", " +
+                serverUUIDColumn +
                 " FROM " + tableName +
                 " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
-                " AND " + columnServerID + "=" + serverTable.statementSelectServerID;
+                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID +
+                " WHERE " + columnUserID + "=" + usersTable.statementSelectID;
 
-        return query(new QueryStatement<UserInfo>(sql) {
+        return query(new QueryStatement<Map<UUID, UserInfo>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setString(2, serverUUID.toString());
             }
 
             @Override
-            public UserInfo processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
+            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
+                Map<UUID, UserInfo> map = new HashMap<>();
+                while (set.next()) {
                     long registered = set.getLong(columnRegistered);
                     boolean opped = set.getBoolean(columnOP);
                     boolean banned = set.getBoolean(columnBanned);
                     String name = set.getString("name");
-                    return new UserInfo(uuid, name, registered, opped, banned);
+
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    map.put(serverUUID, new UserInfo(uuid, name, registered, opped, banned));
                 }
-                return null;
+                return map;
             }
         });
     }
