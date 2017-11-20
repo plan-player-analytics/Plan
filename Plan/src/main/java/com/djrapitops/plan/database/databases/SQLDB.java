@@ -259,7 +259,7 @@ public abstract class SQLDB extends Database {
         profile.setSessions(sessions);
         profile.setTotalWorldTimes(worldTimesTable.getWorldTimesOfUser(uuid));
 
-        return null;
+        return profile;
     }
 
     private void addUserInfoToProfile(PlayerProfile profile, Map<UUID, UserInfo> userInfo) {
