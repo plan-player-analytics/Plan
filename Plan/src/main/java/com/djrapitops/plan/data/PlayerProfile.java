@@ -102,6 +102,19 @@ public class PlayerProfile implements OfflinePlayer {
         return map;
     }
 
+    public UUID getFavoriteServer() {
+        long max = 0L;
+        UUID maxServer = null;
+        for (Map.Entry<UUID, WorldTimes> entry : getWorldTimesPerServer().entrySet()) {
+            long playTime = entry.getValue().getTotal();
+            if (playTime < max) {
+                max = playTime;
+                maxServer = entry.getKey();
+            }
+        }
+        return maxServer;
+    }
+
     public long getLastSeen() {
         return getLastSeen(getAllSessions());
     }

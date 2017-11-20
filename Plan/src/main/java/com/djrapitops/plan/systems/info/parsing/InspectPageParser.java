@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.data.Action;
+import main.java.com.djrapitops.plan.data.GeoInfo;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
@@ -82,20 +83,27 @@ public class InspectPageParser extends PageParser {
             }
 
             Map<UUID, String> serverNames = db.getServerTable().getServerNames();
+
             Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
             addValue("serverPieSeries", ServerPreferencePieCreator.createSeriesData(serverNames, worldTimesPerServer));
             addValue("worldPieColors", Settings.THEME_GRAPH_WORLD_PIE.toString());
             addValue("gmPieColors", Settings.THEME_GRAPH_GM_PIE.toString());
             addValue("serverPieColors", Settings.THEME_GRAPH_SERVER_PREF_PIE.toString());
 
+            String favoriteServer = serverNames.get(profile.getFavoriteServer());
+            addValue("favoriteServer", favoriteServer != null ? favoriteServer : "Unknown");
+
             // TODO IP Timestamp table
-//            List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
             List<String> nicknames = profile.getNicknames().stream()
                     .map(HtmlUtils::swapColorsToSpan)
                     .collect(Collectors.toList());
+            List<String> geoLocations = profile.getGeoInformation().stream()
+                    .map(GeoInfo::getGeolocation)
+                    .collect(Collectors.toList());
 
+            // TODO REMOVE after 4.1.0
             addValue("nicknames", HtmlStructure.createDotList(nicknames.toArray(new String[nicknames.size()])));
-//            addValue("geolocations", HtmlStructure.createDotList(geolocations.toArray(new String[geolocations.size()])));
+            addValue("geolocations", HtmlStructure.createDotList(geoLocations.toArray(new String[geoLocations.size()])));
 
             Map<UUID, List<Session>> sessions = profile.getSessions();
             Map<String, List<Session>> sessionsByServerName = sessions.entrySet().stream()
@@ -173,7 +181,7 @@ public class InspectPageParser extends PageParser {
             addValue("tableBodyActions", ActionsTableCreator.createTable(actions));
 
             String punchCardData = PunchCardGraphCreator.createDataSeries(allSessions);
-            WorldTimes worldTimes = db.getWorldTimesTable().getWorldTimesOfUser(uuid);
+            WorldTimes worldTimes = profile.getWorldTimes();
             AnalysisUtils.addMissingWorlds(worldTimes);
 
             String[] worldPieData = WorldPieCreator.createSeriesData(worldTimes);
