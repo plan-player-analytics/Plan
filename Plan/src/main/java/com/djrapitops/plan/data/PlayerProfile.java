@@ -97,9 +97,21 @@ public class PlayerProfile implements OfflinePlayer {
         List<Session> sessionsWeek2 = getSessions(twoWeeksAgo, weekAgo).collect(Collectors.toList());
         List<Session> sessionsWeek3 = getSessions(threeWeeksAgo, twoWeeksAgo).collect(Collectors.toList());
 
+        // Playtime per week multipliers, max out to avoid too high values.
+        double max = 4.0;
+
         double weekPlay = (PlayerProfile.getPlaytime(sessionsWeek.stream()) * 1.0 / activePlayThreshold);
+        if (weekPlay > max) {
+            weekPlay = max;
+        }
         double week2Play = (PlayerProfile.getPlaytime(sessionsWeek2.stream()) * 1.0 / activePlayThreshold);
+        if (week2Play > max) {
+            week2Play = max;
+        }
         double week3Play = (PlayerProfile.getPlaytime(sessionsWeek3.stream()) * 1.0 / activePlayThreshold);
+        if (week3Play > max) {
+            week3Play = max;
+        }
 
         // Reduce the harshness for new players and players who have had a vacation
         if (weekPlay > 1 && week3Play > 1 && week2Play == 0.0) {
