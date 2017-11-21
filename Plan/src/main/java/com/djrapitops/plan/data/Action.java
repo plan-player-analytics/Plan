@@ -15,7 +15,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class Action {
+public class Action implements HasDate {
     private final long date;
     private final Actions doneAction;
     private final String additionalInfo;

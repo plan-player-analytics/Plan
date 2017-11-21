@@ -5,6 +5,8 @@ import main.java.com.djrapitops.plan.data.TPS;
 import java.util.Comparator;
 
 /**
+ * Compares TPS objects so that earliest is first.
+ *
  * @author Rsl1122
  * @since 3.5.0
  */

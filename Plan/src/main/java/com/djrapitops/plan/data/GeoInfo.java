@@ -11,7 +11,7 @@ import com.google.common.base.Objects;
  *
  * @author Rsl1122
  */
-public class GeoInfo {
+public class GeoInfo implements HasDate {
 
     private final String ip;
     private final String geolocation;
@@ -33,6 +33,11 @@ public class GeoInfo {
 
     public long getLastUsed() {
         return lastUsed;
+    }
+
+    @Override
+    public long getDate() {
+        return getLastUsed();
     }
 
     @Override

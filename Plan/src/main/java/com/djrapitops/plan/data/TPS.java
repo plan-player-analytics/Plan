@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class TPS {
+public class TPS implements HasDate {
 
     private final long date;
     private final double ticksPerSecond;

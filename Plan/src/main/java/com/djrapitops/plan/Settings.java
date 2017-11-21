@@ -31,6 +31,8 @@ public enum Settings {
     WEBSERVER_PORT("WebServer.Port"),
     DB_PORT("Database.MySQL.Port"),
     ANALYSIS_AUTO_REFRESH("Analysis.AutoRefreshPeriod"),
+    ACTIVE_PLAY_THRESHOLD("Analysis.Active.PlaytimeThreshold"),
+    ACTIVE_LOGIN_THRESHOLD("Analysis.Active.LoginThreshold"),
 
     // String
     DEBUG("Plugin.Debug"),

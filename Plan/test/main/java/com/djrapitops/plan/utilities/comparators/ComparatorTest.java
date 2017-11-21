@@ -81,7 +81,7 @@ public class ComparatorTest {
         List<String> stringValues = userInfo.stream().map(UserInfo::getName).collect(Collectors.toList());
         Collections.sort(stringValues);
 
-        userInfo.sort(new UserDataNameComparator());
+        userInfo.sort(new UserInfoNameComparator());
         List<String> afterSort = userInfo.stream().map(UserInfo::getName).collect(Collectors.toList());
 
         assertEquals(stringValues, afterSort);

@@ -351,4 +351,24 @@ public class HtmlStructure {
         String[] split2 = split[1].split("box-footer", 2);
         return split[0] + "<p>Offline</p></div><div class=\"box-footer" + split2[1];
     }
+
+    public static String playerStatus(String online, Set<UUID> banned, boolean op) {
+        boolean offline = "offline".equalsIgnoreCase(online);
+
+        StringBuilder html = new StringBuilder("<p>");
+        if (offline) {
+            html.append(Html.FA_COLORED_ICON.parse("red", "ball")).append(" ").append(online);
+        } else {
+            html.append(Html.FA_COLORED_ICON.parse("green", "ball")).append(" ").append(online);
+        }
+        html.append("</p>");
+        if (op) {
+            html.append("<p>").append(Html.FA_COLORED_ICON.parse("blue", "superpowers")).append(" Operator</p>");
+        }
+        int bannedOn = banned.size();
+        if (bannedOn != 0) {
+            html.append("<p>").append(Html.FA_COLORED_ICON.parse("red", "gavel")).append(" Banned (").append(bannedOn).append(")");
+        }
+        return html.toString();
+    }
 }

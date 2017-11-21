@@ -13,7 +13,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PlayerKill {
+public class PlayerKill implements HasDate {
 
     private final UUID victim;
     private final long time;
@@ -48,6 +48,11 @@ public class PlayerKill {
      */
     public long getTime() {
         return time;
+    }
+
+    @Override
+    public long getDate() {
+        return getTime();
     }
 
     /**

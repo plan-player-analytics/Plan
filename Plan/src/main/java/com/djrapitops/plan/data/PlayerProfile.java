@@ -4,6 +4,8 @@
  */
 package main.java.com.djrapitops.plan.data;
 
+import com.djrapitops.plugin.api.TimeAmount;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.ActionComparator;
@@ -51,7 +53,7 @@ public class PlayerProfile implements OfflinePlayer {
     private Map<String, String> pluginReplaceMap;
 
     // Value that requires lot of processing
-    private Double activityIndex;
+    private Map<Long, Double> activityIndex;
 
     public PlayerProfile(UUID uuid, String name, long registered) {
         this.uuid = uuid;
@@ -67,19 +69,67 @@ public class PlayerProfile implements OfflinePlayer {
         worldTimesMap = new HashMap<>();
 
         pluginReplaceMap = new HashMap<>();
+        activityIndex = new HashMap<>();
     }
 
     // Calculating Getters
 
-    public boolean isActive() {
-        return getActivityIndex() > 1.0;
+    public boolean isActive(long date) {
+        return getActivityIndex(date) > 1.0;
     }
 
-    public double getActivityIndex() {
-        if (activityIndex != null) {
-            return activityIndex;
+    public double getActivityIndex(long date) {
+        Double activityIndx = activityIndex.get(date);
+        if (activityIndx != null) {
+            return activityIndx;
         }
-        return 0.0; // TODO
+
+        long week = TimeAmount.WEEK.ms();
+        long weekAgo = date - week;
+        long twoWeeksAgo = date - 2L * week;
+        long threeWeeksAgo = date - 3L * week;
+
+        long activePlayThreshold = Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms();
+        int activeLoginThreshold = Settings.ACTIVE_LOGIN_THRESHOLD.getNumber();
+
+        List<Session> sessionsWeek = getSessions(weekAgo, date).collect(Collectors.toList());
+        List<Session> sessionsWeek2 = getSessions(twoWeeksAgo, weekAgo).collect(Collectors.toList());
+        List<Session> sessionsWeek3 = getSessions(threeWeeksAgo, twoWeeksAgo).collect(Collectors.toList());
+
+        double weekPlay = (PlayerProfile.getPlaytime(sessionsWeek.stream()) * 1.0 / activePlayThreshold);
+        double week2Play = (PlayerProfile.getPlaytime(sessionsWeek2.stream()) * 1.0 / activePlayThreshold);
+        double week3Play = (PlayerProfile.getPlaytime(sessionsWeek3.stream()) * 1.0 / activePlayThreshold);
+
+        // Reduce the harshness for new players and players who have had a vacation
+        if (weekPlay > 1 && week3Play > 1 && week2Play == 0.0) {
+            week2Play = 0.5;
+        }
+        if (weekPlay > 1 && week2Play == 0.0) {
+            week2Play = 0.6;
+        }
+        if (weekPlay > 1 && week3Play == 0.0) {
+            week3Play = 0.75;
+        }
+
+        double playAvg = (weekPlay + week2Play + week3Play) / 3.0;
+
+        double weekLogin = sessionsWeek.size() > activeLoginThreshold ? 1.0 : 0.5;
+        double week2Login = sessionsWeek2.size() > activeLoginThreshold ? 1.0 : 0.5;
+        double week3Login = sessionsWeek3.size() > activeLoginThreshold ? 1.0 : 0.5;
+
+        double extraMultiplier = 1.0;
+        double loginTotal = weekLogin + week2Login + week3Login;
+
+        double loginAvg = loginTotal / 3.0;
+        if (loginTotal < 2.0) {
+            extraMultiplier = 0.75;
+        }
+
+        activityIndx = playAvg * loginAvg * extraMultiplier;
+
+        activityIndex.put(date, activityIndx);
+
+        return activityIndx;
     }
 
     /**
@@ -232,6 +282,9 @@ public class PlayerProfile implements OfflinePlayer {
     }
 
     public GeoInfo getMostRecentGeoInfo() {
+        if (geoInformation.isEmpty()) {
+            return new GeoInfo("-", "Not Known", MiscUtils.getTime());
+        }
         geoInformation.sort(new GeoInfoComparator());
         return geoInformation.get(0);
     }
@@ -447,7 +500,7 @@ public class PlayerProfile implements OfflinePlayer {
 
     @Override
     public boolean isBanned() {
-        return bannedOnServers.contains(MiscUtils.getIPlan().getServerUuid());
+        return bannedOnServers.size() != 0;
     }
 
     @Override

@@ -30,10 +30,7 @@ import main.java.com.djrapitops.plan.utilities.html.graphs.ServerPreferencePieCr
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -58,6 +55,8 @@ public class InspectPageParser extends PageParser {
             Benchmark.start("Inspect Parse, Fetch");
             Database db = plugin.getDB();
 
+            UUID serverUuid = MiscUtils.getIPlan().getServerUuid();
+            Map<UUID, String> serverNames = db.getServerTable().getServerNames();
             long now = MiscUtils.getTime();
 
             addValue("refresh", FormatUtils.formatTimeStamp(now));
@@ -65,6 +64,14 @@ public class InspectPageParser extends PageParser {
             addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
             PlayerProfile profile = db.getPlayerProfile(uuid);
+
+            String online = "Offline";
+            Optional<Session> activeSession = plugin.getInfoManager().getDataCache().getCachedSession(uuid);
+            if (activeSession.isPresent()) {
+                profile.addActiveSession(activeSession.get());
+                online = serverNames.get(serverUuid);
+            }
+            activeSession.ifPresent(profile::addActiveSession);
 
             Benchmark.stop("Inspect Parse, Fetch");
 
@@ -81,8 +88,6 @@ public class InspectPageParser extends PageParser {
             } else {
                 addValue("lastSeen", "-");
             }
-
-            Map<UUID, String> serverNames = db.getServerTable().getServerNames();
 
             Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
             addValue("serverPieSeries", ServerPreferencePieCreator.createSeriesData(serverNames, worldTimesPerServer));
@@ -211,7 +216,16 @@ public class InspectPageParser extends PageParser {
             addValue("mobKillCount", mobKillCount);
             addValue("deathCount", deathCount);
 
-            boolean isActive = AnalysisUtils.isActive(MiscUtils.getTime(), lastSeen, playtime, sessionCount);
+            double activityIndex = profile.getActivityIndex(now);
+            String[] activityIndexFormat = FormatUtils.readableActivityIndex(activityIndex);
+
+            addValue("activityIndexNumber", /*FormatUtils.cutDecimals(*/activityIndex);
+            addValue("activityIndexColor", activityIndexFormat[0]);
+            addValue("activityIndex", activityIndexFormat[1]);
+
+            addValue("playerStatus", HtmlStructure.playerStatus(online, profile.getBannedOnServers(), profile.isOp()));
+
+            boolean isActive = profile.isActive(now);
             String active = isActive ? "Active" : "Inactive";
             playerClassification(profile, active);
 

@@ -32,7 +32,7 @@ public class AnalysisUtils {
     }
 
     @Deprecated
-    public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
+    public static boolean isActive(long now, long lastPlayed, long playTime, long loginTimes) {
         int timeToActive = 10;
         long twoWeeks = 1209600000;
         return now - lastPlayed < twoWeeks
@@ -175,6 +175,7 @@ public class AnalysisUtils {
      * @param scale    Scale (milliseconds), time before (Current epoch - scale) will be ignored.
      * @return Amount of Unique joins within the time span.
      */
+    @Deprecated
     public static int getUniqueJoins(Map<UUID, List<Session>> sessions, long scale) {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
@@ -190,6 +191,7 @@ public class AnalysisUtils {
         return uniqueJoins.size();
     }
 
+    @Deprecated
     public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long scale) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();
@@ -284,7 +286,7 @@ public class AnalysisUtils {
         return day.get(Calendar.DAY_OF_YEAR);
     }
 
-    public double getAveragePerDay(long after, long before, long total) {
+    public static double getAveragePerDay(long after, long before, long total) {
         return total / getNumberOfDaysBetween(after, before);
     }
 

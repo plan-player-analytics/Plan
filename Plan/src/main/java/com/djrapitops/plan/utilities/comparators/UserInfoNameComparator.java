@@ -10,14 +10,14 @@ import main.java.com.djrapitops.plan.data.UserInfo;
 import java.util.Comparator;
 
 /**
- * Comparator for UserInfo so that most recently seen is first.
+ * Comparator for UserInfo for Alphabetical Name order.
  *
  * @author Rsl1122
  */
-public class UserInfoLastPlayedComparator implements Comparator<UserInfo> {
+public class UserInfoNameComparator implements Comparator<UserInfo> {
 
     @Override
     public int compare(UserInfo u1, UserInfo u2) {
-        return Long.compare(u2.getLastSeen(), u1.getLastSeen());
+        return u1.getName().compareTo(u2.getName());
     }
 }

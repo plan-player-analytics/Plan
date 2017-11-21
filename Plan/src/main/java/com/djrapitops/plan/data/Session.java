@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class Session {
+public class Session implements HasDate {
 
     private final long sessionStart;
     private Integer sessionID;
@@ -119,6 +120,9 @@ public class Session {
      * @return Long in ms.
      */
     public long getLength() {
+        if (sessionEnd == -1) {
+            return MiscUtils.getTime() - sessionStart;
+        }
         return sessionEnd - sessionStart;
     }
 
@@ -211,5 +215,10 @@ public class Session {
                 .append("mobKills", mobKills)
                 .append("deaths", deaths)
                 .toString();
+    }
+
+    @Override
+    public long getDate() {
+        return getSessionStart();
     }
 }
