@@ -24,7 +24,9 @@ import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -56,6 +58,10 @@ public class DatabaseTest {
     private Database db;
     private Database backup;
     private int rows;
+
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(6); // 5 seconds max per method tested
+
 
     @Before
     public void setUp() throws Exception {
@@ -133,7 +139,7 @@ public class DatabaseTest {
         assertEquals("MySQL", new MySQLDB(plan).getName());
     }
 
-    @Test
+    @Test(timeout = 3000)
     public void testSaveCommandUse() throws SQLException, DatabaseInitException {
         CommandUseTable commandUseTable = db.getCommandUseTable();
         Map<String, Integer> expected = new HashMap<>();
