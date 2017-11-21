@@ -74,6 +74,7 @@ public class PlayerProfile implements OfflinePlayer {
 
     // Calculating Getters
 
+    @Deprecated // TODO Remove after 4.1.0, made for old html users
     public boolean isActive(long date) {
         return getActivityIndex(date) > 1.0;
     }
@@ -119,9 +120,10 @@ public class PlayerProfile implements OfflinePlayer {
 
         double extraMultiplier = 1.0;
         double loginTotal = weekLogin + week2Login + week3Login;
-
         double loginAvg = loginTotal / 3.0;
-        if (loginTotal < 2.0) {
+
+        if (loginTotal <= 2.0) {
+            // Reduce index for players that have not logged in the threshold amount for 2 weeks
             extraMultiplier = 0.75;
         }
 

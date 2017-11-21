@@ -213,12 +213,12 @@ public class FormatUtils {
     }
 
     public static String[] readableActivityIndex(double activityIndex) {
-        if (activityIndex >= 5.0) {
+        if (activityIndex >= 3.5) {
             return new String[]{"green", "Very Active"};
-        } else if (activityIndex >= 2.0) {
+        } else if (activityIndex >= 1.75) {
             return new String[]{"green", "Active"};
         } else if (activityIndex >= 1.0) {
-            return new String[]{"green", "Regular"};
+            return new String[]{"lime", "Regular"};
         } else if (activityIndex >= 0.5) {
             return new String[]{"amber", "Irregular"};
         } else {

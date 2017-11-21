@@ -11,9 +11,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,8 +33,42 @@ public class FileUtil {
     public static List<String> lines(IPlan plugin, File savedFile, String defaults) throws IOException {
         if (savedFile.exists()) {
             return lines(savedFile);
+        } else {
+            String fileName = savedFile.getName();
+            File found = attemptToFind(fileName, plugin.getDataFolder());
+            if (found != null) {
+                return lines(found);
+            }
         }
         return lines(plugin, defaults);
+    }
+
+    /**
+     * Breadth-First search through the file tree to find the file.
+     *
+     * @param fileName   Name of the searched file
+     * @param dataFolder Folder to look from
+     * @return File if found or null
+     */
+    private static File attemptToFind(String fileName, File dataFolder) {
+        if (dataFolder.isDirectory()) {
+            ArrayDeque<File> que = new ArrayDeque<>();
+            que.add(dataFolder);
+
+            while (!que.isEmpty()) {
+                File file = que.pop();
+                if (file.isFile() && fileName.equals(file.getName())) {
+                    return file;
+                }
+                if (file.isDirectory()) {
+                    File[] files = file.listFiles();
+                    if (files != null) {
+                        que.addAll(Arrays.asList(files));
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public static List<String> lines(IPlan plugin, String resource) throws IOException {
