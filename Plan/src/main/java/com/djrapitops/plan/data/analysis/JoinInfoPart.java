@@ -64,7 +64,7 @@ public class JoinInfoPart extends RawData {
     private void sessionTables() {
         String[] tables = SessionsTableCreator.createTable(this);
         String[] sessionContent = SessionTabStructureCreator.creteStructure(this);
-        addValue("contentSessions", sessionContent[0]);
+        addValue("accordionSessions", sessionContent[0]);
         addValue("sessionTabGraphViewFunctions", sessionContent[1]);
         addValue("tableBodySessions", tables[0]);
         addValue("tableBodyRecentLogins", tables[1]);

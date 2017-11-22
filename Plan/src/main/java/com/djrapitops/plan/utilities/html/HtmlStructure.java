@@ -92,7 +92,6 @@ public class HtmlStructure {
         return builder.toString();
     }
 
-    @Deprecated
     public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
         Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
         map.put(uuid, sessions);
@@ -357,9 +356,9 @@ public class HtmlStructure {
 
         StringBuilder html = new StringBuilder("<p>");
         if (offline) {
-            html.append(Html.FA_COLORED_ICON.parse("red", "ball")).append(" ").append(online);
+            html.append(Html.FA_COLORED_ICON.parse("red", "circle")).append(" ").append(online);
         } else {
-            html.append(Html.FA_COLORED_ICON.parse("green", "ball")).append(" ").append(online);
+            html.append(Html.FA_COLORED_ICON.parse("green", "circle")).append(" Online (").append(online).append(")");
         }
         html.append("</p>");
         if (op) {

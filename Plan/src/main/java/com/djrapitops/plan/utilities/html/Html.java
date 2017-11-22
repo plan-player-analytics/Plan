@@ -34,6 +34,7 @@ public enum Html {
     BUTTON("<a class=\"button\" href=\"${0}\">${1}</a>"),
     BUTTON_CLASS("class=\"button\""),
     LINK("<a class=\"link\" href=\"${0}\">${1}</a>"),
+    LINK_A("<a href=\"${0}\">${1}</a>"),
     LINK_TOOLTIP("<a title=\"${2}\" class=\"link\" href=\"${0}\">${1}</a>"),
     LINK_EXTERNAL("<a class=\"link\" target=\"_blank\" href=\"${0}\">${1}</a>"),
     LINK_CLASS("class=\"link\""),
@@ -49,9 +50,9 @@ public enum Html {
     ROW("<div class=\"row\">${0}</div>"),
     //
     TABLE_END("</tbody></table>"),
-    TABLE_START_2("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th></tr></thead><tbody>"),
-    TABLE_START_3("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
-    TABLE_START_4("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th><th>${3}</th></tr></thead><tbody>"),
+    TABLE_START_2("<table class=\"table table-striped\"><thead><tr><th>${0}</th><th>${1}</th></tr></thead><tbody>"),
+    TABLE_START_3("<table class=\"table table-striped\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
+    TABLE_START_4("<table class=\"table table-striped\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th><th>${3}</th></tr></thead><tbody>"),
     TABLE_SESSIONS(DIV_W_CLASS_STYLE.parse("box-footer scrollbar", "padding: 2px;",
             TABLE_START_4.parse("Player", "Started", "Length", "World - Time") + "${3}" + TABLE_END.parse())
     ),

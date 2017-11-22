@@ -38,16 +38,14 @@ public class SessionTabStructureCreator {
         }
 
         if (Verify.isEmpty(allSessions)) {
-            return new String[]{"<div class=\"session column\">" +
-                    "<div class=\"session-header\">" +
-                    "<div class=\"session-col\" style=\"width: 200%;\">" +
+            return new String[]{"<div class=\"body\">" +
                     "<h3>No Sessions</h3>" +
-                    "</div></div></div>", ""};
+                    "</div>", ""};
         }
 
         Map<Integer, String> serverNameIDMap = generateIDtoServerNameMap(sessions);
 
-        StringBuilder html = new StringBuilder();
+        StringBuilder html = new StringBuilder("<div class=\"panel-group scrollbar\" id=\"session_accordion\" role=\"tablist\" aria-multiselectable=\"true\">");
         StringBuilder viewScript = new StringBuilder();
         int i = 0;
         for (Session session : allSessions) {
@@ -61,79 +59,90 @@ public class SessionTabStructureCreator {
 
             String sessionStart = FormatUtils.formatTimeStampYear(session.getSessionStart());
             String sessionLength = FormatUtils.formatTimeAmount(session.getLength());
-            String sessionEnd = FormatUtils.formatTimeStampYear(session.getSessionEnd());
+            String sessionEnd = session.getSessionEnd() == -1 ? "Online" : FormatUtils.formatTimeStampYear(session.getSessionEnd());
+
+            int playerKillCount = session.getPlayerKills().size();
 
             String name = Plan.getInstance().getDataCache().getName(uuid);
-            String link = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(name), name);
+            String link = Plan.getPlanAPI().getPlayerInspectPageLink(name);
             String dotSeparated = appendName ?
-                    HtmlStructure.separateWithDots(link, sessionStart, sessionLength) :
-                    HtmlStructure.separateWithDots(sessionStart, sessionLength);
-
-            // Session-column starts & header.
-            html.append("<div class=\"session column\">")
-                    .append("<div title=\"Session ID: ").append(sessionID).append("\" class=\"session-header\">")
-                    .append("<div class=\"session-col\" style=\"width: 200%;\">")
-                    .append("<h3><i style=\"color:#777\" class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i> ").append(dotSeparated).append("</h3>")
-                    .append("</div>")
-                    .append("</div>");
-
-
-            // Left side of Session box
-            html.append("<div class=\"session-content\">")
-                    .append("<div class=\"row\">") //
-                    .append("<div class=\"session-col\" style=\"padding: 0px;\">");
-
-            // Left side header
-            html.append("<div class=\"box-header\" style=\"margin: 0px;\">")
-                    .append("<h2><i class=\"fa fa-calendar\" aria-hidden=\"true\"></i> ")
-                    .append(sessionStart)
-                    .append("</h2>")
-                    .append("</div>");
-
-            // Left side content
-            html.append("<div class=\"box\" style=\"margin: 0px;\">")
-                    .append("<p>Session Length: ").append(sessionLength).append("<br>")
-                    .append("Session Ended: ").append(sessionEnd).append("<br>")
-                    .append("Server: ").append(serverName).append("<br><br>")
-                    .append("Mob Kills: ").append(session.getMobKills()).append("<br>")
-                    .append("Deaths: ").append(session.getDeaths()).append("</p>");
-
-            html.append(KillsTableCreator.createTable(session.getPlayerKills()))
-                    .append("</div>"); // Left Side content ends
-
-            // Left side ends & Right side starts
-            html.append("</div>")
-                    .append("<div class=\"session-col\">");
+                    HtmlStructure.separateWithDots(name, sessionStart) :
+                    sessionStart;
 
             String id = "worldPie" + session.getSessionStart() + i;
-
-            html.append("<div id=\"").append(id).append("\" style=\"width: 100%; height: 400px;\"></div>");
-
             WorldTimes worldTimes = session.getWorldTimes();
             AnalysisUtils.addMissingWorlds(worldTimes);
 
             String[] worldData = WorldPieCreator.createSeriesData(worldTimes);
 
-            html.append("<script>")
+            String killTable = KillsTableCreator.createTable(session.getPlayerKills());
+
+            // Accordion panel header
+            html.append("<div title=\"Session ID: ").append(sessionID).append("\"class=\"panel panel-col-teal\">")
+                    .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(sessionID).append("\">")
+                    .append("<h4 class=\"panel-title\">")
+                    .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
+                    .append("href=\"#session_").append(sessionID).append("\" aria-expanded=\"false\" ")
+                    .append("aria-controls=\"session_").append(sessionID).append("\">")
+                    .append(dotSeparated).append("<span class=\"pull-right\">").append(sessionLength).append("</span>") // Title (header)
+                    .append("</a></h4>") // Closes collapsed, panel title
+                    .append("</div>"); // Closes panel heading
+
+            // Content
+            html.append("<div id=\"session_").append(sessionID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
+                    .append(" aria-labelledby=\"heading_").append(sessionID).append("\">")
+                    .append("<div class=\"panel-body\"><div class=\"row clearfix\">")
+                    .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Left col-6
+                    //
+                    .append("<div class=\"font-bold m-b--35\"><i class=\"col-teal fa fa-clock-o\"></i> ")
+                    .append(sessionStart).append(" -> ").append(sessionEnd).append(" </div>")
+                    //
+                    .append("<ul class=\"dashboard-stat-list\">")
+                    // End
+                    .append("<li><i class=\"col-teal fa fa-clock-o\"></i> Session Ended<span class=\"pull-right\"><b>").append(sessionEnd).append("</b></span></li>")
+                    // Length
+                    .append("<li><i class=\"col-teal fa fa-clock-o\"></i> Session Length<span class=\"pull-right\"><b>").append(sessionLength).append("</b></span></li>")
+                    // Server
+                    .append("<li><i class=\"col-light-green fa fa-server\"></i> Server<span class=\"pull-right\"><b>").append(serverName).append("</b></span></li>")
+                    .append("<li></li>")
+                    // Player Kills
+                    .append("<li><i class=\"col-red fa fa-crosshairs\"></i> Player Kills<span class=\"pull-right\"><b>").append(playerKillCount).append("</b></span></li>")
+                    // Mob Kills
+                    .append("<li><i class=\"col-green fa fa-crosshairs\"></i> Mob Kills<span class=\"pull-right\"><b>").append(session.getMobKills()).append("</b></span></li>")
+                    // Deaths
+                    .append("<li><i class=\"col-red fa fa-frown-o\"></i> Deaths<span class=\"pull-right\"><b>").append(session.getDeaths()).append("</b></span></li>")
+                    .append("</ul></div>") // Closes stat-list, Left col-6
+                    .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Right col-6
+                    .append("<div id=\"").append(id).append("\" class=\"dashboard-donut-chart\"></div>")
+                    // World Pie data script
+                    .append("<script>")
                     .append("var ").append(id).append("series = {name:'World Playtime',colors: worldPieColors,colorByPoint:true,data:").append(worldData[0]).append("};")
                     .append("var ").append(id).append("gmseries = ").append(worldData[1]).append(";")
-                    .append("</script>");
+                    .append("</script>")
+                    .append("</div>") // Right col-6
+                    .append("</div>") // Closes row clearfix
+                    .append("<div class=\"row clearfix\">")
+                    .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Left2 col-6
+                    .append(killTable)
+                    .append("</div>"); // Closes Left2 col-6
+            if (appendName) {
+                html.append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Right2 col-6
+                        .append("<button href=\"").append(link).append("\" type=\"button\" class=\"pull-right btn bg-blue waves-effect\"><i class=\"material-icons\">person</i><span>INSPECT PAGE</span></button>")
+                        .append("</div>"); // Closes Right2 col-6
+            }
+            html.append("</div>") // Closes row clearfix
+                    .append("</div>") // Closes panel-body
+                    .append("</div>") // Closes panel-collapse
+                    .append("</div>"); // Closes panel
 
             viewScript.append("worldPie(")
                     .append(id).append(", ")
                     .append(id).append("series, ")
                     .append(id).append("gmseries")
                     .append(");");
-
-            // Session-col, Row, Session-Content, Session-column ends.
-            html.append("</div>")
-                    .append("</div>")
-                    .append("</div>")
-                    .append("</div>");
-
             i++;
         }
-        return new String[]{html.toString(), viewScript.toString()};
+        return new String[]{html.append("</div>").toString(), viewScript.toString()};
     }
 
     private static Map<Integer, String> generateIDtoServerNameMap(Map<UUID, Map<String, List<Session>>> sessions) {

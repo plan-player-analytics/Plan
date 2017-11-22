@@ -11,7 +11,6 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.data.Action;
-import main.java.com.djrapitops.plan.data.GeoInfo;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
@@ -52,7 +51,6 @@ public class InspectPageParser extends PageParser {
 
     public String parse() throws ParseException {
         try {
-            // TODO Player is online parts
             Log.logDebug("Database", "Inspect Parse Fetch");
             Benchmark.start("Inspect Parse, Fetch");
             Database db = plugin.getDB();
@@ -70,7 +68,9 @@ public class InspectPageParser extends PageParser {
             String online = "Offline";
             Optional<Session> activeSession = plugin.getInfoManager().getDataCache().getCachedSession(uuid);
             if (activeSession.isPresent()) {
-                profile.addActiveSession(activeSession.get());
+                Session session = activeSession.get();
+                session.setSessionID(Integer.MAX_VALUE);
+                profile.addActiveSession(session);
                 online = serverNames.get(serverUuid);
             }
             activeSession.ifPresent(profile::addActiveSession);
@@ -103,19 +103,6 @@ public class InspectPageParser extends PageParser {
             addValue("tableBodyNicknames", NicknameTableCreator.createTable(profile.getNicknames(), serverNames));
             addValue("tableBodyIPs", IpTableCreator.createTable(profile.getGeoInformation()));
 
-            // TODO REMOVE after 4.1.0
-            List<String> nicknames = profile.getNicknames().values().stream()
-                    .flatMap(Collection::stream)
-                    .distinct()
-                    .map(HtmlUtils::swapColorsToSpan)
-                    .collect(Collectors.toList());
-            List<String> geoLocations = profile.getGeoInformation().stream()
-                    .map(GeoInfo::getGeolocation)
-                    .collect(Collectors.toList());
-            addValue("nicknames", HtmlStructure.createDotList(nicknames.toArray(new String[nicknames.size()])));
-            addValue("geolocations", HtmlStructure.createDotList(geoLocations.toArray(new String[geoLocations.size()])));
-            //
-
             Map<UUID, List<Session>> sessions = profile.getSessions();
             Map<String, List<Session>> sessionsByServerName = sessions.entrySet().stream()
                     .collect(Collectors.toMap(entry -> serverNames.get(entry.getKey()), Map.Entry::getValue));
@@ -125,7 +112,7 @@ public class InspectPageParser extends PageParser {
                     .collect(Collectors.toList());
 
             String[] sessionsTabContent = HtmlStructure.createSessionsTabContentInspectPage(sessionsByServerName, allSessions, uuid);
-            addValue("contentSessions", sessionsTabContent[0]);
+            addValue("accordionSessions", sessionsTabContent[0]);
             addValue("sessionTabGraphViewFunctions", sessionsTabContent[1]);
             addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessionsByServerName));
 
