@@ -29,6 +29,7 @@ import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator
 import main.java.com.djrapitops.plan.utilities.html.graphs.ServerPreferencePieCreator;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
+import main.java.com.djrapitops.plan.utilities.html.tables.IpTableCreator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -102,6 +103,9 @@ public class InspectPageParser extends PageParser {
             List<String> nicknames = profile.getNicknames().stream()
                     .map(HtmlUtils::swapColorsToSpan)
                     .collect(Collectors.toList());
+
+            addValue("tableBodyIPs", IpTableCreator.createTable(profile.getGeoInformation()));
+
             List<String> geoLocations = profile.getGeoInformation().stream()
                     .map(GeoInfo::getGeolocation)
                     .collect(Collectors.toList());

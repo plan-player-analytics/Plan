@@ -225,4 +225,20 @@ public class FormatUtils {
             return new String[]{"blue-gray", "Inactive"};
         }
     }
+
+    public static String formatIP(String ip) {
+        StringBuilder b = new StringBuilder();
+        int i = 0;
+        for (String part : ip.split("\\.")) {
+            if (i >= 3) {
+                break;
+            }
+
+            b.append(part).append('.');
+
+            i++;
+        }
+
+        return b.append("xx").toString();
+    }
 }
