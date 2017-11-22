@@ -30,6 +30,7 @@ import main.java.com.djrapitops.plan.utilities.html.graphs.ServerPreferencePieCr
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.IpTableCreator;
+import main.java.com.djrapitops.plan.utilities.html.tables.NicknameTableCreator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -99,20 +100,21 @@ public class InspectPageParser extends PageParser {
             String favoriteServer = serverNames.get(profile.getFavoriteServer());
             addValue("favoriteServer", favoriteServer != null ? favoriteServer : "Unknown");
 
-            // TODO IP Timestamp table
-            List<String> nicknames = profile.getNicknames().stream()
-                    .map(HtmlUtils::swapColorsToSpan)
-                    .collect(Collectors.toList());
-
+            addValue("tableBodyNicknames", NicknameTableCreator.createTable(profile.getNicknames(), serverNames));
             addValue("tableBodyIPs", IpTableCreator.createTable(profile.getGeoInformation()));
 
+            // TODO REMOVE after 4.1.0
+            List<String> nicknames = profile.getNicknames().values().stream()
+                    .flatMap(Collection::stream)
+                    .distinct()
+                    .map(HtmlUtils::swapColorsToSpan)
+                    .collect(Collectors.toList());
             List<String> geoLocations = profile.getGeoInformation().stream()
                     .map(GeoInfo::getGeolocation)
                     .collect(Collectors.toList());
-
-            // TODO REMOVE after 4.1.0
             addValue("nicknames", HtmlStructure.createDotList(nicknames.toArray(new String[nicknames.size()])));
             addValue("geolocations", HtmlStructure.createDotList(geoLocations.toArray(new String[geoLocations.size()])));
+            //
 
             Map<UUID, List<Session>> sessions = profile.getSessions();
             Map<String, List<Session>> sessionsByServerName = sessions.entrySet().stream()
@@ -223,7 +225,7 @@ public class InspectPageParser extends PageParser {
             double activityIndex = profile.getActivityIndex(now);
             String[] activityIndexFormat = FormatUtils.readableActivityIndex(activityIndex);
 
-            addValue("activityIndexNumber", /*FormatUtils.cutDecimals(*/activityIndex);
+            addValue("activityIndexNumber", FormatUtils.cutDecimals(activityIndex));
             addValue("activityIndexColor", activityIndexFormat[0]);
             addValue("activityIndex", activityIndexFormat[1]);
 

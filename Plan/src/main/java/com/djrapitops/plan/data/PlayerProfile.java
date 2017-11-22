@@ -46,7 +46,7 @@ public class PlayerProfile implements OfflinePlayer {
     private Map<UUID, WorldTimes> worldTimesMap;
 
     // Extra information
-    private List<String> nicknames;
+    private Map<UUID, List<String>> nicknames;
     private List<GeoInfo> geoInformation;
 
     // Plugin data
@@ -67,6 +67,9 @@ public class PlayerProfile implements OfflinePlayer {
         sessions = new HashMap<>();
         actions = new ArrayList<>();
         worldTimesMap = new HashMap<>();
+
+        nicknames = new HashMap<>();
+        geoInformation = new ArrayList<>();
 
         pluginReplaceMap = new HashMap<>();
         activityIndex = new HashMap<>();
@@ -439,7 +442,7 @@ public class PlayerProfile implements OfflinePlayer {
         this.actions = actions;
     }
 
-    public void setNicknames(List<String> nicknames) {
+    public void setNicknames(Map<UUID, List<String>> nicknames) {
         this.nicknames = nicknames;
     }
 
@@ -457,7 +460,7 @@ public class PlayerProfile implements OfflinePlayer {
         return timesKicked;
     }
 
-    public List<String> getNicknames() {
+    public Map<UUID, List<String>> getNicknames() {
         return nicknames;
     }
 

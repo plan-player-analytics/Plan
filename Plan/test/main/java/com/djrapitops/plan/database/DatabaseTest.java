@@ -310,8 +310,8 @@ public class DatabaseTest {
         assertEquals(1, nicknames.size());
         assertEquals(expected, nicknames.get(0));
 
-        List<String> allNicknames = nickTable.getAllNicknames(uuid);
-        assertEquals(nicknames, allNicknames);
+        Map<UUID, List<String>> allNicknames = nickTable.getAllNicknames(uuid);
+        assertEquals(nicknames, allNicknames.get(Plan.getServerUUID()));
     }
 
     @Test

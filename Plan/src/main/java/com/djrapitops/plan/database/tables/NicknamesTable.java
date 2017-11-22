@@ -56,37 +56,44 @@ public class NicknamesTable extends UserIDTable {
     }
 
     /**
-     * Get ALL nicknames of the user.
+     * Get ALL nicknames of the user by Server UUID.
      * <p>
      * Get's nicknames from other servers as well.
      *
      * @param uuid UUID of the Player
-     * @return The nicknames of the User
+     * @return The nicknames of the User in a map by ServerUUID
      * @throws SQLException when an error at retrieval happens
      */
-    public List<String> getAllNicknames(UUID uuid) throws SQLException {
-        String sql = "SELECT " + columnNick + " FROM " + tableName +
+    public Map<UUID, List<String>> getAllNicknames(UUID uuid) throws SQLException {
+        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String sql = "SELECT " +
+                columnNick + ", " +
+                serverUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID +
                 " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")";
 
-        return query(new QueryStatement<List<String>>(sql, 1000) {
+        return query(new QueryStatement<Map<UUID, List<String>>>(sql, 5000) {
+
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
             }
 
             @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> nicknames = new ArrayList<>();
+            public Map<UUID, List<String>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<String>> map = new HashMap<>();
                 while (set.next()) {
-                    String nickname = set.getString(columnNick);
-                    if (nickname.isEmpty()) {
-                        continue;
-                    }
-                    if (!nicknames.contains(nickname)) {
-                        nicknames.add(nickname);
-                    }
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+
+                    List<String> nicknames = map.getOrDefault(serverUUID, new ArrayList<>());
+
+                    nicknames.add(set.getString(columnNick));
+
+                    map.put(serverUUID, nicknames);
                 }
-                return nicknames;
+                return map;
             }
         });
     }
