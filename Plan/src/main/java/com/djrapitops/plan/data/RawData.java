@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.analysis;
+package main.java.com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -17,43 +17,11 @@ public abstract class RawData {
     private final Map<String, Serializable> replaceMap;
 
     /**
-     * Status info for call to analyzeData method.
-     */
-    protected boolean analysed;
-
-    /**
      * Only used by subclasses.
      */
     public RawData() {
         replaceMap = new HashMap<>();
-        analysed = false;
     }
-
-    /**
-     * Condition if analyseData() has been called.
-     *
-     * @return true if the method has been called.
-     */
-    public boolean isAnalysed() {
-        return analysed;
-    }
-
-    /**
-     * Analyses the data added together.
-     * <p>
-     * Places place-holders to the replace map.
-     */
-    public void analyseData() {
-        analysed = true;
-        this.analyse();
-    }
-
-    /**
-     * Subclasses should analyse the data added together.
-     * <p>
-     * Place-holders should be added to the replace map.
-     */
-    protected abstract void analyse();
 
     /**
      * Adds values from an existing replaceMap.

@@ -191,16 +191,12 @@ public class AnalysisUtils {
         return uniqueJoins.size();
     }
 
-    @Deprecated
-    public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long scale) {
+    public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long after) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
-        long now = MiscUtils.getTime();
-        long nowMinusScale = now - scale;
 
         sessions.forEach((uuid, s) -> {
             for (Session session : s) {
-                if (scale != -1
-                        && session.getSessionStart() < nowMinusScale) {
+                if (session.getSessionStart() < after) {
                     continue;
                 }
 
@@ -221,23 +217,15 @@ public class AnalysisUtils {
         return total / numberOfDays;
     }
 
-    @Deprecated
-    public static long getNewUsersPerDay(List<Long> registers, long scale) {
-        long now = MiscUtils.getTime();
-        long nowMinusScale = now - scale;
-
+    public static long getNewUsersPerDay(List<Long> registers, long after, long total) {
         Set<Integer> days = new HashSet<>();
         for (Long date : registers) {
-            if (scale != -1) {
-                if (date < nowMinusScale) {
-                    continue;
-                }
-                int day = getDayOfYear(date);
-                days.add(day);
+            if (date < after) {
+                continue;
             }
+            int day = getDayOfYear(date);
+            days.add(day);
         }
-
-        long total = registers.stream().filter(date -> date >= nowMinusScale).count();
         int numberOfDays = days.size();
 
         if (numberOfDays == 0) {

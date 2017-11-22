@@ -13,7 +13,6 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.PlayerProfileLastPlayedComparator;
-import main.java.com.djrapitops.plan.utilities.comparators.TPSComparator;
 import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
 
 import java.util.*;
@@ -43,9 +42,6 @@ public class ServerProfile {
     private long allTimePeak;
     private int allTimePeakPlayers;
 
-    // Active information
-    private int playersOnline;
-    private int playersMax;
 
     public ServerProfile(UUID serverUUID) {
         this.serverUUID = serverUUID;
@@ -57,8 +53,6 @@ public class ServerProfile {
         allTimePeakPlayers = -1;
         lastPeakDate = -1;
         lastPeakPlayers = -1;
-        playersOnline = -1;
-        playersMax = -1;
     }
 
     public List<PlayerProfile> getPlayers() {
@@ -85,9 +79,7 @@ public class ServerProfile {
         this.commandUsage = commandUsage;
     }
 
-    public long getLowSpikeCount(long after, long before) {
-        List<TPS> tpsData = getTPSData(after, before).sorted(new TPSComparator()).collect(Collectors.toList());
-
+    public static long getLowSpikeCount(List<TPS> tpsData) {
         int mediumThreshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
 
         boolean wasLow = false;
@@ -171,7 +163,7 @@ public class ServerProfile {
         return getNewPlayers(after, before) * 1.0 / AnalysisUtils.getNumberOfDaysBetween(after, before);
     }
 
-    private Stream<PlayerProfile> getPlayersWhoPlayedBetween(long after, long before) {
+    public Stream<PlayerProfile> getPlayersWhoPlayedBetween(long after, long before) {
         return players.stream()
                 .filter(player -> player.playedBetween(after, before));
     }
@@ -209,11 +201,15 @@ public class ServerProfile {
         return players.size();
     }
 
-    public List<Session> getSessions() {
+    public Map<UUID, List<Session>> getSessions() {
+        return players.stream().collect(Collectors.toMap(PlayerProfile::getUuid, p -> p.getSessions(serverUUID)));
+    }
+
+    public List<Session> getAllSessions() {
         return players.stream().map(p -> p.getSessions(serverUUID)).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    public List<PlayerKill> getPlayerKills(List<Session> s) {
+    public static List<PlayerKill> getPlayerKills(List<Session> s) {
         List<PlayerKill> kills = new ArrayList<>();
         for (Session session : s) {
             kills.addAll(session.getPlayerKills());
@@ -221,7 +217,7 @@ public class ServerProfile {
         return kills;
     }
 
-    public long getMobKillCount(List<Session> s) {
+    public static long getMobKillCount(List<Session> s) {
         long total = 0;
         for (Session session : s) {
             total += session.getMobKills();
@@ -229,7 +225,7 @@ public class ServerProfile {
         return total;
     }
 
-    public long getDeathCount(List<Session> s) {
+    public static long getDeathCount(List<Session> s) {
         long total = 0;
         for (Session session : s) {
             total += session.getDeaths();
@@ -279,7 +275,7 @@ public class ServerProfile {
         this.allTimePeakPlayers = allTimePeakPlayers;
     }
 
-    public int getPlayersOnline() {
+    public static int getPlayersOnline() {
         if (Check.isBungeeAvailable()) {
             return PlanBungee.getInstance().getProxy().getOnlineCount();
         } else {
@@ -287,7 +283,19 @@ public class ServerProfile {
         }
     }
 
-    public int getPlayersMax() {
+    public static int getPlayersMax() {
         return MiscUtils.getIPlan().getVariable().getMaxPlayers();
+    }
+
+    public Stream<PlayerProfile> getOps() {
+        return players.stream().filter(PlayerProfile::isOp);
+    }
+
+    public Set<UUID> getUuids() {
+        Set<UUID> uuids = new HashSet<>();
+        for (PlayerProfile player : players) {
+            uuids.add(player.getUuid());
+        }
+        return uuids;
     }
 }

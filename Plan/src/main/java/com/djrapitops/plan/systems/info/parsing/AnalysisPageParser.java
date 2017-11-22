@@ -7,12 +7,9 @@ package main.java.com.djrapitops.plan.systems.info.parsing;
 import com.djrapitops.plugin.api.Check;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
@@ -37,12 +34,7 @@ public class AnalysisPageParser extends PageParser {
     public String parse() throws ParseException {
         addValues(data.getReplaceMap());
         addValue("tabContentPlugins", data.replacePluginsTabLayout());
-        addValue("serverName", Settings.SERVER_NAME.toString());
-        addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
-        addValue("refresh", FormatUtils.formatTimeStamp(data.getRefreshDate()));
 
-        addValue("playersMax", plugin.getVariable().getMaxPlayers());
-        addValue("playersOnline", getPlayersOnline());
         try {
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("web/server.html"), placeHolders);
         } catch (IOException e) {

@@ -7,7 +7,6 @@ package main.java.com.djrapitops.plan.utilities.html.tables;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
@@ -26,24 +25,24 @@ import java.util.stream.Collectors;
  */
 public class SessionsTableCreator {
 
-    public static String[] createTable(JoinInfoPart joinInfoPart) {
+    private static Map<Integer, UUID> getUUIDsByID(Map<UUID, List<Session>> sessionsByUser) {
         Map<Integer, UUID> uuidByID = new HashMap<>();
-        for (Map.Entry<UUID, List<Session>> entry : joinInfoPart.getSessions().entrySet()) {
+        for (Map.Entry<UUID, List<Session>> entry : sessionsByUser.entrySet()) {
             List<Session> sessions = entry.getValue();
             for (Session session : sessions) {
                 uuidByID.put(session.getSessionID(), entry.getKey());
             }
         }
-
-        List<Session> allSessions = joinInfoPart.getAllSessions();
-        return createTable(uuidByID, allSessions);
+        return uuidByID;
     }
 
-    public static String[] createTable(Map<Integer, UUID> uuidByID, List<Session> allSessions) {
+    public static String[] createTable(Map<UUID, List<Session>> sessionsByUser, List<Session> allSessions) {
         if (allSessions.isEmpty()) {
             return new String[]{Html.TABLELINE_4.parse("<b>No Sessions</b>", "", "", ""),
                     Html.TABLELINE_2.parse("<b>No Sessions</b>", "")};
         }
+
+        Map<Integer, UUID> uuidByID = getUUIDsByID(sessionsByUser);
 
         allSessions.sort(new SessionStartComparator());
 
@@ -88,7 +87,11 @@ public class SessionsTableCreator {
             ));
 
             if (recentLoginsNames.size() < 20 && !recentLoginsNames.contains(name)) {
-                recentLoginsBuilder.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, name), start));
+                boolean isNew = sessionsByUser.get(uuid).size() <= 2;
+
+                recentLoginsBuilder.append("<li><a class=\"col-").append(isNew ? "light-green" : "blue").append(" font-bold\" href=\"").append(inspectUrl)
+                        .append("\">").append(name).append("</a><span class=\"pull-right\">").append(start).append("</span></li>");
+
                 recentLoginsNames.add(name);
             }
 

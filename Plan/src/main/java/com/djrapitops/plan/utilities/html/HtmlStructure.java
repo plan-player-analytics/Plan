@@ -13,7 +13,6 @@ import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
-import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;
@@ -106,7 +105,7 @@ public class HtmlStructure {
             }
         }
 
-        return new String[]{Html.TABLE_SESSIONS.parse(SessionsTableCreator.createTable(uuidByID, allSessions)[0]), ""};
+        return new String[]{/*Html.TABLE_SESSIONS.parse(SessionsTableCreator.createTable(uuidByID, allSessions)[0]),*/"", ""};
     }
 
     public static String createInspectPluginsTabContent(String serverName, List<PluginData> plugins, Map<String, Serializable> replaceMap) {

@@ -58,7 +58,7 @@ public enum Html {
     ),
     TABLE_PLAYERS("<table class=\"table table-bordered table-striped table-hover player-table dataTable\"><thead><tr>" +
             "<th><i class=\"fa fa-user\"></i> Name</th>" +
-            "<th><i class=\"fa fa-check\"></i> Active</th>" +
+            "<th><i class=\"fa fa-check\"></i> Activity Index</th>" +
             "<th><i class=\"fa fa-clock-o\"></i> Playtime</th>" +
             "<th><i class=\"fa fa-calendar-plus-o\"></i> Sessions</th>" +
             "<th><i class=\"fa fa-user-plus\"></i> Registered</th>" +

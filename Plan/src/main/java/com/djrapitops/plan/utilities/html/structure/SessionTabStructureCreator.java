@@ -6,21 +6,18 @@ package main.java.com.djrapitops.plan.utilities.html.structure;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
-import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * //TODO Class Javadoc Comment
@@ -33,9 +30,9 @@ public class SessionTabStructureCreator {
 
         Map<Integer, UUID> uuidsByID = generateIDtoUUIDMap(sessions);
 
-        if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
-            return new String[]{Html.TABLE_SESSIONS.parse("", "", "", SessionsTableCreator.createTable(uuidsByID, allSessions)[0]), ""};
-        }
+//        if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
+//            return new String[]{Html.TABLE_SESSIONS.parse("", "", "", SessionsTableCreator.createTable(uuidsByID, allSessions)[0]), ""};
+//        }
 
         if (Verify.isEmpty(allSessions)) {
             return new String[]{"<div class=\"body\">" +
@@ -172,19 +169,14 @@ public class SessionTabStructureCreator {
         return uuidsByID;
     }
 
-    public static String[] creteStructure(JoinInfoPart joinInfoPart) {
+    public static String[] creteStructure(Map<UUID, List<Session>> sessions, List<Session> allSessions) {
         Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
-        Map<UUID, List<Session>> sessions = joinInfoPart.getSessions();
+
         for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
             Map<String, List<Session>> serverSpecificMap = new HashMap<>();
             serverSpecificMap.put("This server", entry.getValue());
             map.put(entry.getKey(), serverSpecificMap);
         }
-
-        List<Session> allSessions = sessions.values().stream()
-                .flatMap(Collection::stream)
-                .sorted(new SessionStartComparator())
-                .collect(Collectors.toList());
 
         return creteStructure(map, allSessions, true);
     }
