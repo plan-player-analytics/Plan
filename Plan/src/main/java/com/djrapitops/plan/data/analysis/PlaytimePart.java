@@ -13,6 +13,7 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Deprecated
 public class PlaytimePart extends RawData {
 
     private long totalPlaytime;

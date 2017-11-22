@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Deprecated
 public class JoinInfoPart extends RawData {
 
     private final Map<UUID, Session> activeSessions;

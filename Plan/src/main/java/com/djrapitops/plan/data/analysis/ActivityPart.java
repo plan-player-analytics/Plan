@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Deprecated
 public class ActivityPart extends RawData {
 
     private final PlayerCountPart playerCount;

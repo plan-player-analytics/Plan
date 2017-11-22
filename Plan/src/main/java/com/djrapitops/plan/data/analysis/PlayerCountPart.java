@@ -18,6 +18,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Deprecated
 public class PlayerCountPart extends RawData {
 
     private final Set<UUID> uuids;

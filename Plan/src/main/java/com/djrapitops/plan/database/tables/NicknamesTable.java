@@ -234,4 +234,5 @@ public class NicknamesTable extends UserIDTable {
     public String getColumnUserID() {
         return columnUserID;
     }
+
 }

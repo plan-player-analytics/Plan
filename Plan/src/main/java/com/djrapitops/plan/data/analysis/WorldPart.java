@@ -21,6 +21,7 @@ import java.util.HashMap;
  * @author Rsl1122
  * @since 3.6.0
  */
+@Deprecated
 public class WorldPart extends RawData {
 
     private WorldTimes worldTimes;

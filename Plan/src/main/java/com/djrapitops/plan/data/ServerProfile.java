@@ -52,6 +52,13 @@ public class ServerProfile {
         players = new ArrayList<>();
         tps = new ArrayList<>();
         commandUsage = new HashMap<>();
+
+        allTimePeak = -1;
+        allTimePeakPlayers = -1;
+        lastPeakDate = -1;
+        lastPeakPlayers = -1;
+        playersOnline = -1;
+        playersMax = -1;
     }
 
     public List<PlayerProfile> getPlayers() {

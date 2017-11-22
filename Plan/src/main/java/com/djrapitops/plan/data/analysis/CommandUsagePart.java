@@ -24,6 +24,7 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Deprecated
 public class CommandUsagePart extends RawData {
 
     private Map<String, Integer> commandUsage;
