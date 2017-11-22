@@ -35,6 +35,8 @@ public class ErrorResponse extends Response {
     public void replacePlaceholders() {
         Map<String, String> placeHolders = new HashMap<>();
         placeHolders.put("title", title);
+        String[] split = title.split(">", 3);
+        placeHolders.put("titleText", split.length == 3 ? split[2] : title);
         placeHolders.put("paragraph", paragraph);
         placeHolders.put("version", MiscUtils.getPlanVersion());
 
