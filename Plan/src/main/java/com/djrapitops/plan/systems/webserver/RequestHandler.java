@@ -36,7 +36,7 @@ public class RequestHandler implements HttpHandler {
         try {
             Response response = responseHandler.getResponse(request);
             if (Settings.DEV_MODE.isTrue()) {
-                Log.debug(request.toString(), "Response code: " + response.getCode());
+                Log.debug(request.toString() + " Response code: " + response.getCode());
             }
             if (response instanceof PromptAuthorizationResponse) {
                 responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\";");

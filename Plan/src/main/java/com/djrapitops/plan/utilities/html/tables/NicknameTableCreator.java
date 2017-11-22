@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Utility Class for creating Actions Table for inspect page.
+ * Utility Class for creating Nicknames Table for inspect page.
  *
  * @author Rsl1122
  */

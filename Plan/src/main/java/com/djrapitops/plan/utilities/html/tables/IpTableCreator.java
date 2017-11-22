@@ -12,7 +12,7 @@ import main.java.com.djrapitops.plan.utilities.html.Html;
 import java.util.List;
 
 /**
- * Utility Class for creating Actions Table for inspect page.
+ * Utility Class for creating IP Table for inspect page.
  *
  * @author Rsl1122
  */

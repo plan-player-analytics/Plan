@@ -34,7 +34,7 @@ public class APIRequestHandler implements HttpHandler {
         try {
             Response response = responseHandler.getAPIResponse(request);
             if (Settings.DEV_MODE.isTrue()) {
-                Log.debug(request.toString(), response.toString());
+                Log.debug(request.toString() + " Response code: " + response.getCode());
             }
             response.setResponseHeaders(responseHeaders);
             response.send(exchange);
