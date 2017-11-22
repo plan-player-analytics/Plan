@@ -232,79 +232,83 @@
     <div class="main-limiter">
         <div id="main">
             <div id="tab-information" class="tab">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="card">
-                        <div class="header">
-                            <div class="row clearfix">
-                                <div class="col-xs-12 col-sm-6">
-                                    <h2><i class="fa fa-drivers-license"></i> ${playerName}</h2>
+                <div class="row clearfix">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-6">
+                                        <h2><i class="fa fa-drivers-license"></i> ${playerName}</h2>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            ${playerStatus}
+                                            <p><i class="col-brown fa fa-gavel"></i> Times Kicked: ${kickCount}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <img class="center-block"
+                                                 src="https://cravatar.eu/avatar/${playerName}/100">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p><i class="col-red fa fa-crosshairs"></i> Player Kills: ${playerKillCount}
+                                            </p>
+                                            <p><i class="col-green fa fa-crosshairs"></i> Mob Kills: ${mobKillCount}</p>
+                                            <p><i class="col-red fa fa-frown-o"></i> Deaths: ${deathCount}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><i class="col-teal fa fa-calendar-check-o"></i> Sessions <span
+                                                    class="pull-right"><b>${sessionCount}</b></span></p>
+                                            <p><i class="col-green fa fa-clock-o"></i> Total Playtime <span
+                                                    class="pull-right">${playtimeTotal}</span></p>
+                                            <p><i class="col-teal fa fa-clock-o"></i> Longest Session <span
+                                                    class="pull-right">${sessionLengthLongest}</span>
+                                            </p>
+                                            <p><i class="col-teal fa fa-clock-o"></i> Session Median <span
+                                                    class="pull-right">${sessionLengthMedian}</span>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><i class="col-amber fa fa-user"></i> Activity Index <span
+                                                    class="pull-right"><b>${activityIndexNumber}</b></span></p>
+                                            <p>&nbsp;<span class="col-${activityIndexColor} font-bold pull-right">${activityIndex}</span>
+                                            </p>
+                                            <p>&nbsp;
+                                            </p>
+                                            <p><i class="col-green fa fa-server"></i> Favorite Server<span
+                                                    class="pull-right">${favoriteServer}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        ${playerStatus}
-                                        <p><i class="col-brown fa fa-gavel"></i> Times Kicked: ${kickCount}</p>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <table class="table table-striped">
+                                            <thead class="bg-blue-grey">
+                                            <tr>
+                                                <th><i class="fa fa-clock-o"></i> Time</th>
+                                                <th><i class="fa fa-signing"></i> Action</th>
+                                                <th>Info</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            ${tableBodyActions}
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="col-md-4">
-                                        <img class="center-block" src="https://cravatar.eu/avatar/${playerName}/100">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p><i class="col-red fa fa-crosshairs"></i> Player Kills: ${playerKillCount}</p>
-                                        <p><i class="col-green fa fa-crosshairs"></i> Mob Kills: ${mobKillCount}</p>
-                                        <p><i class="col-red fa fa-frown-o"></i> Deaths: ${deathCount}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><i class="col-teal fa fa-calendar-check-o"></i> Sessions <span
-                                                class="pull-right"><b>${sessionCount}</b></span></p>
-                                        <p><i class="col-green fa fa-clock-o"></i> Total Playtime <span
-                                                class="pull-right">${playtimeTotal}</span></p>
-                                        <p><i class="col-teal fa fa-clock-o"></i> Longest Session <span
-                                                class="pull-right">${sessionLengthLongest}</span>
-                                        </p>
-                                        <p><i class="col-teal fa fa-clock-o"></i> Session Median <span
-                                                class="pull-right">${sessionLengthMedian}</span>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="col-amber fa fa-user"></i> Activity Index <span
-                                                class="pull-right"><b>${activityIndexNumber}</b></span></p>
-                                        <p>&nbsp;<span class="col-${activityIndexColor} font-bold pull-right">${activityIndex}</span></p>
-                                        <p>&nbsp;
-                                        </p>
-                                        <p><i class="col-green fa fa-server"></i> Favorite Server<span
-                                                class="pull-right">${favoriteServer}</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <table class="table table-striped">
-                                        <thead class="bg-blue-grey">
-                                        <tr>
-                                            <th><i class="fa fa-clock-o"></i> Time</th>
-                                            <th><i class="fa fa-signing"></i> Action</th>
-                                            <th>Info</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        ${tableBodyActions}
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- Widgets -->
-                <div class="row clearfix">
+                    <!-- Widgets -->
+
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                         <div class="info-box bg-light-green hover-expand-effect">
                             <div class="icon">
@@ -343,6 +347,63 @@
                     </div>
                 </div>
                 <!-- #END# Widgets -->
+                <div class="row clearfix">
+                    <!-- Information -->
+                    <!-- Nick info -->
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-6">
+                                        <h2><i class="fa fa-id-badge"></i> Seen Nicknames</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <table class="table table-striped scrollbar">
+                                    <thead class="bg-purple">
+                                    <tr>
+                                        <th><i class="fa fa-id-badge"></i> Nickname</th>
+                                        <th><i class="fa fa-server"></i> Server</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    ${tableBodyNicknames}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #END# Nick info -->
+                    <!-- Conn info -->
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-6">
+                                        <h2><i class="fa fa-wifi"></i> Connection Information</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <table class="table table-striped scrollbar">
+                                    <thead class="bg-green">
+                                    <tr>
+                                        <th><i class="fa fa-wifi"></i> IP-address</th>
+                                        <th><i class="fa fa-globe"></i> Geolocation</th>
+                                        <th><i class="fa fa-clock-o"></i> Last Used</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    ${tableBodyIPs}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #END# Conn info -->
+                    <!-- #END# Information -->
+                </div>
             </div>
             <!-- #END# Tab Information -->
             <div id="tab-sessions" class="tab">
@@ -529,18 +590,19 @@
 <script>
     Highcharts.setOptions({
         global: {
-            timezoneOffset: ${timeZone} *  60
+            timezoneOffset: ${timeZone} * 60
     }
-    });
+    })
+    ;
     var serverSeries = {
-        name:'Server Playtime',
-        colorByPoint:true,
+        name: 'Server Playtime',
+        colorByPoint: true,
         colors: [${serverPieColors}],
         data: ${serverPieSeries}
     }
     var worldSeries = {
-        name:'World Playtime',
-        colorByPoint:true,
+        name: 'World Playtime',
+        colorByPoint: true,
         colors: worldPieColors,
         data: ${worldPieSeries}
     };
@@ -581,6 +643,7 @@
         serverPie('serverPie', serverSeries);
         punchCard('punchCard', punchcardSeries);
         ${sessionTabGraphViewFunctions}
+
         /**/
 
         function openFunc(i) {
