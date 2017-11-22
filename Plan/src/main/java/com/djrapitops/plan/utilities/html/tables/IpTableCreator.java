@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.utilities.html.tables;
 
 import main.java.com.djrapitops.plan.data.GeoInfo;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.util.List;
@@ -23,19 +24,18 @@ public class IpTableCreator {
     }
 
     public static String createTable(List<GeoInfo> geoInfo) {
+        geoInfo.sort(new GeoInfoComparator());
         StringBuilder html = new StringBuilder();
         if (geoInfo.isEmpty()) {
             html.append(Html.TABLELINE_3.parse("No Connections", "-", "-"));
         } else {
-            int i = 0;
             for (GeoInfo info : geoInfo) {
+                long date = info.getDate();
                 html.append(Html.TABLELINE_3.parse(
                         FormatUtils.formatIP(info.getIp()),
                         info.getGeolocation(),
-                        FormatUtils.formatTimeStampYear(info.getDate())
+                        date != 0 ? FormatUtils.formatTimeStampYear(date) : "-"
                 ));
-
-                i++;
             }
         }
         return html.toString();
