@@ -1,8 +1,10 @@
 package main.java.com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.api.TimeAmount;
+import com.google.common.base.Objects;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Colors;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -17,10 +19,7 @@ import main.java.com.djrapitops.plan.utilities.html.tables.CommandUseTableCreato
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -117,6 +116,7 @@ public class AnalysisData extends RawData {
         sessionData(monthAgo, sessions, allSessions);
         onlineActivityNumbers(profile, sessions, players);
         geolocationsTab(geoLocations);
+        commandUsage(commandUsage);
 
         addValue("ops", ops.size());
         addValue("playersTotal", playersTotal);
@@ -127,8 +127,6 @@ public class AnalysisData extends RawData {
         addValue("inactive", 0);
         addValue("joinLeaver", 0);
         addValue("banned", 0);
-
-        commandUsage(commandUsage);
 
         addValue("playtimeTotal", FormatUtils.formatTimeAmount(profile.getTotalPlaytime()));
         addValue("playtimeAverage", FormatUtils.formatTimeAmount(profile.getAveragePlayTime()));
@@ -197,6 +195,86 @@ public class AnalysisData extends RawData {
         addValue("playersNewAverageDay", AnalysisUtils.getNewUsersPerDay(toRegistered(newDay), -1, newD));
         addValue("playersNewAverageWeek", AnalysisUtils.getNewUsersPerDay(toRegistered(newWeek), -1, newW));
         addValue("playersNewAverageMonth", AnalysisUtils.getNewUsersPerDay(toRegistered(newMonth), -1, newM));
+
+        stickiness(now, weekAgo, monthAgo, newDay, newWeek, newMonth, newD, newW, newM);
+    }
+
+    private void stickiness(long now, long weekAgo, long monthAgo,
+                            List<PlayerProfile> newDay, List<PlayerProfile> newWeek, List<PlayerProfile> newMonth,
+                            int newD, int newW, int newM) {
+        long fourDaysAgo = now - TimeAmount.DAY.ms() * 4L;
+        long twoWeeksAgo = now - TimeAmount.WEEK.ms() * 2L;
+
+        List<PlayerProfile> playersStuckPerMonth = newMonth.stream()
+                .filter(p -> p.playedBetween(monthAgo, twoWeeksAgo) && p.playedBetween(twoWeeksAgo, now))
+                .collect(Collectors.toList());
+        List<PlayerProfile> playersStuckPerWeek = newWeek.stream()
+                .filter(p -> p.playedBetween(weekAgo, fourDaysAgo) && p.playedBetween(fourDaysAgo, now))
+                .collect(Collectors.toList());
+
+        int stuckPerM = playersStuckPerMonth.size();
+        int stuckPerW = playersStuckPerWeek.size();
+
+        addValue("playersStuckMonth", stuckPerM);
+        addValue("playersStuckWeek", stuckPerW);
+        addValue("playersStuckPercMonth", newM != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerM, newM)) + "%" : "-");
+        addValue("playersStuckPercWeek", newW != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerW, newW)) + "%" : "-");
+
+        if (newD != 0) {
+            // New Players
+            Set<StickyData> stickyM = newMonth.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
+            Set<StickyData> stickyW = playersStuckPerMonth.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
+            // New Players who stayed
+            Set<StickyData> stickyStuckM = newMonth.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
+            Set<StickyData> stickyStuckW = playersStuckPerWeek.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
+
+            int stuckPerD = 0;
+            for (PlayerProfile playerProfile : newDay) {
+                StickyData data = new StickyData(playerProfile);
+
+                Set<StickyData> similarM = new HashSet<>();
+                Set<StickyData> similarW = new HashSet<>();
+                for (StickyData stickyData : stickyM) {
+                    if (stickyData.distance(data) < 2.5) {
+                        similarM.add(stickyData);
+                    }
+                }
+                for (StickyData stickyData : stickyW) {
+                    if (stickyData.distance(data) < 2.5) {
+                        similarW.add(stickyData);
+                    }
+                }
+
+                double probability = 1.0;
+
+                int stickM = 0;
+                for (StickyData stickyData : stickyStuckM) {
+                    if (similarM.contains(stickyData)) {
+                        stickM++;
+                    }
+                }
+
+                probability *= (stickM / similarM.size());
+
+                int stickW = 0;
+                for (StickyData stickyData : stickyStuckW) {
+                    if (similarW.contains(stickyData)) {
+                        stickW++;
+                    }
+                }
+
+                probability *= (stickW / similarW.size());
+
+                if (probability >= 0.5) {
+                    stuckPerD++;
+                }
+            }
+            addValue("playersStuckDay", stuckPerD);
+            addValue("playersStuckPercDay", FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerD, newD)) + "%");
+        } else {
+            addValue("playersStuckDay", 0);
+            addValue("playersStuckPercDay", "-");
+        }
     }
 
     private List<Long> toRegistered(List<PlayerProfile> players) {
@@ -274,5 +352,61 @@ public class AnalysisData extends RawData {
         addValue("chunkAverageMonth", FormatUtils.cutDecimals(MathUtils.averageInt(tpsDataMonth.stream().map(TPS::getChunksLoaded).filter(i -> i != 0))));
         addValue("chunkAverageWeek", FormatUtils.cutDecimals(MathUtils.averageInt(tpsDataWeek.stream().map(TPS::getChunksLoaded).filter(i -> i != 0))));
         addValue("chunkAverageDay", FormatUtils.cutDecimals(MathUtils.averageInt(tpsDataDay.stream().map(TPS::getChunksLoaded).filter(i -> i != 0))));
+    }
+}
+
+class StickyData {
+    private final double activityIndex;
+    private Integer messagesSent;
+    private Integer onlineOnJoin;
+
+    public StickyData(PlayerProfile player) {
+        activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms());
+        for (Action action : player.getActions()) {
+            if (messagesSent == null && action.getDoneAction() == Actions.FIRST_LOGOUT) {
+                String additionalInfo = action.getAdditionalInfo();
+                String[] split = additionalInfo.split(": ");
+                if (split.length == 2) {
+                    try {
+                        messagesSent = Integer.parseInt(split[1]);
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+            }
+            if (onlineOnJoin == null && action.getDoneAction() == Actions.FIRST_SESSION) {
+                String additionalInfo = action.getAdditionalInfo();
+                String[] split = additionalInfo.split(" ");
+                if (split.length == 3) {
+                    try {
+                        onlineOnJoin = Integer.parseInt(split[1]);
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+            }
+        }
+    }
+
+    public double distance(StickyData data) {
+        double num = 0;
+        num += Math.abs(data.activityIndex - activityIndex) * 2.0;
+        num += Math.abs(data.onlineOnJoin - onlineOnJoin) / 10.0;
+        num += Math.abs(data.messagesSent - messagesSent) / 10.0;
+
+        return num;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StickyData that = (StickyData) o;
+        return Double.compare(that.activityIndex, activityIndex) == 0 &&
+                Objects.equal(messagesSent, that.messagesSent) &&
+                Objects.equal(onlineOnJoin, that.onlineOnJoin);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(activityIndex, messagesSent, onlineOnJoin);
     }
 }
