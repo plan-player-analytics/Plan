@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
@@ -13,6 +14,7 @@ import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
+import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;
@@ -92,9 +94,15 @@ public class HtmlStructure {
     }
 
     public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
-        Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
-        map.put(uuid, sessions);
-        return SessionTabStructureCreator.creteStructure(map, allSessions, false);
+        if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
+            Map<UUID, List<Session>> sessionsByPlayer = new HashMap<>();
+            sessionsByPlayer.put(uuid, allSessions);
+            return SessionsTableCreator.createTable(sessionsByPlayer, allSessions);
+        } else {
+            Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
+            map.put(uuid, sessions);
+            return SessionTabStructureCreator.creteStructure(map, allSessions, false);
+        }
     }
 
     private static String[] getSessionsAsTable(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
