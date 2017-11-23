@@ -65,7 +65,7 @@ public enum Html {
             "<th><i class=\"fa fa-calendar-check-o\"></i> Last Seen</th>" +
             "<th><i class=\"fa fa-globe\"></i> Geolocation</th></thead>" +
             "<tfoot><tr><th><i class=\"fa fa-user\"></i> Name</th>" +
-            "<th><i class=\"fa fa-check\"></i> Active</th>" +
+            "<th><i class=\"fa fa-check\"></i> Activity Index</th>" +
             "<th><i class=\"fa fa-clock-o\"></i> Playtime</th>" +
             "<th><i class=\"fa fa-calendar-plus-o\"></i> Sessions</th>" +
             "<th><i class=\"fa fa-user-plus\"></i> Registered</th>" +

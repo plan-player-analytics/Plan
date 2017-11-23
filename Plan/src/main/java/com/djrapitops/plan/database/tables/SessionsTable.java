@@ -457,15 +457,10 @@ public class SessionsTable extends UserIDTable {
     }
 
     public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) throws SQLException {
-        Optional<Integer> id = serverTable.getServerID(serverUUID);
-        if (!id.isPresent()) {
-            return new HashMap<>();
-        }
-        int serverID = id.get();
-
         String usersIDColumn = usersTable + "." + usersTable.getColumnID();
         String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
         String sql = "SELECT " +
+                tableName + "." + columnID + ", " +
                 columnSessionStart + ", " +
                 columnSessionEnd + ", " +
                 columnDeaths + ", " +
@@ -492,7 +487,7 @@ public class SessionsTable extends UserIDTable {
                     int deaths = set.getInt(columnDeaths);
                     int mobKills = set.getInt(columnMobKills);
                     List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
-                    sessions.add(new Session(serverID, start, end, mobKills, deaths));
+                    sessions.add(new Session(set.getInt(columnID), start, end, mobKills, deaths));
                     sessionsByUser.put(uuid, sessions);
                 }
                 return sessionsByUser;

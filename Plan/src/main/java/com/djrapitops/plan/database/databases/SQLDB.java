@@ -304,7 +304,12 @@ public abstract class SQLDB extends Database {
         Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
         Map<UUID, List<Action>> actions = actionsTable.getServerActions(serverUUID);
         Map<UUID, List<GeoInfo>> geoInfo = ipsTable.getAllGeoInfo();
+
         Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
+        Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
+        map.put(serverUUID, sessions);
+        killsTable.addKillsToSessions(map);
+        worldTimesTable.addWorldTimesToSessions(map);
 
         List<PlayerProfile> players = new ArrayList<>();
 

@@ -66,7 +66,9 @@ public class SessionTabStructureCreator {
                     HtmlStructure.separateWithDots(name, sessionStart) :
                     sessionStart;
 
-            String id = "worldPie" + session.getSessionStart() + i;
+            String htmlID = "" + session.getSessionStart() + sessionID + i;
+
+            String worldId = "worldPie" + session.getSessionStart() + i;
             WorldTimes worldTimes = session.getWorldTimes();
             AnalysisUtils.addMissingWorlds(worldTimes);
 
@@ -76,18 +78,18 @@ public class SessionTabStructureCreator {
 
             // Accordion panel header
             html.append("<div title=\"Session ID: ").append(sessionID).append("\"class=\"panel panel-col-teal\">")
-                    .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(sessionID).append("\">")
+                    .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
                     .append("<h4 class=\"panel-title\">")
                     .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
-                    .append("href=\"#session_").append(sessionID).append("\" aria-expanded=\"false\" ")
-                    .append("aria-controls=\"session_").append(sessionID).append("\">")
+                    .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
+                    .append("aria-controls=\"session_").append(htmlID).append("\">")
                     .append(dotSeparated).append("<span class=\"pull-right\">").append(sessionLength).append("</span>") // Title (header)
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 
             // Content
-            html.append("<div id=\"session_").append(sessionID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
-                    .append(" aria-labelledby=\"heading_").append(sessionID).append("\">")
+            html.append("<div id=\"session_").append(htmlID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
+                    .append(" aria-labelledby=\"heading_").append(htmlID).append("\">")
                     .append("<div class=\"panel-body\"><div class=\"row clearfix\">")
                     .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Left col-6
                     //
@@ -110,11 +112,11 @@ public class SessionTabStructureCreator {
                     .append("<li><i class=\"col-red fa fa-frown-o\"></i> Deaths<span class=\"pull-right\"><b>").append(session.getDeaths()).append("</b></span></li>")
                     .append("</ul></div>") // Closes stat-list, Left col-6
                     .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Right col-6
-                    .append("<div id=\"").append(id).append("\" class=\"dashboard-donut-chart\"></div>")
+                    .append("<div id=\"").append(worldId).append("\" class=\"dashboard-donut-chart\"></div>")
                     // World Pie data script
                     .append("<script>")
-                    .append("var ").append(id).append("series = {name:'World Playtime',colors: worldPieColors,colorByPoint:true,data:").append(worldData[0]).append("};")
-                    .append("var ").append(id).append("gmseries = ").append(worldData[1]).append(";")
+                    .append("var ").append(worldId).append("series = {name:'World Playtime',colors: worldPieColors,colorByPoint:true,data:").append(worldData[0]).append("};")
+                    .append("var ").append(worldId).append("gmseries = ").append(worldData[1]).append(";")
                     .append("</script>")
                     .append("</div>") // Right col-6
                     .append("</div>") // Closes row clearfix
@@ -133,9 +135,9 @@ public class SessionTabStructureCreator {
                     .append("</div>"); // Closes panel
 
             viewScript.append("worldPie(")
-                    .append(id).append(", ")
-                    .append(id).append("series, ")
-                    .append(id).append("gmseries")
+                    .append(worldId).append(", ")
+                    .append(worldId).append("series, ")
+                    .append(worldId).append("gmseries")
                     .append(");");
             i++;
         }
