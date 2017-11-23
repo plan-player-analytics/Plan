@@ -97,7 +97,7 @@ public class HtmlStructure {
         if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
             Map<UUID, List<Session>> sessionsByPlayer = new HashMap<>();
             sessionsByPlayer.put(uuid, allSessions);
-            return SessionsTableCreator.createTable(sessionsByPlayer, allSessions);
+            return new String[]{Html.TABLE_SESSIONS.parse("", "", "", SessionsTableCreator.createTable(sessionsByPlayer, allSessions)[0]), ""};
         } else {
             Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
             map.put(uuid, sessions);
