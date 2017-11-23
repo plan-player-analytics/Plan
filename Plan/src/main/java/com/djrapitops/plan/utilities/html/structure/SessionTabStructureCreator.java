@@ -6,13 +6,16 @@ package main.java.com.djrapitops.plan.utilities.html.structure;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
+import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +32,6 @@ public class SessionTabStructureCreator {
     public static String[] creteStructure(Map<UUID, Map<String, List<Session>>> sessions, List<Session> allSessions, boolean appendName) {
 
         Map<Integer, UUID> uuidsByID = generateIDtoUUIDMap(sessions);
-
-//        if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
-//            return new String[]{Html.TABLE_SESSIONS.parse("", "", "", SessionsTableCreator.createTable(uuidsByID, allSessions)[0]), ""};
-//        }
 
         if (Verify.isEmpty(allSessions)) {
             return new String[]{"<div class=\"body\">" +
@@ -172,6 +171,10 @@ public class SessionTabStructureCreator {
     }
 
     public static String[] creteStructure(Map<UUID, List<Session>> sessions, List<Session> allSessions) {
+        if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
+            return new String[]{Html.TABLE_SESSIONS.parse("", "", "", SessionsTableCreator.createTable(sessions, allSessions)[0]), ""};
+        }
+
         Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
 
         for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
