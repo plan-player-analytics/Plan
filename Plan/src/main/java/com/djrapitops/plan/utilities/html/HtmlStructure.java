@@ -4,20 +4,25 @@
  */
 package main.java.com.djrapitops.plan.utilities.html;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -312,16 +317,12 @@ public class HtmlStructure {
         List<String> values = new ArrayList<>(networkPageContents.values());
         Collections.sort(values);
         int size = values.size();
-        int extra = size % 3;
-        for (int j = 0; j < extra; j++) {
-            values.add("<div class=\"column\"></div>");
-        }
         for (String server : values) {
-            if (i % 3 == 0) {
-                b.append("<div class=\"row\">");
+            if (i % 2 == 0) {
+                b.append("<div class=\"row clearfix\">");
             }
             b.append(server);
-            if ((i + 1) % 3 == 0 || i + 1 == size) {
+            if ((i + 1) % 2 == 0 || i + 1 == size) {
                 b.append("</div>");
             }
             i++;
@@ -330,23 +331,72 @@ public class HtmlStructure {
     }
 
     public static String createServerContainer(Plan plugin) {
-        int maxPlayers = plugin.getVariable().getMaxPlayers();
+        ServerVariableHolder variable = plugin.getVariable();
+        int maxPlayers = variable.getMaxPlayers();
         int online = plugin.getServer().getOnlinePlayers().size();
         Optional<Long> analysisRefreshDate = ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisRefreshDate();
         String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStamp).orElse("-");
 
         String serverName = plugin.getServerInfoManager().getServerName();
+        String serverType = variable.getVersion();
         String address = "../server/" + serverName;
 
 
-        return "<div class=\"column\">" + "<div class=\"box-header\"><h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> " +
-                serverName +
-                "</h2></div>" +
-                "<div class=\"box\"><p>" + online + "/" + maxPlayers +
-                " Players Online</p></div>" +
-                "<div class=\"box-footer\"><p>Last Refresh: " + refresh + "</p>" +
-                "<a href=\"" + address + "\" class=\"button right\">Analysis</a>" +
-                "</div></div>";
+        Database db = plugin.getDB();
+        UUID serverUUID = plugin.getServerUuid();
+        String id = serverUUID.toString().replace("-", "");
+
+        int playerCount = db.getUserInfoTable().getServerUserCount(serverUUID);
+        String playerData = "[]";
+        try {
+            playerData = PlayerActivityGraphCreator.buildSeriesDataString(db.getTpsTable().getTPSData(serverUUID));
+        } catch (SQLException e) {
+            Log.toLog(HtmlStructure.class.getClass().getName(), e);
+        }
+
+        return "<div class=\"col-xs-12 col-sm-12 col-md-6 col-lg-6\">" +
+                "<div class=\"card\">" +
+                "<div class=\"header\">" +
+                "<div class=\"row clearfix\">" +
+                "<div class=\"col-xs-12 col-sm-12\">" +
+                "<h2><i class=\"col-light-green fa fa-server\"></i> " + serverName + "</h2>" +
+                "</div></div></div>" +
+                "<div class=\"panel panel-default\">" +
+                "<div class=\"panel-heading\">" +
+                "<div class=\"row\">" +
+                "<div id=\"playerChart" + id + "\" style=\"height: 200px;\"></div>" +
+                "</div></div>" +
+                "<div class=\"panel-body\">" +
+                "<div class=\"row\">" +
+                "<div class=\"col-md-8\">" +
+                "<p><i class=\"fa fa-users\"></i> Registered Players " +
+                "<span class=\"pull-right\">" + playerCount + "</span></p>" +
+                "<p><i class=\"col-blue fa fa-user\"></i> Players Online " +
+                "<span class=\"pull-right\">" + online + " / " + maxPlayers + "</span></p>" +
+                "<p><i class=\"col-deep-orange fa fa-compass\"></i> Type " +
+                "<span class=\"pull-right\">" + serverType + "</span></p></div>" +
+                "<div class=\"col-md-4\">" +
+                "<p><i class=\"fa fa-clock-o\"></i> Last Refresh" +
+                "<span class=\"pull-right\"><b>" + refresh + "</b></span></p>" +
+                "<br>" +
+                "<button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-light-green waves-effect\">" +
+                "<i class=\"material-icons\">trending_up</i>" +
+                "<span>ANALYSIS</span>" +
+                "</button></div></div></div></div></div></div>" +
+                "<script>" +
+                "var playersOnlineSeries" + id + " = {" +
+                "name: 'Players Online'," +
+                "data: " + playerData + "," +
+                "type: 'areaspline'," +
+                "color: '${playersGraphColor}'," +
+                "tooltip: {" +
+                "valueDecimals: 0" +
+                "}" +
+                "};" +
+                "</script>" +
+                "<script>$(function () {" +
+                "playersChartNoNav(playerChart" + id + ", playersOnlineSeries" + id +
+                "}</script>";
     }
 
     public static String parseOfflineServerContainer(String oldContent) {

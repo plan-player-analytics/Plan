@@ -466,6 +466,7 @@ public class DatabaseTest {
         assertEquals(uuid, userInfo.getUuid());
         assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
         assertEquals(123456789L, userInfo.getRegistered());
+        assertEquals(1, userInfoTable.getServerUserCount(Plan.getServerUUID()));
         assertEquals("Waiting for Update..", userInfo.getName());
         assertFalse(userInfo.isBanned());
         assertFalse(userInfo.isOpped());

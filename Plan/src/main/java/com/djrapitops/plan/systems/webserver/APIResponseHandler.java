@@ -48,6 +48,10 @@ public class APIResponseHandler {
             return PageCache.loadPage(target + "css", () -> new CSSResponse(target));
         }
 
+        if (target.endsWith(".js")) {
+            return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(target));
+        }
+
         if (args.length < 2 || !"api".equals(args[1])) {
             String address = MiscUtils.getIPlan().getInfoManager().getWebServerAddress() + target;
             String link = Html.LINK.parse(address, address);

@@ -56,7 +56,7 @@ public class NetworkPageParser extends PageParser {
             addValue("playersNewWeek", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.WEEK.ms(), now));
 
             Map<UUID, String> networkPageContents = ((BungeeInformationManager) plugin.getInfoManager()).getNetworkPageContent();
-            addValue("contentServers", HtmlStructure.createNetworkPageContent(networkPageContents));
+            addValue("tabContentServers", HtmlStructure.createNetworkPageContent(networkPageContents));
 
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("web/network.html"), placeHolders);
         } catch (Exception e) {

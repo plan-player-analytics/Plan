@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
@@ -313,5 +314,32 @@ public class UserInfoTable extends UserIDTable {
                 return serverMap;
             }
         });
+    }
+
+    public int getServerUserCount(UUID serverUUID) {
+        try {
+            String sql = "SELECT " +
+                    " COUNT(" + columnRegistered + ") as c" +
+                    " FROM " + tableName +
+                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
+
+            return query(new QueryStatement<Integer>(sql, 20000) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, serverUUID.toString());
+                }
+
+                @Override
+                public Integer processResults(ResultSet set) throws SQLException {
+                    if (set.next()) {
+                        return set.getInt("c");
+                    }
+                    return 0;
+                }
+            });
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+            return 0;
+        }
     }
 }

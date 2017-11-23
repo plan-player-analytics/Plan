@@ -34,6 +34,7 @@
 </head>
 
 <body class="theme-red">
+<script src="js/charts/playerGraphNoNav.js"></script>
 <!-- Page Loader -->
 <div class="page-loader-wrapper">
     <div class="loader">
@@ -233,14 +234,8 @@
                                     <span class="pull-right"><b>${playersTotal}</b></span>
                                 </li>
                                 <li>
-                                    <i class="col-blue fa fa-user"></i> Unique Players / Day
-                                    <small>(AVG.)</small>
-                                    <span class="pull-right"><b>${playersAverage}</b></span>
-                                </li>
-                                <li>
-                                    <i class="col-light-green fa fa-user-plus"></i> New Players / Day
-                                    <small>(AVG.)</small>
-                                    <span class="pull-right"><b>${playersNewAverage}</b></span>
+                                    <i class="col-blue fa fa-user"></i> Players Online
+                                    <span class="pull-right"><b>${playersOnline}</b></span>
                                 </li>
                                 <li></li>
                                 <li><i class="col-green fa fa-line-chart"></i> Last Peak: ${lastPeakTime}<span
@@ -316,7 +311,7 @@
 <script src="js/admin.js"></script>
 
 <!-- Plan Charts -->
-<script src="./js/playerGraph.js"></script>
+<script src="./js/charts/playerGraph.js"></script>
 
 <!-- Chart Data -->
 <script>

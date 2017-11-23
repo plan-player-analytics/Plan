@@ -106,12 +106,11 @@ public class DebugPageResponse extends ErrorResponse {
         Collection<ServerInfo> bukkitServers = serverInfoManager.getBukkitServers();
 
         if (!bukkitServers.isEmpty()) {
-            content.append("<p>If your issue is about Bungee-Bukkit connection relations, please include the following debug information of available servers as well: ");
+            content.append("<p>If your issue is about Bungee-Bukkit connection relations, please include the following debug information of available servers as well:</p>");
             for (ServerInfo info : bukkitServers) {
                 String link = Html.LINK.parse(info.getWebAddress() + "/debug", info.getWebAddress() + "/debug");
-                content.append(link).append("<br>");
+                content.append("<p>").append(link).append("</p>");
             }
-            content.append("</p>");
         }
 
         content.append("<pre>### Bungee Configuration<br>");
