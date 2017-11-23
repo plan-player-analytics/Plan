@@ -379,10 +379,10 @@ public class HtmlStructure {
                 "<p><i class=\"fa fa-clock-o\"></i> Last Refresh" +
                 "<span class=\"pull-right\"><b>" + refresh + "</b></span></p>" +
                 "<br>" +
-                "<button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-light-green waves-effect\">" +
+                "<a href=\"" + address + "\"><button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-light-green waves-effect\">" +
                 "<i class=\"material-icons\">trending_up</i>" +
                 "<span>ANALYSIS</span>" +
-                "</button></div></div></div></div></div></div>" +
+                "</button></a></div></div></div></div></div></div>" +
                 "<script>" +
                 "var playersOnlineSeries" + id + " = {" +
                 "name: 'Players Online'," +
@@ -396,7 +396,7 @@ public class HtmlStructure {
                 "</script>" +
                 "<script>$(function () {" +
                 "playersChartNoNav(playerChart" + id + ", playersOnlineSeries" + id +
-                "}</script>";
+                ");}</script>";
     }
 
     public static String parseOfflineServerContainer(String oldContent) {

@@ -43,6 +43,7 @@ public class NetworkPageParser extends PageParser {
             Database db = plugin.getDB();
             List<TPS> networkOnlineData = db.getTpsTable().getNetworkOnlineData();
 
+            addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
             addValue("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
             addValue("version", plugin.getVersion());
             addValue("playersOnlineSeries", PlayerActivityGraphCreator.buildSeriesDataString(networkOnlineData));
