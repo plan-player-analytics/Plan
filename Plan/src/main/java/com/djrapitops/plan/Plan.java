@@ -144,7 +144,9 @@ public class Plan extends BukkitPlugin implements IPlan {
     public void onEnable() {
         super.onEnable();
         try {
-            File configFile = new File(getDataFolder(), "config.yml");
+            File dataFolder = getDataFolder();
+            dataFolder.mkdirs();
+            File configFile = new File(dataFolder, "config.yml");
             config = new Config(configFile);
             config.copyDefaults(FileUtil.lines(this, "config.yml"));
             config.save();
