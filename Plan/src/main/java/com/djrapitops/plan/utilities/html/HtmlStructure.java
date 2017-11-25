@@ -364,7 +364,7 @@ public class HtmlStructure {
                 "<div class=\"panel panel-default\">" +
                 "<div class=\"panel-heading\">" +
                 "<div class=\"row\">" +
-                "<div id=\"playerChart" + id + "\" style=\"width: 100%; height: 200px;\"></div>" +
+                "<div id=\"playerChart" + id + "\" style=\"width: 100%; height: 300px;\"></div>" +
                 "</div></div>" +
                 "<div class=\"panel-body\">" +
                 "<div class=\"row\">" +
@@ -391,12 +391,12 @@ public class HtmlStructure {
                 "color: '${playersGraphColor}'," +
                 "tooltip: {" +
                 "valueDecimals: 0" +
-                "}" +
-                "};" +
+                "}};" +
                 "</script>" +
-                "<script>$(function () {" +
-                "playersChartNoNav(playerChart" + id + ", playersOnlineSeries" + id +
-                ");})</script>";
+                "<script>$(function () {setTimeout(" +
+                "function() {" +
+                "playersChartNoNav(playerChart" + id + ", playersOnlineSeries" + id + ");}, 1000);" +
+                "})</script>";
     }
 
     public static String parseOfflineServerContainer(String oldContent) {
