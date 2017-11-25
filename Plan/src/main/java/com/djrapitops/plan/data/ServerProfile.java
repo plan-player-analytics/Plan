@@ -340,7 +340,7 @@ public class ServerProfile {
         for (TPS tps : tpsData) {
             long date = tps.getDate();
             int players = tps.getPlayers();
-            if (lastDate != -1) {
+            if (lastDate == -1) {
                 lastDate = date;
                 lastPlayers = players;
                 continue;
@@ -356,5 +356,22 @@ public class ServerProfile {
         }
 
         return idleTime;
+    }
+
+    public static double aboveLowThreshold(List<TPS> tpsData) {
+        if (tpsData.isEmpty()) {
+            return 1;
+        }
+
+        int threshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
+
+        long count = 0;
+        for (TPS tps : tpsData) {
+            if (tps.getTicksPerSecond() >= threshold) {
+                count++;
+            }
+        }
+
+        return count / tpsData.size();
     }
 }
