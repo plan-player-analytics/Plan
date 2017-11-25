@@ -54,7 +54,7 @@ public class PlayersTableCreator {
 
                 String geoLocation = profile.getMostRecentGeoInfo().getGeolocation();
                 html.append(Html.TABLELINE_PLAYERS.parse(
-                        Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(profile.getName()), profile.getName()),
+                        Html.LINK_EXTERNAL.parse(Plan.getPlanAPI().getPlayerInspectPageLink(profile.getName()), profile.getName()),
                         activityString,
                         String.valueOf(playtime), FormatUtils.formatTimeAmount(playtime),
                         String.valueOf(loginTimes),

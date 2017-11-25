@@ -130,8 +130,6 @@ public class AnalysisData extends RawData {
         long totalPlaytime = profile.getTotalPlaytime();
         addValue("playtimeTotal", playersTotal != 0 ? FormatUtils.formatTimeAmount(totalPlaytime) : "No Players");
         addValue("playtimeAverage", playersTotal != 0 ? FormatUtils.formatTimeAmount(MathUtils.averageLong(totalPlaytime, playersTotal)) : "-");
-
-
     }
 
     private void healthTab(long now, long monthAgo, List<PlayerProfile> players, List<TPS> tpsDataMonth) {

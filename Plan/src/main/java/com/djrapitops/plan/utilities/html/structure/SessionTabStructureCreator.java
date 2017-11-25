@@ -125,7 +125,7 @@ public class SessionTabStructureCreator {
                     .append("</div>"); // Closes Left2 col-6
             if (appendName) {
                 html.append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Right2 col-6
-                        .append("<a href=\"").append(link).append("\"><button href=\"").append(link)
+                        .append("<a target=\"_blank\" href=\"").append(link).append("\"><button href=\"").append(link)
                         .append("\" type=\"button\" class=\"pull-right btn bg-blue waves-effect\"><i class=\"material-icons\">person</i><span>INSPECT PAGE</span></button></a>")
                         .append("</div>"); // Closes Right2 col-6
             }
