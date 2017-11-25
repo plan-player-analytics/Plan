@@ -27,6 +27,7 @@ import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.utilities.html.graphs.ServerPreferencePieCreator;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.structure.ServerAccordionCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.IpTableCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.NicknameTableCreator;
@@ -111,10 +112,11 @@ public class InspectPageParser extends PageParser {
                     .sorted(new SessionStartComparator())
                     .collect(Collectors.toList());
 
-            String[] sessionsTabContent = HtmlStructure.createSessionsTabContentInspectPage(sessionsByServerName, allSessions, uuid);
-            addValue("accordionSessions", sessionsTabContent[0]);
-            addValue("sessionTabGraphViewFunctions", sessionsTabContent[1]);
-            addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessionsByServerName));
+            String[] sessionsAccordion = HtmlStructure.createSessionsTabContentInspectPage(sessionsByServerName, allSessions, uuid);
+            String[] serverAccordion = ServerAccordionCreator.createAccordion(profile, serverNames);
+            addValue("accordionSessions", sessionsAccordion[0]);
+            addValue("accordionServers", serverAccordion[0]);
+            addValue("sessionTabGraphViewFunctions", sessionsAccordion[1] + serverAccordion[1]);
 
             long dayAgo = now - TimeAmount.DAY.ms();
             long weekAgo = now - TimeAmount.WEEK.ms();
