@@ -63,7 +63,7 @@ public class SessionTabStructureCreator {
             String link = Plan.getPlanAPI().getPlayerInspectPageLink(name);
             String dotSeparated = appendName ?
                     HtmlStructure.separateWithDots(name, sessionStart) :
-                    sessionStart;
+                    HtmlStructure.separateWithDots(serverName, sessionStart);
 
             String htmlID = "" + session.getSessionStart() + sessionID + i;
 
