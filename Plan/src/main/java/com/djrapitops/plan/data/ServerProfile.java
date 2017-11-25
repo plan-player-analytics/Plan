@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.TimeAmount;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.Settings;
@@ -13,6 +14,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.PlayerProfileLastPlayedComparator;
+import main.java.com.djrapitops.plan.utilities.comparators.TPSComparator;
 import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
 
 import java.util.*;
@@ -297,5 +299,62 @@ public class ServerProfile {
             uuids.add(player.getUuid());
         }
         return uuids;
+    }
+
+    public long serverDownTime(long after, long before) {
+        return serverDownTime(getTPSData(after, before)
+                .sorted(new TPSComparator())
+                .collect(Collectors.toList()));
+    }
+
+    public static long serverDownTime(List<TPS> tpsData) {
+        long lastDate = -1;
+        long downTime = 0;
+        for (TPS tps : tpsData) {
+            long date = tps.getDate();
+            if (lastDate == -1) {
+                lastDate = date;
+                continue;
+            }
+
+            long diff = date - lastDate;
+            if (diff > TimeAmount.MINUTE.ms() * 3L) {
+                downTime += diff;
+            }
+            lastDate = date;
+        }
+
+        return downTime;
+    }
+
+    public long serverIdleTime(long after, long before) {
+        return serverIdleTime(getTPSData(after, before)
+                .sorted(new TPSComparator())
+                .collect(Collectors.toList()));
+    }
+
+    public static long serverIdleTime(List<TPS> tpsData) {
+        long lastDate = -1;
+        int lastPlayers = 0;
+        long idleTime = 0;
+        for (TPS tps : tpsData) {
+            long date = tps.getDate();
+            int players = tps.getPlayers();
+            if (lastDate != -1) {
+                lastDate = date;
+                lastPlayers = players;
+                continue;
+            }
+
+            long diff = date - lastDate;
+            if (lastPlayers == 0 && players == 0) {
+                idleTime += diff;
+            }
+
+            lastDate = date;
+            lastPlayers = players;
+        }
+
+        return idleTime;
     }
 }
