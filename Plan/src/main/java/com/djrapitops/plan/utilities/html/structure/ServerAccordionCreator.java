@@ -27,7 +27,15 @@ public class ServerAccordionCreator {
         StringBuilder html = new StringBuilder("<div class=\"panel-group scrollbar\" id=\"session_accordion\" role=\"tablist\" aria-multiselectable=\"true\">");
         StringBuilder viewScript = new StringBuilder();
 
-        for (Map.Entry<UUID, WorldTimes> entry : profile.getWorldTimesPerServer().entrySet()) {
+        Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
+
+        if (worldTimesPerServer.isEmpty()) {
+            return new String[]{"<div class=\"body\">" +
+                    "<p>No Sessions</p>" +
+                    "</div>", ""};
+        }
+
+        for (Map.Entry<UUID, WorldTimes> entry : worldTimesPerServer.entrySet()) {
             UUID serverUUID = entry.getKey();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
             WorldTimes worldTimes = entry.getValue();
@@ -78,7 +86,7 @@ public class ServerAccordionCreator {
                     .append("<p><i class=\"col-green fa fa-clock-o\"></i> Server Playtime<span class=\"pull-right\"><b>").append(play).append("</b></span></p>")
                     .append("<p><i class=\"col-teal fa fa-clock-o\"></i> Longest Session<span class=\"pull-right\"><b>").append(longest).append("</b></span></p>")
                     .append("<p><i class=\"col-teal fa fa-clock-o\"></i> Session Median<span class=\"pull-right\"><b>").append(median).append("</b></span></p>")
-                   .append("<br>")
+                    .append("<br>")
                     // Player Kills
                     .append("<p><i class=\"col-red fa fa-crosshairs\"></i> Player Kills<span class=\"pull-right\"><b>").append(playerKills).append("</b></span></p>")
                     // Mob Kills

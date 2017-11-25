@@ -25,7 +25,7 @@ public class ActionsTableCreator {
     public static String createTable(List<Action> actions) {
         StringBuilder html = new StringBuilder();
         if (actions.isEmpty()) {
-            html.append(Html.TABLELINE_3.parse("", "", ""));
+            html.append(Html.TABLELINE_3.parse("No Actions", "-", "-"));
         } else {
             int i = 0;
             for (Action action : actions) {
