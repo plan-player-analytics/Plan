@@ -94,7 +94,7 @@ public abstract class WebAPI {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            connection.setRequestProperty("charset", "ISO-8859-1");
+            connection.setRequestProperty("charset", "UTF-8");
 
             String parameters = parseVariables();
 
@@ -185,13 +185,13 @@ public abstract class WebAPI {
         String serverUUID = MiscUtils.getIPlan().getServerUuid().toString();
         parameters.append("sender=").append(serverUUID);
         for (Map.Entry<String, String> entry : variables.entrySet()) {
-            parameters.append(";&").append(entry.getKey()).append("=").append(entry.getValue());
+            parameters.append(";&variable;").append(entry.getKey()).append("=").append(entry.getValue());
         }
         return parameters.toString();
     }
 
     public static Map<String, String> readVariables(String requestBody) {
-        String[] variables = requestBody.split(";&");
+        String[] variables = requestBody.split(";&variable;");
 
         return Arrays.stream(variables)
                 .map(variable -> variable.split("=", 2))

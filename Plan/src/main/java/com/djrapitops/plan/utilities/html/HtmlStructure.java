@@ -364,7 +364,7 @@ public class HtmlStructure {
                 "<div class=\"panel panel-default\">" +
                 "<div class=\"panel-heading\">" +
                 "<div class=\"row\">" +
-                "<div id=\"playerChart" + id + "\" style=\"height: 200px;\"></div>" +
+                "<div id=\"playerChart" + id + "\" style=\"width: 100%; height: 200px;\"></div>" +
                 "</div></div>" +
                 "<div class=\"panel-body\">" +
                 "<div class=\"row\">" +
@@ -396,7 +396,7 @@ public class HtmlStructure {
                 "</script>" +
                 "<script>$(function () {" +
                 "playersChartNoNav(playerChart" + id + ", playersOnlineSeries" + id +
-                ");}</script>";
+                ");})</script>";
     }
 
     public static String parseOfflineServerContainer(String oldContent) {

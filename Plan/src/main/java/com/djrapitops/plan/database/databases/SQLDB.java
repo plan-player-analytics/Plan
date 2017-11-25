@@ -14,7 +14,6 @@ import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.database.tables.move.Version8TransferTable;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.sqlite.SQLiteException;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -410,7 +409,7 @@ public abstract class SQLDB extends Database {
             if (!usingMySQL) {
                 connection.commit();
             }
-        } catch (SQLiteException e) {
+        } catch (SQLException e) {
             if (!e.getMessage().contains("cannot commit")) {
                 Log.toLog(this.getClass().getName(), e);
             }

@@ -35,7 +35,7 @@ public class SessionTabStructureCreator {
 
         if (Verify.isEmpty(allSessions)) {
             return new String[]{"<div class=\"body\">" +
-                    "<h3>No Sessions</h3>" +
+                    "<p>No Sessions</p>" +
                     "</div>", ""};
         }
 

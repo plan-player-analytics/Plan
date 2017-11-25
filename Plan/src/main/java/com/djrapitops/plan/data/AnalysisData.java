@@ -137,20 +137,25 @@ public class AnalysisData extends RawData {
         List<String> healthNotes = new ArrayList<>();
 
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
-        for (PlayerProfile player : players) {
-            for (long date = now; date >= now - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms() * 2L) {
-                double activityIndex = player.getActivityIndex(date);
-                String index = FormatUtils.readableActivityIndex(activityIndex)[1];
-
-                Map<String, Set<UUID>> map = activityData.getOrDefault(date, new HashMap<>());
-                Set<UUID> uuids = map.getOrDefault(index, new HashSet<>());
-                uuids.add(player.getUuid());
-                map.put(index, uuids);
-                activityData.put(date, map);
-            }
-        }
-
         long fourWeeksAgo = now - TimeAmount.WEEK.ms() * 4L;
+
+        if (!players.isEmpty()) {
+            for (PlayerProfile player : players) {
+                for (long date = now; date >= now - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms() * 2L) {
+                    double activityIndex = player.getActivityIndex(date);
+                    String index = FormatUtils.readableActivityIndex(activityIndex)[1];
+
+                    Map<String, Set<UUID>> map = activityData.getOrDefault(date, new HashMap<>());
+                    Set<UUID> uuids = map.getOrDefault(index, new HashSet<>());
+                    uuids.add(player.getUuid());
+                    map.put(index, uuids);
+                    activityData.put(date, map);
+                }
+            }
+        } else {
+            activityData.put(now, new HashMap<>());
+            activityData.put(fourWeeksAgo, new HashMap<>());
+        }
 
         Map<String, Set<UUID>> activityNow = activityData.get(now);
         Map<String, Set<UUID>> activityFourWAgo = activityData.get(fourWeeksAgo);

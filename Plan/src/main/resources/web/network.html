@@ -31,6 +31,9 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="css/themes/all-themes.css" rel="stylesheet"/>
+
+    <!-- Jquery Core Js -->
+    <script src="plugins/jquery/jquery.min.js"></script>
 </head>
 
 <body class="theme-red">
@@ -288,9 +291,6 @@
     </div>
 </section>
 
-<!-- Jquery Core Js -->
-<script src="plugins/jquery/jquery.min.js"></script>
-
 <!-- Bootstrap Core Js -->
 <script src="plugins/bootstrap/js/bootstrap.js"></script>
 
@@ -355,9 +355,7 @@
         openFunc(slideIndex)();
 
         // Chart draw scripts
-        /*playersChart('playerChartDay', playersOnlineSeries, 1);
-        ${serverTabGraphViewFunctions}
-        /**/
+        playersChart('playerChartDay', playersOnlineSeries, 2);
 
         function openFunc(i) {
             return function () {
