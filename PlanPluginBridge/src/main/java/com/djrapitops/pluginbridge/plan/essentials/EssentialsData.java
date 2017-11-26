@@ -64,6 +64,8 @@ public class EssentialsData extends PluginData {
         List<String> warpsList = new ArrayList<>(essentials.getWarps().getList());
         if (!warpsList.isEmpty()) {
             TableContainer warps = new TableContainer(getWithIcon("Warp", "map-marker"), getWithIcon("Command", "terminal"));
+            warps.setColor("light-green");
+
             Collections.sort(warpsList);
             for (String warp : warpsList) {
                 warps.addRow(warp, "/warp " + warp);

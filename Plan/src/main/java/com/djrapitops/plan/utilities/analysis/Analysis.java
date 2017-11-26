@@ -28,6 +28,7 @@ public class Analysis {
 
     private final Plan plugin;
     private int taskId = -1;
+    private static ServerProfile serverProfile;
 
     /**
      * Class Constructor.
@@ -106,6 +107,7 @@ public class Analysis {
             Benchmark.stop("Analysis", "Create Empty dataset");
             Benchmark.start("Fetch Phase");
             ServerProfile profile = db.getServerProfile(Plan.getServerUUID());
+            serverProfile = profile;
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
 
             // TODO BanData (PluginData) effects
@@ -135,6 +137,7 @@ public class Analysis {
             long time = Benchmark.stop("Analysis", "Analysis");
             Log.logDebug("Analysis");
             Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(time, ""));
+            serverProfile = null;
         }
         return true;
     }
@@ -184,5 +187,14 @@ public class Analysis {
 
     public void setTaskId(int id) {
         taskId = id;
+    }
+
+    /**
+     * Only available during Analysis.
+     *
+     * @return ServerProfile being analyzed or null if analysis is not being run.
+     */
+    public static ServerProfile getServerProfile() {
+        return serverProfile;
     }
 }
