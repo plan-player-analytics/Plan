@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * //TODO Class Javadoc Comment
+ * PluginData for Factions plugin.
  *
  * @author Rsl1122
  */

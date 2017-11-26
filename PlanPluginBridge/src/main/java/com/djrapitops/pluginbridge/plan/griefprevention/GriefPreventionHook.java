@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
+
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
@@ -32,11 +33,7 @@ public class GriefPreventionHook extends Hook {
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
             DataStore dataStore = getPlugin(GriefPrevention.class).dataStore;
-            addPluginDataSource(new GriefPreventionClaims(dataStore));
-            addPluginDataSource(new GriefPreventionClaimArea(dataStore));
-            addPluginDataSource(new GriefPreventionClaimBlocksAvailable(dataStore));
-            addPluginDataSource(new GriefPreventionSoftMuted(dataStore));
-            addPluginDataSource(new GriefPreventionClaimTable(dataStore));
+            addPluginDataSource(new GriefPreventionData(dataStore));
         }
     }
 }

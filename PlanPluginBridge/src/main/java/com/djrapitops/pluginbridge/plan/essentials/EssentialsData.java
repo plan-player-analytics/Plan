@@ -12,7 +12,7 @@ import main.java.com.djrapitops.plan.data.additional.*;
 import java.util.*;
 
 /**
- * //TODO Class Javadoc Comment
+ * PluginData for Essentials Plugin.
  *
  * @author Rsl1122
  */

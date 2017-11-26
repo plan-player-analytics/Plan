@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * PluginData for ASkyBlock plugin.
  *
  * @author Rsl1122
  */
