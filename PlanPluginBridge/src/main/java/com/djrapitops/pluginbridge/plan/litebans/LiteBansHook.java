@@ -37,8 +37,7 @@ public class LiteBansHook extends Hook {
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
             LiteBansDatabaseQueries db = new LiteBansDatabaseQueries();
-            addPluginDataSource(new LiteBansBansTable(db));
-            addPluginDataSource(new LiteBansInspectBansTable(db));
+            addPluginDataSource(new LiteBansData(db));
         }
     }
 }
