@@ -33,8 +33,7 @@ public class SuperbVoteHook extends Hook {
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
             VoteStorage store = getPlugin(SuperbVote.class).getVoteStorage();
-            addPluginDataSource(new SuperbVoteVotes(store));
-            addPluginDataSource(new SuperbVoteVotesTable(store));
+            addPluginDataSource(new SuperbVoteData(store));
         }
     }
 }
