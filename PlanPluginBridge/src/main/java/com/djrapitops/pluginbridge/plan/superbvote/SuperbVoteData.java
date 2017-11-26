@@ -9,7 +9,6 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
 import main.java.com.djrapitops.plan.data.additional.ContainerSize;
 import main.java.com.djrapitops.plan.data.additional.InspectContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,12 +42,14 @@ public class SuperbVoteData extends PluginData {
     @Override
     public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) throws Exception {
         Map<UUID, Integer> votes = new HashMap<>();
+        long total = 0;
         for (UUID uuid : uuids) {
-            votes.put(uuid, store.getVotes(uuid));
+            int votesCount = store.getVotes(uuid);
+            votes.put(uuid, votesCount);
+            total += votesCount;
         }
 
-        long totalVotes = MathUtils.sumLong(votes.values().stream().map(i -> i));
-        analysisContainer.addValue(getWithIcon("Total Votes", "check", "teal"), totalVotes);
+        analysisContainer.addValue(getWithIcon("Total Votes", "check", "teal"), total);
 
         analysisContainer.addPlayerTableValues(getWithIcon("Votes", "check"), votes);
 

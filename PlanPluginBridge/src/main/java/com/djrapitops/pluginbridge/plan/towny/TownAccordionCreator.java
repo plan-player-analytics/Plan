@@ -2,50 +2,54 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.pluginbridge.plan.factions;
+package com.djrapitops.pluginbridge.plan.towny;
 
-import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.factions.entity.MPlayer;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
+import com.palmergames.bukkit.towny.object.Coord;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.ServerProfile;
 import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
+import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Creates Faction accordion for Factions tab.
+ * Creates a Town Accordion for Towny tab.
  *
  * @author Rsl1122
  */
-public class FactionAccordionCreator {
+public class TownAccordionCreator {
 
-    public static String createAccordion(List<Faction> factions) {
-        StringBuilder html = new StringBuilder("<div class=\"panel-group scrollbar\" id=\"faction_accordion\" role=\"tablist\" aria-multiselectable=\"true\">");
+    public static String createAccordion(List<Town> towns) {
+        StringBuilder html = new StringBuilder("<div class=\"panel-group scrollbar\" id=\"towny_accordion\" role=\"tablist\" aria-multiselectable=\"true\">");
 
         ServerProfile serverProfile = Analysis.getServerProfile();
         List<PlayerProfile> players = serverProfile != null ? serverProfile.getPlayers() : new ArrayList<>();
 
-        for (Faction faction : factions) {
-            String factionName = faction.getName();
-            long createdAtMillis = faction.getCreatedAtMillis();
-            String created = FormatUtils.formatTimeStampYear(createdAtMillis);
-            double power = faction.getPower();
-            double maxPower = faction.getPowerMax();
-            String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
-            MPlayer leader = faction.getLeader();
-            String leaderName = leader.getName();
+        for (Town town : towns) {
+            String townName = town.getName();
+            String mayorName = town.getMayor().getName();
 
-            int landCount = faction.getLandCount();
+            String coordinates = "";
+            try {
+                Coord homeBlock = town.getHomeBlock().getCoord();
+                coordinates = "x: " + homeBlock.getX() + " z: " + homeBlock.getZ();
+            } catch (TownyException e) {
+            }
+
+            List<Resident> residents = town.getResidents();
+            int residentsNum = residents.size();
+            String landCount = town.getPurchasedBlocks() + " / " + town.getTotalBlocks();
 
             Set<UUID> members = new HashSet<>();
-            for (MPlayer mPlayer : faction.getMPlayers()) {
-                members.add(mPlayer.getUuid());
+            for (Resident resident : residents) {
+                members.add(UUIDUtility.getUUIDOf(resident.getName()));
             }
-            int membersNum = members.size();
 
             List<PlayerProfile> memberProfiles = players.stream().filter(p -> members.contains(p.getUniqueId())).collect(Collectors.toList());
 
@@ -56,20 +60,21 @@ public class FactionAccordionCreator {
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
             long playerKills = ServerProfile.getPlayerKills(sessions).size();
+            long mobKills = ServerProfile.getMobKillCount(sessions);
             long deaths = ServerProfile.getDeathCount(sessions);
 
-            String separated = HtmlStructure.separateWithDots(powerString, leaderName);
+            String separated = HtmlStructure.separateWithDots(String.valueOf(residentsNum), mayorName);
 
-            String htmlID = "faction_" + createdAtMillis;
+            String htmlID = "town_" + townName.replace(" ", "-");
 
             // Accordion panel header
-            html.append("<div class=\"panel panel-col-light-green\">")
+            html.append("<div class=\"panel panel-col-brown\">")
                     .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
                     .append("<h4 class=\"panel-title\">")
                     .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
                     .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
                     .append("aria-controls=\"session_").append(htmlID).append("\">")
-                    .append(factionName).append("<span class=\"pull-right\">").append(separated).append("</span>") // Title (header)
+                    .append(townName).append("<span class=\"pull-right\">").append(separated).append("</span>") // Title (header)
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 
@@ -79,16 +84,16 @@ public class FactionAccordionCreator {
                     .append("<div class=\"panel-body\"><div class=\"row clearfix\">")
                     .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Left col-6
                     // Sessions
-                    .append("<p><i class=\"col-deep-purple fa fa-calendar-o\"></i> Created <span class=\"pull-right\">").append(created).append("</span></p>")
+                    .append("<p><i class=\"col-brown fa fa-user\"></i> Mayor <span class=\"pull-right\">").append(mayorName).append("</span></p>")
                     // Playtime
-                    .append("<p><i class=\"col-purple fa fa-bolt\"></i> Power<span class=\"pull-right\"><b>").append(powerString).append("</b></span></p>")
-                    .append("<p><i class=\"col-purple fa fa-user\"></i> Leader<span class=\"pull-right\"><b>").append(leaderName).append("</b></span></p>")
-                    .append("<p><i class=\"col-purple fa fa-users\"></i> Members<span class=\"pull-right\"><b>").append(membersNum).append("</b></span></p>")
-                    .append("<p><i class=\"col-purple fa fa-map\"></i> Land Count<span class=\"pull-right\"><b>").append(landCount).append("</b></span></p>")
+                    .append("<p><i class=\"col-brown fa fa-users\"></i> Residents<span class=\"pull-right\"><b>").append(residentsNum).append("</b></span></p>")
+                    .append("<p><i class=\"col-brown fa fa-map\"></i> Town Blocks<span class=\"pull-right\"><b>").append(landCount).append("</b></span></p>")
+                    .append("<p><i class=\"col-brown fa fa-map-pin\"></i> Members<span class=\"pull-right\"><b>").append(coordinates).append("</b></span></p>")
                     .append("</div>") // Closes Left col-6
                     .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Right col-6
                     // Player Kills
                     .append("<p><i class=\"col-red fa fa-crosshairs\"></i> Player Kills<span class=\"pull-right\"><b>").append(playerKills).append("</b></span></p>")
+                    .append("<p><i class=\"col-green fa fa-crosshairs\"></i> Mob Kills<span class=\"pull-right\"><b>").append(mobKills).append("</b></span></p>")
                     // Deaths
                     .append("<p><i class=\"col-red fa fa-frown-o\"></i> Deaths<span class=\"pull-right\"><b>").append(deaths).append("</b></span></p>")
                     .append("</div>") // Right col-6
