@@ -36,15 +36,13 @@ public class VaultHook extends Hook {
 
         try {
             Permission permSys = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
-            addPluginDataSource(new PermGroup(permSys));
-            addPluginDataSource(new PermGroupTable(permSys));
+            addPluginDataSource(new VaultPermData(permSys));
         } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
         }
 
         try {
             Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
-            addPluginDataSource(new EconomyBalance(econ));
-            addPluginDataSource(new EconomyBalanceTable(econ));
+            addPluginDataSource(new VaultEcoData(econ));
         } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
         }
     }

@@ -18,6 +18,7 @@ import main.java.com.djrapitops.plan.utilities.comparators.TPSComparator;
 import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,6 +45,8 @@ public class ServerProfile {
     private long allTimePeak;
     private int allTimePeakPlayers;
 
+    // Calculated once
+    private Map<UUID, PlayerProfile> playerMap;
 
     public ServerProfile(UUID serverUUID) {
         this.serverUUID = serverUUID;
@@ -373,5 +376,13 @@ public class ServerProfile {
         }
 
         return count / tpsData.size();
+    }
+
+    public PlayerProfile getPlayer(UUID uuid) {
+        if (playerMap == null) {
+            playerMap = players.stream().collect(Collectors.toMap(PlayerProfile::getUuid, Function.identity()));
+        }
+
+        return playerMap.get(uuid);
     }
 }
