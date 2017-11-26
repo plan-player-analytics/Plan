@@ -63,7 +63,7 @@ public class ViaVersionData extends PluginData {
         String versionS = getWithIcon("Version", "signal");
         String membersS = getWithIcon("Users", "users");
         TableContainer versionTable = new TableContainer(versionS, membersS);
-        versionTable.setColor("green");
+        versionTable.setColor("light-green");
         Map<String, Integer> usersPerVersion = getUsersPerVersion(versions);
         for (Map.Entry<String, Integer> entry : usersPerVersion.entrySet()) {
             versionTable.addRow(entry.getKey(), entry.getValue());

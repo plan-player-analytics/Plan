@@ -6,7 +6,9 @@ package main.java.com.djrapitops.plan.utilities.html.structure;
 
 import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
+import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public class AnalysisPluginsTabContentCreator {
 
         generalTab.append("<div class=\"tab\"><div class=\"row clearfix\">");
 
-        boolean hadOtherThanTabs = false;
+        boolean hasGeneralBoxes = false;
 
         for (PluginData pluginData : order) {
             AnalysisContainer container = containers.get(pluginData);
@@ -45,29 +47,41 @@ public class AnalysisPluginsTabContentCreator {
                 case WHOLE:
                     if (!container.hasOnlyValues()) {
                         appendWhole(pluginData, container, generalTab);
-                        hadOtherThanTabs = true;
+                        hasGeneralBoxes = true;
                         break;
                     }
 
                 case TWO_THIRDS:
                     if (!container.hasOnlyValues()) {
                         appendTwoThirds(pluginData, container, generalTab);
-                        hadOtherThanTabs = true;
+                        hasGeneralBoxes = true;
                         break;
                     }
                 case THIRD:
                 default:
                     appendThird(pluginData, container, generalTab);
-                    hadOtherThanTabs = true;
+                    hasGeneralBoxes = true;
                     break;
             }
         }
 
         generalTab.append("</div></div>");
 
+        String playerListTab = "<div class=\"tab\">" +
+                "<div class=\"row clearfix\">" +
+                "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">" +
+                "<div class=\"card\">" +
+                "<div class=\"header\"><h2><i class=\"fa fa-users\"></i> Plugin Data</h2></div>" +
+                "<div class=\"body\">" +
+                "<div class=\"table-responsive\">" +
+                PlayersTableCreator.createPluginsTable(containers, Analysis.getServerProfile().getPlayers()) +
+                "</div></div></div>" +
+                "</div></div></div>";
+
         return new String[]{
-                hadOtherThanTabs ? "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>" + nav.toString() : nav.toString(),
-                hadOtherThanTabs ? generalTab.toString() + otherTabs.toString() : otherTabs.toString()
+                (hasGeneralBoxes ? "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>" : "")
+                        + "<li><a class=\"nav-button\" href=\"javascript:void(0)\">Player Data</a></li>" + nav.toString(),
+                (hasGeneralBoxes ? generalTab.toString() : "") + playerListTab + otherTabs.toString()
         };
     }
 

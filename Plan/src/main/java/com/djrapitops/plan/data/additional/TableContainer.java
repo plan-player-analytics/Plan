@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.data.additional;
 
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.Serializable;
@@ -32,6 +33,11 @@ public final class TableContainer {
         values = new ArrayList<>();
     }
 
+    public TableContainer(boolean players, String... header) {
+        this.header = FormatUtils.mergeArrays(new String[]{Html.FONT_AWESOME_ICON.parse("user") + " Player"}, header);
+        values = new ArrayList<>();
+    }
+
     public void addRow(Serializable... values) {
         this.values.add(values);
     }
@@ -45,11 +51,10 @@ public final class TableContainer {
 
     private String parseBody() {
         StringBuilder body = new StringBuilder();
+
         if (values.isEmpty()) {
             addRow("No Data");
         }
-
-        body.append("<tbody>");
         for (Serializable[] row : values) {
             int maxIndex = row.length - 1;
             body.append("<tr>");
@@ -64,7 +69,6 @@ public final class TableContainer {
             }
             body.append("</tr>");
         }
-        body.append("</tbody>");
 
         return Html.TABLE_BODY.parse(body.toString());
     }

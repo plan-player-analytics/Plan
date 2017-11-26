@@ -48,4 +48,8 @@ public final class AnalysisContainer extends InspectContainer {
     public boolean isEmpty() {
         return playerTableValues.isEmpty() && super.isEmpty();
     }
+
+    public boolean hasPlayerTableValues() {
+        return !playerTableValues.isEmpty();
+    }
 }

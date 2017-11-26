@@ -69,7 +69,7 @@ public abstract class PluginData {
     }
 
     public final String getWithIcon(String text, String icon) {
-        return getWithIcon(text, icon, "black");
+        return getWithIcon(text, icon, "");
     }
 
     public final String getWithIcon(String text, String icon, String color) {
