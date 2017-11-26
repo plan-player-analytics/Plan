@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.data;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.google.common.base.Objects;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Colors;
@@ -14,11 +16,11 @@ import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparato
 import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.*;
+import main.java.com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.CommandUseTableCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,8 +41,6 @@ import java.util.stream.Collectors;
 public class AnalysisData extends RawData {
 
     private long refreshDate;
-    private String pluginsTabLayout;
-    private Map<String, Serializable> additionalDataReplaceMap;
 
     private Map<String, Long> analyzedValues;
     private Set<StickyData> stickyMonthData;
@@ -50,12 +50,10 @@ public class AnalysisData extends RawData {
         stickyMonthData = new HashSet<>();
     }
 
-    public void setPluginsTabLayout(String pluginsTabLayout) {
-        this.pluginsTabLayout = pluginsTabLayout;
-    }
-
-    public void setAdditionalDataReplaceMap(Map<String, Serializable> additionalDataReplaceMap) {
-        this.additionalDataReplaceMap = additionalDataReplaceMap;
+    public void parsePluginsSection(Map<PluginData, AnalysisContainer> containers) {
+        String[] navAndTabs = AnalysisPluginsTabContentCreator.createContent(containers);
+        addValue("navPluginsTabs", navAndTabs[0]);
+        addValue("tabsPlugins", navAndTabs[1]);
     }
 
     private void addConstants() {
@@ -76,10 +74,6 @@ public class AnalysisData extends RawData {
 
         addValue("playersMax", ServerProfile.getPlayersMax());
         addValue("playersOnline", ServerProfile.getPlayersOnline());
-    }
-
-    public String replacePluginsTabLayout() {
-        return HtmlUtils.replacePlaceholders(pluginsTabLayout, additionalDataReplaceMap);
     }
 
     public long getRefreshDate() {

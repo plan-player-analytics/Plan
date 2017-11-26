@@ -10,7 +10,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
@@ -18,9 +17,7 @@ import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
-import org.apache.commons.lang3.text.StrSubstitutor;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -118,182 +115,6 @@ public class HtmlStructure {
         }
 
         return new String[]{/*Html.TABLE_SESSIONS.parse(SessionsTableCreator.createTable(uuidByID, allSessions)[0]),*/"", ""};
-    }
-
-    public static String createInspectPluginsTabContent(String serverName, List<PluginData> plugins, Map<String, Serializable> replaceMap) {
-        if (plugins.isEmpty()) {
-            String icon = Html.FONT_AWESOME_ICON.parse("server");
-            // TODO Move plain text to Locale
-            String headerText = Html.HEADER_2.parse(icon + " " + serverName) + Html.PARAGRAPH.parse("No Compatible Plugins");
-            String header = Html.DIV_W_CLASS.parse("box-header", headerText);
-            String row = Html.ROW.parse(header);
-            String pluginsHeader = Html.DIV_W_CLASS.parse("plugins-header", row);
-            return Html.DIV_W_CLASS.parse("plugins-server", pluginsHeader);
-        }
-
-        Map<String, List<String>> placeholders = getPlaceholdersInspect(plugins);
-
-        StringBuilder html = new StringBuilder();
-        html.append("<div class=\"plugins-server\">")
-                // Header
-                .append("<div class=\"plugins-header\">")
-                .append("<div class=\"row\">")
-                .append("<div class=\"column\">")
-                .append("<div class=\"box-header\">")
-                .append("<h2><i style=\"padding: 8px;\" class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i> ")
-                .append(serverName)
-                .append("</h2>")
-                .append("</div>")
-                .append("</div>")
-                .append("</div>")
-                .append("</div>")
-                // Content
-                .append("<div class=\"plugins-content\">");
-        List<String> pluginNames = new ArrayList<>(placeholders.keySet());
-        Collections.sort(pluginNames);
-
-
-        int pluginCount = pluginNames.size();
-        int lastRowColumns = pluginCount % 3;
-
-        int column = 0;
-        for (String pluginName : pluginNames) {
-            List<String> pluginPhs = placeholders.get(pluginName);
-
-            if (column % 3 == 0) {
-                html.append("<div class=\"row\">");
-            }
-
-            html.append("<div class=\"column\">")
-                    .append("<div class=\"box-header\">")
-                    .append("<h2><i class=\"fa fa-cube\" aria-hidden=\"true\"></i> ").append(pluginName).append("</h2></div>");
-            html.append("<div class=\"box plugin\">");
-
-            for (String ph : pluginPhs) {
-                html.append(ph);
-            }
-
-            html.append("</div></div>"); // Closes column
-
-
-            if ((column + 1) % 3 == 0) {
-                html.append("</div>");
-            }
-            column++;
-        }
-
-        if (lastRowColumns != 0) {
-            if (lastRowColumns == 1) {
-                html.append("<div class=\"column\" style=\"width: 200%;\">");
-            } else if (lastRowColumns == 2) {
-                html.append("<div class=\"column\">");
-            }
-            html.append("</div>");
-        }
-
-        html.append("</div>") // Close content
-                .append("</div>");
-        return StrSubstitutor.replace(html.toString(), replaceMap);
-    }
-
-    public static String createAnalysisPluginsTabLayout(List<PluginData> plugins) {
-        StringBuilder html = new StringBuilder();
-        if (plugins.isEmpty()) {
-            html.append("<div class=\"row\">")
-                    .append("<div class=\"column\">")
-                    .append("<div class=\"box-header\">")
-                    .append("<h2><i class=\"fa fa-cube\" aria-hidden=\"true\"></i> No Plugins</h2></div>")
-                    .append("<div class=\"box plugin\">")
-                    .append("<p>No Supported Plugins were detected.</p>")
-                    .append("</div></div>")
-                    .append("</div>");
-            return html.toString();
-        }
-
-        Map<String, List<String>> placeholders = getPlaceholdersAnalysis(plugins);
-        List<String> pluginNames = new ArrayList<>(placeholders.keySet());
-        Collections.sort(pluginNames);
-
-
-        int pluginCount = pluginNames.size();
-        int lastRowColumns = pluginCount % 3;
-
-        int column = 0;
-        for (String pluginName : pluginNames) {
-            List<String> pluginPhs = placeholders.get(pluginName);
-
-            if (column % 3 == 0) {
-                html.append("<div class=\"row\">");
-            }
-
-            html.append("<div class=\"column\">")
-                    .append("<div class=\"box-header\">")
-                    .append("<h2><i class=\"fa fa-cube\" aria-hidden=\"true\"></i> ").append(pluginName).append("</h2></div>");
-            html.append("<div class=\"box plugin\">");
-
-            for (String ph : pluginPhs) {
-                html.append(ph);
-            }
-
-            html.append("</div></div>"); // Closes column
-
-
-            if ((column + 1) % 3 == 0) {
-                html.append("</div>");
-            }
-            column++;
-        }
-
-        if (lastRowColumns != 0) {
-            if (lastRowColumns == 1) {
-                html.append("<div class=\"column\" style=\"width: 200%;\">");
-            } else if (lastRowColumns == 2) {
-                html.append("<div class=\"column\">");
-            }
-            html.append("<div class=\"box-header\" style=\"margin-top: 10px;\">")
-                    .append("<h2>That's all..</h2>")
-                    .append("</div>")
-                    .append("<div class=\"box plugin\">")
-                    .append("<p>Do you have more plugins? ._.</p>")
-                    .append("</div>")
-                    .append("</div>");
-        }
-        return html.toString();
-    }
-
-    private static Map<String, List<String>> getPlaceholdersAnalysis(List<PluginData> plugins) {
-        Map<String, List<String>> placeholders = new HashMap<>();
-        for (PluginData source : plugins) {
-            List<AnalysisType> analysisTypes = source.getAnalysisTypes();
-            if (analysisTypes.isEmpty()) {
-                continue;
-            }
-            String pluginName = source.getSourcePlugin();
-            List<String> pluginPlaceholderList = placeholders.getOrDefault(pluginName, new ArrayList<>());
-
-            for (AnalysisType t : analysisTypes) {
-                pluginPlaceholderList.add(source.getPlaceholder(t.getPlaceholderModifier()));
-            }
-
-            placeholders.put(pluginName, pluginPlaceholderList);
-        }
-        return placeholders;
-    }
-
-    private static Map<String, List<String>> getPlaceholdersInspect(List<PluginData> plugins) {
-        Map<String, List<String>> placeholders = new HashMap<>();
-        for (PluginData source : plugins) {
-            if (source.analysisOnly()) {
-                continue;
-            }
-            String pluginName = source.getSourcePlugin();
-            List<String> pluginPlaceholderList = placeholders.getOrDefault(pluginName, new ArrayList<>());
-
-            pluginPlaceholderList.add(source.getPlaceholder());
-
-            placeholders.put(pluginName, pluginPlaceholderList);
-        }
-        return placeholders;
     }
 
     public static String createInspectPageTabContentCalculating() {

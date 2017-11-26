@@ -32,7 +32,6 @@ import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -132,9 +131,10 @@ public class BukkitInformationManager extends InformationManager {
             String serverName = plugin.getServerInfoManager().getServerName();
             HookHandler hookHandler = plugin.getHookHandler();
             List<PluginData> plugins = hookHandler.getAdditionalDataSources();
-            Map<String, Serializable> replaceMap = hookHandler.getAdditionalInspectReplaceRules(uuid);
-            String contents = HtmlStructure.createInspectPluginsTabContent(serverName, plugins, replaceMap);
-            cacheInspectPluginsTab(uuid, contents);
+            // TODO Inspect Plugins Tab
+//            Map<String, Serializable> replaceMap = hookHandler.getAdditionalInspectReplaceRules(uuid);
+//            String contents = HtmlStructure.createInspectPluginsTabContent(serverName, plugins, replaceMap);
+            cacheInspectPluginsTab(uuid, "");
         }
     }
 

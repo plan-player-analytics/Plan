@@ -5,12 +5,11 @@ import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.ServerProfile;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -19,12 +18,8 @@ import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.ErrorResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
-import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
@@ -107,13 +102,13 @@ public class Analysis {
             Benchmark.start("Create Empty dataset");
 
             AnalysisData analysisData = new AnalysisData();
-            List<PluginData> thirdPartyPlugins = plugin.getHookHandler().getAdditionalDataSources();
-            analysisData.setPluginsTabLayout(HtmlStructure.createAnalysisPluginsTabLayout(thirdPartyPlugins));
 
             Benchmark.stop("Analysis", "Create Empty dataset");
             Benchmark.start("Fetch Phase");
             ServerProfile profile = db.getServerProfile(Plan.getServerUUID());
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
+
+            // TODO BanData (PluginData) effects
 
             Benchmark.start("Analysis Phase");
             Log.logDebug("Analysis", "Analysis Phase");
@@ -126,7 +121,7 @@ public class Analysis {
 
             log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
             Log.logDebug("Analysis", "Analyzing additional data sources (3rd party)");
-            analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(profile.getUuids()));
+            analysisData.parsePluginsSection(analyzeAdditionalPluginData(profile.getUuids()));
             ((BukkitInformationManager) infoManager).cacheAnalysisData(analysisData);
 
             // TODO Export
@@ -150,68 +145,32 @@ public class Analysis {
         }
     }
 
-    private Map<String, Serializable> analyzeAdditionalPluginData(Set<UUID> uuids) {
+    private Map<PluginData, AnalysisContainer> analyzeAdditionalPluginData(Set<UUID> uuids) {
+        Map<PluginData, AnalysisContainer> containers = new HashMap<>();
+
         Benchmark.start("Analysis", "3rd party Analysis");
-        final Map<String, Serializable> replaceMap = new HashMap<>();
-        final HookHandler hookHandler = plugin.getHookHandler();
-        final List<PluginData> sources = hookHandler.getAdditionalDataSources().stream()
-                .filter(p -> !p.isBanData())
-                .filter(p -> !p.getAnalysisTypes().isEmpty())
-                .collect(Collectors.toList());
-        final AnalysisType[] totalTypes = new AnalysisType[]{
-                AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
-        };
-        final AnalysisType[] avgTypes = new AnalysisType[]{
-                AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
-        };
-        final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
-        final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
+        List<PluginData> sources = plugin.getHookHandler().getAdditionalDataSources();
+
         Log.logDebug("Analysis", "Additional Sources: " + sources.size());
-        sources.parallelStream().filter(Verify::notNull).forEach(source -> {
+        sources.parallelStream().forEach(source -> {
             StaticHolder.saveInstance(this.getClass(), plugin.getClass());
             try {
-                Benchmark.start("Analysis", "Source " + source.getPlaceholder());
-                final List<AnalysisType> analysisTypes = source.getAnalysisTypes();
-                if (analysisTypes.isEmpty()) {
-                    return;
-                }
-                if (analysisTypes.contains(AnalysisType.HTML)) {
-                    String html = source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), UUID.randomUUID());
-                    String placeholderName = source.getPlaceholderName(AnalysisType.HTML.getPlaceholderModifier());
-                    int length = html.length();
-                    if (length < 20000) {
-                        replaceMap.put(placeholderName, html);
-                    } else {
-                        replaceMap.put(placeholderName, "<p>Html was removed because it contained too many characters to be responsive (" + length + "/20000)</p>");
-                    }
-                    return;
-                }
-                for (AnalysisType type : totalTypes) {
-                    if (analysisTypes.contains(type)) {
-                        replaceMap.put(source.getPlaceholderName(type.getPlaceholderModifier()), AnalysisUtils.getTotal(type, source, uuids));
-                    }
-                }
-                for (AnalysisType type : avgTypes) {
-                    if (analysisTypes.contains(type)) {
-                        replaceMap.put(source.getPlaceholderName(type.getPlaceholderModifier()), AnalysisUtils.getAverage(type, source, uuids));
-                    }
-                }
-                if (analysisTypes.contains(bool)) {
-                    replaceMap.put(source.getPlaceholderName(bool.getPlaceholderModifier()), AnalysisUtils.getBooleanPercentage(bool, source, uuids));
-                }
-                if (analysisTypes.contains(boolTot)) {
-                    replaceMap.put(source.getPlaceholderName(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
-                }
-            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-                Log.error("A PluginData-source caused an exception: " + StringUtils.remove(source.getPlaceholder(), '%'));
+                Benchmark.start("Analysis", "Source " + source.getSourcePlugin());
 
+                AnalysisContainer container = source.getServerData(uuids, new AnalysisContainer());
+                if (container != null) {
+                    containers.put(source, container);
+                }
+
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
+                Log.error("A PluginData-source caused an exception: " + source.getSourcePlugin());
                 Log.toLog(this.getClass().getName(), e);
             } finally {
-                Benchmark.stop("Analysis", "Source " + source.getPlaceholder());
+                Benchmark.stop("Analysis", "Source " + source.getSourcePlugin());
             }
         });
         Benchmark.stop("Analysis", "3rd party Analysis");
-        return replaceMap;
+        return containers;
     }
 
     /**

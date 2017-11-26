@@ -3,11 +3,9 @@ package main.java.com.djrapitops.plan.data.additional;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.Bridge;
 import main.java.com.djrapitops.plan.Plan;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class responsible for hooking to other plugins and managing the %plugins%
@@ -48,12 +46,15 @@ public class HookHandler {
      * @param dataSource an object extending the PluginData class.
      */
     public void addPluginDataSource(PluginData dataSource) {
+        if (dataSource == null) {
+            return;
+        }
         try {
             if (!configHandler.hasSection(dataSource)) {
                 configHandler.createSection(dataSource);
             }
             if (configHandler.isEnabled(dataSource)) {
-                Log.debug("Registered a new datasource: " + StringUtils.remove(dataSource.getPlaceholder(), '%'));
+                Log.debug("Registered a new datasource: " + dataSource.getSourcePlugin());
                 additionalDataSources.add(dataSource);
             }
         } catch (Exception e) {
@@ -69,48 +70,5 @@ public class HookHandler {
      */
     public List<PluginData> getAdditionalDataSources() {
         return additionalDataSources;
-    }
-
-    private List<String> getPluginNamesAnalysis() {
-        List<String> pluginNames = additionalDataSources.stream()
-                .filter(source -> !source.getAnalysisTypes().isEmpty())
-                .map(PluginData::getSourcePlugin)
-                .distinct()
-                .collect(Collectors.toList());
-        Collections.sort(pluginNames);
-        return pluginNames;
-    }
-
-    private List<String> getPluginNamesInspect() {
-        List<String> pluginNames = additionalDataSources.stream()
-                .filter(source -> !source.analysisOnly())
-                .map(PluginData::getSourcePlugin)
-                .distinct()
-                .collect(Collectors.toList());
-        Collections.sort(pluginNames);
-        return pluginNames;
-    }
-
-    /**
-     * Used to get the replaceMap for inspect page.
-     *
-     * @param uuid UUID of the player whose page is being inspected.
-     * @return Map: key|value - %placeholder%|value
-     */
-    public Map<String, Serializable> getAdditionalInspectReplaceRules(UUID uuid) {
-        Map<String, Serializable> addReplace = new HashMap<>();
-        for (PluginData source : additionalDataSources) {
-            if (source.analysisOnly()) {
-                continue;
-            }
-            try {
-                addReplace.put(source.getPlaceholderName(), source.getHtmlReplaceValue("", uuid));
-            } catch (Exception e) {
-                addReplace.put(source.getPlaceholderName(), "Error occurred: " + e);
-                Log.error("PluginDataSource caused an exception: " + source.getSourcePlugin());
-                Log.toLog("PluginDataSource " + source.getSourcePlugin(), e);
-            }
-        }
-        return addReplace;
     }
 }

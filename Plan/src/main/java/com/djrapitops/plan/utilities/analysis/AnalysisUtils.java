@@ -4,19 +4,14 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Rsl1122
@@ -58,113 +53,6 @@ public class AnalysisUtils {
                 .filter(session -> session.getLength() > 0)
                 .map(Session::getLength)
                 .collect(Collectors.toList());
-    }
-
-    public static String getTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
-        if (analysisType == null) {
-            return source.parseContainer("Err ", "Null Analysistype. ");
-        }
-        try {
-            Number total;
-            switch (analysisType) {
-                case INT_TOTAL:
-                    total = MathUtils.sumInt(getCorrectValues(uuids, source));
-                    break;
-                case LONG_TOTAL:
-                    total = MathUtils.sumLong(getCorrectValues(uuids, source));
-                    break;
-                case LONG_TIME_MS_TOTAL:
-                    total = MathUtils.sumLong(getCorrectValues(uuids, source));
-                    return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) total));
-                case DOUBLE_TOTAL:
-                    total = MathUtils.sumDouble(getCorrectValues(uuids, source));
-                    break;
-                default:
-                    return source.parseContainer("", "Wrong Analysistype specified: " + analysisType.name());
-            }
-            return source.parseContainer(analysisType.getModifier(), String.valueOf(total));
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
-            return logPluginDataCausedError(source, e);
-        }
-    }
-
-    private static Stream<Serializable> getCorrectValues(Collection<UUID> uuids, PluginData source) {
-        return uuids.stream()
-                .map(source::getValue)
-                .filter(value -> !value.equals(-1))
-                .filter(value -> !value.equals(-1L));
-    }
-
-    public static String getAverage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
-        if (analysisType == null) {
-            return source.parseContainer("Err ", "Null Analysistype. ");
-        }
-        try {
-            double average;
-            switch (analysisType) {
-                case LONG_EPOCH_MS_MINUS_NOW_AVG:
-                    final long now = MiscUtils.getTime();
-                    average = MathUtils.averageLong(getCorrectValues(uuids, source).map(value -> ((long) value) - now));
-                    return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
-                case LONG_AVG:
-                    long averageLong = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
-                    return source.parseContainer(analysisType.getModifier(), String.valueOf(averageLong));
-                case LONG_TIME_MS_AVG:
-                    average = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
-                    return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
-                case INT_AVG:
-                    average = MathUtils.averageInt(getCorrectValues(uuids, source).map(i -> (Integer) i));
-                    break;
-                case DOUBLE_AVG:
-                    average = MathUtils.averageDouble(getCorrectValues(uuids, source).map(i -> (Double) i));
-                    break;
-                default:
-                    return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
-            }
-            return source.parseContainer(analysisType.getModifier(), FormatUtils.cutDecimals(average));
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
-            return logPluginDataCausedError(source, e);
-        }
-    }
-
-    public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
-        if (analysisType != AnalysisType.BOOLEAN_PERCENTAGE) {
-            return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
-        }
-
-        try {
-            List<Boolean> tempList = getCorrectValues(uuids, source)
-                    .map(value -> (boolean) value)
-                    .collect(Collectors.toList());
-            long count = tempList.stream().filter(value -> value).count();
-            return source.parseContainer(analysisType.getModifier(), (((double) count / tempList.size()) * 100) + "%");
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
-            return logPluginDataCausedError(source, e);
-        }
-    }
-
-    public static String getBooleanTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
-        if (analysisType != AnalysisType.BOOLEAN_TOTAL) {
-            return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
-        }
-
-        try {
-            List<Boolean> tempList = getCorrectValues(uuids, source)
-                    .map(value -> (boolean) value)
-                    .collect(Collectors.toList());
-            long count = tempList.stream().filter(value -> value).count();
-            return source.parseContainer(analysisType.getModifier(), count + " / " + tempList.size());
-        } catch (Exception e) {
-            return logPluginDataCausedError(source, e);
-        }
-    }
-
-    private static String logPluginDataCausedError(PluginData source, Throwable e) {
-        String placeholder = StringUtils.remove(source.getPlaceholder(), '%');
-
-        Log.error("A PluginData-source caused an exception: " + placeholder);
-        Log.toLog("PluginData-source caused an exception: " + placeholder, e);
-        return source.parseContainer("", "Exception during calculation.");
     }
 
     /**

@@ -33,7 +33,6 @@ public class AnalysisPageParser extends PageParser {
     @Override
     public String parse() throws ParseException {
         addValues(data.getReplaceMap());
-        addValue("tabContentPlugins", data.replacePluginsTabLayout());
 
         try {
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("web/server.html"), placeHolders);

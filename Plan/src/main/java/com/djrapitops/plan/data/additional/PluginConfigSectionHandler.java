@@ -24,12 +24,7 @@ public class PluginConfigSectionHandler {
     public boolean hasSection(PluginData dataSource) {
         ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
-        if (!section.getChildren().containsKey(pluginName)) {
-            return false;
-        }
-
-        ConfigNode pluginSection = section.getConfigNode(pluginName + ".Data");
-        return pluginSection.getChildren().containsKey(dataSource.placeholder);
+        return section.getChildren().containsKey(pluginName);
     }
 
     private ConfigNode getPluginsSection() {
@@ -39,10 +34,8 @@ public class PluginConfigSectionHandler {
     public void createSection(PluginData dataSource) {
         ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
-        String source = dataSource.placeholder;
 
         section.set(pluginName + ".Enabled", true);
-        section.set(pluginName + ".Data." + source, true);
         try {
             section.sort();
             section.save();
@@ -55,11 +48,6 @@ public class PluginConfigSectionHandler {
         ConfigNode section = getPluginsSection();
 
         String pluginName = dataSource.getSourcePlugin();
-        if (!section.getBoolean(pluginName + ".Enabled")) {
-            return false;
-        }
-
-        String source = dataSource.placeholder;
-        return section.getBoolean(pluginName + ".Data." + source);
+        return section.getBoolean(pluginName + ".Enabled");
     }
 }
