@@ -29,10 +29,7 @@ public class ASkyBlockHook extends Hook {
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
             ASkyBlockAPI api = ASkyBlockAPI.getInstance();
-            addPluginDataSource(new ASkyBlockIslandName(api));
-            addPluginDataSource(new ASkyBlockIslandLevel(api));
-            addPluginDataSource(new ASkyBlockIslandResets(api));
-            addPluginDataSource(new ASkyBlockIslands(api));
+            addPluginDataSource(new ASkyBlockData(api));
         }
     }
 }

@@ -4,8 +4,6 @@
  */
 package main.java.com.djrapitops.plan.data.additional;
 
-import main.java.com.djrapitops.plan.utilities.html.Html;
-
 import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
@@ -35,14 +33,6 @@ public class InspectContainer {
         values = new TreeMap<>();
         html = new TreeMap<>();
         tables = new TreeMap<>();
-    }
-
-    public final String getWithIcon(String text, String icon) {
-        return getWithColoredIcon(text, icon, "black");
-    }
-
-    public final String getWithColoredIcon(String text, String icon, String color) {
-        return Html.FA_COLORED_ICON.parse(color, icon) + " " + text;
     }
 
     public final void addValue(String label, Serializable value) {
@@ -77,5 +67,9 @@ public class InspectContainer {
 
     public final boolean hasOnlyValues() {
         return html.isEmpty() && tables.isEmpty();
+    }
+
+    public final boolean isEmpty() {
+        return values.isEmpty() && html.isEmpty() && tables.isEmpty();
     }
 }

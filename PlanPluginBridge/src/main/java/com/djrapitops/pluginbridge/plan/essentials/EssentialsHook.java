@@ -31,9 +31,7 @@ public class EssentialsHook extends Hook {
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
             Essentials ess = getPlugin(Essentials.class);
-            addPluginDataSource(new EssentialsJailed(ess));
-            addPluginDataSource(new EssentialsMuted(ess));
-            addPluginDataSource(new EssentialsWarps(ess));
+            addPluginDataSource(new EssentialsData(ess));
         }
     }
 }

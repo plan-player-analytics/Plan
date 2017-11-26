@@ -20,6 +20,8 @@ public final class TableContainer {
     private final String[] header;
     private List<Serializable[]> values;
 
+    private String color;
+
     /**
      * Constructor, call with super(...).
      *
@@ -30,17 +32,15 @@ public final class TableContainer {
         values = new ArrayList<>();
     }
 
-    protected void addRow(Serializable... values) {
+    public void addRow(Serializable... values) {
         this.values.add(values);
     }
 
     public String parseHtml() {
-        StringBuilder table = new StringBuilder(Html.TABLE.parse());
-
-        table.append(parseHeader());
-        table.append(parseBody());
-
-        return table.append("</table>").toString();
+        return Html.TABLE_COLORED.parse(color != null ? color : "") +
+                parseHeader() +
+                parseBody() +
+                "</table>";
     }
 
     private String parseBody() {
@@ -65,6 +65,10 @@ public final class TableContainer {
         }
 
         return Html.TABLE_BODY.parse(body.toString());
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public String parseHeader() {

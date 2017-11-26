@@ -158,7 +158,7 @@ public class Analysis {
                 Benchmark.start("Analysis", "Source " + source.getSourcePlugin());
 
                 AnalysisContainer container = source.getServerData(uuids, new AnalysisContainer());
-                if (container != null) {
+                if (container != null && !container.isEmpty()) {
                     containers.put(source, container);
                 }
 

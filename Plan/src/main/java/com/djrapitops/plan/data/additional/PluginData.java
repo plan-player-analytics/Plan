@@ -67,4 +67,12 @@ public abstract class PluginData {
     public final int hashCode() {
         return Objects.hashCode(size, sourcePlugin, pluginIcon);
     }
+
+    public final String getWithIcon(String text, String icon) {
+        return getWithIcon(text, icon, "black");
+    }
+
+    public final String getWithIcon(String text, String icon, String color) {
+        return Html.FA_COLORED_ICON.parse(color, icon) + " " + text;
+    }
 }

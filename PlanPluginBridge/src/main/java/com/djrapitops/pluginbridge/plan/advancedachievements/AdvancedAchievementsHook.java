@@ -36,8 +36,7 @@ public class AdvancedAchievementsHook extends Hook {
             AdvancedAchievements aa = getPlugin(AdvancedAchievements.class);
             if (Integer.parseInt(Character.toString(aa.getDescription().getVersion().charAt(0))) >= 5) {
                 AdvancedAchievementsAPI aaAPI = AdvancedAchievementsBukkitAPI.linkAdvancedAchievements();
-                addPluginDataSource(new AdvancedAchievementsAchievements(aaAPI));
-                addPluginDataSource(new AdvancedAchievementsTable(aaAPI));
+                addPluginDataSource(new AdvancedAchievementsData(aaAPI));
             } else {
                 enabled = false;
             }
