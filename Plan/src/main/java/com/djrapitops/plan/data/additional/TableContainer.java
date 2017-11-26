@@ -37,7 +37,7 @@ public final class TableContainer {
     }
 
     public String parseHtml() {
-        return Html.TABLE_COLORED.parse(color != null ? color : "") +
+        return Html.TABLE.parse() +
                 parseHeader() +
                 parseBody() +
                 "</table>";
@@ -49,6 +49,7 @@ public final class TableContainer {
             addRow("No Data");
         }
 
+        body.append("<tbody>");
         for (Serializable[] row : values) {
             int maxIndex = row.length - 1;
             body.append("<tr>");
@@ -63,6 +64,7 @@ public final class TableContainer {
             }
             body.append("</tr>");
         }
+        body.append("</tbody>");
 
         return Html.TABLE_BODY.parse(body.toString());
     }
@@ -72,11 +74,11 @@ public final class TableContainer {
     }
 
     public String parseHeader() {
-        StringBuilder header = new StringBuilder("<tr>");
+        StringBuilder header = new StringBuilder("<thead" + (color != null ? " bg-" + color : "") + "><tr>");
         for (String title : this.header) {
             header.append("<th>").append(title).append("</th>");
         }
-        header.append("</tr>");
+        header.append("</tr></thead>");
         return Html.TABLE_HEAD.parse(header.toString());
     }
 }

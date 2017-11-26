@@ -9,7 +9,6 @@ import com.djrapitops.pluginbridge.plan.griefprevention.GriefPreventionHook;
 import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansHook;
 import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
-import com.djrapitops.pluginbridge.plan.ontime.OnTimeHook;
 import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.vault.VaultHook;
@@ -26,7 +25,6 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
  * @see JobsHook
  * @see LiteBansHook
  * @see McmmoHook
- * @see OnTimeHook
  * @see SuperbVoteHook
  * @see TownyHook
  * @see VaultHook
@@ -49,7 +47,6 @@ public class Bridge {
                 new JobsHook(h),
                 new LiteBansHook(h),
                 new McmmoHook(h),
-                new OnTimeHook(h),
                 new SuperbVoteHook(h),
                 new TownyHook(h),
                 new VaultHook(h),

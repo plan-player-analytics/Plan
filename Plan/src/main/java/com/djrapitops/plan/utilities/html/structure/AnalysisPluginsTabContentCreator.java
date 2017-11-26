@@ -111,8 +111,8 @@ public class AnalysisPluginsTabContentCreator {
                 "<div class=\"header\">" +
                 "<h2>")
                 .append(pluginData.parsePluginIcon()).append(" ").append(pluginData.getSourcePlugin())
-                .append("</h2></div>").append("<div class=\"body\">")
+                .append("</h2></div>")
                 .append(container.parseHtml())
-                .append("</div></div></div></div></div>");
+                .append("</div></div></div></div>");
     }
 }

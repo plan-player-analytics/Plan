@@ -87,7 +87,7 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>PlanPluginBridge</artifactId>
-            <version>4.0.5</version>
+            <version>4.1.0</version>
             <scope>compile</scope>
         </dependency>
         <!--        Testing -->
