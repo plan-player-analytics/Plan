@@ -49,7 +49,6 @@ public class ViaVersionHook extends Hook {
             listener = new PlayerVersionListener(api);
             plan.registerListener(listener);
         }
-        addPluginDataSource(new ViaVersionVersionTable(table));
-        addPluginDataSource(new ViaVersionVersion(table));
+        addPluginDataSource(new ViaVersionData(table));
     }
 }

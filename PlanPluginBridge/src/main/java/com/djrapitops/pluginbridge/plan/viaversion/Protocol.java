@@ -50,7 +50,7 @@ public class Protocol {
             case 4:
                 return "1.7.5";
             default:
-                return "Unknown ProtocolVersion: " + protocolVersion;
+                return "Unknown (" + protocolVersion + ")";
         }
     }
 }
