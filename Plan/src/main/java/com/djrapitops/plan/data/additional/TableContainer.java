@@ -74,11 +74,11 @@ public final class TableContainer {
     }
 
     public String parseHeader() {
-        StringBuilder header = new StringBuilder("<thead" + (color != null ? " bg-" + color : "") + "><tr>");
+        StringBuilder header = new StringBuilder("<thead" + (color != null ? " class=\"bg-" + color + "\"" : "") + "><tr>");
         for (String title : this.header) {
             header.append("<th>").append(title).append("</th>");
         }
         header.append("</tr></thead>");
-        return Html.TABLE_HEAD.parse(header.toString());
+        return header.toString();
     }
 }

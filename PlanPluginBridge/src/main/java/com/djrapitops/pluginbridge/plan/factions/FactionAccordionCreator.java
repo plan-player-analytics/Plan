@@ -6,6 +6,7 @@ package com.djrapitops.pluginbridge.plan.factions;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.ServerProfile;
 import main.java.com.djrapitops.plan.data.Session;
@@ -42,10 +43,15 @@ public class FactionAccordionCreator {
             int landCount = faction.getLandCount();
 
             Set<UUID> members = new HashSet<>();
-            for (MPlayer mPlayer : faction.getMPlayers()) {
-                members.add(mPlayer.getUuid());
+            List<MPlayer> mPlayers = faction.getMPlayers();
+            int membersNum = mPlayers.size();
+            for (MPlayer mPlayer : mPlayers) {
+                UUID uuid = Plan.getInstance().getDataCache().getUUIDof(mPlayer.getName());
+                if (uuid != null) {
+                    members.add(uuid);
+                }
             }
-            int membersNum = members.size();
+
 
             List<PlayerProfile> memberProfiles = players.stream().filter(p -> members.contains(p.getUniqueId())).collect(Collectors.toList());
 

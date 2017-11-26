@@ -21,7 +21,7 @@ public class AnalysisPluginsTabContentCreator {
 
     public static String[] createContent(Map<PluginData, AnalysisContainer> containers) {
         if (containers.isEmpty()) {
-            return new String[]{"<li><a>No Compatible Plugins</a></li>", ""};
+            return new String[]{"<li><a>No Data</a></li>", ""};
         }
 
         List<PluginData> order = new ArrayList<>(containers.keySet());
@@ -77,9 +77,9 @@ public class AnalysisPluginsTabContentCreator {
                 "<div class=\"header\">" +
                 "<h2>")
                 .append(pluginData.parsePluginIcon()).append(" ").append(pluginData.getSourcePlugin())
-                .append("</h2></div>").append("<div class=\"body\">")
+                .append("</h2></div>")
                 .append(container.parseHtml())
-                .append("</div></div></div>");
+                .append("</div></div>");
     }
 
     private static void appendTwoThirds(PluginData pluginData, AnalysisContainer container, StringBuilder generalTab) {
@@ -88,9 +88,9 @@ public class AnalysisPluginsTabContentCreator {
                 "<div class=\"header\">" +
                 "<h2>")
                 .append(pluginData.parsePluginIcon()).append(" ").append(pluginData.getSourcePlugin())
-                .append("</h2></div>").append("<div class=\"body\">")
+                .append("</h2></div>")
                 .append(container.parseHtml())
-                .append("</div></div></div>");
+                .append("</div></div>");
     }
 
     private static void appendWhole(PluginData pluginData, AnalysisContainer container, StringBuilder generalTab) {

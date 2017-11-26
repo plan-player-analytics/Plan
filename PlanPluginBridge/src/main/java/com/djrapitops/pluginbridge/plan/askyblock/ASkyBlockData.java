@@ -10,10 +10,7 @@ import main.java.com.djrapitops.plan.data.additional.ContainerSize;
 import main.java.com.djrapitops.plan.data.additional.InspectContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -56,12 +53,6 @@ public class ASkyBlockData extends PluginData {
 
         analysisContainer.addValue(getWithIcon("Island World", "map-o", "green"), islandWorldName);
         analysisContainer.addValue(getWithIcon("Island Count", "street-view", "green"), islandCount);
-
-        Map<UUID, Serializable> islandLevels = new HashMap<>();
-        for (UUID uuid : uuids) {
-            islandLevels.put(uuid, api.hasIsland(uuid) ? api.getIslandLevel(uuid) : "-");
-        }
-        analysisContainer.addPlayerTableValues(getWithIcon("Island Level", "street-view"), islandLevels);
 
         return analysisContainer;
     }

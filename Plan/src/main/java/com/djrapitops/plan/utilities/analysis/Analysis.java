@@ -8,6 +8,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.ServerProfile;
 import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
@@ -108,6 +109,11 @@ public class Analysis {
             Benchmark.start("Fetch Phase");
             ServerProfile profile = db.getServerProfile(Plan.getServerUUID());
             serverProfile = profile;
+
+            for (PlayerProfile player : profile.getPlayers()) {
+                plugin.getDataCache().updateNames(player.getUuid(), player.getName(), null);
+            }
+
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
 
             // TODO BanData (PluginData) effects

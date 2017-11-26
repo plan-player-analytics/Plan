@@ -43,4 +43,9 @@ public final class AnalysisContainer extends InspectContainer {
     public void addPlayerTableValues(String columnName, Map<UUID, ? extends Serializable> values) {
         playerTableValues.put(columnName, values);
     }
+
+    @Override
+    public boolean isEmpty() {
+        return playerTableValues.isEmpty() && super.isEmpty();
+    }
 }

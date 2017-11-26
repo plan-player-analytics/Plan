@@ -60,7 +60,7 @@ public class AdvancedAchievementsData extends PluginData {
     }
 
     private long getTotal(Map<UUID, Integer> totalAchievements) {
-        return MathUtils.sumLong(totalAchievements.values().stream().map(i -> i));
+        return MathUtils.sumLong(totalAchievements.values().stream().map(i -> (long) i));
     }
 
     private void refreshTotalAchievements() {

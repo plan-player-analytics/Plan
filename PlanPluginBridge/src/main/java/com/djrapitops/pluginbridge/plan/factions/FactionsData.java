@@ -54,21 +54,23 @@ public class FactionsData extends PluginData {
 
         analysisContainer.addValue(getWithIcon("Number of Factions", "flag", "deep-purple"), factions.size());
 
-        analysisContainer.addHtml("factionAccordion", FactionAccordionCreator.createAccordion(factions));
+        if (!factions.isEmpty()) {
+            analysisContainer.addHtml("factionAccordion", FactionAccordionCreator.createAccordion(factions));
 
-        Map<UUID, String> userFactions = new HashMap<>();
-        for (UUID uuid : uuids) {
-            MPlayer mPlayer = MPlayer.get(uuid);
+            Map<UUID, String> userFactions = new HashMap<>();
+            for (UUID uuid : uuids) {
+                MPlayer mPlayer = MPlayer.get(uuid);
 
-            if (mPlayer.hasFaction()) {
-                Faction faction = mPlayer.getFaction();
-                String factionName = faction.isNone() ? "-" : faction.getName();
+                if (mPlayer.hasFaction()) {
+                    Faction faction = mPlayer.getFaction();
+                    String factionName = faction.isNone() ? "-" : faction.getName();
 
-                userFactions.put(uuid, factionName);
+                    userFactions.put(uuid, factionName);
+                }
             }
-        }
 
-        analysisContainer.addPlayerTableValues(getWithIcon("Faction", "flag"), userFactions);
+            analysisContainer.addPlayerTableValues(getWithIcon("Faction", "flag"), userFactions);
+        }
 
         return analysisContainer;
     }

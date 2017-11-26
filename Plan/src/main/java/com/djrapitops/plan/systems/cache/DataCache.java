@@ -25,6 +25,7 @@ public class DataCache extends SessionCache {
     private static final Map<UUID, Integer> firstSessionInformation = new HashMap<>();
     private final Database db;
     private final Map<UUID, String> playerNames;
+    private final Map<String, UUID> uuids;
     private final Map<UUID, String> displayNames;
 
     /**
@@ -38,6 +39,7 @@ public class DataCache extends SessionCache {
 
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
+        uuids = new HashMap<>();
     }
 
     /**
@@ -48,13 +50,22 @@ public class DataCache extends SessionCache {
      * @param displayName DisplayName of the player.
      */
     public void updateNames(UUID uuid, String playerName, String displayName) {
-        playerNames.put(uuid, playerName);
-        displayNames.put(uuid, displayName);
+        if (playerName != null) {
+            playerNames.put(uuid, playerName);
+            uuids.put(playerName, uuid);
+        }
+        if (displayName != null) {
+            displayNames.put(uuid, displayName);
+        }
     }
 
     public void cacheSavedNames() {
         try {
-            playerNames.putAll(db.getUsersTable().getPlayerNames());
+            Map<UUID, String> playerNames = db.getUsersTable().getPlayerNames();
+            this.playerNames.putAll(playerNames);
+            for (Map.Entry<UUID, String> entry : playerNames.entrySet()) {
+                uuids.put(entry.getValue(), entry.getKey());
+            }
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
@@ -143,5 +154,9 @@ public class DataCache extends SessionCache {
 
     public Map<UUID, Integer> getFirstSessionMsgCounts() {
         return firstSessionInformation;
+    }
+
+    public UUID getUUIDof(String playerName) {
+        return uuids.get(playerName);
     }
 }

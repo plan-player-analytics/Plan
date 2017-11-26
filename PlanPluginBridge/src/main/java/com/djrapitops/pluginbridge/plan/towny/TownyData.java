@@ -4,6 +4,7 @@
  */
 package com.djrapitops.pluginbridge.plan.towny;
 
+import com.djrapitops.plugin.utilities.Verify;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Coord;
 import com.palmergames.bukkit.towny.object.Resident;
@@ -16,7 +17,6 @@ import main.java.com.djrapitops.plan.data.additional.ContainerSize;
 import main.java.com.djrapitops.plan.data.additional.InspectContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -70,17 +70,21 @@ public class TownyData extends PluginData {
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
         List<Town> towns = getTopTowns();
 
-        Map<UUID, String> userTowns = new HashMap<>();
-        for (Town town : towns) {
-            String townName = town.getName();
-            town.getResidents().stream()
-                    .map(Resident::getName)
-                    .map(UUIDUtility::getUUIDOf)
-                    .forEach(uuid -> userTowns.put(uuid, townName));
-        }
-        analysisContainer.addPlayerTableValues(getWithIcon("Town", "bank"), userTowns);
+        if (!towns.isEmpty()) {
+            analysisContainer.addValue(getWithIcon("Number of Towns", "bank", "brown"), towns.size());
 
-        analysisContainer.addHtml("townAccordion", TownAccordionCreator.createAccordion(towns));
+            Map<UUID, String> userTowns = new HashMap<>();
+            for (Town town : towns) {
+                String townName = town.getName();
+                town.getResidents().stream()
+                        .map(Resident::getName)
+                        .map(name -> Plan.getInstance().getDataCache().getUUIDof(name))
+                        .filter(Verify::notNull)
+                        .forEach(uuid -> userTowns.put(uuid, townName));
+            }
+            analysisContainer.addPlayerTableValues(getWithIcon("Town", "bank"), userTowns);
+            analysisContainer.addHtml("townAccordion", TownAccordionCreator.createAccordion(towns));
+        }
 
         return analysisContainer;
     }

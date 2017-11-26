@@ -5,8 +5,10 @@
  */
 package main.java.com.djrapitops.plan.utilities.uuid;
 
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.api.utility.log.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
@@ -48,6 +50,12 @@ public class UUIDUtility {
      */
     public static UUID getUUIDOf(String playerName, Database db) {
         UUID uuid = null;
+        if (Check.isBukkitAvailable()) {
+            UUID uuidOf = Plan.getInstance().getDataCache().getUUIDof(playerName);
+            if (uuidOf != null) {
+                return uuidOf;
+            }
+        }
         try {
             uuid = db.getUsersTable().getUuidOf(playerName);
         } catch (SQLException e) {

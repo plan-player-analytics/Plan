@@ -49,13 +49,14 @@ public class InspectContainer {
 
     public final String parseHtml() {
         StringBuilder html = new StringBuilder();
-        html.append("<div class=\"body\">");
 
-        for (Map.Entry<String, String> entry : values.entrySet()) {
-            html.append("<p>").append(entry.getKey()).append(": ").append(entry.getValue()).append("</p>");
+        if (!values.isEmpty()) {
+            html.append("<div class=\"body\">");
+            for (Map.Entry<String, String> entry : values.entrySet()) {
+                html.append("<p>").append(entry.getKey()).append(": ").append(entry.getValue()).append("</p>");
+            }
+            html.append("</div>");
         }
-
-        html.append("</div>");
 
         for (Map.Entry<String, String> entry : this.html.entrySet()) {
             html.append(entry.getValue());
@@ -72,7 +73,7 @@ public class InspectContainer {
         return html.isEmpty() && tables.isEmpty();
     }
 
-    public final boolean isEmpty() {
+    public boolean isEmpty() {
         return values.isEmpty() && html.isEmpty() && tables.isEmpty();
     }
 }

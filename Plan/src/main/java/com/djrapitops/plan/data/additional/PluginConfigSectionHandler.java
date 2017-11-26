@@ -24,7 +24,10 @@ public class PluginConfigSectionHandler {
     public boolean hasSection(PluginData dataSource) {
         ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
-        return section.getChildren().containsKey(pluginName);
+        if (!section.getChildren().containsKey(pluginName)) {
+            return false;
+        }
+        return section.getConfigNode(pluginName).getChildren().containsKey("Enabled");
     }
 
     private ConfigNode getPluginsSection() {

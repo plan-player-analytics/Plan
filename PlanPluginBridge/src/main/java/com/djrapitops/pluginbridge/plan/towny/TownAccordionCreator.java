@@ -8,12 +8,12 @@ import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Coord;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.ServerProfile;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,7 +48,10 @@ public class TownAccordionCreator {
 
             Set<UUID> members = new HashSet<>();
             for (Resident resident : residents) {
-                members.add(UUIDUtility.getUUIDOf(resident.getName()));
+                UUID uuid = Plan.getInstance().getDataCache().getUUIDof(resident.getName());
+                if (uuid != null) {
+                    members.add(uuid);
+                }
             }
 
             List<PlayerProfile> memberProfiles = players.stream().filter(p -> members.contains(p.getUniqueId())).collect(Collectors.toList());

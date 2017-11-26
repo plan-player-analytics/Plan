@@ -4,7 +4,6 @@ import com.djrapitops.pluginbridge.plan.Hook;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -34,11 +33,11 @@ public class VaultHook extends Hook {
             return;
         }
 
-        try {
-            Permission permSys = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
-            addPluginDataSource(new VaultPermData(permSys));
-        } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
-        }
+//        try {
+//            Permission permSys = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
+//            addPluginDataSource(new VaultPermData(permSys));
+//        } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
+//        }
 
         try {
             Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();

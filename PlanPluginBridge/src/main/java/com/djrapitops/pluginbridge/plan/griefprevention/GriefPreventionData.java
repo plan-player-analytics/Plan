@@ -45,7 +45,7 @@ public class GriefPreventionData extends PluginData {
         PlayerData data = dataStore.getPlayerData(uuid);
         int blocks = data.getAccruedClaimBlocks() + data.getBonusClaimBlocks() + dataStore.getGroupBonusBlocks(uuid);
         String softMuted = dataStore.isSoftMuted(uuid) ? "Yes" : "No";
-        long totalArea = MathUtils.sumLong(claims.values().stream().map(i -> i));
+        long totalArea = MathUtils.sumLong(claims.values().stream().map(i -> (long) i));
 
         inspectContainer.addValue(getWithIcon("SoftMuted", "bell-slash-o", "deep-orange"), softMuted);
         inspectContainer.addValue(getWithIcon("Claims", "map-marker", "blue-grey"), claims.size());
@@ -68,7 +68,7 @@ public class GriefPreventionData extends PluginData {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(claim -> claim.ownerID, Claim::getArea));
 
-        long totalArea = MathUtils.sumLong(area.values().stream().map(i -> i));
+        long totalArea = MathUtils.sumLong(area.values().stream().map(i -> (long) i));
         analysisContainer.addValue(getWithIcon("Total Claimed Area", "map-o", "blue-grey"), totalArea);
 
         analysisContainer.addPlayerTableValues(getWithIcon("Claimed Area", "map-o"), area);
