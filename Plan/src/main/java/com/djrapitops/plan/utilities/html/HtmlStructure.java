@@ -60,40 +60,6 @@ public class HtmlStructure {
         return builder.toString();
     }
 
-    @Deprecated
-    public static String createServerOverviewColumn(Map<String, List<Session>> sessions) {
-        StringBuilder builder = new StringBuilder("<div class=\"column\">");
-        if (Verify.isEmpty(sessions)) {
-            return "<div class=\"column\"><div class=\"box-header\"><h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> No Sessions</h2> </div>" +
-                    "<div class=\"box\" style=\"margin-bottom: 5px;\"><p>No sessions to calculate server specific playtime.</p></div></div>";
-        }
-        for (Map.Entry<String, List<Session>> entry : sessions.entrySet()) {
-            String serverName = entry.getKey();
-            List<Session> serverSessions = entry.getValue();
-
-            // Header
-            builder.append("<div class=\"box-header\"><h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> ").append(serverName).append("</h2> </div>");
-
-            // White box
-            builder.append("<div class=\"box\" style=\"margin-bottom: 5px;\">");
-
-            // Content
-            builder.append("<p>Sessions: ").append(serverSessions.size()).append("<br>");
-            long playTime = AnalysisUtils.getTotalPlaytime(serverSessions);
-            builder.append("Playtime: ").append(FormatUtils.formatTimeAmount(playTime)).append("<br>");
-            builder.append("<br>");
-            long longestSessionLength = AnalysisUtils.getLongestSessionLength(serverSessions);
-            builder.append("Longest Session: ").append(FormatUtils.formatTimeAmount(longestSessionLength));
-
-            // Content and box end
-            builder.append("</p></div>");
-
-        }
-        // Column ends
-        builder.append("</div>");
-        return builder.toString();
-    }
-
     public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
         if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
             Map<UUID, List<Session>> sessionsByPlayer = new HashMap<>();

@@ -57,9 +57,11 @@ public class EssentialsData extends PluginData {
             }
         }
 
+        analysisContainer.addValue(getWithIcon("Players in Jail", "ban", "red"), jailed.size() + " / " + uuids.size());
+        analysisContainer.addValue(getWithIcon("Muted", "bell-slash-o", "deep-orange"), muted.size() + " / " + uuids.size());
+
         analysisContainer.addPlayerTableValues(getWithIcon("Jailed", "ban"), jailed);
         analysisContainer.addPlayerTableValues(getWithIcon("Muted", "bell-slash-o"), muted);
-
 
         List<String> warpsList = new ArrayList<>(essentials.getWarps().getList());
         if (!warpsList.isEmpty()) {

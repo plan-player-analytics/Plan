@@ -31,14 +31,4 @@ public class HtmlStructureTest {
             sessions.put(RandomData.randomString(10), RandomData.randomSessions());
         }
     }
-
-    @Test
-    public void createServerOverviewColumn() throws Exception {
-        String serverOverviewColumn = HtmlStructure.createServerOverviewColumn(sessions);
-
-        int opened = StringUtils.countMatches(serverOverviewColumn, "<div");
-        int closed = StringUtils.countMatches(serverOverviewColumn, "</div");
-
-        assertEquals(opened, closed);
-    }
 }

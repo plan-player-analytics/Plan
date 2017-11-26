@@ -70,8 +70,9 @@ public class TownyData extends PluginData {
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
         List<Town> towns = getTopTowns();
 
+        analysisContainer.addValue(getWithIcon("Number of Towns", "bank", "brown"), towns.size());
+
         if (!towns.isEmpty()) {
-            analysisContainer.addValue(getWithIcon("Number of Towns", "bank", "brown"), towns.size());
 
             Map<UUID, String> userTowns = new HashMap<>();
             for (Town town : towns) {

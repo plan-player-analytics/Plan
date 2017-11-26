@@ -25,15 +25,6 @@ public class AnalysisUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    @Deprecated
-    public static boolean isActive(long now, long lastPlayed, long playTime, long loginTimes) {
-        int timeToActive = 10;
-        long twoWeeks = 1209600000;
-        return now - lastPlayed < twoWeeks
-                && loginTimes > 3
-                && playTime > 60 * timeToActive;
-    }
-
     public static long getNewPlayers(List<Long> registered, long scale, long now) {
         long newPlayers = 0;
         if (!registered.isEmpty()) {
@@ -44,38 +35,6 @@ public class AnalysisUtils {
         }
         // Filters out register dates before scale
         return newPlayers;
-    }
-
-    @Deprecated
-    public static List<Long> transformSessionDataToLengths(Collection<Session> data) {
-        return data.stream()
-                .filter(Objects::nonNull)
-                .filter(session -> session.getLength() > 0)
-                .map(Session::getLength)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Used to calculate unique players that have played within the time frame determined by scale.
-     *
-     * @param sessions All sessions sorted in a map by User's UUID
-     * @param scale    Scale (milliseconds), time before (Current epoch - scale) will be ignored.
-     * @return Amount of Unique joins within the time span.
-     */
-    @Deprecated
-    public static int getUniqueJoins(Map<UUID, List<Session>> sessions, long scale) {
-        long now = MiscUtils.getTime();
-        long nowMinusScale = now - scale;
-
-        Set<UUID> uniqueJoins = new HashSet<>();
-        sessions.forEach((uuid, s) ->
-                s.stream()
-                        .filter(session -> session.getSessionStart() >= nowMinusScale)
-                        .map(session -> uuid)
-                        .forEach(uniqueJoins::add)
-        );
-
-        return uniqueJoins.size();
     }
 
     public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long after) {
@@ -174,26 +133,6 @@ public class AnalysisUtils {
             value++;
         }
         return value;
-    }
-
-    @Deprecated
-    public static long getTotalPlaytime(List<Session> sessions) {
-        return sessions.stream().mapToLong(Session::getLength).sum();
-    }
-
-    @Deprecated
-    public static long getLongestSessionLength(List<Session> sessions) {
-        Optional<Session> longest = sessions.stream().sorted(new SessionLengthComparator()).findFirst();
-        return longest.map(Session::getLength).orElse(0L);
-    }
-
-    @Deprecated
-    public static long getLastSeen(List<Session> userSessions) {
-        OptionalLong max = userSessions.stream().mapToLong(Session::getSessionEnd).max();
-        if (max.isPresent()) {
-            return max.getAsLong();
-        }
-        return 0;
     }
 
     public static void addMissingWorlds(WorldTimes worldTimes) {
