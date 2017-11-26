@@ -10,7 +10,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;

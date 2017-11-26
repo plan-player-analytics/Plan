@@ -53,6 +53,9 @@ public enum Html {
     ROW("<div class=\"row\">${0}</div>"),
     //
     TABLE_END("</tbody></table>"),
+    TABLE("<table class=\"table table-striped\">"),
+    TABLE_HEAD("<thead>${0}</thead>"),
+    TABLE_BODY("<tbody>${0}</tbody>"),
     TABLE_START_2("<table class=\"table table-striped\"><thead><tr><th>${0}</th><th>${1}</th></tr></thead><tbody>"),
     TABLE_START_3("<table class=\"table table-striped\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
     TABLE_START_4("<table class=\"table table-striped\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th><th>${3}</th></tr></thead><tbody>"),
