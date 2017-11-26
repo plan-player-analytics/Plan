@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * //TODO Class Javadoc Comment
+ * PluginData for Jobs plugin.
  *
  * @author Rsl1122
  */
