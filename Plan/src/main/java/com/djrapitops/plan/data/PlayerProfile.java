@@ -76,12 +76,6 @@ public class PlayerProfile implements OfflinePlayer {
     }
 
     // Calculating Getters
-
-    @Deprecated // TODO Remove after 4.1.0, made for old html users
-    public boolean isActive(long date) {
-        return getActivityIndex(date) > 1.0;
-    }
-
     public double getActivityIndex(long date) {
         Double activityIndx = activityIndex.get(date);
         if (activityIndx != null) {

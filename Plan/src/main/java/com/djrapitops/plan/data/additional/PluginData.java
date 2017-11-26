@@ -22,6 +22,7 @@ public abstract class PluginData {
     private final String sourcePlugin;
 
     private String pluginIcon;
+    private String iconColor;
 
     public PluginData(ContainerSize size, String sourcePlugin) {
         this.size = size;
@@ -32,24 +33,28 @@ public abstract class PluginData {
 
     public abstract AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer fillThis) throws Exception;
 
-    protected void setPluginIcon(String pluginIcon) {
+    protected final void setPluginIcon(String pluginIcon) {
         this.pluginIcon = pluginIcon;
     }
 
-    public String parsePluginIcon() {
-        return pluginIcon != null ? Html.FONT_AWESOME_ICON.parse(pluginIcon) : Html.FONT_AWESOME_ICON.parse("cube");
+    protected final void setIconColor(String iconColor) {
+        this.iconColor = iconColor;
     }
 
-    public ContainerSize getSize() {
+    public final String parsePluginIcon() {
+        return pluginIcon != null ? Html.FA_COLORED_ICON.parse((iconColor != null ? iconColor : "black"), pluginIcon) : Html.FONT_AWESOME_ICON.parse("cube");
+    }
+
+    public final ContainerSize getSize() {
         return size;
     }
 
-    public String getSourcePlugin() {
+    public final String getSourcePlugin() {
         return sourcePlugin;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PluginData that = (PluginData) o;
@@ -59,7 +64,7 @@ public abstract class PluginData {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hashCode(size, sourcePlugin, pluginIcon);
     }
 }

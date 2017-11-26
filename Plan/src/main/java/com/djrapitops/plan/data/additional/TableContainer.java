@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class TableContainer {
+public final class TableContainer {
 
     private final String[] header;
     private List<Serializable[]> values;

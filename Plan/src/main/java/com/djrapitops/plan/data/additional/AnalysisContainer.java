@@ -28,7 +28,7 @@ import java.util.UUID;
  * @see InspectContainer
  * @since 4.1.0
  */
-public class AnalysisContainer extends InspectContainer {
+public final class AnalysisContainer extends InspectContainer {
 
     private TreeMap<String, Map<UUID, Serializable>> playerTableValues;
 

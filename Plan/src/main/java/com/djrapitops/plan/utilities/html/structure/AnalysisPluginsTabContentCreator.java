@@ -6,17 +6,113 @@ package main.java.com.djrapitops.plan.utilities.html.structure;
 
 import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
- * //TODO Class Javadoc Comment
+ * Creates Plugin section contents for Analysis page.
  *
  * @author Rsl1122
  */
 public class AnalysisPluginsTabContentCreator {
 
     public static String[] createContent(Map<PluginData, AnalysisContainer> containers) {
-        return new String[]{"", ""};
+        if (containers.isEmpty()) {
+            return new String[]{"<li><a>No Compatible Plugins</a></li>", ""};
+        }
+
+        List<PluginData> order = new ArrayList<>(containers.keySet());
+        order.sort(new PluginDataNameComparator());
+
+        StringBuilder nav = new StringBuilder();
+        StringBuilder generalTab = new StringBuilder();
+        StringBuilder otherTabs = new StringBuilder();
+
+        generalTab.append("<div class=\"tab\"><div class=\"row clearfix\">");
+
+        boolean hadOtherThanTabs = false;
+
+        for (PluginData pluginData : order) {
+            AnalysisContainer container = containers.get(pluginData);
+
+            switch (pluginData.getSize()) {
+                case TAB:
+                    appendNewTab(pluginData, container, nav, otherTabs);
+                    break;
+                case WHOLE:
+                    if (!container.hasOnlyValues()) {
+                        appendWhole(pluginData, container, generalTab);
+                        hadOtherThanTabs = true;
+                        break;
+                    }
+
+                case TWO_THIRDS:
+                    if (!container.hasOnlyValues()) {
+                        appendTwoThirds(pluginData, container, generalTab);
+                        hadOtherThanTabs = true;
+                        break;
+                    }
+                case THIRD:
+                default:
+                    appendThird(pluginData, container, generalTab);
+                    hadOtherThanTabs = true;
+                    break;
+            }
+        }
+
+        generalTab.append("</div></div>");
+
+        return new String[]{
+                hadOtherThanTabs ? "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>" + nav.toString() : nav.toString(),
+                hadOtherThanTabs ? generalTab.toString() + otherTabs.toString() : otherTabs.toString()
+        };
+    }
+
+    private static void appendThird(PluginData pluginData, AnalysisContainer container, StringBuilder generalTab) {
+        generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-4 col-lg-4\">" +
+                "<div class=\"card\">" +
+                "<div class=\"header\">" +
+                "<h2>")
+                .append(pluginData.parsePluginIcon()).append(" ").append(pluginData.getSourcePlugin())
+                .append("</h2></div>").append("<div class=\"body\">")
+                .append(container.parseHtml())
+                .append("</div></div></div>");
+    }
+
+    private static void appendTwoThirds(PluginData pluginData, AnalysisContainer container, StringBuilder generalTab) {
+        generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-8 col-lg-8\">" +
+                "<div class=\"card\">" +
+                "<div class=\"header\">" +
+                "<h2>")
+                .append(pluginData.parsePluginIcon()).append(" ").append(pluginData.getSourcePlugin())
+                .append("</h2></div>").append("<div class=\"body\">")
+                .append(container.parseHtml())
+                .append("</div></div></div>");
+    }
+
+    private static void appendWhole(PluginData pluginData, AnalysisContainer container, StringBuilder generalTab) {
+        generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">" +
+                "<div class=\"card\">" +
+                "<div class=\"header\">" +
+                "<h2>")
+                .append(pluginData.parsePluginIcon()).append(" ").append(pluginData.getSourcePlugin())
+                .append("</h2></div>").append("<div class=\"body\">")
+                .append(container.parseHtml())
+                .append("</div></div></div>");
+    }
+
+    private static void appendNewTab(PluginData pluginData, AnalysisContainer container, StringBuilder nav, StringBuilder otherTabs) {
+        nav.append("<li><a class=\"nav-button\" href=\"javascript:void(0)\">").append(pluginData.getSourcePlugin()).append("</a></li>");
+        otherTabs.append("<div class=\"tab\"><div class=\"row clearfix\"><div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">" +
+                "<div class=\"card\">" +
+                "<div class=\"header\">" +
+                "<h2>")
+                .append(pluginData.parsePluginIcon()).append(" ").append(pluginData.getSourcePlugin())
+                .append("</h2></div>").append("<div class=\"body\">")
+                .append(container.parseHtml())
+                .append("</div></div></div></div></div>");
     }
 }

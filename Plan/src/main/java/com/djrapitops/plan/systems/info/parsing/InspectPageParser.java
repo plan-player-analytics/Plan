@@ -220,10 +220,6 @@ public class InspectPageParser extends PageParser {
 
             addValue("playerStatus", HtmlStructure.playerStatus(online, profile.getBannedOnServers(), profile.isOp()));
 
-            boolean isActive = profile.isActive(now);
-            String active = isActive ? "Active" : "Inactive";
-            playerClassification(profile, active);
-
             if (!plugin.getInfoManager().isUsingAnotherWebServer()) {
                 addValue("networkName", Settings.SERVER_NAME.toString());
             }
@@ -233,15 +229,5 @@ public class InspectPageParser extends PageParser {
             Log.toLog(this.getClass().getName(), e);
             throw new ParseException(e);
         }
-    }
-
-    private void playerClassification(PlayerProfile profile, String active) {
-        boolean isBanned = profile.isBanned();
-        boolean isOP = profile.isOp();
-
-        String banned = isBanned ? "Banned" : "";
-        String op = isOP ? "Operator (OP)" : "";
-
-        addValue("playerClassification", HtmlStructure.separateWithDots(active, banned, op));
     }
 }

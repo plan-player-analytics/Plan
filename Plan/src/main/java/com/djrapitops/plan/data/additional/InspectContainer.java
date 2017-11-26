@@ -37,27 +37,27 @@ public class InspectContainer {
         tables = new TreeMap<>();
     }
 
-    public String getWithIcon(String text, String icon) {
+    public final String getWithIcon(String text, String icon) {
         return getWithColoredIcon(text, icon, "black");
     }
 
-    public String getWithColoredIcon(String text, String icon, String color) {
+    public final String getWithColoredIcon(String text, String icon, String color) {
         return Html.FA_COLORED_ICON.parse(color, icon) + " " + text;
     }
 
-    public void addValue(String label, Serializable value) {
+    public final void addValue(String label, Serializable value) {
         values.put(label, value.toString());
     }
 
-    public void addHtml(String key, String html) {
+    public final void addHtml(String key, String html) {
         this.html.put(key, html);
     }
 
-    public void addTable(String key, TableContainer table) {
+    public final void addTable(String key, TableContainer table) {
         tables.put(key, table);
     }
 
-    public String parseHtml() {
+    public final String parseHtml() {
         StringBuilder html = new StringBuilder();
 
         for (Map.Entry<String, String> entry : values.entrySet()) {
@@ -73,5 +73,9 @@ public class InspectContainer {
         }
 
         return html.toString();
+    }
+
+    public final boolean hasOnlyValues() {
+        return html.isEmpty() && tables.isEmpty();
     }
 }
