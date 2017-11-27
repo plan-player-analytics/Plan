@@ -63,9 +63,16 @@ public class KingdomsData extends PluginData {
 
             Map<UUID, String> userKingDoms = new HashMap<>();
             for (Map.Entry<String, OfflineKingdom> entry : kingdoms.entrySet()) {
-                String kingdom = entry.getKey();
-                for (UUID member : entry.getValue().getMembersList()) {
-                    userKingDoms.put(member, kingdom);
+                String kingdomName = entry.getKey();
+                OfflineKingdom kingdom = entry.getValue();
+                UUID king = kingdom.getKing();
+                for (UUID member : kingdom.getMembersList()) {
+                    if (member.equals(king)) {
+                        userKingDoms.put(member, "<b>" + kingdomName + "</b>");
+
+                    } else {
+                        userKingDoms.put(member, kingdomName);
+                    }
                 }
             }
             analysisContainer.addPlayerTableValues(getWithIcon("Kingdom", "shield"), userKingDoms);

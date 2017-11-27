@@ -63,9 +63,10 @@ public class FactionsData extends PluginData {
 
                 if (mPlayer.hasFaction()) {
                     Faction faction = mPlayer.getFaction();
+                    String leadername = faction.getLeader().getName();
                     String factionName = faction.isNone() ? "-" : faction.getName();
 
-                    userFactions.put(uuid, factionName);
+                    userFactions.put(uuid, mPlayer.getName().equals(leadername) ? "<b>" + factionName + "</b>" : factionName);
                 }
             }
 

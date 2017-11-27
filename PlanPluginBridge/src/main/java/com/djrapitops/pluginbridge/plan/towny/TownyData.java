@@ -77,11 +77,13 @@ public class TownyData extends PluginData {
             Map<UUID, String> userTowns = new HashMap<>();
             for (Town town : towns) {
                 String townName = town.getName();
+                String mayor = town.getMayor().getName();
+                UUID mayorUUID = Plan.getInstance().getDataCache().getUUIDof(mayor);
                 town.getResidents().stream()
                         .map(Resident::getName)
                         .map(name -> Plan.getInstance().getDataCache().getUUIDof(name))
                         .filter(Verify::notNull)
-                        .forEach(uuid -> userTowns.put(uuid, townName));
+                        .forEach(uuid -> userTowns.put(uuid, uuid.equals(mayorUUID) ? "<b>" + townName + "</b>" : townName));
             }
             analysisContainer.addPlayerTableValues(getWithIcon("Town", "bank"), userTowns);
             analysisContainer.addHtml("townAccordion", TownAccordionCreator.createAccordion(towns));
