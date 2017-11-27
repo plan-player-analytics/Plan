@@ -56,7 +56,7 @@ public class KingdomsData extends PluginData {
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
         Map<String, OfflineKingdom> kingdoms = GameManagement.getKingdomManager().getKingdomList();
 
-        analysisContainer.addValue(getWithIcon("Kingdoms", "shield", "amber"), kingdoms.size());
+        analysisContainer.addValue(getWithIcon("Number of Kingdoms", "shield", "amber"), kingdoms.size());
 
         if (!kingdoms.isEmpty()) {
             analysisContainer.addHtml("kingdomsAccordion", KingdomAccordionCreator.createAccordion(kingdoms));

@@ -52,7 +52,7 @@ public class KingdomAccordionCreator {
             long mobKills = ServerProfile.getMobKillCount(sessions);
             long deaths = ServerProfile.getDeathCount(sessions);
 
-            String separated = HtmlStructure.separateWithDots(String.valueOf(residentsNum), kingName);
+            String separated = HtmlStructure.separateWithDots(("Members: " + residentsNum), kingName);
 
             String htmlID = "kingdom_" + kingdomName.replace(" ", "-");
 
@@ -71,10 +71,12 @@ public class KingdomAccordionCreator {
             html.append("<div id=\"session_").append(htmlID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
                     .append(" aria-labelledby=\"heading_").append(htmlID).append("\">")
                     .append("<div class=\"panel-body\"><div class=\"row clearfix\">")
-                    .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Left col-6
-                    // Lore
-                    .append("<p>").append(kingdomLore).append("</p>")
-                    .append("<p><i class=\"col-amber fa fa-user\"></i> Mayor <span class=\"pull-right\">").append(kingName).append("</span></p>")
+                    .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">"); // Left col-6
+            // Lore
+            if (kingdomLore != null) {
+                html.append("<p>").append(kingdomLore).append("</p>");
+            }
+            html.append("<p><i class=\"col-amber fa fa-user\"></i> Mayor <span class=\"pull-right\">").append(kingName).append("</span></p>")
                     // Playtime
                     .append("<p><i class=\"col-amber fa fa-users\"></i> Members<span class=\"pull-right\"><b>").append(residentsNum).append("</b></span></p>")
                     .append("<p><i class=\"col-amber fa fa-bolt\"></i> Might<span class=\"pull-right\"><b>").append(might).append("</b></span></p>")

@@ -64,12 +64,12 @@ public class FactionAccordionCreator {
             long playerKills = ServerProfile.getPlayerKills(sessions).size();
             long deaths = ServerProfile.getDeathCount(sessions);
 
-            String separated = HtmlStructure.separateWithDots(powerString, leaderName);
+            String separated = HtmlStructure.separateWithDots(("Power: " + powerString), leaderName);
 
             String htmlID = "faction_" + createdAtMillis;
 
             // Accordion panel header
-            html.append("<div class=\"panel panel-col-light-green\">")
+            html.append("<div class=\"panel panel-col-deep-purple\">")
                     .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
                     .append("<h4 class=\"panel-title\">")
                     .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")

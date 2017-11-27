@@ -66,7 +66,7 @@ public class TownAccordionCreator {
             long mobKills = ServerProfile.getMobKillCount(sessions);
             long deaths = ServerProfile.getDeathCount(sessions);
 
-            String separated = HtmlStructure.separateWithDots(String.valueOf(residentsNum), mayorName);
+            String separated = HtmlStructure.separateWithDots(("Residents: " + residentsNum), mayorName);
 
             String htmlID = "town_" + townName.replace(" ", "-");
 
