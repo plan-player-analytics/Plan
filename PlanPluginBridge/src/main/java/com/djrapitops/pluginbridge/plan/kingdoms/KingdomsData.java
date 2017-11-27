@@ -57,16 +57,19 @@ public class KingdomsData extends PluginData {
         Map<String, OfflineKingdom> kingdoms = GameManagement.getKingdomManager().getKingdomList();
 
         analysisContainer.addValue(getWithIcon("Kingdoms", "shield", "amber"), kingdoms.size());
-        analysisContainer.addHtml("kingdomsAccordion", KingdomAccordionCreator.createAccordion(kingdoms));
 
-        Map<UUID, String> userKingDoms = new HashMap<>();
-        for (Map.Entry<String, OfflineKingdom> entry : kingdoms.entrySet()) {
-            String kingdom = entry.getKey();
-            for (UUID member : entry.getValue().getMembersList()) {
-                userKingDoms.put(member, kingdom);
+        if (!kingdoms.isEmpty()) {
+            analysisContainer.addHtml("kingdomsAccordion", KingdomAccordionCreator.createAccordion(kingdoms));
+
+            Map<UUID, String> userKingDoms = new HashMap<>();
+            for (Map.Entry<String, OfflineKingdom> entry : kingdoms.entrySet()) {
+                String kingdom = entry.getKey();
+                for (UUID member : entry.getValue().getMembersList()) {
+                    userKingDoms.put(member, kingdom);
+                }
             }
+            analysisContainer.addPlayerTableValues(getWithIcon("Kingdom", "shield"), userKingDoms);
         }
-        analysisContainer.addPlayerTableValues(getWithIcon("Kingdom", "shield"), userKingDoms);
 
         return analysisContainer;
     }
