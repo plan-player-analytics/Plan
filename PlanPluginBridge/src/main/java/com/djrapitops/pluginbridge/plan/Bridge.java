@@ -8,6 +8,7 @@ import com.djrapitops.pluginbridge.plan.essentials.EssentialsHook;
 import com.djrapitops.pluginbridge.plan.factions.FactionsHook;
 import com.djrapitops.pluginbridge.plan.griefprevention.GriefPreventionHook;
 import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
+import com.djrapitops.pluginbridge.plan.kingdoms.KingdomsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansHook;
 import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
 import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
@@ -30,6 +31,7 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
  * @see FactionsHook
  * @see GriefPreventionHook
  * @see JobsHook
+ * @see KingdomsHook
  * @see LiteBansHook
  * @see McmmoHook
  * @see SuperbVoteHook
@@ -55,6 +57,7 @@ public class Bridge {
                 new FactionsHook(h),
                 new GriefPreventionHook(h),
                 new JobsHook(h),
+                new KingdomsHook(h),
                 new LiteBansHook(h),
                 new McmmoHook(h),
                 new SuperbVoteHook(h),
