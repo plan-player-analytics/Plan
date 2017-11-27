@@ -12,6 +12,7 @@ import main.java.com.djrapitops.plan.api.exceptions.*;
 import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.additional.InspectContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
@@ -30,6 +31,7 @@ import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebA
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
+import main.java.com.djrapitops.plan.utilities.html.structure.InspectPluginsTabContentCreator;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -52,7 +54,7 @@ public class BukkitInformationManager extends InformationManager {
     private String analysisPluginsTab;
     private Long refreshDate;
 
-    private final Map<UUID, String> pluginsTabContents;
+    private final Map<UUID, String[]> pluginsTabContents;
 
     public BukkitInformationManager(Plan plugin) {
         this.plugin = plugin;
@@ -93,6 +95,10 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public void cachePlayer(UUID uuid) {
+        if (uuid == null) {
+            Log.debug("BukkitInformationManager.cachePlayer: UUID was null");
+            return;
+        }
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendInspectHtml(webServerAddress, uuid, getPlayerHtml(uuid));
@@ -131,14 +137,26 @@ public class BukkitInformationManager extends InformationManager {
             String serverName = plugin.getServerInfoManager().getServerName();
             HookHandler hookHandler = plugin.getHookHandler();
             List<PluginData> plugins = hookHandler.getAdditionalDataSources();
-            // TODO Inspect Plugins Tab
-//            Map<String, Serializable> replaceMap = hookHandler.getAdditionalInspectReplaceRules(uuid);
-//            String contents = HtmlStructure.createInspectPluginsTabContent(serverName, plugins, replaceMap);
-            cacheInspectPluginsTab(uuid, "");
+            Map<PluginData, InspectContainer> containers = new HashMap<>();
+            for (PluginData pluginData : plugins) {
+                InspectContainer inspectContainer = new InspectContainer();
+                try {
+                    InspectContainer container = pluginData.getPlayerData(uuid, inspectContainer);
+                    if (container != null && !container.isEmpty()) {
+                        containers.put(pluginData, container);
+                    }
+                } catch (Exception e) {
+                    String sourcePlugin = pluginData.getSourcePlugin();
+                    Log.error("PluginData caused exception: " + sourcePlugin);
+                    Log.toLog(this.getClass().getName() + " " + sourcePlugin, e);
+                }
+            }
+
+            cacheInspectPluginsTab(uuid, InspectPluginsTabContentCreator.createContent(containers));
         }
     }
 
-    public void cacheInspectPluginsTab(UUID uuid, String contents) {
+    public void cacheInspectPluginsTab(UUID uuid, String[] contents) {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostInspectPluginsTabWebAPI.class).sendPluginsTab(webServerAddress, uuid, contents);
@@ -158,8 +176,8 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     @Override
-    public String getPluginsTabContent(UUID uuid) {
-        String calculating = HtmlStructure.createInspectPageTabContentCalculating();
+    public String[] getPluginsTabContent(UUID uuid) {
+        String[] calculating = HtmlStructure.createInspectPageTabContentCalculating();
         return pluginsTabContents.getOrDefault(uuid, calculating);
     }
 

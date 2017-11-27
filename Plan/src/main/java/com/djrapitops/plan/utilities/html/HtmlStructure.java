@@ -13,7 +13,6 @@ import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
@@ -72,26 +71,17 @@ public class HtmlStructure {
         }
     }
 
-    private static String[] getSessionsAsTable(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
-        Map<Integer, UUID> uuidByID = new HashMap<>();
-        for (List<Session> sessionList : sessions.values()) {
-            for (Session session : sessionList) {
-                uuidByID.put(session.getSessionID(), uuid);
-            }
-        }
-
-        return new String[]{/*Html.TABLE_SESSIONS.parse(SessionsTableCreator.createTable(uuidByID, allSessions)[0]),*/"", ""};
-    }
-
-    public static String createInspectPageTabContentCalculating() {
-        return "<div class=\"row\">" +
-                "<div class=\"column\">" +
-                "<div class=\"box-header\">" +
-                "<h2><i class=\"fa fa-cube\" aria-hidden=\"true\"></i> No Plugins</h2></div>" +
-                "<div class=\"box plugin\">" +
-                "<p><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Plugins tab is still being calculated, please refresh the page after a while (F5)</p>" +
+    public static String[] createInspectPageTabContentCalculating() {
+        String tab = "<div class=\"tab\">" +
+                "<div class=\"row clearfix\">" +
+                "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">" +
+                "<div class=\"card\">" +
+                "<div class=\"header\"><h2><i class=\"fa fa-users\"></i> Plugin Data</h2></div>" +
+                "<div class=\"body\">" +
+                "<p><i class=\"fa fa-spin fa-refresh\"></i> Calculating Plugins tab, refresh (F5) shortly..</p>" +
                 "</div></div>" +
-                "</div>";
+                "</div></div></div>";
+        return new String[]{"<li><a>Calculating... Refresh shortly</a></li>", tab};
     }
 
     public static String createNetworkPageContent(Map<UUID, String> networkPageContents) {

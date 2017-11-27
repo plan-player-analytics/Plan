@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.systems.webserver;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 
 import java.util.Map;
@@ -65,6 +66,22 @@ public class PageCache {
      */
     public static Response loadPage(String identifier) {
         return pageCache.getIfPresent(identifier);
+    }
+
+    /**
+     * Returns a copy some responses
+     *
+     * Currently supported copyable responses: InspectPageResponse
+     *
+     * @param identifier The identifier of the page
+     * @return Copied Response of loadPage, so that cache contents are not changed.
+     */
+    public static Response copyPage(String identifier, PageLoader loader) {
+        Response response = loadPage(identifier, loader);
+        if (response instanceof InspectPageResponse) {
+            return InspectPageResponse.copyOf((InspectPageResponse) response);
+        }
+        return response;
     }
 
     /**

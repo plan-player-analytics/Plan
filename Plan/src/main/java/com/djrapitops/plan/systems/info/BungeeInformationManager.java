@@ -43,7 +43,7 @@ public class BungeeInformationManager extends InformationManager {
     private Map<UUID, ServerInfo> bukkitServers;
 
     private final Map<UUID, String> networkPageContent;
-    private final Map<UUID, Map<UUID, String>> pluginsTabContent;
+    private final Map<UUID, Map<UUID, String[]>> pluginsTabContent;
     private final BungeeServerInfoManager serverInfoManager;
 
     public BungeeInformationManager(PlanBungee plugin) throws SQLException {
@@ -246,10 +246,10 @@ public class BungeeInformationManager extends InformationManager {
      */
     @Override
     public String getPlayerHtml(UUID uuid) {
-        Response response = PageCache.loadPage("inspectPage:" + uuid,
+        Response response = PageCache.copyPage("inspectPage:" + uuid,
                 () -> new NotFoundResponse("No Bukkit Servers were online to process this request"));
         if (response instanceof InspectPageResponse) {
-            ((InspectPageResponse) response).setInspectPagePluginsTab(pluginsTabContent.get(uuid));
+            ((InspectPageResponse) response).setInspectPagePluginsTab(getPluginsTabContent(uuid));
         }
         return response.getContent();
     }
@@ -275,17 +275,28 @@ public class BungeeInformationManager extends InformationManager {
      * @return Html string.
      */
     @Override
-    public String getPluginsTabContent(UUID uuid) {
-        Map<UUID, String> pluginsTab = pluginsTabContent.get(uuid);
+    public String[] getPluginsTabContent(UUID uuid) {
+        Map<UUID, String[]> pluginsTab = pluginsTabContent.get(uuid);
         if (pluginsTab == null) {
             return HtmlStructure.createInspectPageTabContentCalculating();
         }
 
-        StringBuilder builder = new StringBuilder();
-        for (String tab : pluginsTab.values()) {
-            builder.append(tab);
+        List<String[]> order = new ArrayList<>(pluginsTab.values());
+        // Sort serverNames alphabetically
+        order.sort(new Comparator<String[]>() {
+            @Override
+            public int compare(String[] o1, String[] o2) {
+                return o1[0].compareTo(o2[1]);
+            }
+        });
+
+        StringBuilder nav = new StringBuilder();
+        StringBuilder tabs = new StringBuilder();
+        for (String[] tab : order) {
+            nav.append(tab[0]);
+            tabs.append(tab[1]);
         }
-        return builder.toString();
+        return new String[]{nav.toString(), tabs.toString()};
     }
 
     /**
@@ -295,8 +306,8 @@ public class BungeeInformationManager extends InformationManager {
      * @param uuid       UUID of the player
      * @param html       Plugins tab html for the player on the server
      */
-    public void cachePluginsTabContent(UUID serverUUID, UUID uuid, String html) {
-        Map<UUID, String> perServerPluginsTab = pluginsTabContent.getOrDefault(uuid, new HashMap<>());
+    public void cachePluginsTabContent(UUID serverUUID, UUID uuid, String[] html) {
+        Map<UUID, String[]> perServerPluginsTab = pluginsTabContent.getOrDefault(uuid, new HashMap<>());
         perServerPluginsTab.put(serverUUID, html);
         pluginsTabContent.put(uuid, perServerPluginsTab);
         Response inspectResponse = PageCache.loadPage("inspectPage: " + uuid);

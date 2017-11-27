@@ -52,6 +52,9 @@ public class InspectPageParser extends PageParser {
 
     public String parse() throws ParseException {
         try {
+            if (uuid == null) {
+                throw new IllegalStateException("UUID was null!");
+            }
             Log.logDebug("Database", "Inspect Parse Fetch");
             Benchmark.start("Inspect Parse, Fetch");
             Database db = plugin.getDB();
@@ -65,6 +68,9 @@ public class InspectPageParser extends PageParser {
             addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
             PlayerProfile profile = db.getPlayerProfile(uuid);
+            if (profile == null) {
+                throw new IllegalStateException("Player profile was null!");
+            }
 
             String online = "Offline";
             Optional<Session> activeSession = plugin.getInfoManager().getDataCache().getCachedSession(uuid);

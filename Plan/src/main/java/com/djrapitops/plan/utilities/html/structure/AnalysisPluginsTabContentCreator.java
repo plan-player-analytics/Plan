@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.utilities.html.structure;
 
 import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.additional.InspectContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
@@ -85,7 +86,7 @@ public class AnalysisPluginsTabContentCreator {
         };
     }
 
-    private static void appendThird(PluginData pluginData, AnalysisContainer container, StringBuilder generalTab) {
+    public static void appendThird(PluginData pluginData, InspectContainer container, StringBuilder generalTab) {
         generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-4 col-lg-4\">" +
                 "<div class=\"card\">" +
                 "<div class=\"header\">" +
