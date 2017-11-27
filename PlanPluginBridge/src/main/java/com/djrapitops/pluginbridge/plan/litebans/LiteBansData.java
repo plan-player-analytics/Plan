@@ -11,16 +11,15 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * PluginData for LiteBans plugin.
  *
  * @author Rsl1122
  */
-public class LiteBansData extends PluginData {
+public class LiteBansData extends PluginData implements BanData {
 
     private final LiteBansDatabaseQueries db;
 
@@ -90,5 +89,31 @@ public class LiteBansData extends PluginData {
         analysisContainer.addTable("banTable", banTable);
 
         return analysisContainer;
+    }
+
+    @Override
+    public boolean isBanned(UUID uuid) {
+        try {
+            return !db.getBans(uuid).isEmpty();
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        return false;
+    }
+
+    @Override
+    public Collection<UUID> filterBanned(Collection<UUID> collection) {
+        try {
+            List<BanObject> bans = db.getBans();
+            Set<UUID> banned = new HashSet<>();
+            for (BanObject ban : bans) {
+                banned.add(ban.getUuid());
+            }
+
+            return collection.stream().filter(banned::contains).collect(Collectors.toSet());
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        return new HashSet<>();
     }
 }
