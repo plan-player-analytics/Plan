@@ -10,6 +10,7 @@ import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansHook;
 import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
 import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
+import com.djrapitops.pluginbridge.plan.redprotect.RedProtectHook;
 import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.vault.VaultHook;
@@ -28,6 +29,7 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
  * @see McmmoHook
  * @see SuperbVoteHook
  * @see ProtocolSupportHook
+ * @see RedProtectHook
  * @see TownyHook
  * @see VaultHook
  * @see ViaVersionHook
@@ -51,6 +53,7 @@ public class Bridge {
                 new McmmoHook(h),
                 new SuperbVoteHook(h),
                 new ProtocolSupportHook(h),
+                new RedProtectHook(h),
                 new TownyHook(h),
                 new VaultHook(h),
                 new ViaVersionHook(h)

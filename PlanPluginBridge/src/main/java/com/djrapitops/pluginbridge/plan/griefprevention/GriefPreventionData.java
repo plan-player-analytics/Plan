@@ -28,7 +28,7 @@ public class GriefPreventionData extends PluginData {
 
     public GriefPreventionData(DataStore dataStore) {
         super(ContainerSize.THIRD, "GriefPrevention");
-        super.setPluginIcon("map-o");
+        super.setPluginIcon("shield");
         super.setIconColor("blue-grey");
         this.dataStore = dataStore;
     }
