@@ -87,7 +87,7 @@ public class AnalysisPluginsTabContentCreator {
     }
 
     public static void appendThird(PluginData pluginData, InspectContainer container, StringBuilder generalTab) {
-        generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-4 col-lg-4\">" +
+        generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-4 col-lg-4 plugin\">" +
                 "<div class=\"card\">" +
                 "<div class=\"header\">" +
                 "<h2>")
@@ -98,7 +98,7 @@ public class AnalysisPluginsTabContentCreator {
     }
 
     private static void appendTwoThirds(PluginData pluginData, AnalysisContainer container, StringBuilder generalTab) {
-        generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-8 col-lg-8\">" +
+        generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-8 col-lg-8 plugin\">" +
                 "<div class=\"card\">" +
                 "<div class=\"header\">" +
                 "<h2>")
@@ -109,7 +109,7 @@ public class AnalysisPluginsTabContentCreator {
     }
 
     private static void appendWhole(PluginData pluginData, AnalysisContainer container, StringBuilder generalTab) {
-        generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">" +
+        generalTab.append("<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12 plugin\">" +
                 "<div class=\"card\">" +
                 "<div class=\"header\">" +
                 "<h2>")
