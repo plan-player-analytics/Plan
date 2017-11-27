@@ -1,6 +1,7 @@
 package com.djrapitops.pluginbridge.plan;
 
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.pluginbridge.plan.aac.AdvancedAntiCheatHook;
 import com.djrapitops.pluginbridge.plan.advancedachievements.AdvancedAchievementsHook;
 import com.djrapitops.pluginbridge.plan.askyblock.ASkyBlockHook;
 import com.djrapitops.pluginbridge.plan.banmanager.BanManagerHook;
@@ -24,6 +25,7 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
  * Manages connection to other plugins.
  *
  * @author Rsl1122
+ * @see AdvancedAntiCheatHook
  * @see AdvancedAchievementsHook
  * @see ASkyBlockHook
  * @see BanManagerHook
@@ -50,6 +52,7 @@ public class Bridge {
 
     public static void hook(HookHandler h) {
         Hook[] hooks = new Hook[]{
+                new AdvancedAntiCheatHook(h),
                 new AdvancedAchievementsHook(h),
                 new ASkyBlockHook(h),
                 new BanManagerHook(h),
