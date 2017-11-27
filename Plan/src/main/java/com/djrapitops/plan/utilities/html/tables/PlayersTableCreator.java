@@ -129,7 +129,7 @@ public class PlayersTableCreator {
             }
         } catch (IllegalArgumentException ignored) {
         }
-        return tableContainer.parseHtml().replace(Html.TABLE.parse(), "<table class=\"table table-bordered table-striped table-hover player-table dataTable\">");
+        return tableContainer.parseHtml().replace(Html.TABLE_SCROLL.parse(), "<table class=\"table table-bordered table-striped table-hover player-table dataTable\">");
     }
 
 

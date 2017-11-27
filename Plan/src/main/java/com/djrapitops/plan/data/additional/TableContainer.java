@@ -43,7 +43,7 @@ public final class TableContainer {
     }
 
     public String parseHtml() {
-        return Html.TABLE.parse() +
+        return Html.TABLE_SCROLL.parse() +
                 parseHeader() +
                 parseBody() +
                 "</table>";

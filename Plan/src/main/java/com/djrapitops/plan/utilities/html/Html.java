@@ -54,6 +54,7 @@ public enum Html {
     //
     TABLE_END("</tbody></table>"),
     TABLE("<table class=\"table table-striped\">"),
+    TABLE_SCROLL("<table class=\"table table-striped scrollbar\">"),
     TABLE_COLORED("<table class=\"bg-${0} table table-striped\">"),
     TABLE_HEAD("<thead>${0}</thead>"),
     TABLE_BODY("<tbody>${0}</tbody>"),
