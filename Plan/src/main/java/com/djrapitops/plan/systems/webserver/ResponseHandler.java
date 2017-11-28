@@ -208,7 +208,8 @@ public class ResponseHandler extends APIResponseHandler {
 
         plugin.getInfoManager().cachePlayer(uuid);
         Response response = PageCache.loadPage("inspectPage: " + uuid);
-        if (response == null || response instanceof NotFoundResponse) {
+        // TODO Create a new method that places NotFoundResponse to PageCache instead.
+        if (response == null || response.getContent().contains("No Bukkit Servers were online to process this request")) {
             PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
             response = PageCache.loadPage("inspectPage: " + uuid);
         }
