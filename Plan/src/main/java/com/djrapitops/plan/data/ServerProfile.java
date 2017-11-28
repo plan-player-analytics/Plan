@@ -385,4 +385,14 @@ public class ServerProfile {
 
         return playerMap.get(uuid);
     }
+
+    public void addActiveSessions(Map<UUID, Session> activeSessions) {
+        for (Map.Entry<UUID, Session> entry : activeSessions.entrySet()) {
+            UUID uuid = entry.getKey();
+            Session session = entry.getValue();
+            session.setSessionID((int) session.getSessionStart());
+
+            getPlayer(uuid).addActiveSession(session);
+        }
+    }
 }

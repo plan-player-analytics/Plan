@@ -29,7 +29,7 @@ import java.util.UUID;
  */
 public class SessionTabStructureCreator {
 
-    public static String[] creteStructure(Map<UUID, Map<String, List<Session>>> sessions, List<Session> allSessions, boolean appendName) {
+    public static String[] createStructure(Map<UUID, Map<String, List<Session>>> sessions, List<Session> allSessions, boolean appendName) {
 
         Map<Integer, UUID> uuidsByID = generateIDtoUUIDMap(sessions);
 
@@ -82,7 +82,7 @@ public class SessionTabStructureCreator {
                     .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
                     .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
                     .append("aria-controls=\"session_").append(htmlID).append("\">")
-                    .append(dotSeparated).append("<span class=\"pull-right\">").append(sessionLength).append("</span>") // Title (header)
+                    .append(dotSeparated).append("<span class=\"pull-right\">").append(session.getSessionEnd() == -1 ? "Online" : sessionLength).append("</span>") // Title (header)
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 
@@ -171,7 +171,7 @@ public class SessionTabStructureCreator {
         return uuidsByID;
     }
 
-    public static String[] creteStructure(Map<UUID, List<Session>> sessions, List<Session> allSessions) {
+    public static String[] createStructure(Map<UUID, List<Session>> sessions, List<Session> allSessions) {
         if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
             return new String[]{Html.TABLE_SESSIONS.parse("", "", "", SessionsTableCreator.createTable(sessions, allSessions)[0]), ""};
         }
@@ -184,6 +184,6 @@ public class SessionTabStructureCreator {
             map.put(entry.getKey(), serverSpecificMap);
         }
 
-        return creteStructure(map, allSessions, true);
+        return createStructure(map, allSessions, true);
     }
 }

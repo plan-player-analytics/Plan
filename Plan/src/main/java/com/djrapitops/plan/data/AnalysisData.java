@@ -146,13 +146,10 @@ public class AnalysisData extends RawData {
                     activityData.put(date, map);
                 }
             }
-        } else {
-            activityData.put(now, new HashMap<>());
-            activityData.put(fourWeeksAgo, new HashMap<>());
         }
 
-        Map<String, Set<UUID>> activityNow = activityData.get(now);
-        Map<String, Set<UUID>> activityFourWAgo = activityData.get(fourWeeksAgo);
+        Map<String, Set<UUID>> activityNow = activityData.getOrDefault(now, new HashMap<>());
+        Map<String, Set<UUID>> activityFourWAgo = activityData.getOrDefault(fourWeeksAgo, new HashMap<>());
 
         Set<UUID> veryActiveNow = activityNow.getOrDefault("Very Active", new HashSet<>());
         Set<UUID> activeNow = activityNow.getOrDefault("Active", new HashSet<>());
@@ -484,7 +481,7 @@ public class AnalysisData extends RawData {
                 .filter(s -> s.getSessionStart() >= monthAgo)
                 .collect(Collectors.toList());
         String[] tables = SessionsTableCreator.createTable(sessions, allSessions);
-        String[] sessionContent = SessionTabStructureCreator.creteStructure(sessions, allSessions);
+        String[] sessionContent = SessionTabStructureCreator.createStructure(sessions, allSessions);
 
         addValue("sessionCount", allSessions.size());
         addValue("accordionSessions", sessionContent[0]);

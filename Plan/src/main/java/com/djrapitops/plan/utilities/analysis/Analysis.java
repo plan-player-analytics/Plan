@@ -15,6 +15,8 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.ErrorResponse;
@@ -108,10 +110,13 @@ public class Analysis {
             Benchmark.stop("Analysis", "Create Empty dataset");
             Benchmark.start("Fetch Phase");
             ServerProfile profile = db.getServerProfile(Plan.getServerUUID());
+            DataCache dataCache = plugin.getDataCache();
+            profile.addActiveSessions(new HashMap<>(SessionCache.getActiveSessions()));
             serverProfile = profile;
 
             for (PlayerProfile player : profile.getPlayers()) {
-                plugin.getDataCache().updateNames(player.getUuid(), player.getName(), null);
+
+                dataCache.updateNames(player.getUuid(), player.getName(), null);
             }
 
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");

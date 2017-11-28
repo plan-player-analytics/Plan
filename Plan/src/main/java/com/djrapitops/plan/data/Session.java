@@ -179,7 +179,7 @@ public class Session implements HasDate {
      * @throws NullPointerException if Session was not fetched from DB. Condition using {@code isFetchedFromDB}
      */
     public int getSessionID() {
-        return sessionID;
+        return sessionID != null ? sessionID : -1;
     }
 
     public void setSessionID(int sessionID) {

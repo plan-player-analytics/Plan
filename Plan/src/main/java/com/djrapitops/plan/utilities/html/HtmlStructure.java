@@ -67,7 +67,7 @@ public class HtmlStructure {
         } else {
             Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
             map.put(uuid, sessions);
-            return SessionTabStructureCreator.creteStructure(map, allSessions, false);
+            return SessionTabStructureCreator.createStructure(map, allSessions, false);
         }
     }
 
