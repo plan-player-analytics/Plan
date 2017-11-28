@@ -148,6 +148,7 @@ public class BungeeServerInfoManager {
                 @Override
                 public void run() {
                     sendConfigSettings(serverUUID);
+                    connectedToServer(bukkitServers.get(serverUUID));
                     this.cancel();
                 }
             }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 3L);

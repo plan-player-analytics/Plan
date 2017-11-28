@@ -207,7 +207,12 @@ public class ResponseHandler extends APIResponseHandler {
         }
 
         plugin.getInfoManager().cachePlayer(uuid);
-        return PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
+        Response response = PageCache.loadPage("inspectPage: " + uuid);
+        if (response == null || response instanceof NotFoundResponse) {
+            PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
+            response = PageCache.loadPage("inspectPage: " + uuid);
+        }
+        return response;
     }
 
     private Response notFoundResponse() {

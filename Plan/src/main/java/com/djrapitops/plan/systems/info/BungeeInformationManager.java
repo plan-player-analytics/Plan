@@ -174,6 +174,8 @@ public class BungeeInformationManager extends InformationManager {
                 try {
                     getWebAPI().getAPI(IsOnlineWebAPI.class).sendRequest(server.getWebAddress(), uuid);
                     return server;
+                } catch (WebAPIConnectionFailException e) {
+                    serverInfoManager.serverHasGoneOffline(server.getUuid());
                 } catch (WebAPINotFoundException ignored) {
                     /*continue*/
                 } catch (WebAPIException e) {
@@ -182,7 +184,7 @@ public class BungeeInformationManager extends InformationManager {
             }
         }
 
-        Optional<ServerInfo> bukkitServer = onlineServers.stream().findAny();
+        Optional<ServerInfo> bukkitServer = serverInfoManager.getOnlineBukkitServers().stream().findAny();
         if (bukkitServer.isPresent()) {
             return bukkitServer.get();
         }
