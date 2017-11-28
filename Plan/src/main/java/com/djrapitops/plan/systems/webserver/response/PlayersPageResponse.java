@@ -1,7 +1,9 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.GeoInfo;
@@ -38,6 +40,11 @@ public class PlayersPageResponse extends Response {
             List<String> names = new ArrayList<>(plugin.getDB().getUsersTable().getPlayerNames().values());
             Collections.sort(names);
             Map<String, String> replace = new HashMap<>();
+            if (Check.isBukkitAvailable()) {
+                replace.put("networkName", Settings.SERVER_NAME.toString());
+            } else {
+                replace.put("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
+            }
             replace.put("playersTable", buildPlayersTable(plugin.getDB()));
             replace.put("version", plugin.getVersion());
             super.setContent(Theme.replaceColors(StrSubstitutor.replace(FileUtil.getStringFromResource("web/players.html"), replace)));
