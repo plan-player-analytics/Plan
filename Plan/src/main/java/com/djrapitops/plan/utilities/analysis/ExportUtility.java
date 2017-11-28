@@ -123,13 +123,4 @@ public class ExportUtility {
 //        Log.logDebug("Export", "Analysis Page File: " + analysisHtmlFile.getAbsolutePath());
 //        Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
-
-    private static void writePlayersPageHtml(List<String> names, File playersFolder) throws IOException {
-        String playersHtml = PlayersPageResponse.buildContent(names);
-        playersFolder.mkdirs();
-        File playersHtmlFile = new File(playersFolder, "index.html");
-        Log.logDebug("Export", "Players Page File: " + playersHtmlFile.getAbsolutePath());
-        Files.write(playersHtmlFile.toPath(), Collections.singletonList(playersHtml));
-    }
-
 }

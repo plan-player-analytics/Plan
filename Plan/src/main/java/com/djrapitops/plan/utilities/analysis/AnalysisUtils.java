@@ -7,7 +7,6 @@ import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -149,5 +148,20 @@ public class AnalysisUtils {
         } catch (SQLException e) {
             Log.toLog("AnalysisUtils.addMissingWorlds", e);
         }
+    }
+
+    public static Map<UUID, List<Session>> sortSessionsByUser(Map<UUID, Map<UUID, List<Session>>> allSessions) {
+        Map<UUID, List<Session>> userSessions = new HashMap<>();
+
+        for (Map<UUID, List<Session>> sessions : allSessions.values()) {
+            for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
+                UUID uuid = entry.getKey();
+                List<Session> list = userSessions.getOrDefault(uuid, new ArrayList<>());
+                list.addAll(entry.getValue());
+                userSessions.put(uuid, list);
+            }
+        }
+
+        return userSessions;
     }
 }

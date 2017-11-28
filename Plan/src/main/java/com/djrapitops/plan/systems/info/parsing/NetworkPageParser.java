@@ -22,7 +22,10 @@ import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PlayerActivityGraphCreator;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Html String parser for /network page.
@@ -74,16 +77,7 @@ public class NetworkPageParser extends PageParser {
 
     private void uniquePlayers(long now, Database db) throws SQLException {
         Map<UUID, Map<UUID, List<Session>>> allSessions = db.getSessionsTable().getAllSessions(false);
-        Map<UUID, List<Session>> userSessions = new HashMap<>();
-
-        for (Map<UUID, List<Session>> sessions : allSessions.values()) {
-            for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
-                UUID uuid = entry.getKey();
-                List<Session> list = userSessions.getOrDefault(uuid, new ArrayList<>());
-                list.addAll(entry.getValue());
-                userSessions.put(uuid, list);
-            }
-        }
+        Map<UUID, List<Session>> userSessions = AnalysisUtils.sortSessionsByUser(allSessions);
 
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();
