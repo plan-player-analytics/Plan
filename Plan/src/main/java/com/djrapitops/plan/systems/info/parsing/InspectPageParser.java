@@ -80,7 +80,6 @@ public class InspectPageParser extends PageParser {
                 profile.addActiveSession(session);
                 online = serverNames.get(serverUuid);
             }
-            activeSession.ifPresent(profile::addActiveSession);
 
             Benchmark.stop("Inspect Parse, Fetch");
 
