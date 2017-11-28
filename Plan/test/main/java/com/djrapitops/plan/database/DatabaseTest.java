@@ -60,7 +60,7 @@ public class DatabaseTest {
     private int rows;
 
     @Rule
-    public Timeout globalTimeout = Timeout.seconds(6); // 5 seconds max per method tested
+    public Timeout globalTimeout = Timeout.seconds(7); // 5 seconds max per method tested
 
 
     @Before
