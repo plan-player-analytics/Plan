@@ -48,17 +48,17 @@ public class TownyData extends PluginData {
             String townMayor = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(mayorName), mayorName);
 
             inspectContainer.addValue(getWithIcon("Town", "bank", "brown"), townName);
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Mayor", "user", "brown"), townMayor);
+            inspectContainer.addValue(getWithIcon("Town Mayor", "user", "brown"), townMayor);
 
             try {
                 Coord homeBlock = town.getHomeBlock().getCoord();
                 String coordinates = "x: " + homeBlock.getX() + " z: " + homeBlock.getZ();
-                inspectContainer.addValue("&nbsp;" + getWithIcon("Coordinates", "map-pin", "red"), coordinates);
+                inspectContainer.addValue(getWithIcon("Town Coordinates", "map-pin", "red"), coordinates);
             } catch (TownyException e) {
             }
 
             int residents = town.getResidents().size();
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Residents", "users", "brown"), residents);
+            inspectContainer.addValue(getWithIcon("Town Residents", "users", "brown"), residents);
         } else {
             inspectContainer.addValue(getWithIcon("Town", "bank", "brown"), "No Town");
         }

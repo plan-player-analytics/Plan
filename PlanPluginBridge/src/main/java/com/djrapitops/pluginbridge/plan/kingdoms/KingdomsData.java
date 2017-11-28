@@ -45,7 +45,7 @@ public class KingdomsData extends PluginData {
                 String king = kingdom.getKingName();
                 String link = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(king), king);
                 inspectContainer.addValue(getWithIcon("Kingdom", "shield", "amber"), kingdomName);
-                inspectContainer.addValue("&nbsp;" + getWithIcon("King", "user", "amber"), link);
+                inspectContainer.addValue(getWithIcon("King", "user", "amber"), link);
             }
         }
 

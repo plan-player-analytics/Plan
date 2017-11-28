@@ -7,12 +7,14 @@ package com.djrapitops.pluginbridge.plan.factions;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
 import main.java.com.djrapitops.plan.data.additional.ContainerSize;
 import main.java.com.djrapitops.plan.data.additional.InspectContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,9 +42,12 @@ public class FactionsData extends PluginData {
             double power = mPlayer.getPower();
             double maxPower = mPlayer.getPowerMax();
             String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
+            String factionLeader = faction.getLeader().getName();
+            String factionLeaderLink = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(factionLeader), factionLeader);
 
             inspectContainer.addValue(getWithIcon("Faction", "flag", "deep-purple"), factionName);
             inspectContainer.addValue(getWithIcon("Power", "bolt", "purple"), powerString);
+            inspectContainer.addValue(getWithIcon("Leader", "user", "purple"), factionLeaderLink);
         }
 
         return inspectContainer;
