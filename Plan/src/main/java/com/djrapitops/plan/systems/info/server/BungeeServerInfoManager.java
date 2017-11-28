@@ -144,7 +144,13 @@ public class BungeeServerInfoManager {
         }
         Log.info("Received a connection from a Bukkit server..");
         if (onlineServers.contains(serverUUID)) {
-            sendConfigSettings(serverUUID);
+            RunnableFactory.createNew("BukkitRebootedConnectionTask: " + serverUUID, new AbsRunnable() {
+                @Override
+                public void run() {
+                    sendConfigSettings(serverUUID);
+                    this.cancel();
+                }
+            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 3L);
             return true;
         }
         try {
