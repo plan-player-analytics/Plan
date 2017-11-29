@@ -81,8 +81,12 @@ public class PlayersPageResponse extends Response {
                 API planAPI = Plan.getPlanAPI();
 
                 int i = 0;
+                int maxPlayers = Settings.MAX_PLAYERS_PLAYERS_PAGE.getNumber();
+                if (maxPlayers <= 0) {
+                    maxPlayers = 25000;
+                }
                 for (UserInfo userInfo : users) {
-                    if (i >= 25000) {
+                    if (i >= maxPlayers) {
                         break;
                     }
                     UUID uuid = userInfo.getUuid();

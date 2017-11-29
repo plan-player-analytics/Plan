@@ -73,6 +73,9 @@ Customization:
   UseServerTime: true
   Display:
     SessionsAsTable: false
+    MaxSessions: 50
+    MaxPlayers: 2500
+    MaxPlayersPlayersPage: 25000
   Formatting:
     DecimalPoints: '#.##'
     TimeAmount:

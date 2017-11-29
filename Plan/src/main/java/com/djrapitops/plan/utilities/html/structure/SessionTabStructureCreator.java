@@ -44,8 +44,12 @@ public class SessionTabStructureCreator {
         StringBuilder html = new StringBuilder("<div class=\"panel-group scrollbar\" id=\"session_accordion\" role=\"tablist\" aria-multiselectable=\"true\">");
         StringBuilder viewScript = new StringBuilder();
         int i = 0;
+        int maxSessions = Settings.MAX_SESSIONS.getNumber();
+        if (maxSessions <= 0) {
+            maxSessions = 50;
+        }
         for (Session session : allSessions) {
-            if (i >= 50) {
+            if (i >= maxSessions) {
                 break;
             }
 

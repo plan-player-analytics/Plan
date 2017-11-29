@@ -38,8 +38,12 @@ public class PlayersTableCreator {
         UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
 
         int i = 0;
+        int maxPlayers = Settings.MAX_PLAYERS.getNumber();
+        if (maxPlayers <= 0) {
+            maxPlayers = 2000;
+        }
         for (PlayerProfile profile : players) {
-            if (i >= 2000) {
+            if (i >= maxPlayers) {
                 break;
             }
 
@@ -115,8 +119,12 @@ public class PlayersTableCreator {
             }
 
             int i = 0;
+            int maxPlayers = Settings.MAX_PLAYERS.getNumber();
+            if (maxPlayers <= 0) {
+                maxPlayers = 2000;
+            }
             for (PlayerProfile profile : players) {
-                if (i >= 2000) {
+                if (i >= maxPlayers) {
                     break;
                 }
                 UUID uuid = profile.getUuid();

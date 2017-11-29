@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
@@ -49,7 +50,7 @@ public class SessionsTableCreator {
         StringBuilder sessionTableBuilder = new StringBuilder();
         StringBuilder recentLoginsBuilder = new StringBuilder();
 
-        int i = 0;
+
         Set<String> recentLoginsNames = new HashSet<>();
 
         DataCache dataCache = Plan.getInstance().getDataCache();
@@ -58,10 +59,13 @@ public class SessionsTableCreator {
         for (Map.Entry<UUID, Session> entry : SessionCache.getActiveSessions().entrySet()) {
             uuidBySessionStart.put(entry.getValue().getSessionStart(), entry.getKey());
         }
-
-
+        int i = 0;
+        int maxSessions = Settings.MAX_SESSIONS.getNumber();
+        if (maxSessions <= 0) {
+            maxSessions = 50;
+        }
         for (Session session : allSessions) {
-            if (i >= 50) {
+            if (i >= maxSessions) {
                 break;
             }
 

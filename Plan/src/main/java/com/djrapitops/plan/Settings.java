@@ -33,6 +33,9 @@ public enum Settings {
     ANALYSIS_AUTO_REFRESH("Analysis.AutoRefreshPeriod"),
     ACTIVE_PLAY_THRESHOLD("Analysis.Active.PlaytimeThreshold"),
     ACTIVE_LOGIN_THRESHOLD("Analysis.Active.LoginThreshold"),
+    MAX_SESSIONS("Customization.Display.MaxSessions"),
+    MAX_PLAYERS("Customization.Display.MaxPlayers"),
+    MAX_PLAYERS_PLAYERS_PAGE("Customization.Display.MaxPlayersPlayersPage"),
 
     // String
     DEBUG("Plugin.Debug"),
