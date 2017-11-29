@@ -95,7 +95,7 @@ public class WebServer {
 
             if (!usingHttps) {
                 Log.infoColor("§eUser Authorization Disabled! (Not possible over http)");
-                server = HttpServer.create(new InetSocketAddress(port), 10);
+                server = HttpServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
             }
             if (plugin.getInfoManager().isUsingAnotherWebServer()) {
                 server.createContext("/", new APIRequestHandler(getWebAPI()));
@@ -141,7 +141,7 @@ public class WebServer {
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
             trustManagerFactory.init(keystore);
 
-            server = HttpsServer.create(new InetSocketAddress(port), 10);
+            server = HttpsServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
             SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(keyManagerFactory.getKeyManagers(), null/*trustManagerFactory.getTrustManagers()*/, null);
 

@@ -24,6 +24,8 @@ Plugin:
 # -----------------------------------------------------
 WebServer:
   Port: 8804
+  # InternalIP usually does not need to be changed, only change it if you know what you're doing!
+  # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
   InternalIP: 0.0.0.0
   Security:
     SSL-Certificate:
