@@ -25,6 +25,12 @@ public class InspectPluginsTabContentCreator {
         BukkitServerInfoManager serverInfoManager = Plan.getInstance().getServerInfoManager();
         String serverName = serverInfoManager.getServerName();
         String actualServerName = serverName.equals("Plan") ? "Server " + serverInfoManager.getServerID() : serverName;
+
+        if (containers.isEmpty()) {
+            return new String[]{"<li><a>" + actualServerName + "(No Data)</a></li>",
+                    ""};
+        }
+
         String nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + actualServerName + "</a></li>";
 
         StringBuilder tab = new StringBuilder();
