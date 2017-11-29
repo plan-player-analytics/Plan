@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.utilities.html.graphs;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
@@ -21,6 +22,9 @@ public class WorldPieCreator {
      * @return String array, index 0: Series data, 1: drilldown data
      */
     public static String[] createSeriesData(WorldTimes worldTimes) {
+        String[] colors = Settings.THEME_GRAPH_WORLD_PIE.toString().split(", ");
+        int colLenght = colors.length;
+
         StringBuilder seriesBuilder = new StringBuilder("[");
         int i = 0;
         // WorldTimes Map<String, GMTimes> (GMTimes.getTotal)
@@ -34,8 +38,14 @@ public class WorldPieCreator {
 
         int size = playtimePerAlias.size();
         for (String alias : worlds) {
+            Long value = playtimePerAlias.getOrDefault(alias, 0L);
+            if (value == 0L) {
+                i++;
+                continue;
+            }
             seriesBuilder.append("{name:'").append(alias)
-                    .append("',y:").append(playtimePerAlias.getOrDefault(alias, 0L))
+                    .append("',y:").append(value)
+                    .append(",color:").append(colors[i % colLenght])
                     .append(",drilldown: '").append(alias).append("'");
 
             seriesBuilder.append("}");
