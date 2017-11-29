@@ -73,6 +73,8 @@ Customization:
   UseServerTime: true
   Display:
     SessionsAsTable: false
+    # By Default WorldPie is ordered alphabetically, colors are still determined alphabetically.
+    OrderWorldPieByPercentage: false
     MaxSessions: 50
     MaxPlayers: 2500
     MaxPlayersPlayersPage: 25000

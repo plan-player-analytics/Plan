@@ -26,6 +26,7 @@ public enum Settings {
     DEV_MODE("Plugin.Dev"),
     USE_SERVER_TIME("Customization.UseServerTime"),
     DISPLAY_SESSIONS_AS_TABLE("Customization.Display.SessionsAsTable"),
+    ORDER_WORLD_PIE_BY_PERC("Customization.Display.OrderWorldPieByPercentage"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),

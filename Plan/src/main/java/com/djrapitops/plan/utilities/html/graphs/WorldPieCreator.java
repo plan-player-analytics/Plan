@@ -22,11 +22,23 @@ public class WorldPieCreator {
      * @return String array, index 0: Series data, 1: drilldown data
      */
     public static String[] createSeriesData(WorldTimes worldTimes) {
+        List<PieSlice> slices = turnToSlices(worldTimes);
+
+        if (Settings.ORDER_WORLD_PIE_BY_PERC.isTrue()) {
+            slices.sort(new PieSliceComparator());
+        }
+
+        String seriesData = buildSeries(slices);
+
+        String drilldownData = createDrilldownData(worldTimes);
+
+        return new String[]{seriesData, drilldownData};
+    }
+
+    private static List<PieSlice> turnToSlices(WorldTimes worldTimes) {
         String[] colors = Settings.THEME_GRAPH_WORLD_PIE.toString().split(", ");
         int colLenght = colors.length;
 
-        StringBuilder seriesBuilder = new StringBuilder("[");
-        int i = 0;
         // WorldTimes Map<String, GMTimes> (GMTimes.getTotal)
         Map<String, Long> playtimePerWorld = worldTimes.getWorldTimes().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getTotal()));
@@ -36,19 +48,24 @@ public class WorldPieCreator {
         List<String> worlds = new ArrayList<>(playtimePerAlias.keySet());
         Collections.sort(worlds);
 
-        int size = playtimePerAlias.size();
+        List<PieSlice> slices = new ArrayList<>();
+        int i = 0;
         for (String alias : worlds) {
             Long value = playtimePerAlias.getOrDefault(alias, 0L);
-            if (value == 0L) {
-                i++;
-                continue;
+            if (value != 0L) {
+                slices.add(new PieSlice(alias, value, colors[i % colLenght]));
             }
-            seriesBuilder.append("{name:'").append(alias)
-                    .append("',y:").append(value)
-                    .append(",color:").append(colors[i % colLenght])
-                    .append(",drilldown: '").append(alias).append("'");
+            i++;
+        }
+        return slices;
+    }
 
-            seriesBuilder.append("}");
+    private static String buildSeries(List<PieSlice> slices) {
+        StringBuilder seriesBuilder = new StringBuilder("[");
+        int i = 0;
+        int size = slices.size();
+        for (PieSlice slice : slices) {
+            seriesBuilder.append(slice.toString());
             if (i < size - 1) {
                 seriesBuilder.append(",");
             }
@@ -56,11 +73,7 @@ public class WorldPieCreator {
         }
         seriesBuilder.append("]");
 
-        String seriesData = seriesBuilder.toString();
-
-        String drilldownData = createDrilldownData(worldTimes);
-
-        return new String[]{seriesData, drilldownData};
+        return seriesBuilder.toString();
     }
 
     private static Map<String, Long> transformToAliases(Map<String, Long> playtimePerWorld) {
@@ -166,5 +179,36 @@ public class WorldPieCreator {
             j++;
         }
         drilldownBuilder.append("]}");
+    }
+}
+
+class PieSlice {
+    private final String name;
+    final long y;
+    private final String color;
+
+    public PieSlice(String name, long y, String color) {
+        this.name = name;
+        this.y = y;
+        this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "{name:'" + name + "'," +
+                "y:" + y + "," +
+                "color:" + color + "," +
+                "drilldown: '" + name + "'}";
+    }
+}
+
+/**
+ * Compares PieSlices to descending Percentage order.
+ */
+class PieSliceComparator implements Comparator<PieSlice> {
+
+    @Override
+    public int compare(PieSlice o1, PieSlice o2) {
+        return -Long.compare(o1.y, o2.y);
     }
 }
