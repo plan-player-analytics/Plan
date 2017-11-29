@@ -1,4 +1,4 @@
-function activityPie(id, activitySeries, activityTotal, activityColors) {
+function activityPie(id, activitySeries) {
 	Highcharts.chart(id, {
 		chart: {
 			plotBackgroundColor: null,
@@ -17,7 +17,6 @@ function activityPie(id, activitySeries, activityTotal, activityColors) {
 				dataLabels: {
 					enabled: false
 				},
-//				colors: activityColors,
 				showInLegend: true
 			}
 		},

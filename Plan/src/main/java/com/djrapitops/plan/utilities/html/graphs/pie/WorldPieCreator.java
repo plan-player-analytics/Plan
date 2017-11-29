@@ -1,10 +1,11 @@
-package main.java.com.djrapitops.plan.utilities.html.graphs;
+package main.java.com.djrapitops.plan.utilities.html.graphs.pie;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class WorldPieCreator {
             slices.sort(new PieSliceComparator());
         }
 
-        String seriesData = buildSeries(slices);
+        String seriesData = PieSeriesCreator.createSeriesData(slices);
 
         String drilldownData = createDrilldownData(worldTimes);
 
@@ -53,27 +54,11 @@ public class WorldPieCreator {
         for (String alias : worlds) {
             Long value = playtimePerAlias.getOrDefault(alias, 0L);
             if (value != 0L) {
-                slices.add(new PieSlice(alias, value, colors[i % colLenght]));
+                slices.add(new PieSlice(alias, value, colors[i % colLenght], true));
             }
             i++;
         }
         return slices;
-    }
-
-    private static String buildSeries(List<PieSlice> slices) {
-        StringBuilder seriesBuilder = new StringBuilder("[");
-        int i = 0;
-        int size = slices.size();
-        for (PieSlice slice : slices) {
-            seriesBuilder.append(slice.toString());
-            if (i < size - 1) {
-                seriesBuilder.append(",");
-            }
-            i++;
-        }
-        seriesBuilder.append("]");
-
-        return seriesBuilder.toString();
     }
 
     private static Map<String, Long> transformToAliases(Map<String, Long> playtimePerWorld) {
@@ -179,36 +164,5 @@ public class WorldPieCreator {
             j++;
         }
         drilldownBuilder.append("]}");
-    }
-}
-
-class PieSlice {
-    private final String name;
-    final long y;
-    private final String color;
-
-    public PieSlice(String name, long y, String color) {
-        this.name = name;
-        this.y = y;
-        this.color = color;
-    }
-
-    @Override
-    public String toString() {
-        return "{name:'" + name + "'," +
-                "y:" + y + "," +
-                "color:" + color + "," +
-                "drilldown: '" + name + "'}";
-    }
-}
-
-/**
- * Compares PieSlices to descending Percentage order.
- */
-class PieSliceComparator implements Comparator<PieSlice> {
-
-    @Override
-    public int compare(PieSlice o1, PieSlice o2) {
-        return -Long.compare(o1.y, o2.y);
     }
 }

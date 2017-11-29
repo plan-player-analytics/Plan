@@ -603,7 +603,7 @@
                                 </div>
                             </div>
                             <div class="body">
-                                <div id="activityGraph" class="dashboard-flot-chart"></div>
+                                <div id="activityStackGraph" class="dashboard-flot-chart"></div>
                             </div>
                         </div>
                     </div>
@@ -943,6 +943,7 @@
 <script src="js/charts/punchCard.js"></script>
 <script src="js/charts/healthGauge.js"></script>
 <script src="js/charts/activityPie.js"></script>
+<script src="js/charts/activityStackGraph.js"></script>
 <script src="js/charts/worldPie.js"></script>
 <script src="js/charts/performanceGraph.js"></script>
 <script src="js/charts/tpsGraph.js"></script>
@@ -1026,22 +1027,7 @@
     var activitySeries = {
         name: 'Players',
         colorByPoint: true,
-        colors: [${activityPieColors}],
-        data: [{
-            name: 'Active',
-            y: ${active}
-        }, {
-            name: 'Inactive',
-            y: ${inactive},
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Single Join',
-            y: ${joinLeaver}
-        }, {
-            name: 'Banned',
-            y: ${banned}
-        }]
+        data: ${activityPieSeries}
     };
     var worldSeries = {
         name: 'World Playtime',
@@ -1062,6 +1048,8 @@
         color: '#222',
         data: ${punchCardSeries}
     };
+    var activityStackSeries = ${activityStackSeries};
+    var activityCategories = [${activityStackCategories}]
 </script>
 
 <!-- Plan load script -->
@@ -1089,7 +1077,8 @@
         openFunc(slideIndex)();
 
         // Chart draw scripts
-        activityPie('activityPie', activitySeries, ${playersTotal}, [${activityPieColors}]);
+        activityPie('activityPie', activitySeries);
+        activityStackChart('activityStackGraph', activityCategories, activityStackSeries);
         worldPie('worldPie', worldSeries, gmSeries);
         playersChart('playerChartDay', playersOnlineSeries, 3);
         playersChart('playerChartMonth', playersOnlineSeries, 2);

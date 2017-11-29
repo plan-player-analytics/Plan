@@ -10,7 +10,7 @@ import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPieCreator;
 
 import java.util.List;
 import java.util.Map;

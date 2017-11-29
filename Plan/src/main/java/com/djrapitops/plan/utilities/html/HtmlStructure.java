@@ -13,7 +13,7 @@ import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 

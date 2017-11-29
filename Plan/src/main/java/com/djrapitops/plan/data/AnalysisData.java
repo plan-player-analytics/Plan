@@ -15,7 +15,12 @@ import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.*;
+import main.java.com.djrapitops.plan.utilities.html.graphs.ActivityStackGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.WorldMapCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.line.*;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.ActivityPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.CommandUseTableCreator;
@@ -135,7 +140,7 @@ public class AnalysisData extends RawData {
 
         if (!players.isEmpty()) {
             for (PlayerProfile player : players) {
-                for (long date = now; date >= now - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms() * 2L) {
+                for (long date = now; date >= now - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms()) {
                     double activityIndex = player.getActivityIndex(date);
                     String index = FormatUtils.readableActivityIndex(activityIndex)[1];
 
@@ -150,6 +155,13 @@ public class AnalysisData extends RawData {
 
         Map<String, Set<UUID>> activityNow = activityData.getOrDefault(now, new HashMap<>());
         Map<String, Set<UUID>> activityFourWAgo = activityData.getOrDefault(fourWeeksAgo, new HashMap<>());
+
+        String[] activityStackSeries = ActivityStackGraphCreator.createSeries(activityData);
+        String activityPieSeries = ActivityPieCreator.createSeriesData(activityNow);
+
+        addValue("activityStackCategories", activityStackSeries[0]);
+        addValue("activityStackSeries", activityStackSeries[1]);
+        addValue("activityPieSeries", activityPieSeries);
 
         Set<UUID> veryActiveNow = activityNow.getOrDefault("Very Active", new HashSet<>());
         Set<UUID> activeNow = activityNow.getOrDefault("Active", new HashSet<>());

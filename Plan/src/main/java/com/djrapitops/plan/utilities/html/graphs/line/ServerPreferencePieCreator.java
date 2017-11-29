@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.html.graphs;
+package main.java.com.djrapitops.plan.utilities.html.graphs.line;
 
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 

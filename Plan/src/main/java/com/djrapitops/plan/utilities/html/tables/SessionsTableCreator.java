@@ -14,7 +14,7 @@ import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPieCreator;
 
 import java.util.*;
 import java.util.stream.Collectors;

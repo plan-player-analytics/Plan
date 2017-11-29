@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.html.graphs;
+package main.java.com.djrapitops.plan.utilities.html.graphs.line;
 
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
@@ -6,18 +6,21 @@ import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CPUGraphCreator {
+/**
+ * @author Rsl1122
+ */
+public class PlayerActivityGraphCreator {
 
     /**
      * Constructor used to hide the public constructor
      */
-    private CPUGraphCreator() {
+    private PlayerActivityGraphCreator() {
         throw new IllegalStateException("Utility class");
     }
 
     public static String buildSeriesDataString(List<TPS> tpsData) {
         List<Point> points = tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getCPUUsage()))
+                .map(tps -> new Point(tps.getDate(), tps.getPlayers()))
                 .collect(Collectors.toList());
         return SeriesCreator.seriesGraph(points, true);
     }

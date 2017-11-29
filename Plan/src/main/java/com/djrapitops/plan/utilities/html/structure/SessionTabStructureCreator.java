@@ -13,7 +13,7 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
-import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 

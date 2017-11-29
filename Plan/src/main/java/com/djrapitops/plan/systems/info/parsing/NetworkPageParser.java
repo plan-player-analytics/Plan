@@ -19,7 +19,7 @@ import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraphCreator;
 
 import java.sql.SQLException;
 import java.util.List;
