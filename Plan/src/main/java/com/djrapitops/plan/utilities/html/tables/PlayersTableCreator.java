@@ -55,7 +55,10 @@ public class PlayersTableCreator {
 
                 long lastSeen = profile.getLastSeen();
 
-                String activityString = isBanned ? "Banned" : FormatUtils.cutDecimals(profile.getActivityIndex(now));
+                double activityIndex = profile.getActivityIndex(now);
+                String readableIndex = FormatUtils.readableActivityIndex(activityIndex)[1];
+                String activityString = FormatUtils.cutDecimals(activityIndex)
+                        + (isBanned ? " (<b>Banned</b>)" : " (" + readableIndex + ")");
 
                 String geoLocation = profile.getMostRecentGeoInfo().getGeolocation();
                 html.append(Html.TABLELINE_PLAYERS.parse(

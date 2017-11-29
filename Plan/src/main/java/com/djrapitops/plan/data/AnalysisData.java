@@ -170,6 +170,8 @@ public class AnalysisData extends RawData {
         Set<UUID> activeFWAG = activityFourWAgo.getOrDefault("Active", new HashSet<>());
         Set<UUID> regularFWAG = activityFourWAgo.getOrDefault("Regular", new HashSet<>());
 
+        addValue("playersRegular", (veryActiveNow.size() + activeNow.size() + regularNow.size()));
+
         Set<UUID> regularRemainCompareSet = new HashSet<>(regularFWAG);
         regularRemainCompareSet.addAll(activeFWAG);
         regularRemainCompareSet.addAll(veryActiveFWAG);
@@ -269,23 +271,23 @@ public class AnalysisData extends RawData {
             String avgLastTwoWeeksString = FormatUtils.formatTimeAmount(avgLastTwoWeeks);
             String avgFourToTwoWeeksString = FormatUtils.formatTimeAmount(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
-                healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " Active players to have things to do ("
+                healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " Active players to have things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ")</p>");
+                        + ", last two weeks vs weeks 2-4)</p>");
             } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeAmount.HOUR.ms() * 2L) {
                 healthNotes.add("<p>" + Html.RED_WARN.parse() + " Active players might to be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)</p>");
                 serverHealth -= 5;
             } else {
-                healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " Active players might to be running out of things to do ("
+                healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " Active players might to be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ")</p>");
+                        + ", last two weeks vs weeks 2-4)</p>");
             }
         }
 
         long serverDownTime = ServerProfile.serverDownTime(tpsDataMonth);
-        long serverIdleTime = ServerProfile.serverIdleTime(tpsDataMonth);
+//        long serverIdleTime = ServerProfile.serverIdleTime(tpsDataMonth);
         double aboveThreshold = ServerProfile.aboveLowThreshold(tpsDataMonth);
         long tpsSpikeMonth = value("tpsSpikeMonth");
 
@@ -333,8 +335,8 @@ public class AnalysisData extends RawData {
                     + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
             serverHealth *= 0.3;
         }
-        healthNotes.add("<p>" + Html.FA_COLORED_ICON.parse("red", "life-ring") + " Server was idle (No Players) "
-                + FormatUtils.formatTimeAmount(serverIdleTime) + "</p>");
+//        healthNotes.add("<p>" + Html.FA_COLORED_ICON.parse("red", "life-ring") + " Server was idle (No Players) "
+//                + FormatUtils.formatTimeAmount(serverIdleTime) + " in total</p>");
 
         StringBuilder healthNoteBuilder = new StringBuilder();
         for (String healthNote : healthNotes) {
@@ -342,13 +344,6 @@ public class AnalysisData extends RawData {
         }
         addValue("healthNotes", healthNoteBuilder.toString());
         addValue("healthIndex", serverHealth);
-
-        // TODO Rewrite Activity Pie
-        addValue("playersActive", 0);
-        addValue("active", 0);
-        addValue("inactive", 0);
-        addValue("joinLeaver", 0);
-        addValue("banned", 0);
     }
 
     private void commandUsage(Map<String, Integer> commandUsage) {
@@ -424,8 +419,8 @@ public class AnalysisData extends RawData {
 
         addValue("playersStuckMonth", stuckPerM);
         addValue("playersStuckWeek", stuckPerW);
-        addValue("playersStuckPercMonth", newM != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerM, newM)) + "%" : "-");
-        addValue("playersStuckPercWeek", newW != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerW, newW)) + "%" : "-");
+        addValue("playersStuckPercMonth", newM != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerM, newM) * 100.0) + "%" : "-");
+        addValue("playersStuckPercWeek", newW != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerW, newW) * 100.0) + "%" : "-");
 
         if (newD != 0) {
             // New Players
@@ -477,7 +472,7 @@ public class AnalysisData extends RawData {
                 }
             }
             addValue("playersStuckDay", stuckPerD);
-            addValue("playersStuckPercDay", FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerD, newD)) + "%");
+            addValue("playersStuckPercDay", FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerD, newD) * 100.0) + "%");
         } else {
             addValue("playersStuckDay", 0);
             addValue("playersStuckPercDay", "-");

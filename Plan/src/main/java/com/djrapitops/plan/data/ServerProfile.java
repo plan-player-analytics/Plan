@@ -375,7 +375,7 @@ public class ServerProfile {
             }
         }
 
-        return count / tpsData.size();
+        return count * 1.0 / tpsData.size();
     }
 
     public PlayerProfile getPlayer(UUID uuid) {

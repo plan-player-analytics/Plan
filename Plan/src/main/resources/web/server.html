@@ -303,8 +303,8 @@
                                 <i class="material-icons">people</i>
                             </div>
                             <div class="content">
-                                <div class="text">ACTIVE PLAYERS</div>
-                                <div class="number">${playersActive}</div>
+                                <div class="text">REGULAR PLAYERS</div>
+                                <div class="number">${playersRegular}</div>
                             </div>
                         </div>
                     </div>
@@ -402,7 +402,7 @@
                     <!-- #END# User Information -->
                     <!-- Recent Logins -->
                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                        <div class="card">
+                        <div class="card scrollbar">
                             <div class="body bg-white">
                                 <div class="font-bold m-b--35">RECENT LOGINS</div>
                                 <ul class="dashboard-stat-list">
@@ -881,14 +881,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table table-striped scrollbar">
+                            <table class="table table-striped">
                                 <thead class="bg-lime">
                                 <tr>
                                     <th><i class="fa fa-terminal"></i> Command</th>
                                     <th><i class="fa fa-list-ol"></i> Times Used</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="scrollbar">
                                 ${tableBodyCommands}
                                 </tbody>
                             </table>
