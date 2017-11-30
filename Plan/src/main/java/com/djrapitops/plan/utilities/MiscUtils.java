@@ -5,14 +5,14 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.settings.Permissions;
+import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.locale.Locale;
+import main.java.com.djrapitops.plan.settings.locale.Msg;
 
 import java.io.Closeable;
 import java.io.IOException;

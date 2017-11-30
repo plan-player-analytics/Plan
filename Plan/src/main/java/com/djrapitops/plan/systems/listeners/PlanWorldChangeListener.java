@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

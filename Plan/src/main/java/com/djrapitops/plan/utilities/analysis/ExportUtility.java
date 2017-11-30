@@ -2,16 +2,12 @@ package main.java.com.djrapitops.plan.utilities.analysis;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserInfo;
-import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
+import main.java.com.djrapitops.plan.settings.Settings;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 
 /**

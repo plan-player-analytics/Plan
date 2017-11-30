@@ -2,11 +2,11 @@ package main.java.com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.google.common.base.Objects;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.tables.Actions;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Colors;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;

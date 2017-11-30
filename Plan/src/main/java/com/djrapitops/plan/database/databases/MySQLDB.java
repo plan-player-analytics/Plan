@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import main.java.com.djrapitops.plan.settings.Settings;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;

@@ -4,7 +4,7 @@ import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;

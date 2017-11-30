@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.utilities.html.graphs.pie;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
 import main.java.com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
 import java.util.*;

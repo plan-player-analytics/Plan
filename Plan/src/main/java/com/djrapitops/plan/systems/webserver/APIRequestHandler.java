@@ -9,7 +9,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 

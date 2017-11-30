@@ -5,9 +5,9 @@
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bungee;
 
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;

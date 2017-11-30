@@ -1,13 +1,13 @@
-package main.java.com.djrapitops.plan.locale;
+package main.java.com.djrapitops.plan.settings.locale;
 
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.settings.Permissions;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
 import main.java.com.djrapitops.plan.utilities.comparators.StringLengthComparator;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;

@@ -5,10 +5,10 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;

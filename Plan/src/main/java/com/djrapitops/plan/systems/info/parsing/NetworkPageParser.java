@@ -6,11 +6,11 @@ package main.java.com.djrapitops.plan.systems.info.parsing;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Colors;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;

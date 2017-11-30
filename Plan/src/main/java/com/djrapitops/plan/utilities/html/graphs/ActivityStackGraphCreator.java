@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.graphs;
 
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.pie.ActivityPieCreator;
 

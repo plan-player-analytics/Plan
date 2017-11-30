@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.theme;
 
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.settings.Settings;
 
 /**
  * Enum that contains available themes.

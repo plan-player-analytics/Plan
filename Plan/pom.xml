@@ -17,15 +17,29 @@
         </repository>
         <repository>
             <id>paper-repo</id>
-            <url>https://repo.destroystokyo.com/content/repositories/snapshots/</url>
+            <url>https://repo.destroystokyo.com/repository/maven-public/</url>
         </repository>
     </repositories>
     <dependencies>
-        <!--        PaperSpigot -->
+        <!--        Framework for easier plugin development -->
+        <dependency>
+            <groupId>com.djrapitops</groupId>
+            <artifactId>abstract-plugin-framework</artifactId>
+            <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        SoftDepended Plugins -->
+        <dependency>
+            <groupId>com.djrapitops</groupId>
+            <artifactId>PlanPluginBridge</artifactId>
+            <version>4.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        Full PaperSpigot JAR -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>LATEST</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!--        Spigot -->
@@ -34,6 +48,12 @@
             <artifactId>spigot-api</artifactId>
             <version>1.12-R0.1-SNAPSHOT</version>
             <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!--        BungeeCord -->
@@ -57,13 +77,6 @@
             <artifactId>geoip2</artifactId>
             <version>2.9.0</version>
         </dependency>
-        <!--        Framework for easier plugin development -->
-        <dependency>
-            <groupId>com.djrapitops</groupId>
-            <artifactId>abstract-plugin-framework</artifactId>
-            <version>3.0.0</version>
-            <scope>compile</scope>
-        </dependency>
         <!--         Connection Pool -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -81,13 +94,6 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <!--        SoftDepended Plugins -->
-        <dependency>
-            <groupId>com.djrapitops</groupId>
-            <artifactId>PlanPluginBridge</artifactId>
-            <version>4.1.0</version>
             <scope>compile</scope>
         </dependency>
         <!--        Testing -->

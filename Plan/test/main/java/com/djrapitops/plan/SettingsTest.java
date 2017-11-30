@@ -5,6 +5,7 @@
  */
 package main.java.com.djrapitops.plan;
 
+import main.java.com.djrapitops.plan.settings.Settings;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;

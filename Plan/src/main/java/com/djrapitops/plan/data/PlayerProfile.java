@@ -5,8 +5,8 @@
 package main.java.com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.api.TimeAmount;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.ActionComparator;
 import main.java.com.djrapitops.plan.utilities.comparators.GeoInfoComparator;

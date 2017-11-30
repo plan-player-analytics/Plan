@@ -2,11 +2,11 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
-import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.commands.manage.*;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.settings.Permissions;
+import main.java.com.djrapitops.plan.settings.locale.Locale;
+import main.java.com.djrapitops.plan.settings.locale.Msg;
 
 /**
  * This command is used to manage the database of the plugin.

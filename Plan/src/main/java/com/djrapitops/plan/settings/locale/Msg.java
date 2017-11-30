@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.locale;
+package main.java.com.djrapitops.plan.settings.locale;
 
 import java.util.Arrays;
 import java.util.Map;

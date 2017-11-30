@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan;
+package main.java.com.djrapitops.plan.settings;
 
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.config.Config;

@@ -6,9 +6,9 @@ package main.java.com.djrapitops.plan.systems.webserver.webapi;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.*;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
