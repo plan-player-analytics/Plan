@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.util.HashMap;

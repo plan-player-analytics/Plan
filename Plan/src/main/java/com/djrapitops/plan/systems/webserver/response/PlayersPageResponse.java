@@ -12,7 +12,7 @@ import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.data.additional.TableContainer;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;

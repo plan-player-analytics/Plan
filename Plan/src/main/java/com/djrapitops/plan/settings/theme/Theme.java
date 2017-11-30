@@ -2,7 +2,7 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver.theme;
+package main.java.com.djrapitops.plan.settings.theme;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.settings.Settings;

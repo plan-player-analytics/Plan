@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.apache.commons.lang3.text.StrSubstitutor;
