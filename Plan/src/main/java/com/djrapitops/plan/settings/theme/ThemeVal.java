@@ -33,7 +33,7 @@ public enum ThemeVal {
     ORANGE("Colors.orange", "#FF9800"),
     DEEP_ORANGE("Colors.deep-orange", "#FF5722"),
     BROWN("Colors.brown", "#795548"),
-    GREY("Colors.brown", "#9E9E9E"),
+    GREY("Colors.grey", "#9E9E9E"),
     BLUE_GREY("Colors.blue-grey", "#607D8B"),
     BLACK("Colors.black", "#000000"),
     WHITE("Colors.Extra.White", "#fff"),

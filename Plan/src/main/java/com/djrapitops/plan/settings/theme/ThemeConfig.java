@@ -33,6 +33,11 @@ public class ThemeConfig extends Config {
         String fileLocation = "themes/";
 
         switch (fileName.toLowerCase()) {
+            case "pastel":
+            case "brigth":
+            case "highcontrast":
+                fileLocation += "pastel.yml";
+                break;
             case "sepia":
             case "brown":
                 fileLocation += "sepia.yml";
