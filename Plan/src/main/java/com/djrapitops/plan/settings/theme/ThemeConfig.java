@@ -33,9 +33,14 @@ public class ThemeConfig extends Config {
         String fileLocation = "themes/";
 
         switch (fileName.toLowerCase()) {
+            case "mute":
+            case "lowsaturation":
+                fileLocation += "mute.yml";
+                break;
             case "pastel":
             case "brigth":
-            case "highcontrast":
+            case "saturated":
+            case "high":
                 fileLocation += "pastel.yml";
                 break;
             case "sepia":
@@ -54,7 +59,11 @@ public class ThemeConfig extends Config {
         }
 
         IPlan plugin = MiscUtils.getIPlan();
-        return FileUtil.lines(plugin, fileLocation);
+        try {
+            return FileUtil.lines(plugin, fileLocation);
+        } catch (IOException e) {
+            return FileUtil.lines(plugin, "themes/theme.yml");
+        }
     }
 
 
