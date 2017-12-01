@@ -73,12 +73,15 @@ public class Theme {
             if (Verify.equalsOne(value, defaultValue)) {
                 continue;
             }
-            if (!value.contains("url")) {
-                replaced = replaced.replace(defaultValue, value);
-            } else {
+            if (value.contains("url")) {
                 String[] colorAndUrl = value.split(" ");
-                replaced = replaced.replace("background: " + defaultValue, "background: " + colorAndUrl[1]);
-                replaced = replaced.replace(defaultValue, colorAndUrl[0]);
+                if (colorAndUrl.length >= 2) {
+                    replaced = replaced.replace("background: " + defaultValue, "background: " + colorAndUrl[1]);
+                    replaced = replaced.replace(defaultValue, colorAndUrl[0]);
+                    return replaced;
+                }
+            } else {
+                replaced = replaced.replace(defaultValue, value);
             }
         }
         return replaced;

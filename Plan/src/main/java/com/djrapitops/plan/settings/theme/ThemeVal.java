@@ -28,7 +28,7 @@ public enum ThemeVal {
     GREEN("Colors.green", "#4CAF50"),
     LIGHT_GREEN("Colors.light-green", "#8BC34A"),
     LIME("Colors.lime", "#CDDC39"),
-    YELLOW("Colors.yellow", "#FFEB3B"),
+    YELLOW("Colors.yellow", "#ffe821"),
     AMBER("Colors.amber", "#FFC107"),
     ORANGE("Colors.orange", "#FF9800"),
     DEEP_ORANGE("Colors.deep-orange", "#FF5722"),
