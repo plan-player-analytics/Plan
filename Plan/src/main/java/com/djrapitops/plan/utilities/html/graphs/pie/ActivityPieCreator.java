@@ -4,7 +4,8 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.graphs.pie;
 
-import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 
 import java.util.*;
 
@@ -24,7 +25,7 @@ public class ActivityPieCreator {
     }
 
     public static String createSeriesData(Map<String, Set<UUID>> activityData) {
-        String[] colors = Settings.THEME_GRAPH_ACTIVITY_PIE.toString().split(", ");
+        String[] colors = Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
 
         List<PieSlice> slices = new ArrayList<>();

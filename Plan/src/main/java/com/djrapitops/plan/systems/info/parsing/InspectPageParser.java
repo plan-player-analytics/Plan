@@ -15,6 +15,8 @@ import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
@@ -99,9 +101,9 @@ public class InspectPageParser extends PageParser {
 
             Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
             addValue("serverPieSeries", ServerPreferencePieCreator.createSeriesData(serverNames, worldTimesPerServer));
-            addValue("worldPieColors", Settings.THEME_GRAPH_WORLD_PIE.toString());
-            addValue("gmPieColors", Settings.THEME_GRAPH_GM_PIE.toString());
-            addValue("serverPieColors", Settings.THEME_GRAPH_SERVER_PREF_PIE.toString());
+            addValue("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+            addValue("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
+            addValue("serverPieColors", Theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
 
             String favoriteServer = serverNames.get(profile.getFavoriteServer());
             addValue("favoriteServer", favoriteServer != null ? favoriteServer : "Unknown");

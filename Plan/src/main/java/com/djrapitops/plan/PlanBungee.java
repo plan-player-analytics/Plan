@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -24,6 +24,7 @@ import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
@@ -49,6 +50,7 @@ import java.util.UUID;
 public class PlanBungee extends BungeePlugin implements IPlan {
 
     private Config config;
+    private Theme theme;
 
     private WebServer webServer;
     private Database db;
@@ -87,6 +89,8 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             variableHolder = new ServerVariableHolder(getProxy());
 
             new Locale(this).loadLocale();
+
+            theme = new Theme();
 
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
@@ -258,4 +262,8 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         return serverInfoManager.getServerUUID();
     }
 
+    @Override
+    public Theme getTheme() {
+        return theme;
+    }
 }

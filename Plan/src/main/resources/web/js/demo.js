@@ -29,7 +29,7 @@ function skinChanger() {
 function setSkin() {
     var theme = localStorage.getItem("plan_skin");
     if (theme === null) {
-        theme = 'light-green'
+        theme = '${defaultTheme}'
     }
     var body = document.getElementsByTagName('body')[0];
 

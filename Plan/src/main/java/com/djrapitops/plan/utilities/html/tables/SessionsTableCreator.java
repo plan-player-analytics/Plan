@@ -104,7 +104,7 @@ public class SessionsTableCreator {
         return new String[]{sessionTableBuilder.toString(), recentLoginsBuilder.toString()};
     }
 
-    private static String getLongestWorldPlayed(Session session) {
+    public static String getLongestWorldPlayed(Session session) {
         WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
         Map<String, String> aliases = aliasSettings.getAliases();
         if (session.getSessionEnd() == -1) {

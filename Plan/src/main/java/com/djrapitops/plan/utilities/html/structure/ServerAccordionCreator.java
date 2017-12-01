@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -7,6 +7,8 @@ package main.java.com.djrapitops.plan.utilities.html.structure;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -65,7 +67,7 @@ public class ServerAccordionCreator {
             String[] worldData = WorldPieCreator.createSeriesData(worldTimes);
 
             // Accordion panel header
-            html.append("<div class=\"panel panel-col-light-green\">")
+            html.append("<div class=\"panel panel-col-").append(Theme.getValue(ThemeVal.PARSED_SERVER_ACCORDION)).append("\">")
                     .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
                     .append("<h4 class=\"panel-title\">")
                     .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")

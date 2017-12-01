@@ -5,6 +5,8 @@ import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
 import java.util.*;
@@ -37,7 +39,7 @@ public class WorldPieCreator {
     }
 
     private static List<PieSlice> turnToSlices(WorldTimes worldTimes) {
-        String[] colors = Settings.THEME_GRAPH_WORLD_PIE.toString().split(", ");
+        String[] colors = Theme.getValue(ThemeVal.GRAPH_WORLD_PIE).split(", ");
         int colLenght = colors.length;
 
         // WorldTimes Map<String, GMTimes> (GMTimes.getTotal)

@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -9,6 +9,8 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
@@ -48,6 +50,9 @@ public class SessionTabStructureCreator {
         if (maxSessions <= 0) {
             maxSessions = 50;
         }
+
+        boolean appendWorldPerc = Settings.APPEND_WORLD_PERC.isTrue();
+
         for (Session session : allSessions) {
             if (i >= maxSessions) {
                 break;
@@ -58,8 +63,9 @@ public class SessionTabStructureCreator {
             String serverName = serverNameIDMap.get(sessionID);
 
             String sessionStart = FormatUtils.formatTimeStampYear(session.getSessionStart());
-            String sessionLength = FormatUtils.formatTimeAmount(session.getLength());
-            String sessionEnd = session.getSessionEnd() == -1 ? "Online" : FormatUtils.formatTimeStampYear(session.getSessionEnd());
+            long endOfSession = session.getSessionEnd();
+            String sessionLength = endOfSession == -1 ? "Online" : FormatUtils.formatTimeAmount(session.getLength());
+            String sessionEnd = endOfSession == -1 ? "Online" : FormatUtils.formatTimeStampYear(endOfSession);
 
             int playerKillCount = session.getPlayerKills().size();
 
@@ -68,6 +74,9 @@ public class SessionTabStructureCreator {
             String dotSeparated = appendName ?
                     HtmlStructure.separateWithDots(name, sessionStart) :
                     HtmlStructure.separateWithDots(serverName, sessionStart);
+            String dotSeparated2 = appendWorldPerc
+                    ? HtmlStructure.separateWithDots(SessionsTableCreator.getLongestWorldPlayed(session), sessionLength)
+                    : sessionEnd;
 
             String htmlID = "" + session.getSessionStart() + sessionID + i;
 
@@ -80,13 +89,14 @@ public class SessionTabStructureCreator {
             String killTable = KillsTableCreator.createTable(session.getPlayerKills());
 
             // Accordion panel header
-            html.append("<div title=\"Session ID: ").append(sessionID).append("\"class=\"panel panel-col-teal\">")
+            html.append("<div title=\"Session ID: ").append(sessionID)
+                    .append("\"class=\"panel panel-col-").append(Theme.getValue(ThemeVal.PARSED_SESSION_ACCORDION)).append("\">")
                     .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
                     .append("<h4 class=\"panel-title\">")
                     .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
                     .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
                     .append("aria-controls=\"session_").append(htmlID).append("\">")
-                    .append(dotSeparated).append("<span class=\"pull-right\">").append(session.getSessionEnd() == -1 ? "Online" : sessionLength).append("</span>") // Title (header)
+                    .append(dotSeparated).append("<span class=\"pull-right\">").append(dotSeparated2).append("</span>") // Title (header)
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 

@@ -47,6 +47,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
@@ -87,6 +88,7 @@ public class Plan extends BukkitPlugin implements IPlan {
     private API api;
 
     private Config config;
+    private Theme theme;
 
     private ProcessingQueue processingQueue;
     private HookHandler hookHandler; // Manages 3rd party data sources
@@ -181,6 +183,8 @@ public class Plan extends BukkitPlugin implements IPlan {
             }
 
             new Locale(this).loadLocale();
+
+            theme = new Theme();
 
             Benchmark.start("Reading server variables");
             serverVariableHolder = new ServerVariableHolder(getServer());
@@ -562,5 +566,10 @@ public class Plan extends BukkitPlugin implements IPlan {
      */
     public API getApi() {
         return api;
+    }
+
+    @Override
+    public Theme getTheme() {
+        return theme;
     }
 }

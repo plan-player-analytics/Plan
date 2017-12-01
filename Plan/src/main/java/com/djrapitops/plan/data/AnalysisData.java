@@ -7,7 +7,8 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.settings.theme.Colors;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
@@ -63,17 +64,17 @@ public class AnalysisData extends RawData {
 
     private void addConstants() {
         addValue("version", MiscUtils.getIPlan().getVersion());
-        addValue("worldPieColors", Settings.THEME_GRAPH_WORLD_PIE.toString());
-        addValue("gmPieColors", Settings.THEME_GRAPH_GM_PIE.toString());
+        addValue("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+        addValue("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
         addValue("serverName", Settings.SERVER_NAME.toString());
         addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
         addValue("refresh", FormatUtils.formatTimeStamp(refreshDate));
 
-        addValue("activityPieColors", Settings.THEME_GRAPH_ACTIVITY_PIE.toString());
-        addValue("playersGraphColor", Colors.PLAYERS_ONLINE.getColor());
-        addValue("tpsHighColor", Colors.TPS_HIGH.getColor());
-        addValue("tpsMediumColor", Colors.TPS_MED.getColor());
-        addValue("tpsLowColor", Colors.TPS_LOW.getColor());
+        addValue("activityPieColors", Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE));
+        addValue("playersGraphColor", Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+        addValue("tpsHighColor", Theme.getValue(ThemeVal.GRAPH_TPS_HIGH));
+        addValue("tpsMediumColor", Theme.getValue(ThemeVal.GRAPH_TPS_MED));
+        addValue("tpsLowColor", Theme.getValue(ThemeVal.GRAPH_TPS_LOW));
         addValue("tpsMedium", Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber());
         addValue("tpsHigh", Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH.getNumber());
 
