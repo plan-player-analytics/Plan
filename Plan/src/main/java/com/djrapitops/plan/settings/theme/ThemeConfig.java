@@ -33,6 +33,16 @@ public class ThemeConfig extends Config {
         String fileLocation = "themes/";
 
         switch (fileName.toLowerCase()) {
+            case "sepia":
+            case "brown":
+                fileLocation += "sepia.yml";
+                break;
+            case "grey":
+            case "gray":
+            case "greyscale":
+            case "grayscale":
+                fileLocation += "greyscale.yml";
+                break;
             default:
                 fileLocation += "theme.yml";
                 break;
