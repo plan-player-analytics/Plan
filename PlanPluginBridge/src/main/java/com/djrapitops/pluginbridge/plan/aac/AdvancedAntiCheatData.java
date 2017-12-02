@@ -5,7 +5,11 @@
 package com.djrapitops.pluginbridge.plan.aac;
 
 import com.djrapitops.plugin.utilities.Format;
-import main.java.com.djrapitops.plan.data.additional.*;
+import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.element.InspectContainer;
+import main.java.com.djrapitops.plan.data.element.TableContainer;
+import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 
 import java.util.Collection;

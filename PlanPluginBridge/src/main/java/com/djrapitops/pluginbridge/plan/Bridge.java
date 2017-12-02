@@ -18,8 +18,8 @@ import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.vault.VaultHook;
 import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionHook;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
+import main.java.com.djrapitops.plan.settings.Settings;
 
 /**
  * Manages connection to other plugins.

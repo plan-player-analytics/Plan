@@ -10,7 +10,11 @@ import com.gmail.nossr50.datatypes.player.PlayerProfile;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.mcMMO;
 import com.gmail.nossr50.util.player.UserManager;
-import main.java.com.djrapitops.plan.data.additional.*;
+import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.element.InspectContainer;
+import main.java.com.djrapitops.plan.data.element.TableContainer;
+import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
@@ -76,8 +80,7 @@ public class McMmoData extends PluginData {
             skillTable.addRow("No players online");
         }
 
-        List<SkillType> skills = new ArrayList<>();
-        skills.addAll(Arrays.stream(SkillType.values()).distinct().collect(Collectors.toList()));
+        List<SkillType> skills = Arrays.stream(SkillType.values()).distinct().collect(Collectors.toList());
 
         for (SkillType skill : skills) {
             long total = MathUtils.sumInt(profiles.stream().map(p -> (Serializable) p.getSkillLevel(skill)));

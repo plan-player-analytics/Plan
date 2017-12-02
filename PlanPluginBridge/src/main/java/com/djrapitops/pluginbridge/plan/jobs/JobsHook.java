@@ -2,7 +2,7 @@ package com.djrapitops.pluginbridge.plan.jobs;
 
 import com.djrapitops.pluginbridge.plan.Hook;
 import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to Jobs and registering data sources.

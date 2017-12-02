@@ -6,7 +6,12 @@ package com.djrapitops.pluginbridge.plan.litebans;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.additional.*;
+import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.element.InspectContainer;
+import main.java.com.djrapitops.plan.data.element.TableContainer;
+import main.java.com.djrapitops.plan.data.plugin.BanData;
+import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 

@@ -11,11 +11,11 @@ import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.additional.ContainerSize;
-import main.java.com.djrapitops.plan.data.additional.InspectContainer;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.element.InspectContainer;
+import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.util.*;

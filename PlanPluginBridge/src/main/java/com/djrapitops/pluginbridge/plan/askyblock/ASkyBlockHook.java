@@ -3,7 +3,7 @@ package com.djrapitops.pluginbridge.plan.askyblock;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to ASkyBlock and registering data sources.

@@ -5,7 +5,7 @@
 package com.djrapitops.pluginbridge.plan.redprotect;
 
 import com.djrapitops.pluginbridge.plan.Hook;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * Hook for RedProtect plugin.

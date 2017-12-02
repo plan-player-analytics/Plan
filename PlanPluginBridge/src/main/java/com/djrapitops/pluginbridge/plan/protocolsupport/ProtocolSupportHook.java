@@ -9,7 +9,7 @@ import com.djrapitops.pluginbridge.plan.Hook;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
 /**

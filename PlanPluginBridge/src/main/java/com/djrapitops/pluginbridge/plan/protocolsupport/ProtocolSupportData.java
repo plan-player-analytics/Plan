@@ -7,7 +7,11 @@ package com.djrapitops.pluginbridge.plan.protocolsupport;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.viaversion.Protocol;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
-import main.java.com.djrapitops.plan.data.additional.*;
+import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.element.InspectContainer;
+import main.java.com.djrapitops.plan.data.element.TableContainer;
+import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
 
 import java.sql.SQLException;
 import java.util.Collection;

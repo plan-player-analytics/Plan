@@ -6,7 +6,11 @@ package com.djrapitops.pluginbridge.plan.redprotect;
 
 import br.net.fabiozumbi12.RedProtect.API.RedProtectAPI;
 import br.net.fabiozumbi12.RedProtect.Region;
-import main.java.com.djrapitops.plan.data.additional.*;
+import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.element.InspectContainer;
+import main.java.com.djrapitops.plan.data.element.TableContainer;
+import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 
 import java.util.Collection;
