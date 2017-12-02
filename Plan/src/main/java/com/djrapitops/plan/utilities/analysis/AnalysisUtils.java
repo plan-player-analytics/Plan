@@ -186,23 +186,26 @@ public class AnalysisUtils {
 
         double probability = 1.0;
 
-        int stickM = 0;
-        for (StickyData stickyData : stickyStuckM) {
-            if (similarM.contains(stickyData)) {
-                stickM++;
+        if (!similarM.isEmpty()) {
+            int stickM = 0;
+            for (StickyData stickyData : stickyStuckM) {
+                if (similarM.contains(stickyData)) {
+                    stickM++;
+                }
             }
+            probability *= (stickM / similarM.size());
         }
 
-        probability *= (stickM / similarM.size());
-
-        int stickW = 0;
-        for (StickyData stickyData : stickyStuckW) {
-            if (similarW.contains(stickyData)) {
-                stickW++;
+        if (!similarW.isEmpty()) {
+            int stickW = 0;
+            for (StickyData stickyData : stickyStuckW) {
+                if (similarW.contains(stickyData)) {
+                    stickW++;
+                }
             }
-        }
 
-        probability *= (stickW / similarW.size());
+            probability *= (stickW / similarW.size());
+        }
         return probability;
     }
 
