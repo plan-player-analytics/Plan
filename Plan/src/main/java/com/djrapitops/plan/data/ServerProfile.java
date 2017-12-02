@@ -169,7 +169,9 @@ public class ServerProfile {
     }
 
     public double getNewPlayersPerDay(long after, long before) {
-        return getNewPlayers(after, before) * 1.0 / AnalysisUtils.getNumberOfDaysBetween(after, before);
+        long days = AnalysisUtils.getNumberOfDaysBetween(after, before);
+        long newPlayers = getNewPlayers(after, before);
+        return days == 0 ? newPlayers : newPlayers * 1.0 / days;
     }
 
     public Stream<PlayerProfile> getPlayersWhoPlayedBetween(long after, long before) {
