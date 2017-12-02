@@ -61,8 +61,11 @@ public class EssentialsData extends PluginData {
             }
         }
 
-        analysisContainer.addValue(getWithIcon("Players in Jail", "ban", "red"), jailed.size() + " / " + uuids.size());
-        analysisContainer.addValue(getWithIcon("Muted", "bell-slash-o", "deep-orange"), muted.size() + " / " + uuids.size());
+        String jailedString = jailed.values().stream().filter("Yes"::equals).count() + " / " + uuids.size();
+        String mutedString = muted.values().stream().filter("Yes"::equals).count() + " / " + uuids.size();
+
+        analysisContainer.addValue(getWithIcon("Players in Jail", "ban", "red"), jailedString);
+        analysisContainer.addValue(getWithIcon("Muted", "bell-slash-o", "deep-orange"), mutedString);
 
         analysisContainer.addPlayerTableValues(getWithIcon("Jailed", "ban"), jailed);
         analysisContainer.addPlayerTableValues(getWithIcon("Muted", "bell-slash-o"), muted);

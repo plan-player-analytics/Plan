@@ -7,6 +7,7 @@ package main.java.com.djrapitops.plan.utilities.file.export;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.IOException;
+import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 /**
@@ -34,7 +35,7 @@ public class PlayerExport extends SpecificExport {
         } finally {
             try {
                 this.cancel();
-            } catch (IllegalArgumentException ignore) {
+            } catch (ConcurrentModificationException | IllegalArgumentException ignore) {
             }
         }
     }

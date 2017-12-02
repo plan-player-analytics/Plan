@@ -73,7 +73,7 @@ public class HtmlExport extends SpecificExport {
         } finally {
             try {
                 this.cancel();
-            } catch (IllegalArgumentException ignore) {
+            } catch (ConcurrentModificationException | IllegalArgumentException ignore) {
             }
         }
     }

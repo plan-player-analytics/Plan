@@ -92,7 +92,13 @@ public class PlayerProfile implements OfflinePlayer {
         long threeWeeksAgo = date - 3L * week;
 
         long activePlayThreshold = Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms();
+        if (activePlayThreshold <= 0) {
+            activePlayThreshold = 1;
+        }
         int activeLoginThreshold = Settings.ACTIVE_LOGIN_THRESHOLD.getNumber();
+        if (activeLoginThreshold <= 0) {
+            activeLoginThreshold = 1;
+        }
 
         List<Session> sessionsWeek = getSessions(weekAgo, date).collect(Collectors.toList());
         List<Session> sessionsWeek2 = getSessions(twoWeeksAgo, weekAgo).collect(Collectors.toList());
