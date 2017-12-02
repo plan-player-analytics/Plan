@@ -20,7 +20,6 @@ import main.java.com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import main.java.com.djrapitops.plan.utilities.comparators.UserInfoLastPlayedComparator;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.IOException;
@@ -69,7 +68,10 @@ public class PlayersPageResponse extends Response {
             String lastSeenS = Html.FONT_AWESOME_ICON.parse("calendar-check-o") + " Last Seen";
             String geolocationS = Html.FONT_AWESOME_ICON.parse("globe") + " Geolocation";
 
+            StringBuilder html = new StringBuilder("<table class=\"table table-bordered table-striped table-hover player-table dataTable\">");
+
             TableContainer tableContainer = new TableContainer(userS, playtimeS, sessionsS, registeredS, lastSeenS, geolocationS);
+            html.append(tableContainer.parseHeader());
 
             try {
                 if (users.isEmpty()) {
@@ -77,7 +79,6 @@ public class PlayersPageResponse extends Response {
                     throw new IllegalArgumentException("No players");
                 }
 
-                List<String[]> sortedData = new ArrayList<>();
                 API planAPI = Plan.getPlanAPI();
 
                 int i = 0;
@@ -104,23 +105,20 @@ public class PlayersPageResponse extends Response {
                     geoInfoList.sort(new GeoInfoComparator());
                     String geolocation = geoInfoList.isEmpty() ? "Not Known" : geoInfoList.get(0).getGeolocation();
 
-                    playerData[0] = link;
-                    playerData[1] = FormatUtils.formatTimeAmount(playtime);
-                    playerData[2] = sessionCount + "";
-                    playerData[3] = FormatUtils.formatTimeStampYear(registered);
-                    playerData[4] = lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-";
-                    playerData[5] = geolocation;
-                    sortedData.add(playerData);
+                    html.append(Html.TABLELINE_PLAYERS_PLAYERS_PAGE.parse(
+                            link,
+                            playtime, FormatUtils.formatTimeAmount(playtime),
+                            sessionCount + "",
+                            FormatUtils.formatTimeStampYear(registered),
+                            lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-",
+                            geolocation
+                    ));
                     i++;
                 }
 
-                for (String[] playerData : sortedData) {
-                    tableContainer.addRow(ArrayUtils.addAll(playerData));
-                }
             } catch (IllegalArgumentException ignored) {
             }
-            return tableContainer.parseHtml().replace(Html.TABLE_SCROLL.parse(),
-                    "<table class=\"table table-bordered table-striped table-hover player-table dataTable\">");
+            return html.append("</tbody></table>").toString();
         } catch (SQLException e) {
             Log.toLog(PlayersPageResponse.class.getClass().getName(), e);
             return new InternalErrorResponse(e, "/players").getContent();

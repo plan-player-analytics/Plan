@@ -87,7 +87,8 @@ public enum Html {
     TABLELINE_2("<tr><td><b>${0}</b></td><td>${1}</td></tr>"),
     TABLELINE_3("<tr><td><b>${0}</b></td><td>${1}</td><td>${2}</td></tr>"),
     TABLELINE_4("<tr><td><b>${0}</b></td><td>${1}</td><td>${2}</td><td>${3}</td></tr>"),
-    TABLELINE_PLAYERS("<tr><td>${0}</td><td>${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td>${4}</td><td sorttable_customkey=\"${5}\">${6}</td>" + "<td sorttable_customkey=\"${7}\">${8}</td><td>${9}</td></tr>"),
+    TABLELINE_PLAYERS("<tr><td>${0}</td><td>${1}</td><td data-order=\"${2}\">${3}</td><td>${4}</td><td data-order=\"${5}\">${6}</td>" + "<td data-order=\"${7}\">${8}</td><td>${9}</td></tr>"),
+    TABLELINE_PLAYERS_PLAYERS_PAGE("<tr><td>${0}</td><td data-order=\"${1}\">${2}</td><td>${4}</td><td>${5}</td>" + "<td>${6}</td><td>${7}</td></tr>"),
     TABLELINE_3_CUSTOMKEY("<tr><td sorttable_customkey=\"${0}\">${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td sorttable_customkey=\"${4}\">${5}</td></tr>"),
     TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"${0}\">${1}</td><td>${2}</td><td>${3}</td></tr>");
 
