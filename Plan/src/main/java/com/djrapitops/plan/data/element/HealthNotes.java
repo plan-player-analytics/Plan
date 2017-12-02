@@ -232,11 +232,11 @@ public class HealthNotes {
         } else if (serverDownTime <= TimeAmount.WEEK.ms()) {
             healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " Total Server downtime (No Data) was "
                     + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
-            serverHealth *= 0.6;
+            serverHealth *= (TimeAmount.WEEK.ms() - serverDownTime) * 1.0 / TimeAmount.WEEK.ms();
         } else {
             healthNotes.add("<p>" + Html.RED_WARN.parse() + " Total Server downtime (No Data) was "
                     + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
-            serverHealth *= 0.3;
+            serverHealth *= serverDownTime * 1.0 / TimeAmount.MONTH.ms();
         }
     }
 
