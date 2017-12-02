@@ -71,12 +71,14 @@ public class SessionTabStructureCreator {
 
             String name = Plan.getInstance().getDataCache().getName(uuid);
             String link = Plan.getPlanAPI().getPlayerInspectPageLink(name);
-            String dotSeparated = appendName ?
-                    HtmlStructure.separateWithDots(name, sessionStart) :
-                    HtmlStructure.separateWithDots(serverName, sessionStart);
+
             String dotSeparated2 = appendWorldPerc
-                    ? HtmlStructure.separateWithDots(SessionsTableCreator.getLongestWorldPlayed(session), sessionLength)
-                    : sessionEnd;
+                    ? HtmlStructure.separateWithDots(sessionStart, SessionsTableCreator.getLongestWorldPlayed(session))
+                    : sessionStart;
+            String dotSeparated = appendName ?
+                    HtmlStructure.separateWithDots(name, dotSeparated2) :
+                    HtmlStructure.separateWithDots(serverName, dotSeparated2);
+
 
             String htmlID = "" + session.getSessionStart() + sessionID + i;
 
@@ -96,7 +98,7 @@ public class SessionTabStructureCreator {
                     .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
                     .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
                     .append("aria-controls=\"session_").append(htmlID).append("\">")
-                    .append(dotSeparated).append("<span class=\"pull-right\">").append(dotSeparated2).append("</span>") // Title (header)
+                    .append(dotSeparated).append("<span class=\"pull-right\">").append(sessionEnd).append("</span>") // Title (header)
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 

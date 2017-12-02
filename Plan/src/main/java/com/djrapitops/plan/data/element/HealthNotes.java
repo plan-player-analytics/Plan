@@ -236,7 +236,7 @@ public class HealthNotes {
         } else {
             healthNotes.add("<p>" + Html.RED_WARN.parse() + " Total Server downtime (No Data) was "
                     + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
-            serverHealth *= serverDownTime * 1.0 / TimeAmount.MONTH.ms();
+            serverHealth *= (TimeAmount.MONTH.ms() - serverDownTime) * 1.0 / TimeAmount.MONTH.ms();
         }
     }
 

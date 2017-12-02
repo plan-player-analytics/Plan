@@ -7,6 +7,7 @@ package main.java.com.djrapitops.plan.utilities.html.tables;
 import main.java.com.djrapitops.plan.data.container.Action;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ActionsTableCreator {
                 html.append(Html.TABLELINE_3_CUSTOMKEY_1.parse(
                         String.valueOf(date), FormatUtils.formatTimeStampYear(date),
                         action.getDoneAction().toString(),
-                        action.getAdditionalInfo()
+                        HtmlUtils.swapColorsToSpan(action.getAdditionalInfo())
                 ));
 
                 i++;

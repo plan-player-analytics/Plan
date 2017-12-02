@@ -92,7 +92,7 @@ public class HtmlUtils {
             string = Html.SPAN.parse(string);
         }
 
-        return string.replace("§r", "");
+        return string.replace("§r", "").replace("§l", "").replace("§m", "").replace("§n", "").replace("§o", "").replace("§k", "");
     }
 
     public static String separateWithQuotes(String... strings) {

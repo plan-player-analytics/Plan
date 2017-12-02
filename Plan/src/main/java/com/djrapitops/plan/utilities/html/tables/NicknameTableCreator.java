@@ -1,10 +1,11 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
 import main.java.com.djrapitops.plan.utilities.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class NicknameTableCreator {
             for (Map.Entry<UUID, List<String>> entry : nicknames.entrySet()) {
                 String serverName = serverNames.getOrDefault(entry.getKey(), "Unknown");
                 for (String nick : entry.getValue()) {
-                    html.append(Html.TABLELINE_2.parse(nick, serverName));
+                    html.append(Html.TABLELINE_2.parse(HtmlUtils.swapColorsToSpan(HtmlUtils.removeXSS(nick)), serverName));
                 }
             }
         }

@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.ServerProfile;
 import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.plugin.BanData;
 import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.settings.Settings;
@@ -23,6 +24,7 @@ import main.java.com.djrapitops.plan.systems.webserver.response.ErrorResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
@@ -115,13 +117,11 @@ public class Analysis {
             serverProfile = profile;
 
             for (PlayerProfile player : profile.getPlayers()) {
-
                 dataCache.updateNames(player.getUuid(), player.getName(), null);
             }
 
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
-
-            // TODO BanData (PluginData) effects
+            setBannedByPlugins(profile);
 
             Benchmark.start("Analysis Phase");
             Log.logDebug("Analysis", "Analysis Phase");
@@ -148,6 +148,23 @@ public class Analysis {
             serverProfile = null;
         }
         return true;
+    }
+
+    private void setBannedByPlugins(ServerProfile profile) {
+        UUID serverUUID = Plan.getServerUUID();
+        List<BanData> banPlugins = plugin.getHookHandler().getAdditionalDataSources().stream()
+                .filter(p -> p instanceof BanData)
+                .map(p -> (BanData) p)
+                .collect(Collectors.toList());
+
+        Set<UUID> banned = new HashSet<>();
+        for (BanData banPlugin : banPlugins) {
+            Set<UUID> uuids = profile.getUuids();
+            banned.addAll(banPlugin.filterBanned(uuids));
+        }
+
+        profile.getPlayers().stream().filter(player -> banned.contains(player.getUuid()))
+                .forEach(player -> player.bannedOnServer(serverUUID));
     }
 
     private void log(String msg) {
