@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -18,6 +18,8 @@ import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.*;
@@ -79,6 +81,30 @@ public class DebugPageResponse extends ErrorResponse {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+        content.append("<br><br>");
+
+        RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+        Properties properties = System.getProperties();
+
+        String osName = properties.getProperty("os.name");
+        String osVersion = properties.getProperty("os.version");
+        String osArch = properties.getProperty("os.arch");
+
+        String javaVendor = properties.getProperty("java.vendor");
+        String javaVersion = properties.getProperty("java.version");
+
+        String javaVMVendor = properties.getProperty("java.vm.vendor");
+        String javaVMName = properties.getProperty("java.vm.name");
+        String javaVMVersion = properties.getProperty("java.vm.version");
+        List<String> javaVMFlags = runtimeMxBean.getInputArguments();
+
+        content.append("**Operating System:** ").append(osName).append(" (").append(osArch)
+                .append(") version ").append(osVersion).append("<br>");
+
+        content.append("**Java Version:** ").append(javaVersion).append(", ").append(javaVendor).append("<br>");
+        content.append("**Java VM Version:** ").append(javaVMName).append(" version ").append(javaVMVersion)
+                .append(", ").append(javaVMVendor).append("<br>");
+        content.append("**Java VM Flags:** ").append(javaVMFlags).append("<br>");
 
         content.append("</pre>");
     }

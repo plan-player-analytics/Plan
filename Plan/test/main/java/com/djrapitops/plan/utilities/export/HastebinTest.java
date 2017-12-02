@@ -1,10 +1,10 @@
-package main.java.com.djrapitops.plan.utilities.dump;
+package main.java.com.djrapitops.plan.utilities.export;
 
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.collect.Iterables;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.file.dump.Hastebin;
+import main.java.com.djrapitops.plan.utilities.file.export.Hastebin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
