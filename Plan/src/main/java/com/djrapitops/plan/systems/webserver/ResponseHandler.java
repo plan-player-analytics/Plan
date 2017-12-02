@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -206,14 +206,17 @@ public class ResponseHandler extends APIResponseHandler {
             return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        plugin.getInfoManager().cachePlayer(uuid);
-        Response response = PageCache.loadPage("inspectPage: " + uuid);
-        // TODO Create a new method that places NotFoundResponse to PageCache instead.
-        if (response == null || response.getContent().contains("No Bukkit Servers were online to process this request")) {
-            PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
-            response = PageCache.loadPage("inspectPage: " + uuid);
+        if (plugin.getDB().wasSeenBefore(uuid)) {
+            plugin.getInfoManager().cachePlayer(uuid);
+            Response response = PageCache.loadPage("inspectPage: " + uuid);
+            // TODO Create a new method that places NotFoundResponse to PageCache instead.
+            if (response == null || response.getContent().contains("No Bukkit Servers were online to process this request")) {
+                PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
+                response = PageCache.loadPage("inspectPage: " + uuid);
+            }
+            return response;
         }
-        return response;
+        return new NotFoundResponse("Player has not played on this server.");
     }
 
     private Response notFoundResponse() {

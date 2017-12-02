@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.parsing.NetworkPageParser;
 import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
@@ -24,6 +25,7 @@ import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.InspectWebA
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.IsOnlineWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
 import java.io.IOException;
@@ -369,7 +371,11 @@ public class BungeeInformationManager extends InformationManager {
 
     @Override
     public void updateNetworkPageContent() {
-        PageCache.cachePage("analysisPage:" + MiscUtils.getIPlan().getServerUuid(), () -> new AnalysisPageResponse(this));
+        UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
+        PageCache.cachePage("analysisPage:" + serverUUID, () -> new AnalysisPageResponse(this));
+        if (Settings.ANALYSIS_EXPORT.isTrue()) {
+            HtmlExport.exportServer(plugin, serverUUID);
+        }
     }
 
     public void sendConfigSettings() {

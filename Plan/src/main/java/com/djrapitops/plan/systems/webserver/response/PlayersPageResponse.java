@@ -2,10 +2,7 @@ package main.java.com.djrapitops.plan.systems.webserver.response;
 
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.container.GeoInfo;
 import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.data.container.UserInfo;
@@ -79,8 +76,6 @@ public class PlayersPageResponse extends Response {
                     throw new IllegalArgumentException("No players");
                 }
 
-                API planAPI = Plan.getPlanAPI();
-
                 int i = 0;
                 int maxPlayers = Settings.MAX_PLAYERS_PLAYERS_PAGE.getNumber();
                 if (maxPlayers <= 0) {
@@ -91,14 +86,15 @@ public class PlayersPageResponse extends Response {
                         break;
                     }
                     UUID uuid = userInfo.getUuid();
-                    String[] playerData = new String[6];
                     String playerName = userInfo.getName();
 
-                    String link = Html.LINK_EXTERNAL.parse(planAPI.getPlayerInspectPageLink(playerName), playerName);
+                    String link = Html.LINK_EXTERNAL.parse("../player/" + playerName, playerName);
 
                     List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
                     int sessionCount = sessions.size();
-                    long playtime = sessionCount != 0 ? PlayerProfile.getPlaytime(sessions.stream()) : 0L;
+                    long playtime = sessionCount != 0 ? sessions.stream().map(Session::getLength)
+                            .mapToLong(p -> p)
+                            .sum() : 0L;
                     long registered = userInfo.getRegistered();
                     long lastSeen = lastSeenForAllPlayers.getOrDefault(uuid, 0L);
                     List<GeoInfo> geoInfoList = geoInfos.getOrDefault(uuid, new ArrayList<>());

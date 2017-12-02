@@ -7,7 +7,6 @@ package main.java.com.djrapitops.plan.utilities.file.export;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -51,7 +50,7 @@ public abstract class SpecificExport extends AbsRunnable {
             }
             return folder;
         }
-        File dataFolder = Plan.getInstance().getDataFolder();
+        File dataFolder = MiscUtils.getIPlan().getDataFolder();
         File folder = new File(dataFolder, path);
         folder.mkdirs();
         return folder;

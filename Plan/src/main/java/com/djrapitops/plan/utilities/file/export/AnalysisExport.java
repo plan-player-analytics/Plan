@@ -32,7 +32,10 @@ public class AnalysisExport extends SpecificExport {
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
-            this.cancel();
+            try {
+                this.cancel();
+            } catch (IllegalArgumentException ignore) {
+            }
         }
     }
 }

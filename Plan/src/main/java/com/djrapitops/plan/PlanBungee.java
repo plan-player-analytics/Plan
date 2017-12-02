@@ -143,7 +143,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             Log.logDebug("Enable", "WebServer Initialization");
             Log.info(Locale.get(Msg.ENABLED).toString());
             if (Settings.ANALYSIS_EXPORT.isTrue()) {
-                RunnableFactory.createNew(new HtmlExport(this));
+                RunnableFactory.createNew(new HtmlExport(this)).runTaskAsynchronously();
             }
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");

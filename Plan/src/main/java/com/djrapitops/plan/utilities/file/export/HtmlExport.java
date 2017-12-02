@@ -71,7 +71,10 @@ public class HtmlExport extends SpecificExport {
         } catch (IOException | SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
-            this.cancel();
+            try {
+                this.cancel();
+            } catch (IllegalArgumentException ignore) {
+            }
         }
     }
 
@@ -181,12 +184,8 @@ public class HtmlExport extends SpecificExport {
         File to = new File(outputFolder, outputFile);
         to.mkdirs();
         if (to.exists()) {
-            if (overwrite) {
-                to.delete();
-                to.createNewFile();
-            } else {
-                return;
-            }
+            to.delete();
+            to.createNewFile();
         }
         export(to, lines);
     }
