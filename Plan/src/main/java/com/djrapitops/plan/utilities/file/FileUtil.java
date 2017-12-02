@@ -35,7 +35,7 @@ public class FileUtil {
             return lines(savedFile);
         } else {
             String fileName = savedFile.getName();
-            File found = attemptToFind(fileName, plugin.getDataFolder());
+            File found = attemptToFind(fileName, new File(plugin.getDataFolder(), "web"));
             if (found != null) {
                 return lines(found);
             }
@@ -51,7 +51,7 @@ public class FileUtil {
      * @return File if found or null
      */
     private static File attemptToFind(String fileName, File dataFolder) {
-        if (dataFolder.isDirectory()) {
+        if (dataFolder.exists() && dataFolder.isDirectory()) {
             ArrayDeque<File> que = new ArrayDeque<>();
             que.add(dataFolder);
 

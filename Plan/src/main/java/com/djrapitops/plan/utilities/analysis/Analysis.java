@@ -21,6 +21,7 @@ import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.ErrorResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
+import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 
 import java.util.*;
 
@@ -137,8 +138,9 @@ public class Analysis {
             analysisData.parsePluginsSection(analyzeAdditionalPluginData(profile.getUuids()));
             ((BukkitInformationManager) infoManager).cacheAnalysisData(analysisData);
 
-            // TODO Export
-//            ExportUtility.export(analysisData, rawData);
+            if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                RunnableFactory.createNew(new HtmlExport(plugin)).runTaskAsynchronously();
+            }
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             ((BukkitInformationManager) plugin.getInfoManager()).cacheAnalysisHtml(new InternalErrorResponse(e, "Analysis").getContent());
