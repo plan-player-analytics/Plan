@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.data.container.StickyData;
 import main.java.com.djrapitops.plan.data.container.TPS;
 import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.element.HealthNotes;
 import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.settings.Settings;
@@ -51,6 +52,7 @@ public class AnalysisData extends RawData {
 
     private Map<String, Long> analyzedValues;
     private Set<StickyData> stickyMonthData;
+    private List<PlayerProfile> players;
 
     public AnalysisData() {
         analyzedValues = new HashMap<>();
@@ -104,7 +106,7 @@ public class AnalysisData extends RawData {
         List<Session> allSessions = profile.getAllSessions();
         allSessions.sort(new SessionStartComparator());
 
-        List<PlayerProfile> players = profile.getPlayers();
+        players = profile.getPlayers();
         List<PlayerProfile> ops = profile.getOps().collect(Collectors.toList());
         long playersTotal = got("playersTotal", players.size());
 
@@ -126,37 +128,17 @@ public class AnalysisData extends RawData {
         addValue("ops", ops.size());
         addValue("playersTotal", playersTotal);
 
-        healthTab(now, monthAgo, players, tpsDataMonth);
+        healthTab(now, players, tpsDataMonth);
 
         long totalPlaytime = profile.getTotalPlaytime();
         addValue("playtimeTotal", playersTotal != 0 ? FormatUtils.formatTimeAmount(totalPlaytime) : "No Players");
         addValue("playtimeAverage", playersTotal != 0 ? FormatUtils.formatTimeAmount(MathUtils.averageLong(totalPlaytime, playersTotal)) : "-");
     }
 
-    private void healthTab(long now, long monthAgo, List<PlayerProfile> players, List<TPS> tpsDataMonth) {
-        double serverHealth = 100.0;
-        List<String> healthNotes = new ArrayList<>();
-
-        TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
-        long fourWeeksAgo = now - TimeAmount.WEEK.ms() * 4L;
-
-        if (!players.isEmpty()) {
-            for (PlayerProfile player : players) {
-                for (long date = now; date >= now - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms()) {
-                    double activityIndex = player.getActivityIndex(date);
-                    String index = FormatUtils.readableActivityIndex(activityIndex)[1];
-
-                    Map<String, Set<UUID>> map = activityData.getOrDefault(date, new HashMap<>());
-                    Set<UUID> uuids = map.getOrDefault(index, new HashSet<>());
-                    uuids.add(player.getUuid());
-                    map.put(index, uuids);
-                    activityData.put(date, map);
-                }
-            }
-        }
+    private void healthTab(long now, List<PlayerProfile> players, List<TPS> tpsDataMonth) {
+        TreeMap<Long, Map<String, Set<UUID>>> activityData = AnalysisUtils.turnToActivityDataMap(now, players);
 
         Map<String, Set<UUID>> activityNow = activityData.getOrDefault(now, new HashMap<>());
-        Map<String, Set<UUID>> activityFourWAgo = activityData.getOrDefault(fourWeeksAgo, new HashMap<>());
 
         String[] activityStackSeries = ActivityStackGraphCreator.createSeries(activityData);
         String activityPieSeries = ActivityPieCreator.createSeriesData(activityNow);
@@ -168,184 +150,14 @@ public class AnalysisData extends RawData {
         Set<UUID> veryActiveNow = activityNow.getOrDefault("Very Active", new HashSet<>());
         Set<UUID> activeNow = activityNow.getOrDefault("Active", new HashSet<>());
         Set<UUID> regularNow = activityNow.getOrDefault("Regular", new HashSet<>());
-        Set<UUID> veryActiveFWAG = activityFourWAgo.getOrDefault("Very Active", new HashSet<>());
-        Set<UUID> activeFWAG = activityFourWAgo.getOrDefault("Active", new HashSet<>());
-        Set<UUID> regularFWAG = activityFourWAgo.getOrDefault("Regular", new HashSet<>());
 
         addValue("playersRegular", (veryActiveNow.size() + activeNow.size() + regularNow.size()));
 
-        Set<UUID> regularRemainCompareSet = new HashSet<>(regularFWAG);
-        regularRemainCompareSet.addAll(activeFWAG);
-        regularRemainCompareSet.addAll(veryActiveFWAG);
+        HealthNotes healthNotes = new HealthNotes(this, activityData, tpsDataMonth, now);
+        healthNotes.analyzeHealth();
 
-        int activeFWAGNum = regularRemainCompareSet.size();
-        regularRemainCompareSet.removeAll(regularNow);
-        regularRemainCompareSet.removeAll(activeNow);
-        regularRemainCompareSet.removeAll(veryActiveNow);
-        int notRegularAnymore = regularRemainCompareSet.size();
-        int remain = activeFWAGNum - notRegularAnymore;
-        double percRemain = remain * 100.0 / activeFWAGNum;
-
-        Set<UUID> regularNewCompareSet = new HashSet<>(regularNow);
-        regularNewCompareSet.addAll(activeNow);
-        regularNewCompareSet.addAll(veryActiveNow);
-        regularNewCompareSet.removeAll(regularFWAG);
-        regularNewCompareSet.removeAll(activeFWAG);
-        regularNewCompareSet.removeAll(veryActiveFWAG);
-        int newActive = regularNewCompareSet.size();
-
-        int change = newActive - notRegularAnymore;
-
-        String remainNote = "";
-        if (activeFWAGNum != 0) {
-            remainNote = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            if (percRemain > 50) {
-                remainNote += Html.GREEN_THUMB.parse();
-            } else if (percRemain > 20) {
-                remainNote += Html.YELLOW_FLAG.parse();
-            } else {
-                remainNote += Html.RED_WARN.parse();
-                serverHealth -= 2.5;
-            }
-
-            remainNote += " " + FormatUtils.cutDecimals(percRemain) + "% of regular players have remained active (" + remain + "/" + activeFWAGNum + ")";
-        }
-        if (change > 0) {
-            healthNotes.add(
-                    "<p>" + Html.GREEN_THUMB.parse() + " Number of regular players has increased (+" + change + ")<br>" +
-                            remainNote + "</p>");
-        } else if (change == 0) {
-            healthNotes.add(
-                    "<p>" + Html.GREEN_THUMB.parse() + " Number of regular players has stayed the same (+" + change + ")<br>" +
-                            remainNote + "</p>");
-        } else if (change > -20) {
-            healthNotes.add(
-                    "<p>" + Html.YELLOW_FLAG.parse() + " Number of regular players has decreased (" + change + ")<br>" +
-                            remainNote + "</p>");
-            serverHealth -= 5;
-        } else {
-            healthNotes.add(
-                    "<p>" + Html.RED_WARN.parse() + " Number of regular players has decreased (" + change + ")<br>" +
-                            remainNote + "</p>");
-            serverHealth -= 10;
-        }
-
-        double avgOnlineOnRegister = MathUtils.averageInt(stickyMonthData.stream().map(StickyData::getOnlineOnJoin));
-        if (avgOnlineOnRegister >= 1) {
-            healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " New Players have players to play with when they join ("
-                    + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)</p>");
-        } else {
-            healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " New Players may not have players to play with when they join ("
-                    + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)</p>");
-            serverHealth -= 5;
-        }
-
-        long newM = value("newM");
-        long stuckPerM = value("stuckPerM");
-
-        if (newM != 0) {
-            double stuckPerc = MathUtils.averageDouble(stuckPerM, newM) * 100;
-            if (stuckPerc >= 25) {
-                healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
-                        + "% of new players have stuck around (" + stuckPerM + "/" + newM + ")</p>");
-            } else {
-                healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
-                        + "% of new players have stuck around (" + stuckPerM + "/" + newM + ")</p>");
-            }
-        }
-
-        List<PlayerProfile> currentActivePlayers = players.stream()
-                .filter(player -> player.getActivityIndex(now) >= 1.75)
-                .collect(Collectors.toList());
-
-        long twoWeeksAgo = now - TimeAmount.WEEK.ms() * 2L;
-
-        long totalFourToTwoWeeks = 0;
-        long totalLastTwoWeeks = 0;
-        for (PlayerProfile activePlayer : currentActivePlayers) {
-            totalFourToTwoWeeks += activePlayer.getPlaytime(monthAgo, twoWeeksAgo);
-            totalLastTwoWeeks += activePlayer.getPlaytime(twoWeeksAgo, now);
-        }
-        int currentlyActive = currentActivePlayers.size();
-        if (currentlyActive != 0) {
-            long avgFourToTwoWeeks = MathUtils.averageLong(totalFourToTwoWeeks, currentlyActive);
-            long avgLastTwoWeeks = MathUtils.averageLong(totalLastTwoWeeks, currentlyActive);
-            String avgLastTwoWeeksString = FormatUtils.formatTimeAmount(avgLastTwoWeeks);
-            String avgFourToTwoWeeksString = FormatUtils.formatTimeAmount(avgFourToTwoWeeks);
-            if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
-                healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " Active players to have things to do (Played "
-                        + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ", last two weeks vs weeks 2-4)</p>");
-            } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeAmount.HOUR.ms() * 2L) {
-                healthNotes.add("<p>" + Html.RED_WARN.parse() + " Active players might to be running out of things to do (Played "
-                        + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ", last two weeks vs weeks 2-4)</p>");
-                serverHealth -= 5;
-            } else {
-                healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " Active players might to be running out of things to do (Played "
-                        + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ", last two weeks vs weeks 2-4)</p>");
-            }
-        }
-
-        long serverDownTime = ServerProfile.serverDownTime(tpsDataMonth);
-//        long serverIdleTime = ServerProfile.serverIdleTime(tpsDataMonth);
-        double aboveThreshold = ServerProfile.aboveLowThreshold(tpsDataMonth);
-        long tpsSpikeMonth = value("tpsSpikeMonth");
-
-        String avgLowThresholdString = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        if (aboveThreshold >= 0.96) {
-            avgLowThresholdString += Html.GREEN_THUMB.parse();
-        } else if (aboveThreshold >= 0.9) {
-            avgLowThresholdString += Html.YELLOW_FLAG.parse();
-            serverHealth *= 0.9;
-        } else {
-            avgLowThresholdString += Html.RED_WARN.parse();
-            serverHealth *= 0.6;
-        }
-        avgLowThresholdString += " Average TPS was above Low Threshold "
-                + FormatUtils.cutDecimals(aboveThreshold * 100.0) + "% of the time";
-
-        if (tpsSpikeMonth <= 5) {
-            healthNotes.add("<p>" + Html.GREEN_THUMB.parse()
-                    + " Average TPS dropped below Low Threshold (" + Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber() + ")" +
-                    " " + tpsSpikeMonth + " times<br>" +
-                    avgLowThresholdString + "</p>");
-        } else if (tpsSpikeMonth <= 25) {
-            healthNotes.add("<p>" + Html.YELLOW_FLAG.parse()
-                    + " Average TPS dropped below Low Threshold (" + Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber() + ")" +
-                    " " + tpsSpikeMonth + " times<br>" +
-                    avgLowThresholdString + "</p>");
-            serverHealth *= 0.95;
-        } else {
-            healthNotes.add("<p>" + Html.RED_WARN.parse()
-                    + " Average TPS dropped below Low Threshold (" + Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber() + ")" +
-                    " " + tpsSpikeMonth + " times<br>" +
-                    avgLowThresholdString + "</p>");
-            serverHealth *= 0.8;
-        }
-
-        if (serverDownTime <= TimeAmount.DAY.ms()) {
-            healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " Total Server downtime (No Data) was "
-                    + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
-        } else if (serverDownTime <= TimeAmount.WEEK.ms()) {
-            healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " Total Server downtime (No Data) was "
-                    + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
-            serverHealth *= 0.6;
-        } else {
-            healthNotes.add("<p>" + Html.RED_WARN.parse() + " Total Server downtime (No Data) was "
-                    + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
-            serverHealth *= 0.3;
-        }
-//        healthNotes.add("<p>" + Html.FA_COLORED_ICON.parse("red", "life-ring") + " Server was idle (No Players) "
-//                + FormatUtils.formatTimeAmount(serverIdleTime) + " in total</p>");
-
-        StringBuilder healthNoteBuilder = new StringBuilder();
-        for (String healthNote : healthNotes) {
-            healthNoteBuilder.append(healthNote);
-        }
-        addValue("healthNotes", healthNoteBuilder.toString());
-        addValue("healthIndex", serverHealth);
+        addValue("healthNotes", healthNotes.parse());
+        addValue("healthIndex", healthNotes.getServerHealth());
     }
 
     private void commandUsage(Map<String, Integer> commandUsage) {
@@ -424,6 +236,10 @@ public class AnalysisData extends RawData {
         addValue("playersStuckPercMonth", newM != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerM, newM) * 100.0) + "%" : "-");
         addValue("playersStuckPercWeek", newW != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerW, newW) * 100.0) + "%" : "-");
 
+        stuckPerDay(newDay, newMonth, newD, playersStuckPerMonth, playersStuckPerWeek);
+    }
+
+    private void stuckPerDay(List<PlayerProfile> newDay, List<PlayerProfile> newMonth, long newD, List<PlayerProfile> playersStuckPerMonth, List<PlayerProfile> playersStuckPerWeek) {
         if (newD != 0) {
             // New Players
             stickyMonthData = newMonth.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
@@ -434,41 +250,9 @@ public class AnalysisData extends RawData {
 
             int stuckPerD = 0;
             for (PlayerProfile playerProfile : newDay) {
-                StickyData data = new StickyData(playerProfile);
-
-                Set<StickyData> similarM = new HashSet<>();
-                Set<StickyData> similarW = new HashSet<>();
-                for (StickyData stickyData : stickyMonthData) {
-                    if (stickyData.distance(data) < 2.5) {
-                        similarM.add(stickyData);
-                    }
-                }
-                for (StickyData stickyData : stickyW) {
-                    if (stickyData.distance(data) < 2.5) {
-                        similarW.add(stickyData);
-                    }
-                }
-
-                double probability = 1.0;
-
-                int stickM = 0;
-                for (StickyData stickyData : stickyStuckM) {
-                    if (similarM.contains(stickyData)) {
-                        stickM++;
-                    }
-                }
-
-                probability *= (stickM / similarM.size());
-
-                int stickW = 0;
-                for (StickyData stickyData : stickyStuckW) {
-                    if (similarW.contains(stickyData)) {
-                        stickW++;
-                    }
-                }
-
-                probability *= (stickW / similarW.size());
-
+                double probability = AnalysisUtils.calculateProbabilityOfStaying(
+                        stickyMonthData, stickyW, stickyStuckM, stickyStuckW, playerProfile
+                );
                 if (probability >= 0.5) {
                     stuckPerD++;
                 }
@@ -566,7 +350,15 @@ public class AnalysisData extends RawData {
         return v;
     }
 
-    private long value(String key) {
+    public long value(String key) {
         return analyzedValues.getOrDefault(key, 0L);
+    }
+
+    public Set<StickyData> getStickyMonthData() {
+        return stickyMonthData;
+    }
+
+    public List<PlayerProfile> getPlayers() {
+        return players;
     }
 }

@@ -3,9 +3,12 @@ package main.java.com.djrapitops.plan.utilities.analysis;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.container.Session;
+import main.java.com.djrapitops.plan.data.container.StickyData;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
@@ -163,5 +166,62 @@ public class AnalysisUtils {
         }
 
         return userSessions;
+    }
+
+    public static double calculateProbabilityOfStaying(Set<StickyData> stickyMonthData, Set<StickyData> stickyW, Set<StickyData> stickyStuckM, Set<StickyData> stickyStuckW, PlayerProfile playerProfile) {
+        StickyData data = new StickyData(playerProfile);
+
+        Set<StickyData> similarM = new HashSet<>();
+        Set<StickyData> similarW = new HashSet<>();
+        for (StickyData stickyData : stickyMonthData) {
+            if (stickyData.distance(data) < 2.5) {
+                similarM.add(stickyData);
+            }
+        }
+        for (StickyData stickyData : stickyW) {
+            if (stickyData.distance(data) < 2.5) {
+                similarW.add(stickyData);
+            }
+        }
+
+        double probability = 1.0;
+
+        int stickM = 0;
+        for (StickyData stickyData : stickyStuckM) {
+            if (similarM.contains(stickyData)) {
+                stickM++;
+            }
+        }
+
+        probability *= (stickM / similarM.size());
+
+        int stickW = 0;
+        for (StickyData stickyData : stickyStuckW) {
+            if (similarW.contains(stickyData)) {
+                stickW++;
+            }
+        }
+
+        probability *= (stickW / similarW.size());
+        return probability;
+    }
+
+    public static TreeMap<Long, Map<String, Set<UUID>>> turnToActivityDataMap(long time, List<PlayerProfile> players) {
+        TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
+        if (!players.isEmpty()) {
+            for (PlayerProfile player : players) {
+                for (long date = time; date >= time - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms()) {
+                    double activityIndex = player.getActivityIndex(date);
+                    String index = FormatUtils.readableActivityIndex(activityIndex)[1];
+
+                    Map<String, Set<UUID>> map = activityData.getOrDefault(date, new HashMap<>());
+                    Set<UUID> uuids = map.getOrDefault(index, new HashSet<>());
+                    uuids.add(player.getUuid());
+                    map.put(index, uuids);
+                    activityData.put(date, map);
+                }
+            }
+        }
+        return activityData;
     }
 }
