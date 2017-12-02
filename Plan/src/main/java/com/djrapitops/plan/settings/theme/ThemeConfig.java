@@ -44,6 +44,9 @@ public class ThemeConfig extends Config {
 
     private static String getFileLocation(String fileName) {
         switch (fileName.toLowerCase()) {
+            case "soft":
+            case "soften":
+                return "themes/soft.yml";
             case "mute":
             case "lowsaturation":
                 return "themes/mute.yml";
