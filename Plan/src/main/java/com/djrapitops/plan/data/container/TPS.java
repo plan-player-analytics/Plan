@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.data;
+package main.java.com.djrapitops.plan.data.container;
 
+import main.java.com.djrapitops.plan.data.HasDate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Objects;

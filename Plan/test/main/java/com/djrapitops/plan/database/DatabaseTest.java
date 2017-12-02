@@ -7,7 +7,8 @@ package main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.data.container.*;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;

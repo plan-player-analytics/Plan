@@ -6,7 +6,7 @@ package main.java.com.djrapitops.plan.database.tables.move;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.UserInfo;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;

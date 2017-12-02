@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.processing.importing;
 
-import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.container.TPS;
 
 import java.util.*;
 

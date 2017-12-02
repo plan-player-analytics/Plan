@@ -8,7 +8,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
-import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;

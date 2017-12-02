@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data;
+package main.java.com.djrapitops.plan.data.container;
 
 import java.util.Objects;
 import java.util.UUID;

@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.WorldAliasSettings;

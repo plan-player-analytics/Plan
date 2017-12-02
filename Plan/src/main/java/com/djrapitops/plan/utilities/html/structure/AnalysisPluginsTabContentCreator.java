@@ -4,9 +4,9 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.structure;
 
-import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.additional.InspectContainer;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.element.InspectContainer;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;

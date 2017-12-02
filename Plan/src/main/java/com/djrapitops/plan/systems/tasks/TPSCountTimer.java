@@ -7,7 +7,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.container.TPS;
 import main.java.com.djrapitops.plan.systems.processing.TPSInsertProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;

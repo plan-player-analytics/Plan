@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.PlayerKill;
+import main.java.com.djrapitops.plan.data.container.PlayerKill;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;

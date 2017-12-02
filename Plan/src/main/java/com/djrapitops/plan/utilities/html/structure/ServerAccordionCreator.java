@@ -5,10 +5,10 @@
 package main.java.com.djrapitops.plan.utilities.html.structure;
 
 import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;

@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Ignore;

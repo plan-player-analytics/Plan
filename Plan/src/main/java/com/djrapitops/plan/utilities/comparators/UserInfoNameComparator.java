@@ -5,7 +5,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.UserInfo;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
 
 import java.util.Comparator;
 

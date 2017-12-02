@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.processing.ExecStatement;
 import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;

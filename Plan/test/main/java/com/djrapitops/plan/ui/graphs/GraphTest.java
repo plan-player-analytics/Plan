@@ -4,8 +4,8 @@
  */
 package main.java.com.djrapitops.plan.ui.graphs;
 
-import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.container.Session;
+import main.java.com.djrapitops.plan.data.container.TPS;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;

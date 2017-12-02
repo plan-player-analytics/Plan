@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.GeoInfo;
+import main.java.com.djrapitops.plan.data.container.GeoInfo;
 
 import java.util.Comparator;
 

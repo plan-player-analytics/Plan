@@ -5,7 +5,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.graphs;
 
-import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 
 import java.util.Collection;

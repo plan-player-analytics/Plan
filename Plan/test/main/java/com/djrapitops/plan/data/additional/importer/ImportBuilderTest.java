@@ -5,8 +5,8 @@
 package main.java.com.djrapitops.plan.data.additional.importer;
 
 import com.google.common.collect.ImmutableMap;
-import main.java.com.djrapitops.plan.data.PlayerKill;
-import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.container.PlayerKill;
+import main.java.com.djrapitops.plan.data.container.TPS;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.systems.processing.importing.ServerImportData;
 import main.java.com.djrapitops.plan.systems.processing.importing.UserImportData;

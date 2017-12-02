@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.utilities.comparators;
 
 import com.google.common.collect.Ordering;
-import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.data.container.Session;
+import main.java.com.djrapitops.plan.data.container.TPS;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
 import main.java.com.djrapitops.plan.settings.locale.Message;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;

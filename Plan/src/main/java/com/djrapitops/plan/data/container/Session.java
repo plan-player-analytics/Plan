@@ -1,5 +1,6 @@
-package main.java.com.djrapitops.plan.data;
+package main.java.com.djrapitops.plan.data.container;
 
+import main.java.com.djrapitops.plan.data.HasDate;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;

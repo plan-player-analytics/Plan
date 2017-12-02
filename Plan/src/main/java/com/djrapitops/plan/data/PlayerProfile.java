@@ -5,6 +5,10 @@
 package main.java.com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.api.TimeAmount;
+import main.java.com.djrapitops.plan.data.container.Action;
+import main.java.com.djrapitops.plan.data.container.GeoInfo;
+import main.java.com.djrapitops.plan.data.container.PlayerKill;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;

@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.html.graphs.line;
 
-import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.container.TPS;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 

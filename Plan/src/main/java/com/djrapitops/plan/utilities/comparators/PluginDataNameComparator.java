@@ -5,7 +5,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
 
 import java.util.Comparator;
 

@@ -1,14 +1,15 @@
 package main.java.com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.api.TimeAmount;
-import com.google.common.base.Objects;
-import main.java.com.djrapitops.plan.data.additional.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.container.Session;
+import main.java.com.djrapitops.plan.data.container.StickyData;
+import main.java.com.djrapitops.plan.data.container.TPS;
+import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
@@ -567,71 +568,5 @@ public class AnalysisData extends RawData {
 
     private long value(String key) {
         return analyzedValues.getOrDefault(key, 0L);
-    }
-}
-
-class StickyData {
-    private final double activityIndex;
-    private Integer messagesSent;
-    private Integer onlineOnJoin;
-
-    public StickyData(PlayerProfile player) {
-        activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms());
-        for (Action action : player.getActions()) {
-            if (messagesSent == null && action.getDoneAction() == Actions.FIRST_LOGOUT) {
-                String additionalInfo = action.getAdditionalInfo();
-                String[] split = additionalInfo.split(": ");
-                if (split.length == 2) {
-                    try {
-                        messagesSent = Integer.parseInt(split[1]);
-                    } catch (NumberFormatException ignored) {
-                    }
-                }
-            }
-            if (onlineOnJoin == null && action.getDoneAction() == Actions.FIRST_SESSION) {
-                String additionalInfo = action.getAdditionalInfo();
-                String[] split = additionalInfo.split(" ");
-                if (split.length == 3) {
-                    try {
-                        onlineOnJoin = Integer.parseInt(split[1]);
-                    } catch (NumberFormatException ignored) {
-                    }
-                }
-            }
-        }
-        if (messagesSent == null) {
-            messagesSent = 0;
-        }
-        if (onlineOnJoin == null) {
-            onlineOnJoin = 0;
-        }
-    }
-
-    public double distance(StickyData data) {
-        double num = 0;
-        num += Math.abs(data.activityIndex - activityIndex) * 2.0;
-        num += Math.abs(data.onlineOnJoin - onlineOnJoin) / 10.0;
-        num += Math.abs(data.messagesSent - messagesSent) / 10.0;
-
-        return num;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        StickyData that = (StickyData) o;
-        return Double.compare(that.activityIndex, activityIndex) == 0 &&
-                Objects.equal(messagesSent, that.messagesSent) &&
-                Objects.equal(onlineOnJoin, that.onlineOnJoin);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(activityIndex, messagesSent, onlineOnJoin);
-    }
-
-    public int getOnlineOnJoin() {
-        return onlineOnJoin;
     }
 }

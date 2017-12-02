@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.utilities.analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.UserInfo;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
 import main.java.com.djrapitops.plan.settings.Settings;
 
 import java.io.File;

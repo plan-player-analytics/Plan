@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
-import main.java.com.djrapitops.plan.data.GeoInfo;
+import main.java.com.djrapitops.plan.data.container.GeoInfo;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;

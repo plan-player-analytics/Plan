@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.additional;
+package main.java.com.djrapitops.plan.data.plugin;
 
 import com.djrapitops.plugin.api.config.ConfigNode;
 import com.djrapitops.plugin.api.utility.log.Log;

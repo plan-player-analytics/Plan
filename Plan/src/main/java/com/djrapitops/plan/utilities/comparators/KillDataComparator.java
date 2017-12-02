@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.PlayerKill;
+import main.java.com.djrapitops.plan.data.container.PlayerKill;
 
 import java.util.Comparator;
 

@@ -6,7 +6,7 @@ package main.java.com.djrapitops.plan.systems.processing.player;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.Action;
+import main.java.com.djrapitops.plan.data.container.Action;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 
 import java.sql.SQLException;

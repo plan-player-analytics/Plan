@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
-import main.java.com.djrapitops.plan.data.Action;
+import main.java.com.djrapitops.plan.data.container.Action;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 
