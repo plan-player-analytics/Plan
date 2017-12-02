@@ -10,12 +10,10 @@ import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Rsl1122
@@ -212,17 +210,7 @@ public class AnalysisUtils {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
         if (!players.isEmpty()) {
             for (PlayerProfile player : players) {
-                Stream<Session> allSessions = player.getAllSessions();
-                Optional<Session> first = allSessions.sorted(new SessionStartComparator())
-                        .findFirst();
-                if (!first.isPresent()) {
-                    continue;
-                }
-                long firstSession = first.get().getSessionStart();
                 for (long date = time; date >= time - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms()) {
-                    if (date < firstSession) {
-                        continue;
-                    }
                     double activityIndex = player.getActivityIndex(date);
                     String index = FormatUtils.readableActivityIndex(activityIndex)[1];
 
