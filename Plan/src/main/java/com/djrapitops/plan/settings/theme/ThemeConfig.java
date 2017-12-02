@@ -30,33 +30,7 @@ public class ThemeConfig extends Config {
     }
 
     private static List<String> getDefaults(String fileName) throws IOException {
-        String fileLocation = "themes/";
-
-        switch (fileName.toLowerCase()) {
-            case "mute":
-            case "lowsaturation":
-                fileLocation += "mute.yml";
-                break;
-            case "pastel":
-            case "brigth":
-            case "saturated":
-            case "high":
-                fileLocation += "pastel.yml";
-                break;
-            case "sepia":
-            case "brown":
-                fileLocation += "sepia.yml";
-                break;
-            case "grey":
-            case "gray":
-            case "greyscale":
-            case "grayscale":
-                fileLocation += "greyscale.yml";
-                break;
-            default:
-                fileLocation += "theme.yml";
-                break;
-        }
+        String fileLocation = getFileLocation(fileName);
 
         IPlan plugin = MiscUtils.getIPlan();
         try {
@@ -66,10 +40,36 @@ public class ThemeConfig extends Config {
         }
     }
 
+    private static String getFileLocation(String fileName) {
+        switch (fileName.toLowerCase()) {
+            case "mute":
+            case "lowsaturation":
+                return "themes/mute.yml";
+            case "pastel":
+            case "bright":
+            case "harsh":
+            case "saturated":
+            case "high":
+                return  "themes/pastel.yml";
+            case "sepia":
+            case "brown":
+                return  "themes/sepia.yml";
+            case "grey":
+            case "gray":
+            case "greyscale":
+            case "grayscale":
+                return  "themes/greyscale.yml";
+            default:
+                return "themes/theme.yml";
+        }
+    }
+
 
     private static File getConfigFile() throws IOException {
         File folder = MiscUtils.getIPlan().getDataFolder();
-        folder.mkdirs();
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
         File themeFile = new File(folder, "theme.yml");
         if (!themeFile.exists()) {
             themeFile.createNewFile();
