@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -30,6 +30,7 @@ import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
+import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 import main.java.com.djrapitops.plan.utilities.html.structure.InspectPluginsTabContentCreator;
 
@@ -110,6 +111,9 @@ public class BukkitInformationManager extends InformationManager {
             }
         } else {
             PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
+            if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                HtmlExport.exportPlayer(plugin, uuid);
+            }
         }
         plugin.addToProcessQueue(new Processor<UUID>(uuid) {
             @Override
@@ -289,7 +293,11 @@ public class BukkitInformationManager extends InformationManager {
                 cacheAnalysisHtml(html);
             }
         } else {
-            PageCache.cachePage("analysisPage:" + Plan.getServerUUID(), () -> new AnalysisPageResponse(html));
+            UUID serverUUID = Plan.getServerUUID();
+            PageCache.cachePage("analysisPage:" + serverUUID, () -> new AnalysisPageResponse(html));
+            if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                HtmlExport.exportServer(plugin, serverUUID);
+            }
         }
     }
 

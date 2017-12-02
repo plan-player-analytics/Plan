@@ -34,6 +34,7 @@ import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
+import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import net.md_5.bungee.api.ChatColor;
 
 import java.io.File;
@@ -141,6 +142,9 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
             Log.logDebug("Enable", "WebServer Initialization");
             Log.info(Locale.get(Msg.ENABLED).toString());
+            if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                RunnableFactory.createNew(new HtmlExport(this));
+            }
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.toLog(this.getClass().getName(), e);

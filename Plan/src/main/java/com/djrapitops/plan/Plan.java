@@ -62,6 +62,7 @@ import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
+import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -246,6 +247,9 @@ public class Plan extends BukkitPlugin implements IPlan {
             Log.info(Locale.get(Msg.ENABLED).toString());
             StaticHolder.saveInstance(ShutdownHook.class, this.getClass());
             new ShutdownHook(this);
+            if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                RunnableFactory.createNew(new HtmlExport(this));
+            }
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.toLog(this.getClass().getName(), e);

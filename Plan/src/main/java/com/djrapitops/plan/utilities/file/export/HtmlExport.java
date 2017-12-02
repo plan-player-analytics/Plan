@@ -4,60 +4,53 @@
  */
 package main.java.com.djrapitops.plan.utilities.file.export;
 
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Plan;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
+import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostHtmlWebAPI;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Class responsible for Html Export task.
  *
  * @author Rsl1122
  */
-public class HtmlExport extends AbsRunnable {
+public class HtmlExport extends SpecificExport {
 
     private final IPlan plugin;
-    private final boolean usingBungee;
-    private final boolean exportSpecificPage;
-
-    private String specificPage;
-
-    private final File outputFolder;
 
     public HtmlExport(IPlan plugin) {
         super("HtmlExportTask");
-        usingBungee = Check.isBungeeAvailable();
         this.plugin = plugin;
-
-        outputFolder = getFolder();
-        exportSpecificPage = false;
     }
 
-    public HtmlExport(IPlan plugin, String specificPage) {
-        super("HtmlExportTask");
-        usingBungee = Check.isBungeeAvailable();
-        this.plugin = plugin;
+    public static void exportServer(IPlan plugin, UUID serverUUID) {
+        try {
+            Optional<String> serverName = plugin.getDB().getServerTable().getServerName(serverUUID);
+            serverName.ifPresent(s -> RunnableFactory.createNew(new AnalysisExport(serverUUID, s)).runTaskAsynchronously());
+        } catch (SQLException e) {
+            Log.toLog(PostHtmlWebAPI.class.getClass().getName(), e);
+        }
+    }
 
-        outputFolder = getFolder();
-        exportSpecificPage = true;
-        this.specificPage = specificPage;
+    public static void exportPlayer(IPlan plugin, UUID playerUUID) {
+        try {
+            String playerName = plugin.getDB().getUsersTable().getPlayerName(playerUUID);
+            if (playerName != null) {
+                RunnableFactory.createNew(new PlayerExport(playerUUID, playerName)).runTaskAsynchronously();
+            }
+        } catch (SQLException e) {
+            Log.toLog(PostHtmlWebAPI.class.getClass().getName(), e);
+        }
     }
 
     @Override
@@ -73,6 +66,8 @@ public class HtmlExport extends AbsRunnable {
             exportPlugins();
 
             exportAvailableServerPages();
+            exportAvailablePlayers();
+            exportPlayersPage();
         } catch (IOException | SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
@@ -80,38 +75,33 @@ public class HtmlExport extends AbsRunnable {
         }
     }
 
+    private void exportPlayersPage() throws IOException {
+        PlayersPageResponse playersPageResponse = new PlayersPageResponse();
+
+        String html = playersPageResponse.getContent()
+                .replace("href=\"plugins/", "href=\"../plugins/")
+                .replace("href=\"css/", "href=\"../css/")
+                .replace("src=\"plugins/", "src=\"../plugins/")
+                .replace("src=\"js/", "src=\"../js/");
+        List<String> lines = Arrays.asList(html.split("\n"));
+
+        File htmlLocation = new File(outputFolder, "players");
+        htmlLocation.mkdirs();
+        File exportFile = new File(htmlLocation, "index.html");
+        export(exportFile, lines);
+    }
+
+    private void exportAvailablePlayers() throws SQLException, IOException {
+        for (Map.Entry<UUID, UserInfo> entry : plugin.getDB().getUsersTable().getUsers().entrySet()) {
+            exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
+        }
+    }
+
     private void exportAvailableServerPages() throws SQLException, IOException {
         Map<UUID, String> serverNames = plugin.getDB().getServerTable().getServerNames();
 
         for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
-            UUID serverUUID = entry.getKey();
-
-            Response response = PageCache.loadPage("analysisPage:" + serverUUID);
-            if (response == null) {
-                continue;
-            }
-
-            String html = response.getContent()
-                    .replace("href=\"plugins/", "href=\"../plugins/")
-                    .replace("href=\"css/", "href=\"../css/")
-                    .replace("src=\"plugins/", "src=\"../plugins/")
-                    .replace("src=\"js/", "src=\"../js/");
-
-            File htmlLocation = null;
-            if (usingBungee && serverUUID.equals(MiscUtils.getIPlan().getServerUuid())) {
-                htmlLocation = new File(outputFolder, "network");
-            } else {
-                String serverName = entry.getValue();
-                File serverFolder = getServerFolder();
-                htmlLocation = new File(serverFolder, serverName.replace(" ", "%20"));
-                html = html.replace("../", "../../");
-            }
-            htmlLocation.mkdirs();
-            File exportFile = new File(htmlLocation, "index.html");
-
-            List<String> lines = Arrays.asList(html.split("\n"));
-
-            export(exportFile, lines);
+            exportAvailableServerPage(entry.getKey(), entry.getValue());
         }
     }
 
@@ -122,13 +112,12 @@ public class HtmlExport extends AbsRunnable {
                 "web/css/style.css",
                 "web/css/themes/all-themes.css"
         };
-        copyFromJar(resources);
+        copyFromJar(resources, true);
     }
 
     private void exportJs() {
         String[] resources = new String[]{
                 "web/js/admin.js",
-                "web/js/demo.js",
                 "web/js/helpers.js",
                 "web/js/script.js",
                 "web/js/charts/activityPie.js",
@@ -145,7 +134,18 @@ public class HtmlExport extends AbsRunnable {
                 "web/js/charts/worldPie.js",
                 "web/js/charts/healthGauge.js"
         };
-        copyFromJar(resources);
+        copyFromJar(resources, false);
+
+        try {
+            String demo = FileUtil.getStringFromResource("web/js/demo.js")
+                    .replace("${defaultTheme}", Theme.getValue(ThemeVal.THEME_DEFAULT));
+            List<String> lines = Arrays.asList(demo.split("\n"));
+            File outputFolder = new File(this.outputFolder, "js");
+            outputFolder.mkdirs();
+            export(new File(outputFolder, "demo.js"), lines);
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     private void exportPlugins() {
@@ -160,58 +160,34 @@ public class HtmlExport extends AbsRunnable {
                 "web/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js",
                 "web/plugins/jquery-datatable/jquery.dataTables.js"
         };
-        copyFromJar(resources);
+        copyFromJar(resources, true);
     }
 
-    public File getFolder() {
-        String path = Settings.ANALYSIS_EXPORT_PATH.toString();
 
-        Log.logDebug("Export", "Path: " + path);
-        boolean isAbsolute = Paths.get(path).isAbsolute();
-        Log.logDebug("Export", "Absolute: " + (isAbsolute ? "Yes" : "No"));
-        if (isAbsolute) {
-            File folder = new File(path);
-            if (!folder.exists() || !folder.isDirectory()) {
-                folder.mkdirs();
-            }
-            return folder;
-        }
-        File dataFolder = Plan.getInstance().getDataFolder();
-        File folder = new File(dataFolder, path);
-        folder.mkdirs();
-        return folder;
-    }
-
-    private void copyFromJar(String[] resources) {
+    private void copyFromJar(String[] resources, boolean overwrite) {
         for (String resource : resources) {
             try {
-                copyFromJar(resource);
+                copyFromJar(resource, overwrite);
             } catch (IOException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
         }
     }
 
-    private void copyFromJar(String resource) throws IOException {
+    private void copyFromJar(String resource, boolean overwrite) throws IOException {
         String possibleFile = resource.replace("web/", "").replace("/", File.separator);
         List<String> lines = FileUtil.lines(plugin, new File(plugin.getDataFolder(), possibleFile), resource);
         String outputFile = possibleFile.replace("web/", "");
         File to = new File(outputFolder, outputFile);
         to.mkdirs();
         if (to.exists()) {
-            to.delete();
-            to.createNewFile();
+            if (overwrite) {
+                to.delete();
+                to.createNewFile();
+            } else {
+                return;
+            }
         }
         export(to, lines);
-    }
-
-    private void export(File to, List<String> lines) throws IOException {
-        Files.write(to.toPath(), lines, Charset.forName("UTF-8"));
-    }
-
-    public File getServerFolder() {
-        File server = new File(outputFolder, "server");
-        server.mkdirs();
-        return server;
     }
 }
