@@ -186,6 +186,10 @@ public class AnalysisUtils {
 
         double probability = 1.0;
 
+        if (similarM.isEmpty() && similarW.isEmpty()) {
+            return 0;
+        }
+
         if (!similarM.isEmpty()) {
             int stickM = 0;
             for (StickyData stickyData : stickyStuckM) {
@@ -206,6 +210,7 @@ public class AnalysisUtils {
 
             probability *= (stickW / similarW.size());
         }
+
         return probability;
     }
 
