@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.settings.theme;
 
 import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
@@ -36,6 +37,7 @@ public class ThemeConfig extends Config {
         try {
             return FileUtil.lines(plugin, fileLocation);
         } catch (IOException e) {
+            Log.error("Could not find theme " + fileLocation + ". Attempting to use default.");
             return FileUtil.lines(plugin, "themes/theme.yml");
         }
     }
@@ -50,15 +52,15 @@ public class ThemeConfig extends Config {
             case "harsh":
             case "saturated":
             case "high":
-                return  "themes/pastel.yml";
+                return "themes/pastel.yml";
             case "sepia":
             case "brown":
-                return  "themes/sepia.yml";
+                return "themes/sepia.yml";
             case "grey":
             case "gray":
             case "greyscale":
             case "grayscale":
-                return  "themes/greyscale.yml";
+                return "themes/greyscale.yml";
             default:
                 return "themes/theme.yml";
         }

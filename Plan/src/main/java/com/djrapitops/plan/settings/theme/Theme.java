@@ -28,42 +28,33 @@ public class Theme {
     public Theme() throws PlanEnableException {
         String themeName = Settings.THEME_BASE.toString();
         try {
-
             config = new ThemeConfig(themeName);
         } catch (IOException e) {
-            throw new PlanEnableException("Theme could not be loaded: " + themeName, e);
+            throw new PlanEnableException("Default theme could not be loaded.", e);
         }
     }
 
-    public String getColor(ThemeVal color) {
-        String path = color.getThemePath();
+    public String getColor(ThemeVal variable) {
+        String path = variable.getThemePath();
         try {
             String value = config.getString(path);
-            String returnValue = "";
 
-            if (value.isEmpty()) {
-                return value;
-            } else if (value.contains(".")) {
-                returnValue += "url(\"" + value + "\")";
+            if (value.contains(".")) {
+                return "url(\"" + value + "\")";
             } else {
-                returnValue = value;
+                return value;
             }
-
-            if (returnValue.isEmpty()) {
-                returnValue = color.getDefaultValue();
-            }
-            return returnValue;
         } catch (Exception | NoSuchFieldError e) {
-            Log.error("Something went wrong with getting color " + color.name() + " for: " + path);
+            Log.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
         }
-        return color.getDefaultValue();
+        return variable.getDefaultValue();
     }
 
     public String replaceThemeColors(String resourceString) {
         String replaced = resourceString;
-        List<ThemeVal> themeVariables = EnumUtility.getSupportedEnumValues(ThemeVal.class, "RED", "PINK", "PURPLE", "DEEP_PURPLE",
-                "INDIGO", "BLUE", "LIGHT_BLUE", "CYAN", "TEAL", "GREEN", "LIGHT_GREEN", "LIME", "YELLOW", "AMBER",
-                "ORANGE", "DEEP_ORANGE", "BROWN", "GREY", "BLUE_GREY", "BLACK", "WHITE",
+        List<ThemeVal> themeVariables = EnumUtility.getSupportedEnumValues(ThemeVal.class, "RED", "PINK", "PURPLE",
+                "DEEP_PURPLE", "INDIGO", "BLUE", "LIGHT_BLUE", "CYAN", "TEAL", "GREEN", "LIGHT_GREEN", "LIME",
+                "YELLOW", "AMBER", "ORANGE", "DEEP_ORANGE", "BROWN", "GREY", "BLUE_GREY", "BLACK", "WHITE",
                 "GRAPH_PUNCHCARD", "GRAPH_PLAYERS_ONLINE", "GRAPH_TPS_HIGH", "GRAPH_TPS_MED", "GRAPH_TPS_LOW",
                 "GRAPH_CPU", "GRAPH_RAM", "GRAPH_CHUNKS", "GRAPH_ENTITIES", "GRAPH_WORLD_PIE", "GRAPH_GM_PIE",
                 "GRAPH_ACTIVITY_PIE", "GRAPH_SERVER_PREF_PIE", "FONT_STYLESHEET", "FONT_FAMILY");
@@ -91,8 +82,8 @@ public class Theme {
         return config.getString(color.getThemePath());
     }
 
-    public static String getValue(ThemeVal color) {
-        return MiscUtils.getIPlan().getTheme().getThemeValue(color);
+    public static String getValue(ThemeVal variable) {
+        return MiscUtils.getIPlan().getTheme().getThemeValue(variable);
     }
 
     public static String replaceColors(String resourceString) {
