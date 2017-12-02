@@ -1,21 +1,21 @@
 /*
-*    Player Analytics Bukkit plugin for monitoring server activity.
-*    Copyright (C) 2017  Risto Lahtela / Rsl1122
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the Plan License. (licence.yml)
-*    Modified software can only be redistributed if allowed in the licence.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    License for more details.
-* 
-*    You should have received a copy of the License
-*    along with this program. 
-*    If not it should be visible on the distribution page.
-*    Or here
-*    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml
+ *    Player Analytics Bukkit plugin for monitoring server activity.
+ *    Copyright (C) 2017  Risto Lahtela / Rsl1122
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the Plan License. (licence.yml)
+ *    Modified software can only be redistributed if allowed in the licence.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    License for more details.
+ *
+ *    You should have received a copy of the License
+ *    along with this program.
+ *    If not it should be visible on the distribution page.
+ *    Or here
+ *    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml
  */
 package main.java.com.djrapitops.plan;
 
@@ -206,7 +206,12 @@ public class Plan extends BukkitPlugin implements IPlan {
 
             webServer.initServer();
             if (!webServer.isEnabled()) {
-                Log.error("WebServer was not successfully initialized. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
+                if (Settings.WEBSERVER_DISABLED.isTrue()) {
+                    Log.warn("WebServer was not initialized. (WebServer.DisableWebServer: true)");
+                } else {
+                    Log.error("WebServer was not initialized successfully. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
+
+                }
             }
             serverInfoManager.updateServerInfo();
 
@@ -248,7 +253,7 @@ public class Plan extends BukkitPlugin implements IPlan {
             StaticHolder.saveInstance(ShutdownHook.class, this.getClass());
             new ShutdownHook(this);
             if (Settings.ANALYSIS_EXPORT.isTrue()) {
-                RunnableFactory.createNew(new HtmlExport(this));
+                RunnableFactory.createNew(new HtmlExport(this)).runTaskAsynchronously();
             }
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");

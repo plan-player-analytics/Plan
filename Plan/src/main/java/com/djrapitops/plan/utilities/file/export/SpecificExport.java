@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Abstract Html Export Task.
  *
  * @author Rsl1122
  */
@@ -79,11 +79,7 @@ public abstract class SpecificExport extends AbsRunnable {
             return;
         }
 
-        String html = response.getContent()
-                .replace("href=\"plugins/", "href=\"../plugins/")
-                .replace("href=\"css/", "href=\"../css/")
-                .replace("src=\"plugins/", "src=\"../plugins/")
-                .replace("src=\"js/", "src=\"../js/");
+        String html = response.getContent().replace("../", "../../");
         List<String> lines = Arrays.asList(html.split("\n"));
 
         File htmlLocation = new File(getPlayerFolder(), name.replace(" ", "%20").replace(".", "%2E"));

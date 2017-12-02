@@ -48,7 +48,6 @@ Analysis:
   AutoRefreshPeriod: 60
   Export:
     Enabled: false
-    ExternalWebServerLinkProtocol: http
     DestinationFolder: 'Analysis Results'
 
 Data:

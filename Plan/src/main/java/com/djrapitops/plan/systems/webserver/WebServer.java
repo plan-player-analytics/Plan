@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.systems.webserver;
 
 import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
@@ -82,7 +83,12 @@ public class WebServer {
      * Starts up the WebServer in a new Thread Pool.
      */
     public void initServer() {
-        //Server is already enabled stop code
+        // Check if Bukkit WebServer has been disabled.
+        if (!Check.isBungeeAvailable() && Settings.WEBSERVER_DISABLED.isTrue()) {
+            return;
+        }
+
+        // Server is already enabled stop code
         if (enabled) {
             return;
         }
@@ -206,7 +212,7 @@ public class WebServer {
     }
 
     public String getAccessAddress() {
-        return getProtocol() + "://" + HtmlUtils.getIP();
+        return isEnabled() ? getProtocol() + "://" + HtmlUtils.getIP() : Settings.EXTERNAL_WEBSERVER_LINK.toString();
     }
 
     public WebAPIManager getWebAPI() {

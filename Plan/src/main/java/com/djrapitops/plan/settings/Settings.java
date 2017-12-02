@@ -28,6 +28,7 @@ public enum Settings {
     DISPLAY_SESSIONS_AS_TABLE("Customization.Display.SessionsAsTable"),
     APPEND_WORLD_PERC("Customization.Display.LargestWorldPercInSessionTitle"),
     ORDER_WORLD_PIE_BY_PERC("Customization.Display.OrderWorldPieByPercentage"),
+    WEBSERVER_DISABLED("WebServer.DisableWebServer"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),
@@ -54,7 +55,7 @@ public enum Settings {
     WEBSERVER_CERTIFICATE_KEYPASS("WebServer.Security.SSL-Certificate.KeyPass"),
     WEBSERVER_CERTIFICATE_STOREPASS("WebServer.Security.SSL-Certificate.StorePass"),
     WEBSERVER_CERTIFICATE_ALIAS("WebServer.Security.SSL-Certificate.Alias"),
-    EXTERNAL_WEBSERVER_LINK_PROTOCOL("Analysis.Export.ExternalWebServerLinkProtocol"),
+    EXTERNAL_WEBSERVER_LINK("WebServer.ExternalWebServerAddress"),
     //
     SERVER_NAME("Server.ServerName"),
     //
