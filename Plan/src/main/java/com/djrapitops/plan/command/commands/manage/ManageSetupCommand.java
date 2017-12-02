@@ -5,12 +5,12 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.settings.Permissions;
+import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.locale.Locale;
+import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestSetupWebAPI;
 import main.java.com.djrapitops.plan.utilities.Condition;
 

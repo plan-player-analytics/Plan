@@ -38,11 +38,18 @@ public class APIResponseHandler {
         String target = request.getTarget();
         String[] args = target.split("/");
 
-        if ("/favicon.ico".equals(target)) {
+        if ("/favicon.ico".equalsIgnoreCase(target)) {
             return PageCache.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
         }
+        if ("/debug".equalsIgnoreCase(target)) {
+            return new DebugPageResponse();
+        }
         if (target.endsWith(".css")) {
-            return PageCache.loadPage(target + "css", () -> new CSSResponse("main.css"));
+            return PageCache.loadPage(target + "css", () -> new CSSResponse(target));
+        }
+
+        if (target.endsWith(".js")) {
+            return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(target));
         }
 
         if (args.length < 2 || !"api".equals(args[1])) {

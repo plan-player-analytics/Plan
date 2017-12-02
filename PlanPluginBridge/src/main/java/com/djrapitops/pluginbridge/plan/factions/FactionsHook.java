@@ -1,8 +1,8 @@
 package com.djrapitops.pluginbridge.plan.factions;
 
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import main.java.com.djrapitops.plan.api.API;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to Factions and registering 4 data sources.
@@ -26,10 +26,7 @@ public class FactionsHook extends Hook {
 
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
-            addPluginDataSource(new FactionsFaction());
-            addPluginDataSource(new FactionsPower());
-            addPluginDataSource(new FactionsMaxPower());
-            addPluginDataSource(new FactionsTable());
+            addPluginDataSource(new FactionsData());
         }
     }
 }

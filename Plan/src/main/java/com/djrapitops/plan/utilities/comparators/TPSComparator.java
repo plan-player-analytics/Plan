@@ -1,10 +1,12 @@
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.container.TPS;
 
 import java.util.Comparator;
 
 /**
+ * Compares TPS objects so that earliest is first.
+ *
  * @author Rsl1122
  * @since 3.5.0
  */

@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -7,12 +7,14 @@ package main.java.com.djrapitops.plan.systems.info;
 import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.exceptions.*;
 import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.element.InspectContainer;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
+import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
@@ -20,7 +22,6 @@ import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
-import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalysisReadyWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
@@ -29,10 +30,11 @@ import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
+import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
+import main.java.com.djrapitops.plan.utilities.html.structure.InspectPluginsTabContentCreator;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -53,7 +55,7 @@ public class BukkitInformationManager extends InformationManager {
     private String analysisPluginsTab;
     private Long refreshDate;
 
-    private final Map<UUID, String> pluginsTabContents;
+    private final Map<UUID, String[]> pluginsTabContents;
 
     public BukkitInformationManager(Plan plugin) {
         this.plugin = plugin;
@@ -94,6 +96,10 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public void cachePlayer(UUID uuid) {
+        if (uuid == null) {
+            Log.debug("BukkitInformationManager.cachePlayer: UUID was null");
+            return;
+        }
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendInspectHtml(webServerAddress, uuid, getPlayerHtml(uuid));
@@ -105,6 +111,9 @@ public class BukkitInformationManager extends InformationManager {
             }
         } else {
             PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
+            if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                HtmlExport.exportPlayer(plugin, uuid);
+            }
         }
         plugin.addToProcessQueue(new Processor<UUID>(uuid) {
             @Override
@@ -132,13 +141,26 @@ public class BukkitInformationManager extends InformationManager {
             String serverName = plugin.getServerInfoManager().getServerName();
             HookHandler hookHandler = plugin.getHookHandler();
             List<PluginData> plugins = hookHandler.getAdditionalDataSources();
-            Map<String, Serializable> replaceMap = hookHandler.getAdditionalInspectReplaceRules(uuid);
-            String contents = HtmlStructure.createInspectPluginsTabContent(serverName, plugins, replaceMap);
-            cacheInspectPluginsTab(uuid, contents);
+            Map<PluginData, InspectContainer> containers = new HashMap<>();
+            for (PluginData pluginData : plugins) {
+                InspectContainer inspectContainer = new InspectContainer();
+                try {
+                    InspectContainer container = pluginData.getPlayerData(uuid, inspectContainer);
+                    if (container != null && !container.isEmpty()) {
+                        containers.put(pluginData, container);
+                    }
+                } catch (Exception e) {
+                    String sourcePlugin = pluginData.getSourcePlugin();
+                    Log.error("PluginData caused exception: " + sourcePlugin);
+                    Log.toLog(this.getClass().getName() + " " + sourcePlugin, e);
+                }
+            }
+
+            cacheInspectPluginsTab(uuid, InspectPluginsTabContentCreator.createContent(containers));
         }
     }
 
-    public void cacheInspectPluginsTab(UUID uuid, String contents) {
+    public void cacheInspectPluginsTab(UUID uuid, String[] contents) {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostInspectPluginsTabWebAPI.class).sendPluginsTab(webServerAddress, uuid, contents);
@@ -158,8 +180,8 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     @Override
-    public String getPluginsTabContent(UUID uuid) {
-        String calculating = HtmlStructure.createInspectPageTabContentCalculating();
+    public String[] getPluginsTabContent(UUID uuid) {
+        String[] calculating = HtmlStructure.createInspectPageTabContentCalculating();
         return pluginsTabContents.getOrDefault(uuid, calculating);
     }
 
@@ -271,7 +293,11 @@ public class BukkitInformationManager extends InformationManager {
                 cacheAnalysisHtml(html);
             }
         } else {
-            PageCache.cachePage("analysisPage:" + Plan.getServerUUID(), () -> new AnalysisPageResponse(html));
+            UUID serverUUID = Plan.getServerUUID();
+            PageCache.cachePage("analysisPage:" + serverUUID, () -> new AnalysisPageResponse(html));
+            if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                HtmlExport.exportServer(plugin, serverUUID);
+            }
         }
     }
 

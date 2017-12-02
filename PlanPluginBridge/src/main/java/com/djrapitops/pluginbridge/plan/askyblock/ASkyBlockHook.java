@@ -3,7 +3,7 @@ package com.djrapitops.pluginbridge.plan.askyblock;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to ASkyBlock and registering data sources.
@@ -29,10 +29,7 @@ public class ASkyBlockHook extends Hook {
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
             ASkyBlockAPI api = ASkyBlockAPI.getInstance();
-            addPluginDataSource(new ASkyBlockIslandName(api));
-            addPluginDataSource(new ASkyBlockIslandLevel(api));
-            addPluginDataSource(new ASkyBlockIslandResets(api));
-            addPluginDataSource(new ASkyBlockIslands(api));
+            addPluginDataSource(new ASkyBlockData(api));
         }
     }
 }

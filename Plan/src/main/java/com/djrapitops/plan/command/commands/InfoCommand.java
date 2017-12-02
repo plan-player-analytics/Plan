@@ -4,10 +4,10 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
-import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.settings.Permissions;
+import main.java.com.djrapitops.plan.settings.locale.Locale;
+import main.java.com.djrapitops.plan.settings.locale.Msg;
 
 /**
  * This subcommand is used to view the version and the database type in use.

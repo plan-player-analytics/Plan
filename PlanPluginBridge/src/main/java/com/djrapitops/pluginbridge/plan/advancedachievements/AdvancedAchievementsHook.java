@@ -5,7 +5,7 @@ import com.hm.achievement.AdvancedAchievements;
 import com.hm.achievement.api.AdvancedAchievementsAPI;
 import com.hm.achievement.api.AdvancedAchievementsBukkitAPI;
 import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -36,8 +36,7 @@ public class AdvancedAchievementsHook extends Hook {
             AdvancedAchievements aa = getPlugin(AdvancedAchievements.class);
             if (Integer.parseInt(Character.toString(aa.getDescription().getVersion().charAt(0))) >= 5) {
                 AdvancedAchievementsAPI aaAPI = AdvancedAchievementsBukkitAPI.linkAdvancedAchievements();
-                addPluginDataSource(new AdvancedAchievementsAchievements(aaAPI));
-                addPluginDataSource(new AdvancedAchievementsTable(aaAPI));
+                addPluginDataSource(new AdvancedAchievementsData(aaAPI));
             } else {
                 enabled = false;
             }

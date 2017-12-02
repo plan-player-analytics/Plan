@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.utilities.Format;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.settings.Settings;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 
@@ -210,5 +210,35 @@ public class FormatUtils {
      */
     public static String cutDecimals(double d) {
         return df.format(d);
+    }
+
+    public static String[] readableActivityIndex(double activityIndex) {
+        if (activityIndex >= 3.5) {
+            return new String[]{"green", "Very Active"};
+        } else if (activityIndex >= 1.75) {
+            return new String[]{"green", "Active"};
+        } else if (activityIndex >= 1.0) {
+            return new String[]{"lime", "Regular"};
+        } else if (activityIndex >= 0.5) {
+            return new String[]{"amber", "Irregular"};
+        } else {
+            return new String[]{"blue-gray", "Inactive"};
+        }
+    }
+
+    public static String formatIP(String ip) {
+        StringBuilder b = new StringBuilder();
+        int i = 0;
+        for (String part : ip.split("\\.")) {
+            if (i >= 3) {
+                break;
+            }
+
+            b.append(part).append('.');
+
+            i++;
+        }
+
+        return b.append("xx").toString();
     }
 }

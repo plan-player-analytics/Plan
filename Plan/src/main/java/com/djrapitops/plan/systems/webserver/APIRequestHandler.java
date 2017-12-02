@@ -4,11 +4,12 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 
@@ -31,11 +32,12 @@ public class APIRequestHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         Headers responseHeaders = exchange.getResponseHeaders();
         Request request = new Request(exchange);
+        String requestString = request.toString();
+        Benchmark.start("", requestString);
+        int responseCode = -1;
         try {
             Response response = responseHandler.getAPIResponse(request);
-            if (Settings.DEV_MODE.isTrue()) {
-                Log.debug(request.toString(), response.toString());
-            }
+            responseCode = response.getCode();
             response.setResponseHeaders(responseHeaders);
             response.send(exchange);
         } catch (Exception e) {
@@ -44,6 +46,9 @@ public class APIRequestHandler implements HttpHandler {
             }
         } finally {
             exchange.close();
+            if (Settings.DEV_MODE.isTrue()) {
+                Log.debug(requestString + " Response code: " + responseCode + " took " + Benchmark.stop("", requestString) + " ms");
+            }
         }
     }
 

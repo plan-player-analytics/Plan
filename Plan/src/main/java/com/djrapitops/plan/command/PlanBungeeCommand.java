@@ -3,11 +3,11 @@ package main.java.com.djrapitops.plan.command;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
 import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
-import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.command.commands.*;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.settings.Permissions;
+import main.java.com.djrapitops.plan.settings.locale.Locale;
+import main.java.com.djrapitops.plan.settings.locale.Msg;
 
 /**
  * TreeCommand for the /plan command, and all subcommands.

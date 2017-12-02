@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.container.TPS;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.processing.ExecStatement;
 import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
@@ -76,6 +76,10 @@ public class TPSTable extends Table {
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() throws SQLException {
+        return getTPSData(MiscUtils.getIPlan().getServerUuid());
+    }
+
+    public List<TPS> getTPSData(UUID serverUUID) throws SQLException {
         String sql = Select.all(tableName)
                 .where(columnServerID + "=" + serverTable.statementSelectServerID)
                 .toString();
@@ -83,7 +87,7 @@ public class TPSTable extends Table {
         return query(new QueryStatement<List<TPS>>(sql, 50000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, MiscUtils.getIPlan().getServerUuid().toString());
+                statement.setString(1, serverUUID.toString());
             }
 
             @Override

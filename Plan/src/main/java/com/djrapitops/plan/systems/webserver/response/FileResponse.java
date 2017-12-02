@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.IOException;
@@ -25,5 +26,22 @@ public class FileResponse extends Response {
         } catch (IOException e) {
             super.setContent(new NotFoundResponse(fileName + " was not found inside the .jar or /plugins/Plan/ folder").getContent());
         }
+    }
+
+    public static String format(String fileName) {
+        String[] split = fileName.split("/");
+        int i;
+        for (i = 0; i < split.length; i++) {
+            String s = split[i];
+            if (Verify.equalsOne(s, "css", "js", "plugins", "scss")) {
+                break;
+            }
+        }
+        StringBuilder b = new StringBuilder("web");
+        for (int j = i; j < split.length; j++) {
+            String s = split[j];
+            b.append("/").append(s);
+        }
+        return b.toString();
     }
 }

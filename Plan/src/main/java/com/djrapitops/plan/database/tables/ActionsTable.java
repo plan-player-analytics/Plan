@@ -7,7 +7,7 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.Action;
+import main.java.com.djrapitops.plan.data.container.Action;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.processing.ExecStatement;
 import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
@@ -190,6 +190,45 @@ public class ActionsTable extends UserIDTable {
                         }
                     }
                 }
+            }
+        });
+    }
+
+    public Map<UUID, List<Action>> getServerActions(UUID serverUUID) throws SQLException {
+        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String sql = "SELECT " +
+                columnActionID + ", " +
+                columnDate + ", " +
+                columnAdditionalInfo + ", " +
+                usersUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " WHERE " + serverTable.statementSelectServerID + "=" + columnServerID;
+
+        return query(new QueryStatement<Map<UUID, List<Action>>>(sql, 20000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Map<UUID, List<Action>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<Action>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
+
+                    List<Action> actions = map.getOrDefault(uuid, new ArrayList<>());
+
+                    long date = set.getLong(columnDate);
+                    Actions doneAction = Actions.getById(set.getInt(columnActionID));
+                    String additionalInfo = set.getString(columnAdditionalInfo);
+
+                    actions.add(new Action(date, doneAction, additionalInfo, -1));
+
+                    map.put(uuid, actions);
+                }
+                return map;
             }
         });
     }

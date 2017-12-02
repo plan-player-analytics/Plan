@@ -1,8 +1,7 @@
 package main.java.com.djrapitops.plan.utilities.html;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -52,8 +51,7 @@ public class HtmlUtils {
     }
 
     public static String getProtocol() {
-        WebServer uiServer = Plan.getInstance().getWebServer();
-        return uiServer.isEnabled() ? uiServer.getProtocol() : Settings.EXTERNAL_WEBSERVER_LINK_PROTOCOL.toString();
+        return MiscUtils.getIPlan().getWebServer().getProtocol();
     }
 
     public static String getRelativeInspectUrl(String playerName) {
@@ -94,7 +92,7 @@ public class HtmlUtils {
             string = Html.SPAN.parse(string);
         }
 
-        return string.replace("§r", "");
+        return string.replace("§r", "").replace("§l", "").replace("§m", "").replace("§n", "").replace("§o", "").replace("§k", "");
     }
 
     public static String separateWithQuotes(String... strings) {

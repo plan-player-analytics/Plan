@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.systems.cache;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
@@ -30,12 +30,11 @@ public class SessionCache {
     }
 
     public void cacheSession(UUID uuid, Session session) {
-        Log.debug("Caching a session: " + session.getSessionStart());
         activeSessions.put(uuid, session);
+        plugin.getInfoManager().cachePlayer(uuid);
     }
 
     public void endSession(UUID uuid, long time) {
-        Log.debug("Ending a session: " + time);
         try {
             Session session = activeSessions.get(uuid);
             if (session == null) {
@@ -46,8 +45,8 @@ public class SessionCache {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
-            Log.debug("Removing session from cache: " + time);
             activeSessions.remove(uuid);
+            plugin.getInfoManager().cachePlayer(uuid);
         }
     }
 

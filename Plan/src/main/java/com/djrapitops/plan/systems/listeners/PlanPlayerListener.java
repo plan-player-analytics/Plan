@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.systems.listeners;
 
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.processing.info.NetworkPageUpdateProcessor;
 import main.java.com.djrapitops.plan.systems.processing.player.*;
@@ -102,7 +102,7 @@ public class PlanPlayerListener implements Listener {
         cache.cacheSession(uuid, Session.start(time, world, gm));
         plugin.addToProcessQueue(
                 new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
-                        new IPUpdateProcessor(uuid, ip),
+                        new IPUpdateProcessor(uuid, ip, time),
                         new NameProcessor(uuid, playerName, displayName)
                 ),
                 new NetworkPageUpdateProcessor(plugin.getInfoManager())

@@ -1,8 +1,8 @@
 package com.djrapitops.pluginbridge.plan.mcmmo;
 
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import main.java.com.djrapitops.plan.api.API;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to MCMMO and registering data sources.
@@ -26,8 +26,7 @@ public class McmmoHook extends Hook {
 
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
-            addPluginDataSource(new McmmoInspectSkillTable());
-            addPluginDataSource(new McmmoAnalysisSkillTable());
+            addPluginDataSource(new McMmoData());
         }
     }
 }

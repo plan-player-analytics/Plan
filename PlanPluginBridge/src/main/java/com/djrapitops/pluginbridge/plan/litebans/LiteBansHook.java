@@ -3,7 +3,7 @@ package com.djrapitops.pluginbridge.plan.litebans;
 import com.djrapitops.pluginbridge.plan.Hook;
 import litebans.api.Database;
 import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to LiteBans and registering data
@@ -37,8 +37,7 @@ public class LiteBansHook extends Hook {
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
             LiteBansDatabaseQueries db = new LiteBansDatabaseQueries();
-            addPluginDataSource(new LiteBansBansTable(db));
-            addPluginDataSource(new LiteBansInspectBansTable(db));
+            addPluginDataSource(new LiteBansData(db));
         }
     }
 }

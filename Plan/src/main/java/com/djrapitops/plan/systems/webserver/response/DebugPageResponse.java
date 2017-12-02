@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -18,6 +18,8 @@ import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.*;
@@ -31,7 +33,7 @@ public class DebugPageResponse extends ErrorResponse {
 
     public DebugPageResponse() {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setTitle("Debug Information");
+        super.setTitle(Html.FONT_AWESOME_ICON.parse("bug") + " Debug Information");
         super.setParagraph(buildParagraph());
         replacePlaceholders();
     }
@@ -79,6 +81,30 @@ public class DebugPageResponse extends ErrorResponse {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+        content.append("<br><br>");
+
+        RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+        Properties properties = System.getProperties();
+
+        String osName = properties.getProperty("os.name");
+        String osVersion = properties.getProperty("os.version");
+        String osArch = properties.getProperty("os.arch");
+
+        String javaVendor = properties.getProperty("java.vendor");
+        String javaVersion = properties.getProperty("java.version");
+
+        String javaVMVendor = properties.getProperty("java.vm.vendor");
+        String javaVMName = properties.getProperty("java.vm.name");
+        String javaVMVersion = properties.getProperty("java.vm.version");
+        List<String> javaVMFlags = runtimeMxBean.getInputArguments();
+
+        content.append("**Operating System:** ").append(osName).append(" (").append(osArch)
+                .append(") version ").append(osVersion).append("<br>");
+
+        content.append("**Java Version:** ").append(javaVersion).append(", ").append(javaVendor).append("<br>");
+        content.append("**Java VM Version:** ").append(javaVMName).append(" version ").append(javaVMVersion)
+                .append(", ").append(javaVMVendor).append("<br>");
+        content.append("**Java VM Flags:** ").append(javaVMFlags).append("<br>");
 
         content.append("</pre>");
     }
@@ -105,6 +131,14 @@ public class DebugPageResponse extends ErrorResponse {
         Collection<ServerInfo> online = serverInfoManager.getOnlineBukkitServers();
         Collection<ServerInfo> bukkitServers = serverInfoManager.getBukkitServers();
 
+        if (!bukkitServers.isEmpty()) {
+            content.append("<p>If your issue is about Bungee-Bukkit connection relations, please include the following debug information of available servers as well:</p>");
+            for (ServerInfo info : bukkitServers) {
+                String link = Html.LINK.parse(info.getWebAddress() + "/debug", info.getWebAddress() + "/debug");
+                content.append("<p>").append(link).append("</p>");
+            }
+        }
+
         content.append("<pre>### Bungee Configuration<br>");
 
         content.append("Server name | Online | Address | UUID<br>")
@@ -121,8 +155,12 @@ public class DebugPageResponse extends ErrorResponse {
 
     private void appendBenchmarks(StringBuilder content) {
         content.append("<pre>### Benchmarks<br>&#96;&#96;&#96;<br>");
-        for (String line : Benchmark.getAverages().asStringArray()) {
-            content.append(line).append("<br>");
+        try {
+            for (String line : Benchmark.getAverages().asStringArray()) {
+                content.append(line).append("<br>");
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            content.append("ArrayIndexOutOfBoundsException on Benchmark.getAverages().asStringArray()");
         }
         content.append("&#96;&#96;&#96;</pre>");
     }

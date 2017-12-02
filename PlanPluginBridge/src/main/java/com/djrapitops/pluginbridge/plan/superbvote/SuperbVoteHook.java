@@ -4,7 +4,7 @@ import com.djrapitops.pluginbridge.plan.Hook;
 import io.minimum.minecraft.superbvote.SuperbVote;
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
 import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -33,8 +33,7 @@ public class SuperbVoteHook extends Hook {
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
             VoteStorage store = getPlugin(SuperbVote.class).getVoteStorage();
-            addPluginDataSource(new SuperbVoteVotes(store));
-            addPluginDataSource(new SuperbVoteVotesTable(store));
+            addPluginDataSource(new SuperbVoteData(store));
         }
     }
 }

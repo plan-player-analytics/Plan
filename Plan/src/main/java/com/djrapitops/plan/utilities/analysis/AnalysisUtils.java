@@ -1,22 +1,19 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.additional.AnalysisType;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.PlayerProfile;
+import main.java.com.djrapitops.plan.data.container.Session;
+import main.java.com.djrapitops.plan.data.container.StickyData;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Rsl1122
@@ -28,14 +25,6 @@ public class AnalysisUtils {
      */
     private AnalysisUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
-        int timeToActive = 10;
-        long twoWeeks = 1209600000;
-        return now - lastPlayed < twoWeeks
-                && loginTimes > 3
-                && playTime > 60 * timeToActive;
     }
 
     public static long getNewPlayers(List<Long> registered, long scale, long now) {
@@ -50,152 +39,12 @@ public class AnalysisUtils {
         return newPlayers;
     }
 
-    public static List<Long> transformSessionDataToLengths(Collection<Session> data) {
-        return data.stream()
-                .filter(Objects::nonNull)
-                .filter(session -> session.getLength() > 0)
-                .map(Session::getLength)
-                .collect(Collectors.toList());
-    }
-
-    public static String getTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
-        if (analysisType == null) {
-            return source.parseContainer("Err ", "Null Analysistype. ");
-        }
-        try {
-            Number total;
-            switch (analysisType) {
-                case INT_TOTAL:
-                    total = MathUtils.sumInt(getCorrectValues(uuids, source));
-                    break;
-                case LONG_TOTAL:
-                    total = MathUtils.sumLong(getCorrectValues(uuids, source));
-                    break;
-                case LONG_TIME_MS_TOTAL:
-                    total = MathUtils.sumLong(getCorrectValues(uuids, source));
-                    return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) total));
-                case DOUBLE_TOTAL:
-                    total = MathUtils.sumDouble(getCorrectValues(uuids, source));
-                    break;
-                default:
-                    return source.parseContainer("", "Wrong Analysistype specified: " + analysisType.name());
-            }
-            return source.parseContainer(analysisType.getModifier(), String.valueOf(total));
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
-            return logPluginDataCausedError(source, e);
-        }
-    }
-
-    private static Stream<Serializable> getCorrectValues(Collection<UUID> uuids, PluginData source) {
-        return uuids.stream()
-                .map(source::getValue)
-                .filter(value -> !value.equals(-1))
-                .filter(value -> !value.equals(-1L));
-    }
-
-    public static String getAverage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
-        if (analysisType == null) {
-            return source.parseContainer("Err ", "Null Analysistype. ");
-        }
-        try {
-            double average;
-            switch (analysisType) {
-                case LONG_EPOCH_MS_MINUS_NOW_AVG:
-                    final long now = MiscUtils.getTime();
-                    average = MathUtils.averageLong(getCorrectValues(uuids, source).map(value -> ((long) value) - now));
-                    return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
-                case LONG_AVG:
-                    long averageLong = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
-                    return source.parseContainer(analysisType.getModifier(), String.valueOf(averageLong));
-                case LONG_TIME_MS_AVG:
-                    average = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
-                    return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
-                case INT_AVG:
-                    average = MathUtils.averageInt(getCorrectValues(uuids, source).map(i -> (Integer) i));
-                    break;
-                case DOUBLE_AVG:
-                    average = MathUtils.averageDouble(getCorrectValues(uuids, source).map(i -> (Double) i));
-                    break;
-                default:
-                    return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
-            }
-            return source.parseContainer(analysisType.getModifier(), FormatUtils.cutDecimals(average));
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
-            return logPluginDataCausedError(source, e);
-        }
-    }
-
-    public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
-        if (analysisType != AnalysisType.BOOLEAN_PERCENTAGE) {
-            return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
-        }
-
-        try {
-            List<Boolean> tempList = getCorrectValues(uuids, source)
-                    .map(value -> (boolean) value)
-                    .collect(Collectors.toList());
-            long count = tempList.stream().filter(value -> value).count();
-            return source.parseContainer(analysisType.getModifier(), (((double) count / tempList.size()) * 100) + "%");
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
-            return logPluginDataCausedError(source, e);
-        }
-    }
-
-    public static String getBooleanTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
-        if (analysisType != AnalysisType.BOOLEAN_TOTAL) {
-            return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
-        }
-
-        try {
-            List<Boolean> tempList = getCorrectValues(uuids, source)
-                    .map(value -> (boolean) value)
-                    .collect(Collectors.toList());
-            long count = tempList.stream().filter(value -> value).count();
-            return source.parseContainer(analysisType.getModifier(), count + " / " + tempList.size());
-        } catch (Exception e) {
-            return logPluginDataCausedError(source, e);
-        }
-    }
-
-    private static String logPluginDataCausedError(PluginData source, Throwable e) {
-        String placeholder = StringUtils.remove(source.getPlaceholder(), '%');
-
-        Log.error("A PluginData-source caused an exception: " + placeholder);
-        Log.toLog("PluginData-source caused an exception: " + placeholder, e);
-        return source.parseContainer("", "Exception during calculation.");
-    }
-
-    /**
-     * Used to calculate unique players that have played within the time frame determined by scale.
-     *
-     * @param sessions All sessions sorted in a map by User's UUID
-     * @param scale    Scale (milliseconds), time before (Current epoch - scale) will be ignored.
-     * @return Amount of Unique joins within the time span.
-     */
-    public static int getUniqueJoins(Map<UUID, List<Session>> sessions, long scale) {
-        long now = MiscUtils.getTime();
-        long nowMinusScale = now - scale;
-
-        Set<UUID> uniqueJoins = new HashSet<>();
-        sessions.forEach((uuid, s) ->
-                s.stream()
-                        .filter(session -> session.getSessionStart() >= nowMinusScale)
-                        .map(session -> uuid)
-                        .forEach(uniqueJoins::add)
-        );
-
-        return uniqueJoins.size();
-    }
-
-    public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long scale) {
+    public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long after) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
-        long now = MiscUtils.getTime();
-        long nowMinusScale = now - scale;
 
         sessions.forEach((uuid, s) -> {
             for (Session session : s) {
-                if (scale != -1
-                        && session.getSessionStart() < nowMinusScale) {
+                if (session.getSessionStart() < after) {
                     continue;
                 }
 
@@ -216,22 +65,15 @@ public class AnalysisUtils {
         return total / numberOfDays;
     }
 
-    public static long getNewUsersPerDay(List<Long> registers, long scale) {
-        long now = MiscUtils.getTime();
-        long nowMinusScale = now - scale;
-
+    public static long getNewUsersPerDay(List<Long> registers, long after, long total) {
         Set<Integer> days = new HashSet<>();
         for (Long date : registers) {
-            if (scale != -1) {
-                if (date < nowMinusScale) {
-                    continue;
-                }
-                int day = getDayOfYear(date);
-                days.add(day);
+            if (date < after) {
+                continue;
             }
+            int day = getDayOfYear(date);
+            days.add(day);
         }
-
-        long total = registers.stream().filter(date -> date >= nowMinusScale).count();
         int numberOfDays = days.size();
 
         if (numberOfDays == 0) {
@@ -269,32 +111,30 @@ public class AnalysisUtils {
         }).collect(Collectors.toList());
     }
 
-    private static int getDayOfYear(Session session) {
+    public static int getDayOfYear(Session session) {
         return getDayOfYear(session.getSessionStart());
 
     }
 
-    private static int getDayOfYear(long date) {
+    public static int getDayOfYear(long date) {
         Calendar day = Calendar.getInstance();
         day.setTimeInMillis(date);
         return day.get(Calendar.DAY_OF_YEAR);
     }
 
-    public static long getTotalPlaytime(List<Session> sessions) {
-        return sessions.stream().mapToLong(Session::getLength).sum();
+    public static double getAveragePerDay(long after, long before, long total) {
+        return total / getNumberOfDaysBetween(after, before);
     }
 
-    public static long getLongestSessionLength(List<Session> sessions) {
-        Optional<Session> longest = sessions.stream().sorted(new SessionLengthComparator()).findFirst();
-        return longest.map(Session::getLength).orElse(0L);
-    }
-
-    public static long getLastSeen(List<Session> userSessions) {
-        OptionalLong max = userSessions.stream().mapToLong(Session::getSessionEnd).max();
-        if (max.isPresent()) {
-            return max.getAsLong();
+    public static long getNumberOfDaysBetween(long start, long end) {
+        long value = 0;
+        long test = start;
+        long day = TimeAmount.DAY.ms();
+        while (test < end) {
+            test += day;
+            value++;
         }
-        return 0;
+        return value;
     }
 
     public static void addMissingWorlds(WorldTimes worldTimes) {
@@ -311,5 +151,77 @@ public class AnalysisUtils {
         } catch (SQLException e) {
             Log.toLog("AnalysisUtils.addMissingWorlds", e);
         }
+    }
+
+    public static Map<UUID, List<Session>> sortSessionsByUser(Map<UUID, Map<UUID, List<Session>>> allSessions) {
+        Map<UUID, List<Session>> userSessions = new HashMap<>();
+
+        for (Map<UUID, List<Session>> sessions : allSessions.values()) {
+            for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
+                UUID uuid = entry.getKey();
+                List<Session> list = userSessions.getOrDefault(uuid, new ArrayList<>());
+                list.addAll(entry.getValue());
+                userSessions.put(uuid, list);
+            }
+        }
+
+        return userSessions;
+    }
+
+    public static double calculateProbabilityOfStaying(Set<StickyData> stickyMonthData, Set<StickyData> stickyW, Set<StickyData> stickyStuckM, Set<StickyData> stickyStuckW, PlayerProfile playerProfile) {
+        StickyData data = new StickyData(playerProfile);
+
+        Set<StickyData> similarM = new HashSet<>();
+        Set<StickyData> similarW = new HashSet<>();
+        for (StickyData stickyData : stickyMonthData) {
+            if (stickyData.distance(data) < 2.5) {
+                similarM.add(stickyData);
+            }
+        }
+        for (StickyData stickyData : stickyW) {
+            if (stickyData.distance(data) < 2.5) {
+                similarW.add(stickyData);
+            }
+        }
+
+        double probability = 1.0;
+
+        int stickM = 0;
+        for (StickyData stickyData : stickyStuckM) {
+            if (similarM.contains(stickyData)) {
+                stickM++;
+            }
+        }
+
+        probability *= (stickM / similarM.size());
+
+        int stickW = 0;
+        for (StickyData stickyData : stickyStuckW) {
+            if (similarW.contains(stickyData)) {
+                stickW++;
+            }
+        }
+
+        probability *= (stickW / similarW.size());
+        return probability;
+    }
+
+    public static TreeMap<Long, Map<String, Set<UUID>>> turnToActivityDataMap(long time, List<PlayerProfile> players) {
+        TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
+        if (!players.isEmpty()) {
+            for (PlayerProfile player : players) {
+                for (long date = time; date >= time - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms()) {
+                    double activityIndex = player.getActivityIndex(date);
+                    String index = FormatUtils.readableActivityIndex(activityIndex)[1];
+
+                    Map<String, Set<UUID>> map = activityData.getOrDefault(date, new HashMap<>());
+                    Set<UUID> uuids = map.getOrDefault(index, new HashSet<>());
+                    uuids.add(player.getUuid());
+                    map.put(index, uuids);
+                    activityData.put(date, map);
+                }
+            }
+        }
+        return activityData;
     }
 }

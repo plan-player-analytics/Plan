@@ -5,12 +5,14 @@
  */
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.UserInfo;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
 
 import java.util.Comparator;
 
 /**
- * @author Risto
+ * Comparator for UserInfo so that most recently seen is first.
+ *
+ * @author Rsl1122
  */
 public class UserInfoLastPlayedComparator implements Comparator<UserInfo> {
 

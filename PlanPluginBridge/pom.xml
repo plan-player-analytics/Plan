@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>PlanPluginBridge</artifactId>
-    <version>4.0.5</version>
+    <version>4.1.0</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>Plan</artifactId>
-            <version>4.0.5</version>
+            <version>4.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -37,12 +37,6 @@
             <groupId>com.hm</groupId>
             <artifactId>advanced.achievements</artifactId>
             <version>5.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.edge209</groupId>
-            <artifactId>ontime</artifactId>
-            <version>4.1.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -115,6 +109,42 @@
             <groupId>us.myles</groupId>
             <artifactId>viaversion</artifactId>
             <version>1.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.kingdoms</groupId>
+            <artifactId>kingdoms_demo</artifactId>
+            <version>13.3.40</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.confuser</groupId>
+            <artifactId>banmanager</artifactId>
+            <version>5.15.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.github.MCE-Plugins</groupId>-->
+            <!--<artifactId>MinigamesLib-parent</artifactId>-->
+            <!--<version>1.14.18</version>-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.github.ProtocolSupport</groupId>
+            <artifactId>ProtocolSupport</artifactId>
+            <version>4.28</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.net.fabiozumbi12.RedProtect</groupId>
+            <artifactId>RedProtect</artifactId>
+            <version>7.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.konsolas</groupId>
+            <artifactId>AAC</artifactId>
+            <version>3.3.5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

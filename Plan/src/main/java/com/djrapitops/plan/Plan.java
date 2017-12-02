@@ -1,21 +1,21 @@
 /*
-*    Player Analytics Bukkit plugin for monitoring server activity.
-*    Copyright (C) 2017  Risto Lahtela / Rsl1122
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the Plan License. (licence.yml)
-*    Modified software can only be redistributed if allowed in the licence.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    License for more details.
-* 
-*    You should have received a copy of the License
-*    along with this program. 
-*    If not it should be visible on the distribution page.
-*    Or here
-*    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml
+ *    Player Analytics Bukkit plugin for monitoring server activity.
+ *    Copyright (C) 2017  Risto Lahtela / Rsl1122
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the Plan License. (licence.yml)
+ *    Modified software can only be redistributed if allowed in the licence.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    License for more details.
+ *
+ *    You should have received a copy of the License
+ *    along with this program.
+ *    If not it should be visible on the distribution page.
+ *    Or here
+ *    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml
  */
 package main.java.com.djrapitops.plan;
 
@@ -40,12 +40,14 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.command.PlanCommand;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.locale.Locale;
+import main.java.com.djrapitops.plan.settings.locale.Msg;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
@@ -60,6 +62,7 @@ import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
+import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -86,6 +89,7 @@ public class Plan extends BukkitPlugin implements IPlan {
     private API api;
 
     private Config config;
+    private Theme theme;
 
     private ProcessingQueue processingQueue;
     private HookHandler hookHandler; // Manages 3rd party data sources
@@ -144,7 +148,9 @@ public class Plan extends BukkitPlugin implements IPlan {
     public void onEnable() {
         super.onEnable();
         try {
-            File configFile = new File(getDataFolder(), "config.yml");
+            File dataFolder = getDataFolder();
+            dataFolder.mkdirs();
+            File configFile = new File(dataFolder, "config.yml");
             config = new Config(configFile);
             config.copyDefaults(FileUtil.lines(this, "config.yml"));
             config.save();
@@ -179,6 +185,8 @@ public class Plan extends BukkitPlugin implements IPlan {
 
             new Locale(this).loadLocale();
 
+            theme = new Theme();
+
             Benchmark.start("Reading server variables");
             serverVariableHolder = new ServerVariableHolder(getServer());
             Benchmark.stop("Enable", "Reading server variables");
@@ -198,7 +206,12 @@ public class Plan extends BukkitPlugin implements IPlan {
 
             webServer.initServer();
             if (!webServer.isEnabled()) {
-                Log.error("WebServer was not successfully initialized. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
+                if (Settings.WEBSERVER_DISABLED.isTrue()) {
+                    Log.warn("WebServer was not initialized. (WebServer.DisableWebServer: true)");
+                } else {
+                    Log.error("WebServer was not initialized successfully. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
+
+                }
             }
             serverInfoManager.updateServerInfo();
 
@@ -239,6 +252,9 @@ public class Plan extends BukkitPlugin implements IPlan {
             Log.info(Locale.get(Msg.ENABLED).toString());
             StaticHolder.saveInstance(ShutdownHook.class, this.getClass());
             new ShutdownHook(this);
+            if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                RunnableFactory.createNew(new HtmlExport(this)).runTaskAsynchronously();
+            }
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.toLog(this.getClass().getName(), e);
@@ -559,5 +575,10 @@ public class Plan extends BukkitPlugin implements IPlan {
      */
     public API getApi() {
         return api;
+    }
+
+    @Override
+    public Theme getTheme() {
+        return theme;
     }
 }

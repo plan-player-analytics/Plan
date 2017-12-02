@@ -8,14 +8,18 @@ import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import main.java.com.djrapitops.plan.data.PlayerProfile;
+import main.java.com.djrapitops.plan.data.ServerProfile;
+import main.java.com.djrapitops.plan.data.container.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.database.tables.move.Version8TransferTable;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Class containing main logic for different data related save and load functionality.
@@ -110,7 +114,7 @@ public abstract class SQLDB extends Database {
 
             if (newDatabase) {
                 Log.info("New Database created.");
-                setVersion(12);
+                setVersion(13);
             }
 
             int version = getVersion();
@@ -137,6 +141,10 @@ public abstract class SQLDB extends Database {
                 ipsTable.alterTableV12();
                 setVersion(12);
             }
+            if (version < 13) {
+                ipsTable.alterTableV13();
+                setVersion(13);
+            }
         } catch (SQLException e) {
             throw new DatabaseInitException("Failed to set-up Database", e);
         }
@@ -156,7 +164,7 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     * Get all tables in a good order.
+     * Get all tables in a create order.
      *
      * @return Table array.
      */
@@ -220,6 +228,110 @@ public abstract class SQLDB extends Database {
     @Override
     public boolean isNewDatabase() throws SQLException {
         return versionTable.isNewDatabase();
+    }
+
+    @Override
+    public PlayerProfile getPlayerProfile(UUID uuid) throws SQLException {
+        if (!wasSeenBefore(uuid)) {
+            return null;
+        }
+
+        String playerName = usersTable.getPlayerName(uuid);
+        Optional<Long> registerDate = usersTable.getRegisterDate(uuid);
+
+        if (!registerDate.isPresent()) {
+            throw new IllegalStateException("User has been saved with null register date to a NOT NULL column");
+        }
+
+        PlayerProfile profile = new PlayerProfile(uuid, playerName, registerDate.get());
+        profile.setTimesKicked(usersTable.getTimesKicked(uuid));
+
+        Map<UUID, UserInfo> userInfo = userInfoTable.getAllUserInfo(uuid);
+        addUserInfoToProfile(profile, userInfo);
+
+        profile.setActions(actionsTable.getActions(uuid));
+        profile.setNicknames(nicknamesTable.getAllNicknames(uuid));
+        profile.setGeoInformation(ipsTable.getGeoInfo(uuid));
+
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
+        profile.setSessions(sessions);
+        profile.calculateWorldTimesPerServer();
+        profile.setTotalWorldTimes(worldTimesTable.getWorldTimesOfUser(uuid));
+
+        return profile;
+    }
+
+    private void addUserInfoToProfile(PlayerProfile profile, Map<UUID, UserInfo> userInfo) {
+        for (Map.Entry<UUID, UserInfo> entry : userInfo.entrySet()) {
+            UUID serverUUID = entry.getKey();
+            UserInfo info = entry.getValue();
+
+            profile.setRegistered(serverUUID, info.getRegistered());
+            if (info.isBanned()) {
+                profile.bannedOnServer(serverUUID);
+            }
+            if (info.isOpped()) {
+                profile.oppedOnServer(serverUUID);
+            }
+        }
+    }
+
+    @Override
+    public ServerProfile getServerProfile(UUID serverUUID) throws SQLException {
+        ServerProfile profile = new ServerProfile(serverUUID);
+
+        profile.setPlayers(getPlayers(serverUUID));
+        profile.setTps(tpsTable.getTPSData(serverUUID));
+        Optional<TPS> allTimePeak = tpsTable.getAllTimePeak(serverUUID);
+        if (allTimePeak.isPresent()) {
+            TPS peak = allTimePeak.get();
+            profile.setAllTimePeak(peak.getDate());
+            profile.setAllTimePeakPlayers(peak.getPlayers());
+        }
+        Optional<TPS> lastPeak = tpsTable.getPeakPlayerCount(serverUUID, MiscUtils.getTime() - (TimeAmount.DAY.ms() * 2L));
+        if (lastPeak.isPresent()) {
+            TPS peak = lastPeak.get();
+            profile.setLastPeakDate(peak.getDate());
+            profile.setLastPeakPlayers(peak.getPlayers());
+        }
+
+        profile.setCommandUsage(commandUseTable.getCommandUse(serverUUID));
+        profile.setServerWorldtimes(worldTimesTable.getWorldTimesOfServer(serverUUID));
+
+        return profile;
+    }
+
+    private List<PlayerProfile> getPlayers(UUID serverUUID) throws SQLException {
+        List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID);
+        Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
+        Map<UUID, List<Action>> actions = actionsTable.getServerActions(serverUUID);
+        Map<UUID, List<GeoInfo>> geoInfo = ipsTable.getAllGeoInfo();
+
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
+        Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
+        map.put(serverUUID, sessions);
+        killsTable.addKillsToSessions(map);
+        worldTimesTable.addWorldTimesToSessions(map);
+
+        List<PlayerProfile> players = new ArrayList<>();
+
+        for (UserInfo userInfo : serverUserInfo) {
+            UUID uuid = userInfo.getUuid();
+            PlayerProfile profile = new PlayerProfile(uuid, userInfo.getName(), userInfo.getRegistered());
+            profile.setTimesKicked(timesKicked.getOrDefault(uuid, 0));
+            if (userInfo.isBanned()) {
+                profile.bannedOnServer(serverUUID);
+            }
+            if (userInfo.isOpped()) {
+                profile.oppedOnServer(serverUUID);
+            }
+            profile.setActions(actions.getOrDefault(uuid, new ArrayList<>()));
+            profile.setGeoInformation(geoInfo.getOrDefault(uuid, new ArrayList<>()));
+            profile.setSessions(serverUUID, sessions.getOrDefault(uuid, new ArrayList<>()));
+
+            players.add(profile);
+        }
+        return players;
     }
 
     @Override
@@ -298,6 +410,10 @@ public abstract class SQLDB extends Database {
         try {
             if (!usingMySQL) {
                 connection.commit();
+            }
+        } catch (SQLException e) {
+            if (!e.getMessage().contains("cannot commit")) {
+                Log.toLog(this.getClass().getName(), e);
             }
         } finally {
             returnToPool(connection);

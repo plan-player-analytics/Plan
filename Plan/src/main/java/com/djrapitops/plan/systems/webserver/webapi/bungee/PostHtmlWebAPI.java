@@ -1,19 +1,20 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bungee;
 
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
+import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.util.HashMap;
@@ -54,9 +55,16 @@ public class PostHtmlWebAPI extends WebAPI {
                     map.put("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
 
                     PageCache.cachePage("inspectPage:" + uuid, () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), StrSubstitutor.replace(html, map)));
+                    if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                        HtmlExport.exportPlayer(plugin, UUID.fromString(uuid));
+                    }
                     break;
                 case "analysisPage":
-                    PageCache.cachePage("analysisPage:" + variables.get("sender"), () -> new AnalysisPageResponse(html));
+                    String sender = variables.get("sender");
+                    PageCache.cachePage("analysisPage:" + sender, () -> new AnalysisPageResponse(html));
+                    if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                        HtmlExport.exportServer(plugin, UUID.fromString(sender));
+                    }
                     break;
                 default:
                     return badRequest("Faulty Target");

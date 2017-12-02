@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.systems.processing.player;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.container.GeoInfo;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 
 import java.sql.SQLException;
@@ -19,10 +20,12 @@ import java.util.UUID;
 public class IPUpdateProcessor extends PlayerProcessor {
 
     private final String ip;
+    private final long time;
 
-    public IPUpdateProcessor(UUID uuid, String ip) {
+    public IPUpdateProcessor(UUID uuid, String ip, long time) {
         super(uuid);
         this.ip = ip;
+        this.time = time;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class IPUpdateProcessor extends PlayerProcessor {
         UUID uuid = getUUID();
         String country = GeolocationCache.getCountry(ip);
         try {
-            Plan.getInstance().getDB().getIpsTable().saveIP(uuid, ip, country);
+            Plan.getInstance().getDB().getIpsTable().saveGeoInfo(uuid, new GeoInfo(ip, country, time));
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }

@@ -70,7 +70,7 @@ public abstract class InformationManager {
         analysisNotification.put(serverUUID, notify);
     }
 
-    public abstract String getPluginsTabContent(UUID uuid);
+    public abstract String[] getPluginsTabContent(UUID uuid);
 
     public boolean isUsingAnotherWebServer() {
         return usingAnotherWebServer;

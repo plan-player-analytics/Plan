@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Plan | Network</title>
+    <meta name="description" content="Player Analysis window">
+    <meta name="author" content="Rsl1122">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset=utf-8>
+    <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./main.css">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet">
+    <script src="https://use.fontawesome.com/df48eb908b.js"></script>
+</head>
+<body>
+<header>
+    <div>
+        <div class="right fa-stack fa-lg" style="padding: 23px; margin:8px">
+            <i style="padding: 0; color: #fff; font-size: 100px;" class="fa fa-square fa-stack-1x"></i>
+            <i style="padding: 0; color: #348e0f; font-size: 95px;" class="fa fa-square fa-stack-1x"></i>
+            <i style="padding: 0; color: #fff; font-size: 60px;" class="fa fa-circle fa-stack-1x"></i>
+            <div style="margin: 0; padding: 0; width: 100%; height: 100%; position: relative; overflow: hidden; top: -6px;">
+                <i style="position: absolute; left: -4px; top: 8px; color: #348e0f; font-size: 40px;" class="fa fa-bar-chart fa-stack-1x"></i>
+            </div>
+        </div>
+        <p class="right">Player Analytics v.${version}</p>
+        <h1>${networkName} | Network</h1>
+    </div>
+</header>
+    
+<div class="headwrap">
+    <div class="sidenav">
+            <a class="nav-button" href="javascript:void(0)"><div title="Information" class="sidenav-button">
+                <div><i class="fa fa-info-circle"></i></div>
+            </div></a>
+            <a class="nav-button"><div title="Coming Soon" class="sidenav-button sidenav-button-disabled">
+                <div><i class="fa fa-area-chart"></i></div>
+            </div></a>
+        </div>
+<div class="content">
+            <div class="row">
+                <div class="column">
+                    <div class="box-header">
+                        <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
+                    </div>
+                    <div class="box-footer">
+                        <div id="playersOnline" style="width: 100%; height: 400px;"></div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="box-header">
+                        <h2><i class="fa fa-info-circle"></i> Information</h2>
+                    </div>
+                    <div class="box" style="height: 75%;">
+                        <p>${playersOnline} Players Online</p>
+                        <p>${playersTotal} Total Players</p>
+                        <p>${playersNewDay} New Players Today<br>${playersNewWeek} New Players This Week</p>
+                    </div>
+                </div>
+            </div>
+            ${contentServers}
+         </div>
+    </div>
+<script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="./js/playerGraph.js"></script>
+<script>
+        var playersOnlineSeries = {
+			name: 'Players Online',
+			data: ${playersOnlineSeries},
+			type: 'areaspline',
+			color: '${playersGraphColor}',
+            tooltip: {
+                valueDecimals: 0
+            }
+        };
+        playersChart('playersOnline', playersOnlineSeries, 3);
+</script>
+</body>
+</html>

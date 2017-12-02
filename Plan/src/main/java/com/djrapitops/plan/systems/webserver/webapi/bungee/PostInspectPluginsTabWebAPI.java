@@ -33,9 +33,17 @@ public class PostInspectPluginsTabWebAPI extends WebAPI {
 
         UUID uuid = UUID.fromString(uuidS);
         UUID serverUUID = UUID.fromString(variables.get("sender"));
+        String nav = variables.get("nav");
+        if (nav == null) {
+            return badRequest("nav not included");
+        }
         String html = variables.get("html");
+        if (html == null) {
+            return badRequest("html not included");
+        }
+        String[] content = new String[]{nav, html};
 
-        ((BungeeInformationManager) plugin.getInfoManager()).cachePluginsTabContent(serverUUID, uuid, html);
+        ((BungeeInformationManager) plugin.getInfoManager()).cachePluginsTabContent(serverUUID, uuid, content);
 
         return success();
     }
@@ -45,9 +53,10 @@ public class PostInspectPluginsTabWebAPI extends WebAPI {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
-    public void sendPluginsTab(String address, UUID uuid, String html) throws WebAPIException {
+    public void sendPluginsTab(String address, UUID uuid, String[] html) throws WebAPIException {
         addVariable("uuid", uuid.toString());
-        addVariable("html", html);
+        addVariable("nav", html[0]);
+        addVariable("html", html[1]);
         super.sendRequest(address);
     }
 }

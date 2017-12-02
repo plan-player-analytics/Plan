@@ -1,15 +1,16 @@
 package main.java.com.djrapitops.plan.systems.webserver;
 
 import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.locale.Locale;
+import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.*;
@@ -82,7 +83,12 @@ public class WebServer {
      * Starts up the WebServer in a new Thread Pool.
      */
     public void initServer() {
-        //Server is already enabled stop code
+        // Check if Bukkit WebServer has been disabled.
+        if (!Check.isBungeeAvailable() && Settings.WEBSERVER_DISABLED.isTrue()) {
+            return;
+        }
+
+        // Server is already enabled stop code
         if (enabled) {
             return;
         }
@@ -95,7 +101,7 @@ public class WebServer {
 
             if (!usingHttps) {
                 Log.infoColor("§eUser Authorization Disabled! (Not possible over http)");
-                server = HttpServer.create(new InetSocketAddress(port), 10);
+                server = HttpServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
             }
             if (plugin.getInfoManager().isUsingAnotherWebServer()) {
                 server.createContext("/", new APIRequestHandler(getWebAPI()));
@@ -141,7 +147,7 @@ public class WebServer {
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
             trustManagerFactory.init(keystore);
 
-            server = HttpsServer.create(new InetSocketAddress(port), 10);
+            server = HttpsServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
             SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(keyManagerFactory.getKeyManagers(), null/*trustManagerFactory.getTrustManagers()*/, null);
 
@@ -206,7 +212,7 @@ public class WebServer {
     }
 
     public String getAccessAddress() {
-        return getProtocol() + "://" + HtmlUtils.getIP();
+        return isEnabled() ? getProtocol() + "://" + HtmlUtils.getIP() : Settings.EXTERNAL_WEBSERVER_LINK.toString();
     }
 
     public WebAPIManager getWebAPI() {

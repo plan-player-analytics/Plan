@@ -1,9 +1,9 @@
 package com.djrapitops.pluginbridge.plan.essentials;
 
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.earth2me.essentials.Essentials;
 import main.java.com.djrapitops.plan.api.API;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -31,9 +31,7 @@ public class EssentialsHook extends Hook {
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
             Essentials ess = getPlugin(Essentials.class);
-            addPluginDataSource(new EssentialsJailed(ess));
-            addPluginDataSource(new EssentialsMuted(ess));
-            addPluginDataSource(new EssentialsWarps(ess));
+            addPluginDataSource(new EssentialsData(ess));
         }
     }
 }

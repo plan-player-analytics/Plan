@@ -6,7 +6,6 @@ import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Country;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.File;
@@ -105,7 +104,7 @@ public class GeolocationCache {
     /**
      * Checks if the DB exists, if not, it downloads it
      *
-     * @throws PlanEnableException when an error at download or saving the DB happens
+     * @throws IOException when an error at download or saving the DB happens
      */
     public static void checkDB() throws IOException {
         if (geolocationDB.exists()) {

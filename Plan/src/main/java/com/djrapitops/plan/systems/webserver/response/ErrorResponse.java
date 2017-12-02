@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.apache.commons.lang3.text.StrSubstitutor;
@@ -26,7 +26,7 @@ public class ErrorResponse extends Response {
 
     public ErrorResponse() {
         try {
-            setContent(Theme.replaceColors(FileUtil.getStringFromResource("error.html")));
+            setContent(Theme.replaceColors(FileUtil.getStringFromResource("web/error.html")));
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
         }
@@ -35,6 +35,8 @@ public class ErrorResponse extends Response {
     public void replacePlaceholders() {
         Map<String, String> placeHolders = new HashMap<>();
         placeHolders.put("title", title);
+        String[] split = title.split(">", 3);
+        placeHolders.put("titleText", split.length == 3 ? split[2] : title);
         placeHolders.put("paragraph", paragraph);
         placeHolders.put("version", MiscUtils.getPlanVersion());
 

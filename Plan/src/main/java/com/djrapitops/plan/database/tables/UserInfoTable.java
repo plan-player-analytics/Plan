@@ -4,10 +4,11 @@
  */
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.UserInfo;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.processing.ExecStatement;
 import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
@@ -121,39 +122,44 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public UserInfo getUserInfo(UUID uuid) throws SQLException {
-        return getUserInfo(uuid, Plan.getServerUUID());
+        return getAllUserInfo(uuid).get(MiscUtils.getIPlan().getServerUuid());
     }
 
-    public UserInfo getUserInfo(UUID uuid, UUID serverUUID) throws SQLException {
+    public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) throws SQLException {
         String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
         String usersNameColumn = usersTable + "." + usersTable.getColumnName() + " as name";
+        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
         String sql = "SELECT " +
                 tableName + "." + columnRegistered + ", " +
-                columnOP + ", " +
                 columnBanned + ", " +
-                usersNameColumn +
+                columnOP + ", " +
+                usersNameColumn + ", " +
+                serverUUIDColumn +
                 " FROM " + tableName +
                 " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
-                " AND " + columnServerID + "=" + serverTable.statementSelectServerID;
+                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID +
+                " WHERE " + columnUserID + "=" + usersTable.statementSelectID;
 
-        return query(new QueryStatement<UserInfo>(sql) {
+        return query(new QueryStatement<Map<UUID, UserInfo>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setString(2, serverUUID.toString());
             }
 
             @Override
-            public UserInfo processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
+            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
+                Map<UUID, UserInfo> map = new HashMap<>();
+                while (set.next()) {
                     long registered = set.getLong(columnRegistered);
                     boolean opped = set.getBoolean(columnOP);
                     boolean banned = set.getBoolean(columnBanned);
                     String name = set.getString("name");
-                    return new UserInfo(uuid, name, registered, opped, banned);
+
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    map.put(serverUUID, new UserInfo(uuid, name, registered, opped, banned));
                 }
-                return null;
+                return map;
             }
         });
     }
@@ -308,5 +314,32 @@ public class UserInfoTable extends UserIDTable {
                 return serverMap;
             }
         });
+    }
+
+    public int getServerUserCount(UUID serverUUID) {
+        try {
+            String sql = "SELECT " +
+                    " COUNT(" + columnRegistered + ") as c" +
+                    " FROM " + tableName +
+                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
+
+            return query(new QueryStatement<Integer>(sql, 20000) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, serverUUID.toString());
+                }
+
+                @Override
+                public Integer processResults(ResultSet set) throws SQLException {
+                    if (set.next()) {
+                        return set.getInt("c");
+                    }
+                    return 0;
+                }
+            });
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+            return 0;
+        }
     }
 }

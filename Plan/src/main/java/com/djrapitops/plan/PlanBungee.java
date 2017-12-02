@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -21,8 +21,10 @@ import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.command.PlanBungeeCommand;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.locale.Locale;
+import main.java.com.djrapitops.plan.settings.locale.Msg;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
@@ -32,6 +34,7 @@ import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
+import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import net.md_5.bungee.api.ChatColor;
 
 import java.io.File;
@@ -48,6 +51,7 @@ import java.util.UUID;
 public class PlanBungee extends BungeePlugin implements IPlan {
 
     private Config config;
+    private Theme theme;
 
     private WebServer webServer;
     private Database db;
@@ -86,6 +90,8 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             variableHolder = new ServerVariableHolder(getProxy());
 
             new Locale(this).loadLocale();
+
+            theme = new Theme();
 
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
@@ -136,6 +142,9 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
             Log.logDebug("Enable", "WebServer Initialization");
             Log.info(Locale.get(Msg.ENABLED).toString());
+            if (Settings.ANALYSIS_EXPORT.isTrue()) {
+                RunnableFactory.createNew(new HtmlExport(this)).runTaskAsynchronously();
+            }
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.toLog(this.getClass().getName(), e);
@@ -257,4 +266,8 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         return serverInfoManager.getServerUUID();
     }
 
+    @Override
+    public Theme getTheme() {
+        return theme;
+    }
 }

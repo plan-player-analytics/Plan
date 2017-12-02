@@ -31,6 +31,10 @@ public abstract class Response {
         this.type = ResponseType.HTML.get();
     }
 
+    protected String getHeader() {
+        return header;
+    }
+
     public String getResponse() {
         return header + "\r\n"
                 + "Content-Type: " + type + ";\r\n"

@@ -95,6 +95,9 @@ public class MathUtils {
      * @see #average(int, int)
      */
     public static long averageLong(long total, long size) {
+        if (size == 0) {
+            return -1L;
+        }
         return total / size;
     }
 
@@ -187,5 +190,12 @@ public class MathUtils {
      */
     public static double round(double number) {
         return Double.valueOf(decimalFormat.format(number));
+    }
+
+    public static double averageDouble(double amount, double size) {
+        if (size == 0) {
+            return -1;
+        }
+        return amount / size;
     }
 }

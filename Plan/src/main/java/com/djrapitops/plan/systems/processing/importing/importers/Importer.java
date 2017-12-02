@@ -9,14 +9,16 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.collect.ImmutableMap;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.UserInfo;
+import main.java.com.djrapitops.plan.data.container.GeoInfo;
+import main.java.com.djrapitops.plan.data.container.Session;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import main.java.com.djrapitops.plan.systems.processing.importing.ServerImportData;
 import main.java.com.djrapitops.plan.systems.processing.importing.UserImportData;
 import main.java.com.djrapitops.plan.systems.processing.importing.UserImportRefiner;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -161,7 +163,7 @@ public abstract class Importer {
         List<UserInfo> userInfo = new Vector<>();
         Map<UUID, List<String>> nickNames = new Hashtable<>();
         Map<UUID, List<Session>> sessions = new Hashtable<>();
-        Map<UUID, Map<String, String>> ips = new Hashtable<>();
+        Map<UUID, List<GeoInfo>> geoInfo = new Hashtable<>();
         Map<UUID, Integer> timesKicked = new Hashtable<>();
 
         userImportData.parallelStream().forEach(data -> {
@@ -177,7 +179,7 @@ public abstract class Importer {
             }
 
             nickNames.put(uuid, data.getNicknames());
-            ips.put(uuid, convertIPs(data));
+            geoInfo.put(uuid, convertGeoInfo(data));
             timesKicked.put(uuid, data.getTimesKicked());
             sessions.put(uuid, Collections.singletonList(toSession(data)));
         });
@@ -221,7 +223,7 @@ public abstract class Importer {
         new ImportExecutorHelper() {
             @Override
             void execute() throws SQLException {
-                db.getIpsTable().insertIPsAndGeolocations(ips);
+                db.getIpsTable().insertAllGeoInfo(geoInfo);
             }
         }.submit(service);
 
@@ -260,14 +262,14 @@ public abstract class Importer {
         return session;
     }
 
-    private Map<String, String> convertIPs(UserImportData userImportData) {
-        Map<String, String> convertedIPs;
-        List<String> ips = userImportData.getIps();
+    private List<GeoInfo> convertGeoInfo(UserImportData userImportData) {
+        long date = MiscUtils.getTime();
 
-        convertedIPs = ips.parallelStream()
-                .collect(Collectors.toMap(ip -> ip, GeolocationCache::getCountry, (a, b) -> b, HashMap::new));
-
-        return convertedIPs;
+        return userImportData.getIps().parallelStream()
+                .map(ip -> {
+                    String geoLoc = GeolocationCache.getCountry(ip);
+                    return new GeoInfo(ip, geoLoc, date);
+                }).collect(Collectors.toList());
     }
 
     private abstract class ImportExecutorHelper {

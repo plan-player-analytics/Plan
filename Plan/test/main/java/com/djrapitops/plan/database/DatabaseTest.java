@@ -7,7 +7,8 @@ package main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.data.container.*;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
@@ -24,7 +25,9 @@ import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -56,6 +59,10 @@ public class DatabaseTest {
     private Database db;
     private Database backup;
     private int rows;
+
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(7); // 5 seconds max per method tested
+
 
     @Before
     public void setUp() throws Exception {
@@ -133,7 +140,7 @@ public class DatabaseTest {
         assertEquals("MySQL", new MySQLDB(plan).getName());
     }
 
-    @Test
+    @Test(timeout = 3000)
     public void testSaveCommandUse() throws SQLException, DatabaseInitException {
         CommandUseTable commandUseTable = db.getCommandUseTable();
         Map<String, Integer> expected = new HashMap<>();
@@ -271,18 +278,18 @@ public class DatabaseTest {
 
         String expectedIP = "1.2.3.4";
         String expectedGeoLoc = "TestLocation";
+        long time = MiscUtils.getTime();
 
-        ipsTable.saveIP(uuid, expectedIP, expectedGeoLoc);
-        ipsTable.saveIP(uuid, expectedIP, expectedGeoLoc);
+        GeoInfo expected = new GeoInfo(expectedIP, expectedGeoLoc, time);
+        ipsTable.saveGeoInfo(uuid, expected);
+        ipsTable.saveGeoInfo(uuid, expected);
         commitTest();
 
-        List<String> ips = ipsTable.getIps(uuid);
-        assertEquals(1, ips.size());
-        assertEquals(expectedIP, ips.get(0));
-
-        List<String> geolocations = ipsTable.getGeolocations(uuid);
-        assertEquals(1, geolocations.size());
-        assertEquals(expectedGeoLoc, geolocations.get(0));
+        List<GeoInfo> getInfo = ipsTable.getGeoInfo(uuid);
+        assertEquals(1, getInfo.size());
+        GeoInfo actual = getInfo.get(0);
+        assertEquals(expected, actual);
+        assertEquals(time, actual.getLastUsed());
 
 
         Optional<String> result = ipsTable.getGeolocation(expectedIP);
@@ -304,8 +311,8 @@ public class DatabaseTest {
         assertEquals(1, nicknames.size());
         assertEquals(expected, nicknames.get(0));
 
-        List<String> allNicknames = nickTable.getAllNicknames(uuid);
-        assertEquals(nicknames, allNicknames);
+        Map<UUID, List<String>> allNicknames = nickTable.getAllNicknames(uuid);
+        assertEquals(nicknames, allNicknames.get(Plan.getServerUUID()));
     }
 
     @Test
@@ -416,25 +423,23 @@ public class DatabaseTest {
 
         commitTest();
 
-        Map<String, List<Session>> sessions = sessionsTable.getSessions(uuid);
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
 
-        for (Map.Entry<String, List<Session>> entry : sessions.entrySet()) {
-            String key = entry.getKey();
+        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
+            UUID key = entry.getKey();
             if (key == null) {
                 System.out.print("null");
-            } else if (key.isEmpty()) {
-                System.out.print("empty");
             } else {
                 System.out.print(key);
             }
             System.out.println(" " + entry.getValue());
         }
 
-        List<Session> savedSessions = sessions.get("ServerName");
+        List<Session> savedSessions = sessions.get(Plan.getServerUUID());
 
         assertNotNull(savedSessions);
         assertEquals(1, savedSessions.size());
-        assertNull(sessions.get(worlds.get(1)));
+        assertNull(sessions.get(UUID.randomUUID()));
 
         assertEquals(session, savedSessions.get(0));
 
@@ -462,6 +467,7 @@ public class DatabaseTest {
         assertEquals(uuid, userInfo.getUuid());
         assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
         assertEquals(123456789L, userInfo.getRegistered());
+        assertEquals(1, userInfoTable.getServerUserCount(Plan.getServerUUID()));
         assertEquals("Waiting for Update..", userInfo.getName());
         assertFalse(userInfo.isBanned());
         assertFalse(userInfo.isOpped());
@@ -576,7 +582,7 @@ public class DatabaseTest {
 
         sessionsTable.saveSession(uuid, session);
         nicknamesTable.saveUserName(uuid, "TestNick");
-        ipsTable.saveIP(uuid, "1.2.3.4", "TestLoc");
+        ipsTable.saveGeoInfo(uuid, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
         actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(uuid));
@@ -586,8 +592,7 @@ public class DatabaseTest {
         assertFalse(usersTable.isRegistered(uuid));
         assertFalse(userInfoTable.isRegistered(uuid));
         assertTrue(nicknamesTable.getNicknames(uuid).isEmpty());
-        assertTrue(ipsTable.getGeolocations(uuid).isEmpty());
-        assertTrue(ipsTable.getIps(uuid).isEmpty());
+        assertTrue(ipsTable.getGeoInfo(uuid).isEmpty());
         assertTrue(sessionsTable.getSessions(uuid).isEmpty());
         assertTrue(actionsTable.getActions(uuid).isEmpty());
     }
@@ -612,8 +617,7 @@ public class DatabaseTest {
         assertFalse(userInfoTable.isRegistered(uuid));
 
         assertTrue(nicknamesTable.getNicknames(uuid).isEmpty());
-        assertTrue(ipsTable.getGeolocations(uuid).isEmpty());
-        assertTrue(ipsTable.getIps(uuid).isEmpty());
+        assertTrue(ipsTable.getGeoInfo(uuid).isEmpty());
         assertTrue(sessionsTable.getSessions(uuid).isEmpty());
         assertTrue(actionsTable.getActions(uuid).isEmpty());
         assertTrue(db.getCommandUse().isEmpty());
@@ -647,7 +651,7 @@ public class DatabaseTest {
 
         sessionsTable.saveSession(uuid, session);
         nicknamesTable.saveUserName(uuid, "TestNick");
-        ipsTable.saveIP(uuid, "1.2.3.4", "TestLoc");
+        ipsTable.saveGeoInfo(uuid, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
         actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(uuid));
@@ -793,8 +797,7 @@ public class DatabaseTest {
         assertTrue(userInfoTable.isRegistered(uuid));
 
         assertFalse(nicknamesTable.getNicknames(uuid).isEmpty());
-        assertFalse(ipsTable.getGeolocations(uuid).isEmpty());
-        assertFalse(ipsTable.getIps(uuid).isEmpty());
+        assertFalse(ipsTable.getGeoInfo(uuid).isEmpty());
         assertFalse(sessionsTable.getSessions(uuid).isEmpty());
         assertFalse(actionsTable.getActions(uuid).isEmpty());
         assertFalse(backup.getCommandUse().isEmpty());

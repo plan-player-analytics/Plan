@@ -8,10 +8,10 @@ package main.java.com.djrapitops.plan.systems.info.server;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
+import main.java.com.djrapitops.plan.settings.Settings;
 
 import java.io.IOException;
 import java.sql.SQLException;

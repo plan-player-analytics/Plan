@@ -1,7 +1,7 @@
 package com.djrapitops.pluginbridge.plan;
 
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.plugin.HookHandler;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;

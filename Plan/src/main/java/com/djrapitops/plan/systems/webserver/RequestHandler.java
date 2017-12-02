@@ -4,12 +4,13 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.response.PromptAuthorizationResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 
@@ -32,12 +33,12 @@ public class RequestHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         Headers responseHeaders = exchange.getResponseHeaders();
         Request request = new Request(exchange);
-
+        String requestString = request.toString();
+        Benchmark.start("", requestString);
+        int responseCode = -1;
         try {
             Response response = responseHandler.getResponse(request);
-            if (Settings.DEV_MODE.isTrue()) {
-                Log.debug(request.toString(), response.toString());
-            }
+            responseCode = response.getCode();
             if (response instanceof PromptAuthorizationResponse) {
                 responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\";");
             }
@@ -45,10 +46,13 @@ public class RequestHandler implements HttpHandler {
             response.send(exchange);
         } catch (IOException e) {
             if (Settings.DEV_MODE.isTrue()) {
-                Log.toLog(this.getClass().getName(), e);
+                e.printStackTrace();
             }
         } finally {
             exchange.close();
+            if (Settings.DEV_MODE.isTrue()) {
+                Log.debug(requestString + " Response code: " + responseCode+" took "+Benchmark.stop("", requestString)+" ms");
+            }
         }
     }
 

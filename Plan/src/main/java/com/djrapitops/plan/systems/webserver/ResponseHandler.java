@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -47,12 +47,11 @@ public class ResponseHandler extends APIResponseHandler {
                 return getAPIResponse(request);
             }
             if (target.endsWith(".css")) {
-                return PageCache.loadPage(target + "css", () -> new CSSResponse("main.css"));
+                return PageCache.loadPage(target + "css", () -> new CSSResponse(target));
             }
 
             if (target.endsWith(".js")) {
-                String fileName = args[args.length - 1];
-                return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(fileName));
+                return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(target));
             }
 
             UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
@@ -207,8 +206,17 @@ public class ResponseHandler extends APIResponseHandler {
             return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        plugin.getInfoManager().cachePlayer(uuid);
-        return PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
+        if (plugin.getDB().wasSeenBefore(uuid)) {
+            plugin.getInfoManager().cachePlayer(uuid);
+            Response response = PageCache.loadPage("inspectPage: " + uuid);
+            // TODO Create a new method that places NotFoundResponse to PageCache instead.
+            if (response == null || response.getContent().contains("No Bukkit Servers were online to process this request")) {
+                PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
+                response = PageCache.loadPage("inspectPage: " + uuid);
+            }
+            return response;
+        }
+        return new NotFoundResponse("Player has not played on this server.");
     }
 
     private Response notFoundResponse() {

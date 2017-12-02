@@ -5,6 +5,7 @@
  */
 package main.java.com.djrapitops.plan.data;
 
+import main.java.com.djrapitops.plan.data.container.Session;
 import org.junit.Before;
 
 /**

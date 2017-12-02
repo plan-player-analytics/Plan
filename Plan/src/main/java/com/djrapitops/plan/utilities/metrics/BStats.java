@@ -4,7 +4,7 @@ package main.java.com.djrapitops.plan.utilities.metrics;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.settings.Settings;
 
 import java.util.HashMap;
 import java.util.Map;

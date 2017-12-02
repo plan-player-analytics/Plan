@@ -24,6 +24,8 @@ Plugin:
 # -----------------------------------------------------
 WebServer:
   Port: 8804
+  # InternalIP usually does not need to be changed, only change it if you know what you're doing!
+  # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
   InternalIP: 0.0.0.0
   Security:
     SSL-Certificate:
@@ -31,6 +33,12 @@ WebServer:
       KeyPass: 'default'
       StorePass: 'default'
       Alias: 'alias'
+  # For those that want to serve Html from their own WebServer instead.
+  # Set up Html Export (https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/External-WebServer-Use)
+  # ATTENTION: On BungeeCord systems it is not possible to disable the WebServer on the plugin due to WebAPI requirements.
+  # If the WebServer is disabled with this setting BungeeCord systems will cease to function.
+  DisableWebServer: false
+  ExternalWebServerAddress: "https://www.example.address"
 # -----------------------------------------------------
 Database:
   Type: SQLite
@@ -52,10 +60,14 @@ Commands:
 
 Analysis:
   AutoRefreshPeriod: 60
+  Active:
+    # Minutes a player should play per week to be considered active
+    PlaytimeThreshold: 30
+    # How many days player should join per week to be considered active
+    LoginThreshold: 2
   LogProgress: true
   Export:
     Enabled: false
-    ExternalWebServerLinkProtocol: http
     DestinationFolder: 'Analysis Results'
 Data:
   Commands:
@@ -66,6 +78,12 @@ Customization:
   UseServerTime: true
   Display:
     SessionsAsTable: false
+    LargestWorldPercInSessionTitle: false
+    # By Default WorldPie is ordered alphabetically, colors are still determined alphabetically.
+    OrderWorldPieByPercentage: false
+    MaxSessions: 50
+    MaxPlayers: 2500
+    MaxPlayersPlayersPage: 25000
   Formatting:
     DecimalPoints: '#.##'
     TimeAmount:
@@ -85,41 +103,15 @@ Customization:
 # -----------------------------------------------------
 # More information about Themes:
 # https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Themes
+#
+# Since 4.1.0 colors are set in theme.yml
 # -----------------------------------------------------
 Theme:
   Base: Default
-  Font:
-    FontStyleSheet: https://fonts.googleapis.com/css?family=Quicksand:300,400
-    FontFamily: "'Quicksand', sans-serif"
-    Color:
-      Dark: Base
-      Light: Base
-  Colors:
-    Main: Base
-    Main-Dark: Base
-    Secondary: Base
-    Secondary-Dark: Base
-    Tertiary: Base
-    Background: Base
-    Table-Light: Base
-    Table-Dark: Base
   Graphs:
-    PunchCard: Base
-    PlayersOnline: Base
     TPS:
       High-Threshold: 18
       Medium-Threshold: 10
-      High: Base
-      Medium: Base
-      Low: Base
-    CPU: Base
-    RAM: Base
-    Chunks: Base
-    Entities: Base
-    WorldPie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
-    GMDrilldown: '"#438c99", "#639A67", "#D8EBB5", "#D9BF77"'
-    ActivityPie: '"#228B22", "#A9A9A9", "#808080", "#951800"'
-    ServerPreferencePie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
 # -----------------------------------------------------
 Plugins:
   Factions:

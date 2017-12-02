@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.settings.Permissions;
+import main.java.com.djrapitops.plan.settings.locale.Locale;
+import main.java.com.djrapitops.plan.settings.locale.Msg;
 
 /**
  * This subcommand is used to reload the plugin.
@@ -34,7 +35,14 @@ public class ReloadCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        plugin.reloadPlugin(true);
+        try {
+            plugin.reloadPlugin(true);
+        } catch (Exception e) {
+            sender.sendMessage("§cSomething went wrong during reload of the plugin, a restart is recommended.");
+            String address = plugin.getWebServer().getAccessAddress() + "/debug";
+            sender.sendLink("More info can be found at ", address, address);
+            Log.toLog(this.getClass().getName(), e);
+        }
         sender.sendMessage(Locale.get(Msg.CMD_INFO_RELOAD_COMPLETE).toString());
         return true;
     }

@@ -28,11 +28,16 @@ public enum Html {
     COLOR_E("<span class=\"yellow\">"),
     COLOR_F("<span class=\"white\">"),
     //
-    FONT_AWESOME_ICON("<i class=\"fa fa-${0}\" aria-hidden=\"true\"></i>"),
+    FONT_AWESOME_ICON("<i class=\"fa fa-${0}\"></i>"),
+    FA_COLORED_ICON("<i class=\"col-${0} fa fa-${1}\"></i>"),
+    GREEN_THUMB("<i class=\"fa fa-thumbs-up g\"></i>"),
+    YELLOW_FLAG("<i class=\"fa fa-flag o\"></i>"),
+    RED_WARN("<i class=\"fa fa-exclamation-circle r\"></i>"),
     SPAN("${0}</span>"),
     BUTTON("<a class=\"button\" href=\"${0}\">${1}</a>"),
     BUTTON_CLASS("class=\"button\""),
     LINK("<a class=\"link\" href=\"${0}\">${1}</a>"),
+    LINK_A("<a href=\"${0}\">${1}</a>"),
     LINK_TOOLTIP("<a title=\"${2}\" class=\"link\" href=\"${0}\">${1}</a>"),
     LINK_EXTERNAL("<a class=\"link\" target=\"_blank\" href=\"${0}\">${1}</a>"),
     LINK_CLASS("class=\"link\""),
@@ -48,12 +53,33 @@ public enum Html {
     ROW("<div class=\"row\">${0}</div>"),
     //
     TABLE_END("</tbody></table>"),
-    TABLE_START_2("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th></tr></thead><tbody>"),
-    TABLE_START_3("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
-    TABLE_START_4("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th><th>${3}</th></tr></thead><tbody>"),
+    TABLE("<table class=\"table table-striped\">"),
+    TABLE_SCROLL("<table class=\"table table-striped scrollbar\">"),
+    TABLE_COLORED("<table class=\"bg-${0} table table-striped\">"),
+    TABLE_HEAD("<thead>${0}</thead>"),
+    TABLE_BODY("<tbody>${0}</tbody>"),
+    TABLE_START_2("<table class=\"table table-striped\"><thead><tr><th>${0}</th><th>${1}</th></tr></thead><tbody>"),
+    TABLE_START_3("<table class=\"table table-striped\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
+    TABLE_START_4("<table class=\"table table-striped\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th><th>${3}</th></tr></thead><tbody>"),
     TABLE_SESSIONS(DIV_W_CLASS_STYLE.parse("box-footer scrollbar", "padding: 2px;",
             TABLE_START_4.parse("Player", "Started", "Length", "World - Time") + "${3}" + TABLE_END.parse())
     ),
+    TABLE_PLAYERS("<table class=\"table table-bordered table-striped table-hover player-table dataTable\"><thead><tr>" +
+            "<th><i class=\"fa fa-user\"></i> Name</th>" +
+            "<th><i class=\"fa fa-check\"></i> Activity Index</th>" +
+            "<th><i class=\"fa fa-clock-o\"></i> Playtime</th>" +
+            "<th><i class=\"fa fa-calendar-plus-o\"></i> Sessions</th>" +
+            "<th><i class=\"fa fa-user-plus\"></i> Registered</th>" +
+            "<th><i class=\"fa fa-calendar-check-o\"></i> Last Seen</th>" +
+            "<th><i class=\"fa fa-globe\"></i> Geolocation</th></thead>" +
+            "<tfoot><tr><th><i class=\"fa fa-user\"></i> Name</th>" +
+            "<th><i class=\"fa fa-check\"></i> Activity Index</th>" +
+            "<th><i class=\"fa fa-clock-o\"></i> Playtime</th>" +
+            "<th><i class=\"fa fa-calendar-plus-o\"></i> Sessions</th>" +
+            "<th><i class=\"fa fa-user-plus\"></i> Registered</th>" +
+            "<th><i class=\"fa fa-calendar-check-o\"></i> Last Seen</th>" +
+            "<th><i class=\"fa fa-globe\"></i> Geolocation</th>" +
+            "</tr></tfoot><tbody>${0}</tbody></table>"),
     TABLE_SESSIONS_START(TABLE_START_3.parse("Session Started", "Session Ended", "Session Length")),
     TABLE_KILLS_START(TABLE_START_3.parse(FONT_AWESOME_ICON.parse("clock-o") + " Time", "Killed", "With")),
     TABLE_FACTIONS_START(TABLE_START_4.parse(FONT_AWESOME_ICON.parse("flag") + " Faction", FONT_AWESOME_ICON.parse("bolt") + " Power", FONT_AWESOME_ICON.parse("map-o") + " Land", FONT_AWESOME_ICON.parse("user") + " Leader")),
@@ -61,7 +87,8 @@ public enum Html {
     TABLELINE_2("<tr><td><b>${0}</b></td><td>${1}</td></tr>"),
     TABLELINE_3("<tr><td><b>${0}</b></td><td>${1}</td><td>${2}</td></tr>"),
     TABLELINE_4("<tr><td><b>${0}</b></td><td>${1}</td><td>${2}</td><td>${3}</td></tr>"),
-    TABLELINE_PLAYERS("<tr><td>${0}</td><td>${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td>${4}</td><td sorttable_customkey=\"${5}\">${6}</td>" + "<td sorttable_customkey=\"${7}\">${8}</td><td>${9}</td></tr>"),
+    TABLELINE_PLAYERS("<tr><td>${0}</td><td>${1}</td><td data-order=\"${2}\">${3}</td><td>${4}</td><td data-order=\"${5}\">${6}</td>" + "<td data-order=\"${7}\">${8}</td><td>${9}</td></tr>"),
+    TABLELINE_PLAYERS_PLAYERS_PAGE("<tr><td>${0}</td><td data-order=\"${1}\">${2}</td><td>${3}</td><td>${4}</td>" + "<td>${5}</td><td>${6}</td></tr>"),
     TABLELINE_3_CUSTOMKEY("<tr><td sorttable_customkey=\"${0}\">${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td sorttable_customkey=\"${4}\">${5}</td></tr>"),
     TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"${0}\">${1}</td><td>${2}</td><td>${3}</td></tr>");
 

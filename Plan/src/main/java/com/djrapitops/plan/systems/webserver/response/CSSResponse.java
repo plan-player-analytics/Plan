@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
-import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 
 /**
  * @author Rsl1122
@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 public class CSSResponse extends FileResponse {
 
     public CSSResponse(String fileName) {
-        super(fileName);
+        super(format(fileName));
         super.setType(ResponseType.CSS);
         setContent(Theme.replaceColors(getContent()));
     }

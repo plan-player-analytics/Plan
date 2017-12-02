@@ -2,6 +2,8 @@ package main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import main.java.com.djrapitops.plan.data.PlayerProfile;
+import main.java.com.djrapitops.plan.data.ServerProfile;
 import main.java.com.djrapitops.plan.database.tables.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -265,4 +267,8 @@ public abstract class Database {
     public boolean isUsingMySQL() {
         return "mysql".equals(getConfigName());
     }
+
+    public abstract PlayerProfile getPlayerProfile(UUID uuid) throws SQLException;
+
+    public abstract ServerProfile getServerProfile(UUID serverUUID) throws SQLException;
 }

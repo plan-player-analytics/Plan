@@ -5,16 +5,16 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.WorldAliasSettings;
-import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPieCreator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,31 +26,31 @@ import java.util.stream.Collectors;
  */
 public class SessionsTableCreator {
 
-    public static String[] createTable(JoinInfoPart joinInfoPart) {
+    private static Map<Integer, UUID> getUUIDsByID(Map<UUID, List<Session>> sessionsByUser) {
         Map<Integer, UUID> uuidByID = new HashMap<>();
-        for (Map.Entry<UUID, List<Session>> entry : joinInfoPart.getSessions().entrySet()) {
+        for (Map.Entry<UUID, List<Session>> entry : sessionsByUser.entrySet()) {
             List<Session> sessions = entry.getValue();
             for (Session session : sessions) {
                 uuidByID.put(session.getSessionID(), entry.getKey());
             }
         }
-
-        List<Session> allSessions = joinInfoPart.getAllSessions();
-        return createTable(uuidByID, allSessions);
+        return uuidByID;
     }
 
-    public static String[] createTable(Map<Integer, UUID> uuidByID, List<Session> allSessions) {
+    public static String[] createTable(Map<UUID, List<Session>> sessionsByUser, List<Session> allSessions) {
         if (allSessions.isEmpty()) {
             return new String[]{Html.TABLELINE_4.parse("<b>No Sessions</b>", "", "", ""),
                     Html.TABLELINE_2.parse("<b>No Sessions</b>", "")};
         }
+
+        Map<Integer, UUID> uuidByID = getUUIDsByID(sessionsByUser);
 
         allSessions.sort(new SessionStartComparator());
 
         StringBuilder sessionTableBuilder = new StringBuilder();
         StringBuilder recentLoginsBuilder = new StringBuilder();
 
-        int i = 0;
+
         Set<String> recentLoginsNames = new HashSet<>();
 
         DataCache dataCache = Plan.getInstance().getDataCache();
@@ -59,10 +59,13 @@ public class SessionsTableCreator {
         for (Map.Entry<UUID, Session> entry : SessionCache.getActiveSessions().entrySet()) {
             uuidBySessionStart.put(entry.getValue().getSessionStart(), entry.getKey());
         }
-
-
+        int i = 0;
+        int maxSessions = Settings.MAX_SESSIONS.getNumber();
+        if (maxSessions <= 0) {
+            maxSessions = 50;
+        }
         for (Session session : allSessions) {
-            if (i >= 50) {
+            if (i >= maxSessions) {
                 break;
             }
 
@@ -88,7 +91,11 @@ public class SessionsTableCreator {
             ));
 
             if (recentLoginsNames.size() < 20 && !recentLoginsNames.contains(name)) {
-                recentLoginsBuilder.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, name), start));
+                boolean isNew = sessionsByUser.get(uuid).size() <= 2;
+
+                recentLoginsBuilder.append("<li><a class=\"col-").append(isNew ? "light-green" : "blue").append(" font-bold\" href=\"").append(inspectUrl)
+                        .append("\">").append(name).append("</a><span class=\"pull-right\">").append(start).append("</span></li>");
+
                 recentLoginsNames.add(name);
             }
 
@@ -97,7 +104,7 @@ public class SessionsTableCreator {
         return new String[]{sessionTableBuilder.toString(), recentLoginsBuilder.toString()};
     }
 
-    private static String getLongestWorldPlayed(Session session) {
+    public static String getLongestWorldPlayed(Session session) {
         WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
         Map<String, String> aliases = aliasSettings.getAliases();
         if (session.getSessionEnd() == -1) {

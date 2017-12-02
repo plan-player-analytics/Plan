@@ -1,18 +1,19 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.UserInfo;
-import main.java.com.djrapitops.plan.data.analysis.GeolocationPart;
-import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
+import main.java.com.djrapitops.plan.data.PlayerProfile;
+import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
+import main.java.com.djrapitops.plan.data.element.TableContainer;
+import main.java.com.djrapitops.plan.data.plugin.PluginData;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
+import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * @author Rsl1122
@@ -26,50 +27,42 @@ public class PlayersTableCreator {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String createTable(List<UserInfo> userInfo, JoinInfoPart joinInfoPart, GeolocationPart geolocationPart) {
-        if (userInfo.isEmpty()) {
+    public static String createTable(List<PlayerProfile> players) {
+        if (players.isEmpty()) {
             return Html.TABLELINE_PLAYERS.parse("<b>No Players</b>", "", "", "", "", "", "", "", "", "");
         }
 
         StringBuilder html = new StringBuilder();
 
-        Map<UUID, List<Session>> sessions = joinInfoPart.getSessions();
-        Map<UUID, String> geoLocations = geolocationPart.getMostCommonGeoLocations();
-
         long now = MiscUtils.getTime();
+        UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
 
         int i = 0;
-        for (UserInfo user : userInfo) {
-            if (i >= 750) {
+        int maxPlayers = Settings.MAX_PLAYERS.getNumber();
+        if (maxPlayers <= 0) {
+            maxPlayers = 2000;
+        }
+        for (PlayerProfile profile : players) {
+            if (i >= maxPlayers) {
                 break;
             }
 
             try {
-                UUID uuid = user.getUuid();
-                boolean isBanned = user.isBanned();
-                List<Session> userSessions = sessions.get(uuid);
-                int loginTimes = 0;
-                long playtime = 0;
-                if (userSessions != null) {
-                    loginTimes = userSessions.size();
-                    playtime = AnalysisUtils.getTotalPlaytime(userSessions);
-                }
-                boolean isUnknown = loginTimes == 1;
-                long registered = user.getRegistered();
+                boolean isBanned = profile.isBanned();
+                long loginTimes = profile.getSessionCount(serverUUID);
+                long playtime = profile.getPlaytime(serverUUID);
+                long registered = profile.getRegistered();
 
-                boolean isActive = AnalysisUtils.isActive(now, user.getLastSeen(), playtime, loginTimes);
+                long lastSeen = profile.getLastSeen();
 
-                long lastSeen = user.getLastSeen();
+                double activityIndex = profile.getActivityIndex(now);
+                String readableIndex = FormatUtils.readableActivityIndex(activityIndex)[1];
+                String activityString = FormatUtils.cutDecimals(activityIndex)
+                        + (isBanned ? " (<b>Banned</b>)" : " (" + readableIndex + ")");
 
-                String activityString = getActivityString(isBanned, isUnknown, isActive);
-
-
-                String geoLocation = geoLocations.get(uuid);
-                if (geoLocation == null) {
-                    geoLocation = "Not Known";
-                }
+                String geoLocation = profile.getMostRecentGeoInfo().getGeolocation();
                 html.append(Html.TABLELINE_PLAYERS.parse(
-                        Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(user.getName()), user.getName()),
+                        Html.LINK_EXTERNAL.parse(Plan.getPlanAPI().getPlayerInspectPageLink(profile.getName()), profile.getName()),
                         activityString,
                         String.valueOf(playtime), FormatUtils.formatTimeAmount(playtime),
                         String.valueOf(loginTimes),
@@ -77,8 +70,10 @@ public class PlayersTableCreator {
                         String.valueOf(lastSeen), lastSeen != 0 ? FormatUtils.formatTimeStamp(lastSeen) : "-",
                         String.valueOf(geoLocation)
                 ));
-            } catch (NullPointerException ignored) {
-                ignored.printStackTrace(); // TODO IGNORE AGAIN
+            } catch (NullPointerException e) {
+                if (Settings.DEV_MODE.isTrue()) {
+                    Log.toLog(PlayersTableCreator.class.getName(), e);
+                }
             }
 
             i++;
@@ -87,15 +82,66 @@ public class PlayersTableCreator {
         return html.toString();
     }
 
-    private static String getActivityString(boolean isBanned, boolean isUnknown, boolean isActive) {
-        if (isBanned) {
-            return "Banned";
+    public static String createPluginsTable(Map<PluginData, AnalysisContainer> containers, List<PlayerProfile> players) {
+        TreeMap<String, Map<UUID, ? extends Serializable>> data = new TreeMap<>();
+        for (AnalysisContainer container : containers.values()) {
+            if (!container.hasPlayerTableValues()) {
+                continue;
+            }
+            data.putAll(container.getPlayerTableValues());
         }
 
-        if (isUnknown) {
-            return "Unknown";
-        }
+        List<String> header = new ArrayList<>(data.keySet());
+        Collections.sort(header);
 
-        return isActive ? "Active" : "Inactive";
+        int size = header.size();
+        TableContainer tableContainer = new TableContainer(true, header.toArray(new String[size]));
+
+        try {
+            if (players.isEmpty()) {
+                tableContainer.addRow("<b>No Players</b>");
+                throw new IllegalArgumentException("No players");
+            }
+
+            Map<UUID, String[]> sortedData = new HashMap<>();
+
+            for (PlayerProfile profile : players) {
+                UUID uuid = profile.getUuid();
+                String[] playerdata = new String[size];
+                for (int i = 0; i < size; i++) {
+                    String label = header.get(i);
+                    Map<UUID, ? extends Serializable> playerSpecificData = data.getOrDefault(label, new HashMap<>());
+                    Serializable value = playerSpecificData.get(uuid);
+                    if (value != null) {
+                        playerdata[i] = value.toString();
+                    } else {
+                        playerdata[i] = "-";
+                    }
+                }
+                sortedData.put(uuid, playerdata);
+            }
+
+            int i = 0;
+            int maxPlayers = Settings.MAX_PLAYERS.getNumber();
+            if (maxPlayers <= 0) {
+                maxPlayers = 2000;
+            }
+            for (PlayerProfile profile : players) {
+                if (i >= maxPlayers) {
+                    break;
+                }
+                UUID uuid = profile.getUuid();
+                String link = Html.LINK_EXTERNAL.parse(Plan.getPlanAPI().getPlayerInspectPageLink(profile.getName()), profile.getName());
+
+                String[] playerData = FormatUtils.mergeArrays(new String[]{link}, sortedData.getOrDefault(uuid, new String[]{}));
+                tableContainer.addRow(ArrayUtils.addAll(playerData));
+
+                i++;
+            }
+        } catch (IllegalArgumentException ignored) {
+        }
+        return tableContainer.parseHtml().replace(Html.TABLE_SCROLL.parse(), "<table class=\"table table-bordered table-striped table-hover player-table dataTable\">");
     }
+
+
 }

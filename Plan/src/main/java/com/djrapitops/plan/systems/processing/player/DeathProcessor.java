@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.systems.processing.player;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.container.Session;
 
 import java.util.Optional;
 import java.util.UUID;

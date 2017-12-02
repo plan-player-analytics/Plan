@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
-import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.settings.Permissions;
+import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.processing.CommandProcessor;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;

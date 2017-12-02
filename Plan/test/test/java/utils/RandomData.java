@@ -1,9 +1,9 @@
 package test.java.utils;
 
-import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.data.container.Session;
+import main.java.com.djrapitops.plan.data.container.TPS;
+import main.java.com.djrapitops.plan.data.container.UserInfo;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import org.apache.commons.lang3.RandomStringUtils;

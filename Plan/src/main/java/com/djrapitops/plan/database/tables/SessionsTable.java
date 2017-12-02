@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.processing.ExecStatement;
 import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
@@ -151,44 +151,44 @@ public class SessionsTable extends UserIDTable {
      * @return Map with Sessions that don't contain Kills or WorldTimes.
      * @throws SQLException DB Error
      */
-    private Map<String, List<Session>> getSessionInformation(UUID uuid) throws SQLException {
-        Map<Integer, String> serverNames = serverTable.getServerNames();
+    private Map<UUID, List<Session>> getSessionInformation(UUID uuid) throws SQLException {
+        Map<Integer, UUID> serverUUIDs = serverTable.getServerUuids();
         String sql = Select.from(tableName, "*")
                 .where(columnUserID + "=" + usersTable.statementSelectID)
                 .toString();
 
-        return query(new QueryStatement<Map<String, List<Session>>>(sql, 10000) {
+        return query(new QueryStatement<Map<UUID, List<Session>>>(sql, 10000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
             }
 
             @Override
-            public Map<String, List<Session>> processResults(ResultSet set) throws SQLException {
-                Map<String, List<Session>> sessionsByServer = new HashMap<>();
+            public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<Session>> sessionsByServer = new HashMap<>();
                 while (set.next()) {
                     int id = set.getInt(columnID);
                     long start = set.getLong(columnSessionStart);
                     long end = set.getLong(columnSessionEnd);
-                    String serverName = serverNames.get(set.getInt(columnServerID));
+                    UUID serverUUID = serverUUIDs.get(set.getInt(columnServerID));
 
-                    if (serverName == null) {
+                    if (serverUUID == null) {
                         throw new IllegalStateException("Server not present");
                     }
 
                     int deaths = set.getInt(columnDeaths);
                     int mobKills = set.getInt(columnMobKills);
-                    List<Session> sessions = sessionsByServer.getOrDefault(serverName, new ArrayList<>());
+                    List<Session> sessions = sessionsByServer.getOrDefault(serverUUID, new ArrayList<>());
                     sessions.add(new Session(id, start, end, mobKills, deaths));
-                    sessionsByServer.put(serverName, sessions);
+                    sessionsByServer.put(serverUUID, sessions);
                 }
                 return sessionsByServer;
             }
         });
     }
 
-    public Map<String, List<Session>> getSessions(UUID uuid) throws SQLException {
-        Map<String, List<Session>> sessions = getSessionInformation(uuid);
+    public Map<UUID, List<Session>> getSessions(UUID uuid) throws SQLException {
+        Map<UUID, List<Session>> sessions = getSessionInformation(uuid);
         Map<Integer, Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toMap(Session::getSessionID, Function.identity()));
 
         db.getKillsTable().addKillsToSessions(uuid, allSessions);
@@ -286,7 +286,7 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public Map<String, Long> getPlaytimeByServer(UUID uuid, long afterDate) throws SQLException {
-        Map<Integer, String> serverNames = serverTable.getServerNames();
+        Map<Integer, String> serverNames = serverTable.getServerNamesByID();
         String sql = "SELECT " +
                 "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime, " +
                 columnServerID +
@@ -457,15 +457,10 @@ public class SessionsTable extends UserIDTable {
     }
 
     public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) throws SQLException {
-        Optional<Integer> id = serverTable.getServerID(serverUUID);
-        if (!id.isPresent()) {
-            return new HashMap<>();
-        }
-        int serverID = id.get();
-
         String usersIDColumn = usersTable + "." + usersTable.getColumnID();
         String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
         String sql = "SELECT " +
+                tableName + "." + columnID + ", " +
                 columnSessionStart + ", " +
                 columnSessionEnd + ", " +
                 columnDeaths + ", " +
@@ -492,7 +487,7 @@ public class SessionsTable extends UserIDTable {
                     int deaths = set.getInt(columnDeaths);
                     int mobKills = set.getInt(columnMobKills);
                     List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
-                    sessions.add(new Session(serverID, start, end, mobKills, deaths));
+                    sessions.add(new Session(set.getInt(columnID), start, end, mobKills, deaths));
                     sessionsByUser.put(uuid, sessions);
                 }
                 return sessionsByUser;
