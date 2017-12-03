@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -33,7 +33,8 @@ public class TownAccordionCreator {
 
         for (Town town : towns) {
             String townName = town.getName();
-            String mayorName = town.getMayor().getName();
+            Resident mayor = town.getMayor();
+            String mayorName = mayor != null ? mayor.getName() : "NPC";
 
             String coordinates = "";
             try {
