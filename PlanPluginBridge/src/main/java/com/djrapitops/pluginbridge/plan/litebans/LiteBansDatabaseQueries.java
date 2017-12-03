@@ -42,7 +42,12 @@ public class LiteBansDatabaseQueries extends Table {
         List<BanObject> bans = new ArrayList<>();
         while (set.next()) {
             String uuidS = set.getString("uuid");
-            UUID uuid = UUID.fromString(uuidS);
+            UUID uuid;
+            try {
+                uuid = UUID.fromString(uuidS);
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
             String reason = set.getString("reason");
             String bannedBy = set.getString("banned_by_name");
             long time = set.getLong("until");

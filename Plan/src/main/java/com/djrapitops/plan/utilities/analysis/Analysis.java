@@ -160,7 +160,11 @@ public class Analysis {
         Set<UUID> banned = new HashSet<>();
         for (BanData banPlugin : banPlugins) {
             Set<UUID> uuids = profile.getUuids();
-            banned.addAll(banPlugin.filterBanned(uuids));
+            try {
+                banned.addAll(banPlugin.filterBanned(uuids));
+            } catch (Exception | NoSuchMethodError | NoClassDefFoundError | NoSuchFieldError e) {
+                Log.toLog("PluginData caused exception: " + banPlugin.getClass().getName(), e);
+            }
         }
 
         profile.getPlayers().stream().filter(player -> banned.contains(player.getUuid()))
