@@ -1086,7 +1086,7 @@
         tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
         resourceChart('resourceGraph', cpuSeries, ramSeries, playersOnlineSeries);
         worldChart('worldGraph', entitySeries, chunkSeries, playersOnlineSeries);
-        worldMap('worldMap', '#EEFFEE', '#267f00', mapSeries);
+        worldMap('worldMap', '${worldMapColLow}', '${worldMapColHigh}', mapSeries);
         punchCard('punchCard', punchcardSeries);
         healthGauge('healthGauge', [${healthIndex}]);
         ${sessionTabGraphViewFunctions}

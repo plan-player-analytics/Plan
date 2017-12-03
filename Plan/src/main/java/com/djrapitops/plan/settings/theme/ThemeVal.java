@@ -51,6 +51,8 @@ public enum ThemeVal {
     GRAPH_GM_PIE("GraphColors.GMDrilldown", "\"#438c99\", \"#639A67\", \"#D8EBB5\", \"#D9BF77\""),
     GRAPH_ACTIVITY_PIE("GraphColors.ActivityPie", "\"#4CAF50\", \"#8BC34A\", \"#CDDC39\", \"#FFC107\", \"#607D8B\""),
     GRAPH_SERVER_PREF_PIE("GraphColors.ServerPreferencePie", "\"#0099C6\", \"#66AA00\", \"#316395\", \"#994499\", \"#22AA99\", \"#AAAA11\", \"#6633CC\", \"#E67300\", \"#329262\", \"#5574A6\""),
+    WORLD_MAP_HIGH("GraphColors.WorldMap_High", "#267f00"),
+    WORLD_MAP_LOW("GraphColors.WorldMap_High", "#EEFFEE"),
     //
     PARSED_SESSION_ACCORDION("ParsedElements.SessionAccordion", "teal"),
     PARSED_SERVER_ACCORDION("ParsedElements.ServerAccordion", "light-green");
