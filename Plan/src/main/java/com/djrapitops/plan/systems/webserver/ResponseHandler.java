@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.systems.webserver;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
@@ -211,7 +212,13 @@ public class ResponseHandler extends APIResponseHandler {
             Response response = PageCache.loadPage("inspectPage: " + uuid);
             // TODO Create a new method that places NotFoundResponse to PageCache instead.
             if (response == null || response.getContent().contains("No Bukkit Servers were online to process this request")) {
-                PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
+                PageCache.cachePage("inspectPage: " + uuid, () -> {
+                    try {
+                        return new InspectPageResponse(plugin.getInfoManager(), uuid);
+                    } catch (ParseException e) {
+                        return new InternalErrorResponse(e, this.getClass().getName());
+                    }
+                });
                 response = PageCache.loadPage("inspectPage: " + uuid);
             }
             return response;

@@ -38,7 +38,7 @@ public class FactionAccordionCreator {
             double maxPower = faction.getPowerMax();
             String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
             MPlayer leader = faction.getLeader();
-            String leaderName = leader.getName();
+            String leaderName = leader != null ? leader.getName() : "No Leader";
 
             int landCount = faction.getLandCount();
 
@@ -46,6 +46,9 @@ public class FactionAccordionCreator {
             List<MPlayer> mPlayers = faction.getMPlayers();
             int membersNum = mPlayers.size();
             for (MPlayer mPlayer : mPlayers) {
+                if (mPlayer == null) {
+                    continue;
+                }
                 UUID uuid = Plan.getInstance().getDataCache().getUUIDof(mPlayer.getName());
                 if (uuid != null) {
                     members.add(uuid);

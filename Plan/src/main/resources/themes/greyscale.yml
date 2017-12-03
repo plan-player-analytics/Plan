@@ -50,6 +50,8 @@ GraphColors:
   GMDrilldown: '"#535353", "#888888", "#6F6F6F", "#707070"'
   ActivityPie: '"#8C8C8C", "#A4A4A4", "#C4C4C4", "#BEBEBE", "#757575"'
   ServerPreferencePie: '"#707070", "#828282", "#595959", "#676767", "#7F7F7F", "#989898", "#535353", "#888888", "#6F6F6F", "#707070"'
+  WorldMap_High: "#555555"
+  WorldMap_Low: "#DDDDDD"
 
 # Leave blank "" for white
 ParsedElements:

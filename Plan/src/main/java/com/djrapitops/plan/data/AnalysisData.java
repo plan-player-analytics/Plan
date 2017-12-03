@@ -78,6 +78,8 @@ public class AnalysisData extends RawData {
         addValue("tpsHighColor", Theme.getValue(ThemeVal.GRAPH_TPS_HIGH));
         addValue("tpsMediumColor", Theme.getValue(ThemeVal.GRAPH_TPS_MED));
         addValue("tpsLowColor", Theme.getValue(ThemeVal.GRAPH_TPS_LOW));
+        addValue("worldMapColLow", Theme.getValue(ThemeVal.WORLD_MAP_LOW));
+        addValue("worldMapColHigh", Theme.getValue(ThemeVal.WORLD_MAP_HIGH));
         addValue("tpsMedium", Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber());
         addValue("tpsHigh", Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH.getNumber());
 
@@ -90,12 +92,13 @@ public class AnalysisData extends RawData {
     }
 
     public void analyze(ServerProfile profile) {
-        addConstants();
         long now = MiscUtils.getTime();
         refreshDate = now;
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();
         long monthAgo = now - TimeAmount.MONTH.ms();
+
+        addConstants();
 
         got("now", now);
         got("dayAgo", dayAgo);
