@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
+import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import org.apache.commons.lang3.text.StrSubstitutor;
@@ -16,7 +17,7 @@ public class InspectPageResponse extends Response {
 
     private final UUID uuid;
 
-    public InspectPageResponse(InformationManager infoManager, UUID uuid) {
+    public InspectPageResponse(InformationManager infoManager, UUID uuid) throws ParseException {
         this.uuid = uuid;
         super.setHeader("HTTP/1.1 200 OK");
         super.setContent(infoManager.getPlayerHtml(uuid));

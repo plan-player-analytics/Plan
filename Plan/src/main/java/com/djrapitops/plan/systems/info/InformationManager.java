@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plugin.command.ISender;
+import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
@@ -48,7 +49,7 @@ public abstract class InformationManager {
         return PageCache.isCached("inspectPage: " + uuid);
     }
 
-    public abstract String getPlayerHtml(UUID uuid);
+    public abstract String getPlayerHtml(UUID uuid) throws ParseException;
 
     /**
      * Used for /server on Bukkit and /network on Bungee

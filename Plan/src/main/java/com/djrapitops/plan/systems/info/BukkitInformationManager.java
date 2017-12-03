@@ -108,9 +108,25 @@ public class BukkitInformationManager extends InformationManager {
             } catch (WebAPIException e) {
                 attemptConnection();
                 cachePlayer(uuid);
+            } catch (ParseException e) {
+                if (!(e.getCause() instanceof IllegalStateException)) {
+                    Log.toLog(this.getClass().getName(), e);
+                }
             }
         } else {
-            PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
+            PageCache.cachePage("inspectPage: " + uuid, () -> {
+                try {
+                    return new InspectPageResponse(this, uuid);
+                } catch (ParseException e) {
+                    if (e.getCause() instanceof IllegalStateException) {
+                        return new NotFoundResponse(
+                                "Player just registered, so the data was not yet in the database. " +
+                                        "Please wait until they log off or use /plan inspect <player>"
+                        );
+                    }
+                    return new InternalErrorResponse(e, this.getClass().getName());
+                }
+            });
             if (Settings.ANALYSIS_EXPORT.isTrue()) {
                 HtmlExport.exportPlayer(plugin, uuid);
             }
@@ -246,12 +262,8 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     @Override
-    public String getPlayerHtml(UUID uuid) {
-        try {
-            return Theme.replaceColors(new InspectPageParser(uuid, plugin).parse());
-        } catch (ParseException e) {
-            return new InternalErrorResponse(e, this.getClass().getSimpleName()).getContent();
-        }
+    public String getPlayerHtml(UUID uuid) throws ParseException {
+        return Theme.replaceColors(new InspectPageParser(uuid, plugin).parse());
     }
 
     @Override

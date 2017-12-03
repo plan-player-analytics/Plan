@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.api;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.plugin.PluginData;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
@@ -142,7 +143,7 @@ public class API {
      * @param uuid UUID of the player.
      * @return player.html with all placeholders replaced.
      */
-    public String getPlayerHtmlAsString(UUID uuid) {
+    public String getPlayerHtmlAsString(UUID uuid) throws ParseException {
         return plugin.getInfoManager().getPlayerHtml(uuid);
     }
 
