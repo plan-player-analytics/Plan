@@ -398,7 +398,10 @@ public class ServerProfile {
             Session session = entry.getValue();
             session.setSessionID((int) session.getSessionStart());
 
-            getPlayer(uuid).addActiveSession(session);
+            PlayerProfile player = getPlayer(uuid);
+            if (player != null) {
+                player.addActiveSession(session);
+            }
         }
     }
 }
