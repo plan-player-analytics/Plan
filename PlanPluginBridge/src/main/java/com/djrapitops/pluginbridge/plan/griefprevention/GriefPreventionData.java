@@ -15,10 +15,7 @@ import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -68,9 +65,17 @@ public class GriefPreventionData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
-        Map<UUID, Integer> area = dataStore.getClaims().stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(claim -> claim.ownerID, Claim::getArea));
+        Map<UUID, Integer> area = new HashMap<>();
+
+        for (Claim claim : dataStore.getClaims()) {
+            if (claim == null) {
+                continue;
+            }
+            UUID uuid = claim.ownerID;
+            int blocks = area.getOrDefault(uuid, 0);
+            blocks += claim.getArea();
+            area.put(uuid, blocks);
+        }
 
         long totalArea = MathUtils.sumLong(area.values().stream().map(i -> (long) i));
         analysisContainer.addValue(getWithIcon("Total Claimed Area", "map-o", "blue-grey"), totalArea);
