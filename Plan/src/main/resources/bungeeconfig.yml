@@ -34,6 +34,8 @@ Database:
     User: root
     Password: minecraft
     Database: Plan
+    # Launch options to append after driver address, for example
+    LaunchOptions: "?rewriteBatchedStatements=true&useSSL=false"
 # -----------------------------------------------------
 Commands:
   AlternativeIP:

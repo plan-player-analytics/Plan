@@ -49,6 +49,7 @@ public enum Settings {
     DB_USER("Database.MySQL.User"),
     DB_PASS("Database.MySQL.Password"),
     DB_DATABASE("Database.MySQL.Database"),
+    DB_LAUNCH_OPTIONS("Database.MySQL.LaunchOptions"),
     LOCALE("Plugin.Locale"),
     WEBSERVER_IP("WebServer.InternalIP"),
     ANALYSIS_EXPORT_PATH("Analysis.Export.DestinationFolder"),
