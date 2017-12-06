@@ -84,6 +84,7 @@ Customization:
     MaxSessions: 50
     MaxPlayers: 2500
     MaxPlayersPlayersPage: 25000
+    PlayerTableFooter: true
   Formatting:
     DecimalPoints: '#.##'
     TimeAmount:

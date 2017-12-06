@@ -28,6 +28,7 @@ public enum Settings {
     DISPLAY_SESSIONS_AS_TABLE("Customization.Display.SessionsAsTable"),
     APPEND_WORLD_PERC("Customization.Display.LargestWorldPercInSessionTitle"),
     ORDER_WORLD_PIE_BY_PERC("Customization.Display.OrderWorldPieByPercentage"),
+    PLAYERTABLE_FOOTER("Customization.Display.PlayerTableFooter"),
     WEBSERVER_DISABLED("WebServer.DisableWebServer"),
 
     // Integer

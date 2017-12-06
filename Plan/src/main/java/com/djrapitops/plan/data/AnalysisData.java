@@ -297,7 +297,10 @@ public class AnalysisData extends RawData {
         long allTimePeak = profile.getAllTimePeak();
         long lastPeak = profile.getLastPeakDate();
 
-        addValue("tablePlayerlist", Html.TABLE_PLAYERS.parse(profile.createPlayersTableBody()));
+        String playersTableBody = profile.createPlayersTableBody();
+        addValue("tablePlayerlist", Settings.PLAYERTABLE_FOOTER.isTrue() ?
+                Html.TABLE_PLAYERS_FOOTER.parse(playersTableBody)
+                : Html.TABLE_PLAYERS.parse(playersTableBody));
         addValue("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
         String[] seriesData = WorldPieCreator.createSeriesData(worldTimes);
         addValue("worldSeries", seriesData[0]);

@@ -68,7 +68,11 @@ public class PlayersPageResponse extends Response {
             StringBuilder html = new StringBuilder("<table class=\"table table-bordered table-striped table-hover player-table dataTable\">");
 
             TableContainer tableContainer = new TableContainer(userS, playtimeS, sessionsS, registeredS, lastSeenS, geolocationS);
-            html.append(tableContainer.parseHeader());
+            String header = tableContainer.parseHeader();
+            html.append(header);
+            if (Settings.PLAYERTABLE_FOOTER.isTrue()) {
+                html.append(header.replace("thead", "tfoot"));
+            }
 
             try {
                 if (users.isEmpty()) {
