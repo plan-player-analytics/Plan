@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.structure;
 
+import com.djrapitops.plugin.utilities.Format;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
@@ -39,7 +40,8 @@ public class ServerAccordionCreator {
 
         for (Map.Entry<UUID, WorldTimes> entry : worldTimesPerServer.entrySet()) {
             UUID serverUUID = entry.getKey();
-            String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
+            String serverName = new Format(serverNames.getOrDefault(serverUUID, "Unknown"))
+                    .removeSymbols().removeWhitespace().toString();
             WorldTimes worldTimes = entry.getValue();
 
             List<Session> sessions = profile.getSessions(serverUUID);
