@@ -116,9 +116,7 @@ public class Analysis {
             profile.addActiveSessions(new HashMap<>(SessionCache.getActiveSessions()));
             serverProfile = profile;
 
-            for (PlayerProfile player : profile.getPlayers()) {
-                dataCache.updateNames(player.getUuid(), player.getName(), null);
-            }
+            updatePlayerNameCache(profile, dataCache);
 
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
             setBannedByPlugins(profile);
@@ -148,6 +146,12 @@ public class Analysis {
             serverProfile = null;
         }
         return true;
+    }
+
+    private void updatePlayerNameCache(ServerProfile profile, DataCache dataCache) {
+        for (PlayerProfile player : profile.getPlayers()) {
+            dataCache.updateNames(player.getUuid(), player.getName(), null);
+        }
     }
 
     private void setBannedByPlugins(ServerProfile profile) {
