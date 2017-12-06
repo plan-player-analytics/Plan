@@ -9,7 +9,7 @@ import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.settings.Permissions;
@@ -31,14 +31,14 @@ import java.util.UUID;
  */
 public class QInspectCommand extends SubCommand {
 
-    private final Plan plugin;
+    private final IPlan plugin;
 
     /**
      * Class Constructor.
      *
      * @param plugin Current instance of Plan
      */
-    public QInspectCommand(Plan plugin) {
+    public QInspectCommand(IPlan plugin) {
         super("qinspect",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.QUICK_INSPECT.getPermission(),

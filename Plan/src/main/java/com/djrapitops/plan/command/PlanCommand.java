@@ -42,6 +42,7 @@ public class PlanCommand extends TreeCommand<Plan> {
     public void addCommands() {
         add(
                 new InspectCommand(plugin),
+                new QInspectCommand(plugin),
                 new AnalyzeCommand(plugin),
                 new SearchCommand(plugin),
                 new InfoCommand(plugin),
