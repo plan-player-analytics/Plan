@@ -40,8 +40,7 @@ public class ServerAccordionCreator {
 
         for (Map.Entry<UUID, WorldTimes> entry : worldTimesPerServer.entrySet()) {
             UUID serverUUID = entry.getKey();
-            String serverName = new Format(serverNames.getOrDefault(serverUUID, "Unknown"))
-                    .removeSymbols().removeWhitespace().toString();
+            String serverName =  serverNames.getOrDefault(serverUUID, "Unknown");
             WorldTimes worldTimes = entry.getValue();
 
             List<Session> sessions = profile.getSessions(serverUUID);
@@ -60,10 +59,11 @@ public class ServerAccordionCreator {
             String median = sessionCount != 0 ? FormatUtils.formatTimeAmount(sessionMedian) : "-";
             String longest = sessionCount != 0 ? FormatUtils.formatTimeAmount(longestSession) : "-";
 
-            String serverNameID = serverName.replace(" ", "_");
-            String htmlID = "server_" + serverNameID;
+            String sanitizedServerName = new Format(serverName)
+                    .removeSymbols().removeWhitespace().toString();
+            String htmlID = "server_" + sanitizedServerName;
 
-            String worldId = "worldPieServer" + serverNameID;
+            String worldId = "worldPieServer" + sanitizedServerName;
             AnalysisUtils.addMissingWorlds(worldTimes);
 
             String[] worldData = WorldPieCreator.createSeriesData(worldTimes);
