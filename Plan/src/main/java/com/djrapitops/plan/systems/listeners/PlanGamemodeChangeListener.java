@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
@@ -41,15 +42,19 @@ public class PlanGamemodeChangeListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        Player p = event.getPlayer();
-        UUID uuid = p.getUniqueId();
-        long time = MiscUtils.getTime();
-        String gameMode = event.getNewGameMode().name();
-        String worldName = p.getWorld().getName();
+        try {
+            Player p = event.getPlayer();
+            UUID uuid = p.getUniqueId();
+            long time = MiscUtils.getTime();
+            String gameMode = event.getNewGameMode().name();
+            String worldName = p.getWorld().getName();
 
-        new WorldAliasSettings(plugin).addWorld(worldName);
+            new WorldAliasSettings(plugin).addWorld(worldName);
 
-        Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
-        cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
+            Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
+            cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
+        }
     }
 }

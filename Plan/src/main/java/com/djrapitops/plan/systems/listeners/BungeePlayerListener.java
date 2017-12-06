@@ -1,9 +1,10 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package main.java.com.djrapitops.plan.systems.listeners;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.systems.processing.player.BungeePlayerRegisterProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -29,11 +30,15 @@ public class BungeePlayerListener implements Listener {
 
     @EventHandler
     public void onPostLogin(PostLoginEvent event) {
-        ProxiedPlayer player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        String name = player.getName();
-        long now = MiscUtils.getTime();
+        try {
+            ProxiedPlayer player = event.getPlayer();
+            UUID uuid = player.getUniqueId();
+            String name = player.getName();
+            long now = MiscUtils.getTime();
 
-        plugin.getProcessingQueue().addToQueue(new BungeePlayerRegisterProcessor(uuid, name, now));
+            plugin.getProcessingQueue().addToQueue(new BungeePlayerRegisterProcessor(uuid, name, now));
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
+        }
     }
 }

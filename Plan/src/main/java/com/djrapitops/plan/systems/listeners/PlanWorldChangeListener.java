@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
@@ -22,16 +23,20 @@ public class PlanWorldChangeListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(PlayerChangedWorldEvent event) {
-        Player p = event.getPlayer();
-        String worldName = p.getWorld().getName();
+        try {
+            Player p = event.getPlayer();
+            String worldName = p.getWorld().getName();
 
-        UUID uuid = p.getUniqueId();
-        String gameMode = p.getGameMode().name();
-        long time = MiscUtils.getTime();
+            UUID uuid = p.getUniqueId();
+            String gameMode = p.getGameMode().name();
+            long time = MiscUtils.getTime();
 
-        new WorldAliasSettings(plugin).addWorld(worldName);
+            new WorldAliasSettings(plugin).addWorld(worldName);
 
-        Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
-        cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
+            Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
+            cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
+        }
     }
 }
