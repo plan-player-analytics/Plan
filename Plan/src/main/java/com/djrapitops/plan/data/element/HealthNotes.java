@@ -173,16 +173,16 @@ public class HealthNotes {
             String avgLastTwoWeeksString = FormatUtils.formatTimeAmount(avgLastTwoWeeks);
             String avgFourToTwoWeeksString = FormatUtils.formatTimeAmount(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
-                healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " Active players to have things to do (Played "
+                healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " Active players seem to have things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)</p>");
             } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeAmount.HOUR.ms() * 2L) {
-                healthNotes.add("<p>" + Html.RED_WARN.parse() + " Active players might to be running out of things to do (Played "
+                healthNotes.add("<p>" + Html.RED_WARN.parse() + " Active players might be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)</p>");
                 serverHealth -= 5;
             } else {
-                healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " Active players might to be running out of things to do (Played "
+                healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " Active players might be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)</p>");
             }
