@@ -189,7 +189,7 @@ public class BukkitInformationManager extends InformationManager {
         } else {
             pluginsTabContents.put(uuid, contents);
             Response inspectResponse = PageCache.loadPage("inspectPage: " + uuid);
-            if (inspectResponse != null) {
+            if (inspectResponse != null && inspectResponse instanceof InspectPageResponse) {
                 ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(contents);
             }
         }

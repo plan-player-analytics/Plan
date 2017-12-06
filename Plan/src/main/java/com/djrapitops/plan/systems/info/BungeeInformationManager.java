@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -315,7 +315,7 @@ public class BungeeInformationManager extends InformationManager {
         perServerPluginsTab.put(serverUUID, html);
         pluginsTabContent.put(uuid, perServerPluginsTab);
         Response inspectResponse = PageCache.loadPage("inspectPage: " + uuid);
-        if (inspectResponse != null) {
+        if (inspectResponse != null && inspectResponse instanceof InspectPageResponse) {
             ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(getPluginsTabContent(uuid));
         }
     }
