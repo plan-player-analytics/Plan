@@ -45,6 +45,7 @@ import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.DatabaseSystem;
+import main.java.com.djrapitops.plan.systems.FileSystem;
 import main.java.com.djrapitops.plan.systems.Systems;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
@@ -65,7 +66,6 @@ import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -143,10 +143,10 @@ public class Plan extends BukkitPlugin implements IPlan {
     public void onEnable() {
         super.onEnable();
         try {
-            File dataFolder = getDataFolder();
-            dataFolder.mkdirs();
-            File configFile = new File(dataFolder, "config.yml");
-            config = new Config(configFile);
+            systems = new Systems(this);
+            FileSystem.getInstance().init();
+
+            config = new Config(FileSystem.getConfigFile());
             config.copyDefaults(FileUtil.lines(this, "config.yml"));
             config.save();
 
@@ -186,8 +186,7 @@ public class Plan extends BukkitPlugin implements IPlan {
             serverVariableHolder = new ServerVariableHolder(getServer());
             Benchmark.stop("Enable", "Reading server variables");
 
-            systems = new Systems();
-            systems.init();
+            DatabaseSystem.getInstance().init();
 
             Benchmark.start("WebServer Initialization");
             webServer = new WebServer(this);
@@ -344,6 +343,9 @@ public class Plan extends BukkitPlugin implements IPlan {
                 }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
             }
         }
+
+        systems.close();
+
         Log.info(Locale.get(Msg.DISABLED).toString());
         Benchmark.pluginDisabled(Plan.class);
         DebugLog.pluginDisabled(Plan.class);

@@ -5,37 +5,35 @@
 package main.java.com.djrapitops.plan.systems;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
+import main.java.com.djrapitops.plan.api.IPlan;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Layer for reducing
  *
  * @author Rsl1122
  */
-public class Systems implements SubSystem {
+public class Systems {
 
+    FileSystem fileSystem;
     DatabaseSystem databaseSystem;
 
-    public Systems() {
-        this.databaseSystem = new DatabaseSystem();
+    public Systems(IPlan plugin) {
+        databaseSystem = new DatabaseSystem();
+        fileSystem = new FileSystem(plugin);
     }
 
     private SubSystem[] getSubSystems() {
         return new SubSystem[]{
-                databaseSystem
+                databaseSystem,
+                fileSystem
         };
     }
 
-    @Override
-    public void init() throws PlanEnableException {
-        for (SubSystem subSystem : getSubSystems()) {
-            subSystem.init();
-        }
-    }
-
-    @Override
     public void close() {
-        for (SubSystem subSystem : getSubSystems()) {
+        SubSystem[] subSystems = getSubSystems();
+        ArrayUtils.reverse(subSystems);
+        for (SubSystem subSystem : subSystems) {
             subSystem.close();
         }
     }
