@@ -6,7 +6,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.ServerProfile;
@@ -33,8 +32,7 @@ public abstract class SQLDB extends Database {
     private boolean open = false;
     private ITask dbCleanTask;
 
-    public SQLDB(IPlan plugin) {
-        super(plugin);
+    public SQLDB() {
         usingMySQL = getName().equals("MySQL");
 
         versionTable = new VersionTable(this, usingMySQL);

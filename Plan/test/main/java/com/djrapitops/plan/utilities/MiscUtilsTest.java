@@ -163,7 +163,7 @@ public class MiscUtilsTest {
         TestInit t = TestInit.init();
         Plan plan = t.getPlanMock();
 
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
+        db = new SQLiteDB("debug" + MiscUtils.getTime());
         db.init();
 
         db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", "", 20));

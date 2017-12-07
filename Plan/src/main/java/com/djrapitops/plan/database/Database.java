@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.database;
 
-import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.data.ServerProfile;
@@ -23,7 +22,6 @@ import java.util.UUID;
  */
 public abstract class Database {
 
-    protected final IPlan plugin;
     protected UsersTable usersTable;
     protected UserInfoTable userInfoTable;
     protected ActionsTable actionsTable;
@@ -43,11 +41,8 @@ public abstract class Database {
 
     /**
      * Super constructor.
-     *
-     * @param plugin current instance of Plan.
      */
-    public Database(IPlan plugin) {
-        this.plugin = plugin;
+    public Database() {
     }
 
     /**

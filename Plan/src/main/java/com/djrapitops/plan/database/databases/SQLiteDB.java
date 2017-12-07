@@ -4,7 +4,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -26,15 +25,12 @@ public class SQLiteDB extends SQLDB {
 
     /**
      * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
      */
-    public SQLiteDB(Plan plugin) {
-        this(plugin, "database");
+    public SQLiteDB() {
+        this("database");
     }
 
-    public SQLiteDB(Plan plugin, String dbName) {
-        super(plugin);
+    public SQLiteDB(String dbName) {
         this.dbName = dbName;
     }
 
@@ -59,7 +55,7 @@ public class SQLiteDB extends SQLDB {
             return null; // Should never happen.
         }
 
-        String dbFilePath = new File(plugin.getDataFolder(), dbName + ".db").getAbsolutePath();
+        String dbFilePath = new File(MiscUtils.getIPlan().getDataFolder(), dbName + ".db").getAbsolutePath();
         Connection connection;
 
         try {

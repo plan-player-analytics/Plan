@@ -98,7 +98,7 @@ public class DebugPageResponse extends ErrorResponse {
         String javaVMVersion = properties.getProperty("java.vm.version");
         List<String> javaVMFlags = runtimeMxBean.getInputArguments();
 
-        content.append("**Operating System:** ").append(osName).append(" (").append(osArch)
+        content.append("**Operating SubSystem:** ").append(osName).append(" (").append(osArch)
                 .append(") version ").append(osVersion).append("<br>");
 
         content.append("**Java Version:** ").append(javaVersion).append(", ").append(javaVendor).append("<br>");

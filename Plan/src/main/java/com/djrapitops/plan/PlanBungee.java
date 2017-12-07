@@ -194,7 +194,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     }
 
     private void initDatabase() throws DatabaseInitException {
-        db = new MySQLDB(this);
+        db = new MySQLDB();
         db.init();
     }
 

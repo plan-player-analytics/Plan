@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.databases;
 
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.settings.Settings;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -15,15 +14,6 @@ import java.sql.SQLException;
 public class MySQLDB extends SQLDB {
 
     private BasicDataSource dataSource;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public MySQLDB(IPlan plugin) {
-        super(plugin);
-    }
 
     /**
      * Setups the {@link BasicDataSource}
