@@ -40,7 +40,6 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
     @Override
     public void addCommands() {
         add(
-                new QInspectCommand(plugin),
                 new ReloadCommand(plugin),
                 new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
                 new ListCommand()

@@ -10,7 +10,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.PlayerProfile;
 import main.java.com.djrapitops.plan.settings.Permissions;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
@@ -71,9 +70,6 @@ public class QInspectCommand extends SubCommand {
                     if (!Condition.isTrue(Verify.notNull(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString(), sender)) {
                         return;
                     }
-                    if (!Condition.isTrue(ConditionUtils.playerHasPlayed(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_SEEN).toString(), sender)) {
-                        return;
-                    }
                     if (!Condition.isTrue(plugin.getDB().wasSeenBefore(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
                         return;
                     }
@@ -107,11 +103,11 @@ public class QInspectCommand extends SubCommand {
         double activityIndex = profile.getActivityIndex(now);
 
         sender.sendMessage(colT + ball + " " + colM + " Activity Index: " + colS + FormatUtils.cutDecimals(activityIndex) + " | " + FormatUtils.readableActivityIndex(activityIndex)[1]);
-        sender.sendMessage(colT + ball + " " + colM + " Registered: " + colS + profile.getRegistered());
-        sender.sendMessage(colT + ball + " " + colM + " Last Seen: " + colS + profile.getLastSeen());
+        sender.sendMessage(colT + ball + " " + colM + " Registered: " + colS + FormatUtils.formatTimeStampYear(profile.getRegistered()));
+        sender.sendMessage(colT + ball + " " + colM + " Last Seen: " + colS + FormatUtils.formatTimeStampYear(profile.getLastSeen()));
         sender.sendMessage(colT + ball + " " + colM + " Logged in from: " + colS + profile.getMostRecentGeoInfo().getGeolocation());
-        sender.sendMessage(colT + ball + " " + colM + " Playtime: " + colS + profile.getTotalPlaytime());
-        sender.sendMessage(colT + ball + " " + colM + " Longest Session: " + colS + profile.getLongestSession(0, now));
+        sender.sendMessage(colT + ball + " " + colM + " Playtime: " + colS + FormatUtils.formatTimeAmount(profile.getTotalPlaytime()));
+        sender.sendMessage(colT + ball + " " + colM + " Longest Session: " + colS + FormatUtils.formatTimeAmount(profile.getLongestSession(0, now)));
         sender.sendMessage(colT + ball + " " + colM + " Times Kicked: " + colS + profile.getTimesKicked());
         sender.sendMessage("");
         sender.sendMessage(colT + ball + " " + colM + " Player Kills : " + colS + profile.getPlayerKills().count());
