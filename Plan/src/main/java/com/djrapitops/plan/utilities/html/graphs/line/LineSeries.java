@@ -5,7 +5,9 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.graphs.line;
 
+import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeuckerAlgorithm;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
+import main.java.com.djrapitops.plan.utilities.analysis.ReduceGapTriangles;
 
 import java.util.List;
 
@@ -15,26 +17,26 @@ import java.util.List;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class SeriesCreator {
+public class LineSeries {
 
     /**
      * Constructor used to hide the public constructor
      */
-    private SeriesCreator() {
+    private LineSeries() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String seriesGraph(List<Point> points, boolean reduceGapTriangles) {
-        return seriesGraph(points, reduceGapTriangles, true);
+    public static String createSeries(List<Point> points, boolean reduceGapTriangles) {
+        return createSeries(points, reduceGapTriangles, true);
     }
 
-    public static String seriesGraph(List<Point> points, boolean reduceGapTriangles, boolean reducePoints) {
+    public static String createSeries(List<Point> points, boolean reduceGapTriangles, boolean reducePoints) {
         StringBuilder arrayBuilder = new StringBuilder("[");
 
 //        if (reducePoints) {
 //            points = DouglasPeuckerAlgorithm.reducePoints(points, 0);
 //        }
-
+//
 //        if (reduceGapTriangles) {
 //            points = ReduceGapTriangles.reduce(points);
 //        }

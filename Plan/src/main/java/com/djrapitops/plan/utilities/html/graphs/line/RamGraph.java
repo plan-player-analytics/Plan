@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
  * @see TPSCountTimer
  * @since 3.6.0
  */
-public class RamGraphCreator {
+public class RamGraph {
 
     /**
      * Constructor used to hide the public constructor
      */
-    private RamGraphCreator() {
+    private RamGraph() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -29,10 +29,10 @@ public class RamGraphCreator {
      * @param tpsData TPS Data collected by TPSCountTimer, one data point for each minute.
      * @return Series data for HighCharts
      */
-    public static String buildSeriesDataString(List<TPS> tpsData) {
+    public static String createSeries(List<TPS> tpsData) {
         List<Point> points = tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getUsedMemory()))
                 .collect(Collectors.toList());
-        return SeriesCreator.seriesGraph(points, true);
+        return LineSeries.createSeries(points, true);
     }
 }

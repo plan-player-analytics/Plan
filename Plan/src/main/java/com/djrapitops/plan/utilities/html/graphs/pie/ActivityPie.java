@@ -14,9 +14,9 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class ActivityPieCreator {
+public class ActivityPie {
 
-    private ActivityPieCreator() {
+    private ActivityPie() {
         throw new IllegalStateException("Utility Class");
     }
 
@@ -24,7 +24,7 @@ public class ActivityPieCreator {
         return new String[]{"Very Active", "Active", "Regular", "Irregular", "Inactive"};
     }
 
-    public static String createSeriesData(Map<String, Set<UUID>> activityData) {
+    public static String createSeries(Map<String, Set<UUID>> activityData) {
         String[] colors = Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
 
@@ -38,6 +38,6 @@ public class ActivityPieCreator {
             i++;
         }
 
-        return PieSeriesCreator.createSeriesData(slices);
+        return PieSeries.createSeries(slices);
     }
 }

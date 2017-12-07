@@ -7,7 +7,7 @@ package main.java.com.djrapitops.plan.utilities.html.graphs;
 import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.ActivityPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,14 +19,14 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class ActivityStackGraphCreator {
+public class ActivityStackGraph {
 
-    private ActivityStackGraphCreator() {
+    private ActivityStackGraph() {
         throw new IllegalStateException("Utility Class");
     }
 
     public static String[] createSeries(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
-        String[] sliceNames = ActivityPieCreator.getSliceNames();
+        String[] sliceNames = ActivityPie.getSliceNames();
         String[] colors = Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
 

@@ -11,12 +11,12 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class PieSeriesCreator {
-    private PieSeriesCreator() {
+public class PieSeries {
+    private PieSeries() {
         throw new IllegalStateException("Utility Class");
     }
 
-    public static String createSeriesData(List<PieSlice> slices) {
+    public static String createSeries(List<PieSlice> slices) {
         StringBuilder seriesBuilder = new StringBuilder("[");
         int i = 0;
         int size = slices.size();

@@ -13,7 +13,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
@@ -125,7 +125,7 @@ public class HtmlStructure {
         int playerCount = db.getUserInfoTable().getServerUserCount(serverUUID);
         String playerData = "[]";
         try {
-            playerData = PlayerActivityGraphCreator.buildSeriesDataString(db.getTpsTable().getTPSData(serverUUID));
+            playerData = PlayerActivityGraph.createSeries(db.getTpsTable().getTPSData(serverUUID));
         } catch (SQLException e) {
             Log.toLog(HtmlStructure.class.getClass().getName(), e);
         }

@@ -11,27 +11,20 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class TPSGraphCreator {
+public class TPSGraph {
 
     /**
      * Constructor used to hide the public constructor
      */
-    private TPSGraphCreator() {
+    private TPSGraph() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String buildSeriesDataString(List<TPS> tpsData) {
+    public static String createSeries(List<TPS> tpsData) {
         List<Point> points = tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getTicksPerSecond()))
                 .collect(Collectors.toList());
-        return SeriesCreator.seriesGraph(points, true);
+        return LineSeries.createSeries(points, true);
 
-    }
-
-    public static List<TPS> filterTPS(List<TPS> tpsData, long nowMinusScale) {
-        return tpsData.stream()
-                .filter(Objects::nonNull)
-                .filter(t -> t.getDate() >= nowMinusScale)
-                .collect(Collectors.toList());
     }
 }

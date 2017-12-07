@@ -8,7 +8,7 @@ import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.data.container.TPS;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
-import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
 import main.java.com.djrapitops.plan.utilities.html.graphs.line.*;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,34 +54,34 @@ public class GraphTest {
     @Test
     public void testGraphCreators() {
         String expected = "[[0,0.0],[1,1.0],[2,2.0],[3,3.0],[4,4.0],[5,5.0],[6,6.0],[7,7.0],[8,8.0],[9,9.0]]";
-        assertEquals(expected, CPUGraphCreator.buildSeriesDataString(tpsList));
-        assertEquals(expected, PlayerActivityGraphCreator.buildSeriesDataString(tpsList));
+        assertEquals(expected, CPUGraph.createSeries(tpsList));
+        assertEquals(expected, PlayerActivityGraph.createSeries(tpsList));
         // TODO Fix TimeZone Dependency of this test
-        // assertEquals("[{x:3600000, y:3, z:14, marker: { radius:14}},]", PunchCardGraphCreator.createDataSeries(sessionList));
+        // assertEquals("[{x:3600000, y:3, z:14, marker: { radius:14}},]", PunchCardGraph.createSeries(sessionList));
 
-        assertEquals(expected, RamGraphCreator.buildSeriesDataString(tpsList));
-        assertEquals(expected, TPSGraphCreator.buildSeriesDataString(tpsList));
-        assertEquals(expected, WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList));
-        assertEquals(expected, WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList));
-//        assertEquals("[{'code':'1','value':1},{'code':'2','value':2},{'code':'3','value':3},{'code':'4','value':4},{'code':'5','value':5},{'code':'6','value':6},{'code':'7','value':7},{'code':'8','value':8},{'code':'9','value':9}]", WorldMapCreator.createDataSeries(geoList));
+        assertEquals(expected, RamGraph.createSeries(tpsList));
+        assertEquals(expected, TPSGraph.createSeries(tpsList));
+        assertEquals(expected, WorldLoadGraph.createSeriesChunks(tpsList));
+        assertEquals(expected, WorldLoadGraph.createSeriesEntities(tpsList));
+//        assertEquals("[{'code':'1','value':1},{'code':'2','value':2},{'code':'3','value':3},{'code':'4','value':4},{'code':'5','value':5},{'code':'6','value':6},{'code':'7','value':7},{'code':'8','value':8},{'code':'9','value':9}]", WorldMap.createSeries(geoList));
         // TODO fix config mock dependency
         //        assertEquals("[[{name:'WORLD',y:0,drilldown: 'WORLD'}], [{name:'WORLD', id:'WORLD',colors: gmPieColors,data: [['SURVIVAL',0],['SPECTATOR',0],['CREATIVE',0],['ADVENTURE',0]]}]]",
-//                Arrays.toString(WorldPieCreator.createSeriesData(worldTimes)));
+//                Arrays.toString(WorldPie.createSeries(worldTimes)));
     }
 
     @Test
     public void testGraphCreatorsForBracketMistakes() {
         String[] series = new String[]{
-                CPUGraphCreator.buildSeriesDataString(tpsList),
-                PlayerActivityGraphCreator.buildSeriesDataString(tpsList),
-                PunchCardGraphCreator.createDataSeries(sessionList),
-                RamGraphCreator.buildSeriesDataString(tpsList),
-                TPSGraphCreator.buildSeriesDataString(tpsList),
-                WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList),
-                WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList),
-//                WorldMapCreator.createDataSeries(geoList),
+                CPUGraph.createSeries(tpsList),
+                PlayerActivityGraph.createSeries(tpsList),
+                PunchCardGraph.createSeries(sessionList),
+                RamGraph.createSeries(tpsList),
+                TPSGraph.createSeries(tpsList),
+                WorldLoadGraph.createSeriesChunks(tpsList),
+                WorldLoadGraph.createSeriesEntities(tpsList),
+//                WorldMap.createSeries(geoList),
                 // TODO fix config mock dependency
-//                Arrays.toString(WorldPieCreator.createSeriesData(worldTimes))
+//                Arrays.toString(WorldPie.createSeries(worldTimes))
         };
         for (String test : series) {
             int opened = StringUtils.countMatches(test, "{");
@@ -95,7 +95,7 @@ public class GraphTest {
 
     @Test
     public void testSeriesCreator() {
-        String result = StringUtils.removeAll(SeriesCreator.seriesGraph(points, false, false), "[\\[\\]]");
+        String result = StringUtils.removeAll(LineSeries.createSeries(points, false, false), "[\\[\\]]");
         String[] splittedResult = result.split(",");
 
         Map<String, String> expected = new LinkedHashMap<>();
