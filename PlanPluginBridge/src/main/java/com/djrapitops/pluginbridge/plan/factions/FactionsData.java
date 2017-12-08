@@ -68,10 +68,14 @@ public class FactionsData extends PluginData {
 
                 if (mPlayer.hasFaction()) {
                     Faction faction = mPlayer.getFaction();
-                    String leadername = faction.getLeader().getName();
+                    if (faction == null) {
+                        continue;
+                    }
+                    MPlayer leader = faction.getLeader();
+                    String leaderName = leader != null ? leader.getName() : "";
                     String factionName = faction.isNone() ? "-" : faction.getName();
 
-                    userFactions.put(uuid, mPlayer.getName().equals(leadername) ? "<b>" + factionName + "</b>" : factionName);
+                    userFactions.put(uuid, mPlayer.getName().equals(leaderName) ? "<b>" + factionName + "</b>" : factionName);
                 }
             }
 
@@ -81,16 +85,15 @@ public class FactionsData extends PluginData {
         return analysisContainer;
     }
 
-    public final List<Faction> getTopFactions() {
-        List<Faction> topFactions = new ArrayList<>();
-        topFactions.addAll(FactionColl.get().getAll());
+    private List<Faction> getTopFactions() {
+        List<Faction> topFactions = new ArrayList<>(FactionColl.get().getAll());
         topFactions.remove(FactionColl.get().getWarzone());
         topFactions.remove(FactionColl.get().getSafezone());
         topFactions.remove(FactionColl.get().getNone());
         List<String> hide = Settings.HIDE_FACTIONS.getStringList();
-        topFactions.sort(new FactionComparator());
         return topFactions.stream()
                 .filter(faction -> !hide.contains(faction.getName()))
+                .sorted(new FactionComparator())
                 .collect(Collectors.toList());
     }
 }

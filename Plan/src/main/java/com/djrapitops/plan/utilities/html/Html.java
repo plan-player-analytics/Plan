@@ -64,7 +64,7 @@ public enum Html {
     TABLE_SESSIONS(DIV_W_CLASS_STYLE.parse("box-footer scrollbar", "padding: 2px;",
             TABLE_START_4.parse("Player", "Started", "Length", "World - Time") + "${3}" + TABLE_END.parse())
     ),
-    TABLE_PLAYERS("<table class=\"table table-bordered table-striped table-hover player-table dataTable\"><thead><tr>" +
+    TABLE_PLAYERS_FOOTER("<table class=\"table table-bordered table-striped table-hover player-table dataTable\"><thead><tr>" +
             "<th><i class=\"fa fa-user\"></i> Name</th>" +
             "<th><i class=\"fa fa-check\"></i> Activity Index</th>" +
             "<th><i class=\"fa fa-clock-o\"></i> Playtime</th>" +
@@ -80,6 +80,15 @@ public enum Html {
             "<th><i class=\"fa fa-calendar-check-o\"></i> Last Seen</th>" +
             "<th><i class=\"fa fa-globe\"></i> Geolocation</th>" +
             "</tr></tfoot><tbody>${0}</tbody></table>"),
+    TABLE_PLAYERS("<table class=\"table table-bordered table-striped table-hover player-table dataTable\"><thead><tr>" +
+            "<th><i class=\"fa fa-user\"></i> Name</th>" +
+            "<th><i class=\"fa fa-check\"></i> Activity Index</th>" +
+            "<th><i class=\"fa fa-clock-o\"></i> Playtime</th>" +
+            "<th><i class=\"fa fa-calendar-plus-o\"></i> Sessions</th>" +
+            "<th><i class=\"fa fa-user-plus\"></i> Registered</th>" +
+            "<th><i class=\"fa fa-calendar-check-o\"></i> Last Seen</th>" +
+            "<th><i class=\"fa fa-globe\"></i> Geolocation</th></thead>" +
+            "<tbody>${0}</tbody></table>"),
     TABLE_SESSIONS_START(TABLE_START_3.parse("Session Started", "Session Ended", "Session Length")),
     TABLE_KILLS_START(TABLE_START_3.parse(FONT_AWESOME_ICON.parse("clock-o") + " Time", "Killed", "With")),
     TABLE_FACTIONS_START(TABLE_START_4.parse(FONT_AWESOME_ICON.parse("flag") + " Faction", FONT_AWESOME_ICON.parse("bolt") + " Power", FONT_AWESOME_ICON.parse("map-o") + " Land", FONT_AWESOME_ICON.parse("user") + " Leader")),

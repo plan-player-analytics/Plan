@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.settings.Permissions;
 import main.java.com.djrapitops.plan.settings.Settings;
@@ -40,32 +41,37 @@ public class PlanCommandPreprocessListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        if (player.hasPermission(Permissions.IGNORE_COMMANDUSE.getPermission())) {
-            return;
-        }
 
-        String commandName = event.getMessage().substring(1).split(" ")[0].toLowerCase();
+        try {
+            if (player.hasPermission(Permissions.IGNORE_COMMANDUSE.getPermission())) {
+                return;
+            }
 
-        boolean logUnknownCommands = Settings.LOG_UNKNOWN_COMMANDS.isTrue();
-        boolean combineCommandAliases = Settings.COMBINE_COMMAND_ALIASES.isTrue();
+            String commandName = event.getMessage().substring(1).split(" ")[0].toLowerCase();
 
-        if (!logUnknownCommands || combineCommandAliases) {
-            Command command = plugin.getServer().getPluginCommand(commandName);
-            if (command == null) {
-                try {
-                    command = plugin.getServer().getCommandMap().getCommand(commandName);
-                } catch (NoSuchMethodError ignored) {
-                    /* Ignored, Bukkit 1.8 has no such method */
+            boolean logUnknownCommands = Settings.LOG_UNKNOWN_COMMANDS.isTrue();
+            boolean combineCommandAliases = Settings.COMBINE_COMMAND_ALIASES.isTrue();
+
+            if (!logUnknownCommands || combineCommandAliases) {
+                Command command = plugin.getServer().getPluginCommand(commandName);
+                if (command == null) {
+                    try {
+                        command = plugin.getServer().getCommandMap().getCommand(commandName);
+                    } catch (NoSuchMethodError ignored) {
+                        /* Ignored, Bukkit 1.8 has no such method */
+                    }
+                }
+                if (command == null) {
+                    if (!logUnknownCommands) {
+                        return;
+                    }
+                } else if (combineCommandAliases) {
+                    commandName = command.getName();
                 }
             }
-            if (command == null) {
-                if (!logUnknownCommands) {
-                    return;
-                }
-            } else if (combineCommandAliases) {
-                commandName = command.getName();
-            }
+            plugin.addToProcessQueue(new CommandProcessor(commandName));
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
         }
-        plugin.addToProcessQueue(new CommandProcessor(commandName));
     }
 }

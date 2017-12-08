@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
 import com.djrapitops.plugin.api.systems.NotificationCenter;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
@@ -43,13 +44,17 @@ public class PlanPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLogin(PlayerLoginEvent event) {
-        PlayerLoginEvent.Result result = event.getResult();
-        UUID uuid = event.getPlayer().getUniqueId();
-        boolean op = event.getPlayer().isOp();
-        if (result == PlayerLoginEvent.Result.KICK_BANNED) {
-            plugin.addToProcessQueue(new BanAndOpProcessor(uuid, true, op));
-        } else {
-            plugin.addToProcessQueue(new BanAndOpProcessor(uuid, false, op));
+        try {
+            PlayerLoginEvent.Result result = event.getResult();
+            UUID uuid = event.getPlayer().getUniqueId();
+            boolean op = event.getPlayer().isOp();
+            if (result == PlayerLoginEvent.Result.KICK_BANNED) {
+                plugin.addToProcessQueue(new BanAndOpProcessor(uuid, true, op));
+            } else {
+                plugin.addToProcessQueue(new BanAndOpProcessor(uuid, false, op));
+            }
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
         }
     }
 
@@ -63,11 +68,15 @@ public class PlanPlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
-        if (!countKicks || event.isCancelled()) {
-            return;
+        try {
+            if (!countKicks || event.isCancelled()) {
+                return;
+            }
+            UUID uuid = event.getPlayer().getUniqueId();
+            plugin.addToProcessQueue(new KickProcessor(uuid));
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
         }
-        UUID uuid = event.getPlayer().getUniqueId();
-        plugin.addToProcessQueue(new KickProcessor(uuid));
     }
 
     /**
@@ -79,34 +88,34 @@ public class PlanPlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        NotificationCenter.checkNotifications(player);
+        try {
+            Player player = event.getPlayer();
+            NotificationCenter.checkNotifications(player);
 
-        UUID uuid = player.getUniqueId();
-        long time = MiscUtils.getTime();
+            UUID uuid = player.getUniqueId();
+            long time = MiscUtils.getTime();
 
-        String world = player.getWorld().getName();
-        String gm = player.getGameMode().name();
+            String world = player.getWorld().getName();
+            String gm = player.getGameMode().name();
 
-        String ip = player.getAddress().getAddress().getHostAddress();
+            String ip = player.getAddress().getAddress().getHostAddress();
 
-        String playerName = player.getName();
-        String displayName = player.getDisplayName();
+            String playerName = player.getName();
+            String displayName = player.getDisplayName();
 
-        int playersOnline = plugin.getTpsCountTimer().getLatestPlayersOnline();
+            int playersOnline = plugin.getTpsCountTimer().getLatestPlayersOnline();
 
-//        BungeePluginChannelSenderProcessor bungeePluginChannelSenderProcessor = null;
-//        if (!plugin.getInfoManager().isUsingAnotherWebServer() && Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse()) {
-//            bungeePluginChannelSenderProcessor = new BungeePluginChannelSenderProcessor(player);
-//        }
-        cache.cacheSession(uuid, Session.start(time, world, gm));
-        plugin.addToProcessQueue(
-                new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
-                        new IPUpdateProcessor(uuid, ip, time),
-                        new NameProcessor(uuid, playerName, displayName)
-                ),
-                new NetworkPageUpdateProcessor(plugin.getInfoManager())
-        );
+            cache.cacheSession(uuid, Session.start(time, world, gm));
+            plugin.addToProcessQueue(
+                    new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
+                            new IPUpdateProcessor(uuid, ip, time),
+                            new NameProcessor(uuid, playerName, displayName)
+                    ),
+                    new NetworkPageUpdateProcessor(plugin.getInfoManager())
+            );
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
+        }
     }
 
     /**
@@ -118,20 +127,23 @@ public class PlanPlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
+        try {
+            long time = MiscUtils.getTime();
+            Player player = event.getPlayer();
+            UUID uuid = player.getUniqueId();
 
-        long time = MiscUtils.getTime();
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+            plugin.addToProcessQueue(
+                    new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()),
+                    new EndSessionProcessor(uuid, time),
+                    new NetworkPageUpdateProcessor(plugin.getInfoManager())
+            );
 
-        plugin.addToProcessQueue(
-                new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()),
-                new EndSessionProcessor(uuid, time),
-                new NetworkPageUpdateProcessor(plugin.getInfoManager())
-        );
-
-        if (cache.isFirstSession(uuid)) {
-            int messagesSent = plugin.getDataCache().getFirstSessionMsgCount(uuid);
-            plugin.addToProcessQueue(new FirstLeaveProcessor(uuid, time, messagesSent));
+            if (cache.isFirstSession(uuid)) {
+                int messagesSent = plugin.getDataCache().getFirstSessionMsgCount(uuid);
+                plugin.addToProcessQueue(new FirstLeaveProcessor(uuid, time, messagesSent));
+            }
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
         }
     }
 

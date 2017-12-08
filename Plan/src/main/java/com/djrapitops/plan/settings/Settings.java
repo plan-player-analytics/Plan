@@ -28,6 +28,7 @@ public enum Settings {
     DISPLAY_SESSIONS_AS_TABLE("Customization.Display.SessionsAsTable"),
     APPEND_WORLD_PERC("Customization.Display.LargestWorldPercInSessionTitle"),
     ORDER_WORLD_PIE_BY_PERC("Customization.Display.OrderWorldPieByPercentage"),
+    PLAYERTABLE_FOOTER("Customization.Display.PlayerTableFooter"),
     WEBSERVER_DISABLED("WebServer.DisableWebServer"),
 
     // Integer
@@ -48,6 +49,7 @@ public enum Settings {
     DB_USER("Database.MySQL.User"),
     DB_PASS("Database.MySQL.Password"),
     DB_DATABASE("Database.MySQL.Database"),
+    DB_LAUNCH_OPTIONS("Database.MySQL.LaunchOptions"),
     LOCALE("Plugin.Locale"),
     WEBSERVER_IP("WebServer.InternalIP"),
     ANALYSIS_EXPORT_PATH("Analysis.Export.DestinationFolder"),

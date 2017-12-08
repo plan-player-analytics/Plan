@@ -1,7 +1,9 @@
 package main.java.com.djrapitops.plan.command;
 
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanBungee;
 
 import java.util.UUID;
 
@@ -27,6 +29,15 @@ public class ConditionUtils {
      * @return has the player played before, false if uuid is null.
      */
     public static boolean playerHasPlayed(UUID uuid) {
-        return Verify.notNull(uuid) && Plan.getInstance().getServer().getOfflinePlayer(uuid).hasPlayedBefore();
+        if ( Verify.containsNull(uuid)) {
+            return false;
+        }
+        boolean hasPlayed;
+        if (Check.isBukkitAvailable()) {
+            hasPlayed = Plan.getInstance().getServer().getOfflinePlayer(uuid).hasPlayedBefore();
+        } else {
+            hasPlayed = PlanBungee.getInstance().getDB().wasSeenBefore(uuid);
+        }
+        return hasPlayed;
     }
 }

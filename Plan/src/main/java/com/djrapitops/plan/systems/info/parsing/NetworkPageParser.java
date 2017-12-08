@@ -96,7 +96,7 @@ public class NetworkPageParser extends PageParser {
         if (allTimePeak.isPresent()) {
             TPS tps = allTimePeak.get();
             addValue("bestPeakTime", FormatUtils.formatTimeStampYear(tps.getDate()));
-            addValue("playersBestPeak", FormatUtils.formatTimeStampYear(tps.getPlayers()));
+            addValue("playersBestPeak", tps.getPlayers());
         } else {
             addValue("bestPeakTime", "No Data");
             addValue("playersBestPeak", "");
@@ -104,7 +104,7 @@ public class NetworkPageParser extends PageParser {
         if (lastPeak.isPresent()) {
             TPS tps = lastPeak.get();
             addValue("lastPeakTime", FormatUtils.formatTimeStampYear(tps.getDate()));
-            addValue("playersLastPeak", FormatUtils.formatTimeStampYear(tps.getPlayers()));
+            addValue("playersLastPeak", tps.getPlayers());
         } else {
             addValue("lastPeakTime", "No Data");
             addValue("playersLastPeak", "");

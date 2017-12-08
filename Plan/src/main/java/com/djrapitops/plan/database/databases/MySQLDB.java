@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.databases;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.settings.Settings;
@@ -35,8 +36,13 @@ public class MySQLDB extends SQLDB {
         String host = Settings.DB_HOST.toString();
         String port = Integer.toString(Settings.DB_PORT.getNumber());
         String database = Settings.DB_DATABASE.toString();
+        String launchOptions = Settings.DB_LAUNCH_OPTIONS.toString();
+        if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
+            Log.error("Launch Options were faulty, using default (?rewriteBatchedStatements=true&useSSL=false)");
+            launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
+        }
 
-        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?rewriteBatchedStatements=true&useSSL=false");
+        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
         String username = Settings.DB_USER.toString();
         String password = Settings.DB_PASS.toString();

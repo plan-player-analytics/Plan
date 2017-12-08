@@ -48,6 +48,8 @@ Database:
     User: root
     Password: minecraft
     Database: Plan
+    # Launch options to append after driver address, for example
+    LaunchOptions: "?rewriteBatchedStatements=true&useSSL=false"
 # -----------------------------------------------------
 Commands:
   AlternativeIP:
@@ -84,6 +86,7 @@ Customization:
     MaxSessions: 50
     MaxPlayers: 2500
     MaxPlayersPlayersPage: 25000
+    PlayerTableFooter: true
   Formatting:
     DecimalPoints: '#.##'
     TimeAmount:

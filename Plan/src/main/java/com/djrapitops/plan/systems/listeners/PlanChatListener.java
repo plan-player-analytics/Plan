@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.processing.player.NameProcessor;
@@ -42,15 +43,19 @@ public class PlanChatListener implements Listener {
             return;
         }
 
-        Player p = event.getPlayer();
-        UUID uuid = p.getUniqueId();
-        String name = p.getName();
-        String displayName = p.getDisplayName();
+        try {
+            Player p = event.getPlayer();
+            UUID uuid = p.getUniqueId();
+            String name = p.getName();
+            String displayName = p.getDisplayName();
 
-        if (dataCache.isFirstSession(uuid)) {
-            dataCache.firstSessionMessageSent(uuid);
+            if (dataCache.isFirstSession(uuid)) {
+                dataCache.firstSessionMessageSent(uuid);
+            }
+
+            plugin.addToProcessQueue(new NameProcessor(uuid, name, displayName));
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
         }
-
-        plugin.addToProcessQueue(new NameProcessor(uuid, name, displayName));
     }
 }

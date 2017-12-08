@@ -87,6 +87,10 @@ public class KillsTable extends UserIDTable {
                     UUID victim = kill.getVictim();
                     long date = kill.getTime();
                     String weapon = kill.getWeapon();
+                    if (Verify.containsNull(victim, uuid)) {
+                        continue;
+                    }
+
                     statement.setString(1, uuid.toString());
                     statement.setString(2, victim.toString());
                     statement.setInt(3, sessionID);
