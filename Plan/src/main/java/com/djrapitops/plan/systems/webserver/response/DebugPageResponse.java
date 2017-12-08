@@ -159,8 +159,8 @@ public class DebugPageResponse extends ErrorResponse {
             for (String line : Benchmark.getAverages().asStringArray()) {
                 content.append(line).append("<br>");
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            content.append("ArrayIndexOutOfBoundsException on Benchmark.getAverages().asStringArray()");
+        } catch (Exception e) {
+            content.append("Exception on Benchmark.getAverages().asStringArray()");
         }
         content.append("&#96;&#96;&#96;</pre>");
     }
