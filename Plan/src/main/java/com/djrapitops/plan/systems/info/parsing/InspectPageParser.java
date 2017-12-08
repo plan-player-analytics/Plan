@@ -72,7 +72,6 @@ public class InspectPageParser extends PageParser {
 
             return parse(profile, serverUUID, serverNames);
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
             throw new ParseException(e);
         }
     }
