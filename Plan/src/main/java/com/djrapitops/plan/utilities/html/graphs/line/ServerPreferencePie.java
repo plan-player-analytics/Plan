@@ -5,13 +5,13 @@ import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import java.util.Map;
 import java.util.UUID;
 
-public class ServerPreferencePieCreator {
+public class ServerPreferencePie {
 
-    private ServerPreferencePieCreator() {
+    private ServerPreferencePie() {
         throw new IllegalStateException("Utility Class");
     }
 
-    public static String createSeriesData(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
+    public static String createSeries(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
         StringBuilder seriesBuilder = new StringBuilder("[");
         int i = 0;
         int size = serverWorldTimes.size();

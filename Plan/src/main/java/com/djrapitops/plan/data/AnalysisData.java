@@ -18,12 +18,12 @@ import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.ActivityStackGraphCreator;
-import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
-import main.java.com.djrapitops.plan.utilities.html.graphs.WorldMapCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
+import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
+import main.java.com.djrapitops.plan.utilities.html.graphs.WorldMap;
 import main.java.com.djrapitops.plan.utilities.html.graphs.line.*;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.ActivityPieCreator;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import main.java.com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.CommandUseTableCreator;
@@ -143,8 +143,8 @@ public class AnalysisData extends RawData {
 
         Map<String, Set<UUID>> activityNow = activityData.getOrDefault(now, new HashMap<>());
 
-        String[] activityStackSeries = ActivityStackGraphCreator.createSeries(activityData);
-        String activityPieSeries = ActivityPieCreator.createSeriesData(activityNow);
+        String[] activityStackSeries = ActivityStackGraph.createSeries(activityData);
+        String activityPieSeries = ActivityPie.createSeries(activityNow);
 
         addValue("activityStackCategories", activityStackSeries[0]);
         addValue("activityStackSeries", activityStackSeries[1]);
@@ -170,7 +170,7 @@ public class AnalysisData extends RawData {
     }
 
     private void geolocationsTab(List<String> geoLocations) {
-        addValue("geoMapSeries", WorldMapCreator.createDataSeries(geoLocations));
+        addValue("geoMapSeries", WorldMap.createSeries(geoLocations));
     }
 
     private void onlineActivityNumbers(ServerProfile profile, Map<UUID, List<Session>> sessions, List<PlayerProfile> players) {
@@ -285,7 +285,7 @@ public class AnalysisData extends RawData {
         addValue("tableBodySessions", tables[0]);
         addValue("listRecentLogins", tables[1]);
         addValue("sessionAverage", FormatUtils.formatTimeAmount(MathUtils.averageLong(allSessions.stream().map(Session::getLength))));
-        addValue("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessionsMonth));
+        addValue("punchCardSeries", PunchCardGraph.createSeries(sessionsMonth));
 
         addValue("deaths", ServerProfile.getDeathCount(allSessions));
         addValue("mobKillCount", ServerProfile.getMobKillCount(allSessions));
@@ -302,7 +302,7 @@ public class AnalysisData extends RawData {
                 Html.TABLE_PLAYERS_FOOTER.parse(playersTableBody)
                 : Html.TABLE_PLAYERS.parse(playersTableBody));
         addValue("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
-        String[] seriesData = WorldPieCreator.createSeriesData(worldTimes);
+        String[] seriesData = WorldPie.createSeries(worldTimes);
         addValue("worldSeries", seriesData[0]);
         addValue("gmSeries", seriesData[1]);
         addValue("lastPeakTime", lastPeak != -1 ? FormatUtils.formatTimeStampYear(lastPeak) : "No Data");
@@ -319,12 +319,12 @@ public class AnalysisData extends RawData {
         addValue("tpsSpikeWeek", value("tpsSpikeWeek"));
         addValue("tpsSpikeDay", value("tpsSpikeDay"));
 
-        addValue("playersOnlineSeries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
-        addValue("tpsSeries", TPSGraphCreator.buildSeriesDataString(tpsData));
-        addValue("cpuSeries", CPUGraphCreator.buildSeriesDataString(tpsData));
-        addValue("ramSeries", RamGraphCreator.buildSeriesDataString(tpsData));
-        addValue("entitySeries", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsData));
-        addValue("chunkSeries", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsData));
+        addValue("playersOnlineSeries", PlayerActivityGraph.createSeries(tpsData));
+        addValue("tpsSeries", TPSGraph.createSeries(tpsData));
+        addValue("cpuSeries", CPUGraph.createSeries(tpsData));
+        addValue("ramSeries", RamGraph.createSeries(tpsData));
+        addValue("entitySeries", WorldLoadGraph.createSeriesEntities(tpsData));
+        addValue("chunkSeries", WorldLoadGraph.createSeriesChunks(tpsData));
 
         double averageCPUMonth = MathUtils.averageDouble(tpsDataMonth.stream().map(TPS::getCPUUsage).filter(i -> i != 0));
         double averageCPUWeek = MathUtils.averageDouble(tpsDataWeek.stream().map(TPS::getCPUUsage).filter(i -> i != 0));

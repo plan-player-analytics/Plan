@@ -71,7 +71,7 @@ public class ManageClearCommand extends SubCommand {
         }
 
         try {
-            Database database = ManageUtils.getDB(plugin, dbName);
+            Database database = ManageUtils.getDB(dbName);
             runClearTask(sender, database);
         } catch (DatabaseInitException e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());

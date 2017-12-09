@@ -54,7 +54,7 @@ public class ManageBackupCommand extends SubCommand {
                 return true;
             }
 
-            final Database database = ManageUtils.getDB(plugin, dbName);
+            final Database database = ManageUtils.getDB(dbName);
 
             // If DB is null return
             if (!Condition.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {

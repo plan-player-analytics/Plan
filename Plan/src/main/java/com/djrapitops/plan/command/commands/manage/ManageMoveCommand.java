@@ -71,8 +71,8 @@ public class ManageMoveCommand extends SubCommand {
         }
 
         try {
-            final Database fromDatabase = ManageUtils.getDB(plugin, fromDB);
-            final Database toDatabase = ManageUtils.getDB(plugin, toDB);
+            final Database fromDatabase = ManageUtils.getDB(fromDB);
+            final Database toDatabase = ManageUtils.getDB(toDB);
 
             runMoveTask(fromDatabase, toDatabase, sender);
         } catch (Exception e) {

@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.6.0
  */
-public class PunchCardGraphCreator {
+public class PunchCardGraph {
 
     /**
      * Constructor used to hide the public constructor
      */
-    private PunchCardGraphCreator() {
+    private PunchCardGraph() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -34,10 +34,10 @@ public class PunchCardGraphCreator {
      * @param sessions Sessions (Unique/Player) to be placed into the PunchCard.
      * @return Data array as a string.
      */
-    public static String createDataSeries(Collection<Session> sessions) {
+    public static String createSeries(Collection<Session> sessions) {
         List<Long> sessionStarts = getSessionStarts(sessions);
         List<int[]> daysAndHours = AnalysisUtils.getDaysAndHours(sessionStarts);
-        int[][] dataArray = createDataArray(daysAndHours);
+        int[][] dataArray = turnIntoArray(daysAndHours);
         int big = findBiggestValue(dataArray);
         int[][] scaled = scale(dataArray, big);
         StringBuilder arrayBuilder = new StringBuilder("[");
@@ -62,7 +62,7 @@ public class PunchCardGraphCreator {
         return arrayBuilder.toString();
     }
 
-    private static int[][] createDataArray(List<int[]> daysAndHours) {
+    private static int[][] turnIntoArray(List<int[]> daysAndHours) {
         int[][] dataArray = createEmptyArray();
         for (int[] dAndH : daysAndHours) {
             int d = dAndH[0];

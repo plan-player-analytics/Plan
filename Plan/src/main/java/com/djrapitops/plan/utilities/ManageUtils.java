@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.database.tables.move.BatchOperationTable;
+import main.java.com.djrapitops.plan.systems.DatabaseSystem;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -33,7 +33,7 @@ public class ManageUtils {
         Plan plugin = Plan.getInstance();
         String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
         String fileName = dbName + "-backup-" + timeStamp;
-        SQLiteDB backupDB = new SQLiteDB(plugin, fileName);
+        SQLiteDB backupDB = new SQLiteDB(fileName);
         Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
         if (uuids.isEmpty()) {
             return;
@@ -74,16 +74,8 @@ public class ManageUtils {
         fromDB.copyEverything(toDB);
     }
 
-    public static Database getDB(Plan plugin, String dbName) throws DatabaseInitException {
-        Database database = null;
-        for (Database sqldb : plugin.getDatabases()) {
-            String dbConfigName = sqldb.getConfigName();
-            if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
-                database = sqldb;
-                database.init();
-                break;
-            }
-        }
-        return database;
+    @Deprecated
+    public static Database getDB(String dbName) throws DatabaseInitException {
+        return DatabaseSystem.getActiveDatabase(dbName);
     }
 }

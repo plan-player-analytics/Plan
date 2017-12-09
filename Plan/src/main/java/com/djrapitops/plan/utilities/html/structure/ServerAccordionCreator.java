@@ -13,7 +13,7 @@ import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import java.util.List;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class ServerAccordionCreator {
             String worldId = "worldPieServer" + sanitizedServerName;
             AnalysisUtils.addMissingWorlds(worldTimes);
 
-            String[] worldData = WorldPieCreator.createSeriesData(worldTimes);
+            String[] worldData = WorldPie.createSeries(worldTimes);
 
             // Accordion panel header
             html.append("<div class=\"panel panel-col-").append(Theme.getValue(ThemeVal.PARSED_SERVER_ACCORDION)).append("\">")

@@ -69,7 +69,7 @@ public class DatabaseTest {
         TestInit t = TestInit.init();
         plan = t.getPlanMock();
 
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
+        db = new SQLiteDB("debug" + MiscUtils.getTime());
         db.init();
 
         when(plan.getDB()).thenReturn(db);
@@ -132,12 +132,12 @@ public class DatabaseTest {
 
     @Test
     public void testMySQLGetConfigName() {
-        assertEquals("mysql", new MySQLDB(plan).getConfigName());
+        assertEquals("mysql", new MySQLDB().getConfigName());
     }
 
     @Test
     public void testMySQLGetName() {
-        assertEquals("MySQL", new MySQLDB(plan).getName());
+        assertEquals("MySQL", new MySQLDB().getName());
     }
 
     @Test(timeout = 3000)
@@ -776,7 +776,7 @@ public class DatabaseTest {
 
     @Test
     public void testBackupAndRestore() throws SQLException, DatabaseInitException {
-        SQLiteDB backup = new SQLiteDB(plan, "debug-backup" + MiscUtils.getTime());
+        SQLiteDB backup = new SQLiteDB("debug-backup" + MiscUtils.getTime());
         backup.init();
 
         saveAllData(db);

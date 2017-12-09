@@ -12,9 +12,9 @@ import main.java.com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class WorldPieCreator {
+public class WorldPie {
 
-    private WorldPieCreator() {
+    private WorldPie() {
         throw new IllegalStateException("Utility Class");
     }
 
@@ -24,21 +24,21 @@ public class WorldPieCreator {
      * @param worldTimes WorldTimes object.
      * @return String array, index 0: Series data, 1: drilldown data
      */
-    public static String[] createSeriesData(WorldTimes worldTimes) {
-        List<PieSlice> slices = turnToSlices(worldTimes);
+    public static String[] createSeries(WorldTimes worldTimes) {
+        List<PieSlice> slices = turnIntoSlices(worldTimes);
 
         if (Settings.ORDER_WORLD_PIE_BY_PERC.isTrue()) {
             slices.sort(new PieSliceComparator());
         }
 
-        String seriesData = PieSeriesCreator.createSeriesData(slices);
+        String seriesData = PieSeries.createSeries(slices);
 
-        String drilldownData = createDrilldownData(worldTimes);
+        String drilldownData = createDrilldown(worldTimes);
 
         return new String[]{seriesData, drilldownData};
     }
 
-    private static List<PieSlice> turnToSlices(WorldTimes worldTimes) {
+    private static List<PieSlice> turnIntoSlices(WorldTimes worldTimes) {
         String[] colors = Theme.getValue(ThemeVal.GRAPH_WORLD_PIE).split(", ");
         int colLenght = colors.length;
 
@@ -90,7 +90,7 @@ public class WorldPieCreator {
         return playtimePerAlias;
     }
 
-    private static String createDrilldownData(WorldTimes worldTimes) {
+    private static String createDrilldown(WorldTimes worldTimes) {
         StringBuilder drilldownBuilder = new StringBuilder();
         int i = 0;
 

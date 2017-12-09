@@ -17,14 +17,15 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.command.PlanBungeeCommand;
 import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
+import main.java.com.djrapitops.plan.systems.DatabaseSystem;
+import main.java.com.djrapitops.plan.systems.FileSystem;
+import main.java.com.djrapitops.plan.systems.Systems;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
@@ -37,10 +38,8 @@ import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import net.md_5.bungee.api.ChatColor;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -53,8 +52,9 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     private Config config;
     private Theme theme;
 
+    private Systems systems;
+
     private WebServer webServer;
-    private Database db;
     private BungeeServerInfoManager serverInfoManager;
     private BungeeInformationManager infoManager;
     private ServerVariableHolder variableHolder;
@@ -65,8 +65,10 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     public void onEnable() {
         super.onEnable();
         try {
-            File configFile = new File(getDataFolder(), "config.yml");
-            config = new Config(configFile);
+            systems = new Systems(this);
+            FileSystem.getInstance().init();
+
+            config = new Config(FileSystem.getConfigFile());
             config.copyDefaults(FileUtil.lines(this, "bungeeconfig.yml"));
             config.save();
 
@@ -93,8 +95,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
             theme = new Theme();
 
-            Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
-            initDatabase();
+            DatabaseSystem.getInstance().init();
 
             registerCommand("planbungee", new PlanBungeeCommand(this));
 
@@ -168,13 +169,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         if (webServer != null) {
             webServer.stop();
         }
-        if (db != null) {
-            try {
-                db.close();
-            } catch (SQLException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
-        }
+        systems.close();
         Log.info(Locale.get(Msg.DISABLED).toString());
         super.onDisable();
     }
@@ -193,14 +188,10 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         }
     }
 
-    private void initDatabase() throws DatabaseInitException {
-        db = new MySQLDB(this);
-        db.init();
-    }
-
     @Override
+    @Deprecated
     public Database getDB() {
-        return db;
+        return DatabaseSystem.getInstance().getActiveDatabase();
     }
 
     public BungeeServerInfoManager getServerInfoManager() {
@@ -269,5 +260,10 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     @Override
     public Theme getTheme() {
         return theme;
+    }
+
+    @Override
+    public Systems getSystems() {
+        return systems;
     }
 }

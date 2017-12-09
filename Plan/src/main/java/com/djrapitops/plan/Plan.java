@@ -34,20 +34,19 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.databases.MySQLDB;
-import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
+import main.java.com.djrapitops.plan.systems.DatabaseSystem;
+import main.java.com.djrapitops.plan.systems.FileSystem;
+import main.java.com.djrapitops.plan.systems.Systems;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
@@ -67,12 +66,9 @@ import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -91,11 +87,10 @@ public class Plan extends BukkitPlugin implements IPlan {
     private Config config;
     private Theme theme;
 
+    private Systems systems;
+
     private ProcessingQueue processingQueue;
     private HookHandler hookHandler; // Manages 3rd party data sources
-
-    private Database db;
-    private Set<Database> databases;
 
     private WebServer webServer;
 
@@ -148,10 +143,10 @@ public class Plan extends BukkitPlugin implements IPlan {
     public void onEnable() {
         super.onEnable();
         try {
-            File dataFolder = getDataFolder();
-            dataFolder.mkdirs();
-            File configFile = new File(dataFolder, "config.yml");
-            config = new Config(configFile);
+            systems = new Systems(this);
+            FileSystem.getInstance().init();
+
+            config = new Config(FileSystem.getConfigFile());
             config.copyDefaults(FileUtil.lines(this, "config.yml"));
             config.save();
 
@@ -191,10 +186,7 @@ public class Plan extends BukkitPlugin implements IPlan {
             serverVariableHolder = new ServerVariableHolder(getServer());
             Benchmark.stop("Enable", "Reading server variables");
 
-            Benchmark.start("Init Database");
-            Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
-            initDatabase();
-            Benchmark.stop("Enable", "Init Database");
+            DatabaseSystem.getInstance().init();
 
             Benchmark.start("WebServer Initialization");
             webServer = new WebServer(this);
@@ -351,6 +343,9 @@ public class Plan extends BukkitPlugin implements IPlan {
                 }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
             }
         }
+
+        systems.close();
+
         Log.info(Locale.get(Msg.DISABLED).toString());
         Benchmark.pluginDisabled(Plan.class);
         DebugLog.pluginDisabled(Plan.class);
@@ -383,34 +378,6 @@ public class Plan extends BukkitPlugin implements IPlan {
     }
 
     /**
-     * Initializes the database according to settings in the config.
-     * <p>
-     * If database connection can not be established plugin is disabled.
-     */
-    private void initDatabase() throws DatabaseInitException {
-        databases = new HashSet<>();
-        databases.add(new MySQLDB(this));
-        databases.add(new SQLiteDB(this));
-
-        String dbType = Settings.DB_TYPE.toString().toLowerCase().trim();
-
-        for (Database database : databases) {
-            String databaseType = database.getConfigName().toLowerCase().trim();
-            if (Verify.equalsIgnoreCase(dbType, databaseType)) {
-                this.db = database;
-                break;
-            }
-        }
-
-        if (db == null) {
-            throw new DatabaseInitException(Locale.get(Msg.ENABLE_FAIL_WRONG_DB).toString() + " " + dbType);
-        }
-
-        db.init();
-        Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
-    }
-
-    /**
      * Used to access Cache.
      *
      * @return Current instance of the DataCache
@@ -424,8 +391,9 @@ public class Plan extends BukkitPlugin implements IPlan {
      *
      * @return the Current Database
      */
+    @Deprecated
     public Database getDB() {
-        return db;
+        return DatabaseSystem.getInstance().getActiveDatabase();
     }
 
     /**
@@ -444,17 +412,6 @@ public class Plan extends BukkitPlugin implements IPlan {
      */
     public HookHandler getHookHandler() {
         return hookHandler;
-    }
-
-    /**
-     * Used to get all possible database objects.
-     * <p>
-     * #init() might need to be called in order for the object to function.
-     *
-     * @return Set containing the SqLite and MySQL objects.
-     */
-    public Set<Database> getDatabases() {
-        return databases;
     }
 
     /**
@@ -580,5 +537,9 @@ public class Plan extends BukkitPlugin implements IPlan {
     @Override
     public Theme getTheme() {
         return theme;
+    }
+
+    public Systems getSystems() {
+        return systems;
     }
 }

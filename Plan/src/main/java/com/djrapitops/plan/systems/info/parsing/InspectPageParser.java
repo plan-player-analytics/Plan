@@ -26,9 +26,9 @@ import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparato
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
-import main.java.com.djrapitops.plan.utilities.html.graphs.line.ServerPreferencePieCreator;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
+import main.java.com.djrapitops.plan.utilities.html.graphs.line.ServerPreferencePie;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import main.java.com.djrapitops.plan.utilities.html.structure.ServerAccordionCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.IpTableCreator;
@@ -72,7 +72,6 @@ public class InspectPageParser extends PageParser {
 
             return parse(profile, serverUUID, serverNames);
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
             throw new ParseException(e);
         }
     }
@@ -108,7 +107,7 @@ public class InspectPageParser extends PageParser {
         }
 
         Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
-        addValue("serverPieSeries", ServerPreferencePieCreator.createSeriesData(serverNames, worldTimesPerServer));
+        addValue("serverPieSeries", ServerPreferencePie.createSeries(serverNames, worldTimesPerServer));
         addValue("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
         addValue("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
         addValue("serverPieColors", Theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
@@ -195,11 +194,11 @@ public class InspectPageParser extends PageParser {
         List<Action> actions = profile.getAllActions();
         addValue("tableBodyActions", ActionsTableCreator.createTable(actions));
 
-        String punchCardData = PunchCardGraphCreator.createDataSeries(allSessions);
+        String punchCardData = PunchCardGraph.createSeries(allSessions);
         WorldTimes worldTimes = profile.getWorldTimes();
         AnalysisUtils.addMissingWorlds(worldTimes);
 
-        String[] worldPieData = WorldPieCreator.createSeriesData(worldTimes);
+        String[] worldPieData = WorldPie.createSeries(worldTimes);
 
         addValue("worldPieSeries", worldPieData[0]);
         addValue("gmSeries", worldPieData[1]);

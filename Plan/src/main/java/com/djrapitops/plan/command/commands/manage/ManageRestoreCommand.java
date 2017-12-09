@@ -61,7 +61,7 @@ public class ManageRestoreCommand extends SubCommand {
         }
 
         try {
-            final Database database = ManageUtils.getDB(plugin, db);
+            final Database database = ManageUtils.getDB(db);
 
             runRestoreTask(args, sender, database);
         } catch (Exception e) {
@@ -87,7 +87,7 @@ public class ManageRestoreCommand extends SubCommand {
                         backupDBName = backupDBName.substring(0, backupDBName.length() - 3);
                     }
 
-                    SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
+                    SQLiteDB backupDB = new SQLiteDB(backupDBName);
                     backupDB.init();
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());

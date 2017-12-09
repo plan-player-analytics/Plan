@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WorldMapCreator {
+public class WorldMap {
 
     /**
      * Constructor used to hide the public constructor
      */
-    private WorldMapCreator() {
+    private WorldMap() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -19,7 +19,7 @@ public class WorldMapCreator {
      * @param geoLocations The country names of players
      * @return The created data series
      */
-    public static String createDataSeries(List<String> geoLocations) {
+    public static String createSeries(List<String> geoLocations) {
 
         Map<String, Integer> geoCodeCounts = new HashMap<>();
         Map<String, String> geoCodes = getGeoCodes(geoCodeCounts);

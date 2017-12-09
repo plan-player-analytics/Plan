@@ -14,7 +14,7 @@ import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -113,7 +113,7 @@ public class SessionsTableCreator {
 
         Map<String, Long> playtimePerWorld = session.getWorldTimes().getWorldTimes().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getTotal()));
-        Map<String, Long> playtimePerAlias = WorldPieCreator.transformToAliases(playtimePerWorld, aliases);
+        Map<String, Long> playtimePerAlias = WorldPie.transformToAliases(playtimePerWorld, aliases);
 
         WorldTimes worldTimes = session.getWorldTimes();
         long total = worldTimes.getTotal();

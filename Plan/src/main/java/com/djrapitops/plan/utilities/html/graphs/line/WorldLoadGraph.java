@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
  * @see TPSCountTimer
  * @since 3.6.0
  */
-public class WorldLoadGraphCreator {
+public class WorldLoadGraph {
 
     /**
      * Constructor used to hide the public constructor
      */
-    private WorldLoadGraphCreator() {
+    private WorldLoadGraph() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -29,11 +29,11 @@ public class WorldLoadGraphCreator {
      * @param tpsData TPS Data collected by TPSCountTimer, one data point for each minute.
      * @return Series data for HighCharts
      */
-    public static String buildSeriesDataStringEntities(List<TPS> tpsData) {
+    public static String createSeriesEntities(List<TPS> tpsData) {
         List<Point> points = tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getEntityCount()))
                 .collect(Collectors.toList());
-        return SeriesCreator.seriesGraph(points, true);
+        return LineSeries.createSeries(points, true);
     }
 
     /**
@@ -42,10 +42,10 @@ public class WorldLoadGraphCreator {
      * @param tpsData TPS Data collected by TPSCountTimer, one data point for each minute.
      * @return Series data for HighCharts
      */
-    public static String buildSeriesDataStringChunks(List<TPS> tpsData) {
+    public static String createSeriesChunks(List<TPS> tpsData) {
         List<Point> points = tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getChunksLoaded()))
                 .collect(Collectors.toList());
-        return SeriesCreator.seriesGraph(points, true);
+        return LineSeries.createSeries(points, true);
     }
 }
