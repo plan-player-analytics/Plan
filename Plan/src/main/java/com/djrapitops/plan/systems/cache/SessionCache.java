@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.systems.cache;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.container.Session;
+import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
@@ -31,7 +32,12 @@ public class SessionCache {
 
     public void cacheSession(UUID uuid, Session session) {
         activeSessions.put(uuid, session);
-        plugin.getInfoManager().cachePlayer(uuid);
+        plugin.addToProcessQueue(new Processor<Plan>(plugin) {
+            @Override
+            public void process() {
+                plugin.getInfoManager().cachePlayer(uuid);
+            }
+        });
     }
 
     public void endSession(UUID uuid, long time) {
