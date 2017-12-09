@@ -4,8 +4,8 @@
  */
 package main.java.com.djrapitops.plan.systems;
 
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -39,6 +39,6 @@ public class Systems {
     }
 
     public static Systems getInstance() {
-        return Plan.getInstance().getSystems();
+        return MiscUtils.getIPlan().getSystems();
     }
 }

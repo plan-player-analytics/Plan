@@ -261,4 +261,9 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     public Theme getTheme() {
         return theme;
     }
+
+    @Override
+    public Systems getSystems() {
+        return systems;
+    }
 }
