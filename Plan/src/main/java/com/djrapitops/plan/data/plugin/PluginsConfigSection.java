@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.data.plugin;
 
 import com.djrapitops.plugin.api.config.ConfigNode;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.systems.store.config.ConfigSystem;
 
 import java.io.IOException;
 
@@ -13,25 +13,17 @@ import java.io.IOException;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class PluginConfigSectionHandler {
-
-    private final Plan plan;
-
-    public PluginConfigSectionHandler(Plan plan) {
-        this.plan = plan;
-    }
+public class PluginsConfigSection {
 
     public boolean hasSection(PluginData dataSource) {
         ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
-        if (!section.getChildren().containsKey(pluginName)) {
-            return false;
-        }
-        return section.getConfigNode(pluginName).getChildren().containsKey("Enabled");
+        return section.getChildren().containsKey(pluginName)
+                && section.getConfigNode(pluginName).getChildren().containsKey("Enabled");
     }
 
     private ConfigNode getPluginsSection() {
-        return plan.getMainConfig().getConfigNode("Plugins");
+        return ConfigSystem.getInstance().getConfig().getConfigNode("Plugins");
     }
 
     public void createSection(PluginData dataSource) {

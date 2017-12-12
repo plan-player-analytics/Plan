@@ -18,7 +18,7 @@ import java.util.List;
 public class HookHandler {
 
     private final List<PluginData> additionalDataSources;
-    private final PluginConfigSectionHandler configHandler;
+    private final PluginsConfigSection configHandler;
 
     /**
      * Class constructor, hooks to plugins.
@@ -27,7 +27,7 @@ public class HookHandler {
      */
     public HookHandler(Plan plugin) {
         additionalDataSources = new ArrayList<>();
-        configHandler = new PluginConfigSectionHandler(plugin);
+        configHandler = new PluginsConfigSection();
         try {
             Bridge.hook(this);
         } catch (Exception e) {
