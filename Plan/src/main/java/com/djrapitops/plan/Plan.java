@@ -174,7 +174,7 @@ public class Plan extends BukkitPlugin implements IPlan {
                 throw new PlanEnableException("Something went wrong saving the downloaded GeoLite2 Geolocation database", e);
             }
 
-            new Locale(this).loadLocale();
+            new Locale().loadLocale();
 
             theme = new Theme();
 

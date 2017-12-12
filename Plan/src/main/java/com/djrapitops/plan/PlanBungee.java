@@ -87,7 +87,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             }
             variableHolder = new ServerVariableHolder(getProxy());
 
-            new Locale(this).loadLocale();
+            new Locale().loadLocale();
 
             theme = new Theme();
 

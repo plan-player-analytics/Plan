@@ -45,6 +45,10 @@ public class FileSystem implements SubSystem {
         return getInstance().configFile;
     }
 
+    public static File getLocaleFile() {
+        return new File(getInstance().dataFolder, "locale.txt");
+    }
+
     public static List<String> readFromResource(String fileName) throws IOException {
         return FileUtil.lines(MiscUtils.getIPlan(), fileName);
     }
