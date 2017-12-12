@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.systems.webserver;
+package main.java.com.djrapitops.plan.systems.webserver.pagecache;
 
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 

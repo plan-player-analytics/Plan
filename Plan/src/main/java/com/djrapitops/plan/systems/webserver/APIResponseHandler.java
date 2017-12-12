@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webserver;
 
 import com.djrapitops.plugin.api.utility.log.Log;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
