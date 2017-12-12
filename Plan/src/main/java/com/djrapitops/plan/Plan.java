@@ -44,8 +44,6 @@ import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
-import main.java.com.djrapitops.plan.systems.DatabaseSystem;
-import main.java.com.djrapitops.plan.systems.FileSystem;
 import main.java.com.djrapitops.plan.systems.Systems;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
@@ -57,10 +55,12 @@ import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.processing.importing.importers.OfflinePlayerImporter;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
+import main.java.com.djrapitops.plan.systems.store.FileSystem;
+import main.java.com.djrapitops.plan.systems.store.config.ConfigSystem;
+import main.java.com.djrapitops.plan.systems.store.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.bukkit.ChatColor;
@@ -84,7 +84,6 @@ public class Plan extends BukkitPlugin implements IPlan {
 
     private API api;
 
-    private Config config;
     private Theme theme;
 
     private Systems systems;
@@ -145,10 +144,7 @@ public class Plan extends BukkitPlugin implements IPlan {
         try {
             systems = new Systems(this);
             FileSystem.getInstance().init();
-
-            config = new Config(FileSystem.getConfigFile());
-            config.copyDefaults(FileUtil.lines(this, "config.yml"));
-            config.save();
+            ConfigSystem.getInstance().init();
 
             Log.setDebugMode(Settings.DEBUG.toString());
 
@@ -186,7 +182,7 @@ public class Plan extends BukkitPlugin implements IPlan {
             serverVariableHolder = new ServerVariableHolder(getServer());
             Benchmark.stop("Enable", "Reading server variables");
 
-            DatabaseSystem.getInstance().init();
+            DBSystem.getInstance().init();
 
             Benchmark.start("WebServer Initialization");
             webServer = new WebServer(this);
@@ -359,11 +355,7 @@ public class Plan extends BukkitPlugin implements IPlan {
 
     @Override
     public void onReload() {
-        try {
-            config.read();
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
+        ConfigSystem.reload();
     }
 
     private void registerListeners() {
@@ -393,7 +385,7 @@ public class Plan extends BukkitPlugin implements IPlan {
      */
     @Deprecated
     public Database getDB() {
-        return DatabaseSystem.getInstance().getActiveDatabase();
+        return DBSystem.getInstance().getActiveDatabase();
     }
 
     /**
@@ -473,7 +465,7 @@ public class Plan extends BukkitPlugin implements IPlan {
 
     @Override
     public Config getMainConfig() {
-        return config;
+        return ConfigSystem.getInstance().getConfig();
     }
 
     public InformationManager getInfoManager() {
