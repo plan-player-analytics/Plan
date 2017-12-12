@@ -35,6 +35,7 @@ import main.java.com.djrapitops.plan.systems.store.config.ConfigSystem;
 import main.java.com.djrapitops.plan.systems.store.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import net.md_5.bungee.api.ChatColor;
 
@@ -53,7 +54,6 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     private Systems systems;
 
-    private WebServer webServer;
     private BungeeServerInfoManager serverInfoManager;
     private BungeeInformationManager infoManager;
     private ServerVariableHolder variableHolder;
@@ -103,19 +103,12 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             }
 
             Benchmark.start("WebServer Initialization");
-            webServer = new WebServer(this);
 
             serverInfoManager = new BungeeServerInfoManager(this);
             infoManager = new BungeeInformationManager(this);
-            webServer.initServer();
+
+            WebServerSystem.getInstance().init();
             serverInfoManager.loadServerInfo();
-
-
-            if (!webServer.isEnabled()) {
-                Log.error("WebServer was not successfully initialized.");
-                onDisable();
-                return;
-            }
 
             RunnableFactory.createNew("Enable Bukkit Connection Task", new AbsRunnable() {
                 @Override
@@ -162,9 +155,6 @@ public class PlanBungee extends BungeePlugin implements IPlan {
                 /*ignored*/
             }
         }
-        if (webServer != null) {
-            webServer.stop();
-        }
         systems.close();
         Log.info(Locale.get(Msg.DISABLED).toString());
         super.onDisable();
@@ -197,7 +187,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     @Override
     public WebServer getWebServer() {
-        return webServer;
+        return WebServerSystem.getInstance().getWebServer();
     }
 
 

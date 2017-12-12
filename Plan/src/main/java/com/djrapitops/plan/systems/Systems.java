@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.systems.store.FileSystem;
@@ -13,6 +14,7 @@ import main.java.com.djrapitops.plan.systems.store.config.PlanConfigSystem;
 import main.java.com.djrapitops.plan.systems.store.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.store.database.PlanBungeeDBSystem;
 import main.java.com.djrapitops.plan.systems.store.database.PlanDBSystem;
+import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -24,8 +26,10 @@ import org.apache.commons.lang3.ArrayUtils;
 public class Systems {
 
     private FileSystem fileSystem;
-    private DBSystem databaseSystem;
     private ConfigSystem configSystem;
+    private DBSystem databaseSystem;
+
+    private WebServerSystem webServerSystem;
 
     /**
      * Constructor for Bukkit version.
@@ -37,6 +41,7 @@ public class Systems {
         configSystem = new PlanConfigSystem();
         databaseSystem = new PlanDBSystem();
 
+        webServerSystem = new WebServerSystem(plugin);
     }
 
     /**
@@ -48,13 +53,16 @@ public class Systems {
         fileSystem = new FileSystem(plugin);
         configSystem = new PlanBungeeConfigSystem();
         databaseSystem = new PlanBungeeDBSystem();
+
+        webServerSystem = new WebServerSystem(plugin);
     }
 
     private SubSystem[] getSubSystems() {
         return new SubSystem[]{
                 fileSystem,
                 configSystem,
-                databaseSystem
+                databaseSystem,
+                webServerSystem
         };
     }
 
@@ -62,7 +70,11 @@ public class Systems {
         SubSystem[] subSystems = getSubSystems();
         ArrayUtils.reverse(subSystems);
         for (SubSystem subSystem : subSystems) {
-            subSystem.close();
+            try {
+                subSystem.close();
+            } catch (Exception e) {
+                Log.toLog(Systems.class, e);
+            }
         }
     }
 
@@ -80,5 +92,9 @@ public class Systems {
 
     public ConfigSystem getConfigSystem() {
         return configSystem;
+    }
+
+    public WebServerSystem getWebServerSystem() {
+        return webServerSystem;
     }
 }

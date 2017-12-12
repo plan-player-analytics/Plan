@@ -60,6 +60,7 @@ import main.java.com.djrapitops.plan.systems.store.config.ConfigSystem;
 import main.java.com.djrapitops.plan.systems.store.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
 import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
@@ -90,8 +91,6 @@ public class Plan extends BukkitPlugin implements IPlan {
 
     private ProcessingQueue processingQueue;
     private HookHandler hookHandler; // Manages 3rd party data sources
-
-    private WebServer webServer;
 
     private BukkitInformationManager infoManager;
     private BukkitServerInfoManager serverInfoManager;
@@ -185,15 +184,13 @@ public class Plan extends BukkitPlugin implements IPlan {
             DBSystem.getInstance().init();
 
             Benchmark.start("WebServer Initialization");
-            webServer = new WebServer(this);
-
             processingQueue = new ProcessingQueue();
 
             serverInfoManager = new BukkitServerInfoManager(this);
             infoManager = new BukkitInformationManager(this);
 
-            webServer.initServer();
-            if (!webServer.isEnabled()) {
+            WebServerSystem.getInstance().init();
+            if (!WebServerSystem.isWebServerEnabled()) {
                 if (Settings.WEBSERVER_DISABLED.isTrue()) {
                     Log.warn("WebServer was not initialized. (WebServer.DisableWebServer: true)");
                 } else {
@@ -316,11 +313,6 @@ public class Plan extends BukkitPlugin implements IPlan {
         //Clears the page cache
         PageCache.clearCache();
 
-        // Stop the UI Server
-        if (webServer != null) {
-            webServer.stop();
-        }
-
         // Processes unprocessed processors
         if (processingQueue != null) {
             List<Processor> processors = processingQueue.stopAndReturnLeftovers();
@@ -394,7 +386,7 @@ public class Plan extends BukkitPlugin implements IPlan {
      * @return the WebServer
      */
     public WebServer getWebServer() {
-        return webServer;
+        return WebServerSystem.getInstance().getWebServer();
     }
 
     /**
