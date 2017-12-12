@@ -1,12 +1,11 @@
 package main.java.com.djrapitops.plan.utilities.html.graphs.pie;
 
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
-import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
+import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
 import main.java.com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
 import java.util.*;
@@ -64,14 +63,14 @@ public class WorldPie {
     }
 
     private static Map<String, Long> transformToAliases(Map<String, Long> playtimePerWorld) {
-        WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
+        WorldAliasSettings aliasSettings = new WorldAliasSettings();
         Map<String, String> aliases = aliasSettings.getAliases();
         return transformToAliases(playtimePerWorld, aliases);
     }
 
     public static Map<String, Long> transformToAliases(Map<String, Long> playtimePerWorld, Map<String, String> aliases) {
         // TODO Optimization is possible
-        WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
+        WorldAliasSettings aliasSettings = new WorldAliasSettings();
 
         Map<String, Long> playtimePerAlias = new HashMap<>();
         for (Map.Entry<String, Long> entry : playtimePerWorld.entrySet()) {
@@ -121,7 +120,7 @@ public class WorldPie {
 
     private static Map<String, GMTimes> transformToGMAliases(Map<String, GMTimes> gmTimesMap) {
         // TODO Optimization is possible
-        WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
+        WorldAliasSettings aliasSettings = new WorldAliasSettings();
         Map<String, String> aliases = aliasSettings.getAliases();
 
         Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();

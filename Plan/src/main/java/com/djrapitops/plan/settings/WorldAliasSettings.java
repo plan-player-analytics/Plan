@@ -8,7 +8,7 @@ import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.config.ConfigNode;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.systems.store.config.ConfigSystem;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,17 +20,6 @@ import java.util.Map;
  * @author Rsl1122
  */
 public class WorldAliasSettings {
-
-    private final Plan plugin;
-
-    /**
-     * Constructor.
-     *
-     * @param plugin Current instance of Plan.
-     */
-    public WorldAliasSettings(Plan plugin) {
-        this.plugin = plugin;
-    }
 
     /**
      * Used to get all World aliases in the config
@@ -48,7 +37,7 @@ public class WorldAliasSettings {
     }
 
     private ConfigNode getAliasSection() {
-        Config config = plugin.getMainConfig();
+        Config config = ConfigSystem.getInstance().getConfig();
         return config.getConfigNode(Settings.WORLD_ALIASES.getPath());
     }
 

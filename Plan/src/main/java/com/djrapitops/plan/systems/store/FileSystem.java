@@ -26,7 +26,11 @@ public class FileSystem implements SubSystem {
     private File configFile;
 
     public FileSystem(IPlan plugin) {
-        dataFolder = plugin.getDataFolder();
+        this(plugin.getDataFolder());
+    }
+
+    public FileSystem(File dataFolder) {
+        this.dataFolder = dataFolder;
     }
 
     public static FileSystem getInstance() {
