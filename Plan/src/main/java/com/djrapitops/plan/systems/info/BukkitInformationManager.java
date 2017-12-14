@@ -21,6 +21,7 @@ import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalysisReadyWebAPI;
@@ -114,7 +115,7 @@ public class BukkitInformationManager extends InformationManager {
                 }
             }
         } else {
-            PageCache.cachePage("inspectPage: " + uuid, () -> {
+            PageCache.cachePage(PageId.PLAYER.of(uuid), () -> {
                 try {
                     return new InspectPageResponse(this, uuid);
                 } catch (ParseException e) {
@@ -188,7 +189,7 @@ public class BukkitInformationManager extends InformationManager {
             }
         } else {
             pluginsTabContents.put(uuid, contents);
-            Response inspectResponse = PageCache.loadPage("inspectPage: " + uuid);
+            Response inspectResponse = PageCache.loadPage(PageId.PLAYER.of(uuid));
             if (inspectResponse != null && inspectResponse instanceof InspectPageResponse) {
                 ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(contents);
             }
@@ -231,7 +232,7 @@ public class BukkitInformationManager extends InformationManager {
                 return isAnalysisCached(serverUUID);
             }
         }
-        return PageCache.isCached("analysisPage:" + serverUUID);
+        return PageCache.isCached(PageId.SERVER.of(serverUUID));
     }
 
     private WebAPIManager getWebAPI() {
@@ -306,7 +307,7 @@ public class BukkitInformationManager extends InformationManager {
             }
         } else {
             UUID serverUUID = Plan.getServerUUID();
-            PageCache.cachePage("analysisPage:" + serverUUID, () -> new AnalysisPageResponse(html));
+            PageCache.cachePage(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
             if (Settings.ANALYSIS_EXPORT.isTrue()) {
                 HtmlExport.exportServer(plugin, serverUUID);
             }

@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.systems.webserver;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
@@ -40,29 +41,29 @@ public class APIResponseHandler {
         String[] args = target.split("/");
 
         if ("/favicon.ico".equalsIgnoreCase(target)) {
-            return PageCache.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
+            return PageCache.loadPage(PageId.FAVICON_REDIRECT.id(), () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
         }
         if ("/debug".equalsIgnoreCase(target)) {
             return new DebugPageResponse();
         }
         if (target.endsWith(".css")) {
-            return PageCache.loadPage(target + "css", () -> new CSSResponse(target));
+            return PageCache.loadPage(PageId.CSS.of(target), () -> new CSSResponse(target));
         }
 
         if (target.endsWith(".js")) {
-            return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(target));
+            return PageCache.loadPage(PageId.JS.of(target), () -> new JavaScriptResponse(target));
         }
 
         if (args.length < 2 || !"api".equals(args[1])) {
             String address = MiscUtils.getIPlan().getInfoManager().getWebServerAddress() + target;
             String link = Html.LINK.parse(address, address);
-            return PageCache.loadPage("Non-API Request", () -> new NotFoundResponse("WebServer is in WebAPI-only mode, " +
+            return PageCache.loadPage(PageId.ERROR.of("Non-API Request"), () -> new NotFoundResponse("WebServer is in WebAPI-only mode, " +
                     "connect to the Bungee server instead: " + link));
         }
 
         if (args.length < 3) {
             String error = "API Method not specified";
-            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
         }
 
         String method = args[2];
@@ -74,7 +75,7 @@ public class APIResponseHandler {
         if (requestBody == null) {
             String error = "Error at reading the POST request." +
                     "Note that the Encoding must be ISO-8859-1.";
-            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
         }
 
         Map<String, String> variables = WebAPI.readVariables(requestBody);
@@ -93,7 +94,7 @@ public class APIResponseHandler {
                 if (!checkKey(sender)) {
                     String error = "Server Key not given or invalid";
                     Log.debug("Request had invalid Server key: " + sender);
-                    return PageCache.loadPage(error, () -> {
+                    return PageCache.loadPage(PageId.ERROR.of(error), () -> {
                         ForbiddenResponse forbidden = new ForbiddenResponse();
                         forbidden.setContent(error);
                         return forbidden;
@@ -103,7 +104,7 @@ public class APIResponseHandler {
                 if (!webAPI.isAuthorized(accessKey)) {
                     String error = "Access Key invalid";
                     Log.debug("Request had invalid Access key: " + accessKey);
-                    return PageCache.loadPage(error, () -> {
+                    return PageCache.loadPage(PageId.ERROR.of(error), () -> {
                         ForbiddenResponse forbidden = new ForbiddenResponse();
                         forbidden.setContent(error);
                         return forbidden;
@@ -117,7 +118,7 @@ public class APIResponseHandler {
         if (api == null) {
             String error = "API Method not found";
             Log.debug(error);
-            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
         }
 
         Response response = api.processRequest(MiscUtils.getIPlan(), variables);

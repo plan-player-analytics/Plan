@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.*;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
@@ -165,11 +166,11 @@ public abstract class WebAPI {
     };
 
     protected Response success() {
-        return PageCache.loadPage("success", SuccessResponse::new);
+        return PageCache.loadPage(PageId.TRUE.id(), SuccessResponse::new);
     }
 
     protected Response fail(String reason) {
-        return PageCache.loadPage("fail", () -> {
+        return PageCache.loadPage(PageId.FALSE.id(), () -> {
             NotFoundResponse notFoundResponse = new NotFoundResponse("");
             notFoundResponse.setContent(reason);
             return notFoundResponse;
@@ -177,7 +178,7 @@ public abstract class WebAPI {
     }
 
     protected Response badRequest(String error) {
-        return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+        return PageCache.loadPage(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
     }
 
     private String parseVariables() {
