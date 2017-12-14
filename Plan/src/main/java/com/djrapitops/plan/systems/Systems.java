@@ -15,6 +15,9 @@ import main.java.com.djrapitops.plan.systems.file.config.PlanConfigSystem;
 import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.file.database.PlanBungeeDBSystem;
 import main.java.com.djrapitops.plan.systems.file.database.PlanDBSystem;
+import main.java.com.djrapitops.plan.systems.tasks.PlanBungeeTaskSystem;
+import main.java.com.djrapitops.plan.systems.tasks.PlanTaskSystem;
+import main.java.com.djrapitops.plan.systems.tasks.TaskSystem;
 import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
 import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -34,6 +37,8 @@ public class Systems {
 
     private WebServerSystem webServerSystem;
 
+    private TaskSystem taskSystem;
+
     private VersionCheckSystem versionCheckSystem;
 
     /**
@@ -46,6 +51,8 @@ public class Systems {
         configSystem = new PlanConfigSystem();
         databaseSystem = new PlanDBSystem();
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
+
+        taskSystem = new PlanTaskSystem();
 
         webServerSystem = new WebServerSystem(plugin);
         themeSystem = new Theme();
@@ -61,6 +68,8 @@ public class Systems {
         configSystem = new PlanBungeeConfigSystem();
         databaseSystem = new PlanBungeeDBSystem();
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
+
+        taskSystem = new PlanBungeeTaskSystem();
 
         webServerSystem = new WebServerSystem(plugin);
         themeSystem = new Theme();
@@ -113,5 +122,9 @@ public class Systems {
 
     public Theme getThemeSystem() {
         return themeSystem;
+    }
+
+    public TaskSystem getTaskSystem() {
+        return taskSystem;
     }
 }

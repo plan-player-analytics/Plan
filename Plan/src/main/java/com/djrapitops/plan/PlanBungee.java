@@ -7,11 +7,9 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.command.PlanBungeeCommand;
@@ -30,7 +28,7 @@ import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager
 import main.java.com.djrapitops.plan.systems.listeners.BungeePlayerListener;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
-import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
+import main.java.com.djrapitops.plan.systems.tasks.TaskSystem;
 import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
@@ -72,7 +70,6 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             new Locale().loadLocale();
 
             Theme.getInstance().init();
-
             DBSystem.getInstance().init();
 
             registerCommand("planbungee", new PlanBungeeCommand(this));
@@ -92,21 +89,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             WebServerSystem.getInstance().init();
             serverInfoManager.loadServerInfo();
 
-            RunnableFactory.createNew("Enable Bukkit Connection Task", new AbsRunnable() {
-                @Override
-                public void run() {
-                    infoManager.attemptConnection();
-                    infoManager.sendConfigSettings();
-                }
-            }).runTaskAsynchronously();
-            RunnableFactory.createNew("Player Count task", new TPSCountTimer(this))
-                    .runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
-            RunnableFactory.createNew("NetworkPageContentUpdateTask", new AbsRunnable("NetworkPageContentUpdateTask") {
-                @Override
-                public void run() {
-                    infoManager.updateNetworkPageContent();
-                }
-            }).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
+            TaskSystem.getInstance().init();
 
             processingQueue = new ProcessingQueue();
 

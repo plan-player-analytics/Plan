@@ -29,7 +29,6 @@ import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -56,6 +55,7 @@ import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.processing.importing.importers.OfflinePlayerImporter;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
+import main.java.com.djrapitops.plan.systems.tasks.TaskSystem;
 import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
@@ -188,7 +188,8 @@ public class Plan extends BukkitPlugin implements IPlan {
                 registerListeners();
             }
             PlanPlayerListener.setCountKicks(true);
-            registerTasks();
+
+            TaskSystem.getInstance().init();
 
             this.api = new API(this);
 
@@ -227,51 +228,6 @@ public class Plan extends BukkitPlugin implements IPlan {
             Log.toLog(this.getClass().getName(), e);
             onDisable();
         }
-    }
-
-    private void registerTasks() {
-        String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
-        String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
-
-        Benchmark.start("Task Registration");
-        tpsCountTimer = new TPSCountTimer(this);
-        RunnableFactory.createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
-
-        // Analysis refresh settings
-        int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
-        boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
-        long analysisPeriod = analysisRefreshMinutes * TimeAmount.MINUTE.ticks();
-
-        Log.info(bootAnalysisMsg);
-
-        ITask bootAnalysisTask = RunnableFactory.createNew("BootAnalysisTask", new AbsRunnable() {
-            @Override
-            public void run() {
-                Log.info(bootAnalysisRunMsg);
-                infoManager.refreshAnalysis(getServerUUID());
-                this.cancel();
-            }
-        }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
-
-        bootAnalysisTaskID = bootAnalysisTask.getTaskId();
-
-        if (analysisRefreshTaskIsEnabled) {
-            RunnableFactory.createNew("PeriodicalAnalysisTask", new AbsRunnable() {
-                @Override
-                public void run() {
-                    infoManager.refreshAnalysis(getServerUUID());
-                }
-            }).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
-        }
-
-        RunnableFactory.createNew("PeriodicNetworkBoxRefreshTask", new AbsRunnable() {
-            @Override
-            public void run() {
-                infoManager.updateNetworkPageContent();
-            }
-        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks(), TimeAmount.MINUTE.ticks() * 5L);
-
-        Benchmark.stop("Enable", "Task Registration");
     }
 
     @Override
@@ -378,15 +334,6 @@ public class Plan extends BukkitPlugin implements IPlan {
      */
     public HookHandler getHookHandler() {
         return hookHandler;
-    }
-
-    /**
-     * Used to get the ID of the BootAnalysisTask, so that it can be disabled.
-     *
-     * @return ID of the bootAnalysisTask
-     */
-    public int getBootAnalysisTaskID() {
-        return bootAnalysisTaskID;
     }
 
     /**

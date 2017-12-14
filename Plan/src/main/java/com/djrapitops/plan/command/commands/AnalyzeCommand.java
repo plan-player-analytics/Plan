@@ -131,10 +131,6 @@ public class AnalyzeCommand extends SubCommand {
     }
 
     private void updateCache(ISender sender, UUID serverUUID) {
-        int bootAnID = plugin.getBootAnalysisTaskID();
-        if (bootAnID != -1) {
-            plugin.getServer().getScheduler().cancelTask(bootAnID);
-        }
         infoManager.addAnalysisNotification(sender, serverUUID);
         infoManager.refreshAnalysis(serverUUID);
     }

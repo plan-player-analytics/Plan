@@ -20,6 +20,8 @@ import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
+import main.java.com.djrapitops.plan.systems.tasks.PlanTaskSystem;
+import main.java.com.djrapitops.plan.systems.tasks.TaskSystem;
 import main.java.com.djrapitops.plan.systems.webserver.response.ErrorResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
 
@@ -53,6 +55,8 @@ public class Analysis {
         if (isAnalysisBeingRun()) {
             return;
         }
+
+        ((PlanTaskSystem) TaskSystem.getInstance()).cancelBootAnalysis();
 
         Benchmark.start("Analysis");
         log(Locale.get(Msg.ANALYSIS_START).toString());
@@ -216,10 +220,6 @@ public class Analysis {
      */
     public boolean isAnalysisBeingRun() {
         return taskId != -1;
-    }
-
-    public void setTaskId(int id) {
-        taskId = id;
     }
 
     /**
