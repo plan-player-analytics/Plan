@@ -54,7 +54,7 @@ public class Systems {
 
         taskSystem = new PlanTaskSystem();
 
-        webServerSystem = new WebServerSystem(plugin);
+        webServerSystem = new WebServerSystem();
         themeSystem = new Theme();
     }
 
@@ -71,7 +71,7 @@ public class Systems {
 
         taskSystem = new PlanBungeeTaskSystem();
 
-        webServerSystem = new WebServerSystem(plugin);
+        webServerSystem = new WebServerSystem();
         themeSystem = new Theme();
     }
 
@@ -79,8 +79,11 @@ public class Systems {
         return new SubSystem[]{
                 fileSystem,
                 configSystem,
+                versionCheckSystem,
                 databaseSystem,
-                webServerSystem
+                taskSystem,
+                webServerSystem,
+                themeSystem
         };
     }
 

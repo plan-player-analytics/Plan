@@ -9,7 +9,7 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.settings.Settings;
 
 /**
- * //TODO Class Javadoc Comment
+ * ColorScheme that uses values in config settings specific to Plan or PlanBungee.
  *
  * @author Rsl1122
  */

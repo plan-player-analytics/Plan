@@ -55,7 +55,6 @@ import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.processing.importing.importers.OfflinePlayerImporter;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
-import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.tasks.TaskSystem;
 import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
@@ -92,8 +91,6 @@ public class Plan extends BukkitPlugin implements IPlan {
     private BukkitServerInfoManager serverInfoManager;
 
     private ServerVariableHolder serverVariableHolder;
-    private TPSCountTimer tpsCountTimer;
-    private int bootAnalysisTaskID = -1;
 
     /**
      * Used to get the PlanAPI. @see API
@@ -351,10 +348,6 @@ public class Plan extends BukkitPlugin implements IPlan {
 
     public ProcessingQueue getProcessingQueue() {
         return processingQueue;
-    }
-
-    public TPSCountTimer getTpsCountTimer() {
-        return tpsCountTimer;
     }
 
     public void addToProcessQueue(Processor... processors) {

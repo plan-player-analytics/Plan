@@ -5,10 +5,10 @@
 package main.java.com.djrapitops.plan.systems.webserver;
 
 import com.djrapitops.plugin.api.Check;
-import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.systems.SubSystem;
 import main.java.com.djrapitops.plan.systems.Systems;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 /**
  * //TODO Class Javadoc Comment
@@ -19,8 +19,8 @@ public class WebServerSystem implements SubSystem {
 
     private WebServer webServer;
 
-    public WebServerSystem(IPlan plugin) {
-        webServer = new WebServer(plugin);
+    public WebServerSystem() {
+
     }
 
     public static WebServerSystem getInstance() {
@@ -29,6 +29,7 @@ public class WebServerSystem implements SubSystem {
 
     @Override
     public void init() throws PlanEnableException {
+        webServer = new WebServer(MiscUtils.getIPlan());
         webServer.initServer();
         if (Check.isBungeeAvailable() && !webServer.isEnabled()) {
             throw new PlanEnableException("WebServer did not initialize!");
@@ -37,11 +38,15 @@ public class WebServerSystem implements SubSystem {
 
     @Override
     public void close() {
-        webServer.stop();
+        // TODO Remove after WebServer setting requirement is gone.
+        if (webServer != null) {
+            webServer.stop();
+        }
     }
 
     public static boolean isWebServerEnabled() {
-        return getInstance().webServer.isEnabled();
+        WebServer webServer = getInstance().webServer;
+        return webServer != null && webServer.isEnabled();
     }
 
     public WebServer getWebServer() {
