@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.file;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -80,6 +81,8 @@ public class FileUtil {
                 lines.add(scanner.nextLine());
             }
         } catch (NullPointerException e) {
+            Log.infoColor("§ea Resource was not found inside the jar, Plan does not support /reload or updates using " +
+                    "Plugin Managers, restart the server and see if the error persists.");
             throw new FileNotFoundException("File not found inside jar: " + resource);
         } finally {
             MiscUtils.close(scanner);
