@@ -30,9 +30,9 @@ import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager
 import main.java.com.djrapitops.plan.systems.listeners.BungeePlayerListener;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
-import main.java.com.djrapitops.plan.systems.store.FileSystem;
-import main.java.com.djrapitops.plan.systems.store.config.ConfigSystem;
-import main.java.com.djrapitops.plan.systems.store.database.DBSystem;
+import main.java.com.djrapitops.plan.systems.file.FileSystem;
+import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
+import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;

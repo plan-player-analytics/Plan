@@ -8,7 +8,7 @@ import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.config.ConfigNode;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.systems.store.config.ConfigSystem;
+import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
 
 import java.io.IOException;
 import java.util.HashMap;

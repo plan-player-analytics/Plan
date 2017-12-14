@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.settings;
 
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.config.Config;
-import main.java.com.djrapitops.plan.systems.store.config.ConfigSystem;
+import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
 
 import java.util.List;
 

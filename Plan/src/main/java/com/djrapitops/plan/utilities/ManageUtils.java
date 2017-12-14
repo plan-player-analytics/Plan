@@ -6,7 +6,7 @@ import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.database.tables.move.BatchOperationTable;
-import main.java.com.djrapitops.plan.systems.store.database.DBSystem;
+import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 
 import java.sql.SQLException;
 import java.util.*;

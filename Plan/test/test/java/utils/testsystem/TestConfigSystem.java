@@ -4,7 +4,7 @@
  */
 package test.java.utils.testsystem;
 
-import main.java.com.djrapitops.plan.systems.store.config.ConfigSystem;
+import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
 
 import java.io.File;
 import java.io.FileInputStream;
