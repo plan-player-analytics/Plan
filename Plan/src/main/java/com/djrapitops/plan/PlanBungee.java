@@ -17,6 +17,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
+import main.java.com.djrapitops.plan.settings.theme.PlanColorScheme;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.Systems;
 import main.java.com.djrapitops.plan.systems.file.FileSystem;
@@ -33,7 +34,6 @@ import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
-import net.md_5.bungee.api.ChatColor;
 
 import java.io.InputStream;
 import java.util.UUID;
@@ -180,15 +180,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     @Override
     public ColorScheme getColorScheme() {
-        try {
-            ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
-            ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
-            ChatColor terColor = ChatColor.getByChar(Settings.COLOR_TER.toString().charAt(1));
-            return new ColorScheme(mainColor, secColor, terColor);
-        } catch (Exception e) {
-            Log.infoColor(ChatColor.RED + "Customization, Chat colors set-up wrong, using defaults.");
-            return new ColorScheme(ChatColor.DARK_GREEN, ChatColor.GRAY, ChatColor.WHITE);
-        }
+        return PlanColorScheme.create();
     }
 
     @Override
