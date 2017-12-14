@@ -7,6 +7,7 @@ package main.java.com.djrapitops.plan.systems;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
+import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.file.FileSystem;
 import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
 import main.java.com.djrapitops.plan.systems.file.config.PlanBungeeConfigSystem;
@@ -14,6 +15,7 @@ import main.java.com.djrapitops.plan.systems.file.config.PlanConfigSystem;
 import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.file.database.PlanBungeeDBSystem;
 import main.java.com.djrapitops.plan.systems.file.database.PlanDBSystem;
+import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
 import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -28,8 +30,11 @@ public class Systems {
     private FileSystem fileSystem;
     private ConfigSystem configSystem;
     private DBSystem databaseSystem;
+    private Theme themeSystem;
 
     private WebServerSystem webServerSystem;
+
+    private VersionCheckSystem versionCheckSystem;
 
     /**
      * Constructor for Bukkit version.
@@ -40,8 +45,10 @@ public class Systems {
         fileSystem = new FileSystem(plugin);
         configSystem = new PlanConfigSystem();
         databaseSystem = new PlanDBSystem();
+        versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
 
         webServerSystem = new WebServerSystem(plugin);
+        themeSystem = new Theme();
     }
 
     /**
@@ -53,8 +60,10 @@ public class Systems {
         fileSystem = new FileSystem(plugin);
         configSystem = new PlanBungeeConfigSystem();
         databaseSystem = new PlanBungeeDBSystem();
+        versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
 
         webServerSystem = new WebServerSystem(plugin);
+        themeSystem = new Theme();
     }
 
     private SubSystem[] getSubSystems() {
@@ -96,5 +105,13 @@ public class Systems {
 
     public WebServerSystem getWebServerSystem() {
         return webServerSystem;
+    }
+
+    public VersionCheckSystem getVersionCheckSystem() {
+        return versionCheckSystem;
+    }
+
+    public Theme getThemeSystem() {
+        return themeSystem;
     }
 }

@@ -9,7 +9,8 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.systems.SubSystem;
+import main.java.com.djrapitops.plan.systems.Systems;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,17 +22,27 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class Theme {
+public class Theme implements SubSystem {
 
-    private final ThemeConfig config;
+    private ThemeConfig config;
 
-    public Theme() throws PlanEnableException {
+    public static Theme getInstance() {
+        return Systems.getInstance().getThemeSystem();
+    }
+
+    @Override
+    public void init() throws PlanEnableException {
         String themeName = Settings.THEME_BASE.toString();
         try {
             config = new ThemeConfig(themeName);
         } catch (IOException e) {
             throw new PlanEnableException("Default theme could not be loaded.", e);
         }
+    }
+
+    @Override
+    public void close() {
+
     }
 
     public String getColor(ThemeVal variable) {
@@ -83,10 +94,10 @@ public class Theme {
     }
 
     public static String getValue(ThemeVal variable) {
-        return MiscUtils.getIPlan().getTheme().getThemeValue(variable);
+        return getInstance().getThemeValue(variable);
     }
 
     public static String replaceColors(String resourceString) {
-        return MiscUtils.getIPlan().getTheme().replaceThemeColors(resourceString);
+        return getInstance().replaceThemeColors(resourceString);
     }
 }

@@ -9,7 +9,6 @@ import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.Systems;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
@@ -47,8 +46,6 @@ public interface IPlan extends IPlugin {
     Config getMainConfig();
 
     ColorScheme getColorScheme();
-
-    Theme getTheme();
 
     Systems getSystems();
 }

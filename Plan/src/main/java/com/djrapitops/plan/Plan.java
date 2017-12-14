@@ -22,12 +22,9 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.Priority;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.config.Config;
-import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.systems.TaskCenter;
-import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
@@ -47,6 +44,9 @@ import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.Systems;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
+import main.java.com.djrapitops.plan.systems.file.FileSystem;
+import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
+import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.ImporterManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
@@ -55,10 +55,8 @@ import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.processing.importing.importers.OfflinePlayerImporter;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
-import main.java.com.djrapitops.plan.systems.file.FileSystem;
-import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
-import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
+import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
@@ -84,8 +82,6 @@ import java.util.UUID;
 public class Plan extends BukkitPlugin implements IPlan {
 
     private API api;
-
-    private Theme theme;
 
     private Systems systems;
 
@@ -147,21 +143,7 @@ public class Plan extends BukkitPlugin implements IPlan {
 
             Log.setDebugMode(Settings.DEBUG.toString());
 
-            String currentVersion = getVersion();
-            String githubVersionUrl = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml";
-            String spigotUrl = "https://www.spigotmc.org/resources/plan-player-analytics.32536/";
-            try {
-                if (Version.checkVersion(currentVersion, githubVersionUrl) || Version.checkVersion(currentVersion, spigotUrl)) {
-                    Log.infoColor("§a----------------------------------------");
-                    Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
-                    Log.infoColor("§a----------------------------------------");
-                    NotificationCenter.addNotification(Priority.HIGH, "New Version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
-                } else {
-                    Log.info("You're using the latest version.");
-                }
-            } catch (IOException e) {
-                Log.error("Failed to check newest version number");
-            }
+            VersionCheckSystem.getInstance().init();
 
             Benchmark.start("Enable");
 
@@ -175,7 +157,7 @@ public class Plan extends BukkitPlugin implements IPlan {
 
             new Locale().loadLocale();
 
-            theme = new Theme();
+            Theme.getInstance().init();
 
             Benchmark.start("Reading server variables");
             serverVariableHolder = new ServerVariableHolder(getServer());
@@ -516,11 +498,6 @@ public class Plan extends BukkitPlugin implements IPlan {
      */
     public API getApi() {
         return api;
-    }
-
-    @Override
-    public Theme getTheme() {
-        return theme;
     }
 
     public Systems getSystems() {

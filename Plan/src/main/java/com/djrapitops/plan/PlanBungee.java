@@ -7,11 +7,8 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.Priority;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.config.Config;
-import com.djrapitops.plugin.api.systems.NotificationCenter;
-import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -24,22 +21,22 @@ import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
 import main.java.com.djrapitops.plan.systems.Systems;
+import main.java.com.djrapitops.plan.systems.file.FileSystem;
+import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
+import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.BungeePlayerListener;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
-import main.java.com.djrapitops.plan.systems.file.FileSystem;
-import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
-import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
+import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import net.md_5.bungee.api.ChatColor;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -49,8 +46,6 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class PlanBungee extends BungeePlugin implements IPlan {
-
-    private Theme theme;
 
     private Systems systems;
 
@@ -70,26 +65,13 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
             Log.setDebugMode(Settings.DEBUG.toString());
 
-            String currentVersion = getVersion();
-            String githubVersionUrl = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml";
-            String spigotUrl = "https://www.spigotmc.org/resources/plan-player-analytics.32536/";
-            try {
-                if (Version.checkVersion(currentVersion, githubVersionUrl) || Version.checkVersion(currentVersion, spigotUrl)) {
-                    Log.infoColor("§a----------------------------------------");
-                    Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
-                    Log.infoColor("§a----------------------------------------");
-                    NotificationCenter.addNotification(Priority.HIGH, "New Version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
-                } else {
-                    Log.info("You're using the latest version.");
-                }
-            } catch (IOException e) {
-                Log.error("Failed to check newest version number");
-            }
+            VersionCheckSystem.getInstance().init();
+
             variableHolder = new ServerVariableHolder(getProxy());
 
             new Locale().loadLocale();
 
-            theme = new Theme();
+            Theme.getInstance().init();
 
             DBSystem.getInstance().init();
 
@@ -237,11 +219,6 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     public UUID getServerUuid() {
         return serverInfoManager.getServerUUID();
-    }
-
-    @Override
-    public Theme getTheme() {
-        return theme;
     }
 
     @Override
