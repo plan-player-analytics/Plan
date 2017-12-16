@@ -17,6 +17,7 @@ import main.java.com.djrapitops.plan.systems.SubSystem;
 import main.java.com.djrapitops.plan.systems.Systems;
 
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -28,6 +29,10 @@ public abstract class DBSystem implements SubSystem {
 
     protected SQLDB db;
     protected Set<SQLDB> databases;
+
+    public DBSystem() {
+        databases = new HashSet<>();
+    }
 
     public static DBSystem getInstance() {
         return Systems.getInstance().getDatabaseSystem();

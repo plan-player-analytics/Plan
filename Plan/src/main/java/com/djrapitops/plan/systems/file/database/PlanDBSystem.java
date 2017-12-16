@@ -9,8 +9,6 @@ import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.settings.Settings;
 
-import java.util.HashSet;
-
 /**
  * //TODO Class Javadoc Comment
  *
@@ -20,7 +18,6 @@ public class PlanDBSystem extends DBSystem {
 
     @Override
     protected void initDatabase() throws DatabaseInitException {
-        databases = new HashSet<>();
         databases.add(new MySQLDB());
         databases.add(new SQLiteDB());
 
