@@ -10,6 +10,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
 import main.java.com.djrapitops.plan.systems.SubSystem;
@@ -25,8 +26,8 @@ import java.util.Set;
  */
 public abstract class DBSystem implements SubSystem {
 
-    protected Database db;
-    protected Set<Database> databases;
+    protected SQLDB db;
+    protected Set<SQLDB> databases;
 
     public static DBSystem getInstance() {
         return Systems.getInstance().getDatabaseSystem();
@@ -38,6 +39,7 @@ public abstract class DBSystem implements SubSystem {
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
+            db.scheduleClean(10L);
             Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
             Benchmark.stop("Systems", "Init Database");
         } catch (DatabaseInitException e) {
@@ -47,11 +49,11 @@ public abstract class DBSystem implements SubSystem {
 
     protected abstract void initDatabase() throws DatabaseInitException;
 
-    public Set<Database> getDatabases() {
+    public Set<SQLDB> getDatabases() {
         return databases;
     }
 
-    public void setDatabases(Set<Database> databases) {
+    public void setDatabases(Set<SQLDB> databases) {
         this.databases = databases;
     }
 
@@ -70,8 +72,8 @@ public abstract class DBSystem implements SubSystem {
         return db;
     }
 
-    public static Database getActiveDatabase(String dbName) throws DatabaseInitException {
-        for (Database database : DBSystem.getInstance().getDatabases()) {
+    public static SQLDB getActiveDatabase(String dbName) throws DatabaseInitException {
+        for (SQLDB database : DBSystem.getInstance().getDatabases()) {
             String dbConfigName = database.getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
                 database.init();

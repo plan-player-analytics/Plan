@@ -71,7 +71,6 @@ public abstract class SQLDB extends Database {
         try {
             setupDataSource();
             setupDatabase();
-            scheduleClean(10L);
             open = true;
         } finally {
             Benchmark.stop("Database", benchName);
