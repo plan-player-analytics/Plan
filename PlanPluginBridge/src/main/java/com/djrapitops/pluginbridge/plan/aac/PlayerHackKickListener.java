@@ -50,7 +50,7 @@ public class PlayerHackKickListener implements Listener {
                 try {
                     new HackerTable((SQLDB) plan.getDB()).insertHackRow(hackObject);
                 } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName() + ":PlanViaVersionJoinListener", e);
+                    Log.toLog(this.getClass().getName(), e);
                 }
             }
         });

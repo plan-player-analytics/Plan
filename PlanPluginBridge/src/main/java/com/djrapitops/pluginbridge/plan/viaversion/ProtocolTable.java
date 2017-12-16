@@ -32,7 +32,7 @@ public class ProtocolTable extends Table {
     private final String columnProtocolVersion;
 
     public ProtocolTable(SQLDB db) {
-        super("plan_viaversion_protocol", db, db.isUsingMySQL());
+        super("plan_version_protocol", db, db.isUsingMySQL());
         columnUUID = "uuid";
         columnProtocolVersion = "protocol_version";
     }
