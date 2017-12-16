@@ -33,7 +33,7 @@ public class HackerTable extends Table {
     private final String columnViolations;
 
     public HackerTable(SQLDB db) {
-        super("plan_viaversion_protocol", db, db.isUsingMySQL());
+        super("plan_aac_hack_table", db, db.isUsingMySQL());
         columnUUID = "uuid";
         columnDate = "date";
         columnHackType = "hack_type";
@@ -43,7 +43,7 @@ public class HackerTable extends Table {
     @Override
     public void createTable() throws DBCreateTableException {
         createTable("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                + columnUUID + " varchar(36) NOT NULL UNIQUE, "
+                + columnUUID + " varchar(36) NOT NULL, "
                 + columnDate + " bigint NOT NULL, "
                 + columnHackType + " varchar(100) NOT NULL, "
                 + columnViolations + " integer NOT NULL"
@@ -107,7 +107,7 @@ public class HackerTable extends Table {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, hackObject.getUuid().toString());
                 statement.setLong(2, hackObject.getDate());
-                statement.setString(3, hackObject.getHackType().getName());
+                statement.setString(3, hackObject.getHackType().name());
                 statement.setInt(4, hackObject.getViolationLevel());
             }
         });

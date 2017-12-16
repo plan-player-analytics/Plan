@@ -31,7 +31,7 @@ public class PlanWorldChangeListener implements Listener {
             String gameMode = p.getGameMode().name();
             long time = MiscUtils.getTime();
 
-            new WorldAliasSettings(plugin).addWorld(worldName);
+            new WorldAliasSettings().addWorld(worldName);
 
             Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
             cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));

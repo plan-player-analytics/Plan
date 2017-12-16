@@ -42,13 +42,6 @@ public class BukkitServerInfoManager {
         } catch (IOException e) {
             throw new PlanEnableException("Failed to read ServerInfoFile.yml", e);
         }
-        try {
-            updateServerInfo();
-        } catch (SQLException e) {
-            throw new PlanEnableException("Failed to update Database server info", e);
-        } catch (IOException e) {
-            throw new PlanEnableException("Failed to write to ServerInfoFile.yml", e);
-        }
     }
 
     public void updateServerInfo() throws SQLException, IOException {
@@ -66,7 +59,7 @@ public class BukkitServerInfoManager {
             registerServer(serverUUID);
             return;
         }
-        String name = Settings.SERVER_NAME.toString();
+        String name = Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_");
         String webAddress = plugin.getWebServer().getAccessAddress();
         if ("plan".equalsIgnoreCase(name)) {
             name = "Server " + serverID.get();
@@ -83,7 +76,7 @@ public class BukkitServerInfoManager {
 
     private void registerServer(UUID serverUUID) throws SQLException, IOException {
         String webAddress = plugin.getWebServer().getAccessAddress();
-        String name = Settings.SERVER_NAME.toString();
+        String name = Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_");
         int maxPlayers = plugin.getVariable().getMaxPlayers();
         serverInfo = new ServerInfo(-1, serverUUID, name, webAddress, maxPlayers);
         serverTable.saveCurrentServerInfo(serverInfo);

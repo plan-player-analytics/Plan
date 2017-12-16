@@ -182,7 +182,7 @@ public class HtmlExport extends SpecificExport {
         List<String> lines = FileUtil.lines(plugin, new File(plugin.getDataFolder(), possibleFile), resource);
         String outputFile = possibleFile.replace("web/", "");
         File to = new File(outputFolder, outputFile);
-        to.mkdirs();
+        to.getParentFile().mkdirs();
         if (to.exists()) {
             to.delete();
             to.createNewFile();

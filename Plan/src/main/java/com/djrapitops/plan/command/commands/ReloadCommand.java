@@ -38,10 +38,8 @@ public class ReloadCommand extends SubCommand {
         try {
             plugin.reloadPlugin(true);
         } catch (Exception e) {
-            sender.sendMessage("§cSomething went wrong during reload of the plugin, a restart is recommended.");
-            String address = plugin.getWebServer().getAccessAddress() + "/debug";
-            sender.sendLink("More info can be found at ", address, address);
             Log.toLog(this.getClass().getName(), e);
+            sender.sendMessage("§cSomething went wrong during reload of the plugin, a restart is recommended.");
         }
         sender.sendMessage(Locale.get(Msg.CMD_INFO_RELOAD_COMPLETE).toString());
         return true;

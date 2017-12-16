@@ -51,7 +51,7 @@ public class TestInit {
      * Does not load any messages from anywhere because that would cause exceptions.
      */
     public static void initEmptyLocale() {
-        new Locale(null);
+        new Locale();
     }
 
     /**
@@ -62,7 +62,7 @@ public class TestInit {
      * @param plan Mocked Plan
      */
     public static void initLocale(Plan plan) {
-        new Locale(plan).loadLocale();
+        new Locale().loadLocale();
     }
 
     public static TestInit init() throws Exception {
@@ -139,7 +139,7 @@ public class TestInit {
         when(planMock.getServerInfoManager()).thenReturn(bukkitServerInfoManager);
         ColorScheme cs = new ColorScheme(ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK);
         when(planMock.getColorScheme()).thenReturn(cs);
-        initLocale(planMock);
+        initLocale(null);
 
         RunnableFactory.activateTestMode();
     }

@@ -1,13 +1,16 @@
 package main.java.com.djrapitops.plan.settings.locale;
 
 import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.settings.Permissions;
 import main.java.com.djrapitops.plan.settings.Settings;
+import main.java.com.djrapitops.plan.systems.file.FileSystem;
+import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
 import main.java.com.djrapitops.plan.utilities.comparators.StringLengthComparator;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
@@ -34,12 +37,10 @@ import java.util.stream.Collectors;
  */
 public class Locale {
 
-    private final IPlan plugin;
     private final Map<Msg, Message> messages;
 
-    public Locale(IPlan plugin) {
+    public Locale() {
         LocaleHolder.setLocale(this);
-        this.plugin = plugin;
         messages = new EnumMap<>(Msg.class);
     }
 
@@ -67,7 +68,7 @@ public class Locale {
             if (Settings.WRITE_NEW_LOCALE.isTrue()) {
                 writeNewDefaultLocale();
             }
-            File localeFile = new File(plugin.getDataFolder(), "locale.txt");
+            File localeFile = FileSystem.getLocaleFile();
             if (localeFile.exists()) {
                 loadFromFile(localeFile);
             } else if (locale.equals("DEFAULT")) {
@@ -83,7 +84,6 @@ public class Locale {
     }
 
     private void writeNewDefaultLocale() throws IOException {
-
         Optional<String> key = messages.keySet().stream()
                 .map(Msg::getIdentifier)
                 .sorted(new StringLengthComparator())
@@ -96,9 +96,11 @@ public class Locale {
                 .sorted(new LocaleEntryComparator())
                 .map(entry -> getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + entry.getValue().toString())
                 .collect(Collectors.toList());
-        Files.write(new File(plugin.getDataFolder(), "locale.txt").toPath(), lines, StandardCharsets.UTF_8);
-        plugin.getMainConfig().set(Settings.WRITE_NEW_LOCALE.getPath(), false);
-        plugin.getMainConfig().save();
+        Files.write(FileSystem.getLocaleFile().toPath(), lines, StandardCharsets.UTF_8);
+
+        Config config = ConfigSystem.getInstance().getConfig();
+        config.set(Settings.WRITE_NEW_LOCALE.getPath(), false);
+        config.save();
     }
 
     private String getSpacedIdentifier(String identifier, int length) {
@@ -110,13 +112,15 @@ public class Locale {
     }
 
     private void loadDefault() {
+        // TODO Move to Msg as DefaultMessages
+
         String analysis = "Analysis | ";
         String prefix = "[Plan] ";
         String green = "§a";
         String yellow = "§e";
         String red = "§c";
         String arrowsRight = DefaultMessages.ARROWS_RIGHT.parse();
-        ColorScheme cs = plugin.getColorScheme();
+        ColorScheme cs = MiscUtils.getIPlan().getColorScheme();
         String mCol = cs.getMainColor();
         String sCol = cs.getSecondaryColor();
         String tCol = cs.getTertiaryColor();
@@ -310,7 +314,7 @@ public class Locale {
 
     private void loadFromResource(String fileName) {
         try {
-            loadFromContents(FileUtil.lines(plugin, fileName), fileName);
+            loadFromContents(FileSystem.readFromResource(fileName), fileName);
         } catch (FileNotFoundException e) {
             Log.error("Could not find file inside the jar: " + fileName);
             Log.info("Using Locale: Default (EN)");

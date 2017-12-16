@@ -69,7 +69,7 @@ public class AnalysisData extends RawData {
         addValue("version", MiscUtils.getIPlan().getVersion());
         addValue("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
         addValue("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
-        addValue("serverName", Settings.SERVER_NAME.toString());
+        addValue("serverName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
         addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
         addValue("refresh", FormatUtils.formatTimeStamp(refreshDate));
 

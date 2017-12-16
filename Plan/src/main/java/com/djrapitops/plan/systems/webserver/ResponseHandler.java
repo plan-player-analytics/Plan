@@ -10,6 +10,8 @@ import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
@@ -42,17 +44,17 @@ public class ResponseHandler extends APIResponseHandler {
         String[] args = target.split("/");
         try {
             if ("/favicon.ico".equals(target)) {
-                return PageCache.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
+                return PageCache.loadPage(PageId.FAVICON_REDIRECT.id(), () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
             }
             if (request.isAPIRequest()) {
                 return getAPIResponse(request);
             }
             if (target.endsWith(".css")) {
-                return PageCache.loadPage(target + "css", () -> new CSSResponse(target));
+                return PageCache.loadPage(PageId.CSS.of(target), () -> new CSSResponse(target));
             }
 
             if (target.endsWith(".js")) {
-                return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(target));
+                return PageCache.loadPage(PageId.JS.of(target), () -> new JavaScriptResponse(target));
             }
 
             UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
@@ -81,7 +83,7 @@ public class ResponseHandler extends APIResponseHandler {
                 case "debug":
                     return new DebugPageResponse();
                 case "players":
-                    return PageCache.loadPage("players", PlayersPageResponse::new);
+                    return PageCache.loadPage(PageId.PLAYERS.id(), PlayersPageResponse::new);
                 case "player":
                     return playerResponse(args);
                 case "network":
@@ -102,7 +104,7 @@ public class ResponseHandler extends APIResponseHandler {
             }
 
         } catch (WebUserAuthException e) {
-            return PageCache.loadPage("promptAuthorization", PromptAuthorizationResponse::new);
+            return PageCache.loadPage(PageId.AUTH_PROMPT.id(), PromptAuthorizationResponse::new);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             return new InternalErrorResponse(e, request.getTarget());
@@ -110,7 +112,7 @@ public class ResponseHandler extends APIResponseHandler {
     }
 
     private Response forbiddenResponse(int required, int permLevel) {
-        return PageCache.loadPage("forbidden", () ->
+        return PageCache.loadPage(PageId.FORBIDDEN.id(), () ->
                 new ForbiddenResponse("Unauthorized User.<br>"
                         + "Make sure your user has the correct access level.<br>"
                         + "This page requires permission level of " + required + ",<br>"
@@ -182,7 +184,7 @@ public class ResponseHandler extends APIResponseHandler {
             case 0:
                 return serverResponse(serverUUID);
             case 1:
-                return PageCache.loadPage("players", PlayersPageResponse::new);
+                return PageCache.loadPage(PageId.PLAYERS.id(), PlayersPageResponse::new);
             case 2:
                 return playerResponse(new String[]{"", "", user.getName()});
             default:
@@ -191,12 +193,12 @@ public class ResponseHandler extends APIResponseHandler {
     }
 
     private Response serverResponse(UUID serverUUID) {
-        return PageCache.loadPage("analysisPage:" + serverUUID, () -> new AnalysisPageResponse(plugin.getInfoManager()));
+        return PageCache.loadPage(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(plugin.getInfoManager()));
     }
 
     private Response playerResponse(String[] args) {
         if (args.length < 3) {
-            return PageCache.loadPage("notFound", NotFoundResponse::new);
+            return PageCache.loadPage(PageId.NOT_FOUND.id(), NotFoundResponse::new);
         }
 
         String playerName = args[2].trim();
@@ -204,22 +206,22 @@ public class ResponseHandler extends APIResponseHandler {
 
         if (uuid == null) {
             String error = "Player has no UUID";
-            return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
+            return PageCache.loadPage(PageId.NOT_FOUND.of(error), () -> new NotFoundResponse(error));
         }
 
         if (plugin.getDB().wasSeenBefore(uuid)) {
             plugin.getInfoManager().cachePlayer(uuid);
-            Response response = PageCache.loadPage("inspectPage: " + uuid);
+            Response response = PageCache.loadPage(PageId.PLAYER.of(uuid));
             // TODO Create a new method that places NotFoundResponse to PageCache instead.
             if (response == null || response.getContent().contains("No Bukkit Servers were online to process this request")) {
-                PageCache.cachePage("inspectPage: " + uuid, () -> {
+                PageCache.cachePage(PageId.PLAYER.of(uuid), () -> {
                     try {
                         return new InspectPageResponse(plugin.getInfoManager(), uuid);
                     } catch (ParseException e) {
                         return new InternalErrorResponse(e, this.getClass().getName());
                     }
                 });
-                response = PageCache.loadPage("inspectPage: " + uuid);
+                response = PageCache.loadPage(PageId.PLAYER.of(uuid));
             }
             return response;
         }
@@ -228,7 +230,7 @@ public class ResponseHandler extends APIResponseHandler {
 
     private Response notFoundResponse() {
         String error = "404 Not Found";
-        return PageCache.loadPage("notFound: " + error, () -> {
+        return PageCache.loadPage(PageId.NOT_FOUND.of("Wrong Page"), () -> {
                     String url = plugin.getInfoManager().getWebServerAddress();
                     return new NotFoundResponse("Make sure you're accessing a link given by a command, Examples:</p>"
                             + "<p>" + url + "/player/Playername<br>" +

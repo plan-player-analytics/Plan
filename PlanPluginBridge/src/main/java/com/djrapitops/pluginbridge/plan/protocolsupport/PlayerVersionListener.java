@@ -46,7 +46,7 @@ public class PlayerVersionListener implements Listener {
                 try {
                     new ProtocolTable((SQLDB) plan.getDB()).saveProtocolVersion(uuid, playerVersion);
                 } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName() + ":PlanViaVersionJoinListener", e);
+                    Log.toLog(this.getClass().getName(), e);
                 }
             }
         });

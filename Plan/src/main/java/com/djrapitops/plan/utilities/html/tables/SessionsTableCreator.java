@@ -105,7 +105,7 @@ public class SessionsTableCreator {
     }
 
     public static String getLongestWorldPlayed(Session session) {
-        WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
+        WorldAliasSettings aliasSettings = new WorldAliasSettings();
         Map<String, String> aliases = aliasSettings.getAliases();
         if (session.getSessionEnd() == -1) {
             return "Current: " + aliases.get(session.getWorldTimes().getCurrentWorld());

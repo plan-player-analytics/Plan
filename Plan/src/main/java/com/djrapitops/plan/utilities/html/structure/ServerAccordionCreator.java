@@ -38,9 +38,10 @@ public class ServerAccordionCreator {
                     "</div>", ""};
         }
 
+        int i = 0;
         for (Map.Entry<UUID, WorldTimes> entry : worldTimesPerServer.entrySet()) {
             UUID serverUUID = entry.getKey();
-            String serverName =  serverNames.getOrDefault(serverUUID, "Unknown");
+            String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
             WorldTimes worldTimes = entry.getValue();
 
             List<Session> sessions = profile.getSessions(serverUUID);
@@ -60,7 +61,8 @@ public class ServerAccordionCreator {
             String longest = sessionCount != 0 ? FormatUtils.formatTimeAmount(longestSession) : "-";
 
             String sanitizedServerName = new Format(serverName)
-                    .removeSymbols().removeWhitespace().toString();
+                    .removeSymbols()
+                    .removeWhitespace().toString() + i;
             String htmlID = "server_" + sanitizedServerName;
 
             String worldId = "worldPieServer" + sanitizedServerName;
@@ -116,6 +118,8 @@ public class ServerAccordionCreator {
                     .append(worldId).append("series, ")
                     .append(worldId).append("gmseries")
                     .append(");");
+
+            i++;
         }
         return new String[]{html.append("</div>").toString(), viewScript.toString()};
     }

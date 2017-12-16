@@ -7,14 +7,11 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.Priority;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.config.Config;
-import com.djrapitops.plugin.api.systems.NotificationCenter;
-import com.djrapitops.plugin.api.utility.Version;
+import com.djrapitops.plugin.api.systems.TaskCenter;
+import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.command.PlanBungeeCommand;
@@ -22,23 +19,24 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
 import main.java.com.djrapitops.plan.settings.locale.Msg;
+import main.java.com.djrapitops.plan.settings.theme.PlanColorScheme;
 import main.java.com.djrapitops.plan.settings.theme.Theme;
-import main.java.com.djrapitops.plan.systems.DatabaseSystem;
-import main.java.com.djrapitops.plan.systems.FileSystem;
 import main.java.com.djrapitops.plan.systems.Systems;
+import main.java.com.djrapitops.plan.systems.file.FileSystem;
+import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
+import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.BungeePlayerListener;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
-import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
+import main.java.com.djrapitops.plan.systems.tasks.TaskSystem;
+import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
+import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
-import net.md_5.bungee.api.ChatColor;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -49,17 +47,15 @@ import java.util.UUID;
  */
 public class PlanBungee extends BungeePlugin implements IPlan {
 
-    private Config config;
-    private Theme theme;
-
     private Systems systems;
 
-    private WebServer webServer;
     private BungeeServerInfoManager serverInfoManager;
     private BungeeInformationManager infoManager;
     private ServerVariableHolder variableHolder;
 
     private ProcessingQueue processingQueue;
+
+    private boolean setupAllowed = false;
 
     @Override
     public void onEnable() {
@@ -67,37 +63,18 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         try {
             systems = new Systems(this);
             FileSystem.getInstance().init();
-
-            config = new Config(FileSystem.getConfigFile());
-            config.copyDefaults(FileUtil.lines(this, "bungeeconfig.yml"));
-            config.save();
+            ConfigSystem.getInstance().init();
 
             Log.setDebugMode(Settings.DEBUG.toString());
 
-            String currentVersion = getVersion();
-            String githubVersionUrl = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml";
-            String spigotUrl = "https://www.spigotmc.org/resources/plan-player-analytics.32536/";
-            try {
-                if (Version.checkVersion(currentVersion, githubVersionUrl) || Version.checkVersion(currentVersion, spigotUrl)) {
-                    Log.infoColor("§a----------------------------------------");
-                    Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
-                    Log.infoColor("§a----------------------------------------");
-                    NotificationCenter.addNotification(Priority.HIGH, "New Version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
-                } else {
-                    Log.info("You're using the latest version.");
-                }
-            } catch (IOException e) {
-                Log.error("Failed to check newest version number");
-            }
+            VersionCheckSystem.getInstance().init();
+
             variableHolder = new ServerVariableHolder(getProxy());
 
-            new Locale(this).loadLocale();
+            new Locale().loadLocale();
 
-            theme = new Theme();
-
-            DatabaseSystem.getInstance().init();
-
-            registerCommand("planbungee", new PlanBungeeCommand(this));
+            Theme.getInstance().init();
+            DBSystem.getInstance().init();
 
             String ip = variableHolder.getIp();
             if ("0.0.0.0".equals(ip)) {
@@ -107,35 +84,14 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             }
 
             Benchmark.start("WebServer Initialization");
-            webServer = new WebServer(this);
 
             serverInfoManager = new BungeeServerInfoManager(this);
             infoManager = new BungeeInformationManager(this);
-            webServer.initServer();
+
+            WebServerSystem.getInstance().init();
             serverInfoManager.loadServerInfo();
 
-
-            if (!webServer.isEnabled()) {
-                Log.error("WebServer was not successfully initialized.");
-                onDisable();
-                return;
-            }
-
-            RunnableFactory.createNew("Enable Bukkit Connection Task", new AbsRunnable() {
-                @Override
-                public void run() {
-                    infoManager.attemptConnection();
-                    infoManager.sendConfigSettings();
-                }
-            }).runTaskAsynchronously();
-            RunnableFactory.createNew("Player Count task", new TPSCountTimer(this))
-                    .runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
-            RunnableFactory.createNew("NetworkPageContentUpdateTask", new AbsRunnable("NetworkPageContentUpdateTask") {
-                @Override
-                public void run() {
-                    infoManager.updateNetworkPageContent();
-                }
-            }).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
+            TaskSystem.getInstance().init();
 
             processingQueue = new ProcessingQueue();
 
@@ -149,8 +105,8 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.toLog(this.getClass().getName(), e);
-            onDisable();
         }
+        registerCommand("planbungee", new PlanBungeeCommand(this));
     }
 
     public static PlanBungee getInstance() {
@@ -166,12 +122,11 @@ public class PlanBungee extends BungeePlugin implements IPlan {
                 /*ignored*/
             }
         }
-        if (webServer != null) {
-            webServer.stop();
-        }
         systems.close();
         Log.info(Locale.get(Msg.DISABLED).toString());
-        super.onDisable();
+        Benchmark.pluginDisabled(PlanBungee.class);
+        DebugLog.pluginDisabled(PlanBungee.class);
+        TaskCenter.cancelAllKnownTasks(PlanBungee.class);
     }
 
     @Override
@@ -181,17 +136,13 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     @Override
     public void onReload() {
-        try {
-            config.read();
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
+        ConfigSystem.reload();
     }
 
     @Override
     @Deprecated
     public Database getDB() {
-        return DatabaseSystem.getInstance().getActiveDatabase();
+        return DBSystem.getInstance().getActiveDatabase();
     }
 
     public BungeeServerInfoManager getServerInfoManager() {
@@ -205,7 +156,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     @Override
     public WebServer getWebServer() {
-        return webServer;
+        return WebServerSystem.getInstance().getWebServer();
     }
 
 
@@ -228,20 +179,12 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     @Override
     public Config getMainConfig() {
-        return config;
+        return ConfigSystem.getInstance().getConfig();
     }
 
     @Override
     public ColorScheme getColorScheme() {
-        try {
-            ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
-            ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
-            ChatColor terColor = ChatColor.getByChar(Settings.COLOR_TER.toString().charAt(1));
-            return new ColorScheme(mainColor, secColor, terColor);
-        } catch (Exception e) {
-            Log.infoColor(ChatColor.RED + "Customization, Chat colors set-up wrong, using defaults.");
-            return new ColorScheme(ChatColor.DARK_GREEN, ChatColor.GRAY, ChatColor.WHITE);
-        }
+        return PlanColorScheme.create();
     }
 
     @Override
@@ -258,12 +201,15 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     }
 
     @Override
-    public Theme getTheme() {
-        return theme;
-    }
-
-    @Override
     public Systems getSystems() {
         return systems;
+    }
+
+    public boolean isSetupAllowed() {
+        return setupAllowed;
+    }
+
+    public void setSetupAllowed(boolean setupAllowed) {
+        this.setupAllowed = setupAllowed;
     }
 }

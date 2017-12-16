@@ -37,7 +37,7 @@ public class PlayersPageResponse extends Response {
             Collections.sort(names);
             Map<String, String> replace = new HashMap<>();
             if (Check.isBukkitAvailable()) {
-                replace.put("networkName", Settings.SERVER_NAME.toString());
+                replace.put("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
             } else {
                 replace.put("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
             }

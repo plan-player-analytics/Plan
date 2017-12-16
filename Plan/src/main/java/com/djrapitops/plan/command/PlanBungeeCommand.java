@@ -27,7 +27,7 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
      * @param plugin Current instance of Plan
      */
     public PlanBungeeCommand(PlanBungee plugin) {
-        super(plugin, "planbungee", CommandType.CONSOLE, "", "", "planbungee");
+        super(plugin, "planbungee", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), "", "planbungee");
         super.setDefaultCommand("help");
         super.setColorScheme(plugin.getColorScheme());
     }
@@ -42,7 +42,8 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
         add(
                 new ReloadCommand(plugin),
                 new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
-                new ListCommand()
+                new ListCommand(),
+                new BungeeSetupToggleCommand(plugin)
         );
         RegisterCommand registerCommand = new RegisterCommand(plugin);
         add(

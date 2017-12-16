@@ -8,7 +8,8 @@ import com.djrapitops.plugin.command.ISender;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
 
 import java.io.IOException;
 import java.util.*;
@@ -46,7 +47,7 @@ public abstract class InformationManager {
     }
 
     public boolean isCached(UUID uuid) {
-        return PageCache.isCached("inspectPage: " + uuid);
+        return PageCache.isCached(PageId.PLAYER.of(uuid));
     }
 
     public abstract String getPlayerHtml(UUID uuid) throws ParseException;

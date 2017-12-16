@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.settings;
 
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.config.Config;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
 
 import java.util.List;
 
@@ -154,7 +154,7 @@ public enum Settings {
     }
 
     private Config getConfig() {
-        return MiscUtils.getIPlan().getMainConfig();
+        return ConfigSystem.getInstance().getConfig();
     }
 
     public static ServerSpecificSettings serverSpecific() {

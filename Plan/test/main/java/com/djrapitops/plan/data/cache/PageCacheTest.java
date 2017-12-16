@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.PageLoader;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageLoader;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import org.junit.Test;
 import test.java.utils.RandomData;

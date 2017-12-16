@@ -63,16 +63,22 @@ public class RegisterCommandFilter extends AbstractFilter {
     }
 
     private Result validateMessage(String message) {
-        return isSensibleCommand(message)
+        if (message == null) {
+            return Result.NEUTRAL;
+        }
+
+        return commandShouldBeCensored(message)
                 ? Result.DENY
                 : Result.NEUTRAL;
     }
 
-    private boolean isSensibleCommand(String message) {
-        return message.toLowerCase().contains("issued server command:") && isSensible(message);
+    private boolean commandShouldBeCensored(String message) {
+        return message != null
+                && (message.toLowerCase().contains("issued server command:")
+                && shouldBeCensored(message));
     }
 
-    private boolean isSensible(String message) {
-        return censoredCommands.stream().anyMatch(message::contains);
+    private boolean shouldBeCensored(String message) {
+        return message != null && censoredCommands.stream().anyMatch(message::contains);
     }
 }

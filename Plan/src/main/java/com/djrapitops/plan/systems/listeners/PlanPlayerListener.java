@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.data.container.Session;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.processing.info.NetworkPageUpdateProcessor;
 import main.java.com.djrapitops.plan.systems.processing.player.*;
+import main.java.com.djrapitops.plan.systems.tasks.TaskSystem;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -103,7 +104,7 @@ public class PlanPlayerListener implements Listener {
             String playerName = player.getName();
             String displayName = player.getDisplayName();
 
-            int playersOnline = plugin.getTpsCountTimer().getLatestPlayersOnline();
+            int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
 
             cache.cacheSession(uuid, Session.start(time, world, gm));
             plugin.addToProcessQueue(

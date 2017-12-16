@@ -9,7 +9,8 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -54,14 +55,14 @@ public class PostHtmlWebAPI extends WebAPI {
                     Map<String, String> map = new HashMap<>();
                     map.put("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
 
-                    PageCache.cachePage("inspectPage:" + uuid, () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), StrSubstitutor.replace(html, map)));
+                    PageCache.cachePage(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), StrSubstitutor.replace(html, map)));
                     if (Settings.ANALYSIS_EXPORT.isTrue()) {
                         HtmlExport.exportPlayer(plugin, UUID.fromString(uuid));
                     }
                     break;
                 case "analysisPage":
                     String sender = variables.get("sender");
-                    PageCache.cachePage("analysisPage:" + sender, () -> new AnalysisPageResponse(html));
+                    PageCache.cachePage(PageId.SERVER.of(sender), () -> new AnalysisPageResponse(html));
                     if (Settings.ANALYSIS_EXPORT.isTrue()) {
                         HtmlExport.exportServer(plugin, UUID.fromString(sender));
                     }

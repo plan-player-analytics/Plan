@@ -19,8 +19,10 @@ import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalysisReadyWebAPI;
@@ -62,8 +64,7 @@ public class BukkitInformationManager extends InformationManager {
         dataCache = new DataCache(plugin);
         analysis = new Analysis(plugin);
         pluginsTabContents = new HashMap<>();
-
-        updateConnection();
+        usingAnotherWebServer = false;
     }
 
     public void updateConnection() {
@@ -114,7 +115,7 @@ public class BukkitInformationManager extends InformationManager {
                 }
             }
         } else {
-            PageCache.cachePage("inspectPage: " + uuid, () -> {
+            PageCache.cachePage(PageId.PLAYER.of(uuid), () -> {
                 try {
                     return new InspectPageResponse(this, uuid);
                 } catch (ParseException e) {
@@ -154,7 +155,6 @@ public class BukkitInformationManager extends InformationManager {
                 cacheInspectPluginsTab(uuid, origin);
             }
         } else {
-            String serverName = plugin.getServerInfoManager().getServerName();
             HookHandler hookHandler = plugin.getHookHandler();
             List<PluginData> plugins = hookHandler.getAdditionalDataSources();
             Map<PluginData, InspectContainer> containers = new HashMap<>();
@@ -188,7 +188,7 @@ public class BukkitInformationManager extends InformationManager {
             }
         } else {
             pluginsTabContents.put(uuid, contents);
-            Response inspectResponse = PageCache.loadPage("inspectPage: " + uuid);
+            Response inspectResponse = PageCache.loadPage(PageId.PLAYER.of(uuid));
             if (inspectResponse != null && inspectResponse instanceof InspectPageResponse) {
                 ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(contents);
             }
@@ -231,7 +231,7 @@ public class BukkitInformationManager extends InformationManager {
                 return isAnalysisCached(serverUUID);
             }
         }
-        return PageCache.isCached("analysisPage:" + serverUUID);
+        return PageCache.isCached(PageId.SERVER.of(serverUUID));
     }
 
     private WebAPIManager getWebAPI() {
@@ -306,7 +306,7 @@ public class BukkitInformationManager extends InformationManager {
             }
         } else {
             UUID serverUUID = Plan.getServerUUID();
-            PageCache.cachePage("analysisPage:" + serverUUID, () -> new AnalysisPageResponse(html));
+            PageCache.cachePage(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
             if (Settings.ANALYSIS_EXPORT.isTrue()) {
                 HtmlExport.exportServer(plugin, serverUUID);
             }
@@ -323,8 +323,7 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public boolean attemptConnection() {
-        WebServer webServer = plugin.getWebServer();
-        boolean webServerIsEnabled = webServer.isEnabled();
+        boolean webServerIsEnabled = WebServerSystem.isWebServerEnabled();
         boolean previousState = usingAnotherWebServer;
 
         try {
@@ -350,6 +349,7 @@ public class BukkitInformationManager extends InformationManager {
         } finally {
             boolean changedState = previousState != usingAnotherWebServer;
             if (webServerIsEnabled && changedState) {
+                WebServer webServer = WebServerSystem.getInstance().getWebServer();
                 webServer.stop();
                 webServer.initServer();
             }
