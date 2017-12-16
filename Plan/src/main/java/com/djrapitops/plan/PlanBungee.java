@@ -8,6 +8,8 @@ import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.systems.TaskCenter;
+import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -53,6 +55,8 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     private ProcessingQueue processingQueue;
 
+    private boolean setupAllowed = false;
+
     @Override
     public void onEnable() {
         super.onEnable();
@@ -71,8 +75,6 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
             Theme.getInstance().init();
             DBSystem.getInstance().init();
-
-            registerCommand("planbungee", new PlanBungeeCommand(this));
 
             String ip = variableHolder.getIp();
             if ("0.0.0.0".equals(ip)) {
@@ -103,8 +105,8 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.toLog(this.getClass().getName(), e);
-            onDisable();
         }
+        registerCommand("planbungee", new PlanBungeeCommand(this));
     }
 
     public static PlanBungee getInstance() {
@@ -122,7 +124,9 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         }
         systems.close();
         Log.info(Locale.get(Msg.DISABLED).toString());
-        super.onDisable();
+        Benchmark.pluginDisabled(PlanBungee.class);
+        DebugLog.pluginDisabled(PlanBungee.class);
+        TaskCenter.cancelAllKnownTasks(PlanBungee.class);
     }
 
     @Override
@@ -199,5 +203,13 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     @Override
     public Systems getSystems() {
         return systems;
+    }
+
+    public boolean isSetupAllowed() {
+        return setupAllowed;
+    }
+
+    public void setSetupAllowed(boolean setupAllowed) {
+        this.setupAllowed = setupAllowed;
     }
 }

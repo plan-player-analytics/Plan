@@ -20,6 +20,7 @@ import main.java.com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
 import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
@@ -63,8 +64,7 @@ public class BukkitInformationManager extends InformationManager {
         dataCache = new DataCache(plugin);
         analysis = new Analysis(plugin);
         pluginsTabContents = new HashMap<>();
-
-        updateConnection();
+        usingAnotherWebServer = false;
     }
 
     public void updateConnection() {
@@ -323,8 +323,7 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public boolean attemptConnection() {
-        WebServer webServer = plugin.getWebServer();
-        boolean webServerIsEnabled = webServer.isEnabled();
+        boolean webServerIsEnabled = WebServerSystem.isWebServerEnabled();
         boolean previousState = usingAnotherWebServer;
 
         try {
@@ -350,6 +349,7 @@ public class BukkitInformationManager extends InformationManager {
         } finally {
             boolean changedState = previousState != usingAnotherWebServer;
             if (webServerIsEnabled && changedState) {
+                WebServer webServer = WebServerSystem.getInstance().getWebServer();
                 webServer.stop();
                 webServer.initServer();
             }

@@ -167,7 +167,6 @@ public class Plan extends BukkitPlugin implements IPlan {
 
             serverInfoManager = new BukkitServerInfoManager(this);
             infoManager = new BukkitInformationManager(this);
-
             WebServerSystem.getInstance().init();
             if (!WebServerSystem.isWebServerEnabled()) {
                 if (Settings.WEBSERVER_DISABLED.isTrue()) {
@@ -178,6 +177,7 @@ public class Plan extends BukkitPlugin implements IPlan {
                 }
             }
             serverInfoManager.updateServerInfo();
+            infoManager.updateConnection();
 
             Benchmark.stop("Enable", "WebServer Initialization");
 

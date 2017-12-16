@@ -13,7 +13,7 @@ public class ForbiddenResponse extends ErrorResponse {
     }
 
     public ForbiddenResponse(String msg) {
-        super.setHeader("HTTP/1.1 404 Not Found");
+        super.setHeader("HTTP/1.1 403 Forbidden");
         super.setTitle("403 Forbidden - Access Denied");
         super.setParagraph(msg);
         super.replacePlaceholders();

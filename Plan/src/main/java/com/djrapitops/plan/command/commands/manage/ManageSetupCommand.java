@@ -7,6 +7,7 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
+import main.java.com.djrapitops.plan.api.exceptions.WebAPIForbiddenException;
 import main.java.com.djrapitops.plan.settings.Permissions;
 import main.java.com.djrapitops.plan.settings.Settings;
 import main.java.com.djrapitops.plan.settings.locale.Locale;
@@ -70,6 +71,8 @@ public class ManageSetupCommand extends SubCommand {
 //            plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(address);
             plugin.getWebServer().getWebAPI().getAPI(RequestSetupWebAPI.class).sendRequest(address);
             sender.sendMessage("§eConnection successful, Plan may restart in a few seconds, if it doesn't something has gone wrong.");
+        } catch (WebAPIForbiddenException e) {
+            sender.sendMessage("§eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it.");
         } catch (WebAPIException e) {
             Log.toLog(this.getClass().getName(), e);
             sender.sendMessage("§cConnection to Bungee WebServer failed: More info on console");
