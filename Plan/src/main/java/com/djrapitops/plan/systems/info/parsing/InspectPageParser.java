@@ -235,7 +235,7 @@ public class InspectPageParser extends PageParser {
         addValue("playerStatus", HtmlStructure.playerStatus(online, profile.getBannedOnServers(), profile.isOp()));
 
         if (!plugin.getInfoManager().isUsingAnotherWebServer()) {
-            addValue("networkName", Settings.SERVER_NAME.toString());
+            addValue("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
         }
 
         return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("web/player.html"), placeHolders);

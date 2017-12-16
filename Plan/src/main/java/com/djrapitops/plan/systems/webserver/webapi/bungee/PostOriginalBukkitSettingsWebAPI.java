@@ -50,7 +50,7 @@ public class PostOriginalBukkitSettingsWebAPI extends WebAPI {
     @Override
     public void sendRequest(String address) throws WebAPIException {
         addVariable("WebServerPort", Integer.toString(Settings.WEBSERVER_PORT.getNumber()));
-        addVariable("ServerName", Settings.SERVER_NAME.toString());
+        addVariable("ServerName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
         addVariable("ThemeBase", Settings.THEME_BASE.toString());
         super.sendRequest(address);
     }

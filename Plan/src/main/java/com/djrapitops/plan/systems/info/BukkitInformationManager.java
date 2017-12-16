@@ -155,7 +155,6 @@ public class BukkitInformationManager extends InformationManager {
                 cacheInspectPluginsTab(uuid, origin);
             }
         } else {
-            String serverName = plugin.getServerInfoManager().getServerName();
             HookHandler hookHandler = plugin.getHookHandler();
             List<PluginData> plugins = hookHandler.getAdditionalDataSources();
             Map<PluginData, InspectContainer> containers = new HashMap<>();
