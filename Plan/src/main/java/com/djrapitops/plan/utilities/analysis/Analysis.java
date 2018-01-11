@@ -8,7 +8,7 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.plugin.BanData;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.systems.cache.DataCache;

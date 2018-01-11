@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.settings.theme;
 
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 

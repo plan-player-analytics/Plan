@@ -37,7 +37,7 @@ public class HastebinTest {
         TestInit.init();
 
         Thread thread = new Thread(() -> {
-            StaticHolder.saveInstance(this.getClass(), MiscUtils.getIPlan().getClass());
+            StaticHolder.saveInstance(this.getClass(), PlanPlugin.getInstance().getClass());
             try {
                 Hastebin.upload(RandomData.randomString(10));
             } catch (IOException e) {

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -43,7 +43,7 @@ public class ListCommand extends SubCommand {
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
 
         // Link
-        String url = MiscUtils.getIPlan().getInfoManager().getLinkTo("/players/");
+        String url = PlanPlugin.getInstance().getInfoManager().getLinkTo("/players/");
         String message = Locale.get(Msg.CMD_INFO_LINK).toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {

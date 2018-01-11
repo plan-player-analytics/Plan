@@ -8,7 +8,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ServerVariableHolder;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;

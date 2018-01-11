@@ -1,6 +1,6 @@
 package com.djrapitops.plan.utilities.file;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -24,14 +24,14 @@ public class FileUtil {
 
     public static String getStringFromResource(String fileName) throws IOException {
         StringBuilder html = new StringBuilder();
-        IPlan plugin = MiscUtils.getIPlan();
+        PlanPlugin plugin = PlanPlugin.getInstance();
 
-        lines(MiscUtils.getIPlan(), new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName)
+        lines(PlanPlugin.getInstance(), new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName)
                 .forEach(line -> html.append(line).append("\r\n"));
         return html.toString();
     }
 
-    public static List<String> lines(IPlan plugin, File savedFile, String defaults) throws IOException {
+    public static List<String> lines(PlanPlugin plugin, File savedFile, String defaults) throws IOException {
         if (savedFile.exists()) {
             return lines(savedFile);
         } else {
@@ -72,7 +72,7 @@ public class FileUtil {
         return null;
     }
 
-    public static List<String> lines(IPlan plugin, String resource) throws IOException {
+    public static List<String> lines(PlanPlugin plugin, String resource) throws IOException {
         List<String> lines = new ArrayList<>();
         Scanner scanner = null;
         try (InputStream inputStream = plugin.getResource(resource)) {

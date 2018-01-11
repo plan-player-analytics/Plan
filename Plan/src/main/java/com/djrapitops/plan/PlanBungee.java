@@ -4,26 +4,25 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.api.IPlan;
 import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.systems.Systems;
-import com.djrapitops.plan.systems.file.FileSystem;
-import com.djrapitops.plan.systems.file.config.ConfigSystem;
+import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.systems.file.database.DBSystem;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import com.djrapitops.plan.systems.listeners.BungeePlayerListener;
 import com.djrapitops.plan.systems.processing.Processor;
-import com.djrapitops.plan.systems.queue.ProcessingQueue;
+import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.systems.tasks.TaskSystem;
-import com.djrapitops.plan.systems.update.VersionCheckSystem;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.systems.webserver.WebServer;
 import com.djrapitops.plan.systems.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
@@ -45,13 +44,13 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PlanBungee extends BungeePlugin implements IPlan {
+public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     private Systems systems;
 
     private BungeeServerInfoManager serverInfoManager;
     private BungeeInformationManager infoManager;
-    private com.djrapitops.plan.ServerVariableHolder variableHolder;
+    private ServerVariableHolder variableHolder;
 
     private ProcessingQueue processingQueue;
 
@@ -62,19 +61,19 @@ public class PlanBungee extends BungeePlugin implements IPlan {
         super.onEnable();
         try {
             systems = new Systems(this);
-            FileSystem.getInstance().init();
-            ConfigSystem.getInstance().init();
+            FileSystem.getInstance().enable();
+            ConfigSystem.getInstance().enable();
 
             Log.setDebugMode(Settings.DEBUG.toString());
 
-            VersionCheckSystem.getInstance().init();
+            VersionCheckSystem.getInstance().enable();
 
-            variableHolder = new com.djrapitops.plan.ServerVariableHolder(getProxy());
+            variableHolder = new ServerVariableHolder(getProxy());
 
             new Locale().loadLocale();
 
-            Theme.getInstance().init();
-            DBSystem.getInstance().init();
+            Theme.getInstance().enable();
+            DBSystem.getInstance().enable();
 
             String ip = variableHolder.getIp();
             if ("0.0.0.0".equals(ip)) {
@@ -88,10 +87,10 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             serverInfoManager = new BungeeServerInfoManager(this);
             infoManager = new BungeeInformationManager(this);
 
-            WebServerSystem.getInstance().init();
+            WebServerSystem.getInstance().enable();
             serverInfoManager.loadServerInfo();
 
-            TaskSystem.getInstance().init();
+            TaskSystem.getInstance().enable();
 
             processingQueue = new ProcessingQueue();
 
@@ -188,7 +187,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     }
 
     @Override
-    public com.djrapitops.plan.ServerVariableHolder getVariable() {
+    public ServerVariableHolder getVariable() {
         return variableHolder;
     }
 

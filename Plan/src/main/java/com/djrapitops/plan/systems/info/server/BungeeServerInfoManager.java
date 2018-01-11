@@ -6,7 +6,7 @@ package com.djrapitops.plan.systems.info.server;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.ServerVariableHolder;
-import com.djrapitops.plan.api.exceptions.PlanEnableException;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.database.tables.ServerTable;
@@ -45,7 +45,7 @@ public class BungeeServerInfoManager {
         onlineServers = new HashSet<>();
     }
 
-    public void loadServerInfo() throws PlanEnableException {
+    public void loadServerInfo() throws EnableException {
         try {
             Optional<ServerInfo> bungeeInfo = db.getServerTable().getBungeeInfo();
             if (bungeeInfo.isPresent()) {
@@ -59,11 +59,11 @@ public class BungeeServerInfoManager {
                 serverInfo = registerBungeeInfo();
             }
         } catch (SQLException e) {
-            throw new PlanEnableException("Failed to read Database for ServerInfo");
+            throw new EnableException("Failed to read Database for ServerInfo");
         }
     }
 
-    private ServerInfo registerBungeeInfo() throws SQLException, PlanEnableException {
+    private ServerInfo registerBungeeInfo() throws SQLException, EnableException {
         ServerVariableHolder variable = plugin.getVariable();
         UUID serverUUID = generateNewUUID(variable);
         String accessAddress = plugin.getWebServer().getAccessAddress();
@@ -76,7 +76,7 @@ public class BungeeServerInfoManager {
         if (bungeeInfo.isPresent()) {
             return bungeeInfo.get();
         }
-        throw new PlanEnableException("BungeeCord registration failed (DB)");
+        throw new EnableException("BungeeCord registration failed (DB)");
     }
 
     private UUID generateNewUUID(ServerVariableHolder variableHolder) {

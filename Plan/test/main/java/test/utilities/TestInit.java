@@ -2,7 +2,7 @@ package test.utilities;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ServerVariableHolder;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;

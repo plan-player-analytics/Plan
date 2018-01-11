@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.settings.theme;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.config.Config;
@@ -33,7 +33,7 @@ public class ThemeConfig extends Config {
     private static List<String> getDefaults(String fileName) throws IOException {
         String fileLocation = getFileLocation(fileName);
 
-        IPlan plugin = MiscUtils.getIPlan();
+        PlanPlugin plugin = PlanPlugin.getInstance();
         try {
             return FileUtil.lines(plugin, fileLocation);
         } catch (IOException e) {
@@ -71,7 +71,7 @@ public class ThemeConfig extends Config {
 
 
     private static File getConfigFile() throws IOException {
-        File folder = MiscUtils.getIPlan().getDataFolder();
+        File folder = PlanPlugin.getInstance().getDataFolder();
         if (!folder.exists()) {
             folder.mkdirs();
         }

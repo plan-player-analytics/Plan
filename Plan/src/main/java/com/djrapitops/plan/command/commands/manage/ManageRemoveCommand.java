@@ -2,7 +2,7 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.systems.cache.DataCache;

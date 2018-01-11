@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.systems.webserver.webapi.bungee;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
 import com.djrapitops.plan.systems.info.InformationManager;
@@ -22,7 +22,7 @@ import java.util.UUID;
 public class IsCachedWebAPI extends WebAPI {
 
     @Override
-    public Response onRequest(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         try {
             String target = variables.get("target");
             InformationManager infoManager = plugin.getInfoManager();

@@ -83,7 +83,7 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public boolean isRegistered(UUID uuid) throws SQLException {
-        return isRegistered(uuid, MiscUtils.getIPlan().getServerUuid());
+        return isRegistered(uuid, PlanPlugin.getInstance().getServerUuid());
     }
 
     public boolean isRegistered(UUID uuid, UUID serverUUID) throws SQLException {
@@ -122,7 +122,7 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public UserInfo getUserInfo(UUID uuid) throws SQLException {
-        return getAllUserInfo(uuid).get(MiscUtils.getIPlan().getServerUuid());
+        return getAllUserInfo(uuid).get(PlanPlugin.getInstance().getServerUuid());
     }
 
     public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) throws SQLException {

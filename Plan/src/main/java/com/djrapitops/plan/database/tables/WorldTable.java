@@ -114,7 +114,7 @@ public class WorldTable extends Table {
     }
 
     public Set<String> getWorldNames() throws SQLException {
-        return getWorldNames(MiscUtils.getIPlan().getServerUuid());
+        return getWorldNames(PlanPlugin.getInstance().getServerUuid());
     }
 
     public Set<String> getWorldNames(UUID serverUUID) throws SQLException {

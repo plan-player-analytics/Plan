@@ -7,7 +7,7 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.HealthNotes;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -66,7 +66,7 @@ public class AnalysisData extends RawData {
     }
 
     private void addConstants() {
-        addValue("version", MiscUtils.getIPlan().getVersion());
+        addValue("version", PlanPlugin.getInstance().getVersion());
         addValue("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
         addValue("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
         addValue("serverName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));

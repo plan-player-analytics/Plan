@@ -1,8 +1,8 @@
 package com.djrapitops.plan.command.commands.webuser;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.utilities.comparators.WebUserComparator;
@@ -24,9 +24,9 @@ import java.util.List;
  */
 public class WebListUsersCommand extends SubCommand {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
-    public WebListUsersCommand(IPlan plugin) {
+    public WebListUsersCommand(PlanPlugin plugin) {
         super("list", CommandType.CONSOLE, Permissions.MANAGE_WEB.getPerm(), "List registered web users & permission levels.");
         this.plugin = plugin;
     }

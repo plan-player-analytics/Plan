@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.systems.webserver.webapi.bukkit;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.systems.webserver.response.Response;
 import com.djrapitops.plan.systems.webserver.webapi.WebAPI;
@@ -17,7 +17,7 @@ import java.util.UUID;
  */
 public class InspectWebAPI extends WebAPI {
     @Override
-    public Response onRequest(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         String uuidS = variables.get("uuid");
         if (uuidS == null) {
             return badRequest("UUID not included");

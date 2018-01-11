@@ -11,7 +11,7 @@ import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;

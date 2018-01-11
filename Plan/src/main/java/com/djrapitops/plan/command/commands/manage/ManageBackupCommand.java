@@ -3,7 +3,7 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;

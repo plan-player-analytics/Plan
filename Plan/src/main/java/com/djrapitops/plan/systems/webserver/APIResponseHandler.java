@@ -55,7 +55,7 @@ public class APIResponseHandler {
         }
 
         if (args.length < 2 || !"api".equals(args[1])) {
-            String address = MiscUtils.getIPlan().getInfoManager().getWebServerAddress() + target;
+            String address = PlanPlugin.getInstance().getInfoManager().getWebServerAddress() + target;
             String link = Html.LINK.parse(address, address);
             return PageCache.loadPage(PageId.ERROR.of("Non-API Request"), () -> new NotFoundResponse("WebServer is in WebAPI-only mode, " +
                     "connect to the Bungee server instead: " + link));
@@ -121,7 +121,7 @@ public class APIResponseHandler {
             return PageCache.loadPage(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
         }
 
-        Response response = api.processRequest(MiscUtils.getIPlan(), variables);
+        Response response = api.processRequest(PlanPlugin.getInstance(), variables);
 
         Log.debug("Response: " + response.getResponse().split("\r\n")[0]);
 
@@ -152,7 +152,7 @@ public class APIResponseHandler {
         }
 
         try {
-            List<UUID> uuids = MiscUtils.getIPlan().getDB().getServerTable().getServerUUIDs();
+            List<UUID> uuids = PlanPlugin.getInstance().getDB().getServerTable().getServerUUIDs();
             UUID keyUUID = UUID.fromString(sender);
             return uuids.contains(keyUUID);
         } catch (SQLException | IllegalArgumentException e) {

@@ -4,9 +4,9 @@
  */
 package com.djrapitops.plan.systems.webserver.webapi;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.*;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
 import com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
@@ -42,7 +42,7 @@ public abstract class WebAPI {
         this.variables = new HashMap<>();
     }
 
-    public Response processRequest(IPlan plugin, Map<String, String> variables) {
+    public Response processRequest(PlanPlugin plugin, Map<String, String> variables) {
         String sender = variables.get("sender");
         if (sender == null) {
             Log.debug(getClass().getSimpleName() + ": Sender not Found");
@@ -58,7 +58,7 @@ public abstract class WebAPI {
         return onRequest(plugin, variables);
     }
 
-    public abstract Response onRequest(IPlan plugin, Map<String, String> variables);
+    public abstract Response onRequest(PlanPlugin plugin, Map<String, String> variables);
 
     public void sendRequest(String address) throws WebAPIException {
         Verify.nullCheck(address);
@@ -183,7 +183,7 @@ public abstract class WebAPI {
 
     private String parseVariables() {
         StringBuilder parameters = new StringBuilder();
-        String serverUUID = MiscUtils.getIPlan().getServerUuid().toString();
+        String serverUUID = PlanPlugin.getInstance().getServerUuid().toString();
         parameters.append("sender=").append(serverUUID);
         for (Map.Entry<String, String> entry : variables.entrySet()) {
             parameters.append(";&variable;").append(entry.getKey()).append("=").append(entry.getValue());

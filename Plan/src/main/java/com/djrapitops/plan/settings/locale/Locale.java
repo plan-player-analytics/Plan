@@ -1,10 +1,11 @@
 package com.djrapitops.plan.settings.locale;
 
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.Settings;
-import com.djrapitops.plan.systems.file.FileSystem;
-import com.djrapitops.plan.systems.file.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
 import com.djrapitops.plan.utilities.comparators.StringLengthComparator;
 import com.djrapitops.plan.utilities.file.FileUtil;
@@ -40,24 +41,21 @@ public class Locale {
     private final Map<Msg, Message> messages;
 
     public Locale() {
-        LocaleHolder.setLocale(this);
         messages = new EnumMap<>(Msg.class);
     }
 
-    public static void unload() {
-        Locale locale = LocaleHolder.getLocale();
-        if (locale != null) {
-            locale.messages.clear();
-            LocaleHolder.locale = null;
-        }
+    public void unload() {
+        messages.clear();
+    }
+
+    public static Locale getInstance() {
+        Locale locale = ConfigSystem.getInstance().getLocale();
+        NullCheck.check(locale, new IllegalStateException("Locale has not been initialized."));
+        return locale;
     }
 
     public static Message get(Msg msg) {
-        Locale locale = LocaleHolder.getLocale();
-        if (locale == null) {
-            throw new IllegalStateException("Locale has not been initialized.");
-        }
-        return locale.getMessage(msg);
+        return getInstance().getMessage(msg);
     }
 
     public void loadLocale() {
@@ -120,7 +118,7 @@ public class Locale {
         String yellow = "§e";
         String red = "§c";
         String arrowsRight = DefaultMessages.ARROWS_RIGHT.parse();
-        ColorScheme cs = MiscUtils.getIPlan().getColorScheme();
+        ColorScheme cs = PlanPlugin.getInstance().getColorScheme();
         String mCol = cs.getMainColor();
         String sCol = cs.getSecondaryColor();
         String tCol = cs.getTertiaryColor();
@@ -341,22 +339,5 @@ public class Locale {
 
     public Message getMessage(Msg msg) {
         return messages.getOrDefault(msg, new Message(""));
-    }
-
-    private static class LocaleHolder {
-
-        private static Locale locale;
-
-        private LocaleHolder() {
-            throw new IllegalStateException("Static variable holder class");
-        }
-
-        public static Locale getLocale() {
-            return locale;
-        }
-
-        public static void setLocale(Locale locale) {
-            LocaleHolder.locale = locale;
-        }
     }
 }

@@ -9,7 +9,7 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.info.parsing.NetworkPageParser;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
@@ -368,7 +368,7 @@ public class BungeeInformationManager extends InformationManager {
 
     @Override
     public void updateNetworkPageContent() {
-        UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
+        UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
         PageCache.cachePage(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(this));
         if (Settings.ANALYSIS_EXPORT.isTrue()) {
             HtmlExport.exportServer(plugin, serverUUID);

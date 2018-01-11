@@ -9,7 +9,7 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;

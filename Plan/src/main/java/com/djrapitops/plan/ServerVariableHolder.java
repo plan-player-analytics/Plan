@@ -1,6 +1,6 @@
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import net.md_5.bungee.api.ProxyServer;
 import org.bukkit.Server;
 

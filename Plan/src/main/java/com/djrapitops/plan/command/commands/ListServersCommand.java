@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.api.IPlan;
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -21,14 +21,14 @@ import java.util.Map;
  */
 public class ListServersCommand extends SubCommand {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
     /**
      * Subcommand constructor.
      *
      * @param plugin Current instance of Plan
      */
-    public ListServersCommand(IPlan plugin) {
+    public ListServersCommand(PlanPlugin plugin) {
         super("servers, serverlist, listservers, sl",
                 CommandType.CONSOLE,
                 Permissions.MANAGE.getPermission(),

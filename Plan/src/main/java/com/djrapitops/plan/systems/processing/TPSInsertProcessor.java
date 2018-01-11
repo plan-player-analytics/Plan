@@ -36,7 +36,7 @@ public class TPSInsertProcessor extends Processor<List<TPS>> {
 
         TPS tps = new TPS(lastDate, averageTPS, averagePlayersOnline, averageCPUUsage, averageUsedMemory, averageEntityCount, averageChunksLoaded);
         try {
-            MiscUtils.getIPlan().getDB().getTpsTable().insertTPS(tps);
+            PlanPlugin.getInstance().getDB().getTpsTable().insertTPS(tps);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }

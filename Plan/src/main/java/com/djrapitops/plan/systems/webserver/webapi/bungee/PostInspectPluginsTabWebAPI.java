@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.systems.webserver.webapi.bungee;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plan.systems.webserver.response.Response;
@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 public class PostInspectPluginsTabWebAPI extends WebAPI {
     @Override
-    public Response onRequest(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         String uuidS = variables.get("uuid");
         if (uuidS == null) {
             return badRequest("uuid not included");

@@ -2,10 +2,11 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.plan.systems.update;
+package com.djrapitops.plan.system.update;
 
-import com.djrapitops.plan.systems.SubSystem;
-import com.djrapitops.plan.systems.Systems;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Priority;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.Version;
@@ -28,11 +29,13 @@ public class VersionCheckSystem implements SubSystem {
     }
 
     public static VersionCheckSystem getInstance() {
-        return Systems.getInstance().getVersionCheckSystem();
+        VersionCheckSystem versionCheckSystem = PlanSystem.getInstance().getVersionCheckSystem();
+        NullCheck.check(versionCheckSystem, new IllegalStateException("Version Check system has not been initialized."));
+        return versionCheckSystem;
     }
 
     @Override
-    public void init() {
+    public void enable() {
         checkForNewVersion();
     }
 
@@ -45,7 +48,7 @@ public class VersionCheckSystem implements SubSystem {
             if (newVersionAvailable) {
                 String newVersionNotification = "New Version is available at " + spigotUrl;
                 Log.infoColor("§a----------------------------------------");
-                Log.infoColor("§a"+newVersionNotification);
+                Log.infoColor("§a" + newVersionNotification);
                 Log.infoColor("§a----------------------------------------");
                 NotificationCenter.addNotification(Priority.HIGH, newVersionNotification);
             } else {
@@ -57,7 +60,7 @@ public class VersionCheckSystem implements SubSystem {
     }
 
     @Override
-    public void close() {
+    public void disable() {
         /* Does not need to be closed */
     }
 

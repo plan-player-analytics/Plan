@@ -7,7 +7,7 @@ package com.djrapitops.plan.utilities.html.structure;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;

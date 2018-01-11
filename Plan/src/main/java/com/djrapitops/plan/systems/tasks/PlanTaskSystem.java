@@ -5,7 +5,7 @@
 package com.djrapitops.plan.systems.tasks;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.systems.info.InformationManager;
@@ -28,7 +28,7 @@ public class PlanTaskSystem extends TaskSystem {
     private ITask bootAnalysisTask;
 
     @Override
-    public void init() {
+    public void enable() {
         registerTasks();
     }
 

@@ -1,7 +1,7 @@
 package com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -45,13 +45,13 @@ public class HtmlUtils {
         if (Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
             ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
         } else {
-            ip = MiscUtils.getIPlan().getVariable().getIp() + ":" + port;
+            ip = PlanPlugin.getInstance().getVariable().getIp() + ":" + port;
         }
         return ip;
     }
 
     public static String getProtocol() {
-        return MiscUtils.getIPlan().getWebServer().getProtocol();
+        return PlanPlugin.getInstance().getWebServer().getProtocol();
     }
 
     public static String getRelativeInspectUrl(String playerName) {

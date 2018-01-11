@@ -4,9 +4,9 @@
  */
 package com.djrapitops.plan.systems.webserver.webapi.bungee;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
 import com.djrapitops.plan.systems.webserver.pagecache.PageId;
@@ -30,7 +30,7 @@ import java.util.UUID;
 public class PostHtmlWebAPI extends WebAPI {
 
     @Override
-    public Response onRequest(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         try {
             String htmlVariable = variables.get("html");
             if (htmlVariable == null) {

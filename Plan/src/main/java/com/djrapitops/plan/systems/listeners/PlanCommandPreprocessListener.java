@@ -1,8 +1,8 @@
 package com.djrapitops.plan.systems.listeners;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.processing.CommandProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.command.Command;

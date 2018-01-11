@@ -5,7 +5,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.system.settings.Permissions;
 import org.junit.Test;
 import test.utilities.TestUtils;
 

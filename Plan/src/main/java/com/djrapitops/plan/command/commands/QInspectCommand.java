@@ -1,8 +1,8 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
@@ -30,14 +30,14 @@ import java.util.UUID;
  */
 public class QInspectCommand extends SubCommand {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
     /**
      * Class Constructor.
      *
      * @param plugin Current instance of Plan
      */
-    public QInspectCommand(IPlan plugin) {
+    public QInspectCommand(PlanPlugin plugin) {
         super("qinspect",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.QUICK_INSPECT.getPermission(),

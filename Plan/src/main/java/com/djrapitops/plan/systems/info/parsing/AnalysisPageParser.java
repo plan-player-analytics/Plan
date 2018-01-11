@@ -6,7 +6,7 @@ package com.djrapitops.plan.systems.info.parsing;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.utilities.file.FileUtil;
@@ -23,9 +23,9 @@ import java.io.IOException;
 public class AnalysisPageParser extends PageParser {
 
     private final AnalysisData data;
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
-    public AnalysisPageParser(AnalysisData analysisData, IPlan plugin) {
+    public AnalysisPageParser(AnalysisData analysisData, PlanPlugin plugin) {
         this.data = analysisData;
         this.plugin = plugin;
     }

@@ -2,12 +2,12 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.webuser.WebCheckCommand;
 import com.djrapitops.plan.command.commands.webuser.WebDeleteCommand;
 import com.djrapitops.plan.command.commands.webuser.WebLevelCommand;
 import com.djrapitops.plan.command.commands.webuser.WebListUsersCommand;
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandType;
@@ -19,7 +19,7 @@ import com.djrapitops.plugin.command.TreeCommand;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class WebUserCommand extends TreeCommand<IPlan> {
+public class WebUserCommand extends TreeCommand<PlanPlugin> {
 
     public WebUserCommand(Plan plugin, RegisterCommand register) {
         super(plugin, "webuser, web",

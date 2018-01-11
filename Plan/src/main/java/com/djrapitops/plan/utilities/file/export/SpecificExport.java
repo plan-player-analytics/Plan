@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.utilities.file.export;
 
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
 import com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import com.djrapitops.plan.systems.webserver.response.Response;
@@ -51,7 +51,7 @@ public abstract class SpecificExport extends AbsRunnable {
             }
             return folder;
         }
-        File dataFolder = MiscUtils.getIPlan().getDataFolder();
+        File dataFolder = PlanPlugin.getInstance().getDataFolder();
         File folder = new File(dataFolder, path);
         folder.mkdirs();
         return folder;
@@ -104,7 +104,7 @@ public abstract class SpecificExport extends AbsRunnable {
 
         File htmlLocation = null;
         if (usingBungee) {
-            if (serverUUID.equals(MiscUtils.getIPlan().getServerUuid())) {
+            if (serverUUID.equals(PlanPlugin.getInstance().getServerUuid())) {
                 htmlLocation = new File(outputFolder, "network");
             } else {
                 htmlLocation = new File(getServerFolder(), serverName.replace(" ", "%20").replace(".", "%2E"));

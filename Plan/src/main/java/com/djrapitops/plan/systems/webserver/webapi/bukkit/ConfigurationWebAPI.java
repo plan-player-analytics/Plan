@@ -6,10 +6,10 @@ package com.djrapitops.plan.systems.webserver.webapi.bukkit;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.settings.ServerSpecificSettings;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.webserver.response.Response;
 import com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 import com.djrapitops.plugin.api.Check;
@@ -26,7 +26,7 @@ import java.util.UUID;
 public class ConfigurationWebAPI extends WebAPI {
 
     @Override
-    public Response onRequest(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         if (!Check.isBukkitAvailable()) {
             Log.debug("Called a wrong server type");
             return badRequest("Called a Bungee Server");

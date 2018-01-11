@@ -6,7 +6,7 @@ package com.djrapitops.plan.systems.webserver.response;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.ServerVariableHolder;
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import com.djrapitops.plan.systems.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -63,7 +63,7 @@ public class DebugPageResponse extends ErrorResponse {
     }
 
     private void appendServerInformation(StringBuilder content) {
-        IPlan plugin = MiscUtils.getIPlan();
+        PlanPlugin plugin = PlanPlugin.getInstance();
         ServerVariableHolder variable = plugin.getVariable();
 
         content.append("<pre>### Server Information<br>")
@@ -111,7 +111,7 @@ public class DebugPageResponse extends ErrorResponse {
 
     private void appendConfig(StringBuilder content) {
         try {
-            File configFile = new File(MiscUtils.getIPlan().getDataFolder(), "config.yml");
+            File configFile = new File(PlanPlugin.getInstance().getDataFolder(), "config.yml");
             if (configFile.exists()) {
                 content.append("<pre>### config.yml<br>&#96;&#96;&#96;<br>");
                 FileUtil.lines(configFile, Charset.forName("UTF-8"))
@@ -169,7 +169,7 @@ public class DebugPageResponse extends ErrorResponse {
         try {
             content.append("<pre>### Logged Errors<br>");
 
-            TreeMap<String, List<String>> errors = MiscUtils.getIPlan().getInfoManager().getErrors();
+            TreeMap<String, List<String>> errors = PlanPlugin.getInstance().getInfoManager().getErrors();
 
             if (!errors.isEmpty()) {
                 List<String> errorLines = new ArrayList<>();

@@ -4,7 +4,8 @@
  */
 package com.djrapitops.plan.settings;
 
-import com.djrapitops.plan.systems.file.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.config.ConfigNode;
 import com.djrapitops.plugin.api.utility.log.Log;

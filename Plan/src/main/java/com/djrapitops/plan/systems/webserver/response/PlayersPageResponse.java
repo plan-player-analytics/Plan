@@ -1,12 +1,12 @@
 package com.djrapitops.plan.systems.webserver.response;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -32,7 +32,7 @@ public class PlayersPageResponse extends Response {
     public PlayersPageResponse() {
         super.setHeader("HTTP/1.1 200 OK");
         try {
-            IPlan plugin = MiscUtils.getIPlan();
+            PlanPlugin plugin = PlanPlugin.getInstance();
             List<String> names = new ArrayList<>(plugin.getDB().getUsersTable().getPlayerNames().values());
             Collections.sort(names);
             Map<String, String> replace = new HashMap<>();

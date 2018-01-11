@@ -4,8 +4,8 @@
  */
 package com.djrapitops.plan.systems.webserver;
 
-import com.djrapitops.plan.api.IPlan;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.webserver.response.PromptAuthorizationResponse;
 import com.djrapitops.plan.systems.webserver.response.Response;
 import com.djrapitops.plugin.api.Benchmark;
@@ -25,7 +25,7 @@ public class RequestHandler implements HttpHandler {
 
     private final ResponseHandler responseHandler;
 
-    RequestHandler(IPlan plugin, WebServer webServer) {
+    RequestHandler(PlanPlugin plugin, WebServer webServer) {
         responseHandler = new ResponseHandler(plugin, webServer);
     }
 

@@ -5,7 +5,7 @@
 package com.djrapitops.plan.systems.processing.info;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.systems.cache.DataCache;
@@ -34,7 +34,7 @@ public class InspectCacheRequestProcessor extends PlayerProcessor {
 
     @Override
     public void process() {
-        IPlan plugin = MiscUtils.getIPlan();
+        PlanPlugin plugin = PlanPlugin.getInstance();
         plugin.getInfoManager().cachePlayer(getUUID());
         DataCache dataCache = plugin.getInfoManager().getDataCache();
         if (dataCache != null) {

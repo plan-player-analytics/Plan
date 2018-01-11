@@ -7,7 +7,7 @@ package com.djrapitops.plan.systems.webserver.webapi.bungee;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.systems.info.server.ServerInfo;
 import com.djrapitops.plan.systems.webserver.response.ForbiddenResponse;
@@ -28,7 +28,7 @@ import java.util.UUID;
 public class RequestSetupWebAPI extends WebAPI {
 
     @Override
-    public Response onRequest(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         if (!Check.isBungeeAvailable()) {
             return badRequest("Called a Bukkit server.");
         }

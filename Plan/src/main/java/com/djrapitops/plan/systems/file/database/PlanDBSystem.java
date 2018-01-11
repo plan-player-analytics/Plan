@@ -7,7 +7,7 @@ package com.djrapitops.plan.systems.file.database;
 import com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import com.djrapitops.plan.database.databases.MySQLDB;
 import com.djrapitops.plan.database.databases.SQLiteDB;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 
 /**
  * //TODO Class Javadoc Comment

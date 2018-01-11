@@ -7,7 +7,7 @@ package com.djrapitops.plan.systems.webserver.webapi.universal;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.systems.webserver.response.Response;
@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 public class PingWebAPI extends WebAPI {
     @Override
-    public Response onRequest(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         if (Check.isBungeeAvailable()) {
             if (!((PlanBungee) plugin).getServerInfoManager().serverConnected(UUID.fromString(variables.get("sender")))) {
                 return fail("Server info not found from the database");
@@ -57,7 +57,7 @@ public class PingWebAPI extends WebAPI {
 
     public void sendRequest(String address, String accessCode) throws WebAPIException {
         addVariable("accessKey", accessCode);
-        addVariable("version", MiscUtils.getIPlan().getVersion());
+        addVariable("version", PlanPlugin.getInstance().getVersion());
         sendRequest(address);
     }
 }

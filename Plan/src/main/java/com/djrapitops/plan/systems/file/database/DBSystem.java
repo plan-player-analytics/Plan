@@ -5,12 +5,12 @@
 package com.djrapitops.plan.systems.file.database;
 
 import com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import com.djrapitops.plan.api.exceptions.PlanEnableException;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.database.databases.SQLDB;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
-import com.djrapitops.plan.systems.SubSystem;
+import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -39,7 +39,7 @@ public abstract class DBSystem implements SubSystem {
     }
 
     @Override
-    public void init() throws PlanEnableException {
+    public void enable() throws EnableException {
         try {
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
@@ -48,7 +48,7 @@ public abstract class DBSystem implements SubSystem {
             Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
             Benchmark.stop("Systems", "Init Database");
         } catch (DatabaseInitException e) {
-            throw new PlanEnableException(db.getName() + "-Database failed to initialize", e);
+            throw new EnableException(db.getName() + "-Database failed to initialize", e);
         }
     }
 
@@ -63,7 +63,7 @@ public abstract class DBSystem implements SubSystem {
     }
 
     @Override
-    public void close() {
+    public void disable() {
         try {
             if (db != null) {
                 db.close();

@@ -9,13 +9,13 @@ package com.djrapitops.plan.api.exceptions;
  *
  * @author Rsl1122
  */
-public class PlanEnableException extends Exception {
+public class EnableException extends Exception {
 
-    public PlanEnableException(String message, Throwable cause) {
+    public EnableException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public PlanEnableException(String message) {
+    public EnableException(String message) {
         super(message);
     }
 }

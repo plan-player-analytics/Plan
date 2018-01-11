@@ -20,12 +20,11 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.API;
-import com.djrapitops.plan.api.IPlan;
-import com.djrapitops.plan.api.exceptions.PlanEnableException;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
@@ -33,8 +32,8 @@ import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.cache.GeolocationCache;
-import com.djrapitops.plan.systems.file.FileSystem;
-import com.djrapitops.plan.systems.file.config.ConfigSystem;
+import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.systems.file.database.DBSystem;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.systems.info.ImporterManager;
@@ -43,9 +42,9 @@ import com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
 import com.djrapitops.plan.systems.listeners.*;
 import com.djrapitops.plan.systems.processing.Processor;
 import com.djrapitops.plan.systems.processing.importing.importers.OfflinePlayerImporter;
-import com.djrapitops.plan.systems.queue.ProcessingQueue;
+import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.systems.tasks.TaskSystem;
-import com.djrapitops.plan.systems.update.VersionCheckSystem;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.systems.webserver.WebServer;
 import com.djrapitops.plan.systems.webserver.WebServerSystem;
 import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
@@ -78,7 +77,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class Plan extends BukkitPlugin implements IPlan {
+public class Plan extends BukkitPlugin implements PlanPlugin {
 
     private API api;
 
@@ -135,12 +134,12 @@ public class Plan extends BukkitPlugin implements IPlan {
         super.onEnable();
         try {
             systems = new Systems(this);
-            FileSystem.getInstance().init();
-            ConfigSystem.getInstance().init();
+            FileSystem.getInstance().enable();
+            ConfigSystem.getInstance().enable();
 
             Log.setDebugMode(Settings.DEBUG.toString());
 
-            VersionCheckSystem.getInstance().init();
+            VersionCheckSystem.getInstance().enable();
 
             Benchmark.start("Enable");
 
@@ -149,25 +148,25 @@ public class Plan extends BukkitPlugin implements IPlan {
             } catch (UnknownHostException e) {
                 Log.error("Plan Requires internet access on first run to download GeoLite2 Geolocation database.");
             } catch (IOException e) {
-                throw new PlanEnableException("Something went wrong saving the downloaded GeoLite2 Geolocation database", e);
+                throw new EnableException("Something went wrong saving the downloaded GeoLite2 Geolocation database", e);
             }
 
             new Locale().loadLocale();
 
-            Theme.getInstance().init();
+            Theme.getInstance().enable();
 
             Benchmark.start("Reading server variables");
             serverVariableHolder = new ServerVariableHolder(getServer());
             Benchmark.stop("Enable", "Reading server variables");
 
-            DBSystem.getInstance().init();
+            DBSystem.getInstance().enable();
 
             Benchmark.start("WebServer Initialization");
             processingQueue = new ProcessingQueue();
 
             serverInfoManager = new BukkitServerInfoManager(this);
             infoManager = new BukkitInformationManager(this);
-            WebServerSystem.getInstance().init();
+            WebServerSystem.getInstance().enable();
             if (!WebServerSystem.isWebServerEnabled()) {
                 if (Settings.WEBSERVER_DISABLED.isTrue()) {
                     Log.warn("WebServer was not initialized. (WebServer.DisableWebServer: true)");
@@ -186,7 +185,7 @@ public class Plan extends BukkitPlugin implements IPlan {
             }
             PlanPlayerListener.setCountKicks(true);
 
-            TaskSystem.getInstance().init();
+            TaskSystem.getInstance().enable();
 
             this.api = new API(this);
 

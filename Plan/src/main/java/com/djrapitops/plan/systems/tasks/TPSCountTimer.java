@@ -2,7 +2,7 @@ package com.djrapitops.plan.systems.tasks;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.systems.processing.TPSInsertProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class TPSCountTimer extends AbsRunnable {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
     private final List<TPS> history;
     private long lastCheckNano;
 
@@ -33,7 +33,7 @@ public class TPSCountTimer extends AbsRunnable {
 
     private int latestPlayersOnline = 0;
 
-    public TPSCountTimer(IPlan plugin) {
+    public TPSCountTimer(PlanPlugin plugin) {
         super("TPSCountTimer");
         lastCheckNano = -1;
         this.plugin = plugin;

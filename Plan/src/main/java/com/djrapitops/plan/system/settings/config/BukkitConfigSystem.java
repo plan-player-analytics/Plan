@@ -2,10 +2,11 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.plan.systems.file.config;
+package com.djrapitops.plan.system.settings.config;
 
-import com.djrapitops.plan.systems.file.FileSystem;
+import com.djrapitops.plan.system.file.FileSystem;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -13,7 +14,11 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
-public class PlanConfigSystem extends ConfigSystem {
+public class BukkitConfigSystem extends ConfigSystem {
+
+    public BukkitConfigSystem(File configFile) {
+        super(configFile);
+    }
 
     @Override
     protected void copyDefaults() throws IOException {

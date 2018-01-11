@@ -1,6 +1,6 @@
 package com.djrapitops.plan.data.plugin;
 
-import com.djrapitops.plan.systems.file.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plugin.api.config.ConfigNode;
 import com.djrapitops.plugin.api.utility.log.Log;
 

@@ -7,17 +7,18 @@ package com.djrapitops.plan.systems;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.systems.file.FileSystem;
-import com.djrapitops.plan.systems.file.config.ConfigSystem;
-import com.djrapitops.plan.systems.file.config.PlanBungeeConfigSystem;
-import com.djrapitops.plan.systems.file.config.PlanConfigSystem;
+import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
+import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
 import com.djrapitops.plan.systems.file.database.DBSystem;
 import com.djrapitops.plan.systems.file.database.PlanBungeeDBSystem;
 import com.djrapitops.plan.systems.file.database.PlanDBSystem;
 import com.djrapitops.plan.systems.tasks.PlanBungeeTaskSystem;
 import com.djrapitops.plan.systems.tasks.PlanTaskSystem;
 import com.djrapitops.plan.systems.tasks.TaskSystem;
-import com.djrapitops.plan.systems.update.VersionCheckSystem;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.systems.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -48,7 +49,7 @@ public class Systems {
      */
     public Systems(Plan plugin) {
         fileSystem = new FileSystem(plugin);
-        configSystem = new PlanConfigSystem();
+        configSystem = new BukkitConfigSystem();
         databaseSystem = new PlanDBSystem();
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
 
@@ -65,7 +66,7 @@ public class Systems {
      */
     public Systems(PlanBungee plugin) {
         fileSystem = new FileSystem(plugin);
-        configSystem = new PlanBungeeConfigSystem();
+        configSystem = new BungeeConfigSystem();
         databaseSystem = new PlanBungeeDBSystem();
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
 
@@ -92,7 +93,7 @@ public class Systems {
         ArrayUtils.reverse(subSystems);
         for (SubSystem subSystem : subSystems) {
             try {
-                subSystem.close();
+                subSystem.disable();
             } catch (Exception e) {
                 Log.toLog(Systems.class, e);
             }
@@ -100,7 +101,7 @@ public class Systems {
     }
 
     public static Systems getInstance() {
-        return MiscUtils.getIPlan().getSystems();
+        return PlanPlugin.getInstance().getSystems();
     }
 
     public FileSystem getFileSystem() {

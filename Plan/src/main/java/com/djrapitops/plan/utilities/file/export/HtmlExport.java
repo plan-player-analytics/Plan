@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.utilities.file.export;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
@@ -26,14 +26,14 @@ import java.util.*;
  */
 public class HtmlExport extends SpecificExport {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
-    public HtmlExport(IPlan plugin) {
+    public HtmlExport(PlanPlugin plugin) {
         super("HtmlExportTask");
         this.plugin = plugin;
     }
 
-    public static void exportServer(IPlan plugin, UUID serverUUID) {
+    public static void exportServer(PlanPlugin plugin, UUID serverUUID) {
         try {
             Optional<String> serverName = plugin.getDB().getServerTable().getServerName(serverUUID);
             serverName.ifPresent(s -> RunnableFactory.createNew(new AnalysisExport(serverUUID, s)).runTaskAsynchronously());
@@ -42,7 +42,7 @@ public class HtmlExport extends SpecificExport {
         }
     }
 
-    public static void exportPlayer(IPlan plugin, UUID playerUUID) {
+    public static void exportPlayer(PlanPlugin plugin, UUID playerUUID) {
         try {
             String playerName = plugin.getDB().getUsersTable().getPlayerName(playerUUID);
             if (playerName != null) {

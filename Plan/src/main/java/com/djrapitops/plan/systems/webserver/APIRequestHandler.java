@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.systems.webserver;
 
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.webserver.response.Response;
 import com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import com.djrapitops.plugin.api.Benchmark;

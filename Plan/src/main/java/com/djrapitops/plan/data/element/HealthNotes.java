@@ -9,7 +9,7 @@ import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.container.StickyData;
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.html.Html;

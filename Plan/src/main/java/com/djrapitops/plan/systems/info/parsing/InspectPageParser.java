@@ -4,14 +4,14 @@
  */
 package com.djrapitops.plan.systems.info.parsing;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -46,9 +46,9 @@ import java.util.stream.Collectors;
 public class InspectPageParser extends PageParser {
 
     private final UUID uuid;
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
-    public InspectPageParser(UUID uuid, IPlan plugin) {
+    public InspectPageParser(UUID uuid, PlanPlugin plugin) {
         this.uuid = uuid;
         this.plugin = plugin;
     }
@@ -65,7 +65,7 @@ public class InspectPageParser extends PageParser {
             if (profile == null) {
                 throw new IllegalStateException("Player profile was null!");
             }
-            UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
+            UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
             Map<UUID, String> serverNames = db.getServerTable().getServerNames();
 
             Benchmark.stop("Inspect Parse, Fetch");

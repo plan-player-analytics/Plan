@@ -1,6 +1,6 @@
 package com.djrapitops.plan.utilities.analysis;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.StickyData;
@@ -141,7 +141,7 @@ public class AnalysisUtils {
         try {
             // Add 0 time for worlds not present.
             Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
-            IPlan plugin = MiscUtils.getIPlan();
+            PlanPlugin plugin = PlanPlugin.getInstance();
             for (String world : plugin.getDB().getWorldTable().getWorldNames(plugin.getServerUuid())) {
                 if (nonZeroWorlds.contains(world)) {
                     continue;

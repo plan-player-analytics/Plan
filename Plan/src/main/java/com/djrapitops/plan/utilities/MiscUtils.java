@@ -2,10 +2,10 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plugin.api.Check;
@@ -96,7 +96,7 @@ public class MiscUtils {
      * @return Alphabetically sorted list of matching player names.
      */
     public static List<String> getMatchingPlayerNames(String search) {
-        Database db = getIPlan().getDB();
+        Database db = PlanPlugin.getInstance().getDB();
         List<String> matches;
         try {
             matches = db.getUsersTable().getMatchingNames(search);
@@ -141,14 +141,6 @@ public class MiscUtils {
             return Plan.getInstance().getDescription().getVersion();
         } else {
             return PlanBungee.getInstance().getDescription().getVersion();
-        }
-    }
-
-    public static IPlan getIPlan() {
-        if (Check.isBukkitAvailable()) {
-            return Plan.getInstance();
-        } else {
-            return PlanBungee.getInstance();
         }
     }
 }

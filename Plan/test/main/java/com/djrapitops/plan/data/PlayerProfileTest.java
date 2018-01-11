@@ -1,7 +1,7 @@
 package com.djrapitops.plan.data;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import org.bukkit.plugin.java.JavaPlugin;

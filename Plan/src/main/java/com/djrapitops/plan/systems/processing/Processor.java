@@ -4,6 +4,8 @@
  */
 package com.djrapitops.plan.systems.processing;
 
+import com.djrapitops.plan.system.processing.ProcessingQueue;
+
 /**
  * Abstract class for processing different objects using Generics.
  *
@@ -20,5 +22,13 @@ public abstract class Processor<T> {
 
     public T getObject() {
         return object;
+    }
+
+    public void que() {
+        que(this);
+    }
+
+    public static void que(Processor processor) {
+        ProcessingQueue.getInstance().addToQueue(processor);
     }
 }

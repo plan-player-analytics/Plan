@@ -1,8 +1,8 @@
 package com.djrapitops.plan.command.commands.webuser;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.database.tables.SecurityTable;
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
@@ -22,9 +22,9 @@ import net.md_5.bungee.api.ChatColor;
  */
 public class WebDeleteCommand extends SubCommand {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
-    public WebDeleteCommand(IPlan plugin) {
+    public WebDeleteCommand(PlanPlugin plugin) {
         super("delete, remove",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE_WEB.getPerm(),

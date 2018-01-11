@@ -4,8 +4,8 @@
  */
 package com.djrapitops.plan.systems.webserver;
 
-import com.djrapitops.plan.api.exceptions.PlanEnableException;
-import com.djrapitops.plan.systems.SubSystem;
+import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.Check;
@@ -28,16 +28,16 @@ public class WebServerSystem implements SubSystem {
     }
 
     @Override
-    public void init() throws PlanEnableException {
-        webServer = new WebServer(MiscUtils.getIPlan());
+    public void enable() throws EnableException {
+        webServer = new WebServer(PlanPlugin.getInstance());
         webServer.initServer();
         if (Check.isBungeeAvailable() && !webServer.isEnabled()) {
-            throw new PlanEnableException("WebServer did not initialize!");
+            throw new EnableException("WebServer did not initialize!");
         }
     }
 
     @Override
-    public void close() {
+    public void disable() {
         // TODO Remove after WebServer setting requirement is gone.
         if (webServer != null) {
             webServer.stop();

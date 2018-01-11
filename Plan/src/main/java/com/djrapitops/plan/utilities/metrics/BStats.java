@@ -2,7 +2,7 @@ package com.djrapitops.plan.utilities.metrics;
 
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 

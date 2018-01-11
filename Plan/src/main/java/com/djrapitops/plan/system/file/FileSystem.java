@@ -2,12 +2,12 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.plan.systems.file;
+package com.djrapitops.plan.system.file;
 
-import com.djrapitops.plan.api.IPlan;
-import com.djrapitops.plan.systems.SubSystem;
-import com.djrapitops.plan.systems.Systems;
-import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.File;
@@ -24,16 +24,19 @@ public class FileSystem implements SubSystem {
     private final File dataFolder;
     private File configFile;
 
-    public FileSystem(IPlan plugin) {
+    public FileSystem(PlanPlugin plugin) {
         this(plugin.getDataFolder());
     }
 
     public FileSystem(File dataFolder) {
         this.dataFolder = dataFolder;
+        configFile = new File(dataFolder, "config.yml");
     }
 
     public static FileSystem getInstance() {
-        return Systems.getInstance().getFileSystem();
+        FileSystem fileSystem = PlanSystem.getInstance().getFileSystem();
+        NullCheck.check(fileSystem, new IllegalStateException("File system was not initialized."));
+        return fileSystem;
     }
 
     public static File getDataFolder() {
@@ -49,17 +52,16 @@ public class FileSystem implements SubSystem {
     }
 
     public static List<String> readFromResource(String fileName) throws IOException {
-        return FileUtil.lines(MiscUtils.getIPlan(), fileName);
+        return FileUtil.lines(PlanPlugin.getInstance(), fileName);
     }
 
     @Override
-    public void init() {
+    public void enable() {
         dataFolder.mkdirs();
-        configFile = new File(dataFolder, "config.yml");
     }
 
     @Override
-    public void close() {
+    public void disable() {
 
     }
 }

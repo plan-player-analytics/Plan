@@ -1,6 +1,6 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.utilities.Format;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;

@@ -6,6 +6,7 @@ package com.djrapitops.plan.settings;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;

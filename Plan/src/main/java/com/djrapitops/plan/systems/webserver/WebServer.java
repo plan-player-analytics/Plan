@@ -1,7 +1,7 @@
 package com.djrapitops.plan.systems.webserver;
 
-import com.djrapitops.plan.api.IPlan;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class WebServer {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
     private final WebAPIManager webAPI;
 
     private final int port;
@@ -45,7 +45,7 @@ public class WebServer {
 
     private boolean usingHttps = false;
 
-    public WebServer(IPlan plugin) {
+    public WebServer(PlanPlugin plugin) {
         this.plugin = plugin;
         this.port = Settings.WEBSERVER_PORT.getNumber();
         webAPI = new WebAPIManager();

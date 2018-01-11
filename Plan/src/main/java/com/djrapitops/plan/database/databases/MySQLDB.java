@@ -1,6 +1,6 @@
 package com.djrapitops.plan.database.databases;
 
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.dbcp2.BasicDataSource;
 

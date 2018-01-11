@@ -1,4 +1,4 @@
-package com.djrapitops.plan.settings;
+package com.djrapitops.plan.system.settings;
 
 /**
  * Permissions class is used easily check every permission node.

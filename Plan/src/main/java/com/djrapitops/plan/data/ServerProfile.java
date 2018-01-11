@@ -11,7 +11,7 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -295,7 +295,7 @@ public class ServerProfile {
     }
 
     public static int getPlayersMax() {
-        return MiscUtils.getIPlan().getVariable().getMaxPlayers();
+        return PlanPlugin.getInstance().getVariable().getMaxPlayers();
     }
 
     public Stream<PlayerProfile> getOps() {

@@ -1,9 +1,20 @@
-package com.djrapitops.plan.systems.queue;
+package com.djrapitops.plan.system.processing;
 
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.systems.processing.Processor;
+import com.djrapitops.plan.systems.queue.Consumer;
+import com.djrapitops.plan.systems.queue.Queue;
+import com.djrapitops.plan.systems.queue.Setup;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -14,15 +25,44 @@ import java.util.concurrent.BlockingQueue;
  * @author Rsl1122
  * @since 3.0.0
  */
-public class ProcessingQueue extends Queue<Processor> {
+public class ProcessingQueue extends Queue<Processor> implements SubSystem {
 
-    /**
-     * Class constructor, starts the new Thread for processing.
-     */
     public ProcessingQueue() {
         super(new ArrayBlockingQueue<>(20000));
         setup = new ProcessSetup(queue);
+    }
+
+    public static ProcessingQueue getInstance() {
+        ProcessingQueue processingQueue = PlanSystem.getInstance().getProcessingQueue();
+        NullCheck.check(processingQueue, new IllegalStateException("ProcessingQueue has not been initialized."));
+        return processingQueue;
+    }
+
+    @Override
+    public void enable() {
         setup.go();
+    }
+
+    @Override
+    public void disable() {
+        List<Processor> processors = stopAndReturnLeftovers();
+        if (PlanPlugin.getInstance().isReloading()) {
+            RunnableFactory.createNew("Re-Add processors", new AbsRunnable() {
+                @Override
+                public void run() {
+                    ProcessingQueue que = ProcessingQueue.getInstance();
+                    for (Processor processor : processors) {
+                        que.addToQueue(processor);
+                    }
+                    cancel();
+                }
+            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
+        } else {
+            Log.info("Processing unprocessed processors. (" + processors.size() + ")");
+            for (Processor processor : processors) {
+                processor.process();
+            }
+        }
     }
 
     /**

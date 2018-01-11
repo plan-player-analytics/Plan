@@ -55,7 +55,7 @@ public class SQLiteDB extends SQLDB {
             return null; // Should never happen.
         }
 
-        String dbFilePath = new File(MiscUtils.getIPlan().getDataFolder(), dbName + ".db").getAbsolutePath();
+        String dbFilePath = new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db").getAbsolutePath();
         Connection connection;
 
         try {

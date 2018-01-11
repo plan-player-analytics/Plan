@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.systems.webserver;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.data.WebUser;
@@ -29,11 +29,11 @@ import java.util.UUID;
  */
 public class ResponseHandler extends APIResponseHandler {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
     private final boolean usingHttps;
 
-    public ResponseHandler(IPlan plugin, WebServer webServer) {
+    public ResponseHandler(PlanPlugin plugin, WebServer webServer) {
         super(webServer.getWebAPI());
         this.plugin = plugin;
         this.usingHttps = webServer.isUsingHTTPS();
@@ -57,7 +57,7 @@ public class ResponseHandler extends APIResponseHandler {
                 return PageCache.loadPage(PageId.JS.of(target), () -> new JavaScriptResponse(target));
             }
 
-            UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
+            UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
 
             if (usingHttps) {
                 if (!request.hasAuth()) {

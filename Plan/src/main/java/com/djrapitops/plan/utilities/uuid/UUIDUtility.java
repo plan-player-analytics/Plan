@@ -35,7 +35,7 @@ public class UUIDUtility {
      */
     public static UUID getUUIDOf(String playerName) {
         try {
-            return getUUIDOf(playerName, MiscUtils.getIPlan().getDB());
+            return getUUIDOf(playerName, PlanPlugin.getInstance().getDB());
         } catch (Exception e) {
             return null;
         }

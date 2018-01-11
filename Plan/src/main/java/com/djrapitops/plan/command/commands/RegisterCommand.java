@@ -1,9 +1,9 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.database.tables.SecurityTable;
-import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
@@ -31,9 +31,9 @@ import com.djrapitops.plugin.task.RunnableFactory;
  */
 public class RegisterCommand extends SubCommand {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
-    public RegisterCommand(IPlan plugin) {
+    public RegisterCommand(PlanPlugin plugin) {
         super("register",
                 CommandType.PLAYER_OR_ARGS,
                 "", // No Permission Requirement

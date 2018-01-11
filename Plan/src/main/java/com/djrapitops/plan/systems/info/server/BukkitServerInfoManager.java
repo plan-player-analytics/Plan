@@ -7,10 +7,10 @@ package com.djrapitops.plan.systems.info.server;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ServerVariableHolder;
-import com.djrapitops.plan.api.exceptions.PlanEnableException;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.database.tables.ServerTable;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class BukkitServerInfoManager {
     private ServerInfoFile serverInfoFile;
     private final ServerTable serverTable;
 
-    public BukkitServerInfoManager(Plan plugin) throws PlanEnableException {
+    public BukkitServerInfoManager(Plan plugin) throws EnableException {
         this.plugin = plugin;
         Database db = plugin.getDB();
         serverTable = db.getServerTable();
@@ -40,7 +40,7 @@ public class BukkitServerInfoManager {
         try {
             serverInfoFile = new ServerInfoFile(plugin);
         } catch (IOException e) {
-            throw new PlanEnableException("Failed to read ServerInfoFile.yml", e);
+            throw new EnableException("Failed to read ServerInfoFile.yml", e);
         }
     }
 

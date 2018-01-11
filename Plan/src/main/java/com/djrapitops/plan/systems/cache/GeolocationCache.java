@@ -29,7 +29,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class GeolocationCache {
 
-    private static File geolocationDB = new File(MiscUtils.getIPlan().getDataFolder(), "GeoIP.dat");
+    private static File geolocationDB = new File(PlanPlugin.getInstance().getDataFolder(), "GeoIP.dat");
 
     private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
             .build();

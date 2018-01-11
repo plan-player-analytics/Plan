@@ -17,7 +17,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 public class PlanBungeeTaskSystem extends TaskSystem {
 
     @Override
-    public void init() {
+    public void enable() {
         registerTasks();
     }
 

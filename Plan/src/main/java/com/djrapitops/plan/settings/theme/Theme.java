@@ -4,10 +4,12 @@
  */
 package com.djrapitops.plan.settings.theme;
 
-import com.djrapitops.plan.api.exceptions.PlanEnableException;
-import com.djrapitops.plan.settings.Settings;
-import com.djrapitops.plan.systems.SubSystem;
+import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.systems.Systems;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.EnumUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -27,21 +29,23 @@ public class Theme implements SubSystem {
     private ThemeConfig config;
 
     public static Theme getInstance() {
-        return Systems.getInstance().getThemeSystem();
+        Theme themeSystem = ConfigSystem.getInstance().getThemeSystem();
+        NullCheck.check(themeSystem, new IllegalStateException("Theme System has not been initialized."));
+        return themeSystem;
     }
 
     @Override
-    public void init() throws PlanEnableException {
+    public void enable() throws EnableException {
         String themeName = Settings.THEME_BASE.toString();
         try {
             config = new ThemeConfig(themeName);
         } catch (IOException e) {
-            throw new PlanEnableException("Default theme could not be loaded.", e);
+            throw new EnableException("Default theme could not be loaded.", e);
         }
     }
 
     @Override
-    public void close() {
+    public void disable() {
 
     }
 

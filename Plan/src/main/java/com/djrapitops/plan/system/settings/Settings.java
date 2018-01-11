@@ -1,6 +1,7 @@
-package com.djrapitops.plan.settings;
+package com.djrapitops.plan.system.settings;
 
-import com.djrapitops.plan.systems.file.config.ConfigSystem;
+import com.djrapitops.plan.settings.ServerSpecificSettings;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.config.Config;
 
