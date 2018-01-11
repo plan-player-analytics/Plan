@@ -1,8 +1,7 @@
 package com.djrapitops.plan.systems.cache;
 
-import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.PlanPlugin;
 import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
@@ -15,6 +14,8 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -31,8 +32,7 @@ public class GeolocationCache {
 
     private static File geolocationDB = new File(PlanPlugin.getInstance().getDataFolder(), "GeoIP.dat");
 
-    private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
-            .build();
+    private static final Map<String, String> geolocationCache = new HashMap<>();
 
     /**
      * Constructor used to hide the public constructor
@@ -124,7 +124,7 @@ public class GeolocationCache {
      * @return The cached country, {@code null} if the country is not cached
      */
     private static String getCachedCountry(String ipAddress) {
-        return geolocationCache.getIfPresent(ipAddress);
+        return geolocationCache.get(ipAddress);
     }
 
     /**
@@ -134,13 +134,13 @@ public class GeolocationCache {
      * @return true if the IP Address is cached
      */
     public static boolean isCached(String ipAddress) {
-        return geolocationCache.asMap().containsKey(ipAddress);
+        return geolocationCache.containsKey(ipAddress);
     }
 
     /**
      * Clears the cache
      */
     public static void clearCache() {
-        geolocationCache.invalidateAll();
+        geolocationCache.clear();
     }
 }
