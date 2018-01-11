@@ -8,12 +8,12 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -27,8 +27,8 @@ public abstract class ConfigSystem implements SubSystem {
     protected final Locale locale;
     protected final Theme theme;
 
-    public ConfigSystem(File configFile) {
-        config = new Config(configFile);
+    public ConfigSystem() {
+        config = new Config(FileSystem.getConfigFile());
         locale = new Locale();
         theme = new Theme();
     }

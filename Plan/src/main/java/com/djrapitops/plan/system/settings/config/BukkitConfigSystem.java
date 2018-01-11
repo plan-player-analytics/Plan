@@ -6,7 +6,6 @@ package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.system.file.FileSystem;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -15,10 +14,6 @@ import java.io.IOException;
  * @author Rsl1122
  */
 public class BukkitConfigSystem extends ConfigSystem {
-
-    public BukkitConfigSystem(File configFile) {
-        super(configFile);
-    }
 
     @Override
     protected void copyDefaults() throws IOException {
