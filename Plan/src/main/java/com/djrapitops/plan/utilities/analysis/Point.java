@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.analysis;
+package com.djrapitops.plan.utilities.analysis;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

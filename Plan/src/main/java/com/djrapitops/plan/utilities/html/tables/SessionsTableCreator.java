@@ -2,19 +2,19 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.html.tables;
+package com.djrapitops.plan.utilities.html.tables;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.cache.SessionCache;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
-import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.settings.WorldAliasSettings;
+import com.djrapitops.plan.systems.cache.DataCache;
+import com.djrapitops.plan.systems.cache.SessionCache;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
+import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import java.util.*;
 import java.util.stream.Collectors;

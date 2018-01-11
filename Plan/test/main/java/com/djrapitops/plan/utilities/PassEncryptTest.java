@@ -1,8 +1,8 @@
-package main.java.com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities;
 
 import org.junit.Before;
 import org.junit.Test;
-import test.java.utils.RandomData;
+import test.utilities.RandomData;
 
 import java.util.HashMap;
 import java.util.Map;

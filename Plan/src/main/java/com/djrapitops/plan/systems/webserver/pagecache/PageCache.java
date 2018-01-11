@@ -1,9 +1,9 @@
-package main.java.com.djrapitops.plan.systems.webserver.pagecache;
+package com.djrapitops.plan.systems.webserver.pagecache;
 
+import com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
+import com.djrapitops.plan.systems.webserver.response.Response;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 
 import java.util.Map;
 import java.util.function.Predicate;

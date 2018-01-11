@@ -1,9 +1,9 @@
-package main.java.com.djrapitops.plan.data.plugin;
+package com.djrapitops.plan.data.plugin;
 
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.utilities.html.Html;
 import com.google.common.base.Objects;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.util.Collection;
 import java.util.UUID;

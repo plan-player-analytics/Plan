@@ -1,17 +1,17 @@
-package main.java.com.djrapitops.plan.command.commands;
+package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.command.commands.webuser.WebCheckCommand;
+import com.djrapitops.plan.command.commands.webuser.WebDeleteCommand;
+import com.djrapitops.plan.command.commands.webuser.WebLevelCommand;
+import com.djrapitops.plan.command.commands.webuser.WebListUsersCommand;
+import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.command.commands.webuser.WebCheckCommand;
-import main.java.com.djrapitops.plan.command.commands.webuser.WebDeleteCommand;
-import main.java.com.djrapitops.plan.command.commands.webuser.WebLevelCommand;
-import main.java.com.djrapitops.plan.command.commands.webuser.WebListUsersCommand;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
 
 /**
  * Web subcommand used to manage Web users.

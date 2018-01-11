@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.html;
+package com.djrapitops.plan.utilities.html;
 
 import org.apache.commons.lang3.text.StrSubstitutor;
 

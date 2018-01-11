@@ -1,15 +1,15 @@
-package main.java.com.djrapitops.plan.systems.webserver;
+package com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plan.Plan;
 import com.sun.net.httpserver.HttpExchange;
-import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.MockUtils;
-import test.java.utils.TestInit;
+import test.utilities.MockUtils;
+import test.utilities.TestInit;
 
 import java.io.IOException;
 import java.util.HashMap;

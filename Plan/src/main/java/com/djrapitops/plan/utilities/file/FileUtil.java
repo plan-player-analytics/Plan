@@ -1,9 +1,9 @@
-package main.java.com.djrapitops.plan.utilities.file;
+package com.djrapitops.plan.utilities.file;
 
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;

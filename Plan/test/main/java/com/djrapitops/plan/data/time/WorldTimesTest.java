@@ -1,8 +1,8 @@
-package main.java.com.djrapitops.plan.data.time;
+package com.djrapitops.plan.data.time;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
-import test.java.utils.RandomData;
+import test.utilities.RandomData;
 
 import java.util.ArrayList;
 import java.util.List;

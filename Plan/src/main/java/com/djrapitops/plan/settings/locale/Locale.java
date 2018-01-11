@@ -1,20 +1,20 @@
-package main.java.com.djrapitops.plan.settings.locale;
+package com.djrapitops.plan.settings.locale;
 
+import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.systems.file.FileSystem;
+import com.djrapitops.plan.systems.file.config.ConfigSystem;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
+import com.djrapitops.plan.utilities.comparators.StringLengthComparator;
+import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.file.FileSystem;
-import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
-import main.java.com.djrapitops.plan.utilities.comparators.StringLengthComparator;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.File;
 import java.io.FileNotFoundException;

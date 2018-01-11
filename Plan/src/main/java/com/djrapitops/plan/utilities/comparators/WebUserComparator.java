@@ -1,6 +1,6 @@
-package main.java.com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.data.WebUser;
 
 import java.util.Comparator;
 

@@ -1,8 +1,7 @@
-package main.java.com.djrapitops.plan.database.databases;
+package com.djrapitops.plan.database.databases;
 
+import com.djrapitops.plan.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.settings.Settings;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
@@ -19,7 +18,7 @@ public class MySQLDB extends SQLDB {
      * Setups the {@link BasicDataSource}
      */
     @Override
-    public void setupDataSource() throws DatabaseInitException {
+    public void setupDataSource() {
         dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 

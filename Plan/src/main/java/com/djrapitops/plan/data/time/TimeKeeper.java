@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.time;
+package com.djrapitops.plan.data.time;
 
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.lang3.builder.ToStringBuilder;

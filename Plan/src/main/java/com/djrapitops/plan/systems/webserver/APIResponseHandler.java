@@ -2,17 +2,17 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver;
+package com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import com.djrapitops.plan.systems.webserver.pagecache.PageId;
+import com.djrapitops.plan.systems.webserver.response.*;
+import com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
+import com.djrapitops.plan.systems.webserver.webapi.WebAPI;
+import com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
-import main.java.com.djrapitops.plan.systems.webserver.response.*;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

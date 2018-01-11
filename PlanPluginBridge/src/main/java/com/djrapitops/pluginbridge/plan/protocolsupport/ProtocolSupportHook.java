@@ -7,10 +7,10 @@ package com.djrapitops.pluginbridge.plan.protocolsupport;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.database.databases.SQLDB;
 
 /**
  * Hook for ProtocolSupport plugin.

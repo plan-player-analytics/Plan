@@ -2,9 +2,9 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems;
+package com.djrapitops.plan.systems;
 
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
+import com.djrapitops.plan.api.exceptions.PlanEnableException;
 
 /**
  * //TODO Class Javadoc Comment

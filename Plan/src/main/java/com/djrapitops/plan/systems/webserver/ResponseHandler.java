@@ -2,20 +2,20 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver;
+package com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.database.tables.SecurityTable;
+import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import com.djrapitops.plan.systems.webserver.pagecache.PageId;
+import com.djrapitops.plan.systems.webserver.response.*;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.api.exceptions.ParseException;
-import main.java.com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.database.tables.SecurityTable;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
-import main.java.com.djrapitops.plan.systems.webserver.response.*;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.sql.SQLException;
 import java.util.Base64;

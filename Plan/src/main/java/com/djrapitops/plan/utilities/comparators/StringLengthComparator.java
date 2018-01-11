@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.utilities.comparators;
 
 import java.util.Comparator;
 

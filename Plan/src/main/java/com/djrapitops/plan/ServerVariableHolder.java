@@ -1,6 +1,6 @@
-package main.java.com.djrapitops.plan;
+package com.djrapitops.plan;
 
-import main.java.com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.settings.Settings;
 import net.md_5.bungee.api.ProxyServer;
 import org.bukkit.Server;
 

@@ -1,19 +1,19 @@
-package main.java.com.djrapitops.plan.database.databases;
+package com.djrapitops.plan.database.databases;
 
+import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.ServerProfile;
+import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.database.tables.*;
+import com.djrapitops.plan.database.tables.move.Version8TransferTable;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.ServerProfile;
-import main.java.com.djrapitops.plan.data.container.*;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.tables.*;
-import main.java.com.djrapitops.plan.database.tables.move.Version8TransferTable;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;

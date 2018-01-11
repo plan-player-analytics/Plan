@@ -3,25 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.database;
+package com.djrapitops.plan.database;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.data.container.*;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.database.databases.MySQLDB;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
-import main.java.com.djrapitops.plan.database.tables.*;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
-import main.java.com.djrapitops.plan.systems.processing.player.RegisterProcessor;
-import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.database.databases.MySQLDB;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.database.databases.SQLiteDB;
+import com.djrapitops.plan.database.tables.*;
+import com.djrapitops.plan.systems.cache.DataCache;
+import com.djrapitops.plan.systems.info.server.ServerInfo;
+import com.djrapitops.plan.systems.processing.player.RegisterProcessor;
+import com.djrapitops.plan.utilities.ManageUtils;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.analysis.MathUtils;
+import com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;
@@ -31,9 +31,9 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.MockUtils;
-import test.java.utils.RandomData;
-import test.java.utils.TestInit;
+import test.utilities.MockUtils;
+import test.utilities.RandomData;
+import test.utilities.TestInit;
 
 import java.io.File;
 import java.io.IOException;

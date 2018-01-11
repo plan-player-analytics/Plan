@@ -2,11 +2,11 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.settings.theme;
+package com.djrapitops.plan.settings.theme;
 
+import com.djrapitops.plan.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
-import main.java.com.djrapitops.plan.settings.Settings;
 
 /**
  * ColorScheme that uses values in config settings specific to Plan or PlanBungee.

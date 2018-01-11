@@ -1,6 +1,6 @@
-package main.java.com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.TPS;
 
 import java.util.Comparator;
 

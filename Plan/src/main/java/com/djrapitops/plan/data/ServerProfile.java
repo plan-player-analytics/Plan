@@ -2,24 +2,24 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data;
+package com.djrapitops.plan.data;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import com.djrapitops.plan.utilities.analysis.MathUtils;
+import com.djrapitops.plan.utilities.comparators.PlayerProfileLastPlayedComparator;
+import com.djrapitops.plan.utilities.comparators.TPSComparator;
+import com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.data.container.GeoInfo;
-import main.java.com.djrapitops.plan.data.container.PlayerKill;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.container.TPS;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.PlayerProfileLastPlayedComparator;
-import main.java.com.djrapitops.plan.utilities.comparators.TPSComparator;
-import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
 
 import java.util.*;
 import java.util.function.Function;

@@ -2,32 +2,32 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.info;
+package com.djrapitops.plan.systems.info;
 
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
+import com.djrapitops.plan.api.exceptions.WebAPIException;
+import com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.systems.cache.DataCache;
+import com.djrapitops.plan.systems.info.parsing.NetworkPageParser;
+import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
+import com.djrapitops.plan.systems.info.server.ServerInfo;
+import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import com.djrapitops.plan.systems.webserver.pagecache.PageId;
+import com.djrapitops.plan.systems.webserver.response.*;
+import com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
+import com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalysisReadyWebAPI;
+import com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
+import com.djrapitops.plan.systems.webserver.webapi.bukkit.InspectWebAPI;
+import com.djrapitops.plan.systems.webserver.webapi.bukkit.IsOnlineWebAPI;
+import com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.file.export.HtmlExport;
+import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.api.exceptions.ParseException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.info.parsing.NetworkPageParser;
-import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
-import main.java.com.djrapitops.plan.systems.webserver.response.*;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalysisReadyWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.InspectWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.IsOnlineWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
-import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
 import java.io.IOException;
 import java.sql.SQLException;

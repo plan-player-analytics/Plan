@@ -1,16 +1,16 @@
-package main.java.com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.utilities.comparators;
 
+import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.settings.locale.Message;
+import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.analysis.Point;
 import com.google.common.collect.Ordering;
-import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.container.TPS;
-import main.java.com.djrapitops.plan.data.container.UserInfo;
-import main.java.com.djrapitops.plan.settings.locale.Message;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
-import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import org.junit.Test;
-import test.java.utils.RandomData;
+import test.utilities.RandomData;
 
 import java.util.*;
 import java.util.stream.Collectors;

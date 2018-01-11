@@ -2,20 +2,19 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.tasks;
+package com.djrapitops.plan.systems.tasks;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.systems.info.InformationManager;
 
 /**
  * //TODO Class Javadoc Comment
@@ -29,7 +28,7 @@ public class PlanTaskSystem extends TaskSystem {
     private ITask bootAnalysisTask;
 
     @Override
-    public void init() throws PlanEnableException {
+    public void init() {
         registerTasks();
     }
 

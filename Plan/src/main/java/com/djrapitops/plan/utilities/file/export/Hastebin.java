@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.file.export;
+package com.djrapitops.plan.utilities.file.export;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.base.Splitter;

@@ -1,17 +1,17 @@
-package main.java.com.djrapitops.plan.database.tables;
+package com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.database.processing.ExecStatement;
+import com.djrapitops.plan.database.processing.QueryAllStatement;
+import com.djrapitops.plan.database.processing.QueryStatement;
+import com.djrapitops.plan.database.sql.Sql;
+import com.djrapitops.plan.database.sql.TableSqlParser;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.processing.ExecStatement;
-import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
-import main.java.com.djrapitops.plan.database.processing.QueryStatement;
-import main.java.com.djrapitops.plan.database.sql.Sql;
-import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

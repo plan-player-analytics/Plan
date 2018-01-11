@@ -2,11 +2,11 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.processing.info;
+package com.djrapitops.plan.systems.processing.info;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.systems.processing.Processor;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.processing.Processor;
 import org.bukkit.entity.Player;
 
 import java.io.ByteArrayOutputStream;

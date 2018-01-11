@@ -1,10 +1,10 @@
-package main.java.com.djrapitops.plan.data.cache;
+package com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageLoader;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
+import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import com.djrapitops.plan.systems.webserver.pagecache.PageLoader;
+import com.djrapitops.plan.systems.webserver.response.Response;
 import org.junit.Test;
-import test.java.utils.RandomData;
+import test.utilities.RandomData;
 
 import static junit.framework.TestCase.*;
 

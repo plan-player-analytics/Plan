@@ -2,25 +2,25 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems;
+package com.djrapitops.plan.systems;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.systems.file.FileSystem;
+import com.djrapitops.plan.systems.file.config.ConfigSystem;
+import com.djrapitops.plan.systems.file.config.PlanBungeeConfigSystem;
+import com.djrapitops.plan.systems.file.config.PlanConfigSystem;
+import com.djrapitops.plan.systems.file.database.DBSystem;
+import com.djrapitops.plan.systems.file.database.PlanBungeeDBSystem;
+import com.djrapitops.plan.systems.file.database.PlanDBSystem;
+import com.djrapitops.plan.systems.tasks.PlanBungeeTaskSystem;
+import com.djrapitops.plan.systems.tasks.PlanTaskSystem;
+import com.djrapitops.plan.systems.tasks.TaskSystem;
+import com.djrapitops.plan.systems.update.VersionCheckSystem;
+import com.djrapitops.plan.systems.webserver.WebServerSystem;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.settings.theme.Theme;
-import main.java.com.djrapitops.plan.systems.file.FileSystem;
-import main.java.com.djrapitops.plan.systems.file.config.ConfigSystem;
-import main.java.com.djrapitops.plan.systems.file.config.PlanBungeeConfigSystem;
-import main.java.com.djrapitops.plan.systems.file.config.PlanConfigSystem;
-import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
-import main.java.com.djrapitops.plan.systems.file.database.PlanBungeeDBSystem;
-import main.java.com.djrapitops.plan.systems.file.database.PlanDBSystem;
-import main.java.com.djrapitops.plan.systems.tasks.PlanBungeeTaskSystem;
-import main.java.com.djrapitops.plan.systems.tasks.PlanTaskSystem;
-import main.java.com.djrapitops.plan.systems.tasks.TaskSystem;
-import main.java.com.djrapitops.plan.systems.update.VersionCheckSystem;
-import main.java.com.djrapitops.plan.systems.webserver.WebServerSystem;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**

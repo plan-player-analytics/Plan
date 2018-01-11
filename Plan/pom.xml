@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>4.1.3.2</version>
+    <version>4.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -32,17 +32,17 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>PlanPluginBridge</artifactId>
-            <version>4.1.3-SNAPSHOT</version>
+            <version>4.2.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <!--        Full PaperSpigot JAR -->
+        <!--        Paper API -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--        Spigot -->
+        <!--        Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -157,8 +157,8 @@
     <build>
         <defaultGoal>clean package install</defaultGoal>
         <finalName>${project.name}</finalName>
-        <sourceDirectory>${basedir}/src</sourceDirectory>
-        <testSourceDirectory>${basedir}/test</testSourceDirectory>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <testSourceDirectory>${basedir}/test/main/java</testSourceDirectory>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
@@ -215,6 +215,11 @@
                         </excludes>
                     </artifactSet>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,10 +1,10 @@
-package main.java.com.djrapitops.plan.utilities.export;
+package com.djrapitops.plan.utilities.export;
 
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.file.export.Hastebin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.collect.Iterables;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.file.export.Hastebin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
@@ -13,8 +13,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.RandomData;
-import test.java.utils.TestInit;
+import test.utilities.RandomData;
+import test.utilities.TestInit;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;

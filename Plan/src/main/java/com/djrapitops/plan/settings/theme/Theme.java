@@ -2,15 +2,15 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.settings.theme;
+package com.djrapitops.plan.settings.theme;
 
+import com.djrapitops.plan.api.exceptions.PlanEnableException;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.systems.SubSystem;
+import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plugin.api.utility.EnumUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.SubSystem;
-import main.java.com.djrapitops.plan.systems.Systems;
 
 import java.io.IOException;
 import java.util.List;

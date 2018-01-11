@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.utilities.analysis;
+package com.djrapitops.plan.utilities.analysis;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.TestInit;
+import test.utilities.TestInit;
 
 import java.util.Arrays;
 import java.util.Collections;

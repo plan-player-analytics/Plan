@@ -2,16 +2,16 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.database.tables;
+package com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.database.processing.ExecStatement;
+import com.djrapitops.plan.database.processing.QueryAllStatement;
+import com.djrapitops.plan.database.processing.QueryStatement;
+import com.djrapitops.plan.database.sql.*;
+import com.djrapitops.plan.systems.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.processing.ExecStatement;
-import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
-import main.java.com.djrapitops.plan.database.processing.QueryStatement;
-import main.java.com.djrapitops.plan.database.sql.*;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -413,7 +413,7 @@ public class ServerTable extends Table {
 
         return query(new QueryStatement<Integer>(sql) {
             @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
+            public void prepare(PreparedStatement statement) {
 
             }
 

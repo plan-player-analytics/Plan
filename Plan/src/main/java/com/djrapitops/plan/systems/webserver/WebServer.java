@@ -1,5 +1,14 @@
-package main.java.com.djrapitops.plan.systems.webserver;
+package com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
+import com.djrapitops.plan.systems.webserver.webapi.bukkit.*;
+import com.djrapitops.plan.systems.webserver.webapi.bungee.*;
+import com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
+import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -7,15 +16,6 @@ import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.*;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.*;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import javax.net.ssl.*;
 import java.io.File;

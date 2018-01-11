@@ -1,6 +1,6 @@
-package main.java.com.djrapitops.plan.systems.webserver.pagecache;
+package com.djrapitops.plan.systems.webserver.pagecache;
 
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
+import com.djrapitops.plan.systems.webserver.response.Response;
 
 /**
  * This interface is used for providing the method to load the page.

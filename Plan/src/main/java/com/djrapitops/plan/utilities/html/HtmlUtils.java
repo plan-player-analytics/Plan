@@ -1,8 +1,8 @@
-package main.java.com.djrapitops.plan.utilities.html;
+package com.djrapitops.plan.utilities.html;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;

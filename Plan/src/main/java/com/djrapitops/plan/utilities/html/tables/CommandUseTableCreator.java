@@ -1,8 +1,8 @@
-package main.java.com.djrapitops.plan.utilities.html.tables;
+package com.djrapitops.plan.utilities.html.tables;
 
+import com.djrapitops.plan.utilities.comparators.MapComparator;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.util.Collections;
 import java.util.List;

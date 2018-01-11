@@ -2,14 +2,13 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.file;
+package com.djrapitops.plan.systems.file;
 
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
-import main.java.com.djrapitops.plan.systems.SubSystem;
-import main.java.com.djrapitops.plan.systems.Systems;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.systems.SubSystem;
+import com.djrapitops.plan.systems.Systems;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +53,7 @@ public class FileSystem implements SubSystem {
     }
 
     @Override
-    public void init() throws PlanEnableException {
+    public void init() {
         dataFolder.mkdirs();
         configFile = new File(dataFolder, "config.yml");
     }

@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.database.databases.SQLiteDB;
+import com.djrapitops.plan.database.tables.UsersTable;
+import com.djrapitops.plan.systems.info.server.ServerInfo;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
-import main.java.com.djrapitops.plan.database.tables.UsersTable;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
@@ -20,9 +20,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.MockUtils;
-import test.java.utils.RandomData;
-import test.java.utils.TestInit;
+import test.utilities.MockUtils;
+import test.utilities.RandomData;
+import test.utilities.TestInit;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class MiscUtilsTest {
     private SQLDB db;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         StaticHolder.saveInstance(MiscUtils.class, Plan.class);
     }
 

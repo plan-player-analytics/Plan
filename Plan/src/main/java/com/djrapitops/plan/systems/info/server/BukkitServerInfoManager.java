@@ -2,16 +2,16 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.info.server;
+package com.djrapitops.plan.systems.info.server;
 
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.ServerVariableHolder;
+import com.djrapitops.plan.api.exceptions.PlanEnableException;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.database.tables.ServerTable;
+import com.djrapitops.plan.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.ServerVariableHolder;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.tables.ServerTable;
-import main.java.com.djrapitops.plan.settings.Settings;
 
 import java.io.IOException;
 import java.sql.SQLException;

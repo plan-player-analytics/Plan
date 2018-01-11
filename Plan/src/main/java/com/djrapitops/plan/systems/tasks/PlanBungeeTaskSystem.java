@@ -2,13 +2,12 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.tasks;
+package com.djrapitops.plan.systems.tasks;
 
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
-import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 
 /**
  * //TODO Class Javadoc Comment
@@ -18,7 +17,7 @@ import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 public class PlanBungeeTaskSystem extends TaskSystem {
 
     @Override
-    public void init() throws PlanEnableException {
+    public void init() {
         registerTasks();
     }
 

@@ -1,9 +1,9 @@
-package main.java.com.djrapitops.plan.systems.listeners;
+package com.djrapitops.plan.systems.listeners;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.systems.cache.DataCache;
+import com.djrapitops.plan.systems.processing.player.NameProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.processing.player.NameProcessor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

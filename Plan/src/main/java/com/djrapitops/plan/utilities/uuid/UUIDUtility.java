@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.utilities.uuid;
+package com.djrapitops.plan.utilities.uuid;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 import java.util.UUID;

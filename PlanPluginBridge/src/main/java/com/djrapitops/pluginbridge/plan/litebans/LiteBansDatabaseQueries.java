@@ -1,8 +1,8 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
 import litebans.api.Database;
-import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.database.tables.Table;
+import com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import com.djrapitops.plan.database.tables.Table;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

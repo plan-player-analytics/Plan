@@ -1,8 +1,8 @@
-package main.java.com.djrapitops.plan.systems.processing.player;
+package com.djrapitops.plan.systems.processing.player;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.container.PlayerKill;
-import main.java.com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.container.Session;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 

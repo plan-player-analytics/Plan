@@ -3,8 +3,8 @@ package com.djrapitops.pluginbridge.plan.superbvote;
 import com.djrapitops.pluginbridge.plan.Hook;
 import io.minimum.minecraft.superbvote.SuperbVote;
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
-import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.api.API;
+import com.djrapitops.plan.data.plugin.HookHandler;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 

@@ -2,13 +2,13 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.html.structure;
+package com.djrapitops.plan.utilities.html.structure;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
-import main.java.com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
+import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,16 +1,16 @@
-package main.java.com.djrapitops.plan.command.commands.manage;
+package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.systems.info.ImporterManager;
+import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.systems.info.ImporterManager;
-import main.java.com.djrapitops.plan.utilities.Condition;
 
 /**
  * This manage subcommand is used to import data from 3rd party plugins.

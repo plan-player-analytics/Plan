@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.systems.webserver.response;
+package com.djrapitops.plan.systems.webserver.response;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;

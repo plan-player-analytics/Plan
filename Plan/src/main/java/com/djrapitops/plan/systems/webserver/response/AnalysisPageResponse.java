@@ -1,11 +1,11 @@
-package main.java.com.djrapitops.plan.systems.webserver.response;
+package com.djrapitops.plan.systems.webserver.response;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.systems.info.BukkitInformationManager;
+import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
-import main.java.com.djrapitops.plan.systems.info.InformationManager;
 
 /**
  * @author Rsl1122

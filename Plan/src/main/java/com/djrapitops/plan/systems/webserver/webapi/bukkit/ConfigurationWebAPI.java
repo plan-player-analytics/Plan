@@ -2,19 +2,19 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit;
+package com.djrapitops.plan.systems.webserver.webapi.bukkit;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.api.exceptions.WebAPIException;
+import com.djrapitops.plan.settings.ServerSpecificSettings;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.systems.webserver.response.Response;
+import com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
-import main.java.com.djrapitops.plan.settings.ServerSpecificSettings;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 
 import java.util.HashMap;
 import java.util.Map;

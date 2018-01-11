@@ -1,9 +1,9 @@
-package main.java.com.djrapitops.plan.command;
+package com.djrapitops.plan.command;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanBungee;
 
 import java.util.UUID;
 

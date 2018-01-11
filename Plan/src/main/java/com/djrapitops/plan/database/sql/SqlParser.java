@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.database.sql;
+package com.djrapitops.plan.database.sql;
 
 /**
  * Class for parsing different SQL strings.

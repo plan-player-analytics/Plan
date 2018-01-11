@@ -2,18 +2,18 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data;
+package com.djrapitops.plan.data;
 
+import com.djrapitops.plan.data.container.Action;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.comparators.ActionComparator;
+import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plugin.api.TimeAmount;
-import main.java.com.djrapitops.plan.data.container.Action;
-import main.java.com.djrapitops.plan.data.container.GeoInfo;
-import main.java.com.djrapitops.plan.data.container.PlayerKill;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.ActionComparator;
-import main.java.com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;

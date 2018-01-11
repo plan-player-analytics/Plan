@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan;
+package com.djrapitops.plan;
 
-import main.java.com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.Permissions;
 import org.junit.Test;
-import test.java.utils.TestUtils;
+import test.utilities.TestUtils;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,8 +1,8 @@
-package main.java.com.djrapitops.plan.utilities.analysis;
+package com.djrapitops.plan.utilities.analysis;
 
+import com.djrapitops.plan.utilities.comparators.PointComparator;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.utilities.comparators.PointComparator;
 
 import java.util.HashSet;
 import java.util.List;

@@ -1,11 +1,11 @@
-package main.java.com.djrapitops.plan.systems.listeners;
+package com.djrapitops.plan.systems.listeners;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.systems.processing.player.DeathProcessor;
+import com.djrapitops.plan.systems.processing.player.KillProcessor;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Format;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.processing.player.DeathProcessor;
-import main.java.com.djrapitops.plan.systems.processing.player.KillProcessor;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;

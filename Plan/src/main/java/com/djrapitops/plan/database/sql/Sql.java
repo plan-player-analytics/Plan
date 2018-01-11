@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.database.sql;
+package com.djrapitops.plan.database.sql;
 
 public class Sql {
     public static final String INT = "integer";

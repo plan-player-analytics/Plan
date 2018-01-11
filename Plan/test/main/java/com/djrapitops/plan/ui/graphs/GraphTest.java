@@ -2,14 +2,14 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.ui.graphs;
+package com.djrapitops.plan.ui.graphs;
 
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.container.TPS;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.utilities.analysis.Point;
-import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
-import main.java.com.djrapitops.plan.utilities.html.graphs.line.*;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.utilities.analysis.Point;
+import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
+import com.djrapitops.plan.utilities.html.graphs.line.*;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Assert;
@@ -18,8 +18,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.RandomData;
-import test.java.utils.TestInit;
+import test.utilities.RandomData;
+import test.utilities.TestInit;
 
 import java.util.*;
 

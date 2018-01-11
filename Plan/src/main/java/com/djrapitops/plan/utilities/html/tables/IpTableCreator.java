@@ -2,12 +2,12 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.html.tables;
+package com.djrapitops.plan.utilities.html.tables;
 
-import main.java.com.djrapitops.plan.data.container.GeoInfo;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
-import main.java.com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
+import com.djrapitops.plan.utilities.html.Html;
 
 import java.util.List;
 

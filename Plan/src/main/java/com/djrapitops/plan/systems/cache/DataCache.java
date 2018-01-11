@@ -1,8 +1,8 @@
-package main.java.com.djrapitops.plan.systems.cache;
+package com.djrapitops.plan.systems.cache;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.database.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.database.Database;
 
 import java.sql.SQLException;
 import java.util.*;

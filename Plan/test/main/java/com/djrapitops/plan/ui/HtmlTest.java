@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.ui;
+package com.djrapitops.plan.ui;
 
-import main.java.com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.Html;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

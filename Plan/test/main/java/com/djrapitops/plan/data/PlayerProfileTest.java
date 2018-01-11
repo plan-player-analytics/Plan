@@ -1,16 +1,16 @@
-package main.java.com.djrapitops.plan.data;
+package com.djrapitops.plan.data;
 
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.TestInit;
+import test.utilities.TestInit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class PlayerProfileTest {
     }
 
     @Test
-    public void testMaxActivityIndex() throws Exception {
+    public void testMaxActivityIndex() {
         PlayerProfile p = new PlayerProfile(null, null, 0L);
         List<Session> sessions = new ArrayList<>();
 
@@ -57,7 +57,7 @@ public class PlayerProfileTest {
     }
 
     @Test
-    public void testMaxActivityIndex2() throws Exception {
+    public void testMaxActivityIndex2() {
         PlayerProfile p = new PlayerProfile(null, null, 0L);
         List<Session> sessions = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class PlayerProfileTest {
     }
 
     @Test
-    public void testActivityIndexOne() throws Exception {
+    public void testActivityIndexOne() {
         PlayerProfile p = new PlayerProfile(null, null, 0L);
         List<Session> sessions = new ArrayList<>();
 
@@ -105,7 +105,7 @@ public class PlayerProfileTest {
     }
 
     @Test(timeout = 500)
-    public void testMethodTimeout() throws Exception {
+    public void testMethodTimeout() {
         PlayerProfile p = new PlayerProfile(null, null, 0L);
         List<Session> sessions = new ArrayList<>();
         long date = 0;
