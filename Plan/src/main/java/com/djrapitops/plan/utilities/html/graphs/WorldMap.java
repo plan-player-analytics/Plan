@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.html.graphs;
+package com.djrapitops.plan.utilities.html.graphs;
 
 import java.util.HashMap;
 import java.util.List;

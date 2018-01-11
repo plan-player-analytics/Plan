@@ -2,19 +2,19 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan;
+package com.djrapitops.plan;
 
+import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.data.container.Action;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.database.tables.Actions;
+import com.djrapitops.plan.database.tables.SessionsTable;
+import com.djrapitops.plan.systems.cache.DataCache;
+import com.djrapitops.plan.systems.cache.SessionCache;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.data.container.Action;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.tables.Actions;
-import main.java.com.djrapitops.plan.database.tables.SessionsTable;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.cache.SessionCache;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 import java.util.Map;

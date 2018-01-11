@@ -2,17 +2,17 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver;
+package com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.systems.webserver.response.PromptAuthorizationResponse;
+import com.djrapitops.plan.systems.webserver.response.Response;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.webserver.response.PromptAuthorizationResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class RequestHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) {
         Headers responseHeaders = exchange.getResponseHeaders();
         Request request = new Request(exchange);
         String requestString = request.toString();

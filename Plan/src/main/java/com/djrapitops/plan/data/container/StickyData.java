@@ -2,12 +2,12 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data.container;
+package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.database.tables.Actions;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.google.common.base.Objects;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.database.tables.Actions;
 
 public class StickyData {
     private final double activityIndex;

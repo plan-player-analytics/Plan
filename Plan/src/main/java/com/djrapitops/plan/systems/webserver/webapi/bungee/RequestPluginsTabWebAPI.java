@@ -2,18 +2,18 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver.webapi.bungee;
+package com.djrapitops.plan.systems.webserver.webapi.bungee;
 
 
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.api.exceptions.WebAPIException;
+import com.djrapitops.plan.systems.info.server.ServerInfo;
+import com.djrapitops.plan.systems.processing.Processor;
+import com.djrapitops.plan.systems.webserver.response.Response;
+import com.djrapitops.plan.systems.webserver.webapi.WebAPI;
+import com.djrapitops.plan.systems.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
-import main.java.com.djrapitops.plan.systems.processing.Processor;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
 
 import java.sql.SQLException;
 import java.util.List;

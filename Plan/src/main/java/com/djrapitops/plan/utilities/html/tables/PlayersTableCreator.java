@@ -1,15 +1,15 @@
-package main.java.com.djrapitops.plan.utilities.html.tables;
+package com.djrapitops.plan.utilities.html.tables;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.TableContainer;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.Serializable;

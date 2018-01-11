@@ -4,14 +4,14 @@
  */
 package com.djrapitops.pluginbridge.plan.banmanager;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.plugin.BanData;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.BanData;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.Html;
 import me.confuser.banmanager.BmAPI;
 import me.confuser.banmanager.data.PlayerBanData;
 import me.confuser.banmanager.data.PlayerMuteData;

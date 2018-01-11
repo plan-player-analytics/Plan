@@ -4,11 +4,11 @@
  */
 package com.djrapitops.pluginbridge.plan.kingdoms;
 
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.ServerProfile;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
-import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.ServerProfile;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.utilities.analysis.Analysis;
+import com.djrapitops.plan.utilities.html.HtmlStructure;
 import org.kingdoms.constants.kingdom.OfflineKingdom;
 
 import java.util.*;

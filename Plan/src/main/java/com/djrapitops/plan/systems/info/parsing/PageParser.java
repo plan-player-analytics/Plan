@@ -2,9 +2,9 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.info.parsing;
+package com.djrapitops.plan.systems.info.parsing;
 
-import main.java.com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.api.exceptions.ParseException;
 
 import java.io.Serializable;
 import java.util.HashMap;

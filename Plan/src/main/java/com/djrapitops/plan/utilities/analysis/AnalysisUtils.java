@@ -1,15 +1,15 @@
-package main.java.com.djrapitops.plan.utilities.analysis;
+package com.djrapitops.plan.utilities.analysis;
 
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.StickyData;
+import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.container.StickyData;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 import java.util.*;

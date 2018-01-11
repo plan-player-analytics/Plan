@@ -2,20 +2,20 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.html;
+package com.djrapitops.plan.utilities.html;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.ServerVariableHolder;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.systems.info.BukkitInformationManager;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;
+import com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
+import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.ServerVariableHolder;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;
-import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
-import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
 import java.sql.SQLException;
 import java.util.*;

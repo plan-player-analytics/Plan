@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
@@ -8,9 +8,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.MockUtils;
-import test.java.utils.RandomData;
-import test.java.utils.TestInit;
+import test.utilities.MockUtils;
+import test.utilities.RandomData;
+import test.utilities.TestInit;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;

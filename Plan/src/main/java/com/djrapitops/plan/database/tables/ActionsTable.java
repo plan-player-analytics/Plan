@@ -2,19 +2,19 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.database.tables;
+package com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import com.djrapitops.plan.data.container.Action;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.database.processing.ExecStatement;
+import com.djrapitops.plan.database.processing.QueryAllStatement;
+import com.djrapitops.plan.database.processing.QueryStatement;
+import com.djrapitops.plan.database.sql.Select;
+import com.djrapitops.plan.database.sql.Sql;
+import com.djrapitops.plan.database.sql.TableSqlParser;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.data.container.Action;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.processing.ExecStatement;
-import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
-import main.java.com.djrapitops.plan.database.processing.QueryStatement;
-import main.java.com.djrapitops.plan.database.sql.Select;
-import main.java.com.djrapitops.plan.database.sql.Sql;
-import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

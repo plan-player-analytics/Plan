@@ -2,11 +2,11 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver.response.api;
+package com.djrapitops.plan.systems.webserver.response.api;
 
+import com.djrapitops.plan.systems.webserver.response.Response;
+import com.djrapitops.plan.systems.webserver.response.ResponseType;
 import com.google.gson.Gson;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.response.ResponseType;
 
 /**
  * @author Fuzzlemann

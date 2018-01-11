@@ -1,7 +1,7 @@
-package main.java.com.djrapitops.plan.database.tables;
+package com.djrapitops.plan.database.tables;
 
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.database.processing.ExecStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

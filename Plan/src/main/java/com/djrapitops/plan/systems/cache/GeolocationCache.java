@@ -1,12 +1,12 @@
-package main.java.com.djrapitops.plan.systems.cache;
+package com.djrapitops.plan.systems.cache;
 
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Country;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;

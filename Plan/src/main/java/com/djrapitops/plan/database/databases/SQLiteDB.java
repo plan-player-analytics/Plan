@@ -1,11 +1,11 @@
-package main.java.com.djrapitops.plan.database.databases;
+package com.djrapitops.plan.database.databases;
 
+import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.File;

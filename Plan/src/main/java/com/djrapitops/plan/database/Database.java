@@ -1,9 +1,9 @@
-package main.java.com.djrapitops.plan.database;
+package com.djrapitops.plan.database;
 
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.ServerProfile;
-import main.java.com.djrapitops.plan.database.tables.*;
+import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.ServerProfile;
+import com.djrapitops.plan.database.tables.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;

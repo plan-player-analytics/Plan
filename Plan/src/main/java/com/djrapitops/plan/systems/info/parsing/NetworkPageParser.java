@@ -2,25 +2,25 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.info.parsing;
+package com.djrapitops.plan.systems.info.parsing;
 
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.systems.info.BungeeInformationManager;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.html.HtmlStructure;
+import com.djrapitops.plan.utilities.html.HtmlUtils;
+import com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;
 import com.djrapitops.plugin.api.TimeAmount;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.api.exceptions.ParseException;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.container.TPS;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.settings.theme.Theme;
-import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
-import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
-import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;
 
 import java.sql.SQLException;
 import java.util.List;

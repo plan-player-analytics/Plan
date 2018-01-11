@@ -2,15 +2,15 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.tasks;
+package com.djrapitops.plan.systems.tasks;
 
+import com.djrapitops.plan.systems.SubSystem;
+import com.djrapitops.plan.systems.Systems;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.systems.TaskCenter;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.IRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.systems.SubSystem;
-import main.java.com.djrapitops.plan.systems.Systems;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 /**
  * //TODO Class Javadoc Comment

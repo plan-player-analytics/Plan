@@ -1,8 +1,8 @@
-package main.java.com.djrapitops.plan.systems.queue;
+package com.djrapitops.plan.systems.queue;
 
+import com.djrapitops.plan.systems.processing.Processor;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.systems.processing.Processor;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

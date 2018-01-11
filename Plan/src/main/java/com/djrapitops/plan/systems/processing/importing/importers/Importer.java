@@ -2,23 +2,23 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.processing.importing.importers;
+package com.djrapitops.plan.systems.processing.importing.importers;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.systems.cache.GeolocationCache;
+import com.djrapitops.plan.systems.processing.importing.ServerImportData;
+import com.djrapitops.plan.systems.processing.importing.UserImportData;
+import com.djrapitops.plan.systems.processing.importing.UserImportRefiner;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.collect.ImmutableMap;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.container.GeoInfo;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.container.UserInfo;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
-import main.java.com.djrapitops.plan.systems.processing.importing.ServerImportData;
-import main.java.com.djrapitops.plan.systems.processing.importing.UserImportData;
-import main.java.com.djrapitops.plan.systems.processing.importing.UserImportRefiner;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -50,7 +50,7 @@ public abstract class Importer {
 
         new ImportExecutorHelper() {
             @Override
-            void execute() throws SQLException {
+            void execute() {
                 Benchmark.start(serverBenchmarkName);
                 processServerData();
                 Benchmark.stop(serverBenchmarkName);

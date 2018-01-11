@@ -2,20 +2,20 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.info.server;
+package com.djrapitops.plan.systems.info.server;
 
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.ServerVariableHolder;
+import com.djrapitops.plan.api.exceptions.PlanEnableException;
+import com.djrapitops.plan.api.exceptions.WebAPIException;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.database.tables.ServerTable;
+import com.djrapitops.plan.systems.webserver.webapi.bukkit.ConfigurationWebAPI;
+import com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.ServerVariableHolder;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.tables.ServerTable;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.ConfigurationWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 
 import java.sql.SQLException;
 import java.util.*;

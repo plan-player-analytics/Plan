@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.systems.queue;
+package com.djrapitops.plan.systems.queue;
 
 import java.util.ArrayList;
 import java.util.List;

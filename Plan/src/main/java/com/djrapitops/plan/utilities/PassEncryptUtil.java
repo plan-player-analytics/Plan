@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

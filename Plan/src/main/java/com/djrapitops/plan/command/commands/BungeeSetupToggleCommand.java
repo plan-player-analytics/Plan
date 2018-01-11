@@ -2,13 +2,13 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.command.commands;
+package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.settings.Permissions;
 
 /**
  * //TODO Class Javadoc Comment

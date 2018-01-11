@@ -2,20 +2,20 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver.webapi.bungee;
+package com.djrapitops.plan.systems.webserver.webapi.bungee;
 
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.api.exceptions.WebAPIException;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.systems.info.InformationManager;
+import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import com.djrapitops.plan.systems.webserver.pagecache.PageId;
+import com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
+import com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
+import com.djrapitops.plan.systems.webserver.response.Response;
+import com.djrapitops.plan.systems.webserver.webapi.WebAPI;
+import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
-import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
-import main.java.com.djrapitops.plan.utilities.file.export.HtmlExport;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.util.HashMap;

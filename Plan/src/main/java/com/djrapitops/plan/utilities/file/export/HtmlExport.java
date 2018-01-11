@@ -2,17 +2,17 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.file.export;
+package com.djrapitops.plan.utilities.file.export;
 
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
+import com.djrapitops.plan.systems.webserver.webapi.bungee.PostHtmlWebAPI;
+import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.data.container.UserInfo;
-import main.java.com.djrapitops.plan.settings.theme.Theme;
-import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
-import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostHtmlWebAPI;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,13 +1,13 @@
-package main.java.com.djrapitops.plan.command.commands.webuser;
+package com.djrapitops.plan.command.commands.webuser;
 
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
 
 /**
  * Subcommand for info about permission levels.

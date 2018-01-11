@@ -2,19 +2,19 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver.response;
+package com.djrapitops.plan.systems.webserver.response;
 
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.ServerVariableHolder;
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
+import com.djrapitops.plan.systems.info.server.ServerInfo;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.PlanBungee;
-import main.java.com.djrapitops.plan.ServerVariableHolder;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.File;
 import java.io.IOException;

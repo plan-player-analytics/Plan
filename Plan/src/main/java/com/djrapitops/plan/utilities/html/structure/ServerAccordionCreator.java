@@ -2,18 +2,18 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.html.structure;
+package com.djrapitops.plan.utilities.html.structure;
 
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import com.djrapitops.plan.utilities.analysis.MathUtils;
+import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plugin.utilities.Format;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.settings.theme.Theme;
-import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.analysis;
+package com.djrapitops.plan.utilities.analysis;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;

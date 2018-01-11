@@ -1,14 +1,14 @@
-package main.java.com.djrapitops.plan.systems.listeners;
+package com.djrapitops.plan.systems.listeners;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.systems.cache.DataCache;
+import com.djrapitops.plan.systems.processing.info.NetworkPageUpdateProcessor;
+import com.djrapitops.plan.systems.processing.player.*;
+import com.djrapitops.plan.systems.tasks.TaskSystem;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.processing.info.NetworkPageUpdateProcessor;
-import main.java.com.djrapitops.plan.systems.processing.player.*;
-import main.java.com.djrapitops.plan.systems.tasks.TaskSystem;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

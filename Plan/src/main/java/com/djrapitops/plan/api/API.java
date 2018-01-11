@@ -1,12 +1,12 @@
-package main.java.com.djrapitops.plan.api;
+package com.djrapitops.plan.api;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.systems.info.BukkitInformationManager;
+import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.ParseException;
-import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.OfflinePlayer;
 
 import java.sql.SQLException;
@@ -220,7 +220,7 @@ public class API {
      * @deprecated Typo in method name, use playerNameToUUID instead
      */
     @Deprecated
-    public UUID PlayerNameToUUID(String playerName) throws Exception {
+    public UUID PlayerNameToUUID(String playerName) {
         return playerNameToUUID(playerName);
     }
 

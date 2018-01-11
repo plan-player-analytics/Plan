@@ -2,8 +2,8 @@ package com.djrapitops.pluginbridge.plan.litebans;
 
 import com.djrapitops.pluginbridge.plan.Hook;
 import litebans.api.Database;
-import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.api.API;
+import com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to LiteBans and registering data

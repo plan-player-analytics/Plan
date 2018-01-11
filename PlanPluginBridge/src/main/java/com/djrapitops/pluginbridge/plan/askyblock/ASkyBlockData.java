@@ -5,10 +5,10 @@
 package com.djrapitops.pluginbridge.plan.askyblock;
 
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
 
 import java.util.Collection;
 import java.util.UUID;

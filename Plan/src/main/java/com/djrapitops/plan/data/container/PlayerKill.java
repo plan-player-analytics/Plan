@@ -1,8 +1,8 @@
-package main.java.com.djrapitops.plan.data.container;
+package com.djrapitops.plan.data.container;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.HasDate;
-import main.java.com.djrapitops.plan.database.tables.Actions;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.HasDate;
+import com.djrapitops.plan.database.tables.Actions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Objects;

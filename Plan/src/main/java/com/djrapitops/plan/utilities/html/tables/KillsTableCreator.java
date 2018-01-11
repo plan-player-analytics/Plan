@@ -1,12 +1,12 @@
-package main.java.com.djrapitops.plan.utilities.html.tables;
+package com.djrapitops.plan.utilities.html.tables;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.container.PlayerKill;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.KillDataComparator;
-import main.java.com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.comparators.KillDataComparator;
+import com.djrapitops.plan.utilities.html.Html;
 
 import java.util.Collections;
 import java.util.List;

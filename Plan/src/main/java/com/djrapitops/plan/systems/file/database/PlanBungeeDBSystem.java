@@ -2,10 +2,10 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.file.database;
+package com.djrapitops.plan.systems.file.database;
 
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.database.databases.MySQLDB;
+import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.database.databases.MySQLDB;
 
 /**
  * //TODO Class Javadoc Comment

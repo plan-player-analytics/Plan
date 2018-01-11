@@ -2,16 +2,16 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.file.export;
+package com.djrapitops.plan.utilities.file.export;
 
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
+import com.djrapitops.plan.systems.webserver.pagecache.PageId;
+import com.djrapitops.plan.systems.webserver.response.Response;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.pagecache.PageId;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.File;
 import java.io.IOException;

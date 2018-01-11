@@ -8,9 +8,9 @@ package com.djrapitops.pluginbridge.plan.protocolsupport;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.systems.processing.Processor;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.systems.processing.Processor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

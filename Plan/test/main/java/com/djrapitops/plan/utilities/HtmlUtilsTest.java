@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities;
 
+import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.google.common.collect.ImmutableMap;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.RandomData;
+import test.utilities.RandomData;
 
 import java.io.Serializable;
 import java.util.Map;

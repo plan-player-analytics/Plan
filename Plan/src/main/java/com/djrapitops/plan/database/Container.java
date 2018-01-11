@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.database;
+package com.djrapitops.plan.database;
 
 /**
  * Class to contain objects in the batches.

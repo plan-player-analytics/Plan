@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.data.cache;
+package com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.systems.cache.DataCache;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;

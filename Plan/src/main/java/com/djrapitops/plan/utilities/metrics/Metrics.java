@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.metrics;
+package com.djrapitops.plan.utilities.metrics;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import org.bukkit.Bukkit;

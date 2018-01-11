@@ -1,12 +1,12 @@
-package main.java.com.djrapitops.plan.utilities.html.graphs.pie;
+package com.djrapitops.plan.utilities.html.graphs.pie;
 
-import main.java.com.djrapitops.plan.data.time.GMTimes;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
-import main.java.com.djrapitops.plan.settings.theme.Theme;
-import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
-import main.java.com.djrapitops.plan.utilities.comparators.PieSliceComparator;
+import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.settings.WorldAliasSettings;
+import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
 import java.util.*;
 import java.util.stream.Collectors;

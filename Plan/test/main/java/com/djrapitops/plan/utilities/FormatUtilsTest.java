@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import org.bukkit.Location;
@@ -9,9 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.MockUtils;
-import test.java.utils.RandomData;
-import test.java.utils.TestInit;
+import test.utilities.MockUtils;
+import test.utilities.RandomData;
+import test.utilities.TestInit;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -181,7 +181,7 @@ public class FormatUtilsTest {
     }
 
     @Test
-    public void testCutDecimalsWhichIsRoundedDown() throws Exception {
+    public void testCutDecimalsWhichIsRoundedDown() {
         double d = 0.05234;
         String expResult = "0,05";
 
@@ -191,7 +191,7 @@ public class FormatUtilsTest {
     }
 
     @Test
-    public void testCutDecimalsWhichIsRoundedUp() throws Exception {
+    public void testCutDecimalsWhichIsRoundedUp() {
         double d = 0.05634;
         String expResult = "0,06";
 

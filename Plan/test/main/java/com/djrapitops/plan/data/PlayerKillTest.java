@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.data;
+package com.djrapitops.plan.data;
 
-import main.java.com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.container.PlayerKill;
 import org.junit.Test;
-import test.java.utils.RandomData;
+import test.utilities.RandomData;
 
 import java.util.UUID;
 

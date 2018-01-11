@@ -2,10 +2,10 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data.element;
+package com.djrapitops.plan.data.element;
 
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.Html;
 
 import java.io.Serializable;
 import java.util.ArrayList;

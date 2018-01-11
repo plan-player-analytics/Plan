@@ -1,7 +1,7 @@
-package main.java.com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities;
 
+import com.djrapitops.plan.settings.Settings;
 import com.djrapitops.plugin.utilities.Format;
-import main.java.com.djrapitops.plan.settings.Settings;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 

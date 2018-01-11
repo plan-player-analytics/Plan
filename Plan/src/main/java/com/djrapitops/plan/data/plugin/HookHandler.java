@@ -1,9 +1,9 @@
-package main.java.com.djrapitops.plan.data.plugin;
+package com.djrapitops.plan.data.plugin;
 
+import com.djrapitops.plan.Plan;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.Bridge;
-import main.java.com.djrapitops.plan.Plan;
 
 import java.util.ArrayList;
 import java.util.List;

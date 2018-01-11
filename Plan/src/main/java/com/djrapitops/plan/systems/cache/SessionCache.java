@@ -1,10 +1,10 @@
-package main.java.com.djrapitops.plan.systems.cache;
+package com.djrapitops.plan.systems.cache;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.systems.processing.Processor;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.systems.processing.Processor;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 import java.util.HashMap;

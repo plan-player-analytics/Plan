@@ -2,16 +2,16 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data.additional.importer;
+package com.djrapitops.plan.data.additional.importer;
 
+import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.systems.processing.importing.ServerImportData;
+import com.djrapitops.plan.systems.processing.importing.UserImportData;
 import com.google.common.collect.ImmutableMap;
-import main.java.com.djrapitops.plan.data.container.PlayerKill;
-import main.java.com.djrapitops.plan.data.container.TPS;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
-import main.java.com.djrapitops.plan.systems.processing.importing.ServerImportData;
-import main.java.com.djrapitops.plan.systems.processing.importing.UserImportData;
 import org.junit.Test;
-import test.java.utils.RandomData;
+import test.utilities.RandomData;
 
 import java.util.Arrays;
 import java.util.Collections;

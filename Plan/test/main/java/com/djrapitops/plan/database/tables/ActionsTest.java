@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.database.tables;
+package com.djrapitops.plan.database.tables;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data;
+package com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.utilities.Verify;
 

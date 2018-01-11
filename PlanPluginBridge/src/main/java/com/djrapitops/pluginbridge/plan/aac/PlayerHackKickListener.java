@@ -7,10 +7,10 @@ package com.djrapitops.pluginbridge.plan.aac;
 
 
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.systems.processing.Processor;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.systems.processing.Processor;
+import com.djrapitops.plan.utilities.MiscUtils;
 import me.konsolas.aac.api.AACAPIProvider;
 import me.konsolas.aac.api.HackType;
 import me.konsolas.aac.api.PlayerViolationCommandEvent;

@@ -2,15 +2,14 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.update;
+package com.djrapitops.plan.systems.update;
 
+import com.djrapitops.plan.systems.SubSystem;
+import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plugin.api.Priority;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
-import main.java.com.djrapitops.plan.systems.SubSystem;
-import main.java.com.djrapitops.plan.systems.Systems;
 
 import java.io.IOException;
 
@@ -33,7 +32,7 @@ public class VersionCheckSystem implements SubSystem {
     }
 
     @Override
-    public void init() throws PlanEnableException {
+    public void init() {
         checkForNewVersion();
     }
 

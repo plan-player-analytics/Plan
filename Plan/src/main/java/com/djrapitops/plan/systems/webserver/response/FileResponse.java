@@ -2,10 +2,10 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webserver.response;
+package com.djrapitops.plan.systems.webserver.response;
 
+import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.IOException;
 

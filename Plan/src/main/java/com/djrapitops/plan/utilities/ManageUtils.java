@@ -1,12 +1,12 @@
-package main.java.com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.database.databases.SQLiteDB;
+import com.djrapitops.plan.database.tables.move.BatchOperationTable;
+import com.djrapitops.plan.systems.file.database.DBSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
-import main.java.com.djrapitops.plan.database.tables.move.BatchOperationTable;
-import main.java.com.djrapitops.plan.systems.file.database.DBSystem;
 
 import java.sql.SQLException;
 import java.util.*;

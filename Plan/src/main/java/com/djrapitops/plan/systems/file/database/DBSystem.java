@@ -2,19 +2,19 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.file.database;
+package com.djrapitops.plan.systems.file.database;
 
+import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.api.exceptions.PlanEnableException;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.systems.SubSystem;
+import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.systems.SubSystem;
-import main.java.com.djrapitops.plan.systems.Systems;
 
 import java.sql.SQLException;
 import java.util.HashSet;

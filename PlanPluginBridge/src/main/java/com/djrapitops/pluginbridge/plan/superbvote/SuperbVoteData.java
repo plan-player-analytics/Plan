@@ -5,10 +5,10 @@
 package com.djrapitops.pluginbridge.plan.superbvote;
 
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
 
 import java.util.Collection;
 import java.util.HashMap;

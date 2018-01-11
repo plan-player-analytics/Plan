@@ -1,5 +1,17 @@
-package main.java.com.djrapitops.plan.command.commands.manage;
+package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.systems.cache.DataCache;
+import com.djrapitops.plan.systems.cache.SessionCache;
+import com.djrapitops.plan.utilities.Condition;
+import com.djrapitops.plan.utilities.ManageUtils;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -7,18 +19,6 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.cache.SessionCache;
-import main.java.com.djrapitops.plan.utilities.Condition;
-import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 

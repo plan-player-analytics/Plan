@@ -2,13 +2,13 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.database.tables.move;
+package com.djrapitops.plan.database.tables.move;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import com.djrapitops.plan.database.databases.SQLDB;
+import com.djrapitops.plan.database.tables.*;
 import com.djrapitops.plugin.api.Benchmark;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.tables.*;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -34,7 +34,7 @@ public class Version8TransferTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() {
         throw new IllegalStateException("Method not supposed to be used on this table.");
     }
 

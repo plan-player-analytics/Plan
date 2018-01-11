@@ -2,8 +2,8 @@ package com.djrapitops.pluginbridge.plan.essentials;
 
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.earth2me.essentials.Essentials;
-import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.api.API;
+import com.djrapitops.plan.data.plugin.HookHandler;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 

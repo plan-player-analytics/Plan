@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities;
+package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.ISender;

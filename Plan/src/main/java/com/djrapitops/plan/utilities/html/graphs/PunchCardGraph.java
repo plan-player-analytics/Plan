@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.utilities.html.graphs;
+package com.djrapitops.plan.utilities.html.graphs;
 
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 
 import java.util.Collection;
 import java.util.List;

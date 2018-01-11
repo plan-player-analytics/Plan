@@ -2,17 +2,17 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.processing.info;
+package com.djrapitops.plan.systems.processing.info;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.systems.cache.DataCache;
+import com.djrapitops.plan.systems.processing.player.PlayerProcessor;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.processing.player.PlayerProcessor;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.UUID;
 

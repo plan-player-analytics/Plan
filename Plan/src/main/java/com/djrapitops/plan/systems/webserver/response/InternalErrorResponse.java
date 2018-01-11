@@ -1,6 +1,6 @@
-package main.java.com.djrapitops.plan.systems.webserver.response;
+package com.djrapitops.plan.systems.webserver.response;
 
-import main.java.com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.Html;
 
 /**
  * @author Rsl1122

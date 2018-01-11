@@ -2,18 +2,18 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data.element;
+package com.djrapitops.plan.data.element;
 
+import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.ServerProfile;
+import com.djrapitops.plan.data.container.StickyData;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.analysis.MathUtils;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.TimeAmount;
-import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.ServerProfile;
-import main.java.com.djrapitops.plan.data.container.StickyData;
-import main.java.com.djrapitops.plan.data.container.TPS;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.util.*;
 import java.util.stream.Collectors;
