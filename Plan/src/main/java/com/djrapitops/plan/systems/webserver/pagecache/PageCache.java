@@ -2,9 +2,8 @@ package com.djrapitops.plan.systems.webserver.pagecache;
 
 import com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import com.djrapitops.plan.systems.webserver.response.Response;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -14,16 +13,13 @@ import java.util.function.Predicate;
  * It caches all Responses with their matching identifiers.
  * This reduces CPU cycles and the time to wait for loading the pages.
  * This is especially useful in situations where multiple clients are accessing the server.
- * <p>
- * This cache uses the Google Guava {@link Cache}.
  *
  * @author Fuzzlemann
  * @since 3.6.0
  */
 public class PageCache {
 
-    private static final Cache<String, Response> pageCache = CacheBuilder.newBuilder()
-            .build();
+    private static final Map<String, Response> pageCache = new HashMap<>();
 
     /**
      * Constructor used to hide the public constructor
@@ -65,7 +61,7 @@ public class PageCache {
      * @return The Response that was cached or {@code null} if it wasn't
      */
     public static Response loadPage(String identifier) {
-        return pageCache.getIfPresent(identifier);
+        return pageCache.get(identifier);
     }
 
     /**
@@ -104,7 +100,7 @@ public class PageCache {
      * @return true if the page is cached
      */
     public static boolean isCached(String identifier) {
-        return pageCache.asMap().containsKey(identifier);
+        return pageCache.containsKey(identifier);
     }
 
     /**
@@ -113,11 +109,9 @@ public class PageCache {
      * @param filter a predicate which returns true for entries to be removed
      */
     public static void removeIf(Predicate<String> filter) {
-        Map<String, Response> pageCacheMap = pageCache.asMap();
-
-        for (String identifier : pageCacheMap.keySet()) {
+        for (String identifier : pageCache.keySet()) {
             if (filter.test(identifier)) {
-                pageCache.invalidate(identifier);
+                pageCache.remove(identifier);
             }
         }
     }
@@ -126,6 +120,6 @@ public class PageCache {
      * Clears the cache from all its contents.
      */
     public static void clearCache() {
-        pageCache.invalidateAll();
+        pageCache.clear();
     }
 }
