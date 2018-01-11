@@ -6,10 +6,10 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.systems.processing.Processor;
-import com.djrapitops.plan.systems.webserver.WebServer;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.config.Config;
@@ -25,6 +25,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public interface PlanPlugin extends IPlugin {
+    @Deprecated
     Database getDB();
 
     ServerVariableHolder getVariable();

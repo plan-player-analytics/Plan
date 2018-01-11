@@ -5,10 +5,10 @@
 package com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.cache.SessionCache;
-import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
-import com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import com.djrapitops.plugin.command.ISender;
 
 import java.io.IOException;
