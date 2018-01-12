@@ -15,9 +15,14 @@ import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.response.*;
+import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
+import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.system.webserver.webapi.WebAPIManager;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalysisReadyWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalyzeWebAPI;
@@ -41,7 +46,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Manages the Information going to the PageCache.
+ * Manages the Information going to the ResponseCache.
  * <p>
  * This means Inspect and Analysis pages as well as managing what is sent to Bungee WebServer when one is in use.
  *
@@ -115,7 +120,7 @@ public class BukkitInformationManager extends InformationManager {
                 }
             }
         } else {
-            PageCache.cachePage(PageId.PLAYER.of(uuid), () -> {
+            ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> {
                 try {
                     return new InspectPageResponse(this, uuid);
                 } catch (ParseException e) {
@@ -188,7 +193,7 @@ public class BukkitInformationManager extends InformationManager {
             }
         } else {
             pluginsTabContents.put(uuid, contents);
-            Response inspectResponse = PageCache.loadPage(PageId.PLAYER.of(uuid));
+            Response inspectResponse = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
             if (inspectResponse != null && inspectResponse instanceof InspectPageResponse) {
                 ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(contents);
             }
@@ -231,7 +236,7 @@ public class BukkitInformationManager extends InformationManager {
                 return isAnalysisCached(serverUUID);
             }
         }
-        return PageCache.isCached(PageId.SERVER.of(serverUUID));
+        return ResponseCache.isCached(PageId.SERVER.of(serverUUID));
     }
 
     private WebAPIManager getWebAPI() {
@@ -306,7 +311,7 @@ public class BukkitInformationManager extends InformationManager {
             }
         } else {
             UUID serverUUID = Plan.getServerUUID();
-            PageCache.cachePage(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
+            ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
             if (Settings.ANALYSIS_EXPORT.isTrue()) {
                 HtmlExport.exportServer(plugin, serverUUID);
             }

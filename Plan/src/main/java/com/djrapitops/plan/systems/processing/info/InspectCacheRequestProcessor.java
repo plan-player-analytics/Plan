@@ -17,7 +17,7 @@ import com.djrapitops.plugin.command.ISender;
 import java.util.UUID;
 
 /**
- * Sends a request to cache players inspect page to the PageCache on the appropriate WebServer.
+ * Sends a request to cache players inspect page to the ResponseCache on the appropriate WebServer.
  *
  * @author Rsl1122
  */

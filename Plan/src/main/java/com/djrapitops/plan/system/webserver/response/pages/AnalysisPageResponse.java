@@ -1,7 +1,9 @@
-package com.djrapitops.plan.system.webserver.response;
+package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
+import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.task.AbsRunnable;

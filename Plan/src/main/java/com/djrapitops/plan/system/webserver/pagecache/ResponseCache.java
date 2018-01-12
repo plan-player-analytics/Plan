@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.webserver.pagecache;
 
-import com.djrapitops.plan.system.webserver.response.InspectPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
 
 import java.util.HashMap;
@@ -17,14 +17,14 @@ import java.util.function.Predicate;
  * @author Fuzzlemann
  * @since 3.6.0
  */
-public class PageCache {
+public class ResponseCache {
 
-    private static final Map<String, Response> pageCache = new HashMap<>();
+    private static final Map<String, Response> cache = new HashMap<>();
 
     /**
      * Constructor used to hide the public constructor
      */
-    private PageCache() {
+    private ResponseCache() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -40,8 +40,8 @@ public class PageCache {
      * @param loader     The {@link PageLoader} (How should it load the page if it's not cached)
      * @return The Response that was cached or created by the {@link PageLoader loader}
      */
-    public static Response loadPage(String identifier, PageLoader loader) {
-        Response response = loadPage(identifier);
+    public static Response loadResponse(String identifier, PageLoader loader) {
+        Response response = loadResponse(identifier);
 
         if (response != null) {
             return response;
@@ -49,7 +49,7 @@ public class PageCache {
 
         response = loader.createResponse();
 
-        pageCache.put(identifier, response);
+        cache.put(identifier, response);
 
         return response;
     }
@@ -60,8 +60,8 @@ public class PageCache {
      * @param identifier The identifier of the page
      * @return The Response that was cached or {@code null} if it wasn't
      */
-    public static Response loadPage(String identifier) {
-        return pageCache.get(identifier);
+    public static Response loadResponse(String identifier) {
+        return cache.get(identifier);
     }
 
     /**
@@ -70,10 +70,10 @@ public class PageCache {
      * Currently supported copyable responses: InspectPageResponse
      *
      * @param identifier The identifier of the page
-     * @return Copied Response of loadPage, so that cache contents are not changed.
+     * @return Copied Response of loadResponse, so that cache contents are not changed.
      */
-    public static Response copyPage(String identifier, PageLoader loader) {
-        Response response = loadPage(identifier, loader);
+    public static Response copyResponse(String identifier, PageLoader loader) {
+        Response response = loadResponse(identifier, loader);
         if (response instanceof InspectPageResponse) {
             return InspectPageResponse.copyOf((InspectPageResponse) response);
         }
@@ -88,9 +88,9 @@ public class PageCache {
      * @param identifier The identifier of the page
      * @param loader     The {@link PageLoader} (How it should load the page)
      */
-    public static void cachePage(String identifier, PageLoader loader) {
+    public static void cacheResponse(String identifier, PageLoader loader) {
         Response response = loader.createResponse();
-        pageCache.put(identifier, response);
+        cache.put(identifier, response);
     }
 
     /**
@@ -100,7 +100,7 @@ public class PageCache {
      * @return true if the page is cached
      */
     public static boolean isCached(String identifier) {
-        return pageCache.containsKey(identifier);
+        return cache.containsKey(identifier);
     }
 
     /**
@@ -109,9 +109,9 @@ public class PageCache {
      * @param filter a predicate which returns true for entries to be removed
      */
     public static void removeIf(Predicate<String> filter) {
-        for (String identifier : pageCache.keySet()) {
+        for (String identifier : cache.keySet()) {
             if (filter.test(identifier)) {
-                pageCache.remove(identifier);
+                cache.remove(identifier);
             }
         }
     }
@@ -120,6 +120,6 @@ public class PageCache {
      * Clears the cache from all its contents.
      */
     public static void clearCache() {
-        pageCache.clear();
+        cache.clear();
     }
 }

@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Rsl1122
@@ -240,5 +242,30 @@ public class FormatUtils {
         }
 
         return b.append("xx").toString();
+    }
+
+    /**
+     * Gets lines for stack trace recursively.
+     *
+     * @param throwable
+     * @return
+     */
+    public static List<String> getStackTrace(Throwable throwable) {
+        List<String> stackTrace = new ArrayList<>();
+        stackTrace.add(throwable.toString());
+        for (StackTraceElement element : throwable.getStackTrace()) {
+            stackTrace.add("    " + element.toString());
+        }
+
+        Throwable cause = throwable.getCause();
+        if (cause != null) {
+            List<String> causeTrace = getStackTrace(cause);
+            if (!causeTrace.isEmpty()) {
+                causeTrace.set(0, "Caused by: " + causeTrace.get(0));
+                stackTrace.addAll(causeTrace);
+            }
+        }
+
+        return stackTrace;
     }
 }

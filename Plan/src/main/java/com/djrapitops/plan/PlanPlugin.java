@@ -32,6 +32,7 @@ public interface PlanPlugin extends IPlugin {
 
     UUID getServerUuid();
 
+    @Deprecated
     InformationManager getInfoManager();
 
     WebServer getWebServer();

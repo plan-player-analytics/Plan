@@ -35,7 +35,7 @@ import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.cache.GeolocationCache;
@@ -237,7 +237,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     @Override
     public void onDisable() {
         //Clears the page cache
-        PageCache.clearCache();
+        ResponseCache.clearCache();
 
         // Processes unprocessed processors
         if (processingQueue != null) {

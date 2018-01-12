@@ -5,7 +5,7 @@
 package com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.cache.SessionCache;
@@ -47,7 +47,7 @@ public abstract class InformationManager {
     }
 
     public boolean isCached(UUID uuid) {
-        return PageCache.isCached(PageId.PLAYER.of(uuid));
+        return ResponseCache.isCached(PageId.PLAYER.of(uuid));
     }
 
     public abstract String getPlayerHtml(UUID uuid) throws ParseException;

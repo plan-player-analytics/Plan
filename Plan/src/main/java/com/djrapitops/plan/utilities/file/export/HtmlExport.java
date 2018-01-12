@@ -8,7 +8,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
-import com.djrapitops.plan.system.webserver.response.PlayersPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
 import com.djrapitops.plan.system.webserver.webapi.bungee.PostHtmlWebAPI;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.utility.log.Log;

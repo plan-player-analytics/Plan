@@ -4,12 +4,14 @@
  */
 package com.djrapitops.plan.system.webserver;
 
+import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents a HttpExchange Request.
@@ -19,7 +21,7 @@ import java.util.List;
  * @author Rsl1122
  */
 public class Request {
-    private String auth;
+    private Authentication auth;
     private final String requestMethod;
     private final String target;
 
@@ -30,27 +32,14 @@ public class Request {
         this.target = exchange.getRequestURI().toString();
 
         this.exchange = exchange;
-        setAuth(exchange.getRequestHeaders());
     }
 
-    public String getAuth() {
-        return auth;
+    public Optional<Authentication> getAuth() {
+        return Optional.ofNullable(auth);
     }
 
-    public void setAuth(Headers requestHeaders) {
-        List<String> authorization = requestHeaders.get("Authorization");
-        if (Verify.isEmpty(authorization)) {
-            return;
-        }
-
-        String authLine = authorization.get(0);
-        if (authLine.contains("Basic ")) {
-            auth = authLine.split(" ")[1];
-        }
-    }
-
-    public boolean hasAuth() {
-        return auth != null;
+    public void setAuth(Authentication authentication) {
+        auth = authentication;
     }
 
     public String getRequestMethod() {

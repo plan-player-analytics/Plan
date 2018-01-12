@@ -1,7 +1,8 @@
-package com.djrapitops.plan.system.webserver.response;
+package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.systems.info.InformationManager;
 import org.apache.commons.lang3.text.StrSubstitutor;
 

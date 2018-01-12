@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.webserver.response;
+package com.djrapitops.plan.system.webserver.response.errors;
 
 import com.djrapitops.plan.utilities.html.Html;
 

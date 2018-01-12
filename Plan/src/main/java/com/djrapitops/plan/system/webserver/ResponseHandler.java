@@ -9,49 +9,104 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.database.tables.SecurityTable;
-import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.auth.Authentication;
+import com.djrapitops.plan.system.webserver.auth.FailReason;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
+import com.djrapitops.plan.system.webserver.pages.*;
 import com.djrapitops.plan.system.webserver.response.*;
+import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
+import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.DebugPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.SQLException;
-import java.util.Base64;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Handles choosing of the correct response to a request.
  *
  * @author Rsl1122
  */
-public class ResponseHandler extends APIResponseHandler {
+public class ResponseHandler extends TreePageHandler {
+
+    private final boolean authRequired;
 
     private final boolean usingHttps;
 
     public ResponseHandler(WebServer webServer) {
-        super();
+        authRequired = webServer.isAuthRequired();
         this.usingHttps = webServer.isUsingHTTPS();
     }
 
+    public void registerDefaultPages() {
+        registerPage("favicon.ico", new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
+        registerPage("debug", new DebugPageHandler());
+        registerPage("players", new PlayersPageHandler());
+        registerPage("player", new PlayerPageHandler());
+
+        ServerPageHandler serverPageHandler = new ServerPageHandler();
+        registerPage("network", serverPageHandler);
+        registerPage("server", serverPageHandler);
+    }
+
+    public void registerWebAPIPages() {
+
+    }
+
     public Response getResponse(Request request) {
-        String target = request.getTarget();
-        String[] args = target.split("/");
+        String targetString = request.getTarget();
+        List<String> target = Arrays.asList(targetString.split("/"));
+        target.remove(0);
         try {
-            if ("/favicon.ico".equals(target)) {
-                return PageCache.loadPage(PageId.FAVICON_REDIRECT.id(), () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
+            Optional<Authentication> authentication = Optional.empty();
+            if (authRequired) {
+                authentication = request.getAuth();
+                if (!authentication.isPresent() && usingHttps) {
+                    return DefaultResponses.BASIC_AUTH.get();
+                }
+
+                if (authentication.isPresent() && !authentication.get().isAuthorized(null)) {
+                    return forbiddenResponse(0, 0);
+                }
+            }
+
+            PageHandler pageHandler = getPageHandler(target);
+            if (pageHandler == null) {
+                if (targetString.endsWith(".css")) {
+                    return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> new CSSResponse(targetString));
+                }
+                if (targetString.endsWith(".js")) {
+                    return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
+                }
+                return DefaultResponses.NOT_FOUND.get();
+            } else {
+                if (authentication.isPresent() && authentication.get().isAuthorized(pageHandler.getPermission())) {
+                    return forbiddenResponse(0, 0);
+                }
+                return pageHandler.getResponse(request, target);
+            }
+        } catch (WebUserAuthException e) {
+            return PromptAuthorizationResponse.getBasicAuthResponse(e);
+        } catch (Exception e) {
+            Log.toLog(this.getClass().getName(), e);
+            return new InternalErrorResponse(e, request.getTarget());
+        }
+
+        try {
+            if ("/favicon.ico".equals(targetString)) {
+                return ResponseCache.loadResponse(PageId.FAVICON_REDIRECT.id(), () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
             }
             if (request.isAPIRequest()) {
                 return getAPIResponse(request);
             }
-            if (target.endsWith(".css")) {
-                return PageCache.loadPage(PageId.CSS.of(target), () -> new CSSResponse(target));
-            }
 
-            if (target.endsWith(".js")) {
-                return PageCache.loadPage(PageId.JS.of(target), () -> new JavaScriptResponse(target));
-            }
 
             UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
 
@@ -61,7 +116,7 @@ public class ResponseHandler extends APIResponseHandler {
                 }
 
                 WebUser user = getUser(request.getAuth());
-                int required = getRequiredPermLevel(target, user.getName());
+                int required = getRequiredPermLevel(targetString, user.getName());
                 int permLevel = user.getPermLevel();
 
                 if (!isAuthorized(required, permLevel)) {
@@ -79,7 +134,7 @@ public class ResponseHandler extends APIResponseHandler {
                 case "debug":
                     return new DebugPageResponse();
                 case "players":
-                    return PageCache.loadPage(PageId.PLAYERS.id(), PlayersPageResponse::new);
+                    return ResponseCache.loadResponse(PageId.PLAYERS.id(), PlayersPageResponse::new);
                 case "player":
                     return playerResponse(args);
                 case "network":
@@ -100,7 +155,7 @@ public class ResponseHandler extends APIResponseHandler {
             }
 
         } catch (WebUserAuthException e) {
-            return PageCache.loadPage(PageId.AUTH_PROMPT.id(), PromptAuthorizationResponse::new);
+            return ResponseCache.loadResponse(PageId.AUTH_PROMPT.id(), PromptAuthorizationResponse::getBasicAuthResponse);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             return new InternalErrorResponse(e, request.getTarget());
@@ -108,7 +163,7 @@ public class ResponseHandler extends APIResponseHandler {
     }
 
     private Response forbiddenResponse(int required, int permLevel) {
-        return PageCache.loadPage(PageId.FORBIDDEN.id(), () ->
+        return ResponseCache.loadResponse(PageId.FORBIDDEN.of(required + "/" + permLevel), () ->
                 new ForbiddenResponse("Unauthorized User.<br>"
                         + "Make sure your user has the correct access level.<br>"
                         + "This page requires permission level of " + required + ",<br>"
@@ -117,31 +172,6 @@ public class ResponseHandler extends APIResponseHandler {
 
     private boolean isAuthorized(int requiredPermLevel, int permLevel) {
         return permLevel <= requiredPermLevel;
-    }
-
-    private WebUser getUser(String auth) throws SQLException, PassEncryptUtil.InvalidHashException, PassEncryptUtil.CannotPerformOperationException, WebUserAuthException {
-        Base64.Decoder decoder = Base64.getDecoder();
-        byte[] decoded = decoder.decode(auth);
-        String[] userInfo = new String(decoded).split(":");
-        if (userInfo.length != 2) {
-            throw new WebUserAuthException("User and Password not specified");
-        }
-
-        String user = userInfo[0];
-        String passwordRaw = userInfo[1];
-
-        SecurityTable securityTable = PlanPlugin.getInstance().getDB().getSecurityTable();
-        if (!securityTable.userExists(user)) {
-            throw new WebUserAuthException("User Doesn't exist");
-        }
-
-        WebUser webUser = securityTable.getWebUser(user);
-
-        boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, webUser.getSaltedPassHash());
-        if (!correctPass) {
-            throw new WebUserAuthException("User and Password do not match");
-        }
-        return webUser;
     }
 
     private int getRequiredPermLevel(String target, String user) {
@@ -180,7 +210,7 @@ public class ResponseHandler extends APIResponseHandler {
             case 0:
                 return serverResponse(serverUUID);
             case 1:
-                return PageCache.loadPage(PageId.PLAYERS.id(), PlayersPageResponse::new);
+                return ResponseCache.loadResponse(PageId.PLAYERS.id(), PlayersPageResponse::new);
             case 2:
                 return playerResponse(new String[]{"", "", user.getName()});
             default:
@@ -189,44 +219,12 @@ public class ResponseHandler extends APIResponseHandler {
     }
 
     private Response serverResponse(UUID serverUUID) {
-        return PageCache.loadPage(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(plugin.getInfoManager()));
-    }
-
-    private Response playerResponse(String[] args) {
-        if (args.length < 3) {
-            return PageCache.loadPage(PageId.NOT_FOUND.id(), NotFoundResponse::new);
-        }
-
-        String playerName = args[2].trim();
-        UUID uuid = UUIDUtility.getUUIDOf(playerName);
-
-        if (uuid == null) {
-            String error = "Player has no UUID";
-            return PageCache.loadPage(PageId.NOT_FOUND.of(error), () -> new NotFoundResponse(error));
-        }
-
-        if (plugin.getDB().wasSeenBefore(uuid)) {
-            plugin.getInfoManager().cachePlayer(uuid);
-            Response response = PageCache.loadPage(PageId.PLAYER.of(uuid));
-            // TODO Create a new method that places NotFoundResponse to PageCache instead.
-            if (response == null || response.getContent().contains("No Bukkit Servers were online to process this request")) {
-                PageCache.cachePage(PageId.PLAYER.of(uuid), () -> {
-                    try {
-                        return new InspectPageResponse(plugin.getInfoManager(), uuid);
-                    } catch (ParseException e) {
-                        return new InternalErrorResponse(e, this.getClass().getName());
-                    }
-                });
-                response = PageCache.loadPage(PageId.PLAYER.of(uuid));
-            }
-            return response;
-        }
-        return new NotFoundResponse("Player has not played on this server.");
+        return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(plugin.getInfoManager()));
     }
 
     private Response notFoundResponse() {
         String error = "404 Not Found";
-        return PageCache.loadPage(PageId.NOT_FOUND.of("Wrong Page"), () -> {
+        return ResponseCache.loadResponse(PageId.NOT_FOUND.of("Wrong Page"), () -> {
                     String url = plugin.getInfoManager().getWebServerAddress();
                     return new NotFoundResponse("Make sure you're accessing a link given by a command, Examples:</p>"
                             + "<p>" + url + "/player/Playername<br>" +

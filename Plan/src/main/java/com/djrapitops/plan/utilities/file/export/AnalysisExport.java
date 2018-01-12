@@ -11,7 +11,7 @@ import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 /**
- * Task that exports a single Analysis page if it is in PageCache.
+ * Task that exports a single Analysis page if it is in ResponseCache.
  *
  * @author Rsl1122
  */

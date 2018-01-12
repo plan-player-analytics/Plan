@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.webserver.response;
+package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.GeoInfo;
@@ -8,6 +8,8 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
+import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;

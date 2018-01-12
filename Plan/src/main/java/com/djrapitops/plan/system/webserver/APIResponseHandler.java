@@ -4,10 +4,13 @@
  */
 package com.djrapitops.plan.system.webserver;
 
-import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.response.*;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
+import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.pages.DebugPageResponse;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.system.webserver.webapi.WebAPIManager;
 import com.djrapitops.plan.utilities.html.Html;
@@ -40,29 +43,29 @@ public class APIResponseHandler {
         String[] args = target.split("/");
 
         if ("/favicon.ico".equalsIgnoreCase(target)) {
-            return PageCache.loadPage(PageId.FAVICON_REDIRECT.id(), () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
+            return ResponseCache.loadResponse(PageId.FAVICON_REDIRECT.id(), () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
         }
         if ("/debug".equalsIgnoreCase(target)) {
             return new DebugPageResponse();
         }
         if (target.endsWith(".css")) {
-            return PageCache.loadPage(PageId.CSS.of(target), () -> new CSSResponse(target));
+            return ResponseCache.loadResponse(PageId.CSS.of(target), () -> new CSSResponse(target));
         }
 
         if (target.endsWith(".js")) {
-            return PageCache.loadPage(PageId.JS.of(target), () -> new JavaScriptResponse(target));
+            return ResponseCache.loadResponse(PageId.JS.of(target), () -> new JavaScriptResponse(target));
         }
 
         if (args.length < 2 || !"api".equals(args[1])) {
             String address = PlanPlugin.getInstance().getInfoManager().getWebServerAddress() + target;
             String link = Html.LINK.parse(address, address);
-            return PageCache.loadPage(PageId.ERROR.of("Non-API Request"), () -> new NotFoundResponse("WebServer is in WebAPI-only mode, " +
+            return ResponseCache.loadResponse(PageId.ERROR.of("Non-API Request"), () -> new NotFoundResponse("WebServer is in WebAPI-only mode, " +
                     "connect to the Bungee server instead: " + link));
         }
 
         if (args.length < 3) {
             String error = "API Method not specified";
-            return PageCache.loadPage(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
+            return ResponseCache.loadResponse(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
         }
 
         String method = args[2];
@@ -74,7 +77,7 @@ public class APIResponseHandler {
         if (requestBody == null) {
             String error = "Error at reading the POST request." +
                     "Note that the Encoding must be ISO-8859-1.";
-            return PageCache.loadPage(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
+            return ResponseCache.loadResponse(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
         }
 
         Map<String, String> variables = WebAPI.readVariables(requestBody);
@@ -93,7 +96,7 @@ public class APIResponseHandler {
                 if (!checkKey(sender)) {
                     String error = "Server Key not given or invalid";
                     Log.debug("Request had invalid Server key: " + sender);
-                    return PageCache.loadPage(PageId.ERROR.of(error), () -> {
+                    return ResponseCache.loadResponse(PageId.ERROR.of(error), () -> {
                         ForbiddenResponse forbidden = new ForbiddenResponse();
                         forbidden.setContent(error);
                         return forbidden;
@@ -103,7 +106,7 @@ public class APIResponseHandler {
                 if (!webAPI.isAuthorized(accessKey)) {
                     String error = "Access Key invalid";
                     Log.debug("Request had invalid Access key: " + accessKey);
-                    return PageCache.loadPage(PageId.ERROR.of(error), () -> {
+                    return ResponseCache.loadResponse(PageId.ERROR.of(error), () -> {
                         ForbiddenResponse forbidden = new ForbiddenResponse();
                         forbidden.setContent(error);
                         return forbidden;
@@ -117,7 +120,7 @@ public class APIResponseHandler {
         if (api == null) {
             String error = "API Method not found";
             Log.debug(error);
-            return PageCache.loadPage(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
+            return ResponseCache.loadResponse(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
         }
 
         Response response = api.processRequest(PlanPlugin.getInstance(), variables);

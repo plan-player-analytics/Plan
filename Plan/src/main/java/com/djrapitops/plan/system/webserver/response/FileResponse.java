@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.webserver.response;
 
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.utilities.Verify;
 

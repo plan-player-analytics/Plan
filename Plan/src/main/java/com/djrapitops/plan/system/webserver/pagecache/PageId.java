@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.webserver.pagecache;
 import java.util.UUID;
 
 /**
- * Enum class for "magic" PageCache identifier values.
+ * Enum class for "magic" ResponseCache identifier values.
  *
  * @author Rsl1122
  */

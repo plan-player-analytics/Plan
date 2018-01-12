@@ -5,7 +5,7 @@
 package com.djrapitops.plan.utilities.file.export;
 
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plugin.api.Check;
@@ -73,7 +73,7 @@ public abstract class SpecificExport extends AbsRunnable {
     }
 
     protected void exportAvailablePlayerPage(UUID uuid, String name) throws IOException {
-        Response response = PageCache.loadPage(PageId.PLAYER.of(uuid));
+        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
         if (response == null) {
             return;
         }
@@ -90,7 +90,7 @@ public abstract class SpecificExport extends AbsRunnable {
 
     protected void exportAvailableServerPage(UUID serverUUID, String serverName) throws IOException {
 
-        Response response = PageCache.loadPage(PageId.SERVER.of(serverUUID));
+        Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
         if (response == null) {
             return;
         }

@@ -7,10 +7,10 @@ package com.djrapitops.plan.system.webserver.webapi.bungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
-import com.djrapitops.plan.system.webserver.response.AnalysisPageResponse;
-import com.djrapitops.plan.system.webserver.response.InspectPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.systems.info.InformationManager;
@@ -55,14 +55,14 @@ public class PostHtmlWebAPI extends WebAPI {
                     Map<String, String> map = new HashMap<>();
                     map.put("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
 
-                    PageCache.cachePage(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), StrSubstitutor.replace(html, map)));
+                    ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), StrSubstitutor.replace(html, map)));
                     if (Settings.ANALYSIS_EXPORT.isTrue()) {
                         HtmlExport.exportPlayer(plugin, UUID.fromString(uuid));
                     }
                     break;
                 case "analysisPage":
                     String sender = variables.get("sender");
-                    PageCache.cachePage(PageId.SERVER.of(sender), () -> new AnalysisPageResponse(html));
+                    ResponseCache.cacheResponse(PageId.SERVER.of(sender), () -> new AnalysisPageResponse(html));
                     if (Settings.ANALYSIS_EXPORT.isTrue()) {
                         HtmlExport.exportServer(plugin, UUID.fromString(sender));
                     }

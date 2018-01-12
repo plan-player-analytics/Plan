@@ -89,7 +89,7 @@ public class API {
     }
 
     /**
-     * Condition if Players's Inspect page is cached to PageCache.
+     * Condition if Players's Inspect page is cached to ResponseCache.
      *
      * @param uuid UUID of the player.
      * @return true/false
@@ -101,10 +101,10 @@ public class API {
     }
 
     /**
-     * Condition if Players's Inspect page is cached to PageCache of the providing WebServer.
+     * Condition if Players's Inspect page is cached to ResponseCache of the providing WebServer.
      * <p>
-     * Using BungeeCord: Will send a {@code IsCachedWebAPI} request to check if the page is in Bungee's PageCache.
-     * Only Bukkit: Checks PageCache for page.
+     * Using BungeeCord: Will send a {@code IsCachedWebAPI} request to check if the page is in Bungee's ResponseCache.
+     * Only Bukkit: Checks ResponseCache for page.
      *
      * @param uuid UUID of the player.
      * @return true/false
@@ -114,7 +114,7 @@ public class API {
     }
 
     /**
-     * Cache Players's Inspect page to the PageCache of the providing WebServer.
+     * Cache Players's Inspect page to the ResponseCache of the providing WebServer.
      *
      * @param uuid UUID of the player.
      * @deprecated use {@code cachePlayerHtml}
@@ -125,10 +125,10 @@ public class API {
     }
 
     /**
-     * Cache Players's Inspect page to the PageCache of the providing WebServer.
+     * Cache Players's Inspect page to the ResponseCache of the providing WebServer.
      * <p>
      * Using BungeeCord: Will send a {@code PostHtmlWebAPI} request after calculating the inspect page.
-     * Only Bukkit: Calculates inspect page and places it in the PageCache.
+     * Only Bukkit: Calculates inspect page and places it in the ResponseCache.
      *
      * @param uuid UUID of the player.
      * @deprecated use {@code cachePlayerHtml}

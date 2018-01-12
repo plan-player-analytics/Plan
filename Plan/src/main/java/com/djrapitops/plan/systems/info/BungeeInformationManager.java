@@ -10,9 +10,13 @@ import com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.response.*;
+import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.system.webserver.webapi.WebAPIManager;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalysisReadyWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalyzeWebAPI;
@@ -35,7 +39,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Manages information going to the PageCache from Bukkit servers.
+ * Manages information going to the ResponseCache from Bukkit servers.
  *
  * @author Rsl1122
  */
@@ -233,7 +237,7 @@ public class BungeeInformationManager extends InformationManager {
      */
     @Override
     public boolean isAnalysisCached(UUID serverUUID) {
-        return PageCache.isCached(PageId.SERVER.of(serverUUID));
+        return ResponseCache.isCached(PageId.SERVER.of(serverUUID));
     }
 
     /**
@@ -246,7 +250,7 @@ public class BungeeInformationManager extends InformationManager {
      */
     @Override
     public String getPlayerHtml(UUID uuid) {
-        Response response = PageCache.copyPage(PageId.PLAYER.of(uuid),
+        Response response = ResponseCache.copyResponse(PageId.PLAYER.of(uuid),
                 () -> new NotFoundResponse("No Bukkit Servers were online to process this request"));
         if (response instanceof InspectPageResponse) {
             ((InspectPageResponse) response).setInspectPagePluginsTab(getPluginsTabContent(uuid));
@@ -310,7 +314,7 @@ public class BungeeInformationManager extends InformationManager {
         Map<UUID, String[]> perServerPluginsTab = pluginsTabContent.getOrDefault(uuid, new HashMap<>());
         perServerPluginsTab.put(serverUUID, html);
         pluginsTabContent.put(uuid, perServerPluginsTab);
-        Response inspectResponse = PageCache.loadPage(PageId.PLAYER.of(uuid));
+        Response inspectResponse = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
         if (inspectResponse != null && inspectResponse instanceof InspectPageResponse) {
             ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(getPluginsTabContent(uuid));
         }
@@ -368,7 +372,7 @@ public class BungeeInformationManager extends InformationManager {
     @Override
     public void updateNetworkPageContent() {
         UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
-        PageCache.cachePage(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(this));
+        ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(this));
         if (Settings.ANALYSIS_EXPORT.isTrue()) {
             HtmlExport.exportServer(plugin, serverUUID);
         }

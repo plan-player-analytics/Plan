@@ -7,9 +7,9 @@ package com.djrapitops.plan.system.webserver.webapi;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.*;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.pagecache.PageCache;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
-import com.djrapitops.plan.system.webserver.response.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
@@ -165,11 +165,11 @@ public abstract class WebAPI {
     };
 
     protected Response success() {
-        return PageCache.loadPage(PageId.TRUE.id(), SuccessResponse::new);
+        return ResponseCache.loadResponse(PageId.TRUE.id(), SuccessResponse::new);
     }
 
     protected Response fail(String reason) {
-        return PageCache.loadPage(PageId.FALSE.id(), () -> {
+        return ResponseCache.loadResponse(PageId.FALSE.id(), () -> {
             NotFoundResponse notFoundResponse = new NotFoundResponse("");
             notFoundResponse.setContent(reason);
             return notFoundResponse;
@@ -177,7 +177,7 @@ public abstract class WebAPI {
     }
 
     protected Response badRequest(String error) {
-        return PageCache.loadPage(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
+        return ResponseCache.loadResponse(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
     }
 
     private String parseVariables() {
