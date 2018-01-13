@@ -5,7 +5,7 @@
 package com.djrapitops.plan.systems.processing.player;
 
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.database.tables.UsersTable;
+import com.djrapitops.plan.system.database.tables.UsersTable;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.SQLException;

@@ -2,10 +2,10 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.database.tables.SecurityTable;
-import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.database.tables.SecurityTable;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;

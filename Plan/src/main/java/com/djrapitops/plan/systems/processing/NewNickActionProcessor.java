@@ -6,7 +6,7 @@ package com.djrapitops.plan.systems.processing;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.Action;
-import com.djrapitops.plan.database.tables.Actions;
+import com.djrapitops.plan.system.database.tables.Actions;
 import com.djrapitops.plan.systems.processing.player.PlayerProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.html.HtmlUtils;

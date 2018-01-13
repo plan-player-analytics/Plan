@@ -5,8 +5,8 @@
 package com.djrapitops.plan.systems.processing.player;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.database.tables.NicknamesTable;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.tables.NicknamesTable;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.processing.NewNickActionProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;

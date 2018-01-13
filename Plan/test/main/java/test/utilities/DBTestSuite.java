@@ -4,7 +4,7 @@
  */
 package test.utilities;
 
-import com.djrapitops.plan.database.DatabaseTest;
+import com.djrapitops.plan.system.database.DatabaseTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;

@@ -5,10 +5,11 @@
 package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.processing.ProcessingQueue;
-import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.processing.ProcessingQueue;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
 
@@ -28,6 +29,7 @@ public abstract class PlanSystem implements SubSystem {
     protected VersionCheckSystem versionCheckSystem;
     protected FileSystem fileSystem;
     protected ConfigSystem configSystem;
+    protected DBSystem databaseSystem;
 
     public PlanSystem() {
         processingQueue = new ProcessingQueue();
@@ -59,6 +61,7 @@ public abstract class PlanSystem implements SubSystem {
             NullCheck.check(versionCheckSystem, new IllegalStateException("Version Check system was not initialized."));
             NullCheck.check(fileSystem, new IllegalStateException("File system was not initialized."));
             NullCheck.check(configSystem, new IllegalStateException("Config system was not initialized."));
+            NullCheck.check(databaseSystem, new IllegalStateException("Database system was not initialized."));
         } catch (Exception e) {
             throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ".", e);
         }
@@ -93,5 +96,9 @@ public abstract class PlanSystem implements SubSystem {
 
     public FileSystem getFileSystem() {
         return fileSystem;
+    }
+
+    public DBSystem getDatabaseSystem() {
+        return databaseSystem;
     }
 }
