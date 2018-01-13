@@ -1,4 +1,4 @@
-package com.djrapitops.plan.systems.queue;
+package com.djrapitops.plan.utilities.queue;
 
 import com.djrapitops.plugin.task.AbsRunnable;
 
