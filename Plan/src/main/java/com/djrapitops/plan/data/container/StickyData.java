@@ -5,7 +5,7 @@
 package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.database.tables.Actions;
+import com.djrapitops.plan.system.database.tables.Actions;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.google.common.base.Objects;
 
@@ -15,7 +15,7 @@ public class StickyData {
     private Integer onlineOnJoin;
 
     public StickyData(PlayerProfile player) {
-        activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms());
+        activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms()).getValue();
         for (Action action : player.getActions()) {
             if (messagesSent == null && action.getDoneAction() == Actions.FIRST_LOGOUT) {
                 String additionalInfo = action.getAdditionalInfo();

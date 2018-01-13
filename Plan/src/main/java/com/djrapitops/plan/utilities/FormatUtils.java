@@ -214,20 +214,6 @@ public class FormatUtils {
         return df.format(d);
     }
 
-    public static String[] readableActivityIndex(double activityIndex) {
-        if (activityIndex >= 3.5) {
-            return new String[]{"green", "Very Active"};
-        } else if (activityIndex >= 1.75) {
-            return new String[]{"green", "Active"};
-        } else if (activityIndex >= 1.0) {
-            return new String[]{"lime", "Regular"};
-        } else if (activityIndex >= 0.5) {
-            return new String[]{"amber", "Irregular"};
-        } else {
-            return new String[]{"blue-gray", "Inactive"};
-        }
-    }
-
     public static String formatIP(String ip) {
         StringBuilder b = new StringBuilder();
         int i = 0;

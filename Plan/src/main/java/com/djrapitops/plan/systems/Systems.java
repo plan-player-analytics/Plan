@@ -8,6 +8,9 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.database.BukkitDBSystem;
+import com.djrapitops.plan.system.database.BungeeDBSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
@@ -17,9 +20,12 @@ import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.systems.file.database.DBSystem;
 import com.djrapitops.plan.systems.file.database.PlanBungeeDBSystem;
 import com.djrapitops.plan.systems.file.database.PlanDBSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.systems.tasks.PlanBungeeTaskSystem;
 import com.djrapitops.plan.systems.tasks.PlanTaskSystem;
 import com.djrapitops.plan.systems.tasks.TaskSystem;
+import com.djrapitops.plan.systems.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -49,7 +55,7 @@ public class Systems {
     public Systems(Plan plugin) {
         fileSystem = new FileSystem(plugin);
         configSystem = new BukkitConfigSystem();
-        databaseSystem = new PlanDBSystem();
+        databaseSystem = new BukkitDBSystem();
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
 
         taskSystem = new PlanTaskSystem();
@@ -66,7 +72,7 @@ public class Systems {
     public Systems(PlanBungee plugin) {
         fileSystem = new FileSystem(plugin);
         configSystem = new BungeeConfigSystem();
-        databaseSystem = new PlanBungeeDBSystem();
+        databaseSystem = new BungeeDBSystem();
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
 
         taskSystem = new PlanBungeeTaskSystem();

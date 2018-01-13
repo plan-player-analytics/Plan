@@ -4,10 +4,9 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.StickyData;
+import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -219,13 +218,13 @@ public class AnalysisUtils {
         if (!players.isEmpty()) {
             for (PlayerProfile player : players) {
                 for (long date = time; date >= time - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms()) {
-                    double activityIndex = player.getActivityIndex(date);
-                    String index = FormatUtils.readableActivityIndex(activityIndex)[1];
+                    ActivityIndex activityIndex = player.getActivityIndex(date);
+                    String activityGroup = activityIndex.getGroup();
 
                     Map<String, Set<UUID>> map = activityData.getOrDefault(date, new HashMap<>());
-                    Set<UUID> uuids = map.getOrDefault(index, new HashSet<>());
+                    Set<UUID> uuids = map.getOrDefault(activityGroup, new HashSet<>());
                     uuids.add(player.getUuid());
-                    map.put(index, uuids);
+                    map.put(activityGroup, uuids);
                     activityData.put(date, map);
                 }
             }

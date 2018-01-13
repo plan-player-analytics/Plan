@@ -6,9 +6,9 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.database.databases.SQLDB;
-import com.djrapitops.plan.database.databases.SQLiteDB;
-import com.djrapitops.plan.database.tables.UsersTable;
+import com.djrapitops.plan.system.database.databases.SQLDB;
+import com.djrapitops.plan.system.database.databases.SQLiteDB;
+import com.djrapitops.plan.system.database.tables.UsersTable;
 import com.djrapitops.plan.systems.info.server.ServerInfo;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.command.ISender;

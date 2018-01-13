@@ -9,7 +9,7 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.systems.cache.GeolocationCache;
 import com.djrapitops.plan.systems.processing.importing.ServerImportData;
 import com.djrapitops.plan.systems.processing.importing.UserImportData;

@@ -2,9 +2,10 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -100,9 +101,9 @@ public class QInspectCommand extends SubCommand {
 
         sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + profile.getName());
 
-        double activityIndex = profile.getActivityIndex(now);
+        ActivityIndex activityIndex = profile.getActivityIndex(now);
 
-        sender.sendMessage(colT + ball + " " + colM + " Activity Index: " + colS + FormatUtils.cutDecimals(activityIndex) + " | " + FormatUtils.readableActivityIndex(activityIndex)[1]);
+        sender.sendMessage(colT + ball + " " + colM + " Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getColor());
         sender.sendMessage(colT + ball + " " + colM + " Registered: " + colS + FormatUtils.formatTimeStampYear(profile.getRegistered()));
         sender.sendMessage(colT + ball + " " + colM + " Last Seen: " + colS + FormatUtils.formatTimeStampYear(profile.getLastSeen()));
         sender.sendMessage(colT + ball + " " + colM + " Logged in from: " + colS + profile.getMostRecentGeoInfo().getGeolocation());

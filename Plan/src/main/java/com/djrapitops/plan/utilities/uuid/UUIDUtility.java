@@ -6,8 +6,7 @@
 package com.djrapitops.plan.utilities.uuid;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.api.utility.log.Log;

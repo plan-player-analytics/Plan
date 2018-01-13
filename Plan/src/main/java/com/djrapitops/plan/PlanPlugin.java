@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.systems.Systems;
