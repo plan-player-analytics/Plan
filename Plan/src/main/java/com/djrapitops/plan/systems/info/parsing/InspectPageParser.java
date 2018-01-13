@@ -9,11 +9,12 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
@@ -225,12 +226,11 @@ public class InspectPageParser extends PageParser {
         addValue("mobKillCount", mobKillCount);
         addValue("deathCount", deathCount);
 
-        double activityIndex = profile.getActivityIndex(now);
-        String[] activityIndexFormat = FormatUtils.readableActivityIndex(activityIndex);
+        ActivityIndex activityIndex = profile.getActivityIndex(now);
 
-        addValue("activityIndexNumber", FormatUtils.cutDecimals(activityIndex));
-        addValue("activityIndexColor", activityIndexFormat[0]);
-        addValue("activityIndex", activityIndexFormat[1]);
+        addValue("activityIndexNumber", activityIndex.getFormattedValue());
+        addValue("activityIndexColor", activityIndex.getColor());
+        addValue("activityIndex", activityIndex.getGroup());
 
         addValue("playerStatus", HtmlStructure.playerStatus(online, profile.getBannedOnServers(), profile.isOp()));
 

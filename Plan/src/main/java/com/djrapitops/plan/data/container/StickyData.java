@@ -15,7 +15,7 @@ public class StickyData {
     private Integer onlineOnJoin;
 
     public StickyData(PlayerProfile player) {
-        activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms());
+        activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms()).getValue();
         for (Action action : player.getActions()) {
             if (messagesSent == null && action.getDoneAction() == Actions.FIRST_LOGOUT) {
                 String additionalInfo = action.getAdditionalInfo();

@@ -155,7 +155,7 @@ public class HealthNotes {
 
     private void activePlayerPlaytimeChange() {
         List<PlayerProfile> currentActivePlayers = analysisData.getPlayers().stream()
-                .filter(player -> player.getActivityIndex(now) >= 1.75)
+                .filter(player -> player.getActivityIndex(now).getValue() >= 1.75)
                 .collect(Collectors.toList());
 
         long twoWeeksAgo = now - TimeAmount.WEEK.ms() * 2L;

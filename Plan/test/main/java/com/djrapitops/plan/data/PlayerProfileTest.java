@@ -53,7 +53,7 @@ public class PlayerProfileTest {
         }
         p.setSessions(null, sessions);
 
-        assertEquals(5.0, p.getActivityIndex(date));
+        assertEquals(5.0, p.getActivityIndex(date).getValue());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class PlayerProfileTest {
         }
         p.setSessions(null, sessions);
 
-        assertEquals(5.0, p.getActivityIndex(date));
+        assertEquals(5.0, p.getActivityIndex(date).getValue());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class PlayerProfileTest {
         }
         p.setSessions(null, sessions);
 
-        assertTrue(2.0 <= p.getActivityIndex(date));
+        assertTrue(2.0 <= p.getActivityIndex(date).getValue());
     }
 
     @Test(timeout = 500)

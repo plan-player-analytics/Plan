@@ -1,7 +1,9 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
@@ -55,10 +57,10 @@ public class PlayersTableCreator {
 
                 long lastSeen = profile.getLastSeen();
 
-                double activityIndex = profile.getActivityIndex(now);
-                String readableIndex = FormatUtils.readableActivityIndex(activityIndex)[1];
-                String activityString = FormatUtils.cutDecimals(activityIndex)
-                        + (isBanned ? " (<b>Banned</b>)" : " (" + readableIndex + ")");
+                ActivityIndex activityIndex = profile.getActivityIndex(now);
+                String activityGroup = activityIndex.getGroup();
+                String activityString = activityIndex.getFormattedValue()
+                        + (isBanned ? " (<b>Banned</b>)" : " (" + activityGroup + ")");
 
                 String geoLocation = profile.getMostRecentGeoInfo().getGeolocation();
                 html.append(Html.TABLELINE_PLAYERS.parse(

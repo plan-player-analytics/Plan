@@ -4,16 +4,16 @@
  */
 package com.djrapitops.plan.data;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.comparators.ActionComparator;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
-import com.djrapitops.plugin.api.TimeAmount;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -57,7 +57,7 @@ public class PlayerProfile implements OfflinePlayer {
     private Map<String, String> pluginReplaceMap;
 
     // Value that requires lot of processing
-    private Map<Long, Double> activityIndex;
+    private Map<Long, ActivityIndex> activityIndexCache;
 
     public PlayerProfile(UUID uuid, String name, long registered) {
         this.uuid = uuid;
@@ -76,88 +76,17 @@ public class PlayerProfile implements OfflinePlayer {
         geoInformation = new ArrayList<>();
 
         pluginReplaceMap = new HashMap<>();
-        activityIndex = new HashMap<>();
+        activityIndexCache = new HashMap<>();
     }
 
     // Calculating Getters
-    public double getActivityIndex(long date) {
-        Double activityIndx = activityIndex.get(date);
-        if (activityIndx != null) {
-            return activityIndx;
+    public ActivityIndex getActivityIndex(long date) {
+        ActivityIndex index = activityIndexCache.get(date);
+        if (index == null) {
+            index = new ActivityIndex(this, date);
+            activityIndexCache.put(date, index);
         }
-
-        long week = TimeAmount.WEEK.ms();
-        long weekAgo = date - week;
-        long twoWeeksAgo = date - 2L * week;
-        long threeWeeksAgo = date - 3L * week;
-
-        long activePlayThreshold = Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms();
-        if (activePlayThreshold <= 0) {
-            activePlayThreshold = 1;
-        }
-        int activeLoginThreshold = Settings.ACTIVE_LOGIN_THRESHOLD.getNumber();
-        if (activeLoginThreshold <= 0) {
-            activeLoginThreshold = 1;
-        }
-
-        List<Session> sessionsWeek = getSessions(weekAgo, date).collect(Collectors.toList());
-        List<Session> sessionsWeek2 = getSessions(twoWeeksAgo, weekAgo).collect(Collectors.toList());
-        List<Session> sessionsWeek3 = getSessions(threeWeeksAgo, twoWeeksAgo).collect(Collectors.toList());
-
-        // Playtime per week multipliers, max out to avoid too high values.
-        double max = 4.0;
-
-        long playtimeWeek = PlayerProfile.getPlaytime(sessionsWeek.stream());
-        double weekPlay = (playtimeWeek * 1.0 / activePlayThreshold);
-        if (weekPlay > max) {
-            weekPlay = max;
-        }
-        long playtimeWeek2 = PlayerProfile.getPlaytime(sessionsWeek2.stream());
-        double week2Play = (playtimeWeek2 * 1.0 / activePlayThreshold);
-        if (week2Play > max) {
-            week2Play = max;
-        }
-        long playtimeWeek3 = PlayerProfile.getPlaytime(sessionsWeek3.stream());
-        double week3Play = (playtimeWeek3 * 1.0 / activePlayThreshold);
-        if (week3Play > max) {
-            week3Play = max;
-        }
-
-        double playtimeMultiplier = 1.0;
-        if (playtimeWeek + playtimeWeek2 + playtimeWeek3 > activeLoginThreshold * 3.0) {
-            playtimeMultiplier = 1.25;
-        }
-
-        // Reduce the harshness for new players and players who have had a vacation
-        if (weekPlay > 1 && week3Play > 1 && week2Play == 0.0) {
-            week2Play = 0.5;
-        }
-        if (weekPlay > 1 && week2Play == 0.0) {
-            week2Play = 0.6;
-        }
-        if (weekPlay > 1 && week3Play == 0.0) {
-            week3Play = 0.75;
-        }
-
-        double playAvg = (weekPlay + week2Play + week3Play) / 3.0;
-
-        double weekLogin = sessionsWeek.size() >= activeLoginThreshold ? 1.0 : 0.5;
-        double week2Login = sessionsWeek2.size() >= activeLoginThreshold ? 1.0 : 0.5;
-        double week3Login = sessionsWeek3.size() >= activeLoginThreshold ? 1.0 : 0.5;
-
-        double loginMultiplier = 1.0;
-        double loginTotal = weekLogin + week2Login + week3Login;
-        double loginAvg = loginTotal / 3.0;
-
-        if (loginTotal <= 2.0) {
-            // Reduce index for players that have not logged in the threshold amount for 2 weeks
-            loginMultiplier = 0.75;
-        }
-
-        activityIndx = playAvg * loginAvg * loginMultiplier * playtimeMultiplier;
-        activityIndex.put(date, activityIndx);
-
-        return activityIndx;
+        return index;
     }
 
     /**
