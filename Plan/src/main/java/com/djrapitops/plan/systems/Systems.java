@@ -6,6 +6,7 @@ package com.djrapitops.plan.systems;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.BukkitDBSystem;
@@ -15,11 +16,11 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
+import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
+import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
-import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -28,6 +29,7 @@ import org.apache.commons.lang3.ArrayUtils;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class Systems {
 
     private FileSystem fileSystem;

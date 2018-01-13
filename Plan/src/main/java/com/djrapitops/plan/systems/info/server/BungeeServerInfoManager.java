@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class BungeeServerInfoManager {
 
     private final PlanBungee plugin;

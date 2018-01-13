@@ -44,28 +44,36 @@ public abstract class PlanSystem implements SubSystem {
     public void enable() throws EnableException {
         checkSubSystemInitialization();
 
-        versionCheckSystem.enable();
-        fileSystem.enable();
-        configSystem.enable();
-        databaseSystem.enable();
-        processingQueue.enable();
-        listenerSystem.enable();
-        taskSystem.enable();
+        SubSystem[] systems = new SubSystem[]{
+                versionCheckSystem,
+                fileSystem,
+                configSystem,
+                databaseSystem,
+                processingQueue,
+                listenerSystem,
+                taskSystem
+        };
+        for (SubSystem system : systems) {
+            system.enable();
+        }
     }
 
     @Override
     public void disable() {
-        processingQueue.disable();
-        databaseSystem.disable();
-        taskSystem.disable();
-        configSystem.disable();
-        fileSystem.disable();
-        versionCheckSystem.disable();
-    }
-
-    public void reload() throws EnableException {
-        checkSubSystemInitialization();
-        configSystem.reload();
+        SubSystem[] systems = new SubSystem[]{
+                listenerSystem,
+                processingQueue,
+                databaseSystem,
+                taskSystem,
+                configSystem,
+                fileSystem,
+                versionCheckSystem
+        };
+        for (SubSystem system : systems) {
+            if (system != null) {
+                system.disable();
+            }
+        }
     }
 
     private void checkSubSystemInitialization() throws EnableException {
@@ -75,6 +83,7 @@ public abstract class PlanSystem implements SubSystem {
             NullCheck.check(configSystem, new IllegalStateException("Config system was not initialized."));
             NullCheck.check(databaseSystem, new IllegalStateException("Database system was not initialized."));
             NullCheck.check(listenerSystem, new IllegalStateException("Listener system was not initialized."));
+            NullCheck.check(taskSystem, new IllegalStateException("Task system was not initialized."));
         } catch (Exception e) {
             throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ".", e);
         }

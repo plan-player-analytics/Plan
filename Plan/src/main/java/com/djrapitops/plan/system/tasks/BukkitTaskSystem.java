@@ -8,8 +8,11 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.tasks.bukkit.BukkitTPSCountTimer;
+import com.djrapitops.plan.system.tasks.bukkit.PaperTPSCountTimer;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -23,7 +26,11 @@ import com.djrapitops.plugin.task.RunnableFactory;
  */
 public class BukkitTaskSystem extends TaskSystem {
 
-    // TODO Remove Plan.getInstance requirement.
+    private final Plan plugin;
+
+    public BukkitTaskSystem(Plan plugin) {
+        this.plugin = plugin;
+    }
 
     private ITask bootAnalysisTask;
 
@@ -38,7 +45,9 @@ public class BukkitTaskSystem extends TaskSystem {
         String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
 
         Benchmark.start("Task Registration");
-        tpsCountTimer = new TPSCountTimer(Plan.getInstance());
+        tpsCountTimer = Check.isPaperAvailable()
+                ? new PaperTPSCountTimer(plugin)
+                : new BukkitTPSCountTimer(plugin);
         registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
 
         // Analysis refresh settings
@@ -48,7 +57,7 @@ public class BukkitTaskSystem extends TaskSystem {
 
         Log.info(bootAnalysisMsg);
 
-        InformationManager infoManager = Plan.getInstance().getInfoManager();
+        InformationManager infoManager = plugin.getInfoManager();
 
         bootAnalysisTask = RunnableFactory.createNew("BootAnalysisTask", new AbsRunnable() {
             @Override

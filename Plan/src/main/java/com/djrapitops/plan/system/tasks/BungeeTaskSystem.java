@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -15,6 +16,12 @@ import com.djrapitops.plugin.task.AbsRunnable;
  * @author Rsl1122
  */
 public class BungeeTaskSystem extends TaskSystem {
+
+    private final PlanBungee plugin;
+
+    public BungeeTaskSystem(PlanBungee plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public void enable() {
@@ -31,7 +38,7 @@ public class BungeeTaskSystem extends TaskSystem {
                 infoManager.sendConfigSettings();
             }
         }).runTaskAsynchronously();
-        registerTask("Player Count task", new TPSCountTimer(PlanBungee.getInstance()))
+        registerTask("Player Count task", new BungeeTPSCountTimer(plugin))
                 .runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
         registerTask("NetworkPageContentUpdateTask", new AbsRunnable("NetworkPageContentUpdateTask") {
             @Override

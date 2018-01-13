@@ -52,6 +52,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class BukkitInformationManager extends InformationManager {
 
     private final Plan plugin;

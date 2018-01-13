@@ -7,7 +7,9 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
+import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 
 /**
@@ -22,6 +24,8 @@ public class BukkitSystem extends PlanSystem {
         fileSystem = new FileSystem(plugin);
         configSystem = new BukkitConfigSystem();
         databaseSystem = new BukkitDBSystem();
+        listenerSystem = new BukkitListenerSystem(plugin);
+        taskSystem = new BukkitTaskSystem(plugin);
     }
 
     public static BukkitSystem getInstance() {

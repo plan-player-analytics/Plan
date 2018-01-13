@@ -7,9 +7,9 @@ package com.djrapitops.plan.system.settings.config;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -34,7 +34,7 @@ public abstract class ConfigSystem implements SubSystem {
     }
 
     public static ConfigSystem getInstance() {
-        ConfigSystem configSystem = Systems.getInstance().getConfigSystem();
+        ConfigSystem configSystem = PlanSystem.getInstance().getConfigSystem();
         NullCheck.check(configSystem, new IllegalStateException("Config System has not been initialized."));
         return configSystem;
     }

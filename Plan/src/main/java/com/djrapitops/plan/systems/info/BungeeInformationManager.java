@@ -5,6 +5,7 @@
 package com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class BungeeInformationManager extends InformationManager {
 
     private final PlanBungee plugin;
