@@ -5,9 +5,9 @@
 package com.djrapitops.plan.systems.tasks;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;

@@ -29,7 +29,7 @@ public class ConditionUtils {
      * @return has the player played before, false if uuid is null.
      */
     public static boolean playerHasPlayed(UUID uuid) {
-        if ( Verify.containsNull(uuid)) {
+        if (Verify.containsNull(uuid)) {
             return false;
         }
         boolean hasPlayed;

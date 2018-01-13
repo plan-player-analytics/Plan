@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.webserver.pagecache;
 
-import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class ResponseCache {
 
     /**
      * Returns a copy some responses
-     *
+     * <p>
      * Currently supported copyable responses: InspectPageResponse
      *
      * @param identifier The identifier of the page

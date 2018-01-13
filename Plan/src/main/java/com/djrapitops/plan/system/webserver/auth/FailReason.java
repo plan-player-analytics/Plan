@@ -9,7 +9,7 @@ package com.djrapitops.plan.system.webserver.auth;
  *
  * @author Rsl1122
  */
-public enum  FailReason {
+public enum FailReason {
     USER_AND_PASS_NOT_SPECIFIED("User and Password not specified"),
     USER_DOES_NOT_EXIST("User does not exist"),
     USER_PASS_MISMATCH("User and Password did not match"),

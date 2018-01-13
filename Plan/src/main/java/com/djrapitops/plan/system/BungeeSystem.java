@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.system.database.BungeeDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -20,5 +21,6 @@ public class BungeeSystem extends PlanSystem {
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
         fileSystem = new FileSystem(plugin);
         configSystem = new BungeeConfigSystem();
+        databaseSystem = new BungeeDBSystem();
     }
 }

@@ -1,16 +1,13 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.system.webserver.auth.Authentication;
-import com.djrapitops.plugin.utilities.Verify;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Optional;
 
 /**

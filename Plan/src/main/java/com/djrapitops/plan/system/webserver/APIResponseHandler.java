@@ -1,12 +1,15 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package com.djrapitops.plan.system.webserver;
 
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
-import com.djrapitops.plan.system.webserver.response.*;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
+import com.djrapitops.plan.system.webserver.response.CSSResponse;
+import com.djrapitops.plan.system.webserver.response.JavaScriptResponse;
+import com.djrapitops.plan.system.webserver.response.RedirectResponse;
+import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;

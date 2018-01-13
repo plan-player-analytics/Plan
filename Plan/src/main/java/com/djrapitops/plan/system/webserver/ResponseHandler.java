@@ -5,14 +5,11 @@
 package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.database.tables.SecurityTable;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
-import com.djrapitops.plan.system.webserver.auth.FailReason;
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pages.*;
 import com.djrapitops.plan.system.webserver.response.*;
 import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
@@ -20,18 +17,14 @@ import com.djrapitops.plan.system.webserver.response.errors.InternalErrorRespons
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plan.system.webserver.response.pages.DebugPageResponse;
-import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
-import com.djrapitops.plan.system.database.tables.SecurityTable;
-import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
-import com.djrapitops.plan.systems.webserver.pagecache.PageId;
 import com.djrapitops.plan.systems.webserver.response.*;
-import com.djrapitops.plan.utilities.PassEncryptUtil;
-import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Handles choosing of the correct response to a request.

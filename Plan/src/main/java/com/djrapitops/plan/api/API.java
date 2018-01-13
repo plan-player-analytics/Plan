@@ -83,7 +83,7 @@ public class API {
      */
     public String getPlayerInspectPageLink(String name) {
         if (name == null) {
-            return  "#";
+            return "#";
         }
         return "../player/" + name.replace(" ", "%20").replace(".", "%2E");
     }

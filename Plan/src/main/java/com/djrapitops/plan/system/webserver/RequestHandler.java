@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -57,7 +57,7 @@ public class RequestHandler implements HttpHandler {
         } finally {
             exchange.close();
             if (Settings.DEV_MODE.isTrue()) {
-                Log.debug(requestString + " Response code: " + responseCode+" took "+Benchmark.stop("", requestString)+" ms");
+                Log.debug(requestString + " Response code: " + responseCode + " took " + Benchmark.stop("", requestString) + " ms");
             }
         }
     }

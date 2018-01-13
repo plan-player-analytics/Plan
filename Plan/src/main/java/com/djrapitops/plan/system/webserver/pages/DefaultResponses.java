@@ -4,9 +4,9 @@
  */
 package com.djrapitops.plan.system.webserver.pages;
 
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 
 /**
  * //TODO Class Javadoc Comment

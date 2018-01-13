@@ -2,10 +2,10 @@ package com.djrapitops.plan.utilities.html.graphs.pie;
 
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.settings.WorldAliasSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
 import java.util.*;

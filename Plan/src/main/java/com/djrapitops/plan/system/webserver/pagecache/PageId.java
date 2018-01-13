@@ -27,8 +27,7 @@ public enum PageId {
     CSS("css:"),
     //
     FAVICON_REDIRECT("Redirect:Favicon"),
-    AUTH_PROMPT("PromptAuth")
-    ;
+    AUTH_PROMPT("PromptAuth");
 
     private final String id;
 

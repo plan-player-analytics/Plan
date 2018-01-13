@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -10,10 +10,6 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.WebAPIException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.tables.ServerTable;
-import com.djrapitops.plan.systems.webserver.webapi.bukkit.ConfigurationWebAPI;
-import com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.database.tables.ServerTable;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.ConfigurationWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.universal.PingWebAPI;
 import com.djrapitops.plugin.api.TimeAmount;

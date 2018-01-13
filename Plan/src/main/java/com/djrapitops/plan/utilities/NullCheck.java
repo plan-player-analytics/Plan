@@ -11,7 +11,8 @@ package com.djrapitops.plan.utilities;
  */
 public class NullCheck {
 
-    private NullCheck() {}
+    private NullCheck() {
+    }
 
     public static <T extends Throwable> void check(Object toCheck, T throwIfNull) throws T {
         if (toCheck == null) {

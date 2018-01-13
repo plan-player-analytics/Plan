@@ -5,10 +5,9 @@
 package com.djrapitops.plan.settings.theme;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.EnumUtility;
 import com.djrapitops.plugin.api.utility.log.Log;

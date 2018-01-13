@@ -7,9 +7,9 @@ import com.djrapitops.plan.command.commands.webuser.WebCheckCommand;
 import com.djrapitops.plan.command.commands.webuser.WebDeleteCommand;
 import com.djrapitops.plan.command.commands.webuser.WebLevelCommand;
 import com.djrapitops.plan.command.commands.webuser.WebListUsersCommand;
-import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
 

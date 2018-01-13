@@ -5,7 +5,6 @@
 package com.djrapitops.plan.settings.theme;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
