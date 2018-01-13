@@ -8,16 +8,12 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.tasks.bukkit.BukkitTPSCountTimer;
-import com.djrapitops.plan.system.tasks.bukkit.PaperTPSCountTimer;
-import com.djrapitops.plan.systems.info.InformationManager;
+import com.djrapitops.plan.system.tasks.bukkit.*;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
-import com.djrapitops.plugin.task.RunnableFactory;
 
 /**
  * //TODO Class Javadoc Comment
@@ -39,51 +35,27 @@ public class BukkitTaskSystem extends TaskSystem {
         registerTasks();
     }
 
-    // TODO Clean Up
     private void registerTasks() {
-        String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
-        String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
-
         Benchmark.start("Task Registration");
+
         tpsCountTimer = Check.isPaperAvailable()
                 ? new PaperTPSCountTimer(plugin)
                 : new BukkitTPSCountTimer(plugin);
-        registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
 
         // Analysis refresh settings
         int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
         boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
         long analysisPeriod = analysisRefreshMinutes * TimeAmount.MINUTE.ticks();
 
-        Log.info(bootAnalysisMsg);
+        Log.info(Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString());
 
-        InformationManager infoManager = plugin.getInfoManager();
-
-        bootAnalysisTask = RunnableFactory.createNew("BootAnalysisTask", new AbsRunnable() {
-            @Override
-            public void run() {
-                Log.info(bootAnalysisRunMsg);
-                infoManager.refreshAnalysis(Plan.getServerUUID());
-                this.cancel();
-            }
-        }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
+        registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
+        registerTask(new NetworkPageRefreshTask()).runTaskTimerAsynchronously(20L, 5L * TimeAmount.MINUTE.ticks());
+        bootAnalysisTask = registerTask(new BootAnalysisTask()).runTaskLaterAsynchronously(30L * TimeAmount.SECOND.ticks());
 
         if (analysisRefreshTaskIsEnabled) {
-            RunnableFactory.createNew("PeriodicalAnalysisTask", new AbsRunnable() {
-                @Override
-                public void run() {
-                    infoManager.refreshAnalysis(Plan.getServerUUID());
-                }
-            }).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
+            registerTask(new PeriodicAnalysisTask()).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }
-
-        registerTask("PeriodicNetworkBoxRefreshTask", new AbsRunnable() {
-            @Override
-            public void run() {
-                infoManager.updateNetworkPageContent();
-            }
-        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks(), TimeAmount.MINUTE.ticks() * 5L);
-
         Benchmark.stop("Enable", "Task Registration");
     }
 

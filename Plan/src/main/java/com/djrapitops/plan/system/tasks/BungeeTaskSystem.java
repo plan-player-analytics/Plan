@@ -5,10 +5,11 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.system.tasks.bukkit.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
+import com.djrapitops.plan.system.tasks.bungee.EnableConnectionTask;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.AbsRunnable;
 
 /**
  * //TODO Class Javadoc Comment
@@ -21,6 +22,7 @@ public class BungeeTaskSystem extends TaskSystem {
 
     public BungeeTaskSystem(PlanBungee plugin) {
         this.plugin = plugin;
+        tpsCountTimer = new BungeeTPSCountTimer(plugin);
     }
 
     @Override
@@ -31,20 +33,8 @@ public class BungeeTaskSystem extends TaskSystem {
     private void registerTasks() {
         BungeeInformationManager infoManager = ((BungeeInformationManager) PlanBungee.getInstance().getInfoManager());
 
-        registerTask("Enable Bukkit Connection Task", new AbsRunnable() {
-            @Override
-            public void run() {
-                infoManager.attemptConnection();
-                infoManager.sendConfigSettings();
-            }
-        }).runTaskAsynchronously();
-        registerTask("Player Count task", new BungeeTPSCountTimer(plugin))
-                .runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
-        registerTask("NetworkPageContentUpdateTask", new AbsRunnable("NetworkPageContentUpdateTask") {
-            @Override
-            public void run() {
-                infoManager.updateNetworkPageContent();
-            }
-        }).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
+        registerTask(new EnableConnectionTask()).runTaskAsynchronously();
+        registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
+        registerTask(new NetworkPageRefreshTask()).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
     }
 }

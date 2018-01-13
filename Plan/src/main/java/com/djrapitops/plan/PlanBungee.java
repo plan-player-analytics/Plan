@@ -17,6 +17,7 @@ import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
@@ -24,7 +25,6 @@ import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
@@ -148,6 +148,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     }
 
     @Override
+    @Deprecated
     public InformationManager getInfoManager() {
         return infoManager;
     }

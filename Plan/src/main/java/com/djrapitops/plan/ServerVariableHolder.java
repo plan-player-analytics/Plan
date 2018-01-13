@@ -70,6 +70,7 @@ public class ServerVariableHolder {
      *
      * @return if the server is using PaperSpigot.
      */
+    @Deprecated
     public boolean isUsingPaper() {
         return usingPaper;
     }
