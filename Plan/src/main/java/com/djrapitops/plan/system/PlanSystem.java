@@ -7,6 +7,7 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -31,6 +32,8 @@ public abstract class PlanSystem implements SubSystem {
     protected ConfigSystem configSystem;
     protected DBSystem databaseSystem;
 
+    protected ListenerSystem listenerSystem;
+
     public PlanSystem() {
         processingQueue = new ProcessingQueue();
     }
@@ -40,14 +43,19 @@ public abstract class PlanSystem implements SubSystem {
         checkSubSystemInitialization();
 
         versionCheckSystem.enable();
+        fileSystem.enable();
         configSystem.enable();
+        databaseSystem.enable();
         processingQueue.enable();
+        listenerSystem.enable();
     }
 
     @Override
     public void disable() {
         processingQueue.disable();
+        databaseSystem.disable();
         configSystem.disable();
+        fileSystem.disable();
         versionCheckSystem.disable();
     }
 
@@ -62,6 +70,7 @@ public abstract class PlanSystem implements SubSystem {
             NullCheck.check(fileSystem, new IllegalStateException("File system was not initialized."));
             NullCheck.check(configSystem, new IllegalStateException("Config system was not initialized."));
             NullCheck.check(databaseSystem, new IllegalStateException("Database system was not initialized."));
+            NullCheck.check(listenerSystem, new IllegalStateException("Listener system was not initialized."));
         } catch (Exception e) {
             throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ".", e);
         }
@@ -73,9 +82,9 @@ public abstract class PlanSystem implements SubSystem {
         if (bukkitAvailable && bungeeAvailable) {
             // TODO test system.
         } else if (bungeeAvailable) {
-            // todo bungee
+            return BungeeSystem.getInstance();
         } else {
-            // Todo bukkit
+            return BukkitSystem.getInstance();
         }
         throw new IllegalAccessError("PlanSystem is not available on this platform.");
     }
@@ -100,5 +109,9 @@ public abstract class PlanSystem implements SubSystem {
 
     public DBSystem getDatabaseSystem() {
         return databaseSystem;
+    }
+
+    public ListenerSystem getListenerSystem() {
+        return listenerSystem;
     }
 }

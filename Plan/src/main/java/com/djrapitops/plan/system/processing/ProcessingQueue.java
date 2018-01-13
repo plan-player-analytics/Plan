@@ -3,7 +3,7 @@ package com.djrapitops.plan.system.processing;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.systems.processing.Processor;
+import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.systems.queue.Consumer;
 import com.djrapitops.plan.systems.queue.Queue;
 import com.djrapitops.plan.systems.queue.Setup;

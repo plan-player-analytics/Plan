@@ -27,10 +27,13 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.system.BukkitSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
+import com.djrapitops.plan.system.processing.processors.Processor;
+import com.djrapitops.plan.system.processing.processors.importing.importers.OfflinePlayerImporter;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -44,9 +47,6 @@ import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.systems.info.ImporterManager;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
-import com.djrapitops.plan.systems.listeners.*;
-import com.djrapitops.plan.systems.processing.Processor;
-import com.djrapitops.plan.systems.processing.importing.importers.OfflinePlayerImporter;
 import com.djrapitops.plan.systems.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.metrics.BStats;
@@ -180,11 +180,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
             Benchmark.stop("Enable", "WebServer Initialization");
 
-            if (!reloading) {
-                registerListeners();
-            }
-            PlanPlayerListener.setCountKicks(true);
-
             TaskSystem.getInstance().enable();
 
             this.api = new API(this);
@@ -273,18 +268,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
     @Override
     public void onReload() {
-        ConfigSystem.reload();
-    }
 
-    private void registerListeners() {
-        Benchmark.start("Register Listeners");
-        registerListener(new PlanPlayerListener(this));
-        registerListener(new PlanChatListener(this));
-        registerListener(new PlanGamemodeChangeListener(this));
-        registerListener(new PlanWorldChangeListener(this));
-        registerListener(new PlanCommandPreprocessListener(this));
-        registerListener(new PlanDeathEventListener(this));
-        Benchmark.stop("Enable", "Register Listeners");
     }
 
     /**
@@ -433,5 +417,9 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
     public Systems getSystems() {
         return systems;
+    }
+
+    public BukkitSystem getSystem() {
+        return system;
     }
 }

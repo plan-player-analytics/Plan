@@ -9,10 +9,12 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
+import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -22,8 +24,6 @@ import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
-import com.djrapitops.plan.systems.listeners.BungeePlayerListener;
-import com.djrapitops.plan.systems.processing.Processor;
 import com.djrapitops.plan.systems.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.BungeePlugin;
@@ -55,6 +55,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     private ProcessingQueue processingQueue;
 
     private boolean setupAllowed = false;
+    private BungeeSystem system;
 
     @Override
     public void onEnable() {
@@ -93,8 +94,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             TaskSystem.getInstance().enable();
 
             processingQueue = new ProcessingQueue();
-
-            registerListener(new BungeePlayerListener(this));
 
             Log.logDebug("Enable", "WebServer Initialization");
             Log.info(Locale.get(Msg.ENABLED).toString());
@@ -210,5 +209,9 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     public void setSetupAllowed(boolean setupAllowed) {
         this.setupAllowed = setupAllowed;
+    }
+
+    public BungeeSystem getSystem() {
+        return system;
     }
 }

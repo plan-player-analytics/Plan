@@ -6,10 +6,10 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
+import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.info.InformationManager;
-import com.djrapitops.plan.systems.processing.Processor;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.config.Config;

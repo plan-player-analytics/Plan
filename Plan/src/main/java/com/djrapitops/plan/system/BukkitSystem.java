@@ -23,4 +23,8 @@ public class BukkitSystem extends PlanSystem {
         configSystem = new BukkitConfigSystem();
         databaseSystem = new BukkitDBSystem();
     }
+
+    public static BukkitSystem getInstance() {
+        return Plan.getInstance().getSystem();
+    }
 }

@@ -4,7 +4,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.systems.processing.TPSInsertProcessor;
+import com.djrapitops.plan.system.processing.processors.TPSInsertProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.Check;

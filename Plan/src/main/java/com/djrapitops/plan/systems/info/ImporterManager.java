@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.systems.info;
 
-import com.djrapitops.plan.systems.processing.importing.importers.Importer;
+import com.djrapitops.plan.system.processing.processors.importing.importers.Importer;
 
 import java.util.ArrayList;
 import java.util.List;

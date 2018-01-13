@@ -23,4 +23,8 @@ public class BungeeSystem extends PlanSystem {
         configSystem = new BungeeConfigSystem();
         databaseSystem = new BungeeDBSystem();
     }
+
+    public static BungeeSystem getInstance() {
+        return PlanBungee.getInstance().getSystem();
+    }
 }
