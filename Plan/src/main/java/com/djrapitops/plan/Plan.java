@@ -47,7 +47,7 @@ import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.systems.info.ImporterManager;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
-import com.djrapitops.plan.systems.tasks.TaskSystem;
+import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.metrics.BStats;
 import com.djrapitops.plugin.BukkitPlugin;
@@ -357,6 +357,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         return ConfigSystem.getInstance().getConfig();
     }
 
+    @Deprecated
     public InformationManager getInfoManager() {
         return infoManager;
     }

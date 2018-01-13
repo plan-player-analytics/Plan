@@ -1,7 +1,7 @@
 package com.djrapitops.plan.utilities.html.graphs.line;
 
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.systems.tasks.TPSCountTimer;
+import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plan.utilities.analysis.Point;
 
 import java.util.List;

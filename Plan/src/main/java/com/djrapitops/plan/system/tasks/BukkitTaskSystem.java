@@ -2,7 +2,7 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.plan.systems.tasks;
+package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -21,7 +21,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
  *
  * @author Rsl1122
  */
-public class PlanTaskSystem extends TaskSystem {
+public class BukkitTaskSystem extends TaskSystem {
 
     // TODO Remove Plan.getInstance requirement.
 

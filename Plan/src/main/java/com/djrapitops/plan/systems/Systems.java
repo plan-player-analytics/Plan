@@ -17,9 +17,9 @@ import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.systems.tasks.PlanBungeeTaskSystem;
-import com.djrapitops.plan.systems.tasks.PlanTaskSystem;
-import com.djrapitops.plan.systems.tasks.TaskSystem;
+import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
+import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
+import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -52,7 +52,7 @@ public class Systems {
         databaseSystem = new BukkitDBSystem();
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
 
-        taskSystem = new PlanTaskSystem();
+        taskSystem = new BukkitTaskSystem();
 
         webServerSystem = new WebServerSystem();
         themeSystem = new Theme();
@@ -69,7 +69,7 @@ public class Systems {
         databaseSystem = new BungeeDBSystem();
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
 
-        taskSystem = new PlanBungeeTaskSystem();
+        taskSystem = new BungeeTaskSystem();
 
         webServerSystem = new WebServerSystem();
         themeSystem = new Theme();

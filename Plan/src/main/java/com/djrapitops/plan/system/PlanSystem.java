@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
@@ -33,6 +34,7 @@ public abstract class PlanSystem implements SubSystem {
     protected DBSystem databaseSystem;
 
     protected ListenerSystem listenerSystem;
+    protected TaskSystem taskSystem;
 
     public PlanSystem() {
         processingQueue = new ProcessingQueue();
@@ -48,12 +50,14 @@ public abstract class PlanSystem implements SubSystem {
         databaseSystem.enable();
         processingQueue.enable();
         listenerSystem.enable();
+        taskSystem.enable();
     }
 
     @Override
     public void disable() {
         processingQueue.disable();
         databaseSystem.disable();
+        taskSystem.disable();
         configSystem.disable();
         fileSystem.disable();
         versionCheckSystem.disable();
@@ -113,5 +117,9 @@ public abstract class PlanSystem implements SubSystem {
 
     public ListenerSystem getListenerSystem() {
         return listenerSystem;
+    }
+
+    public TaskSystem getTaskSystem() {
+        return taskSystem;
     }
 }

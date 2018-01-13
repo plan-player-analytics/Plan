@@ -24,7 +24,7 @@ import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
-import com.djrapitops.plan.systems.tasks.TaskSystem;
+import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;

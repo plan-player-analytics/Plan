@@ -1,4 +1,4 @@
-package com.djrapitops.plan.systems.tasks;
+package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;

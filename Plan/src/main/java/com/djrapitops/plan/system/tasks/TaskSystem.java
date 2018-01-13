@@ -2,10 +2,11 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.plan.systems.tasks;
+package com.djrapitops.plan.system.tasks;
 
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plugin.api.systems.TaskCenter;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.IRunnable;
@@ -21,7 +22,7 @@ public abstract class TaskSystem implements SubSystem {
     protected TPSCountTimer tpsCountTimer;
 
     public static TaskSystem getInstance() {
-        return Systems.getInstance().getTaskSystem();
+        return PlanSystem.getInstance().getTaskSystem();
     }
 
     protected IRunnable registerTask(AbsRunnable runnable) {

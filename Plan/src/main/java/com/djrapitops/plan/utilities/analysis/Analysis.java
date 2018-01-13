@@ -16,8 +16,8 @@ import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.cache.SessionCache;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.systems.info.InformationManager;
-import com.djrapitops.plan.systems.tasks.PlanTaskSystem;
-import com.djrapitops.plan.systems.tasks.TaskSystem;
+import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
+import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -55,7 +55,7 @@ public class Analysis {
             return;
         }
 
-        ((PlanTaskSystem) TaskSystem.getInstance()).cancelBootAnalysis();
+        ((BukkitTaskSystem) TaskSystem.getInstance()).cancelBootAnalysis();
 
         Benchmark.start("Analysis");
         log(Locale.get(Msg.ANALYSIS_START).toString());

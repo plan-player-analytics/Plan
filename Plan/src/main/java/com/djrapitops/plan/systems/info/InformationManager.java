@@ -21,6 +21,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
+@Deprecated
 public abstract class InformationManager {
     boolean usingAnotherWebServer;
     String webServerAddress;
