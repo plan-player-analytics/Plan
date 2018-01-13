@@ -1,5 +1,6 @@
 package com.djrapitops.plan.system.database.tables;
 
+import com.djrapitops.plan.data.Actions;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

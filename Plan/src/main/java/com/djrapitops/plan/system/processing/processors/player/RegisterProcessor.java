@@ -5,9 +5,9 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.tables.Actions;
 import com.djrapitops.plan.system.database.tables.UserInfoTable;
 import com.djrapitops.plan.system.database.tables.UsersTable;
 import com.djrapitops.plan.system.processing.processors.Processor;

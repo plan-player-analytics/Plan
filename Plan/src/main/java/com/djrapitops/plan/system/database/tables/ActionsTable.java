@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.database.tables;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.system.database.databases.SQLDB;
 import com.djrapitops.plan.system.database.processing.ExecStatement;

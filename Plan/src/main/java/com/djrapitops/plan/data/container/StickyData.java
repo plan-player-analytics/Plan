@@ -4,8 +4,8 @@
  */
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.system.database.tables.Actions;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.google.common.base.Objects;
 

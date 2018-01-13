@@ -3,8 +3,9 @@ package com.djrapitops.plan.system.database.databases;
 import com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.tables.*;
-import org.apache.commons.lang3.StringUtils;
+import com.djrapitops.plan.utilities.NullCheck;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -37,11 +38,10 @@ public abstract class Database {
     protected WorldTimesTable worldTimesTable;
     protected ServerTable serverTable;
 
-
-    /**
-     * Super constructor.
-     */
-    public Database() {
+    public static Database getInstance() {
+        Database database = DBSystem.getInstance().getActiveDatabase();
+        NullCheck.check(database, new IllegalStateException("Database was not initialized."));
+        return database;
     }
 
     /**
@@ -77,7 +77,7 @@ public abstract class Database {
      * @return sqlite/mysql
      */
     public String getConfigName() {
-        return StringUtils.remove(getName().toLowerCase(), ' ');
+        return getName().toLowerCase().trim();
     }
 
     public abstract boolean isNewDatabase() throws SQLException;
@@ -123,6 +123,7 @@ public abstract class Database {
      * @param uuid UUID of the account.
      * @throws SQLException If a database error occurs.
      */
+    @Deprecated
     public abstract void removeAccount(UUID uuid) throws SQLException;
 
     /**
@@ -132,6 +133,7 @@ public abstract class Database {
      *
      * @throws SQLException if remove fails.
      */
+    @Deprecated
     public abstract void removeAllData() throws SQLException;
 
     /**
@@ -140,6 +142,7 @@ public abstract class Database {
      * @return Set of saved UUIDs
      * @throws SQLException If a database error occurs.
      */
+    @Deprecated
     public Set<UUID> getSavedUUIDs() throws SQLException {
         return usersTable.getSavedUUIDs();
     }
@@ -150,96 +153,60 @@ public abstract class Database {
      * @return String command (key), Integer times used
      * @throws SQLException If a database error occurs.
      */
+    @Deprecated
     public Map<String, Integer> getCommandUse() throws SQLException {
         return commandUseTable.getCommandUse();
     }
 
-    /**
-     * Used to get the users table.
-     *
-     * @return Table representing plan_users
-     */
+
+    public abstract void commit(Connection connection) throws SQLException;
+
+    public boolean isUsingMySQL() {
+        return "mysql".equals(getConfigName());
+    }
+
+    @Deprecated
+    public abstract PlayerProfile getPlayerProfile(UUID uuid) throws SQLException;
+
+    @Deprecated
+    public abstract ServerProfile getServerProfile(UUID serverUUID) throws SQLException;
+
     public UsersTable getUsersTable() {
         return usersTable;
     }
 
-    /**
-     * Used to get the users table.
-     *
-     * @return Table representing plan_sessions
-     */
     public SessionsTable getSessionsTable() {
         return sessionsTable;
     }
 
-    /**
-     * Used to get the kills table.
-     *
-     * @return Table representing plan_kills
-     */
     public KillsTable getKillsTable() {
         return killsTable;
     }
 
-    /**
-     * Used to get the ips table.
-     *
-     * @return Table representing plan_ips
-     */
     public IPsTable getIpsTable() {
         return ipsTable;
     }
 
-    /**
-     * Used to get the nicknames table.
-     *
-     * @return Table representing plan_nicknames
-     */
     public NicknamesTable getNicknamesTable() {
         return nicknamesTable;
     }
 
-    /**
-     * Used to get the command usage table.
-     *
-     * @return Table representing plan_commandusages
-     */
     public CommandUseTable getCommandUseTable() {
         return commandUseTable;
     }
 
-    /**
-     * Used to get the tps table.
-     *
-     * @return Table representing plan_tps
-     */
     public TPSTable getTpsTable() {
         return tpsTable;
     }
 
-    /**
-     * Used to get the security table.
-     *
-     * @return Table representing plan_security
-     */
     public SecurityTable getSecurityTable() {
         return securityTable;
     }
 
-    /**
-     * Used to get the worlds table.
-     *
-     * @return Table representing plan_worlds
-     */
     public WorldTable getWorldTable() {
         return worldTable;
     }
 
-    /**
-     * Used to get the world times table.
-     *
-     * @return Table representing plan_world_times
-     */
     public WorldTimesTable getWorldTimesTable() {
         return worldTimesTable;
     }
@@ -255,14 +222,4 @@ public abstract class Database {
     public UserInfoTable getUserInfoTable() {
         return userInfoTable;
     }
-
-    public abstract void commit(Connection connection) throws SQLException;
-
-    public boolean isUsingMySQL() {
-        return "mysql".equals(getConfigName());
-    }
-
-    public abstract PlayerProfile getPlayerProfile(UUID uuid) throws SQLException;
-
-    public abstract ServerProfile getServerProfile(UUID serverUUID) throws SQLException;
 }

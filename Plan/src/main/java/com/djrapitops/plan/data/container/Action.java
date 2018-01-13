@@ -4,8 +4,8 @@
  */
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.HasDate;
-import com.djrapitops.plan.system.database.tables.Actions;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
 

@@ -5,10 +5,10 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.databases.SQLDB;
-import com.djrapitops.plan.system.database.tables.Actions;
 import com.djrapitops.plan.system.database.tables.SessionsTable;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.cache.SessionCache;

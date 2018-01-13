@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.database;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.time.GMTimes;

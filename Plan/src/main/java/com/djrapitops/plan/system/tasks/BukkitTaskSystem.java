@@ -16,16 +16,17 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.ITask;
 
 /**
- * //TODO Class Javadoc Comment
+ * TaskSystem responsible for registering tasks for Bukkit.
  *
  * @author Rsl1122
  */
 public class BukkitTaskSystem extends TaskSystem {
 
-    private final Plan plugin;
-
     public BukkitTaskSystem(Plan plugin) {
-        this.plugin = plugin;
+        tpsCountTimer = Check.isPaperAvailable()
+                ? new PaperTPSCountTimer(plugin)
+                : new BukkitTPSCountTimer(plugin);
+
     }
 
     private ITask bootAnalysisTask;
@@ -38,9 +39,6 @@ public class BukkitTaskSystem extends TaskSystem {
     private void registerTasks() {
         Benchmark.start("Task Registration");
 
-        tpsCountTimer = Check.isPaperAvailable()
-                ? new PaperTPSCountTimer(plugin)
-                : new BukkitTPSCountTimer(plugin);
 
         // Analysis refresh settings
         int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
