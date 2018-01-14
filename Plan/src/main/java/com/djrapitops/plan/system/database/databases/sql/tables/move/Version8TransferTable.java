@@ -24,8 +24,8 @@ public class Version8TransferTable extends Table {
 
     private final int serverID;
 
-    public Version8TransferTable(SQLDB db, boolean usingMySQL) throws SQLException {
-        super("", db, usingMySQL);
+    public Version8TransferTable(SQLDB db) throws SQLException {
+        super("", db);
         Optional<Integer> serverID = db.getServerTable().getServerID(Plan.getServerUUID());
         if (!serverID.isPresent()) {
             throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");

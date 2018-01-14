@@ -4,14 +4,13 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public interface FetchOperations {
 
     ServerProfile getServerProfile(UUID serverUUID) throws DBException;
+
+    List<PlayerProfile> getPlayers(UUID serverUUID) throws DBException;
 
     PlayerProfile getPlayerProfile(UUID uuid) throws DBException;
 

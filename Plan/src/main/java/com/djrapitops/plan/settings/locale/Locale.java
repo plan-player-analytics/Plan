@@ -1,5 +1,6 @@
 package com.djrapitops.plan.settings.locale;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;

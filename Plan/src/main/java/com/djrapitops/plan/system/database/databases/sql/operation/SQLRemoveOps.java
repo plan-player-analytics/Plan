@@ -28,6 +28,7 @@ public class SQLRemoveOps extends SQLOps implements RemoveOperations {
         try {
             Log.logDebug("Database", "Removing Account: " + uuid);
             Benchmark.start("Database", "Remove Account");
+            String webUser = usersTable.getPlayerName(uuid);
 
             for (Table t : db.getAllTablesInRemoveOrder()) {
                 if (!(t instanceof UserIDTable)) {
@@ -37,6 +38,8 @@ public class SQLRemoveOps extends SQLOps implements RemoveOperations {
                 UserIDTable table = (UserIDTable) t;
                 table.removeUser(uuid);
             }
+
+            securityTable.removeUser(webUser);
         } catch (SQLException e) {
             throw ErrorUtil.getFatalExceptionFor(e);
         } finally {
