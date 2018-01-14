@@ -1,19 +1,18 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.api.exceptions.DBNoDataException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 public interface RemoveOperations {
 
-    void removePlayer(UUID uuid) throws SQLException, DBNoDataException;
+    void player(UUID uuid) throws DBException;
 
-    void removePlayer(UUID player, UUID server) throws SQLException, DBNoDataException;
+    void player(UUID player, UUID server) throws DBException;
 
-    void removeServer(UUID serverUUID) throws SQLException, DBNoDataException;
+    void server(UUID serverUUID) throws DBException;
 
-    void removeAll() throws SQLException, DBNoDataException;
+    void everything() throws DBException;
 
-    void removeWebUser(String name) throws SQLException, DBNoDataException;
+    void webUser(String name) throws DBException;
 }

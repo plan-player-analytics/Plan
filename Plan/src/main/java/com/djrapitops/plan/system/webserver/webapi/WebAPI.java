@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.webserver.webapi;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.*;
+import com.djrapitops.plan.api.exceptions.webapi.*;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;

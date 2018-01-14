@@ -4,14 +4,14 @@
  */
 package com.djrapitops.plan.system.database;
 
-import com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -50,12 +50,12 @@ public abstract class DBSystem implements SubSystem {
             db.scheduleClean(10L);
             Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
             Benchmark.stop("Systems", "Init Database");
-        } catch (DatabaseInitException e) {
+        } catch (DBInitException e) {
             throw new EnableException(db.getName() + "-Database failed to initialize", e);
         }
     }
 
-    protected abstract void initDatabase() throws DatabaseInitException;
+    protected abstract void initDatabase() throws DBInitException;
 
     public Set<SQLDB> getDatabases() {
         return databases;
@@ -80,14 +80,14 @@ public abstract class DBSystem implements SubSystem {
         return db;
     }
 
-    public SQLDB getActiveDatabase(String dbName) throws DatabaseInitException {
-        for (SQLDB database : DBSystem.getInstance().getDatabases()) {
+    public SQLDB getActiveDatabase(String dbName) throws DBInitException {
+        for (SQLDB database : getDatabases()) {
             String dbConfigName = database.getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
                 database.init();
                 return database;
             }
         }
-        throw new DatabaseInitException(Locale.get(Msg.ENABLE_FAIL_WRONG_DB) + " " + dbName);
+        throw new DBInitException(Locale.get(Msg.ENABLE_FAIL_WRONG_DB) + " " + dbName);
     }
 }

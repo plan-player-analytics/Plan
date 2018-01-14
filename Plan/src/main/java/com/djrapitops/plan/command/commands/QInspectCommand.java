@@ -1,10 +1,12 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -20,7 +22,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -71,15 +72,16 @@ public class QInspectCommand extends SubCommand {
                     if (!Condition.isTrue(Verify.notNull(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString(), sender)) {
                         return;
                     }
-                    if (!Condition.isTrue(plugin.getDB().wasSeenBefore(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
+                    Database database = Database.getActive();
+                    if (!Condition.isTrue(database.check().isPlayerRegistered(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
                         return;
                     }
 
-                    PlayerProfile playerProfile = plugin.getDB().getPlayerProfile(uuid);
+                    PlayerProfile playerProfile = database.fetch().getPlayerProfile(uuid);
 
                     sendMsgs(sender, playerProfile);
 
-                } catch (SQLException ex) {
+                } catch (DBException ex) {
                     Log.toLog(this.getClass().getName(), ex);
                 } finally {
                     this.cancel();

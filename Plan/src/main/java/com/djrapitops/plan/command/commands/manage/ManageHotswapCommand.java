@@ -76,7 +76,6 @@ public class ManageHotswapCommand extends SubCommand {
 
             assert database != null;
 
-
             database.getVersion(); //Test db connection
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);

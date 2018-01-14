@@ -1,8 +1,8 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.WebAPIException;
-import com.djrapitops.plan.api.exceptions.WebAPIForbiddenException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIForbiddenException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.Permissions;

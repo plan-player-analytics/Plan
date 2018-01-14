@@ -61,13 +61,13 @@ public class InspectPageParser extends PageParser {
             }
             Log.logDebug("Database", "Inspect Parse Fetch");
             Benchmark.start("Inspect Parse, Fetch");
-            Database db = plugin.getDB();
-            PlayerProfile profile = db.getPlayerProfile(uuid);
+            Database db = Database.getActive();
+            PlayerProfile profile = db.fetch().getPlayerProfile(uuid);
             if (profile == null) {
                 throw new IllegalStateException("Player profile was null!");
             }
             UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
-            Map<UUID, String> serverNames = db.getServerTable().getServerNames();
+            Map<UUID, String> serverNames = db.fetch().getServerNames();
 
             Benchmark.stop("Inspect Parse, Fetch");
 

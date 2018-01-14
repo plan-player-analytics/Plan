@@ -2,8 +2,10 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.utilities.Verify;
@@ -11,6 +13,7 @@ import org.bukkit.OfflinePlayer;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.bukkit.Bukkit.getOfflinePlayer;
@@ -198,7 +201,7 @@ public class API {
      * @throws IllegalArgumentException If uuid is null.
      * @throws IllegalStateException    If the player has not played on the server before.
      */
-    public String getPlayerName(UUID uuid) throws SQLException {
+    public String getPlayerName(UUID uuid) {
         Verify.nullCheck(uuid);
         String playerName = plugin.getDB().getUsersTable().getPlayerName(uuid);
         if (playerName != null) {
@@ -248,7 +251,11 @@ public class API {
      * @throws SQLException If database error occurs.
      * @since 3.4.2
      */
-    public Collection<UUID> getSavedUUIDs() throws SQLException {
-        return plugin.getDB().getSavedUUIDs();
+    public Collection<UUID> getSavedUUIDs() {
+        try {
+            return Database.getActive().fetch().getSavedUUIDs();
+        } catch (DBException e) {
+            return Collections.EMPTY_SET;
+        }
     }
 }

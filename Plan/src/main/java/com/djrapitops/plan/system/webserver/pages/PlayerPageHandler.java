@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
@@ -42,7 +43,7 @@ public class PlayerPageHandler extends PageHandler {
             return notFound("Player has no UUID");
         }
 
-        if (PlanPlugin.getInstance().getDB().wasSeenBefore(uuid)) {
+        if (Database.getActive().check().isPlayerRegistered(uuid)) {
             PlanPlugin.getInstance().getInfoManager().cachePlayer(uuid);
             Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
             // TODO Create a new method that places NotFoundResponse to ResponseCache instead.

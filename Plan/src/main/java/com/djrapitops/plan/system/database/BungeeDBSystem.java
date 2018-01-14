@@ -4,8 +4,8 @@
  */
 package com.djrapitops.plan.system.database;
 
-import com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import com.djrapitops.plan.system.database.databases.MySQLDB;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 
 /**
  * //TODO Class Javadoc Comment
@@ -15,7 +15,7 @@ import com.djrapitops.plan.system.database.databases.MySQLDB;
 public class BungeeDBSystem extends DBSystem {
     
     @Override
-    protected void initDatabase() throws DatabaseInitException {
+    protected void initDatabase() throws DBInitException {
         db = new MySQLDB();
         databases.add(db);
         db.init();

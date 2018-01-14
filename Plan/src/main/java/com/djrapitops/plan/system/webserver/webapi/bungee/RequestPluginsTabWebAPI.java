@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.WebAPIException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;

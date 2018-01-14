@@ -7,9 +7,9 @@ package com.djrapitops.plan.systems.info;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
-import com.djrapitops.plan.api.exceptions.WebAPIException;
-import com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIConnectionFailException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPINotFoundException;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
@@ -68,7 +68,7 @@ public class BungeeInformationManager extends InformationManager {
      *
      * @throws SQLException If DB Error occurs.
      */
-    private void refreshBukkitServerMap() throws SQLException {
+    private void refreshBukkitServerMap() {
         bukkitServers = plugin.getDB().getServerTable().getBukkitServers().stream().collect(Collectors.toMap(ServerInfo::getUuid, Function.identity()));
     }
 

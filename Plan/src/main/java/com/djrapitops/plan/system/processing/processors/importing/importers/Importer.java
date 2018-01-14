@@ -104,14 +104,14 @@ public abstract class Importer {
 
         new ImportExecutorHelper() {
             @Override
-            void execute() throws SQLException {
+            void execute() {
                 db.getTpsTable().insertAllTPS(ImmutableMap.of(uuid, serverImportData.getTpsData()));
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() throws SQLException {
+            void execute() {
                 db.getCommandUseTable().insertCommandUsage(ImmutableMap.of(uuid, serverImportData.getCommandUsages()));
             }
         }.submit(service);
@@ -129,7 +129,7 @@ public abstract class Importer {
         Benchmark.stop(benchmarkName);
     }
 
-    private void processUserData() throws SQLException {
+    private void processUserData() {
         String benchmarkName = "Processing User Data";
         String getDataBenchmarkName = "Getting User Data";
         String insertDataIntoCollectionsBenchmarkName = "Insert User Data into Collections";
@@ -154,8 +154,8 @@ public abstract class Importer {
         UUID serverUUID = plugin.getServerInfoManager().getServerUUID();
         Database db = plugin.getDB();
 
-        Set<UUID> existingUUIDs = db.getSavedUUIDs();
-        Set<UUID> existingUserInfoTableUUIDs = db.getUserInfoTable().getSavedUUIDs().get(serverUUID);
+        Set<UUID> existingUUIDs = db.fetch().getSavedUUIDs();
+        Set<UUID> existingUserInfoTableUUIDs = db.fetch().getSavedUUIDs(serverUUID);
 
         Benchmark.start(insertDataIntoCollectionsBenchmarkName);
 
@@ -194,35 +194,35 @@ public abstract class Importer {
 
         new ImportExecutorHelper() {
             @Override
-            void execute() throws SQLException {
+            void execute() {
                 db.getSessionsTable().insertSessions(ImmutableMap.of(serverUUID, sessions), true);
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() throws SQLException {
+            void execute() {
                 db.getUsersTable().updateKicked(timesKicked);
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() throws SQLException {
+            void execute() {
                 db.getUserInfoTable().insertUserInfo(ImmutableMap.of(serverUUID, userInfo));
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() throws SQLException {
+            void execute() {
                 db.getNicknamesTable().insertNicknames(ImmutableMap.of(serverUUID, nickNames));
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() throws SQLException {
+            void execute() {
                 db.getIpsTable().insertAllGeoInfo(geoInfo);
             }
         }.submit(service);

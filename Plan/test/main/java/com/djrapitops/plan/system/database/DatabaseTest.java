@@ -6,17 +6,18 @@
 package com.djrapitops.plan.system.database;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.MySQLDB;
-import com.djrapitops.plan.system.database.databases.SQLDB;
-import com.djrapitops.plan.system.database.databases.SQLiteDB;
-import com.djrapitops.plan.system.database.tables.*;
+import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
+import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.info.server.ServerInfo;
@@ -89,7 +90,7 @@ public class DatabaseTest {
     }
 
     @After
-    public void tearDown() throws IOException, SQLException {
+    public void tearDown() throws IOException {
         db.close();
         if (backup != null) {
             backup.close();
@@ -109,7 +110,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testInit() throws DatabaseInitException {
+    public void testInit() throws DBInitException {
         db.init();
     }
 
@@ -143,7 +144,7 @@ public class DatabaseTest {
     }
 
     @Test(timeout = 3000)
-    public void testSaveCommandUse() throws SQLException, DatabaseInitException {
+    public void testSaveCommandUse() throws SQLException, DBInitException {
         CommandUseTable commandUseTable = db.getCommandUseTable();
         Map<String, Integer> expected = new HashMap<>();
 
@@ -247,7 +248,7 @@ public class DatabaseTest {
         saveUserOne(db);
     }
 
-    private void saveUserOne(Database database) throws SQLException {
+    private void saveUserOne(Database database) {
         database.getUsersTable().registerUser(uuid, 123456789L, "Test");
     }
 
@@ -255,7 +256,7 @@ public class DatabaseTest {
         saveUserTwo(db);
     }
 
-    private void saveUserTwo(Database database) throws SQLException {
+    private void saveUserTwo(Database database) {
         database.getUsersTable().registerUser(uuid2, 123456789L, "Test");
     }
 
@@ -274,7 +275,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testIPTable() throws SQLException, DatabaseInitException {
+    public void testIPTable() throws SQLException, DBInitException {
         saveUserOne();
         IPsTable ipsTable = db.getIpsTable();
 
@@ -300,7 +301,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testNicknamesTable() throws SQLException, DatabaseInitException {
+    public void testNicknamesTable() throws SQLException, DBInitException {
         saveUserOne();
         NicknamesTable nickTable = db.getNicknamesTable();
 
@@ -318,7 +319,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testSecurityTable() throws SQLException, DatabaseInitException {
+    public void testSecurityTable() throws SQLException, DBInitException {
         SecurityTable securityTable = db.getSecurityTable();
         WebUser expected = new WebUser("Test", "RandomGarbageBlah", 0);
         securityTable.addNewUser(expected);
@@ -341,7 +342,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testWorldTable() throws SQLException, DatabaseInitException {
+    public void testWorldTable() throws SQLException, DBInitException {
         WorldTable worldTable = db.getWorldTable();
         List<String> worlds = Arrays.asList("Test", "Test2", "Test3");
         worldTable.saveWorlds(worlds);
@@ -356,7 +357,7 @@ public class DatabaseTest {
         saveTwoWorlds(db);
     }
 
-    private void saveTwoWorlds(Database database) throws SQLException {
+    private void saveTwoWorlds(Database database) {
         database.getWorldTable().saveWorlds(worlds);
     }
 
@@ -381,7 +382,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testSessionPlaytimeSaving() throws SQLException, DatabaseInitException {
+    public void testSessionPlaytimeSaving() throws SQLException, DBInitException {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
@@ -411,7 +412,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testSessionSaving() throws SQLException, DatabaseInitException {
+    public void testSessionSaving() throws SQLException, DBInitException {
         saveUserOne();
         saveUserTwo();
 
@@ -452,7 +453,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testUserInfoTableRegisterUnRegistered() throws SQLException, DatabaseInitException {
+    public void testUserInfoTableRegisterUnRegistered() throws SQLException, DBInitException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
         assertFalse(userInfoTable.isRegistered(uuid));
         UsersTable usersTable = db.getUsersTable();
@@ -476,7 +477,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testUserInfoTableRegisterRegistered() throws SQLException, DatabaseInitException {
+    public void testUserInfoTableRegisterRegistered() throws SQLException, DBInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
         assertTrue(usersTable.isRegistered(uuid));
@@ -502,7 +503,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testUserInfoTableUpdateBannedOpped() throws SQLException, DatabaseInitException {
+    public void testUserInfoTableUpdateBannedOpped() throws SQLException, DBInitException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
         userInfoTable.registerUserInfo(uuid, 223456789L);
         assertTrue(userInfoTable.isRegistered(uuid));
@@ -532,7 +533,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testUsersTableUpdateName() throws SQLException, DatabaseInitException {
+    public void testUsersTableUpdateName() throws SQLException, DBInitException {
         saveUserOne();
 
         UsersTable usersTable = db.getUsersTable();
@@ -549,7 +550,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testUsersTableKickSaving() throws SQLException, DatabaseInitException {
+    public void testUsersTableKickSaving() throws SQLException, DBInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
         assertEquals(0, usersTable.getTimesKicked(uuid));
@@ -564,7 +565,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testRemovalSingleUser() throws SQLException {
+    public void testRemovalSingleUser() throws SQLException, DBException {
         saveUserTwo();
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
@@ -589,7 +590,7 @@ public class DatabaseTest {
 
         assertTrue(usersTable.isRegistered(uuid));
 
-        db.removeAccount(uuid);
+        db.remove().player(uuid);
 
         assertFalse(usersTable.isRegistered(uuid));
         assertFalse(userInfoTable.isRegistered(uuid));
@@ -600,7 +601,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testRemovalEverything() throws SQLException {
+    public void testRemovalEverything() throws SQLException, DBException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
@@ -612,7 +613,7 @@ public class DatabaseTest {
 
         saveAllData(db);
 
-        db.removeAllData();
+        db.remove().everything();
 
         assertFalse(usersTable.isRegistered(uuid));
         assertFalse(usersTable.isRegistered(uuid2));
@@ -687,7 +688,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testServerTableBungeeSave() throws SQLException, DatabaseInitException {
+    public void testServerTableBungeeSave() throws SQLException, DBInitException {
         ServerTable serverTable = db.getServerTable();
 
         Optional<ServerInfo> bungeeInfo = serverTable.getBungeeInfo();
@@ -711,7 +712,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testServerTableBungee() throws SQLException, DatabaseInitException {
+    public void testServerTableBungee() throws SQLException, DBInitException {
         testServerTableBungeeSave();
         ServerTable serverTable = db.getServerTable();
 
@@ -720,18 +721,18 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testSessionTableNPEWhenNoPlayers() throws SQLException {
+    public void testSessionTableNPEWhenNoPlayers() {
         Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
         assertTrue(lastSeen.isEmpty());
     }
 
-    private void commitTest() throws DatabaseInitException, SQLException {
+    private void commitTest() throws DBInitException {
         db.close();
         db.init();
     }
 
     @Test
-    public void testSessionTableGetInfoOfServer() throws SQLException, DatabaseInitException {
+    public void testSessionTableGetInfoOfServer() throws SQLException, DBInitException {
         saveUserOne();
         saveUserTwo();
 
@@ -758,7 +759,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testKillTableGetKillsOfServer() throws SQLException, DatabaseInitException {
+    public void testKillTableGetKillsOfServer() throws SQLException, DBInitException {
         saveUserOne();
         saveUserTwo();
 
@@ -777,7 +778,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testBackupAndRestore() throws SQLException, DatabaseInitException {
+    public void testBackupAndRestore() throws SQLException, DBInitException {
         SQLiteDB backup = new SQLiteDB("debug-backup" + MiscUtils.getTime());
         backup.init();
 
@@ -872,7 +873,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testRegisterProcessorRegisterException() throws SQLException {
+    public void testRegisterProcessorRegisterException() {
         assertFalse(db.getUsersTable().isRegistered(uuid));
         assertFalse(db.getUserInfoTable().isRegistered(uuid));
         for (int i = 0; i < 200; i++) {
@@ -883,7 +884,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testWorldTableGetWorldNamesNoException() throws SQLException {
+    public void testWorldTableGetWorldNamesNoException() {
         Set<String> worldNames = db.getWorldTable().getWorldNames();
     }
 }

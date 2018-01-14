@@ -5,6 +5,10 @@
 package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
+
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * //TODO Class Javadoc Comment
@@ -18,4 +22,8 @@ public interface PlanAPI {
     }
 
     void registerPluginData(PluginData pluginData);
+
+    Map<UUID, String> getKnownUsernames();
+
+    FetchOperations fetchFromPlanDB();
 }

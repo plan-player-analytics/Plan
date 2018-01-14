@@ -1,9 +1,11 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.command.ConditionUtils;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.processors.info.InspectCacheRequestProcessor;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.Condition;
@@ -19,7 +21,6 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import org.bukkit.ChatColor;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -66,26 +67,29 @@ public class InspectCommand extends SubCommand {
             @Override
             public void run() {
                 try {
+                    Database activeDB = Database.getActive();
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     if (!Condition.isTrue(Verify.notNull(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString(), sender)) {
                         return;
                     }
-                    if (!Condition.isTrue(ConditionUtils.playerHasPlayed(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_SEEN).toString(), sender)) {
-                        return;
-                    }
-                    if (!Condition.isTrue(plugin.getDB().wasSeenBefore(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
+                    if (!Condition.isTrue(activeDB.check().isPlayerRegistered(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
                         return;
                     }
                     if (CommandUtils.isPlayer(sender) && plugin.getWebServer().isAuthRequired()) {
-                        boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
+                        boolean senderHasWebUser = activeDB.check().doesWebUserExists(sender.getName());
+                        
                         if (!senderHasWebUser) {
                             sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                         }
                     }
-
                     plugin.addToProcessQueue(new InspectCacheRequestProcessor(uuid, sender, playerName));
-                } catch (SQLException ex) {
-                    Log.toLog(this.getClass().getName(), ex);
+                } catch (DBException ex) {
+                    if (ex instanceof FatalDBException) {
+                        Log.toLog(this.getClass().getName(), ex);
+                        sender.sendMessage(ChatColor.RED + "Fatal database exception occurred: " + ex.getMessage());
+                    } else {
+                        sender.sendMessage(ChatColor.YELLOW + "Non-Fatal database exception occurred: " + ex.getMessage());
+                    }
                 } finally {
                     this.cancel();
                 }

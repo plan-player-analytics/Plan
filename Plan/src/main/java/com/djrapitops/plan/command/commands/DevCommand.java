@@ -5,7 +5,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.WebAPIException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;

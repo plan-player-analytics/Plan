@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -63,7 +63,7 @@ public class ManageBackupCommand extends SubCommand {
             }
             Log.debug("Backup", "Start");
             runBackupTask(sender, args, database);
-        } catch (DatabaseInitException | NullPointerException e) {
+        } catch (DBInitException | NullPointerException e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
         } finally {
             Log.logDebug("Backup");

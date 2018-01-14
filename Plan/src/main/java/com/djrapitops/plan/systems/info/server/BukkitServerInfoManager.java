@@ -9,7 +9,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ServerVariableHolder;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.tables.ServerTable;
+import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 

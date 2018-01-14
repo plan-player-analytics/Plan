@@ -8,7 +8,7 @@ package com.djrapitops.plan.system.webserver.webapi.universal;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.WebAPIException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;

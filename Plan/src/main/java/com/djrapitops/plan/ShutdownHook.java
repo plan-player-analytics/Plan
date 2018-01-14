@@ -4,12 +4,12 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.system.database.databases.SQLDB;
-import com.djrapitops.plan.system.database.tables.SessionsTable;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.cache.SessionCache;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -58,7 +58,7 @@ public class ShutdownHook extends Thread {
 
             saveFirstSessionInformation(now);
             saveActiveSessions(activeSessions, now);
-        } catch (DatabaseInitException e) {
+        } catch (DBInitException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
             if (db != null) {

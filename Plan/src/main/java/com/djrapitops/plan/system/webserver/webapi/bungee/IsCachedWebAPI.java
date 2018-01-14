@@ -5,8 +5,8 @@
 package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.WebAPIException;
-import com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPINotFoundException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.systems.info.InformationManager;

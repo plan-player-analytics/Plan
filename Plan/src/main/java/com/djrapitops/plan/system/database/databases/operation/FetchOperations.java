@@ -1,19 +1,22 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 
-import java.sql.SQLException;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 public interface FetchOperations {
 
-    ServerProfile getServerProfile(UUID serverUUID) throws SQLException;
+    ServerProfile getServerProfile(UUID serverUUID) throws DBException;
 
-    PlayerProfile getPlayerProfile(UUID uuid) throws SQLException;
+    PlayerProfile getPlayerProfile(UUID uuid) throws DBException;
 
-    Set<UUID> getSavedUUIDs() throws SQLException;
+    Set<UUID> getSavedUUIDs() throws DBException;
 
-    Set<UUID> getSavedUUIDs(UUID server) throws SQLException;
+    Set<UUID> getSavedUUIDs(UUID server) throws DBException;
+
+    Map<UUID, String> getServerNames() throws DBException;
 }

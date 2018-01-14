@@ -5,7 +5,11 @@
 package com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.*;
+import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIConnectionFailException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPIFailException;
+import com.djrapitops.plan.api.exceptions.webapi.WebAPINotFoundException;
 import com.djrapitops.plan.command.commands.AnalyzeCommand;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.element.InspectContainer;

@@ -1,7 +1,8 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
@@ -19,8 +20,6 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
-
-import java.sql.SQLException;
 
 /**
  * This manage subcommand is used to clear a database of all data.
@@ -73,7 +72,7 @@ public class ManageClearCommand extends SubCommand {
         try {
             Database database = ManageUtils.getDB(dbName);
             runClearTask(sender, database);
-        } catch (DatabaseInitException e) {
+        } catch (DBInitException e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
         }
         return true;
@@ -86,7 +85,7 @@ public class ManageClearCommand extends SubCommand {
                 try {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    database.removeAllData();
+                    database.remove().everything();
 
                     DataCache dataCache = plugin.getDataCache();
                     long now = MiscUtils.getTime();
@@ -96,7 +95,7 @@ public class ManageClearCommand extends SubCommand {
                                     new Session(now, player.getWorld().getName(), player.getGameMode().name()))
                     );
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
-                } catch (SQLException e) {
+                } catch (DBException e) {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                     Log.toLog(this.getClass().getSimpleName() + "/" + this.getTaskName(), e);
                 } finally {
