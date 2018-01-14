@@ -4,7 +4,9 @@
  */
 package com.djrapitops.plan.system.webserver.pages;
 
+import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.Response;
 
 import java.util.HashMap;
@@ -28,11 +30,16 @@ public abstract class TreePageHandler extends PageHandler {
         pages.put(targetPage, handler);
     }
 
-    public void registerPage(String targetPage, Response response) {
+    public void registerPage(String targetPage, Response response, int requiredPerm) {
         pages.put(targetPage, new PageHandler() {
             @Override
             public Response getResponse(Request request, List<String> target) {
                 return response;
+            }
+
+            @Override
+            public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
+                return auth.getWebUser().getPermLevel() <= requiredPerm;
             }
         });
     }
@@ -46,8 +53,15 @@ public abstract class TreePageHandler extends PageHandler {
     }
 
     public PageHandler getPageHandler(List<String> target) {
+        if (target.isEmpty()) {
+            return pages.get("");
+        }
         String targetPage = target.get(0);
         target.remove(0);
+        return pages.get(targetPage);
+    }
+
+    public PageHandler getPageHandler(String targetPage) {
         return pages.get(targetPage);
     }
 }

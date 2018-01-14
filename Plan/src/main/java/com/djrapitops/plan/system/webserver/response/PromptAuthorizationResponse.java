@@ -12,6 +12,11 @@ import com.djrapitops.plan.utilities.html.Html;
  */
 public class PromptAuthorizationResponse extends ErrorResponse {
 
+    private static final String TIPS = "<br>- Ensure you have registered a user with <b>/plan register</b><br>"
+            + "- Check that the username and password are correct<br>"
+            + "- Username and password are case-sensitive<br>"
+            + "<br>If you have forgotten your password, ask a staff member to delete your old user and re-register.";
+
     private PromptAuthorizationResponse() {
         super.setTitle(Html.FONT_AWESOME_ICON.parse("lock") + " 401 Unauthorized");
     }
@@ -20,11 +25,8 @@ public class PromptAuthorizationResponse extends ErrorResponse {
         PromptAuthorizationResponse response = new PromptAuthorizationResponse();
         response.setHeader("HTTP/1.1 401 Access Denied\r\n"
                 + "WWW-Authenticate: Basic realm=\"/\";");
-        response.setParagraph("Authentication Failed.<br>"
-                + "- Ensure you have registered a user with <b>/plan register</b><br>"
-                + "- Check that the username and password are correct<br>"
-                + "- Username and password are case-sensitive<br>"
-                + "<br>If you have forgotten your password, ask a staff member to delete your old user and re-register.");
+
+        response.setParagraph("Authentication Failed." + TIPS);
         response.replacePlaceholders();
         return response;
     }
@@ -47,7 +49,7 @@ public class PromptAuthorizationResponse extends ErrorResponse {
             reason += errorBuilder.toString();
         }
 
-        response.setParagraph("Authentication Failed.<br>Reason: " + reason);
+        response.setParagraph("Authentication Failed.<br>Reason: " + reason + TIPS);
         response.replacePlaceholders();
         return response;
     }

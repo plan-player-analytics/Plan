@@ -4,7 +4,9 @@
  */
 package com.djrapitops.plan.system.webserver.pages;
 
+import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -19,12 +21,13 @@ import java.util.List;
  */
 public class PlayersPageHandler extends PageHandler {
 
-    public PlayersPageHandler() {
-        permission = "players";
-    }
-
     @Override
     public Response getResponse(Request request, List<String> target) {
         return ResponseCache.loadResponse(PageId.PLAYERS.id(), PlayersPageResponse::new);
+    }
+
+    @Override
+    public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
+        return auth.getWebUser().getPermLevel() <= 1;
     }
 }

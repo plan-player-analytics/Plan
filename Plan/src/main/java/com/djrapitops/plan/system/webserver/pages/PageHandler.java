@@ -4,7 +4,9 @@
  */
 package com.djrapitops.plan.system.webserver.pages;
 
+import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.Response;
 
 import java.util.List;
@@ -16,11 +18,17 @@ import java.util.List;
  */
 public abstract class PageHandler {
 
-    protected String permission = "*";
-
+    /**
+     * Get the Response of a PageHandler.
+     *
+     * @param request Request in case it is useful for choosing page.
+     * @param target  Rest of the target coordinates after this page has been solved.
+     * @return Response appropriate to the PageHandler.
+     */
     public abstract Response getResponse(Request request, List<String> target);
 
-    public String getPermission() {
-        return permission;
+    public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
+        return true;
     }
+
 }

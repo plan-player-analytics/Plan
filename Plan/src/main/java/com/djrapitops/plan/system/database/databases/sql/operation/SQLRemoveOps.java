@@ -1,8 +1,10 @@
-package com.djrapitops.plan.system.database.databases.sql;
+package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
+import com.djrapitops.plan.system.database.databases.sql.ErrorUtil;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import com.djrapitops.plan.system.database.databases.sql.tables.UserIDTable;
 import com.djrapitops.plugin.api.Benchmark;
@@ -59,7 +61,7 @@ public class SQLRemoveOps extends SQLOps implements RemoveOperations {
                 table.removeAllData();
             }
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw ErrorUtil.getFatalExceptionFor(e);
         }
     }
 
@@ -68,7 +70,7 @@ public class SQLRemoveOps extends SQLOps implements RemoveOperations {
         try {
             securityTable.removeUser(userName);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw ErrorUtil.getFatalExceptionFor(e);
         }
     }
 }

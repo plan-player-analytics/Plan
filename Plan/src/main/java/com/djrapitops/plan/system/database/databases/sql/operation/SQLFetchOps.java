@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.database.databases.sql;
+package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
@@ -6,6 +6,8 @@ import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
+import com.djrapitops.plan.system.database.databases.sql.ErrorUtil;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -93,6 +95,15 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     public Map<UUID, String> getServerNames() throws DBException {
         try {
             return serverTable.getServerNames();
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Optional<UUID> getServerUUID(String serverName) throws DBException {
+        try {
+            return serverTable.getServerUUID(serverName);
         } catch (SQLException e) {
             throw ErrorUtil.getExceptionFor(e);
         }

@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.webserver.auth;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.data.WebUser;
 
 /**
  * //TODO Class Javadoc Comment
@@ -13,6 +14,6 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
  */
 public interface Authentication {
 
-    boolean isAuthorized(String permission) throws WebUserAuthException;
+    WebUser getWebUser() throws WebUserAuthException;
 
 }

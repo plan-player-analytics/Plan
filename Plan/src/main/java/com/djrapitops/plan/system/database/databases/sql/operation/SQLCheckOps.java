@@ -1,7 +1,9 @@
-package com.djrapitops.plan.system.database.databases.sql;
+package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.operation.CheckOperations;
+import com.djrapitops.plan.system.database.databases.sql.ErrorUtil;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 
 import java.sql.SQLException;
 import java.util.UUID;

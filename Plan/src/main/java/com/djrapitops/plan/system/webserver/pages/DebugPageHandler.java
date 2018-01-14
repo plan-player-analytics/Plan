@@ -4,7 +4,10 @@
  */
 package com.djrapitops.plan.system.webserver.pages;
 
+import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.pages.DebugPageResponse;
 
@@ -20,5 +23,11 @@ public class DebugPageHandler extends PageHandler {
     @Override
     public Response getResponse(Request request, List<String> target) {
         return new DebugPageResponse();
+    }
+
+    @Override
+    public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
+        WebUser webUser = auth.getWebUser();
+        return webUser.getPermLevel() == 0;
     }
 }

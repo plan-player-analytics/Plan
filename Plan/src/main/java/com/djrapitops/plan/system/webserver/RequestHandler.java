@@ -75,4 +75,7 @@ public class RequestHandler implements HttpHandler {
         return null;
     }
 
+    public ResponseHandler getResponseHandler() {
+        return responseHandler;
+    }
 }

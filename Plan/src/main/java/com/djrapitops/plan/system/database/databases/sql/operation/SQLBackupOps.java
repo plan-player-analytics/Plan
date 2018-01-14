@@ -1,7 +1,8 @@
-package com.djrapitops.plan.system.database.databases.sql;
+package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.BackupOperations;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 
 public class SQLBackupOps implements BackupOperations {
 

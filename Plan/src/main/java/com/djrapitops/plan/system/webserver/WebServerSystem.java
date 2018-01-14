@@ -28,11 +28,14 @@ public class WebServerSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        webServer = new WebServer(PlanPlugin.getInstance());
+        webServer = new WebServer();
         webServer.initServer();
         if (Check.isBungeeAvailable() && !webServer.isEnabled()) {
             throw new EnableException("WebServer did not initialize!");
         }
+        ResponseHandler responseHandler = webServer.getResponseHandler();
+        responseHandler.registerWebAPIPages();
+        responseHandler.registerDefaultPages();
     }
 
     @Override

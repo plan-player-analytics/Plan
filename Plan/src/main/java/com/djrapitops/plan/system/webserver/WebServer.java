@@ -40,15 +40,19 @@ public class WebServer implements SubSystem {
 
     private boolean usingHttps = false;
 
+    private RequestHandler requestHandler;
+    private ResponseHandler responseHandler;
+
     @Override
     public void enable() {
         this.port = Settings.WEBSERVER_PORT.getNumber();
 
         PlanPlugin plugin = PlanPlugin.getInstance();
-        StaticHolder.saveInstance(APIRequestHandler.class, plugin.getClass());
         StaticHolder.saveInstance(RequestHandler.class, plugin.getClass());
         StaticHolder.saveInstance(ResponseHandler.class, plugin.getClass());
-        StaticHolder.saveInstance(APIResponseHandler.class, plugin.getClass());
+
+        requestHandler = new RequestHandler(this);
+        responseHandler = requestHandler.getResponseHandler();
 
         initServer();
     }
@@ -57,30 +61,6 @@ public class WebServer implements SubSystem {
     public void disable() {
         stop();
     }
-
-    // TODO WebAPIPageHandler
-//    private void registerWebAPIs() {
-//        webAPI.registerNewAPI(
-//                new AnalysisReadyWebAPI(),
-//                new AnalyzeWebAPI(),
-//                new ConfigurationWebAPI(),
-//                new InspectWebAPI(),
-//                new IsOnlineWebAPI(),
-//                new RequestInspectPluginsTabBukkitWebAPI(),
-//                new PingWebAPI()
-//        );
-//
-//        webAPI.registerNewAPI(
-//                new IsCachedWebAPI(),
-//                new PostHtmlWebAPI(),
-//                new PostInspectPluginsTabWebAPI(),
-//                new PostNetworkPageContentWebAPI(),
-//                new PostOriginalBukkitSettingsWebAPI(),
-//                new RequestPluginsTabWebAPI(),
-//                new RequestSetupWebAPI()
-//        );
-//    }
-    //Log.infoColor("§aWebServer Running in WebAPI-only Mode");
 
     /**
      * Starts up the WebServer in a new Thread Pool.
@@ -107,7 +87,7 @@ public class WebServer implements SubSystem {
                 server = HttpServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
             }
 
-            server.createContext("/", new RequestHandler(this));
+            server.createContext("/", requestHandler);
 
             server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
             server.start();
@@ -212,5 +192,13 @@ public class WebServer implements SubSystem {
 
     public String getAccessAddress() {
         return isEnabled() ? getProtocol() + "://" + HtmlUtils.getIP() : Settings.EXTERNAL_WEBSERVER_LINK.toString();
+    }
+
+    public RequestHandler getRequestHandler() {
+        return requestHandler;
+    }
+
+    public ResponseHandler getResponseHandler() {
+        return responseHandler;
     }
 }

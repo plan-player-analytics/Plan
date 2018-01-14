@@ -8,7 +8,7 @@ import com.djrapitops.plan.utilities.html.Html;
  */
 public class InternalErrorResponse extends ErrorResponse {
 
-    public InternalErrorResponse(Throwable e, String cause) {
+    public InternalErrorResponse(String cause, Throwable e) {
         super.setHeader("HTTP/1.1 500 Internal Error");
 
         super.setTitle(Html.FONT_AWESOME_ICON.parse("bug") + " 500 Internal Error occurred");
@@ -31,6 +31,11 @@ public class InternalErrorResponse extends ErrorResponse {
 
         super.setParagraph(paragraph.toString());
         super.replacePlaceholders();
+    }
+
+    @Deprecated
+    public InternalErrorResponse(Throwable e, String cause) {
+        this(cause, e);
     }
 
     private void appendCause(Throwable cause, StringBuilder paragraph) {

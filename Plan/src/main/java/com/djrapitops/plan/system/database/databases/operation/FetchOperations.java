@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,4 +20,6 @@ public interface FetchOperations {
     Set<UUID> getSavedUUIDs(UUID server) throws DBException;
 
     Map<UUID, String> getServerNames() throws DBException;
+
+    Optional<UUID> getServerUUID(String serverName) throws DBException;
 }

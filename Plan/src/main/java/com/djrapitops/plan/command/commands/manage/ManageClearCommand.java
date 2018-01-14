@@ -3,6 +3,7 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
@@ -95,9 +96,13 @@ public class ManageClearCommand extends SubCommand {
                                     new Session(now, player.getWorld().getName(), player.getGameMode().name()))
                     );
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
+                } catch (FatalDBException e) {
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString()
+                            + " Error was fatal, so all information may not have been removed.");
+                    Log.toLog(this.getClass(), e);
                 } catch (DBException e) {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
-                    Log.toLog(this.getClass().getSimpleName() + "/" + this.getTaskName(), e);
+                    Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();
                 }
