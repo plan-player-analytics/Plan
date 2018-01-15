@@ -31,6 +31,21 @@ public class SessionCache {
         this.plugin = plugin;
     }
 
+    /**
+     * Used to get the Map of active sessions.
+     * <p>
+     * Used for testing.
+     *
+     * @return key:value UUID:Session
+     */
+    public static Map<UUID, Session> getActiveSessions() {
+        return activeSessions;
+    }
+
+    public static void clear() {
+        activeSessions.clear();
+    }
+
     public void cacheSession(UUID uuid, Session session) {
         activeSessions.put(uuid, session);
         plugin.addToProcessQueue(new Processor<Plan>(plugin) {
@@ -75,20 +90,5 @@ public class SessionCache {
             return Optional.of(session);
         }
         return Optional.empty();
-    }
-
-    /**
-     * Used to get the Map of active sessions.
-     * <p>
-     * Used for testing.
-     *
-     * @return key:value UUID:Session
-     */
-    public static Map<UUID, Session> getActiveSessions() {
-        return activeSessions;
-    }
-
-    public static void clear() {
-        activeSessions.clear();
     }
 }

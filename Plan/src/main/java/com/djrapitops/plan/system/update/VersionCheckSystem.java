@@ -34,6 +34,10 @@ public class VersionCheckSystem implements SubSystem {
         return versionCheckSystem;
     }
 
+    public static boolean isNewVersionAvailable() {
+        return getInstance().newVersionAvailable;
+    }
+
     @Override
     public void enable() {
         checkForNewVersion();
@@ -62,9 +66,5 @@ public class VersionCheckSystem implements SubSystem {
     @Override
     public void disable() {
         /* Does not need to be closed */
-    }
-
-    public static boolean isNewVersionAvailable() {
-        return getInstance().newVersionAvailable;
     }
 }

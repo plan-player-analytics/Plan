@@ -12,7 +12,7 @@ public abstract class ListenerSystem implements SubSystem {
         NullCheck.check(listenerSystem, new IllegalStateException("Listener system was not initialized."));
         return listenerSystem;
     }
-    
+
     @Override
     public void enable() {
         Benchmark.start("Register Listeners");

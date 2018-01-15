@@ -18,11 +18,10 @@ import java.util.Optional;
  * @author Rsl1122
  */
 public class Request {
-    private Authentication auth;
     private final String requestMethod;
     private final String target;
-
     private final HttpExchange exchange;
+    private Authentication auth;
 
     public Request(HttpExchange exchange) {
         this.requestMethod = exchange.getRequestMethod();

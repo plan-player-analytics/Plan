@@ -13,7 +13,7 @@ import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
  * @author Rsl1122
  */
 public class BungeeDBSystem extends DBSystem {
-    
+
     @Override
     protected void initDatabase() throws DBInitException {
         db = new MySQLDB();

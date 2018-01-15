@@ -77,7 +77,7 @@ public class InspectCommand extends SubCommand {
                     }
                     if (CommandUtils.isPlayer(sender) && plugin.getWebServer().isAuthRequired()) {
                         boolean senderHasWebUser = activeDB.check().doesWebUserExists(sender.getName());
-                        
+
                         if (!senderHasWebUser) {
                             sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                         }

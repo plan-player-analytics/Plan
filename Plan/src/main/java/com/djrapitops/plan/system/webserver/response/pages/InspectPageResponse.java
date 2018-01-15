@@ -38,15 +38,15 @@ public class InspectPageResponse extends Response {
         super.setContent(response.getContent());
     }
 
+    public static InspectPageResponse copyOf(InspectPageResponse response) {
+        return new InspectPageResponse(response);
+    }
+
     public void setInspectPagePluginsTab(String[] inspectPagePluginsTab) {
         Map<String, String> replaceMap = new HashMap<>();
         replaceMap.put("navPluginsTabs", inspectPagePluginsTab[0]);
         replaceMap.put("pluginsTabs", inspectPagePluginsTab[1]);
 
         setContent(StrSubstitutor.replace(getContent(), replaceMap));
-    }
-
-    public static InspectPageResponse copyOf(InspectPageResponse response) {
-        return new InspectPageResponse(response);
     }
 }

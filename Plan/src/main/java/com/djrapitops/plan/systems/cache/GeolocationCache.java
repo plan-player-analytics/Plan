@@ -30,9 +30,8 @@ import java.util.zip.GZIPInputStream;
  */
 public class GeolocationCache {
 
-    private static File geolocationDB = new File(PlanPlugin.getInstance().getDataFolder(), "GeoIP.dat");
-
     private static final Map<String, String> geolocationCache = new HashMap<>();
+    private static File geolocationDB = new File(PlanPlugin.getInstance().getDataFolder(), "GeoIP.dat");
 
     /**
      * Constructor used to hide the public constructor

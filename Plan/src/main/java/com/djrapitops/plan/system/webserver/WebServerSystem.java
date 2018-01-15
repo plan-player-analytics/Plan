@@ -27,6 +27,11 @@ public class WebServerSystem implements SubSystem {
         return PlanSystem.getInstance().getWebServerSystem();
     }
 
+    public static boolean isWebServerEnabled() {
+        WebServer webServer = getInstance().webServer;
+        return webServer != null && webServer.isEnabled();
+    }
+
     @Override
     public void enable() throws EnableException {
         webServer.initServer();
@@ -42,11 +47,6 @@ public class WebServerSystem implements SubSystem {
     public void disable() {
         ResponseCache.clearCache();
         webServer.stop();
-    }
-
-    public static boolean isWebServerEnabled() {
-        WebServer webServer = getInstance().webServer;
-        return webServer != null && webServer.isEnabled();
     }
 
     public WebServer getWebServer() {

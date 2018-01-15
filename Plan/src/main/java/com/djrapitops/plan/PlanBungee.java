@@ -52,6 +52,14 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Deprecated
     private boolean setupAllowed = false;
 
+    public static PlanBungee getInstance() {
+        return (PlanBungee) StaticHolder.getInstance(PlanBungee.class);
+    }
+
+    public static UUID getServerUUID() {
+        return getInstance().getServerUuid();
+    }
+
     @Override
     public void onEnable() {
         super.onEnable();
@@ -97,10 +105,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             Log.toLog(this.getClass().getName(), e);
         }
         registerCommand("planbungee", new PlanBungeeCommand(this));
-    }
-
-    public static PlanBungee getInstance() {
-        return (PlanBungee) StaticHolder.getInstance(PlanBungee.class);
     }
 
     @Override
@@ -161,10 +165,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Override
     public ServerVariableHolder getVariable() {
         return variableHolder;
-    }
-
-    public static UUID getServerUUID() {
-        return getInstance().getServerUuid();
     }
 
     public UUID getServerUuid() {

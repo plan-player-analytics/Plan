@@ -35,6 +35,10 @@ public abstract class Response {
         return header;
     }
 
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
     public String getResponse() {
         return header + "\r\n"
                 + "Content-Type: " + type + ";\r\n"
@@ -49,10 +53,6 @@ public abstract class Response {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public void setHeader(String header) {
-        this.header = header;
     }
 
     public int getCode() {

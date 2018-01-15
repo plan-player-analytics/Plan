@@ -79,6 +79,57 @@ public class PlayerProfile implements OfflinePlayer {
         activityIndexCache = new HashMap<>();
     }
 
+    public static long getPlaytime(Stream<Session> s) {
+        return s.map(Session::getLength)
+                .mapToLong(i -> i)
+                .sum();
+    }
+
+    public static long getLongestSession(Stream<Session> s) {
+        OptionalLong longestSession = s.map(Session::getLength)
+                .mapToLong(i -> i)
+                .max();
+        if (longestSession.isPresent()) {
+            return longestSession.getAsLong();
+        }
+        return -1;
+    }
+
+    public static long getSessionMedian(Stream<Session> s) {
+        List<Long> sessionLenghts = s.map(Session::getLength)
+                .sorted()
+                .collect(Collectors.toList());
+        if (sessionLenghts.isEmpty()) {
+            return 0;
+        }
+        return sessionLenghts.get(sessionLenghts.size() / 2);
+    }
+
+    public static long getSessionAverage(Stream<Session> s) {
+        OptionalDouble average = s.map(Session::getLength)
+                .mapToLong(i -> i)
+                .average();
+        if (average.isPresent()) {
+            return (long) average.getAsDouble();
+        }
+        return 0L;
+    }
+
+    public static Stream<PlayerKill> getPlayerKills(Stream<Session> s) {
+        return s.map(Session::getPlayerKills)
+                .flatMap(Collection::stream);
+    }
+
+    public static long getDeathCount(Stream<Session> s) {
+        return s.mapToLong(Session::getDeaths)
+                .sum();
+    }
+
+    public static long getMobKillCount(Stream<Session> s) {
+        return s.mapToLong(Session::getMobKills)
+                .sum();
+    }
+
     // Calculating Getters
     public ActivityIndex getActivityIndex(long date) {
         ActivityIndex index = activityIndexCache.get(date);
@@ -96,6 +147,10 @@ public class PlayerProfile implements OfflinePlayer {
      */
     public WorldTimes getWorldTimes() {
         return worldTimesMap.getOrDefault(null, new WorldTimes(new HashMap<>()));
+    }
+
+    public void setWorldTimes(Map<UUID, WorldTimes> worldTimes) {
+        worldTimesMap.putAll(worldTimes);
     }
 
     /**
@@ -151,12 +206,6 @@ public class PlayerProfile implements OfflinePlayer {
         return getPlaytime(getSessions(serverUUID).stream());
     }
 
-    public static long getPlaytime(Stream<Session> s) {
-        return s.map(Session::getLength)
-                .mapToLong(i -> i)
-                .sum();
-    }
-
     public long getLongestSession() {
         return getLongestSession(-1, MiscUtils.getTime() + 1L);
     }
@@ -167,16 +216,6 @@ public class PlayerProfile implements OfflinePlayer {
 
     public long getLongestSession(UUID serverUUID) {
         return getLongestSession(getSessions(serverUUID).stream());
-    }
-
-    public static long getLongestSession(Stream<Session> s) {
-        OptionalLong longestSession = s.map(Session::getLength)
-                .mapToLong(i -> i)
-                .max();
-        if (longestSession.isPresent()) {
-            return longestSession.getAsLong();
-        }
-        return -1;
     }
 
     public long getSessionMedian() {
@@ -191,15 +230,7 @@ public class PlayerProfile implements OfflinePlayer {
         return getSessionMedian(getSessions(serverUUID).stream());
     }
 
-    public static long getSessionMedian(Stream<Session> s) {
-        List<Long> sessionLenghts = s.map(Session::getLength)
-                .sorted()
-                .collect(Collectors.toList());
-        if (sessionLenghts.isEmpty()) {
-            return 0;
-        }
-        return sessionLenghts.get(sessionLenghts.size() / 2);
-    }
+    // Special Getters
 
     public long getSessionAverage() {
         return getSessionAverage(-1, MiscUtils.getTime() + 1L);
@@ -213,21 +244,9 @@ public class PlayerProfile implements OfflinePlayer {
         return getSessionAverage(getSessions(serverUUID).stream());
     }
 
-    public static long getSessionAverage(Stream<Session> s) {
-        OptionalDouble average = s.map(Session::getLength)
-                .mapToLong(i -> i)
-                .average();
-        if (average.isPresent()) {
-            return (long) average.getAsDouble();
-        }
-        return 0L;
-    }
-
     public boolean playedBetween(long after, long before) {
         return getSessions(after, before).findFirst().isPresent();
     }
-
-    // Special Getters
 
     public Stream<Session> getAllSessions() {
         return sessions.values().stream().flatMap(Collection::stream);
@@ -261,11 +280,6 @@ public class PlayerProfile implements OfflinePlayer {
         return getPlayerKills(getSessions(serverUUID).stream());
     }
 
-    public static Stream<PlayerKill> getPlayerKills(Stream<Session> s) {
-        return s.map(Session::getPlayerKills)
-                .flatMap(Collection::stream);
-    }
-
     public long getPlayerKillCount() {
         return getPlayerKills().count();
     }
@@ -282,22 +296,12 @@ public class PlayerProfile implements OfflinePlayer {
         return getDeathCount(getSessions(serverUUID).stream());
     }
 
-    public static long getDeathCount(Stream<Session> s) {
-        return s.mapToLong(Session::getDeaths)
-                .sum();
-    }
-
     public long getMobKillCount() {
         return getMobKillCount(getAllSessions());
     }
 
     public long getMobKillCount(UUID serverUUID) {
         return getMobKillCount(getSessions(serverUUID).stream());
-    }
-
-    public static long getMobKillCount(Stream<Session> s) {
-        return s.mapToLong(Session::getMobKills)
-                .sum();
     }
 
     public long getSessionCount() {
@@ -308,11 +312,11 @@ public class PlayerProfile implements OfflinePlayer {
         return getSessions(serverUUID).size();
     }
 
+    // Setters & Adders
+
     public long getRegistered(UUID serverUUID) {
         return registeredMap.getOrDefault(serverUUID, -1L);
     }
-
-    // Setters & Adders
 
     public void bannedOnServer(UUID serverUUID) {
         bannedOnServers.add(serverUUID);
@@ -334,10 +338,6 @@ public class PlayerProfile implements OfflinePlayer {
         this.sessions.put(serverUUID, sessions);
     }
 
-    public void setSessions(Map<UUID, List<Session>> sessions) {
-        this.sessions.putAll(sessions);
-    }
-
     public void addActiveSession(Session activeSession) {
         UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
         List<Session> sessions = getSessions(serverUUID);
@@ -357,10 +357,6 @@ public class PlayerProfile implements OfflinePlayer {
         worldTimesMap.put(serverUUID, worldTimes);
     }
 
-    public void setWorldTimes(Map<UUID, WorldTimes> worldTimes) {
-        worldTimesMap.putAll(worldTimes);
-    }
-
     public void setTotalWorldTimes(WorldTimes worldTimes) {
         worldTimesMap.put(null, worldTimes);
     }
@@ -369,36 +365,32 @@ public class PlayerProfile implements OfflinePlayer {
         registeredMap.put(serverUUID, registered);
     }
 
+    public int getTimesKicked() {
+        return timesKicked;
+    }
+
     // Default Setters
-
-    public void setActions(List<Action> actions) {
-        this.actions = actions;
-    }
-
-    public void setNicknames(Map<UUID, List<String>> nicknames) {
-        this.nicknames = nicknames;
-    }
-
-    public void setGeoInformation(List<GeoInfo> geoInformation) {
-        this.geoInformation = geoInformation;
-    }
 
     public void setTimesKicked(int timesKicked) {
         this.timesKicked = timesKicked;
-    }
-
-    // Default Getters
-
-    public int getTimesKicked() {
-        return timesKicked;
     }
 
     public Map<UUID, List<String>> getNicknames() {
         return nicknames;
     }
 
+    public void setNicknames(Map<UUID, List<String>> nicknames) {
+        this.nicknames = nicknames;
+    }
+
     public List<GeoInfo> getGeoInformation() {
         return geoInformation;
+    }
+
+    // Default Getters
+
+    public void setGeoInformation(List<GeoInfo> geoInformation) {
+        this.geoInformation = geoInformation;
     }
 
     public UUID getUuid() {
@@ -425,8 +417,16 @@ public class PlayerProfile implements OfflinePlayer {
         return sessions;
     }
 
+    public void setSessions(Map<UUID, List<Session>> sessions) {
+        this.sessions.putAll(sessions);
+    }
+
     public List<Action> getActions() {
         return actions;
+    }
+
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
     }
 
     public Map<String, String> getPluginReplaceMap() {

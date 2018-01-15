@@ -30,11 +30,10 @@ import java.util.stream.Collectors;
 public class BungeeServerInfoManager {
 
     private final PlanBungee plugin;
-    private ServerInfo serverInfo;
     private final Database db;
-
     private final Map<UUID, ServerInfo> bukkitServers;
     private final Set<UUID> onlineServers;
+    private ServerInfo serverInfo;
     private ServerTable serverTable;
 
     public BungeeServerInfoManager(PlanBungee plugin) {

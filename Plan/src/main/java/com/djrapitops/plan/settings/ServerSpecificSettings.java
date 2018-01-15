@@ -25,21 +25,6 @@ import java.util.UUID;
  */
 public class ServerSpecificSettings {
 
-    public void addOriginalBukkitSettings(PlanBungee plugin, UUID serverUUID, Map<String, Object> settings) {
-        try {
-            Config config = plugin.getMainConfig();
-            if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
-                return;
-            }
-            for (Map.Entry<String, Object> entry : settings.entrySet()) {
-                config.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
-            }
-            config.save();
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-    }
-
     public static void updateSettings(Plan plugin, Map<String, String> settings) {
         Log.debug("Checking new settings..");
         Config config = plugin.getMainConfig();
@@ -90,6 +75,21 @@ public class ServerSpecificSettings {
             return false;
         }
         return value;
+    }
+
+    public void addOriginalBukkitSettings(PlanBungee plugin, UUID serverUUID, Map<String, Object> settings) {
+        try {
+            Config config = plugin.getMainConfig();
+            if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
+                return;
+            }
+            for (Map.Entry<String, Object> entry : settings.entrySet()) {
+                config.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
+            }
+            config.save();
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     private String getPath(UUID serverUUID, Settings setting) {

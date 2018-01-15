@@ -18,6 +18,13 @@ public abstract class Processor<T> {
         this.object = object;
     }
 
+    public static void queue(Processor... processors) {
+        ProcessingQueue processingQueue = ProcessingQueue.getInstance();
+        for (Processor processor : processors) {
+            processingQueue.queue(processor);
+        }
+    }
+
     public abstract void process();
 
     public T getObject() {
@@ -26,12 +33,5 @@ public abstract class Processor<T> {
 
     public void queue() {
         queue(this);
-    }
-
-    public static void queue(Processor... processors) {
-        ProcessingQueue processingQueue = ProcessingQueue.getInstance();
-        for (Processor processor : processors) {
-            processingQueue.queue(processor);
-        }
     }
 }

@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
 
 public class ActivityIndex {
 
-    private static long loadSetting(long value) {
-        return value < 0 ? 1 : value;
-    }
-
     private final double value;
 
     public ActivityIndex(PlayerProfile player, long date) {
         value = calculate(player, date);
+    }
+
+    private static long loadSetting(long value) {
+        return value < 0 ? 1 : value;
     }
 
     private double calculate(PlayerProfile player, long date) {

@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
  */
 public class Analysis {
 
+    private static ServerProfile serverProfile;
     private final Plan plugin;
     private int taskId = -1;
-    private static ServerProfile serverProfile;
 
     /**
      * Class Constructor.
@@ -44,6 +44,15 @@ public class Analysis {
      */
     public Analysis(Plan plugin) {
         this.plugin = plugin;
+    }
+
+    /**
+     * Only available during Analysis.
+     *
+     * @return ServerProfile being analyzed or null if analysis is not being run.
+     */
+    public static ServerProfile getServerProfile() {
+        return serverProfile;
     }
 
     /**
@@ -220,14 +229,5 @@ public class Analysis {
      */
     public boolean isAnalysisBeingRun() {
         return taskId != -1;
-    }
-
-    /**
-     * Only available during Analysis.
-     *
-     * @return ServerProfile being analyzed or null if analysis is not being run.
-     */
-    public static ServerProfile getServerProfile() {
-        return serverProfile;
     }
 }

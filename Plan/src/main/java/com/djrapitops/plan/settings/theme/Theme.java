@@ -33,6 +33,14 @@ public class Theme implements SubSystem {
         return themeSystem;
     }
 
+    public static String getValue(ThemeVal variable) {
+        return getInstance().getThemeValue(variable);
+    }
+
+    public static String replaceColors(String resourceString) {
+        return getInstance().replaceThemeColors(resourceString);
+    }
+
     @Override
     public void enable() throws EnableException {
         String themeName = Settings.THEME_BASE.toString();
@@ -94,13 +102,5 @@ public class Theme implements SubSystem {
 
     public String getThemeValue(ThemeVal color) {
         return config.getString(color.getThemePath());
-    }
-
-    public static String getValue(ThemeVal variable) {
-        return getInstance().getThemeValue(variable);
-    }
-
-    public static String replaceColors(String resourceString) {
-        return getInstance().replaceThemeColors(resourceString);
     }
 }

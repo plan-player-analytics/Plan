@@ -4,8 +4,8 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
-import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.system.tasks.TaskSystem;
+import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -41,6 +41,10 @@ public class PlayerOnlineListener implements Listener {
     public PlayerOnlineListener(Plan plugin) {
         this.plugin = plugin;
         cache = plugin.getDataCache();
+    }
+
+    public static void setCountKicks(boolean value) {
+        countKicks = value;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -146,9 +150,5 @@ public class PlayerOnlineListener implements Listener {
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
-    }
-
-    public static void setCountKicks(boolean value) {
-        countKicks = value;
     }
 }

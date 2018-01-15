@@ -34,7 +34,7 @@ public abstract class TPSCountTimer<T extends PlanPlugin> extends AbsRunnable {
         long now = MiscUtils.getTime();
 
         addNewTPSEntry(nanoTime, now);
-       
+
         if (history.size() >= 60) {
             plugin.addToProcessQueue(new TPSInsertProcessor(new ArrayList<>(history)));
             history.clear();

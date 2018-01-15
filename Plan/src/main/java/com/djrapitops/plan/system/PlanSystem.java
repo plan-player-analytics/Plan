@@ -44,6 +44,19 @@ public abstract class PlanSystem implements SubSystem {
         webServerSystem = new WebServerSystem();
     }
 
+    public static PlanSystem getInstance() {
+        boolean bukkitAvailable = Check.isBukkitAvailable();
+        boolean bungeeAvailable = Check.isBungeeAvailable();
+        if (bukkitAvailable && bungeeAvailable) {
+            // TODO test system.
+        } else if (bungeeAvailable) {
+            return BungeeSystem.getInstance();
+        } else {
+            return BukkitSystem.getInstance();
+        }
+        throw new IllegalAccessError("PlanSystem is not available on this platform.");
+    }
+
     @Override
     public void enable() throws EnableException {
         checkSubSystemInitialization();
@@ -91,19 +104,6 @@ public abstract class PlanSystem implements SubSystem {
         } catch (Exception e) {
             throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ".", e);
         }
-    }
-
-    public static PlanSystem getInstance() {
-        boolean bukkitAvailable = Check.isBukkitAvailable();
-        boolean bungeeAvailable = Check.isBungeeAvailable();
-        if (bukkitAvailable && bungeeAvailable) {
-            // TODO test system.
-        } else if (bungeeAvailable) {
-            return BungeeSystem.getInstance();
-        } else {
-            return BukkitSystem.getInstance();
-        }
-        throw new IllegalAccessError("PlanSystem is not available on this platform.");
     }
 
     // Accessor methods.

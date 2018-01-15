@@ -15,8 +15,8 @@ import java.util.*;
 @Deprecated
 public class WebAPIManager extends TreePageHandler {
 
-    private final Map<String, WebAPI> registry;
     private static final Set<String> accessKeys = new HashSet<>();
+    private final Map<String, WebAPI> registry;
 
     /**
      * Constructor used to hide the public constructor

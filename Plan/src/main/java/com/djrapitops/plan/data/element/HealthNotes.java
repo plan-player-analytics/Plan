@@ -26,13 +26,12 @@ import java.util.stream.Collectors;
 public class HealthNotes {
 
     private final List<String> healthNotes;
-    private double serverHealth;
-
     private final AnalysisData analysisData;
     private final TreeMap<Long, Map<String, Set<UUID>>> activityData;
     private final List<TPS> tpsDataMonth;
     private final long now;
     private final long fourWeeksAgo;
+    private double serverHealth;
 
     public HealthNotes(AnalysisData analysisData, TreeMap<Long, Map<String, Set<UUID>>> activityData, List<TPS> tpsDataMonth, long now) {
         this.healthNotes = new ArrayList<>();

@@ -44,10 +44,6 @@ public class Locale {
         messages = new EnumMap<>(Msg.class);
     }
 
-    public void unload() {
-        messages.clear();
-    }
-
     public static Locale getInstance() {
         Locale locale = ConfigSystem.getInstance().getLocale();
         NullCheck.check(locale, new IllegalStateException("Locale has not been initialized."));
@@ -56,6 +52,10 @@ public class Locale {
 
     public static Message get(Msg msg) {
         return getInstance().getMessage(msg);
+    }
+
+    public void unload() {
+        messages.clear();
     }
 
     public void loadLocale() {

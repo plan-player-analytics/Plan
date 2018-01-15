@@ -22,14 +22,14 @@ import com.djrapitops.plugin.task.ITask;
  */
 public class BukkitTaskSystem extends TaskSystem {
 
+    private ITask bootAnalysisTask;
+
     public BukkitTaskSystem(Plan plugin) {
         tpsCountTimer = Check.isPaperAvailable()
                 ? new PaperTPSCountTimer(plugin)
                 : new BukkitTPSCountTimer(plugin);
 
     }
-
-    private ITask bootAnalysisTask;
 
     @Override
     public void enable() {

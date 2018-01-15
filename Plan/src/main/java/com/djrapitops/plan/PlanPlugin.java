@@ -24,6 +24,19 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public interface PlanPlugin extends IPlugin {
+    static PlanPlugin getInstance() {
+        boolean bukkitAvailable = Check.isBukkitAvailable();
+        boolean bungeeAvailable = Check.isBungeeAvailable();
+        if (bukkitAvailable && bungeeAvailable) {
+            // TODO Test Plugin
+        } else if (bungeeAvailable) {
+            return Plan.getInstance();
+        } else if (bukkitAvailable) {
+            return PlanBungee.getInstance();
+        }
+        throw new IllegalAccessError("Plugin instance not available");
+    }
+
     @Deprecated
     Database getDB();
 
@@ -55,17 +68,4 @@ public interface PlanPlugin extends IPlugin {
     ColorScheme getColorScheme();
 
     boolean isReloading();
-
-    static PlanPlugin getInstance() {
-        boolean bukkitAvailable = Check.isBukkitAvailable();
-        boolean bungeeAvailable = Check.isBungeeAvailable();
-        if (bukkitAvailable && bungeeAvailable) {
-            // TODO Test Plugin
-        } else if (bungeeAvailable) {
-            return Plan.getInstance();
-        } else if (bukkitAvailable) {
-            return PlanBungee.getInstance();
-        }
-        throw new IllegalAccessError("Plugin instance not available");
-    }
 }

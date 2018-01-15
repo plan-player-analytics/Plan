@@ -35,12 +35,36 @@ import java.util.stream.Collectors;
  */
 public abstract class WebAPI {
 
+    private static TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    //No need to implement.
+                }
+
+                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    //No need to implement.
+                }
+            }
+    };
     private Map<String, String> variables;
+
 
     public WebAPI() {
         this.variables = new HashMap<>();
     }
 
+    public static Map<String, String> readVariables(String requestBody) {
+        String[] variables = requestBody.split(";&variable;");
+
+        return Arrays.stream(variables)
+                .map(variable -> variable.split("=", 2))
+                .filter(splitVariables -> splitVariables.length == 2)
+                .collect(Collectors.toMap(splitVariables -> splitVariables[0], splitVariables -> splitVariables[1], (a, b) -> b));
+    }
 
     public Response processRequest(PlanPlugin plugin, Map<String, String> variables) {
         String sender = variables.get("sender");
@@ -149,22 +173,6 @@ public abstract class WebAPI {
         return sc.getSocketFactory();
     }
 
-    private static TrustManager[] trustAllCerts = new TrustManager[]{
-            new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                    //No need to implement.
-                }
-
-                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                    //No need to implement.
-                }
-            }
-    };
-
     protected Response success() {
         return ResponseCache.loadResponse(PageId.TRUE.id(), SuccessResponse::new);
     }
@@ -189,14 +197,5 @@ public abstract class WebAPI {
             parameters.append(";&variable;").append(entry.getKey()).append("=").append(entry.getValue());
         }
         return parameters.toString();
-    }
-
-    public static Map<String, String> readVariables(String requestBody) {
-        String[] variables = requestBody.split(";&variable;");
-
-        return Arrays.stream(variables)
-                .map(variable -> variable.split("=", 2))
-                .filter(splitVariables -> splitVariables.length == 2)
-                .collect(Collectors.toMap(splitVariables -> splitVariables[0], splitVariables -> splitVariables[1], (a, b) -> b));
     }
 }
