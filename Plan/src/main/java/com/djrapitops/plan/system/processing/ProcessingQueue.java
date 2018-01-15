@@ -52,7 +52,7 @@ public class ProcessingQueue extends Queue<Processor> implements SubSystem {
                 public void run() {
                     ProcessingQueue que = ProcessingQueue.getInstance();
                     for (Processor processor : processors) {
-                        que.addToQueue(processor);
+                        que.queue(processor);
                     }
                     cancel();
                 }
@@ -70,9 +70,9 @@ public class ProcessingQueue extends Queue<Processor> implements SubSystem {
      *
      * @param processor processing object.
      */
-    public void addToQueue(Processor processor) {
+    public void queue(Processor processor) {
         if (!queue.offer(processor)) {
-            Log.toLog("ProcessingQueue.addToQueue", new IllegalStateException("Processor was not added to Queue"));
+            Log.toLog("ProcessingQueue.queue", new IllegalStateException("Processor was not added to Queue"));
         }
     }
 }

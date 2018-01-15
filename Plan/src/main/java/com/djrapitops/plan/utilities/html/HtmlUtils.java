@@ -1,6 +1,8 @@
 package com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.system.settings.Settings;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -58,7 +60,7 @@ public class HtmlUtils {
     }
 
     public static String getRelativeInspectUrl(UUID uuid) {
-        return Plan.getPlanAPI().getPlayerInspectPageLink(Plan.getInstance().getDataCache().getName(uuid));
+        return PlanAPI.getInstance().getPlayerInspectPageLink(Plan.getInstance().getDataCache().getName(uuid));
     }
 
     /**

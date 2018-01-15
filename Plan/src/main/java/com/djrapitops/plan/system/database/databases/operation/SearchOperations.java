@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface SearchOperations {
 
-    List<String> matchingNames(String search) throws DBException;
+    List<String> matchingPlayers(String search) throws DBException;
 
 }

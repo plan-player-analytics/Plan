@@ -4,10 +4,9 @@
  */
 package com.djrapitops.plan.system.processing.processors;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
-
-import java.sql.SQLException;
 
 /**
  * Updates Command usage amount in the database.
@@ -23,8 +22,8 @@ public class CommandProcessor extends Processor<String> {
     @Override
     public void process() {
         try {
-            Plan.getInstance().getDB().getCommandUseTable().commandUsed(object);
-        } catch (SQLException e) {
+            Database.getActive().save().commandUsed(object);
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }

@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
@@ -47,7 +48,7 @@ public class KillsTableCreator {
                 String name = Plan.getInstance().getDataCache().getName(kill.getVictim());
                 html.append(Html.TABLELINE_3_CUSTOMKEY_1.parse(
                         String.valueOf(date), FormatUtils.formatTimeStamp(date),
-                        Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(name), name),
+                        Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
                         kill.getWeapon()
                 ));
 

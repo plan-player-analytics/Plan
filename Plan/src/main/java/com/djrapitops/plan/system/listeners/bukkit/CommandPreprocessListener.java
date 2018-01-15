@@ -69,7 +69,7 @@ public class CommandPreprocessListener implements Listener {
                     commandName = command.getName();
                 }
             }
-            plugin.addToProcessQueue(new CommandProcessor(commandName));
+            new CommandProcessor(commandName).queue();
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

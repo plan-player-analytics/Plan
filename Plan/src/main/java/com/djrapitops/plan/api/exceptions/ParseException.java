@@ -5,7 +5,7 @@
 package com.djrapitops.plan.api.exceptions;
 
 /**
- * Exception thrown when PageParser encounters an Exception.
+ * Exception thrown when Page encounters an Exception.
  *
  * @author Rsl1122
  */

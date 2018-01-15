@@ -5,13 +5,13 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable;
+import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.processing.processors.NewNickActionProcessor;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,30 +45,24 @@ public class NameProcessor extends PlayerProcessor {
             return;
         }
 
-        Database db = plugin.getDB();
-        NicknamesTable nicknamesTable = db.getNicknamesTable();
-        cueNameChangeActionProcessor(uuid, plugin, nicknamesTable);
-
+        Database database = Database.getActive();
         try {
-            db.getUsersTable().updateName(uuid, playerName);
+            cueNameChangeActionProcessor(uuid, database);
+            database.save().playerName(uuid, playerName);
 
-            nicknamesTable.saveUserName(uuid, displayName);
-        } catch (SQLException e) {
+            database.save().playerDisplayName(uuid, displayName);
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
 
         dataCache.updateNames(uuid, playerName, displayName);
     }
 
-    private void cueNameChangeActionProcessor(UUID uuid, Plan plugin, NicknamesTable nicknamesTable) {
-        try {
-            List<String> nicknames = nicknamesTable.getNicknames(uuid, Plan.getServerUUID());
-            if (nicknames.contains(displayName)) {
-                return;
-            }
-            plugin.addToProcessQueue(new NewNickActionProcessor(uuid, displayName));
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+    private void cueNameChangeActionProcessor(UUID uuid, Database db) throws DBException {
+        List<String> nicknames = db.fetch().getNicknamesOfPlayerOnServer(uuid, Plan.getServerUUID());
+        if (nicknames.contains(displayName)) {
+            return;
         }
+        ProcessingQueue.getInstance().queue(new NewNickActionProcessor(uuid, displayName));
     }
 }

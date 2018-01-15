@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.utilities.file.export;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;

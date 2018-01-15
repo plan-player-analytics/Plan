@@ -6,6 +6,7 @@ package com.djrapitops.plan.data;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;

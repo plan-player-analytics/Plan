@@ -5,12 +5,13 @@
 package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.systems.Systems;
+import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plugin.api.Check;
 
 /**
- * //TODO Class Javadoc Comment
+ * WebServer subsystem for managing WebServer initialization.
  *
  * @author Rsl1122
  */
@@ -19,16 +20,15 @@ public class WebServerSystem implements SubSystem {
     private WebServer webServer;
 
     public WebServerSystem() {
-
+        webServer = new WebServer();
     }
 
     public static WebServerSystem getInstance() {
-        return Systems.getInstance().getWebServerSystem();
+        return PlanSystem.getInstance().getWebServerSystem();
     }
 
     @Override
     public void enable() throws EnableException {
-        webServer = new WebServer();
         webServer.initServer();
         if (Check.isBungeeAvailable() && !webServer.isEnabled()) {
             throw new EnableException("WebServer did not initialize!");
@@ -40,10 +40,8 @@ public class WebServerSystem implements SubSystem {
 
     @Override
     public void disable() {
-        // TODO Remove after WebServer setting requirement is gone.
-        if (webServer != null) {
-            webServer.stop();
-        }
+        ResponseCache.clearCache();
+        webServer.stop();
     }
 
     public static boolean isWebServerEnabled() {

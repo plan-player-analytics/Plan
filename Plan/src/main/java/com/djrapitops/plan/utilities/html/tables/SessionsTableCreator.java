@@ -5,6 +5,7 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.settings.WorldAliasSettings;
@@ -81,7 +82,7 @@ public class SessionsTableCreator {
             String length = session.getSessionEnd() != -1 ? FormatUtils.formatTimeAmount(session.getLength()) : "Online";
             String world = getLongestWorldPlayed(session);
 
-            String inspectUrl = Plan.getPlanAPI().getPlayerInspectPageLink(name);
+            String inspectUrl = PlanAPI.getInstance().getPlayerInspectPageLink(name);
             String toolTip = "Session ID: " + (session.isFetchedFromDB() ? session.getSessionID() : "Not Saved.");
             sessionTableBuilder.append(Html.TABLELINE_4.parse(
                     Html.LINK_TOOLTIP.parse(inspectUrl, name, toolTip),

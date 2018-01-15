@@ -4,11 +4,10 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -30,13 +29,13 @@ public class BungeePlayerRegisterProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        UsersTable usersTable = PlanBungee.getInstance().getDB().getUsersTable();
+        Database database = Database.getActive();
         try {
-            if (usersTable.isRegistered(uuid)) {
+            if (database.check().isPlayerRegistered(uuid)) {
                 return;
             }
-            usersTable.registerUser(uuid, registered, name);
-        } catch (SQLException e) {
+            database.save().registerNewUser(uuid, registered, name);
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }

@@ -44,17 +44,17 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class InspectPageParser extends PageParser {
+public class InspectPage extends Page {
 
     private final UUID uuid;
     private final PlanPlugin plugin;
 
-    public InspectPageParser(UUID uuid, PlanPlugin plugin) {
+    public InspectPage(UUID uuid, PlanPlugin plugin) {
         this.uuid = uuid;
         this.plugin = plugin;
     }
 
-    public String parse() throws ParseException {
+    public String toHtml() throws ParseException {
         try {
             if (uuid == null) {
                 throw new IllegalStateException("UUID was null!");

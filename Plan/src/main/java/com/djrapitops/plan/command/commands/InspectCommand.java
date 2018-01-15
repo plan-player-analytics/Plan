@@ -82,7 +82,7 @@ public class InspectCommand extends SubCommand {
                             sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                         }
                     }
-                    plugin.addToProcessQueue(new InspectCacheRequestProcessor(uuid, sender, playerName));
+                    new InspectCacheRequestProcessor(uuid, sender, playerName).queue();
                 } catch (DBException ex) {
                     if (ex instanceof FatalDBException) {
                         Log.toLog(this.getClass().getName(), ex);

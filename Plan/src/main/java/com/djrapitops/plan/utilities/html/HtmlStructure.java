@@ -125,7 +125,7 @@ public class HtmlStructure {
         int playerCount = 0;
         String playerData = "[]";
         try {
-            playerCount = db.count().serverPlayerCount(serverUUID);
+            playerCount = db.count().getServerPlayerCount(serverUUID);
             playerData = PlayerActivityGraph.createSeries(db.fetch().getTPSData(serverUUID));
         } catch (DBException e) {
             Log.toLog(HtmlStructure.class.getClass().getName(), e);

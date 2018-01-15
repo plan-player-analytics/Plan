@@ -4,10 +4,11 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -30,8 +31,10 @@ public class BanAndOpProcessor extends PlayerProcessor {
     public void process() {
         UUID uuid = getUUID();
         try {
-            Plan.getInstance().getDB().getUserInfoTable().updateOpAndBanStatus(uuid, opped, banned);
-        } catch (SQLException e) {
+            SaveOperations save = Database.getActive().save();
+            save.banStatus(uuid, banned);
+            save.opStatus(uuid, opped);
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }

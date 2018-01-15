@@ -25,7 +25,7 @@ import com.djrapitops.plan.system.webserver.webapi.bukkit.InspectWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.IsOnlineWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bungee.RequestPluginsTabWebAPI;
 import com.djrapitops.plan.systems.cache.DataCache;
-import com.djrapitops.plan.systems.info.parsing.NetworkPageParser;
+import com.djrapitops.plan.systems.info.parsing.NetworkPage;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import com.djrapitops.plan.systems.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
@@ -54,7 +54,7 @@ public class BungeeInformationManager extends InformationManager {
     private final Map<UUID, Map<UUID, String[]>> pluginsTabContent;
     private final BungeeServerInfoManager serverInfoManager;
 
-    public BungeeInformationManager(PlanBungee plugin) throws SQLException {
+    public BungeeInformationManager(PlanBungee plugin) {
         usingAnotherWebServer = false;
         pluginsTabContent = new HashMap<>();
         networkPageContent = new HashMap<>();
@@ -268,7 +268,7 @@ public class BungeeInformationManager extends InformationManager {
     @Override
     public String getAnalysisHtml() {
         try {
-            return new NetworkPageParser(plugin).parse();
+            return new NetworkPage(plugin).toHtml();
         } catch (ParseException e) {
             return new InternalErrorResponse(e, this.getClass().getSimpleName()).getContent();
         }
@@ -376,7 +376,7 @@ public class BungeeInformationManager extends InformationManager {
         UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
         ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(this));
         if (Settings.ANALYSIS_EXPORT.isTrue()) {
-            HtmlExport.exportServer(plugin, serverUUID);
+            HtmlExport.exportServer(serverUUID);
         }
     }
 

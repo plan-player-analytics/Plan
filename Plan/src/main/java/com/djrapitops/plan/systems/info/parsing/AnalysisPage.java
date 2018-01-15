@@ -20,18 +20,18 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
-public class AnalysisPageParser extends PageParser {
+public class AnalysisPage extends Page {
 
     private final AnalysisData data;
     private final PlanPlugin plugin;
 
-    public AnalysisPageParser(AnalysisData analysisData, PlanPlugin plugin) {
+    public AnalysisPage(AnalysisData analysisData, PlanPlugin plugin) {
         this.data = analysisData;
         this.plugin = plugin;
     }
 
     @Override
-    public String parse() throws ParseException {
+    public String toHtml() throws ParseException {
         addValues(data.getReplaceMap());
 
         try {

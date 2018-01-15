@@ -34,6 +34,12 @@ public abstract class Database {
 
     public abstract RemoveOperations remove();
 
+    public abstract SearchOperations search();
+
+    public abstract CountOperations count();
+
+    public abstract SaveOperations save();
+
     /**
      * Used to get the name of the database type.
      * <p>
@@ -60,7 +66,5 @@ public abstract class Database {
         return open;
     }
 
-    public abstract SearchOperations search();
-
-    public abstract CountOperations count();
+    public abstract void scheduleClean(long delay);
 }

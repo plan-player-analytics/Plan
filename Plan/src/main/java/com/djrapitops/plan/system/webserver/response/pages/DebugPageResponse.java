@@ -7,6 +7,8 @@ package com.djrapitops.plan.system.webserver.response.pages;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.ServerVariableHolder;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import com.djrapitops.plan.systems.info.server.ServerInfo;
@@ -75,12 +77,17 @@ public class DebugPageResponse extends ErrorResponse {
                 .append(" ").append(variable.getVersion());
         content.append("<br>");
 
-        content.append("**Database:** ").append(plugin.getDB().getName());
-        try {
-            content.append(" schema v").append(plugin.getDB().getVersion());
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+        Database database = plugin.getDB();
+        content.append("**Database:** ").append(database.getName());
+
+        if (database instanceof SQLDB) {
+            try {
+                content.append(" schema v").append(((SQLDB) database).getVersion());
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
         }
+
         content.append("<br><br>");
 
         RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();

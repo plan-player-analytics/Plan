@@ -57,14 +57,14 @@ public class PostHtmlWebAPI extends WebAPI {
 
                     ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), StrSubstitutor.replace(html, map)));
                     if (Settings.ANALYSIS_EXPORT.isTrue()) {
-                        HtmlExport.exportPlayer(plugin, UUID.fromString(uuid));
+                        HtmlExport.exportPlayer(UUID.fromString(uuid));
                     }
                     break;
                 case "analysisPage":
                     String sender = variables.get("sender");
                     ResponseCache.cacheResponse(PageId.SERVER.of(sender), () -> new AnalysisPageResponse(html));
                     if (Settings.ANALYSIS_EXPORT.isTrue()) {
-                        HtmlExport.exportServer(plugin, UUID.fromString(sender));
+                        HtmlExport.exportServer(UUID.fromString(sender));
                     }
                     break;
                 default:

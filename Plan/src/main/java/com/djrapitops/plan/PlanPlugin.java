@@ -8,7 +8,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.api.Check;
@@ -54,9 +53,6 @@ public interface PlanPlugin extends IPlugin {
     Config getMainConfig();
 
     ColorScheme getColorScheme();
-
-    @Deprecated
-    Systems getSystems();
 
     boolean isReloading();
 

@@ -4,14 +4,14 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.*;
 
 import java.util.*;
 
 public interface FetchOperations {
 
     // Profiles
-    
+
     ServerProfile getServerProfile(UUID serverUUID) throws DBException;
 
     List<PlayerProfile> getPlayers(UUID serverUUID) throws DBException;
@@ -19,7 +19,7 @@ public interface FetchOperations {
     PlayerProfile getPlayerProfile(UUID uuid) throws DBException;
 
     // UUIDs
-    
+
     Set<UUID> getSavedUUIDs() throws DBException;
 
     Set<UUID> getSavedUUIDs(UUID server) throws DBException;
@@ -37,4 +37,36 @@ public interface FetchOperations {
     // Raw Data
 
     List<TPS> getTPSData(UUID serverUUID) throws DBException;
+
+    List<TPS> getNetworkOnlineData() throws DBException;
+
+    List<Long> getRegisterDates() throws DBException;
+
+    Optional<TPS> getAllTimePeak(UUID serverUUID) throws DBException;
+
+    Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws DBException;
+
+    Map<UUID, Map<UUID, List<Session>>> getSessionsWithNoExtras() throws DBException;
+
+    Map<UUID, Map<UUID, List<Session>>> getSessionsAndExtras() throws DBException;
+
+    Set<String> getWorldNames(UUID serverUuid) throws DBException;
+
+    List<String> getNicknamesOfPlayerOnServer(UUID uuid, UUID serverUUID) throws DBException;
+
+    List<Action> getActions(UUID uuid) throws DBException;
+
+    Map<UUID, UserInfo> getUsers() throws DBException;
+
+    Map<UUID, Long> getLastSeenForAllPlayers() throws DBException;
+
+    Map<UUID, List<GeoInfo>> getAllGeoInfo() throws DBException;
+
+    Map<UUID, String> getPlayerNames() throws DBException;
+
+    String getPlayerName(UUID playerUUID) throws DBException;
+
+    Optional<String> getServerName(UUID serverUUID) throws DBException;
+
+    List<String> getNicknames(UUID uuid) throws DBException;
 }

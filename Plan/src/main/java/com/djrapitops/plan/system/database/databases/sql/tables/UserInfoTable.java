@@ -105,17 +105,30 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public void updateOpAndBanStatus(UUID uuid, boolean opped, boolean banned) throws SQLException {
-        String sql = Update.values(tableName, columnOP, columnBanned)
+    public void updateOpStatus(UUID uuid, boolean op) throws SQLException {
+        String sql = Update.values(tableName, columnOP)
                 .where(columnUserID + "=" + usersTable.statementSelectID)
                 .toString();
 
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, opped);
-                statement.setBoolean(2, banned);
-                statement.setString(3, uuid.toString());
+                statement.setBoolean(1, op);
+                statement.setString(2, uuid.toString());
+            }
+        });
+    }
+
+    public void updateBanStatus(UUID uuid, boolean banned) throws SQLException {
+        String sql = Update.values(tableName, columnBanned)
+                .where(columnUserID + "=" + usersTable.statementSelectID)
+                .toString();
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, banned);
+                statement.setString(2, uuid.toString());
             }
         });
     }

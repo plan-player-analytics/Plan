@@ -5,19 +5,18 @@
 package com.djrapitops.plan.system.database;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,8 +27,8 @@ import java.util.Set;
  */
 public abstract class DBSystem implements SubSystem {
 
-    protected SQLDB db;
-    protected Set<SQLDB> databases;
+    protected Database db;
+    protected Set<Database> databases;
 
     public DBSystem() {
         databases = new HashSet<>();
@@ -49,7 +48,7 @@ public abstract class DBSystem implements SubSystem {
             initDatabase();
             db.scheduleClean(10L);
             Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
-            Benchmark.stop("Systems", "Init Database");
+            Benchmark.stop("Enable", "Init Database");
         } catch (DBInitException e) {
             throw new EnableException(db.getName() + "-Database failed to initialize", e);
         }
@@ -57,11 +56,11 @@ public abstract class DBSystem implements SubSystem {
 
     protected abstract void initDatabase() throws DBInitException;
 
-    public Set<SQLDB> getDatabases() {
+    public Set<Database> getDatabases() {
         return databases;
     }
 
-    public void setDatabases(Set<SQLDB> databases) {
+    public void setDatabases(Set<Database> databases) {
         this.databases = databases;
     }
 
@@ -71,7 +70,7 @@ public abstract class DBSystem implements SubSystem {
             if (db != null) {
                 db.close();
             }
-        } catch (SQLException e) {
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }
@@ -80,8 +79,8 @@ public abstract class DBSystem implements SubSystem {
         return db;
     }
 
-    public SQLDB getActiveDatabase(String dbName) throws DBInitException {
-        for (SQLDB database : getDatabases()) {
+    public Database getActiveDatabase(String dbName) throws DBInitException {
+        for (Database database : getDatabases()) {
             String dbConfigName = database.getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
                 database.init();

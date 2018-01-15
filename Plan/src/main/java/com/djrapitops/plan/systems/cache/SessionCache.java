@@ -1,12 +1,13 @@
 package com.djrapitops.plan.systems.cache;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -47,8 +48,8 @@ public class SessionCache {
                 return;
             }
             session.endSession(time);
-            plugin.getDB().getSessionsTable().saveSession(uuid, session);
-        } catch (SQLException e) {
+            Database.getActive().save().session(uuid, session);
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
             activeSessions.remove(uuid);

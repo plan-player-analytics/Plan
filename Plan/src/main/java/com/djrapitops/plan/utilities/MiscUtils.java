@@ -2,7 +2,6 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
@@ -96,10 +95,10 @@ public class MiscUtils {
      * @return Alphabetically sorted list of matching player names.
      */
     public static List<String> getMatchingPlayerNames(String search) {
-        Database db = PlanPlugin.getInstance().getDB();
+        Database db = Database.getActive();
         List<String> matches;
         try {
-            matches = db.search().matchingPlayerNames(search);
+            matches = db.search().matchingPlayers(search);
         } catch (DBException e) {
             Log.toLog(MiscUtils.class, e);
             return new ArrayList<>();

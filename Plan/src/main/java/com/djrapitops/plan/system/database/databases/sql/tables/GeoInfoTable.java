@@ -19,14 +19,14 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
-public class IPsTable extends UserIDTable {
+public class GeoInfoTable extends UserIDTable {
 
     private final String columnIP = "ip";
     private final String columnGeolocation = "geolocation";
     private final String columnLastUsed = "last_used";
     private String insertStatement;
 
-    public IPsTable(SQLDB db) {
+    public GeoInfoTable(SQLDB db) {
         super("plan_ips", db);
         insertStatement = "INSERT INTO " + tableName + " ("
                 + columnUserID + ", "

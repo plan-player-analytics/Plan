@@ -53,7 +53,7 @@ public class ChatListener implements Listener {
                 dataCache.firstSessionMessageSent(uuid);
             }
 
-            plugin.addToProcessQueue(new NameProcessor(uuid, name, displayName));
+            new NameProcessor(uuid, name, displayName).queue();
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

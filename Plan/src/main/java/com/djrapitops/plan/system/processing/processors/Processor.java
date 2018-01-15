@@ -24,11 +24,14 @@ public abstract class Processor<T> {
         return object;
     }
 
-    public void que() {
-        que(this);
+    public void queue() {
+        queue(this);
     }
 
-    public static void que(Processor processor) {
-        ProcessingQueue.getInstance().addToQueue(processor);
+    public static void queue(Processor... processors) {
+        ProcessingQueue processingQueue = ProcessingQueue.getInstance();
+        for (Processor processor : processors) {
+            processingQueue.queue(processor);
+        }
     }
 }

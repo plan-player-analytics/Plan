@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.StickyData;
 import com.djrapitops.plan.data.container.TPS;

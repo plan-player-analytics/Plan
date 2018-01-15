@@ -41,6 +41,7 @@ public abstract class WebAPI {
         this.variables = new HashMap<>();
     }
 
+
     public Response processRequest(PlanPlugin plugin, Map<String, String> variables) {
         String sender = variables.get("sender");
         if (sender == null) {

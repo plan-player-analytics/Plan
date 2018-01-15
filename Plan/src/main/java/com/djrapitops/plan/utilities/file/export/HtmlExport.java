@@ -5,9 +5,11 @@
 package com.djrapitops.plan.utilities.file.export;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
 import com.djrapitops.plan.system.webserver.webapi.bungee.PostHtmlWebAPI;
 import com.djrapitops.plan.utilities.file.FileUtil;
@@ -16,7 +18,6 @@ import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -33,22 +34,22 @@ public class HtmlExport extends SpecificExport {
         this.plugin = plugin;
     }
 
-    public static void exportServer(PlanPlugin plugin, UUID serverUUID) {
+    public static void exportServer(UUID serverUUID) {
         try {
-            Optional<String> serverName = plugin.getDB().getServerTable().getServerName(serverUUID);
+            Optional<String> serverName = Database.getActive().fetch().getServerName(serverUUID);
             serverName.ifPresent(s -> RunnableFactory.createNew(new AnalysisExport(serverUUID, s)).runTaskAsynchronously());
-        } catch (SQLException e) {
+        } catch (DBException e) {
             Log.toLog(PostHtmlWebAPI.class.getClass().getName(), e);
         }
     }
 
-    public static void exportPlayer(PlanPlugin plugin, UUID playerUUID) {
+    public static void exportPlayer(UUID playerUUID) {
         try {
-            String playerName = plugin.getDB().getUsersTable().getPlayerName(playerUUID);
+            String playerName = Database.getActive().fetch().getPlayerName(playerUUID);
             if (playerName != null) {
                 RunnableFactory.createNew(new PlayerExport(playerUUID, playerName)).runTaskAsynchronously();
             }
-        } catch (SQLException e) {
+        } catch (DBException e) {
             Log.toLog(PostHtmlWebAPI.class.getClass().getName(), e);
         }
     }
@@ -68,7 +69,7 @@ public class HtmlExport extends SpecificExport {
             exportAvailableServerPages();
             exportAvailablePlayers();
             exportPlayersPage();
-        } catch (IOException | SQLException e) {
+        } catch (IOException | DBException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
             try {
@@ -94,14 +95,14 @@ public class HtmlExport extends SpecificExport {
         export(exportFile, lines);
     }
 
-    private void exportAvailablePlayers() throws SQLException, IOException {
-        for (Map.Entry<UUID, UserInfo> entry : plugin.getDB().getUsersTable().getUsers().entrySet()) {
+    private void exportAvailablePlayers() throws DBException, IOException {
+        for (Map.Entry<UUID, UserInfo> entry : Database.getActive().fetch().getUsers().entrySet()) {
             exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
         }
     }
 
-    private void exportAvailableServerPages() throws SQLException, IOException {
-        Map<UUID, String> serverNames = plugin.getDB().getServerTable().getServerNames();
+    private void exportAvailableServerPages() throws IOException, DBException {
+        Map<UUID, String> serverNames = Database.getActive().fetch().getServerNames();
 
         for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
             exportAvailableServerPage(entry.getKey(), entry.getValue());

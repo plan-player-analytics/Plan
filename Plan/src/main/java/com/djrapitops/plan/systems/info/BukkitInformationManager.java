@@ -35,8 +35,8 @@ import com.djrapitops.plan.system.webserver.webapi.bukkit.RequestInspectPluginsT
 import com.djrapitops.plan.system.webserver.webapi.bungee.*;
 import com.djrapitops.plan.system.webserver.webapi.universal.PingWebAPI;
 import com.djrapitops.plan.systems.cache.DataCache;
-import com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
-import com.djrapitops.plan.systems.info.parsing.InspectPageParser;
+import com.djrapitops.plan.systems.info.parsing.AnalysisPage;
+import com.djrapitops.plan.systems.info.parsing.InspectPage;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
@@ -139,15 +139,15 @@ public class BukkitInformationManager extends InformationManager {
                 }
             });
             if (Settings.ANALYSIS_EXPORT.isTrue()) {
-                HtmlExport.exportPlayer(plugin, uuid);
+                HtmlExport.exportPlayer(uuid);
             }
         }
-        plugin.addToProcessQueue(new Processor<UUID>(uuid) {
+        new Processor<UUID>(uuid) {
             @Override
             public void process() {
                 cacheInspectPluginsTab(object);
             }
-        });
+        }.queue();
     }
 
     public void cacheInspectPluginsTab(UUID uuid) {
@@ -265,7 +265,7 @@ public class BukkitInformationManager extends InformationManager {
             return analysisRefreshPage.getContent();
         }
         try {
-            return Theme.replaceColors(new AnalysisPageParser(analysisData, plugin).parse());
+            return Theme.replaceColors(new AnalysisPage(analysisData, plugin).toHtml());
         } catch (ParseException e) {
             return new InternalErrorResponse(e, this.getClass().getSimpleName()).getContent();
         }
@@ -273,7 +273,7 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public String getPlayerHtml(UUID uuid) throws ParseException {
-        return Theme.replaceColors(new InspectPageParser(uuid, plugin).parse());
+        return Theme.replaceColors(new InspectPage(uuid, plugin).toHtml());
     }
 
     @Override
@@ -318,7 +318,7 @@ public class BukkitInformationManager extends InformationManager {
             UUID serverUUID = Plan.getServerUUID();
             ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
             if (Settings.ANALYSIS_EXPORT.isTrue()) {
-                HtmlExport.exportServer(plugin, serverUUID);
+                HtmlExport.exportServer(serverUUID);
             }
         }
     }

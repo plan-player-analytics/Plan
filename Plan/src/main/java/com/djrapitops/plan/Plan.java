@@ -37,8 +37,6 @@ import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
-import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.cache.GeolocationCache;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
@@ -74,8 +72,6 @@ import java.util.UUID;
 public class Plan extends BukkitPlugin implements PlanPlugin {
 
     private BukkitSystem system;
-    
-    private Systems systems;
 
     private HookHandler hookHandler; // Manages 3rd party data sources
 
@@ -110,7 +106,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     public void onEnable() {
         super.onEnable();
         try {
-            systems = new Systems(this);
             FileSystem.getInstance().enable();
             ConfigSystem.getInstance().enable();
 
@@ -205,10 +200,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
      */
     @Override
     public void onDisable() {
-        //Clears the page cache
-        ResponseCache.clearCache();
-
-        systems.close();
+        system.disable();
 
         Log.info(Locale.get(Msg.DISABLED).toString());
         Benchmark.pluginDisabled(Plan.class);
@@ -332,10 +324,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     @Deprecated
     public void saveDefaultConfig() {
         throw new IllegalStateException("This method should be used on this plugin.");
-    }
-
-    public Systems getSystems() {
-        return systems;
     }
 
     public BukkitSystem getSystem() {

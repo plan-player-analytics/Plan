@@ -115,7 +115,7 @@ public class BatchOperationTable extends Table {
             return;
         }
         Log.debug("Batch Copy IPs, Geolocations & Last used dates");
-        toDB.getDb().getIpsTable().insertAllGeoInfo(db.getIpsTable().getAllGeoInfo());
+        toDB.getDb().getGeoInfoTable().insertAllGeoInfo(db.getGeoInfoTable().getAllGeoInfo());
     }
 
     public void copyNicknames(BatchOperationTable toDB) throws SQLException {

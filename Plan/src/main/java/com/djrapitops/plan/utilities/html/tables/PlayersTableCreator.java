@@ -1,7 +1,7 @@
 package com.djrapitops.plan.utilities.html.tables;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.element.AnalysisContainer;
@@ -64,7 +64,7 @@ public class PlayersTableCreator {
 
                 String geoLocation = profile.getMostRecentGeoInfo().getGeolocation();
                 html.append(Html.TABLELINE_PLAYERS.parse(
-                        Html.LINK_EXTERNAL.parse(Plan.getPlanAPI().getPlayerInspectPageLink(profile.getName()), profile.getName()),
+                        Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(profile.getName()), profile.getName()),
                         activityString,
                         String.valueOf(playtime), FormatUtils.formatTimeAmount(playtime),
                         String.valueOf(loginTimes),
@@ -133,7 +133,7 @@ public class PlayersTableCreator {
                     break;
                 }
                 UUID uuid = profile.getUuid();
-                String link = Html.LINK_EXTERNAL.parse(Plan.getPlanAPI().getPlayerInspectPageLink(profile.getName()), profile.getName());
+                String link = Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(profile.getName()), profile.getName());
 
                 String[] playerData = FormatUtils.mergeArrays(new String[]{link}, sortedData.getOrDefault(uuid, new String[]{}));
                 tableContainer.addRow(ArrayUtils.addAll(playerData));

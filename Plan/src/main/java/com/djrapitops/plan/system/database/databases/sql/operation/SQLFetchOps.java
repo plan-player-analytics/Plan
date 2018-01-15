@@ -55,7 +55,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID);
             Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
             Map<UUID, List<Action>> actions = actionsTable.getServerActions(serverUUID);
-            Map<UUID, List<GeoInfo>> geoInfo = ipsTable.getAllGeoInfo();
+            Map<UUID, List<GeoInfo>> geoInfo = geoInfoTable.getAllGeoInfo();
 
             Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
             Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -109,7 +109,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
             profile.setActions(actionsTable.getActions(uuid));
             profile.setNicknames(nicknamesTable.getAllNicknames(uuid));
-            profile.setGeoInformation(ipsTable.getGeoInfo(uuid));
+            profile.setGeoInformation(geoInfoTable.getGeoInfo(uuid));
 
             Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
             profile.setSessions(sessions);
@@ -197,6 +197,123 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     public List<TPS> getTPSData(UUID serverUUID) throws DBException {
         try {
             return tpsTable.getTPSData(serverUUID);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public List<TPS> getNetworkOnlineData() throws DBException {
+        try {
+            return tpsTable.getNetworkOnlineData();
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public List<Long> getRegisterDates() throws DBException {
+        try {
+            return usersTable.getRegisterDates();
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Optional<TPS> getAllTimePeak(UUID serverUUID) throws DBException {
+        try {
+            return tpsTable.getAllTimePeak(serverUUID);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws DBException {
+        try {
+            return tpsTable.getPeakPlayerCount(serverUUID, afterDate);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Map<UUID, Map<UUID, List<Session>>> getSessionsWithNoExtras() throws DBException {
+        try {
+            return sessionsTable.getAllSessions(false);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Map<UUID, Map<UUID, List<Session>>> getSessionsAndExtras() throws DBException {
+        try {
+            return sessionsTable.getAllSessions(true);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Set<String> getWorldNames(UUID serverUuid) throws DBException {
+        try {
+            return worldTable.getWorldNames(serverUuid);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public List<String> getNicknamesOfPlayerOnServer(UUID uuid, UUID serverUUID) throws DBException {
+        try {
+            return nicknamesTable.getNicknames(uuid, serverUUID);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public List<Action> getActions(UUID uuid) throws DBException {
+        try {
+            return actionsTable.getActions(uuid);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Map<UUID, UserInfo> getUsers() throws DBException {
+        try {
+            return usersTable.getUsers();
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Map<UUID, Long> getLastSeenForAllPlayers() throws DBException {
+        try {
+            return sessionsTable.getLastSeenForAllPlayers();
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Map<UUID, List<GeoInfo>> getAllGeoInfo() throws DBException {
+        try {
+            return geoInfoTable.getAllGeoInfo();
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Map<UUID, String> getPlayerNames() throws DBException {
+        try {
+            return usersTable.getPlayerNames();
         } catch (SQLException e) {
             throw ErrorUtil.getExceptionFor(e);
         }

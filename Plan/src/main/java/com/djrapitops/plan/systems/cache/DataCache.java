@@ -1,10 +1,10 @@
 package com.djrapitops.plan.systems.cache;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -61,12 +61,12 @@ public class DataCache extends SessionCache {
 
     public void cacheSavedNames() {
         try {
-            Map<UUID, String> playerNames = db.getUsersTable().getPlayerNames();
+            Map<UUID, String> playerNames = db.fetch().getPlayerNames();
             this.playerNames.putAll(playerNames);
             for (Map.Entry<UUID, String> entry : playerNames.entrySet()) {
                 uuids.put(entry.getValue(), entry.getKey());
             }
-        } catch (SQLException e) {
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }
@@ -81,9 +81,9 @@ public class DataCache extends SessionCache {
         String name = playerNames.get(uuid);
         if (name == null) {
             try {
-                name = db.getUsersTable().getPlayerName(uuid);
+                name = db.fetch().getPlayerName(uuid);
                 playerNames.put(uuid, name);
-            } catch (SQLException e) {
+            } catch (DBException e) {
                 Log.toLog(this.getClass().getName(), e);
                 name = "Error occurred";
             }
@@ -104,11 +104,11 @@ public class DataCache extends SessionCache {
         if (cached == null) {
             List<String> nicknames;
             try {
-                nicknames = db.getNicknamesTable().getNicknames(uuid);
+                nicknames = db.fetch().getNicknames(uuid);
                 if (!nicknames.isEmpty()) {
                     return nicknames.get(nicknames.size() - 1);
                 }
-            } catch (SQLException e) {
+            } catch (DBException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
         }

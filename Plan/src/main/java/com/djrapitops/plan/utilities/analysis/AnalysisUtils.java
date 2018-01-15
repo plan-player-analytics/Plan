@@ -1,16 +1,17 @@
 package com.djrapitops.plan.utilities.analysis;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.StickyData;
 import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -141,14 +142,14 @@ public class AnalysisUtils {
             // Add 0 time for worlds not present.
             Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
             PlanPlugin plugin = PlanPlugin.getInstance();
-            for (String world : plugin.getDB().getWorldTable().getWorldNames(plugin.getServerUuid())) {
+            for (String world : Database.getActive().fetch().getWorldNames(plugin.getServerUuid())) {
                 if (nonZeroWorlds.contains(world)) {
                     continue;
                 }
                 worldTimes.setGMTimesForWorld(world, new GMTimes());
             }
-        } catch (SQLException e) {
-            Log.toLog("AnalysisUtils.addMissingWorlds", e);
+        } catch (DBException e) {
+            Log.toLog(AnalysisUtils.class, e);
         }
     }
 

@@ -19,7 +19,6 @@ import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.systems.Systems;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
@@ -44,7 +43,7 @@ import java.util.UUID;
  */
 public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
-    private Systems systems;
+    private BungeeSystem system;
 
     private BungeeServerInfoManager serverInfoManager;
     private BungeeInformationManager infoManager;
@@ -52,13 +51,11 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Deprecated
     private boolean setupAllowed = false;
-    private BungeeSystem system;
 
     @Override
     public void onEnable() {
         super.onEnable();
         try {
-            systems = new Systems(this);
             FileSystem.getInstance().enable();
             ConfigSystem.getInstance().enable();
 
@@ -108,7 +105,8 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
-        systems.close();
+        system.disable();
+
         Log.info(Locale.get(Msg.DISABLED).toString());
         Benchmark.pluginDisabled(PlanBungee.class);
         DebugLog.pluginDisabled(PlanBungee.class);
@@ -171,11 +169,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     public UUID getServerUuid() {
         return serverInfoManager.getServerUUID();
-    }
-
-    @Override
-    public Systems getSystems() {
-        return systems;
     }
 
     public boolean isSetupAllowed() {

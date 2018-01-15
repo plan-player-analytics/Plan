@@ -15,9 +15,18 @@ public class SQLCountOps extends SQLOps implements CountOperations {
     }
 
     @Override
-    public int serverPlayerCount(UUID server) throws DBException {
+    public int getServerPlayerCount(UUID server) throws DBException {
         try {
             return userInfoTable.getServerUserCount(server);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public int getNetworkPlayerCount() throws DBException {
+        try {
+            return usersTable.getPlayerCount();
         } catch (SQLException e) {
             throw ErrorUtil.getExceptionFor(e);
         }

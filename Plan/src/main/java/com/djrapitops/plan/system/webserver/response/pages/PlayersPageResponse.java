@@ -1,11 +1,13 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -21,7 +23,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -33,8 +34,11 @@ public class PlayersPageResponse extends Response {
     public PlayersPageResponse() {
         super.setHeader("HTTP/1.1 200 OK");
         try {
+            PlanSystem system = PlanSystem.getInstance();
+
             PlanPlugin plugin = PlanPlugin.getInstance();
-            List<String> names = new ArrayList<>(plugin.getDB().getUsersTable().getPlayerNames().values());
+            Database db = system.getDatabaseSystem().getActiveDatabase();
+            List<String> names = new ArrayList<>(db.fetch().getPlayerNames().values());
             Collections.sort(names);
             Map<String, String> replace = new HashMap<>();
             if (Check.isBukkitAvailable()) {
@@ -42,22 +46,22 @@ public class PlayersPageResponse extends Response {
             } else {
                 replace.put("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
             }
-            replace.put("playersTable", buildPlayersTable(plugin.getDB()));
+            replace.put("playersTable", buildPlayersTable(db));
             replace.put("version", plugin.getVersion());
             super.setContent(Theme.replaceColors(StrSubstitutor.replace(FileUtil.getStringFromResource("web/players.html"), replace)));
-        } catch (SQLException | IOException e) {
+        } catch (DBException | IOException e) {
             Log.toLog(this.getClass().getName(), e);
-            setContent(new InternalErrorResponse(e, "/players").getContent());
+            setContent(new InternalErrorResponse("/players", e).getContent());
         }
     }
 
-    public static String buildPlayersTable(Database db) {
+    private String buildPlayersTable(Database db) {
         try {
-            List<UserInfo> users = new ArrayList<>(db.getUsersTable().getUsers().values());
+            List<UserInfo> users = new ArrayList<>(db.fetch().getUsers().values());
             users.sort(new UserInfoLastPlayedComparator());
-            Map<UUID, Long> lastSeenForAllPlayers = db.getSessionsTable().getLastSeenForAllPlayers();
-            Map<UUID, List<Session>> sessionsByUser = AnalysisUtils.sortSessionsByUser(db.getSessionsTable().getAllSessions(false));
-            Map<UUID, List<GeoInfo>> geoInfos = db.getIpsTable().getAllGeoInfo();
+            Map<UUID, Long> lastSeenForAllPlayers = db.fetch().getLastSeenForAllPlayers();
+            Map<UUID, List<Session>> sessionsByUser = AnalysisUtils.sortSessionsByUser(db.fetch().getSessionsWithNoExtras());
+            Map<UUID, List<GeoInfo>> geoInfos = db.fetch().getAllGeoInfo();
 
             String userS = Html.FONT_AWESOME_ICON.parse("user") + " Player";
             String playtimeS = Html.FONT_AWESOME_ICON.parse("clock-o") + " Playtime";
@@ -120,7 +124,7 @@ public class PlayersPageResponse extends Response {
             } catch (IllegalArgumentException ignored) {
             }
             return html.append("</tbody></table>").toString();
-        } catch (SQLException e) {
+        } catch (DBException e) {
             Log.toLog(PlayersPageResponse.class.getClass().getName(), e);
             return new InternalErrorResponse(e, "/players").getContent();
         }

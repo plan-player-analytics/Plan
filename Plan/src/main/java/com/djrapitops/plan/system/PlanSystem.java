@@ -12,6 +12,8 @@ import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plan.systems.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
 
@@ -26,6 +28,7 @@ public abstract class PlanSystem implements SubSystem {
 
     // Initialized in this class
     protected final ProcessingQueue processingQueue;
+    protected final WebServerSystem webServerSystem;
 
     // These need to be initialized in the sub class.
     protected VersionCheckSystem versionCheckSystem;
@@ -38,6 +41,7 @@ public abstract class PlanSystem implements SubSystem {
 
     public PlanSystem() {
         processingQueue = new ProcessingQueue();
+        webServerSystem = new WebServerSystem();
     }
 
     @Override
@@ -130,5 +134,13 @@ public abstract class PlanSystem implements SubSystem {
 
     public TaskSystem getTaskSystem() {
         return taskSystem;
+    }
+
+    public WebServerSystem getWebServerSystem() {
+        return webServerSystem;
+    }
+
+    public ServerInfo getServerInfo() {
+        return null; // TODO
     }
 }

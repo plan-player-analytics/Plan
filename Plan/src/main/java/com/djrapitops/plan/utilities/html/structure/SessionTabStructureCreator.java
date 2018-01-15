@@ -5,6 +5,7 @@
 package com.djrapitops.plan.utilities.html.structure;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -70,7 +71,7 @@ public class SessionTabStructureCreator {
             int playerKillCount = session.getPlayerKills().size();
 
             String name = Plan.getInstance().getDataCache().getName(uuid);
-            String link = Plan.getPlanAPI().getPlayerInspectPageLink(name);
+            String link = PlanAPI.getInstance().getPlayerInspectPageLink(name);
 
             String dotSeparated2 = appendWorldPerc
                     ? HtmlStructure.separateWithDots(sessionStart, SessionsTableCreator.getLongestWorldPlayed(session))

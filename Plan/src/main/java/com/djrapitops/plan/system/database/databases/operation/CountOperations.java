@@ -6,6 +6,7 @@ import java.util.UUID;
 
 public interface CountOperations {
 
-    int serverPlayerCount(UUID server) throws DBException;
+    int getServerPlayerCount(UUID server) throws DBException;
 
+    int getNetworkPlayerCount() throws DBException;
 }

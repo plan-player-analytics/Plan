@@ -1,6 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -48,12 +49,12 @@ public class AnalyzeCommand extends SubCommand {
         infoManager = plugin.getInfoManager();
     }
 
-    public static void sendAnalysisMessage(Collection<ISender> senders, UUID serverUUID) throws SQLException {
+    public static void sendAnalysisMessage(Collection<ISender> senders, UUID serverUUID) throws DBException {
         if (Verify.isEmpty(senders)) {
             return;
         }
         Plan plugin = Plan.getInstance();
-        Optional<String> serverName = plugin.getDB().getServerTable().getServerName(serverUUID);
+        Optional<String> serverName = plugin.getDB().fetch().getServerName(serverUUID);
         serverName.ifPresent(name -> {
             String target = "/server/" + name;
             String url = plugin.getInfoManager().getLinkTo(target);

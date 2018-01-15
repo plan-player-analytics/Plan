@@ -5,15 +5,13 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.tables.UserInfoTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -42,25 +40,23 @@ public class RegisterProcessor extends PlayerProcessor {
     public void process() {
         UUID uuid = getUUID();
         Plan plugin = Plan.getInstance();
-        Database db = plugin.getDB();
-        UsersTable usersTable = db.getUsersTable();
-        UserInfoTable userInfoTable = db.getUserInfoTable();
+        Database db = Database.getActive();
         try {
-            if (!usersTable.isRegistered(uuid)) {
-                usersTable.registerUser(uuid, registered, name);
+            if (!db.check().isPlayerRegistered(uuid)) {
+                db.save().registerNewUser(uuid, registered, name);
             }
-            if (!userInfoTable.isRegistered(uuid)) {
-                userInfoTable.registerUserInfo(uuid, registered);
+            if (!db.check().isPlayerRegisteredOnThisServer(uuid)) {
+                db.save().registerNewUserOnThisServer(uuid, registered);
             }
-            if (db.getActionsTable().getActions(uuid).size() > 0) {
+            if (db.fetch().getActions(uuid).size() > 0) {
                 return;
             }
             plugin.getDataCache().markFirstSession(uuid);
-            db.getActionsTable().insertAction(uuid, new Action(time, Actions.FIRST_SESSION, "Online: " + playersOnline + " Players"));
-        } catch (SQLException e) {
+            db.save().action(uuid, new Action(time, Actions.FIRST_SESSION, "Online: " + playersOnline + " Players"));
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
-            plugin.addToProcessQueue(afterProcess);
+            Processor.queue(afterProcess);
         }
     }
 }

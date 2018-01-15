@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.processing.processors.importing.importers;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
@@ -20,7 +21,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.collect.ImmutableMap;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,7 +59,7 @@ public abstract class Importer {
 
         new ImportExecutorHelper() {
             @Override
-            void execute() throws SQLException {
+            void execute() throws DBException {
                 Benchmark.start(userDataBenchmarkName);
                 processUserData();
                 Benchmark.stop(userDataBenchmarkName);
@@ -104,15 +104,15 @@ public abstract class Importer {
 
         new ImportExecutorHelper() {
             @Override
-            void execute() {
-                db.getTpsTable().insertAllTPS(ImmutableMap.of(uuid, serverImportData.getTpsData()));
+            void execute() throws DBException {
+                db.save().insertTPS(ImmutableMap.of(uuid, serverImportData.getTpsData()));
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() {
-                db.getCommandUseTable().insertCommandUsage(ImmutableMap.of(uuid, serverImportData.getCommandUsages()));
+            void execute() throws DBException {
+                db.save().insertCommandUsage(ImmutableMap.of(uuid, serverImportData.getCommandUsages()));
             }
         }.submit(service);
 
@@ -129,7 +129,7 @@ public abstract class Importer {
         Benchmark.stop(benchmarkName);
     }
 
-    private void processUserData() {
+    private void processUserData() throws DBException {
         String benchmarkName = "Processing User Data";
         String getDataBenchmarkName = "Getting User Data";
         String insertDataIntoCollectionsBenchmarkName = "Insert User Data into Collections";
@@ -190,40 +190,40 @@ public abstract class Importer {
 
         Benchmark.start(insertDataIntoDatabaseBenchmarkName);
 
-        db.getUsersTable().insertUsers(users);
+        db.save().insertUsers(users);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() {
-                db.getSessionsTable().insertSessions(ImmutableMap.of(serverUUID, sessions), true);
+            void execute() throws DBException {
+                db.save().insertSessions(ImmutableMap.of(serverUUID, sessions), true);
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() {
-                db.getUsersTable().updateKicked(timesKicked);
+            void execute() throws DBException {
+                db.save().kickAmount(timesKicked);
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() {
-                db.getUserInfoTable().insertUserInfo(ImmutableMap.of(serverUUID, userInfo));
+            void execute() throws DBException {
+                db.save().insertUserInfo(ImmutableMap.of(serverUUID, userInfo));
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() {
-                db.getNicknamesTable().insertNicknames(ImmutableMap.of(serverUUID, nickNames));
+            void execute() throws DBException {
+                db.save().insertNicknames(ImmutableMap.of(serverUUID, nickNames));
             }
         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
-            void execute() {
-                db.getIpsTable().insertAllGeoInfo(geoInfo);
+            void execute() throws DBException {
+                db.save().insertAllGeoInfo(geoInfo);
             }
         }.submit(service);
 
@@ -273,7 +273,7 @@ public abstract class Importer {
     }
 
     private abstract class ImportExecutorHelper {
-        abstract void execute() throws SQLException;
+        abstract void execute() throws DBException;
 
         void submit(ExecutorService service) {
             service.submit(new Runnable() {
@@ -281,7 +281,7 @@ public abstract class Importer {
                 public void run() {
                     try {
                         execute();
-                    } catch (SQLException e) {
+                    } catch (DBException e) {
                         Log.toLog(this.getClass().getName(), e);
                     }
                 }

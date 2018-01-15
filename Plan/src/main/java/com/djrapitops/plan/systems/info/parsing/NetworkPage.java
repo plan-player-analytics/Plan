@@ -6,6 +6,7 @@ package com.djrapitops.plan.systems.info.parsing;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -22,7 +23,6 @@ import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;
 import com.djrapitops.plugin.api.TimeAmount;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,21 +33,21 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class NetworkPageParser extends PageParser {
+public class NetworkPage extends Page {
 
     private final PlanBungee plugin;
 
-    public NetworkPageParser(PlanBungee plugin) {
+    public NetworkPage(PlanBungee plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public String parse() throws ParseException {
+    public String toHtml() throws ParseException {
         try {
             UUID serverUUID = plugin.getServerUuid();
             long now = MiscUtils.getTime();
             Database db = plugin.getDB();
-            List<TPS> networkOnlineData = db.getTpsTable().getNetworkOnlineData();
+            List<TPS> networkOnlineData = db.fetch().getNetworkOnlineData();
 
             peakTimes(serverUUID, now, db);
 
@@ -60,9 +60,9 @@ public class NetworkPageParser extends PageParser {
             addValue("playersGraphColor", Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
             addValue("playersOnline", plugin.getProxy().getOnlineCount());
 
-            addValue("playersTotal", db.getUsersTable().getPlayerCount());
+            addValue("playersTotal", db.count().getNetworkPlayerCount());
 
-            List<Long> registerDates = db.getUsersTable().getRegisterDates();
+            List<Long> registerDates = db.fetch().getRegisterDates();
             addValue("playersNewDay", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.DAY.ms(), now));
             addValue("playersNewWeek", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.WEEK.ms(), now));
             addValue("playersNewMonth", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.MONTH.ms(), now));
@@ -76,8 +76,8 @@ public class NetworkPageParser extends PageParser {
         }
     }
 
-    private void uniquePlayers(long now, Database db) throws SQLException {
-        Map<UUID, Map<UUID, List<Session>>> allSessions = db.getSessionsTable().getAllSessions(false);
+    private void uniquePlayers(long now, Database db) throws DBException {
+        Map<UUID, Map<UUID, List<Session>>> allSessions = db.fetch().getSessionsWithNoExtras();
         Map<UUID, List<Session>> userSessions = AnalysisUtils.sortSessionsByUser(allSessions);
 
         long dayAgo = now - TimeAmount.DAY.ms();
@@ -89,9 +89,9 @@ public class NetworkPageParser extends PageParser {
         addValue("playersUniqueMonth", AnalysisUtils.getUniqueJoinsPerDay(userSessions, monthAgo));
     }
 
-    private void peakTimes(UUID serverUUID, long now, Database db) throws SQLException {
-        Optional<TPS> allTimePeak = db.getTpsTable().getAllTimePeak(serverUUID);
-        Optional<TPS> lastPeak = db.getTpsTable().getPeakPlayerCount(serverUUID, now - TimeAmount.DAY.ms() * 2L);
+    private void peakTimes(UUID serverUUID, long now, Database db) throws DBException {
+        Optional<TPS> allTimePeak = db.fetch().getAllTimePeak(serverUUID);
+        Optional<TPS> lastPeak = db.fetch().getPeakPlayerCount(serverUUID, now - TimeAmount.DAY.ms() * 2L);
 
         if (allTimePeak.isPresent()) {
             TPS tps = allTimePeak.get();

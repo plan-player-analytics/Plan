@@ -15,7 +15,7 @@ public class SQLSearchOps extends SQLOps implements SearchOperations {
     }
 
     @Override
-    public List<String> matchingNames(String search) throws DBException {
+    public List<String> matchingPlayers(String search) throws DBException {
         try {
             return usersTable.getMatchingNames(search);
         } catch (SQLException e) {

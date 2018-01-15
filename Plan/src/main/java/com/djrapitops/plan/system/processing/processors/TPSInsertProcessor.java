@@ -4,12 +4,12 @@
  */
 package com.djrapitops.plan.system.processing.processors;
 
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -36,8 +36,8 @@ public class TPSInsertProcessor extends Processor<List<TPS>> {
 
         TPS tps = new TPS(lastDate, averageTPS, averagePlayersOnline, averageCPUUsage, averageUsedMemory, averageEntityCount, averageChunksLoaded);
         try {
-            PlanPlugin.getInstance().getDB().getTpsTable().insertTPS(tps);
-        } catch (SQLException e) {
+            Database.getActive().save().insertTPSforThisServer(tps);
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }

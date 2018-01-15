@@ -4,15 +4,15 @@
  */
 package com.djrapitops.plan.system.processing.processors;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.processors.player.PlayerProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -39,8 +39,8 @@ public class NewNickActionProcessor extends PlayerProcessor {
         Action action = new Action(MiscUtils.getTime(), Actions.NEW_NICKNAME, info);
 
         try {
-            Plan.getInstance().getDB().getActionsTable().insertAction(uuid, action);
-        } catch (SQLException e) {
+            Database.getActive().save().action(uuid, action);
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }

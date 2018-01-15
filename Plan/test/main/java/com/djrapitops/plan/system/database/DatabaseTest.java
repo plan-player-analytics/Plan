@@ -244,7 +244,7 @@ public class DatabaseTest {
         assertEquals(expected, tpsTable.getTPSData());
     }
 
-    private void saveUserOne() throws SQLException {
+    private void saveUserOne() {
         saveUserOne(db);
     }
 
@@ -252,7 +252,7 @@ public class DatabaseTest {
         database.getUsersTable().registerUser(uuid, 123456789L, "Test");
     }
 
-    private void saveUserTwo() throws SQLException {
+    private void saveUserTwo() {
         saveUserTwo(db);
     }
 
@@ -277,7 +277,7 @@ public class DatabaseTest {
     @Test
     public void testIPTable() throws SQLException, DBInitException {
         saveUserOne();
-        IPsTable ipsTable = db.getIpsTable();
+        GeoInfoTable ipsTable = db.getIpsTable();
 
         String expectedIP = "1.2.3.4";
         String expectedGeoLoc = "TestLocation";
@@ -353,7 +353,7 @@ public class DatabaseTest {
         assertEquals(new HashSet<>(worlds), new HashSet<>(saved));
     }
 
-    private void saveTwoWorlds() throws SQLException {
+    private void saveTwoWorlds() {
         saveTwoWorlds(db);
     }
 
@@ -508,14 +508,14 @@ public class DatabaseTest {
         userInfoTable.registerUserInfo(uuid, 223456789L);
         assertTrue(userInfoTable.isRegistered(uuid));
 
-        userInfoTable.updateOpAndBanStatus(uuid, true, true);
+        userInfoTable.updateOpStatus(uuid, true, true);
         commitTest();
 
         UserInfo userInfo = userInfoTable.getUserInfo(uuid);
         assertTrue(userInfo.isBanned());
         assertTrue(userInfo.isOpped());
 
-        userInfoTable.updateOpAndBanStatus(uuid, false, true);
+        userInfoTable.updateOpStatus(uuid, false, true);
         commitTest();
 
         userInfo = userInfoTable.getUserInfo(uuid);
@@ -523,7 +523,7 @@ public class DatabaseTest {
         assertTrue(userInfo.isBanned());
         assertFalse(userInfo.isOpped());
 
-        userInfoTable.updateOpAndBanStatus(uuid, false, false);
+        userInfoTable.updateOpStatus(uuid, false, false);
         commitTest();
 
         userInfo = userInfoTable.getUserInfo(uuid);
@@ -572,7 +572,7 @@ public class DatabaseTest {
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        IPsTable ipsTable = db.getIpsTable();
+        GeoInfoTable ipsTable = db.getIpsTable();
         ActionsTable actionsTable = db.getActionsTable();
 
         userInfoTable.registerUserInfo(uuid, 223456789L);
@@ -606,7 +606,7 @@ public class DatabaseTest {
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        IPsTable ipsTable = db.getIpsTable();
+        GeoInfoTable ipsTable = db.getIpsTable();
         ActionsTable actionsTable = db.getActionsTable();
         TPSTable tpsTable = db.getTpsTable();
         SecurityTable securityTable = db.getSecurityTable();
@@ -636,7 +636,7 @@ public class DatabaseTest {
         UsersTable usersTable = database.getUsersTable();
         SessionsTable sessionsTable = database.getSessionsTable();
         NicknamesTable nicknamesTable = database.getNicknamesTable();
-        IPsTable ipsTable = database.getIpsTable();
+        GeoInfoTable ipsTable = database.getIpsTable();
         ActionsTable actionsTable = database.getActionsTable();
         TPSTable tpsTable = database.getTpsTable();
         SecurityTable securityTable = database.getSecurityTable();
@@ -790,7 +790,7 @@ public class DatabaseTest {
         UsersTable usersTable = backup.getUsersTable();
         SessionsTable sessionsTable = backup.getSessionsTable();
         NicknamesTable nicknamesTable = backup.getNicknamesTable();
-        IPsTable ipsTable = backup.getIpsTable();
+        GeoInfoTable ipsTable = backup.getGeoInfoTable();
         ActionsTable actionsTable = backup.getActionsTable();
         TPSTable tpsTable = backup.getTpsTable();
         SecurityTable securityTable = backup.getSecurityTable();

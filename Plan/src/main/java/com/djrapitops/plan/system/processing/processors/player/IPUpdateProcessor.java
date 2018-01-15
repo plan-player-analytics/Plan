@@ -4,12 +4,12 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.systems.cache.GeolocationCache;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -33,8 +33,8 @@ public class IPUpdateProcessor extends PlayerProcessor {
         UUID uuid = getUUID();
         String country = GeolocationCache.getCountry(ip);
         try {
-            Plan.getInstance().getDB().getIpsTable().saveGeoInfo(uuid, new GeoInfo(ip, country, time));
-        } catch (SQLException e) {
+            Database.getActive().save().geoInfo(uuid, new GeoInfo(ip, country, time));
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }

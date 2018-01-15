@@ -31,7 +31,7 @@ public abstract class SQLDB extends Database {
     private final KillsTable killsTable;
     private final NicknamesTable nicknamesTable;
     private final SessionsTable sessionsTable;
-    private final IPsTable ipsTable;
+    private final GeoInfoTable geoInfoTable;
     private final CommandUseTable commandUseTable;
     private final TPSTable tpsTable;
     private final VersionTable versionTable;
@@ -46,6 +46,7 @@ public abstract class SQLDB extends Database {
     private final SQLRemoveOps removeOps;
     private final SQLSearchOps searchOps;
     private final SQLCountOps countOps;
+    private final SQLSaveOps saveOps;
 
     private final boolean usingMySQL;
     private boolean open = false;
@@ -64,7 +65,7 @@ public abstract class SQLDB extends Database {
         usersTable = new UsersTable(this);
         userInfoTable = new UserInfoTable(this);
         actionsTable = new ActionsTable(this);
-        ipsTable = new IPsTable(this);
+        geoInfoTable = new GeoInfoTable(this);
         nicknamesTable = new NicknamesTable(this);
         sessionsTable = new SessionsTable(this);
         killsTable = new KillsTable(this);
@@ -77,6 +78,7 @@ public abstract class SQLDB extends Database {
         removeOps = new SQLRemoveOps(this);
         countOps = new SQLCountOps(this);
         searchOps = new SQLSearchOps(this);
+        saveOps = new SQLSaveOps(this);
     }
 
     /**
@@ -162,11 +164,11 @@ public abstract class SQLDB extends Database {
             }
             if (version < 12) {
                 actionsTable.alterTableV12();
-                ipsTable.alterTableV12();
+                geoInfoTable.alterTableV12();
                 versionTable.setVersion(12);
             }
             if (version < 13) {
-                ipsTable.alterTableV13();
+                geoInfoTable.alterTableV13();
                 versionTable.setVersion(13);
             }
         } catch (SQLException e) {
@@ -194,7 +196,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTables() {
         return new Table[]{
-                serverTable, usersTable, userInfoTable, ipsTable,
+                serverTable, usersTable, userInfoTable, geoInfoTable,
                 nicknamesTable, sessionsTable, killsTable,
                 commandUseTable, actionsTable, tpsTable,
                 worldTable, worldTimesTable, securityTable
@@ -208,7 +210,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
-                ipsTable, nicknamesTable, killsTable,
+                geoInfoTable, nicknamesTable, killsTable,
                 worldTimesTable, sessionsTable, actionsTable,
                 worldTable, userInfoTable, usersTable,
                 commandUseTable, tpsTable, securityTable,
@@ -303,8 +305,8 @@ public abstract class SQLDB extends Database {
         return killsTable;
     }
 
-    public IPsTable getIpsTable() {
-        return ipsTable;
+    public GeoInfoTable getGeoInfoTable() {
+        return geoInfoTable;
     }
 
     public NicknamesTable getNicknamesTable() {
@@ -375,5 +377,10 @@ public abstract class SQLDB extends Database {
     @Override
     public CountOperations count() {
         return countOps;
+    }
+
+    @Override
+    public SaveOperations save() {
+        return saveOps;
     }
 }

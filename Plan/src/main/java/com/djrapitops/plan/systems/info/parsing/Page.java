@@ -15,11 +15,11 @@ import java.util.Map;
  *
  * @author Rsl1122
  */
-public abstract class PageParser {
+public abstract class Page {
 
     protected final Map<String, Serializable> placeHolders;
 
-    public PageParser() {
+    public Page() {
         this.placeHolders = new HashMap<>();
     }
 
@@ -31,5 +31,5 @@ public abstract class PageParser {
         placeHolders.putAll(values);
     }
 
-    public abstract String parse() throws ParseException;
+    public abstract String toHtml() throws ParseException;
 }

@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.webserver.webapi;
 
+import com.djrapitops.plan.system.webserver.pages.TreePageHandler;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 
 import java.util.*;
@@ -11,7 +12,8 @@ import java.util.*;
 /**
  * @author Fuzzlemann and Rsl1122
  */
-public class WebAPIManager {
+@Deprecated
+public class WebAPIManager extends TreePageHandler {
 
     private final Map<String, WebAPI> registry;
     private static final Set<String> accessKeys = new HashSet<>();

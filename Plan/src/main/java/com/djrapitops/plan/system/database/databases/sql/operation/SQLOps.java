@@ -13,7 +13,7 @@ public class SQLOps {
     protected final KillsTable killsTable;
     protected final NicknamesTable nicknamesTable;
     protected final SessionsTable sessionsTable;
-    protected final IPsTable ipsTable;
+    protected final GeoInfoTable geoInfoTable;
     protected final CommandUseTable commandUseTable;
     protected final TPSTable tpsTable;
     protected final SecurityTable securityTable;
@@ -30,7 +30,7 @@ public class SQLOps {
         killsTable = db.getKillsTable();
         nicknamesTable = db.getNicknamesTable();
         sessionsTable = db.getSessionsTable();
-        ipsTable = db.getIpsTable();
+        geoInfoTable = db.getGeoInfoTable();
         commandUseTable = db.getCommandUseTable();
         tpsTable = db.getTpsTable();
         securityTable = db.getSecurityTable();

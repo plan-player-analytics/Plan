@@ -58,7 +58,7 @@ public class Version8TransferTable extends Table {
         copyUsers();
 
         execute(dropTableSql("plan_ips"));
-        db.getIpsTable().createTable();
+        db.getGeoInfoTable().createTable();
         execute(dropTableSql("plan_world_times"));
         execute(dropTableSql("plan_worlds"));
         db.getWorldTable().createTable();

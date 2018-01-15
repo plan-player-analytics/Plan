@@ -58,19 +58,27 @@ public class DeathEventListener implements Listener {
             EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) entityDamageEvent;
             Entity killerEntity = entityDamageByEntityEvent.getDamager();
 
-            if (killerEntity instanceof Player) {
-                handlePlayerKill(time, dead, (Player) killerEntity);
-            } else if (killerEntity instanceof Wolf) {
-                handleWolfKill(time, dead, (Wolf) killerEntity);
-            } else if (killerEntity instanceof Arrow) {
-                handleArrowKill(time, dead, (Arrow) killerEntity);
-            }
+            handleKill(time, dead, killerEntity);
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
     }
 
-    private void handlePlayerKill(long time, LivingEntity dead, Player killer) {
+    private void handleKill(long time, LivingEntity dead, Entity killerEntity) {
+        KillProcessor processor = null;
+        if (killerEntity instanceof Player) {
+            processor = handlePlayerKill(time, dead, (Player) killerEntity);
+        } else if (killerEntity instanceof Wolf) {
+            processor = handleWolfKill(time, dead, (Wolf) killerEntity);
+        } else if (killerEntity instanceof Arrow) {
+            processor = handleArrowKill(time, dead, (Arrow) killerEntity);
+        }
+        if (processor != null) {
+            processor.queue();
+        }
+    }
+
+    private KillProcessor handlePlayerKill(long time, LivingEntity dead, Player killer) {
         Material itemInHand;
         try {
             itemInHand = killer.getInventory().getItemInMainHand().getType();
@@ -82,31 +90,31 @@ public class DeathEventListener implements Listener {
             }
         }
 
-        plugin.addToProcessQueue(new KillProcessor(killer.getUniqueId(), time, dead, normalizeMaterialName(itemInHand)));
+        return new KillProcessor(killer.getUniqueId(), time, dead, normalizeMaterialName(itemInHand));
     }
 
-    private void handleWolfKill(long time, LivingEntity dead, Wolf wolf) {
+    private KillProcessor handleWolfKill(long time, LivingEntity dead, Wolf wolf) {
         if (!wolf.isTamed()) {
-            return;
+            return null;
         }
 
         AnimalTamer owner = wolf.getOwner();
         if (!(owner instanceof Player)) {
-            return;
+            return null;
         }
 
-        plugin.addToProcessQueue(new KillProcessor(owner.getUniqueId(), time, dead, "Wolf"));
+        return new KillProcessor(owner.getUniqueId(), time, dead, "Wolf");
     }
 
-    private void handleArrowKill(long time, LivingEntity dead, Arrow arrow) {
+    private KillProcessor handleArrowKill(long time, LivingEntity dead, Arrow arrow) {
         ProjectileSource source = arrow.getShooter();
         if (!(source instanceof Player)) {
-            return;
+            return null;
         }
 
         Player player = (Player) source;
 
-        plugin.addToProcessQueue(new KillProcessor(player.getUniqueId(), time, dead, "Bow"));
+        return new KillProcessor(player.getUniqueId(), time, dead, "Bow");
     }
 
     /**
