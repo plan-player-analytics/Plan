@@ -21,9 +21,15 @@ public interface PlanAPI {
         throw new IllegalAccessError("Not yet implemented"); // TODO
     }
 
-    void registerPluginData(PluginData pluginData);
+    void addPluginDataSource(PluginData pluginData);
 
-    Map<UUID, String> getKnownUsernames();
+    String getPlayerInspectPageLink(String playerName);
+
+    String getPlayerName(UUID uuid);
+
+    UUID playerNameToUUID(String playerName);
+
+    Map<UUID, String> getKnownPlayerNames();
 
     FetchOperations fetchFromPlanDB();
 }

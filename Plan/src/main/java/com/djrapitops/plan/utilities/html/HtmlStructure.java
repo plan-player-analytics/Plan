@@ -6,6 +6,7 @@ package com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ServerVariableHolder;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Settings;
@@ -17,7 +18,6 @@ import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -122,11 +122,12 @@ public class HtmlStructure {
         UUID serverUUID = plugin.getServerUuid();
         String id = serverUUID.toString().replace("-", "");
 
-        int playerCount = db.getUserInfoTable().getServerUserCount(serverUUID);
+        int playerCount = 0;
         String playerData = "[]";
         try {
-            playerData = PlayerActivityGraph.createSeries(db.getTpsTable().getTPSData(serverUUID));
-        } catch (SQLException e) {
+            playerCount = db.count().serverPlayerCount(serverUUID);
+            playerData = PlayerActivityGraph.createSeries(db.fetch().getTPSData(serverUUID));
+        } catch (DBException e) {
             Log.toLog(HtmlStructure.class.getClass().getName(), e);
         }
 

@@ -13,8 +13,6 @@ import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.processing.ProcessingQueue;
-import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
@@ -52,8 +50,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     private BungeeInformationManager infoManager;
     private ServerVariableHolder variableHolder;
 
-    private ProcessingQueue processingQueue;
-
+    @Deprecated
     private boolean setupAllowed = false;
     private BungeeSystem system;
 
@@ -93,8 +90,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
             TaskSystem.getInstance().enable();
 
-            processingQueue = new ProcessingQueue();
-
             Log.logDebug("Enable", "WebServer Initialization");
             Log.info(Locale.get(Msg.ENABLED).toString());
             if (Settings.ANALYSIS_EXPORT.isTrue()) {
@@ -113,13 +108,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
-        if (processingQueue != null) {
-            try {
-                processingQueue.stop();
-            } catch (IllegalArgumentException ignored) {
-                /*ignored*/
-            }
-        }
         systems.close();
         Log.info(Locale.get(Msg.DISABLED).toString());
         Benchmark.pluginDisabled(PlanBungee.class);
@@ -134,7 +122,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Override
     public void onReload() {
-        ConfigSystem.reload();
     }
 
     @Override
@@ -156,19 +143,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Override
     public WebServer getWebServer() {
         return WebServerSystem.getInstance().getWebServer();
-    }
-
-
-    @Override
-    public ProcessingQueue getProcessingQueue() {
-        return processingQueue;
-    }
-
-    @Override
-    public void addToProcessQueue(Processor... processors) {
-        for (Processor processor : processors) {
-            processingQueue.addToQueue(processor);
-        }
     }
 
     @Override
@@ -214,5 +188,10 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     public BungeeSystem getSystem() {
         return system;
+    }
+
+    @Override
+    public boolean isReloading() {
+        return reloading;
     }
 }

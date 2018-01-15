@@ -3,10 +3,7 @@ package com.djrapitops.plan.system.database.databases;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.operation.BackupOperations;
-import com.djrapitops.plan.system.database.databases.operation.CheckOperations;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
+import com.djrapitops.plan.system.database.databases.operation.*;
 import com.djrapitops.plan.utilities.NullCheck;
 
 /**
@@ -62,4 +59,8 @@ public abstract class Database {
     public boolean isOpen() {
         return open;
     }
+
+    public abstract SearchOperations search();
+
+    public abstract CountOperations count();
 }

@@ -3,6 +3,7 @@ package com.djrapitops.plan.utilities;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -16,7 +17,6 @@ import com.djrapitops.plugin.command.ISender;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -99,9 +99,9 @@ public class MiscUtils {
         Database db = PlanPlugin.getInstance().getDB();
         List<String> matches;
         try {
-            matches = db.getUsersTable().getMatchingNames(search);
-        } catch (SQLException e) {
-            Log.toLog("MiscUtils.getMatchingPlayerNames", e);
+            matches = db.search().matchingPlayerNames(search);
+        } catch (DBException e) {
+            Log.toLog(MiscUtils.class, e);
             return new ArrayList<>();
         }
         Collections.sort(matches);

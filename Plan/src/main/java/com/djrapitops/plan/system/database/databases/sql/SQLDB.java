@@ -2,14 +2,8 @@ package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.operation.BackupOperations;
-import com.djrapitops.plan.system.database.databases.operation.CheckOperations;
-import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLBackupOps;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLCheckOps;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLRemoveOps;
+import com.djrapitops.plan.system.database.databases.operation.*;
+import com.djrapitops.plan.system.database.databases.sql.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.database.databases.sql.tables.move.Version8TransferTable;
 import com.djrapitops.plugin.api.Benchmark;
@@ -50,6 +44,8 @@ public abstract class SQLDB extends Database {
     private final SQLCheckOps checkOps;
     private final SQLFetchOps fetchOps;
     private final SQLRemoveOps removeOps;
+    private final SQLSearchOps searchOps;
+    private final SQLCountOps countOps;
 
     private final boolean usingMySQL;
     private boolean open = false;
@@ -79,6 +75,8 @@ public abstract class SQLDB extends Database {
         checkOps = new SQLCheckOps(this);
         fetchOps = new SQLFetchOps(this);
         removeOps = new SQLRemoveOps(this);
+        countOps = new SQLCountOps(this);
+        searchOps = new SQLSearchOps(this);
     }
 
     /**
@@ -151,7 +149,7 @@ public abstract class SQLDB extends Database {
                     @Override
                     public void run() {
                         try {
-                            new Version8TransferTable(db, isUsingMySQL()).alterTablesToV10();
+                            new Version8TransferTable(db).alterTablesToV10();
                         } catch (DBInitException | SQLException e) {
                             Log.toLog(this.getClass().getName(), e);
                         }
@@ -367,5 +365,15 @@ public abstract class SQLDB extends Database {
     @Override
     public RemoveOperations remove() {
         return removeOps;
+    }
+
+    @Override
+    public SearchOperations search() {
+        return searchOps;
+    }
+
+    @Override
+    public CountOperations count() {
+        return countOps;
     }
 }

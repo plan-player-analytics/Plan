@@ -16,7 +16,6 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.database.databases.sql.statements.Update;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -316,31 +315,26 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public int getServerUserCount(UUID serverUUID) {
-        try {
-            String sql = "SELECT " +
-                    " COUNT(" + columnRegistered + ") as c" +
-                    " FROM " + tableName +
-                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
+    public int getServerUserCount(UUID serverUUID) throws SQLException {
+        String sql = "SELECT " +
+                " COUNT(" + columnRegistered + ") as c" +
+                " FROM " + tableName +
+                " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
 
-            return query(new QueryStatement<Integer>(sql, 20000) {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setString(1, serverUUID.toString());
-                }
+        return query(new QueryAllStatement<Integer>(sql, 20000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
 
-                @Override
-                public Integer processResults(ResultSet set) throws SQLException {
-                    if (set.next()) {
-                        return set.getInt("c");
-                    }
-                    return 0;
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getInt("c");
                 }
-            });
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
-            return 0;
-        }
+                return 0;
+            }
+        });
     }
 
     // TODO improve performance of this method.

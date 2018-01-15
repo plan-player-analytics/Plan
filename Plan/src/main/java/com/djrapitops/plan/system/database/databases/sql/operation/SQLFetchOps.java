@@ -3,6 +3,7 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
+import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.sql.ErrorUtil;
@@ -167,6 +168,35 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     public Optional<UUID> getServerUUID(String serverName) throws DBException {
         try {
             return serverTable.getServerUUID(serverName);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public UUID getUuidOf(String playerName) throws DBException {
+        try {
+            return usersTable.getUuidOf(playerName);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+
+    @Override
+    public WebUser getWebUser(String username) throws DBException {
+        try {
+            return securityTable.getWebUser(username);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+
+    @Override
+    public List<TPS> getTPSData(UUID serverUUID) throws DBException {
+        try {
+            return tpsTable.getTPSData(serverUUID);
         } catch (SQLException e) {
             throw ErrorUtil.getExceptionFor(e);
         }

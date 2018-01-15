@@ -57,8 +57,12 @@ public class MySQLDB extends SQLDB {
     }
 
     @Override
-    public void close() throws SQLException {
-        dataSource.close();
+    public void close() {
+        try {
+            dataSource.close();
+        } catch (SQLException e) {
+            Log.toLog(this.getClass(), e);
+        }
         super.close();
     }
 }

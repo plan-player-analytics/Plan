@@ -9,15 +9,16 @@ import com.djrapitops.plan.data.plugin.BanData;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
+import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.cache.SessionCache;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.systems.info.InformationManager;
-import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -114,7 +115,7 @@ public class Analysis {
 
             Benchmark.stop("Analysis", "Create Empty dataset");
             Benchmark.start("Fetch Phase");
-            ServerProfile profile = db.getServerProfile(Plan.getServerUUID());
+            ServerProfile profile = db.fetch().getServerProfile(Plan.getServerUUID());
             DataCache dataCache = plugin.getDataCache();
             profile.addActiveSessions(new HashMap<>(SessionCache.getActiveSessions()));
             serverProfile = profile;

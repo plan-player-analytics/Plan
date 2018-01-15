@@ -36,7 +36,7 @@ public class PlayerOnlineListener implements Listener {
             String name = player.getName();
             long now = MiscUtils.getTime();
 
-            plugin.getProcessingQueue().addToQueue(new BungeePlayerRegisterProcessor(uuid, name, now));
+            plugin.getSystem().getProcessingQueue().addToQueue(new BungeePlayerRegisterProcessor(uuid, name, now));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

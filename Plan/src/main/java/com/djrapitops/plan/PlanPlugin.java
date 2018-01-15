@@ -28,27 +28,34 @@ public interface PlanPlugin extends IPlugin {
     @Deprecated
     Database getDB();
 
+    @Deprecated
     ServerVariableHolder getVariable();
 
+    @Deprecated
     UUID getServerUuid();
 
     @Deprecated
     InformationManager getInfoManager();
 
+    @Deprecated
     WebServer getWebServer();
 
     File getDataFolder();
 
+    @Deprecated
     ProcessingQueue getProcessingQueue();
 
+    @Deprecated
     void addToProcessQueue(Processor... processors);
 
     InputStream getResource(String resource);
 
+    @Deprecated
     Config getMainConfig();
 
     ColorScheme getColorScheme();
 
+    @Deprecated
     Systems getSystems();
 
     boolean isReloading();

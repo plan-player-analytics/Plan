@@ -3,7 +3,6 @@ package com.djrapitops.plan.data.plugin;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.pluginbridge.plan.Bridge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class HookHandler {
         additionalDataSources = new ArrayList<>();
         configHandler = new PluginsConfigSection();
         try {
-            Bridge.hook(this);
+//            Bridge.hook(this);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");

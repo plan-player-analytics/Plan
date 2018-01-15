@@ -1,5 +1,7 @@
 package com.djrapitops.plan.utilities;
 
+import com.djrapitops.plan.api.exceptions.PassEncryptException;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -167,7 +169,7 @@ public class PassEncryptUtil {
     }
 
     @SuppressWarnings("serial")
-    public static class InvalidHashException extends Exception {
+    public static class InvalidHashException extends PassEncryptException {
 
         InvalidHashException(String message) {
             super(message);
@@ -179,7 +181,7 @@ public class PassEncryptUtil {
     }
 
     @SuppressWarnings("serial")
-    public static class CannotPerformOperationException extends Exception {
+    public static class CannotPerformOperationException extends PassEncryptException {
 
         CannotPerformOperationException() {
             super("Unsupported hash type.");
