@@ -55,7 +55,7 @@
 		// Browser
 		factory( jQuery, window, document );
 	}
-}
+};
 (function( $, window, document, undefined ) {
 	"use strict";
 
@@ -1054,7 +1054,6 @@
 			
 			var oClasses = oSettings.oClasses;
 			
-			// @todo Remove in 1.11
 			if ( oInit.bJQueryUI )
 			{
 				/* Use the JUI classes object for display. You could clone the oStdClasses object if
@@ -1225,7 +1224,6 @@
 			
 			/*
 			 * Sorting
-			 * @todo For modularisation (1.11) this needs to do into a sort start up handler
 			 */
 			
 			// If aaSorting is not defined, then we use the first indicator in asSorting
@@ -2861,10 +2859,6 @@
 	 * @param {int}    [colIdx] Column index to invalidate. If undefined the whole
 	 *     row will be invalidated
 	 * @memberof DataTable#oApi
-	 *
-	 * @todo For the modularisation of v1.11 this will need to become a callback, so
-	 *   the sort and filter methods can subscribe to it. That will required
-	 *   initialisation options for sorting, which is why it is not already baked in
 	 */
 	function _fnInvalidate( settings, rowIdx, src, colIdx )
 	{
@@ -3582,7 +3576,6 @@
 						j++;
 					}
 	
-					/* Replace jQuery UI constants @todo depreciated */
 					if ( sAttr == "H" )
 					{
 						sAttr = classes.sJUIHeader;
@@ -3621,7 +3614,6 @@
 				/* End container div */
 				insert = insert.parent();
 			}
-			// @todo Move options into their own plugins?
 			else if ( cOption == 'l' && features.bPaginate && features.bLengthChange )
 			{
 				/* Length */
@@ -4258,7 +4250,6 @@
 		};
 	
 		// Resolve any column types that are unknown due to addition or invalidation
-		// @todo As per sort - can this be moved into an event handler?
 		_fnColumnTypes( oSettings );
 	
 		/* In server-side processing all filtering is done by the server, so no point hanging around here */
@@ -5880,7 +5871,6 @@
 	 * Change the order of the table
 	 *  @param {object} oSettings dataTables settings object
 	 *  @memberof DataTable#oApi
-	 *  @todo This really needs split up!
 	 */
 	function _fnSort ( oSettings )
 	{
@@ -5898,7 +5888,6 @@
 			aSort;
 	
 		// Resolve any column types that are unknown due to addition or invalidation
-		// @todo Can this be moved into a 'data-ready' handler which is called when
 		//   data is going to be used in the table?
 		_fnColumnTypes( oSettings );
 	
@@ -6331,10 +6320,8 @@
 	
 		// Store the saved state so it might be accessed at any time
 		settings.oLoadedState = $.extend( true, {}, state );
-	
-		// Restore key features - todo - for 1.11 this needs to be done by
-		// subscribed events
-		if ( state.start !== undefined ) {
+
+        if ( state.start !== undefined ) {
 			settings._iDisplayStart    = state.start;
 			settings.iInitDisplayStart = state.start;
 		}
@@ -6485,7 +6472,6 @@
 	 *      references
 	 *  @returns {object} out Reference, just for convenience - out === the return.
 	 *  @memberof DataTable#oApi
-	 *  @todo This doesn't take account of arrays inside the deep copied objects.
 	 */
 	function _fnExtend( out, extender, breakRefs )
 	{
@@ -7164,7 +7150,6 @@
 	};
 	
 	
-	// @todo - Is there need for an augment function?
 	// _Api.augment = function ( inst, name )
 	// {
 	// 	// Find src object in the structure from the name
@@ -12866,13 +12851,6 @@
 	 * NOT be manipulated outside of DataTables. Any configuration should be done
 	 * through the initialisation options.
 	 *  @namespace
-	 *  @todo Really should attach the settings object to individual instances so we
-	 *    don't need to create new instances on each $().dataTable() call (if the
-	 *    table already exists). It would also save passing oSettings around and
-	 *    into every single function. However, this is a very significant
-	 *    architecture change for DataTables and will almost certainly break
-	 *    backwards compatibility with older installations. This is something that
-	 *    will be done in 2.0.
 	 */
 	DataTable.models.oSettings = {
 		/**
@@ -13195,7 +13173,6 @@
 		 * Note that this parameter will be set by the initialisation routine. To
 		 * set a default use {@link DataTable.defaults}.
 		 *  @type array
-		 *  @todo These inner arrays should really be objects
 		 */
 		"aaSorting": null,
 	
