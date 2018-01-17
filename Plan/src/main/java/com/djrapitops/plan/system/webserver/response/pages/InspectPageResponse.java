@@ -1,9 +1,10 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
-import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.systems.info.InformationManager;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.util.HashMap;
@@ -17,19 +18,14 @@ import java.util.UUID;
 public class InspectPageResponse extends Response {
 
     private final UUID uuid;
+    private InspectPagePluginsContent pluginsTab;
 
-    public InspectPageResponse(InformationManager infoManager, UUID uuid) throws ParseException {
-        this.uuid = uuid;
-        super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(infoManager.getPlayerHtml(uuid));
-        setInspectPagePluginsTab(infoManager.getPluginsTabContent(uuid));
-    }
-
-    public InspectPageResponse(InformationManager infoManager, UUID uuid, String html) {
+    public InspectPageResponse(UUID uuid, String html) {
         this.uuid = uuid;
         super.setHeader("HTTP/1.1 200 OK");
         super.setContent(Theme.replaceColors(html));
-        setInspectPagePluginsTab(infoManager.getPluginsTabContent(uuid));
+        pluginsTab = (InspectPagePluginsContent)
+                ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(uuid), InspectPagePluginsContent::new);
     }
 
     private InspectPageResponse(InspectPageResponse response) {
@@ -42,11 +38,14 @@ public class InspectPageResponse extends Response {
         return new InspectPageResponse(response);
     }
 
-    public void setInspectPagePluginsTab(String[] inspectPagePluginsTab) {
+    @Override
+    public String getContent() {
         Map<String, String> replaceMap = new HashMap<>();
+        String[] inspectPagePluginsTab = pluginsTab.getContents();
         replaceMap.put("navPluginsTabs", inspectPagePluginsTab[0]);
         replaceMap.put("pluginsTabs", inspectPagePluginsTab[1]);
 
-        setContent(StrSubstitutor.replace(getContent(), replaceMap));
+        return StrSubstitutor.replace(super.getContent(), replaceMap);
     }
+
 }

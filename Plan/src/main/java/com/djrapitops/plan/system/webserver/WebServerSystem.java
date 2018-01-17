@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plugin.api.Check;
 
 /**

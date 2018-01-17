@@ -6,10 +6,10 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
-import com.djrapitops.plan.system.webserver.pagecache.PageId;
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pages.*;
 import com.djrapitops.plan.system.webserver.response.*;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plugin.api.utility.log.Log;

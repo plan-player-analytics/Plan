@@ -1,8 +1,8 @@
 package com.djrapitops.plan.data.cache;
 
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
-import com.djrapitops.plan.system.webserver.pagecache.PageLoader;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.cache.PageLoader;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import org.junit.Test;
 import test.utilities.RandomData;
 

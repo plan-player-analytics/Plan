@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.database.databases.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -14,5 +15,12 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public interface TransferOperations {
+
+    // Save
+
     void playerHtml(UUID player, String html) throws DBException;
+
+    // Get
+
+    Map<UUID, String> getPlayerHtml() throws DBException;
 }

@@ -9,20 +9,20 @@ package com.djrapitops.plan.api.exceptions.connection;
  *
  * @author Rsl1122
  */
-public class WebUnauthorizedServerException extends WebFailException {
+public class UnauthorizedServerException extends WebFailException {
 
-    public WebUnauthorizedServerException() {
+    public UnauthorizedServerException() {
     }
 
-    public WebUnauthorizedServerException(String message) {
+    public UnauthorizedServerException(String message) {
         super(message);
     }
 
-    public WebUnauthorizedServerException(String message, Throwable cause) {
+    public UnauthorizedServerException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public WebUnauthorizedServerException(Throwable cause) {
+    public UnauthorizedServerException(Throwable cause) {
         super(cause);
     }
 }

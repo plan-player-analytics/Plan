@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.CacheInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
@@ -23,7 +24,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public abstract class ConnectionSystem {
+public abstract class ConnectionSystem implements SubSystem {
 
     protected final Map<String, InfoRequest> dataRequests;
     protected final UUID serverUUID;
@@ -60,4 +61,6 @@ public abstract class ConnectionSystem {
 
         new ConnectionOut(address, serverUUID, infoRequest).sendRequest();
     }
+
+    public abstract boolean isServerAvailable();
 }

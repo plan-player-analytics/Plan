@@ -7,8 +7,8 @@ package com.djrapitops.plan.systems.info;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.webserver.pagecache.PageId;
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plugin.command.ISender;
 
 import java.io.IOException;

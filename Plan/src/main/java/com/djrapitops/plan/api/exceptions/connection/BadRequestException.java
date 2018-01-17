@@ -5,12 +5,13 @@
 package com.djrapitops.plan.api.exceptions.connection;
 
 /**
- * Thrown when Connection returns 500.
+ * Thrown when connection is returned 401 Bad Request.
  *
  * @author Rsl1122
  */
-public class WebInternalErrorException extends WebFailException {
-    public WebInternalErrorException() {
-        super("Internal Error occurred on receiving server");
+public class BadRequestException extends WebException {
+
+    public BadRequestException(String message) {
+        super(message);
     }
 }

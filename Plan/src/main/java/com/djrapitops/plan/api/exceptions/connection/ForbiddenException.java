@@ -5,12 +5,12 @@
 package com.djrapitops.plan.api.exceptions.connection;
 
 /**
- * Thrown when Connection returns 404, when page is not found.
+ * Thrown when Connection gets a 403 response.
  *
  * @author Rsl1122
  */
-public class WebNotFoundException extends WebFailException {
-    public WebNotFoundException() {
-        super("Not Found");
+public class ForbiddenException extends WebFailException {
+    public ForbiddenException(String url) {
+        super("Forbidden: " + url);
     }
 }

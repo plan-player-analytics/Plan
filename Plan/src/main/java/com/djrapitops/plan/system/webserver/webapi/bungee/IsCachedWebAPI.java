@@ -5,8 +5,8 @@
 package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.connection.WebNotFoundException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.systems.info.InformationManager;
@@ -62,7 +62,7 @@ public class IsCachedWebAPI extends WebAPI {
         try {
             super.sendRequest(address);
             return true;
-        } catch (WebNotFoundException e) {
+        } catch (NotFoundException e) {
             return false;
         }
     }
@@ -73,7 +73,7 @@ public class IsCachedWebAPI extends WebAPI {
         try {
             super.sendRequest(address);
             return true;
-        } catch (WebNotFoundException e) {
+        } catch (NotFoundException e) {
             return false;
         }
     }

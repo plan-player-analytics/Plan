@@ -7,11 +7,11 @@ package com.djrapitops.plan.system.webserver.webapi;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.pagecache.PageId;
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -141,11 +141,11 @@ public abstract class WebAPI {
                 case 400:
                     throw new WebFailException("Bad Request: " + url.toString() + "|" + parameters);
                 case 403:
-                    throw new WebForbiddenException(url.toString());
+                    throw new ForbiddenException(url.toString());
                 case 404:
-                    throw new WebNotFoundException();
+                    throw new NotFoundException();
                 case 500:
-                    throw new WebInternalErrorException();
+                    throw new InternalErrorException();
                 default:
                     throw new WebException(url.toString() + "| Wrong response code " + responseCode);
             }

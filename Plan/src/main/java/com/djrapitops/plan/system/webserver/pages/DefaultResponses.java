@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 
 /**
@@ -19,7 +20,8 @@ public enum DefaultResponses {
                     + "<p>/player/PlayerName<br>" +
                     "/server/ServerName</p>")
     ),
-    BASIC_AUTH(PromptAuthorizationResponse.getBasicAuthResponse());
+    BASIC_AUTH(PromptAuthorizationResponse.getBasicAuthResponse()),
+    SUCCESS(new SuccessResponse());
 
     private final Response response;
 

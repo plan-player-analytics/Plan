@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.request.InfoRequestWithVariables;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -18,6 +19,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -117,13 +119,13 @@ public class ConnectionOut {
                 case 400:
                     throw new WebFailException("Bad Request: " + url.toString() + "|" + parameters);
                 case 403:
-                    throw new WebForbiddenException(url.toString());
+                    throw new ForbiddenException(url.toString());
                 case 404:
-                    throw new WebNotFoundException();
+                    throw new NotFoundException();
                 case 412:
-                    throw new WebUnauthorizedServerException();
+                    throw new UnauthorizedServerException();
                 case 500:
-                    throw new WebInternalErrorException();
+                    throw new InternalErrorException();
                 default:
                     throw new WebException(url.toString() + "| Wrong response code " + responseCode);
             }
@@ -138,8 +140,17 @@ public class ConnectionOut {
     }
 
     private String parseVariables() {
-        return "sender=" + serverUUID + ";&variable;" +
-                "type=" + infoRequest.getClass().getSimpleName();
+        StringBuilder parameters = new StringBuilder("sender=" + serverUUID + ";&variable;" +
+                "type=" + infoRequest.getClass().getSimpleName());
+
+        if (infoRequest instanceof InfoRequestWithVariables) {
+            Map<String, String> variables = ((InfoRequestWithVariables) infoRequest).getVariables();
+            for (Map.Entry<String, String> entry : variables.entrySet()) {
+                parameters.append(";&variable;").append(entry.getKey()).append("=").append(entry.getValue());
+            }
+        }
+
+        return parameters.toString();
     }
 
     private SSLSocketFactory getRelaxedSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {

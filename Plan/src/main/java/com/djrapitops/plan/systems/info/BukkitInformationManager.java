@@ -7,9 +7,9 @@ package com.djrapitops.plan.systems.info;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
+import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.connection.WebFailException;
-import com.djrapitops.plan.api.exceptions.connection.WebNotFoundException;
 import com.djrapitops.plan.command.commands.AnalyzeCommand;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.element.InspectContainer;
@@ -21,9 +21,9 @@ import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.system.webserver.pagecache.PageId;
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
@@ -346,7 +346,7 @@ public class BukkitInformationManager extends InformationManager {
                 return true;
             } catch (ConnectionFailException e) {
                 plugin.getServerInfoManager().markConnectionFail();
-            } catch (WebNotFoundException e) {
+            } catch (NotFoundException e) {
                 Log.info("Bungee reported that UUID of this server is not in the MySQL-database. Try using '/plan m setup " + webServerAddress + "' again");
             } catch (WebException e) {
                 Log.toLog(this.getClass().getName(), e);

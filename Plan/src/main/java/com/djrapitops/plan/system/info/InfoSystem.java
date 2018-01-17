@@ -4,13 +4,23 @@
  */
 package com.djrapitops.plan.system.info;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
+import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
+import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.utilities.NullCheck;
 
+import java.util.UUID;
+
 /**
- * //TODO Class Javadoc Comment
+ * Information management system.
+ *
+ * Subclasses should decide how InfoRequests are run locally if necessary.
  *
  * @author Rsl1122
  */
@@ -18,7 +28,7 @@ public abstract class InfoSystem implements SubSystem {
 
     protected final ConnectionSystem connectionSystem;
 
-    public InfoSystem(ConnectionSystem connectionSystem) {
+    protected InfoSystem(ConnectionSystem connectionSystem) {
         this.connectionSystem = connectionSystem;
     }
 
@@ -28,14 +38,40 @@ public abstract class InfoSystem implements SubSystem {
         return infoSystem;
     }
 
-    @Override
-    public void enable() {
+    public void generatePlayerPage(UUID player) throws WebException {
+        sendRequest(new GenerateInspectPageRequest(player));
+    }
 
+    public void generateAnalysisPageOfThisServer() throws WebException {
+        generateAnalysisPage(Plan.getServerUUID());
+    }
+
+    public void generateAnalysisPage(UUID serverUUID) throws WebException {
+        GenerateAnalysisPageRequest request = new GenerateAnalysisPageRequest(serverUUID);
+        if (Plan.getServerUUID().equals(serverUUID)) {
+            runLocally(request);
+        } else {
+            sendRequest(request);
+        }
+    }
+
+    public void sendRequest(InfoRequest infoRequest) throws WebException {
+        if (!connectionSystem.isServerAvailable()) {
+            runLocally(infoRequest);
+        }
+        connectionSystem.sendInfoRequest(infoRequest);
+    }
+
+    protected abstract void runLocally(InfoRequest infoRequest);
+
+    @Override
+    public void enable() throws EnableException {
+        connectionSystem.enable();
     }
 
     @Override
     public void disable() {
-
+        connectionSystem.disable();
     }
 
     public ConnectionSystem getConnectionSystem() {

@@ -8,7 +8,11 @@ import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -52,7 +56,21 @@ public class CacheInspectPageRequest implements InfoRequest {
     }
 
     @Override
-    public Response handleRequest(Map<String, String> variables) {
-        return null;
+    public Response handleRequest(Map<String, String> variables) throws WebException {
+        // Available variables: sender
+
+        try {
+            Map<UUID, String> pages = Database.getActive().transfer().getPlayerHtml();
+
+            for (Map.Entry<UUID, String> entry : pages.entrySet()) {
+                UUID uuid = entry.getKey();
+                String html = Base64Util.decode(entry.getValue());
+
+                ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
+            }
+        } catch (DBException e) {
+            throw new TransferDatabaseException(e);
+        }
+        return DefaultResponses.SUCCESS.get();
     }
 }

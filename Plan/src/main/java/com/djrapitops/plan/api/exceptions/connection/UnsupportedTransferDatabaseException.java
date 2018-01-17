@@ -4,6 +4,8 @@
  */
 package com.djrapitops.plan.api.exceptions.connection;
 
+import com.djrapitops.plan.system.database.databases.Database;
+
 /**
  * //TODO Class Javadoc Comment
  *
@@ -11,10 +13,7 @@ package com.djrapitops.plan.api.exceptions.connection;
  */
 public class UnsupportedTransferDatabaseException extends WebException {
 
-    public UnsupportedTransferDatabaseException() {
-    }
-
-    public UnsupportedTransferDatabaseException(String message) {
-        super(message);
+    public UnsupportedTransferDatabaseException(Database db) {
+        super(db.getName() + " does not support Transfer operations!");
     }
 }

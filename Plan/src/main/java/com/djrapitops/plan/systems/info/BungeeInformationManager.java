@@ -8,13 +8,13 @@ import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
+import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.connection.WebNotFoundException;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.pagecache.PageId;
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
@@ -183,7 +183,7 @@ public class BungeeInformationManager extends InformationManager {
                     return server;
                 } catch (ConnectionFailException e) {
                     serverInfoManager.serverHasGoneOffline(server.getUuid());
-                } catch (WebNotFoundException ignored) {
+                } catch (NotFoundException ignored) {
                     /*continue*/
                 } catch (WebException e) {
                     Log.toLog(this.getClass().getName(), e);
@@ -291,7 +291,7 @@ public class BungeeInformationManager extends InformationManager {
         order.sort(new Comparator<String[]>() {
             @Override
             public int compare(String[] o1, String[] o2) {
-                return o1[0].compareTo(o2[1]);
+                return o1[0].compareTo(o2[0]);
             }
         });
 

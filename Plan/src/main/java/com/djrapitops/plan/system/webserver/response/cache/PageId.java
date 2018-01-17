@@ -2,7 +2,7 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.plan.system.webserver.pagecache;
+package com.djrapitops.plan.system.webserver.response.cache;
 
 import java.util.UUID;
 
@@ -27,7 +27,9 @@ public enum PageId {
     CSS("css:"),
     //
     FAVICON_REDIRECT("Redirect:Favicon"),
-    AUTH_PROMPT("PromptAuth");
+    AUTH_PROMPT("PromptAuth"),
+    //
+    PLAYER_PLUGINS_TAB("playerPluginsTab:");
 
     private final String id;
 

@@ -1,8 +1,8 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.connection.WebForbiddenException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -71,7 +71,7 @@ public class ManageSetupCommand extends SubCommand {
 //            plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(address);
             plugin.getWebServer().getWebAPI().getAPI(RequestSetupWebAPI.class).sendRequest(address);
             sender.sendMessage("§eConnection successful, Plan may restart in a few seconds, if it doesn't something has gone wrong.");
-        } catch (WebForbiddenException e) {
+        } catch (ForbiddenException e) {
             sender.sendMessage("§eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it.");
         } catch (WebException e) {
             Log.toLog(this.getClass().getName(), e);
