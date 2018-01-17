@@ -42,7 +42,7 @@ import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.systems.info.ImporterManager;
 import com.djrapitops.plan.systems.info.InformationManager;
-import com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
+import com.djrapitops.plan.system.info.server.BukkitServerInfoManager;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.metrics.BStats;
 import com.djrapitops.plugin.BukkitPlugin;

@@ -2,7 +2,7 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.plan.systems.info.server;
+package com.djrapitops.plan.system.info.server;
 
 
 import com.djrapitops.plan.Plan;
@@ -25,7 +25,6 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-@Deprecated
 public class BukkitServerInfoManager {
 
     private final Plan plugin;

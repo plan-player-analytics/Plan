@@ -15,7 +15,7 @@ import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.systems.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
 

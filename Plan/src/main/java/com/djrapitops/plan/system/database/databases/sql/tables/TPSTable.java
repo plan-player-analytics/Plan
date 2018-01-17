@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.systems.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;

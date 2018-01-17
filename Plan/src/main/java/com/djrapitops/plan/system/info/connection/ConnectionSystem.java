@@ -9,7 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.CacheInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.systems.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.NullCheck;
 
 import java.util.HashMap;

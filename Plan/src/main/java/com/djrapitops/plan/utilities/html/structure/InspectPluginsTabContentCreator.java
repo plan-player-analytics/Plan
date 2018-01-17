@@ -7,7 +7,7 @@ package com.djrapitops.plan.utilities.html.structure;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
+import com.djrapitops.plan.system.info.server.BukkitServerInfoManager;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 
 import java.util.ArrayList;

@@ -5,7 +5,7 @@ import com.djrapitops.plan.ServerVariableHolder;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
+import com.djrapitops.plan.system.info.server.BukkitServerInfoManager;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.StaticHolder;

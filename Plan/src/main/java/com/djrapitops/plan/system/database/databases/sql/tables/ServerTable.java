@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatemen
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.*;
-import com.djrapitops.plan.systems.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
