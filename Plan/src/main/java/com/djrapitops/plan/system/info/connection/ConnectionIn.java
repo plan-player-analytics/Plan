@@ -1,5 +1,6 @@
 package com.djrapitops.plan.system.info.connection;
 
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.webserver.response.Response;
 
@@ -15,7 +16,7 @@ public class ConnectionIn {
         this.infoRequest = infoRequest;
     }
 
-    public Response handleRequest() {
+    public Response handleRequest() throws WebException {
         return infoRequest.handleRequest(variables);
     }
 }
