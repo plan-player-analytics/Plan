@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
-import com.djrapitops.plan.systems.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.SQLException;
