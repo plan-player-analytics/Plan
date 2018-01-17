@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.webserver.webapi.bukkit;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 
@@ -28,11 +28,11 @@ public class AnalyzeWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebAPIException {
+    public void sendRequest(String address) throws WebException {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
-    public void sendRequest(String address, UUID serverUUID) throws WebAPIException {
+    public void sendRequest(String address, UUID serverUUID) throws WebException {
         addVariable("serverUUID", serverUUID.toString());
         super.sendRequest(address);
     }

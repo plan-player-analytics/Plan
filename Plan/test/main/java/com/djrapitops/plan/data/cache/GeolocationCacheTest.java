@@ -1,6 +1,6 @@
 package com.djrapitops.plan.data.cache;
 
-import com.djrapitops.plan.systems.cache.GeolocationCache;
+import com.djrapitops.plan.system.cache.GeolocationCache;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;

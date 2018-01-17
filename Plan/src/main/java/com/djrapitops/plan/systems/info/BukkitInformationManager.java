@@ -6,16 +6,17 @@ package com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIConnectionFailException;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIFailException;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPINotFoundException;
+import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.api.exceptions.connection.WebFailException;
+import com.djrapitops.plan.api.exceptions.connection.WebNotFoundException;
 import com.djrapitops.plan.command.commands.AnalyzeCommand;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.WebServer;
@@ -34,7 +35,6 @@ import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalyzeWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bungee.*;
 import com.djrapitops.plan.system.webserver.webapi.universal.PingWebAPI;
-import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.info.parsing.AnalysisPage;
 import com.djrapitops.plan.systems.info.parsing.InspectPage;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -93,9 +93,9 @@ public class BukkitInformationManager extends InformationManager {
         } else if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(AnalyzeWebAPI.class).sendRequest(webServerAddress, serverUUID);
-            } catch (WebAPIFailException e) {
+            } catch (WebFailException e) {
                 Log.error("Failed to request Analysis refresh from Bungee.");
-            } catch (WebAPIException e) {
+            } catch (WebException e) {
                 attemptConnection();
                 refreshAnalysis(serverUUID);
             }
@@ -112,9 +112,9 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendInspectHtml(webServerAddress, uuid, getPlayerHtml(uuid));
-            } catch (WebAPIFailException e) {
+            } catch (WebFailException e) {
                 Log.error("Failed to request Inspect from Bungee.");
-            } catch (WebAPIException e) {
+            } catch (WebException e) {
                 attemptConnection();
                 cachePlayer(uuid);
             } catch (ParseException e) {
@@ -156,9 +156,9 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer && !origin.equals(RequestInspectPluginsTabBukkitWebAPI.class)) {
             try {
                 getWebAPI().getAPI(RequestPluginsTabWebAPI.class).sendRequest(webServerAddress, uuid);
-            } catch (WebAPIFailException e) {
+            } catch (WebFailException e) {
                 Log.error("Failed send Player Plugins tab contents to BungeeCord.");
-            } catch (WebAPIException e) {
+            } catch (WebException e) {
                 attemptConnection();
                 cacheInspectPluginsTab(uuid, origin);
             }
@@ -188,9 +188,9 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostInspectPluginsTabWebAPI.class).sendPluginsTab(webServerAddress, uuid, contents);
-            } catch (WebAPIFailException e) {
+            } catch (WebFailException e) {
                 Log.error("Failed send Player HTML to BungeeCord.");
-            } catch (WebAPIException e) {
+            } catch (WebException e) {
                 attemptConnection();
                 cacheInspectPluginsTab(uuid, contents);
             }
@@ -214,9 +214,9 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 return getWebAPI().getAPI(IsCachedWebAPI.class).isInspectCached(webServerAddress, uuid);
-            } catch (WebAPIFailException e) {
+            } catch (WebFailException e) {
                 Log.error("Failed check Bungee Player Cache status.");
-            } catch (WebAPIException e) {
+            } catch (WebException e) {
                 attemptConnection();
                 return isCached(uuid);
             }
@@ -232,9 +232,9 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 return getWebAPI().getAPI(IsCachedWebAPI.class).isAnalysisCached(webServerAddress, serverUUID);
-            } catch (WebAPIFailException e) {
+            } catch (WebFailException e) {
                 Log.error("Failed check Bungee Analysis Cache status.");
-            } catch (WebAPIException e) {
+            } catch (WebException e) {
                 attemptConnection();
                 return isAnalysisCached(serverUUID);
             }
@@ -289,9 +289,9 @@ public class BukkitInformationManager extends InformationManager {
                 getWebAPI().getAPI(AnalysisReadyWebAPI.class).sendRequest(webServerAddress, serverUUID);
                 updateNetworkPageContent();
                 return;
-            } catch (WebAPIFailException ignored) {
+            } catch (WebFailException ignored) {
                 Log.error("Failed to notify Bungee of Analysis Completion.");
-            } catch (WebAPIException e) {
+            } catch (WebException e) {
                 attemptConnection();
             }
         }
@@ -306,9 +306,9 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendAnalysisHtml(webServerAddress, html);
-            } catch (WebAPIFailException e) {
+            } catch (WebFailException e) {
                 Log.error("Failed to send Analysis HTML to Bungee Server.");
-            } catch (WebAPIException e) {
+            } catch (WebException e) {
                 attemptConnection();
                 cacheAnalysisHtml(html);
             }
@@ -344,11 +344,11 @@ public class BukkitInformationManager extends InformationManager {
                 plugin.getServerInfoManager().resetConnectionFails();
                 usingAnotherWebServer = true;
                 return true;
-            } catch (WebAPIConnectionFailException e) {
+            } catch (ConnectionFailException e) {
                 plugin.getServerInfoManager().markConnectionFail();
-            } catch (WebAPINotFoundException e) {
+            } catch (WebNotFoundException e) {
                 Log.info("Bungee reported that UUID of this server is not in the MySQL-database. Try using '/plan m setup " + webServerAddress + "' again");
-            } catch (WebAPIException e) {
+            } catch (WebException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
             Log.info("Bungee Connection Failed.");
@@ -384,9 +384,9 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostNetworkPageContentWebAPI.class).sendNetworkContent(webServerAddress, HtmlStructure.createServerContainer(plugin));
-            } catch (WebAPIFailException ignored) {
+            } catch (WebFailException ignored) {
                 /* Do nothing */
-            } catch (WebAPIException ignored) {
+            } catch (WebException ignored) {
                 attemptConnection();
                 updateNetworkPageContent();
             }

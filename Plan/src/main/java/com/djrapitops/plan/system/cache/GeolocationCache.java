@@ -1,6 +1,7 @@
-package com.djrapitops.plan.systems.cache;
+package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.google.common.cache.Cache;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
@@ -30,14 +31,18 @@ import java.util.zip.GZIPInputStream;
  */
 public class GeolocationCache {
 
-    private static final Map<String, String> geolocationCache = new HashMap<>();
-    private static File geolocationDB = new File(PlanPlugin.getInstance().getDataFolder(), "GeoIP.dat");
+    private final Map<String, String> geolocationCache;
+    private final File geolocationDB;
 
-    /**
-     * Constructor used to hide the public constructor
-     */
-    private GeolocationCache() {
-        throw new IllegalStateException("Utility class");
+    public GeolocationCache() {
+        geolocationCache = new HashMap<>();
+        geolocationDB = new File(FileSystem.getDataFolder(), "GeoIP.dat");
+    }
+
+    private static GeolocationCache getInstance() {
+        GeolocationCache geolocationCache = CacheSystem.getInstance().getGeolocationCache();
+        NullCheck.check(geolocationCache, new IllegalStateException("GeolocationCache was not initialized."));
+        return geolocationCache;
     }
 
     /**
@@ -59,7 +64,7 @@ public class GeolocationCache {
             return country;
         } else {
             country = getUnCachedCountry(ipAddress);
-            geolocationCache.put(ipAddress, country);
+            getInstance().geolocationCache.put(ipAddress, country);
 
             return country;
         }
@@ -86,7 +91,7 @@ public class GeolocationCache {
         try {
             checkDB();
 
-            try (DatabaseReader reader = new DatabaseReader.Builder(geolocationDB).build()) {
+            try (DatabaseReader reader = new DatabaseReader.Builder(getInstance().geolocationDB).build()) {
                 InetAddress inetAddress = InetAddress.getByName(ipAddress);
 
                 CountryResponse response = reader.country(inetAddress);
@@ -106,12 +111,12 @@ public class GeolocationCache {
      * @throws IOException when an error at download or saving the DB happens
      */
     public static void checkDB() throws IOException {
-        if (geolocationDB.exists()) {
+        if (getInstance().geolocationDB.exists()) {
             return;
         }
         URL downloadSite = new URL("http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz");
         try (ReadableByteChannel rbc = Channels.newChannel(new GZIPInputStream(downloadSite.openStream()));
-             FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())) {
+             FileOutputStream fos = new FileOutputStream(getInstance().geolocationDB.getAbsoluteFile())) {
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         }
     }
@@ -123,7 +128,7 @@ public class GeolocationCache {
      * @return The cached country, {@code null} if the country is not cached
      */
     private static String getCachedCountry(String ipAddress) {
-        return geolocationCache.get(ipAddress);
+        return getInstance().geolocationCache.get(ipAddress);
     }
 
     /**
@@ -133,13 +138,13 @@ public class GeolocationCache {
      * @return true if the IP Address is cached
      */
     public static boolean isCached(String ipAddress) {
-        return geolocationCache.containsKey(ipAddress);
+        return getInstance().geolocationCache.containsKey(ipAddress);
     }
 
     /**
      * Clears the cache
      */
-    public static void clearCache() {
+    public void clearCache() {
         geolocationCache.clear();
     }
 }

@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
@@ -49,11 +49,11 @@ public class PostInspectPluginsTabWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebAPIException {
+    public void sendRequest(String address) throws WebException {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
-    public void sendPluginsTab(String address, UUID uuid, String[] html) throws WebAPIException {
+    public void sendPluginsTab(String address, UUID uuid, String[] html) throws WebException {
         addVariable("uuid", uuid.toString());
         addVariable("nav", html[0]);
         addVariable("html", html[1]);

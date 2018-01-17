@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
@@ -48,7 +48,7 @@ public class PostOriginalBukkitSettingsWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebAPIException {
+    public void sendRequest(String address) throws WebException {
         addVariable("WebServerPort", Integer.toString(Settings.WEBSERVER_PORT.getNumber()));
         addVariable("ServerName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
         addVariable("ThemeBase", Settings.THEME_BASE.toString());

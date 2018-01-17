@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
@@ -38,11 +38,11 @@ public class PostNetworkPageContentWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebAPIException {
+    public void sendRequest(String address) throws WebException {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
-    public void sendNetworkContent(String address, String html) throws WebAPIException {
+    public void sendNetworkContent(String address, String html) throws WebException {
         addVariable("html", html);
         super.sendRequest(address);
     }

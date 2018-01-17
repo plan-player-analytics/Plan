@@ -7,7 +7,7 @@ package com.djrapitops.plan.systems.info.server;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.ServerVariableHolder;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.ConfigurationWebAPI;
@@ -105,7 +105,7 @@ public class BungeeServerInfoManager {
             }
             connectedToServer(server);
             return true;
-        } catch (WebAPIException e) {
+        } catch (WebException e) {
             Log.debug(e.toString());
             serverHasGoneOffline(server.getUuid());
             return false;
@@ -126,7 +126,7 @@ public class BungeeServerInfoManager {
             webAddress = server.getWebAddress();
             Log.debug("Sending config settings to " + webAddress + "");
             plugin.getWebServer().getWebAPI().getAPI(ConfigurationWebAPI.class).sendRequest(webAddress, serverUUID);
-        } catch (WebAPIException e) {
+        } catch (WebException e) {
             Log.info("Connection to Bukkit (" + webAddress + ") did not succeed.");
             serverHasGoneOffline(serverUUID);
         }

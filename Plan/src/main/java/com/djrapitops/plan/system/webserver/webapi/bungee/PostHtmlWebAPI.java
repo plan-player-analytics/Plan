@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
@@ -77,18 +77,18 @@ public class PostHtmlWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebAPIException {
+    public void sendRequest(String address) throws WebException {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
-    public void sendInspectHtml(String address, UUID uuid, String html) throws WebAPIException {
+    public void sendInspectHtml(String address, UUID uuid, String html) throws WebException {
         addVariable("uuid", uuid.toString());
         addVariable("target", "inspectPage");
         addVariable("html", html);
         super.sendRequest(address);
     }
 
-    public void sendAnalysisHtml(String address, String html) throws WebAPIException {
+    public void sendAnalysisHtml(String address, String html) throws WebException {
         addVariable("html", html);
         addVariable("target", "analysisPage");
         super.sendRequest(address);

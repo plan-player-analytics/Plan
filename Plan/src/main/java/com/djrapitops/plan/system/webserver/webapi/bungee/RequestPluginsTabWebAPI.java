@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
@@ -49,11 +49,11 @@ public class RequestPluginsTabWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebAPIException {
+    public void sendRequest(String address) throws WebException {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
-    public void sendRequest(String address, UUID uuid) throws WebAPIException {
+    public void sendRequest(String address, UUID uuid) throws WebException {
         addVariable("uuid", uuid.toString());
         super.sendRequest(address);
     }
@@ -68,7 +68,7 @@ public class RequestPluginsTabWebAPI extends WebAPI {
                         String webAddress = server.getWebAddress();
                         try {
                             plugin.getWebServer().getWebAPI().getAPI(RequestInspectPluginsTabBukkitWebAPI.class).sendRequest(webAddress, uuid);
-                        } catch (WebAPIException ignore) {
+                        } catch (WebException ignore) {
                             /* ignored */
                         }
                     }

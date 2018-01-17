@@ -8,7 +8,7 @@ package com.djrapitops.plan.system.webserver.webapi.bungee;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
@@ -50,7 +50,7 @@ public class RequestSetupWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebAPIException {
+    public void sendRequest(String address) throws WebException {
         if (!Check.isBukkitAvailable()) {
             throw new IllegalStateException("Not supposed to be called on Bungee");
         }

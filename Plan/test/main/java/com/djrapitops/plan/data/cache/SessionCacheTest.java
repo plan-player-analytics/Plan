@@ -5,7 +5,7 @@
  */
 package com.djrapitops.plan.data.cache;
 
-import com.djrapitops.plan.systems.cache.SessionCache;
+import com.djrapitops.plan.system.cache.SessionCache;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;

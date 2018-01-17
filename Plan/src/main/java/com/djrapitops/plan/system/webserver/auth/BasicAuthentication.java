@@ -9,9 +9,8 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-
-import java.util.Base64;
 
 /**
  * //TODO Class Javadoc Comment
@@ -30,9 +29,8 @@ public class BasicAuthentication implements Authentication {
 
     @Override
     public WebUser getWebUser() throws WebUserAuthException {
-        Base64.Decoder decoder = Base64.getDecoder();
-        byte[] decoded = decoder.decode(authenticationString);
-        String[] userInfo = new String(decoded).split(":");
+        String decoded = Base64Util.decode(authenticationString);
+        String[] userInfo = decoded.split(":");
         if (userInfo.length != 2) {
             throw new WebUserAuthException(FailReason.USER_AND_PASS_NOT_SPECIFIED);
         }

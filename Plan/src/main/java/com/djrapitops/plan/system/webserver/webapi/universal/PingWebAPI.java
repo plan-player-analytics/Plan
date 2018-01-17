@@ -8,7 +8,7 @@ package com.djrapitops.plan.system.webserver.webapi.universal;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
@@ -45,7 +45,7 @@ public class PingWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebAPIException {
+    public void sendRequest(String address) throws WebException {
         if (Check.isBukkitAvailable()) {
             super.sendRequest(address);
         } else {
@@ -54,7 +54,7 @@ public class PingWebAPI extends WebAPI {
         }
     }
 
-    public void sendRequest(String address, String accessCode) throws WebAPIException {
+    public void sendRequest(String address, String accessCode) throws WebException {
         addVariable("accessKey", accessCode);
         addVariable("version", PlanPlugin.getInstance().getVersion());
         sendRequest(address);

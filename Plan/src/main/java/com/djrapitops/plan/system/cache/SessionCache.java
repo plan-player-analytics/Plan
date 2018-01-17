@@ -1,8 +1,8 @@
-package com.djrapitops.plan.systems.cache;
+package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -21,14 +21,15 @@ import java.util.UUID;
  */
 public class SessionCache {
 
+    private static final Map<UUID, Integer> firstSessionInformation = new HashMap<>();
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
-    protected final Plan plugin;
+    protected final PlanSystem system;
 
     /**
      * Class Constructor.
      */
-    public SessionCache(Plan plugin) {
-        this.plugin = plugin;
+    public SessionCache(PlanSystem system) {
+        this.system = system;
     }
 
     /**
@@ -48,12 +49,12 @@ public class SessionCache {
 
     public void cacheSession(UUID uuid, Session session) {
         activeSessions.put(uuid, session);
-        plugin.addToProcessQueue(new Processor<Plan>(plugin) {
+        new Processor<PlanSystem>(system) {
             @Override
             public void process() {
-                plugin.getInfoManager().cachePlayer(uuid);
+                system.getInfoManager().cachePlayer(uuid);
             }
-        });
+        }.queue();
     }
 
     public void endSession(UUID uuid, long time) {
@@ -68,7 +69,7 @@ public class SessionCache {
             Log.toLog(this.getClass().getName(), e);
         } finally {
             activeSessions.remove(uuid);
-            plugin.getInfoManager().cachePlayer(uuid);
+            system.getInfoManager().cachePlayer(uuid);
         }
     }
 
@@ -90,5 +91,42 @@ public class SessionCache {
             return Optional.of(session);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Used for marking first Session Actions to be saved.
+     *
+     * @param uuid UUID of the new player.
+     */
+    public void markFirstSession(UUID uuid) {
+        firstSessionInformation.put(uuid, 0);
+    }
+
+    /**
+     * Condition if a session is player's first session on the server.
+     *
+     * @param uuid UUID of the player
+     * @return true / false
+     */
+    public boolean isFirstSession(UUID uuid) {
+        return firstSessionInformation.containsKey(uuid);
+    }
+
+    public void endFirstSessionActionTracking(UUID uuid) {
+        firstSessionInformation.remove(uuid);
+    }
+
+    public void firstSessionMessageSent(UUID uuid) {
+        Integer msgCount = firstSessionInformation.getOrDefault(uuid, 0);
+        msgCount++;
+        firstSessionInformation.put(uuid, msgCount);
+    }
+
+    public int getFirstSessionMsgCount(UUID uuid) {
+        return firstSessionInformation.getOrDefault(uuid, 0);
+    }
+
+    public Map<UUID, Integer> getFirstSessionMsgCounts() {
+        return firstSessionInformation;
     }
 }

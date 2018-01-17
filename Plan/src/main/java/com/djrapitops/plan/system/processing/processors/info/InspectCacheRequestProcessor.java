@@ -8,8 +8,8 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.processing.processors.player.PlayerProcessor;
-import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 

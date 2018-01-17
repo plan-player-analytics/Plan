@@ -6,10 +6,10 @@ package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.processing.processors.NewNickActionProcessor;
-import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.List;

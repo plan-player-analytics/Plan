@@ -1,7 +1,7 @@
-package com.djrapitops.plan.systems.cache;
+package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -22,7 +22,6 @@ import java.util.*;
  */
 public class DataCache extends SessionCache {
 
-    private static final Map<UUID, Integer> firstSessionInformation = new HashMap<>();
     private final Database db;
     private final Map<UUID, String> playerNames;
     private final Map<String, UUID> uuids;
@@ -31,11 +30,11 @@ public class DataCache extends SessionCache {
     /**
      * Class Constructor.
      *
-     * @param plugin Current instance of Plan
+     * @param system Instance of PlanSystem
      */
-    public DataCache(Plan plugin) {
-        super(plugin);
-        db = plugin.getDB();
+    public DataCache(PlanSystem system) {
+        super(system);
+        db = system.getDatabaseSystem().getActiveDatabase();
 
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
@@ -115,45 +114,8 @@ public class DataCache extends SessionCache {
         return cached;
     }
 
-    /**
-     * Used for marking first Session Actions to be saved.
-     *
-     * @param uuid UUID of the new player.
-     */
-    public void markFirstSession(UUID uuid) {
-        firstSessionInformation.put(uuid, 0);
-    }
-
-    /**
-     * Condition if a session is player's first session on the server.
-     *
-     * @param uuid UUID of the player
-     * @return true / false
-     */
-    public boolean isFirstSession(UUID uuid) {
-        return firstSessionInformation.containsKey(uuid);
-    }
-
-    public void endFirstSessionActionTracking(UUID uuid) {
-        firstSessionInformation.remove(uuid);
-    }
-
-    public void firstSessionMessageSent(UUID uuid) {
-        Integer msgCount = firstSessionInformation.getOrDefault(uuid, 0);
-        msgCount++;
-        firstSessionInformation.put(uuid, msgCount);
-    }
-
-    public int getFirstSessionMsgCount(UUID uuid) {
-        return firstSessionInformation.getOrDefault(uuid, 0);
-    }
-
     public Set<UUID> getUuids() {
         return playerNames.keySet();
-    }
-
-    public Map<UUID, Integer> getFirstSessionMsgCounts() {
-        return firstSessionInformation;
     }
 
     public UUID getUUIDof(String playerName) {

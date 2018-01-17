@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.webserver.webapi.bukkit;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.settings.ServerSpecificSettings;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -41,11 +41,11 @@ public class ConfigurationWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebAPIException {
+    public void sendRequest(String address) throws WebException {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
-    public void sendRequest(String address, UUID serverUUID, String accessKey) throws WebAPIException {
+    public void sendRequest(String address, UUID serverUUID, String accessKey) throws WebException {
         if (accessKey != null) {
             addVariable("accessKey", accessKey);
         }
@@ -54,7 +54,7 @@ public class ConfigurationWebAPI extends WebAPI {
         sendRequest(address, serverUUID);
     }
 
-    public void sendRequest(String address, UUID serverUUID) throws WebAPIException {
+    public void sendRequest(String address, UUID serverUUID) throws WebException {
         Map<String, Object> configValues = getConfigValues(serverUUID);
         for (Map.Entry<String, Object> entry : configValues.entrySet()) {
             String key = entry.getKey();
@@ -73,10 +73,10 @@ public class ConfigurationWebAPI extends WebAPI {
         }
     }
 
-    private Map<String, Object> getConfigValues(UUID serverUUID) throws WebAPIException {
+    private Map<String, Object> getConfigValues(UUID serverUUID) throws WebException {
         Map<String, Object> configValues = new HashMap<>();
         if (!Check.isBungeeAvailable()) {
-            throw new WebAPIException("Attempted to send config values from Bukkit to Bungee.");
+            throw new WebException("Attempted to send config values from Bukkit to Bungee.");
         }
         addConfigValue(configValues, Settings.DB_TYPE, "mysql");
         Settings[] sameStrings = new Settings[]{

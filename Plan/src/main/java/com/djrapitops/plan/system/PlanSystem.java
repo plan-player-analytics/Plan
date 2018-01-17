@@ -5,8 +5,10 @@
 package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
@@ -29,12 +31,14 @@ public abstract class PlanSystem implements SubSystem {
     // Initialized in this class
     protected final ProcessingQueue processingQueue;
     protected final WebServerSystem webServerSystem;
+    protected final CacheSystem cacheSystem;
 
     // These need to be initialized in the sub class.
     protected VersionCheckSystem versionCheckSystem;
     protected FileSystem fileSystem;
     protected ConfigSystem configSystem;
     protected DBSystem databaseSystem;
+    protected InfoSystem infoSystem;
 
     protected ListenerSystem listenerSystem;
     protected TaskSystem taskSystem;
@@ -42,6 +46,7 @@ public abstract class PlanSystem implements SubSystem {
     public PlanSystem() {
         processingQueue = new ProcessingQueue();
         webServerSystem = new WebServerSystem();
+        cacheSystem = new CacheSystem(this);
     }
 
     public static PlanSystem getInstance() {
@@ -66,7 +71,10 @@ public abstract class PlanSystem implements SubSystem {
                 fileSystem,
                 configSystem,
                 databaseSystem,
+                webServerSystem,
+                infoSystem,
                 processingQueue,
+                cacheSystem,
                 listenerSystem,
                 taskSystem
         };
@@ -78,9 +86,12 @@ public abstract class PlanSystem implements SubSystem {
     @Override
     public void disable() {
         SubSystem[] systems = new SubSystem[]{
+                cacheSystem,
                 listenerSystem,
                 processingQueue,
                 databaseSystem,
+                infoSystem,
+                webServerSystem,
                 taskSystem,
                 configSystem,
                 fileSystem,
@@ -99,6 +110,7 @@ public abstract class PlanSystem implements SubSystem {
             NullCheck.check(fileSystem, new IllegalStateException("File system was not initialized."));
             NullCheck.check(configSystem, new IllegalStateException("Config system was not initialized."));
             NullCheck.check(databaseSystem, new IllegalStateException("Database system was not initialized."));
+            NullCheck.check(infoSystem, new IllegalStateException("Info system was not initialized."));
             NullCheck.check(listenerSystem, new IllegalStateException("Listener system was not initialized."));
             NullCheck.check(taskSystem, new IllegalStateException("Task system was not initialized."));
         } catch (Exception e) {
@@ -142,5 +154,13 @@ public abstract class PlanSystem implements SubSystem {
 
     public ServerInfo getServerInfo() {
         return null; // TODO
+    }
+
+    public CacheSystem getCacheSystem() {
+        return cacheSystem;
+    }
+
+    public InfoSystem getInfoSystem() {
+        return infoSystem;
     }
 }

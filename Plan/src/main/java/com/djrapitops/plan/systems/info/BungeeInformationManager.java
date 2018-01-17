@@ -7,9 +7,10 @@ package com.djrapitops.plan.systems.info;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIConnectionFailException;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPINotFoundException;
+import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.api.exceptions.connection.WebNotFoundException;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.pagecache.PageId;
 import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
@@ -24,7 +25,6 @@ import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalyzeWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.InspectWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.IsOnlineWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bungee.RequestPluginsTabWebAPI;
-import com.djrapitops.plan.systems.cache.DataCache;
 import com.djrapitops.plan.systems.info.parsing.NetworkPage;
 import com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import com.djrapitops.plan.systems.info.server.ServerInfo;
@@ -91,9 +91,9 @@ public class BungeeInformationManager extends InformationManager {
         AnalyzeWebAPI api = plugin.getWebServer().getWebAPI().getAPI(AnalyzeWebAPI.class);
         try {
             api.sendRequest(serverInfo.getWebAddress(), serverUUID);
-        } catch (WebAPIConnectionFailException e) {
+        } catch (ConnectionFailException e) {
             attemptConnection();
-        } catch (WebAPIException e) {
+        } catch (WebException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }
@@ -147,7 +147,7 @@ public class BungeeInformationManager extends InformationManager {
             apiManager.getAPI(RequestPluginsTabWebAPI.class).sendRequestsToBukkitServers(plugin, uuid);
         } catch (IllegalStateException ignored) {
             /* Ignored */
-        } catch (WebAPIException e) {
+        } catch (WebException e) {
             plugin.getServerInfoManager().attemptConnection(inspectServer);
         }
     }
@@ -181,11 +181,11 @@ public class BungeeInformationManager extends InformationManager {
                 try {
                     getWebAPI().getAPI(IsOnlineWebAPI.class).sendRequest(server.getWebAddress(), uuid);
                     return server;
-                } catch (WebAPIConnectionFailException e) {
+                } catch (ConnectionFailException e) {
                     serverInfoManager.serverHasGoneOffline(server.getUuid());
-                } catch (WebAPINotFoundException ignored) {
+                } catch (WebNotFoundException ignored) {
                     /*continue*/
-                } catch (WebAPIException e) {
+                } catch (WebException e) {
                     Log.toLog(this.getClass().getName(), e);
                 }
             }
@@ -364,7 +364,7 @@ public class BungeeInformationManager extends InformationManager {
         for (ServerInfo serverInfo : serverInfoManager.getOnlineBukkitServers()) {
             try {
                 api.sendRequest(serverInfo.getWebAddress(), serverUUID);
-            } catch (WebAPIException ignored) {
+            } catch (WebException ignored) {
                 /*Ignored*/
             }
         }

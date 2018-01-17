@@ -2,17 +2,11 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.plan.system.webserver.webapi;
+package com.djrapitops.plan.system.info.connection;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.pagecache.PageId;
-import com.djrapitops.plan.system.webserver.pagecache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
-import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -24,18 +18,16 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
+ * Represents an outbound action request to another Plan server.
+ *
  * @author Rsl1122
  */
-public abstract class WebAPI {
+public class ConnectionOut {
 
-    private static TrustManager[] trustAllCerts = new TrustManager[]{
+    private static final TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -50,43 +42,26 @@ public abstract class WebAPI {
                 }
             }
     };
-    private Map<String, String> variables;
 
+    private final String address;
+    private final UUID serverUUID;
+    private final InfoRequest infoRequest;
 
-    public WebAPI() {
-        this.variables = new HashMap<>();
+    /**
+     * Constructor.
+     *
+     * @param address     Full address to another Plan webserver. (http://something:port)
+     * @param serverUUID  UUID of server this outbound connection.
+     * @param infoRequest Type of the action this connection wants to be performed.
+     */
+    public ConnectionOut(String address, UUID serverUUID, InfoRequest infoRequest) {
+        Verify.nullCheck(address, serverUUID, infoRequest);
+        this.address = address;
+        this.serverUUID = serverUUID;
+        this.infoRequest = infoRequest;
     }
 
-    public static Map<String, String> readVariables(String requestBody) {
-        String[] variables = requestBody.split(";&variable;");
-
-        return Arrays.stream(variables)
-                .map(variable -> variable.split("=", 2))
-                .filter(splitVariables -> splitVariables.length == 2)
-                .collect(Collectors.toMap(splitVariables -> splitVariables[0], splitVariables -> splitVariables[1], (a, b) -> b));
-    }
-
-    public Response processRequest(PlanPlugin plugin, Map<String, String> variables) {
-        String sender = variables.get("sender");
-        if (sender == null) {
-            Log.debug(getClass().getSimpleName() + ": Sender not Found");
-            return badRequest("Sender not present");
-        } else {
-            try {
-                UUID.fromString(sender);
-            } catch (Exception e) {
-                Log.debug(getClass().getSimpleName() + ": Invalid Sender UUID");
-                return badRequest("Faulty Sender value");
-            }
-        }
-        return onRequest(plugin, variables);
-    }
-
-    public abstract Response onRequest(PlanPlugin plugin, Map<String, String> variables);
-
-    public void sendRequest(String address) throws WebException {
-        Verify.nullCheck(address);
-
+    public void sendRequest() throws WebException {
         try {
             URL url = new URL(address + "/api/" + this.getClass().getSimpleName().toLowerCase());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -122,13 +97,14 @@ public abstract class WebAPI {
             connection.setRequestProperty("charset", "UTF-8");
 
             String parameters = parseVariables();
+            infoRequest.placeDataToDatabase();
 
             connection.setRequestProperty("Content-Length", Integer.toString(parameters.length()));
 
             byte[] toSend = parameters.getBytes();
 
             connection.setUseCaches(false);
-            Log.debug("Sending WebAPI Request: " + this.getClass().getSimpleName() + " to " + address);
+            Log.debug("ConnectionOut: " + infoRequest.getClass().getSimpleName() + " to " + address);
             try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
                 out.write(toSend);
             }
@@ -144,6 +120,8 @@ public abstract class WebAPI {
                     throw new WebForbiddenException(url.toString());
                 case 404:
                     throw new WebNotFoundException();
+                case 412:
+                    throw new WebUnauthorizedServerException();
                 case 500:
                     throw new WebInternalErrorException();
                 default:
@@ -155,47 +133,18 @@ public abstract class WebAPI {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.toLog(this.getClass().getName(), e);
             }
-            throw new ConnectionFailException("API connection failed. address: " + address, e);
+            throw new ConnectionFailException("Connection failed. address: " + address, e);
         }
     }
 
-    protected void addVariable(String key, String value) {
-        variables.put(key, value);
-    }
-
-    public Map<String, String> getVariables() {
-        return variables;
+    private String parseVariables() {
+        return "sender=" + serverUUID + ";&variable;" +
+                "type=" + infoRequest.getClass().getSimpleName();
     }
 
     private SSLSocketFactory getRelaxedSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sc = SSLContext.getInstance("SSL");
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
         return sc.getSocketFactory();
-    }
-
-    protected Response success() {
-        return ResponseCache.loadResponse(PageId.TRUE.id(), SuccessResponse::new);
-    }
-
-    protected Response fail(String reason) {
-        return ResponseCache.loadResponse(PageId.FALSE.id(), () -> {
-            NotFoundResponse notFoundResponse = new NotFoundResponse("");
-            notFoundResponse.setContent(reason);
-            return notFoundResponse;
-        });
-    }
-
-    protected Response badRequest(String error) {
-        return ResponseCache.loadResponse(PageId.ERROR.of(error), () -> new BadRequestResponse(error));
-    }
-
-    private String parseVariables() {
-        StringBuilder parameters = new StringBuilder();
-        String serverUUID = PlanPlugin.getInstance().getServerUuid().toString();
-        parameters.append("sender=").append(serverUUID);
-        for (Map.Entry<String, String> entry : variables.entrySet()) {
-            parameters.append(";&variable;").append(entry.getKey()).append("=").append(entry.getValue());
-        }
-        return parameters.toString();
     }
 }

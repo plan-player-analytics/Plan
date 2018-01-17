@@ -6,8 +6,8 @@ package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.systems.cache.GeolocationCache;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;

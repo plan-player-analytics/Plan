@@ -5,7 +5,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.webapi.WebAPIException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
@@ -39,11 +39,11 @@ public class DevCommand extends SubCommand {
         }
         String feature = args[0];
         switch (feature) {
-            case "webapi":
+            case "connection":
                 if (!Condition.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
                     break;
                 }
-                if (!webapi(args[1] + "webapi", args.length >= 3)) {
+                if (!webapi(args[1] + "connection", args.length >= 3)) {
                     sender.sendMessage("[Plan] No such API / Exception occurred.");
                 }
                 break;
@@ -78,7 +78,7 @@ public class DevCommand extends SubCommand {
                 api.sendRequest(address);
             }
             return true;
-        } catch (WebAPIException e) {
+        } catch (WebException e) {
             e.printStackTrace();
         }
         return false;
