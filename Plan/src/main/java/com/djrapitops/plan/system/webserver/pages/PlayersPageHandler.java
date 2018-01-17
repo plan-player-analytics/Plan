@@ -15,7 +15,7 @@ import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
 import java.util.List;
 
 /**
- * //TODO Class Javadoc Comment
+ * PageHandler for /players page.
  *
  * @author Rsl1122
  */

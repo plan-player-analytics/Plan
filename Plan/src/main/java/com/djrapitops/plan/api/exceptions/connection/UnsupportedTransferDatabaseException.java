@@ -7,7 +7,7 @@ package com.djrapitops.plan.api.exceptions.connection;
 import com.djrapitops.plan.system.database.databases.Database;
 
 /**
- * //TODO Class Javadoc Comment
+ * Exception thrown when calling Database#transfer and Database implementation doesn't support it.
  *
  * @author Rsl1122
  */

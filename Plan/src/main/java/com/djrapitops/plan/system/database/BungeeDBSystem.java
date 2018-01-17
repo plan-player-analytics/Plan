@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 
 /**
- * //TODO Class Javadoc Comment
+ * Bungee Database system that initializes MySQL object.
  *
  * @author Rsl1122
  */

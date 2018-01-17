@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * SaveOperations implementation for SQL databases.
  *
  * @author Rsl1122
  */
@@ -192,6 +192,15 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     public void insertTPSforThisServer(TPS tps) throws DBException {
         try {
             tpsTable.insertTPS(tps);
+        } catch (SQLException e) {
+            throw ErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public void session(UUID uuid, Session session) throws DBException {
+        try {
+            sessionsTable.saveSession(uuid, session);
         } catch (SQLException e) {
             throw ErrorUtil.getExceptionFor(e);
         }

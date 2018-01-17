@@ -2,7 +2,6 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.Actions;
-import com.djrapitops.plan.data.HasDate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Objects;
@@ -14,7 +13,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PlayerKill implements HasDate {
+public class PlayerKill {
 
     private final UUID victim;
     private final long time;
@@ -49,11 +48,6 @@ public class PlayerKill implements HasDate {
      */
     public long getTime() {
         return time;
-    }
-
-    @Override
-    public long getDate() {
-        return getTime();
     }
 
     /**

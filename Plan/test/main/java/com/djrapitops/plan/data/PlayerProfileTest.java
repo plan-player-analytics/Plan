@@ -18,11 +18,6 @@ import java.util.List;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * //TODO Class Javadoc Comment
- *
- * @author Rsl1122
- */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class PlayerProfileTest {

@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.data.WebUser;
 
 /**
- * //TODO Class Javadoc Comment
+ * Interface for different WebUser authentication methods used by Requests.
  *
  * @author Rsl1122
  */

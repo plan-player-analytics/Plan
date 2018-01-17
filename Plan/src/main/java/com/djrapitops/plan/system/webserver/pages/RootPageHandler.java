@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.ResponseHandler;
@@ -18,7 +19,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * //TODO Class Javadoc Comment
+ * PageHandler for / page (Address root).
+ *
+ * Not Available if Authentication is not enabled.
  *
  * @author Rsl1122
  */
@@ -31,7 +34,7 @@ public class RootPageHandler extends PageHandler {
     }
 
     @Override
-    public Response getResponse(Request request, List<String> target) {
+    public Response getResponse(Request request, List<String> target) throws WebException {
         Optional<Authentication> auth = request.getAuth();
         if (!auth.isPresent()) {
             return DefaultResponses.BASIC_AUTH.get();

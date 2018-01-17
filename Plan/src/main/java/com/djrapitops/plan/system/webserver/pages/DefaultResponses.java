@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 
 /**
- * //TODO Class Javadoc Comment
+ * Enum containing default responses that don't need to be cached because they're always the same.
  *
  * @author Rsl1122
  */

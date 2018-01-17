@@ -5,7 +5,7 @@
 package com.djrapitops.plan.utilities;
 
 /**
- * //TODO Class Javadoc Comment
+ * Utility class for performing actions if something is null.
  *
  * @author Rsl1122
  */

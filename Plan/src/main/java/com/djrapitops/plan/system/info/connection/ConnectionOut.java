@@ -117,13 +117,13 @@ public class ConnectionOut {
                 case 200:
                     return;
                 case 400:
-                    throw new WebFailException("Bad Request: " + url.toString() + "|" + parameters);
+                    throw new WebFailException("Bad Request: " + url.toString() + " | " + parameters);
                 case 403:
-                    throw new ForbiddenException(url.toString());
+                    throw new ForbiddenException(url.toString() + " returned 403, this is not supposed to happen.");
                 case 404:
-                    throw new NotFoundException();
+                    throw new NotFoundException(url.toString() + " returned a 404, ensure that your server is connected to an up to date Plan server.");
                 case 412:
-                    throw new UnauthorizedServerException();
+                    throw new UnauthorizedServerException(url.toString() + " reported that it does not recognize this server. Make sure '/plan m setup' was successful.");
                 case 500:
                     throw new InternalErrorException();
                 default:
@@ -135,7 +135,7 @@ public class ConnectionOut {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.toLog(this.getClass().getName(), e);
             }
-            throw new ConnectionFailException("Connection failed. address: " + address, e);
+            throw new ConnectionFailException("Connection failed to address: " + address, e);
         }
     }
 

@@ -4,22 +4,22 @@
  */
 package com.djrapitops.plan.system.processing.processors.info;
 
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.processing.processors.Processor;
-import com.djrapitops.plan.systems.info.InformationManager;
 
 /**
- * //TODO Class Javadoc Comment
+ * Processor for updating the network page.
  *
  * @author Rsl1122
  */
-public class NetworkPageUpdateProcessor extends Processor<InformationManager> {
+public class NetworkPageUpdateProcessor extends Processor<InfoSystem> {
 
-    public NetworkPageUpdateProcessor(InformationManager object) {
-        super(object);
+    public NetworkPageUpdateProcessor() {
+        super(null);
     }
 
     @Override
     public void process() {
-        object.updateNetworkPageContent();
+        InfoSystem.getInstance().updateNetworkPage();
     }
 }

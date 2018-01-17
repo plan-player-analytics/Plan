@@ -9,7 +9,9 @@ import com.djrapitops.plan.system.file.FileSystem;
 import java.io.IOException;
 
 /**
- * //TODO Class Javadoc Comment
+ * ConfigSystem for Bungee.
+ * <p>
+ * Bukkit and Bungee have different default config file inside the jar.
  *
  * @author Rsl1122
  */

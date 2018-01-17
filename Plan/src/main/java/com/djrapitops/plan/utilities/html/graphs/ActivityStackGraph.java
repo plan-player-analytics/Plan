@@ -15,7 +15,9 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Graph creation utility for Activity Stack graph.
+ *
+ * This graph represents evolution of the playerbase.
  *
  * @author Rsl1122
  */

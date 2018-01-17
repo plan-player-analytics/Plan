@@ -14,11 +14,6 @@ import test.utilities.TestInit;
 import java.io.IOException;
 import java.util.HashMap;
 
-/**
- * //TODO Class Javadoc Comment
- *
- * @author Rsl1122
- */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class})
 public class WebServerTest {

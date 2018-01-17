@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * //TODO Class Javadoc Comment
+ * HTML utility class for parsing HTML for Inspect page plugins tabs.
  *
  * @author Rsl1122
  */

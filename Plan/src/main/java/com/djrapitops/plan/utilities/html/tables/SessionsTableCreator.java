@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * //TODO Class Javadoc Comment
+ * Utility for creating HTML {@code <table>}-element with Sessions inside it.
  *
  * @author Rsl1122
  */

@@ -29,7 +29,7 @@ import com.djrapitops.plan.utilities.html.graphs.line.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordionCreator;
 import com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
-import com.djrapitops.plan.utilities.html.tables.IpTableCreator;
+import com.djrapitops.plan.utilities.html.tables.GeoInfoTableCreator;
 import com.djrapitops.plan.utilities.html.tables.NicknameTableCreator;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -117,7 +117,7 @@ public class InspectPage extends Page {
         addValue("favoriteServer", favoriteServer != null ? favoriteServer : "Unknown");
 
         addValue("tableBodyNicknames", NicknameTableCreator.createTable(profile.getNicknames(), serverNames));
-        addValue("tableBodyIPs", IpTableCreator.createTable(profile.getGeoInformation()));
+        addValue("tableBodyIPs", GeoInfoTableCreator.createTable(profile.getGeoInformation()));
 
         Map<UUID, List<Session>> sessions = profile.getSessions();
         Map<String, List<Session>> sessionsByServerName = sessions.entrySet().stream()

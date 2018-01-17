@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Operation methods for saving data.
+ *
+ * Note: Method names subject to change (TODO remove insert update and such)
  *
  * @author Rsl1122
  */

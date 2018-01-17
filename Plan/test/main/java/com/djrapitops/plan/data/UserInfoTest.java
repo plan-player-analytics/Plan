@@ -29,6 +29,7 @@ public class UserInfoTest {
     }
 
     @Test
+    @Ignore
     public void test() {
         // TODO Rewrite
     }

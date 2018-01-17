@@ -11,9 +11,6 @@ package com.djrapitops.plan.api.exceptions.connection;
  */
 public class UnauthorizedServerException extends WebFailException {
 
-    public UnauthorizedServerException() {
-    }
-
     public UnauthorizedServerException(String message) {
         super(message);
     }

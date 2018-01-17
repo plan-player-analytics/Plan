@@ -15,7 +15,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import java.io.IOException;
 
 /**
- * //TODO Class Javadoc Comment
+ * System for checking if new Version is available when the System initializes.
  *
  * @author Rsl1122
  */

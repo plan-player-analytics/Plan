@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.webserver.response;
 
 /**
- * //TODO Class Javadoc Comment
+ * Enum for HTTP content-type response header Strings.
  *
  * @author Rsl1122
  */

@@ -7,7 +7,7 @@ package com.djrapitops.plan.api.exceptions.connection;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 
 /**
- * //TODO Class Javadoc Comment
+ * Thrown when DBException occurs during InfoRequest#placeIntoDatabase.
  *
  * @author Rsl1122
  */

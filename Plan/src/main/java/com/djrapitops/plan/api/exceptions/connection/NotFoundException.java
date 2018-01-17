@@ -10,7 +10,7 @@ package com.djrapitops.plan.api.exceptions.connection;
  * @author Rsl1122
  */
 public class NotFoundException extends WebFailException {
-    public NotFoundException() {
-        super("Not Found");
+    public NotFoundException(String message) {
+        super(message);
     }
 }

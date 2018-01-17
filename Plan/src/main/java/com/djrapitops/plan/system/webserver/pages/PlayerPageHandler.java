@@ -4,18 +4,17 @@
  */
 package com.djrapitops.plan.system.webserver.pages;
 
-import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -25,14 +24,14 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * PageHandler for /player/PlayerName pages.
  *
  * @author Rsl1122
  */
 public class PlayerPageHandler extends PageHandler {
 
     @Override
-    public Response getResponse(Request request, List<String> target) {
+    public Response getResponse(Request request, List<String> target) throws WebException {
         if (target.isEmpty()) {
             return DefaultResponses.NOT_FOUND.get();
         }
@@ -46,17 +45,9 @@ public class PlayerPageHandler extends PageHandler {
 
         try {
             if (Database.getActive().check().isPlayerRegistered(uuid)) {
-                PlanPlugin.getInstance().getInfoManager().cachePlayer(uuid);
                 Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
-                // TODO Create a new method that places NotFoundResponse to ResponseCache instead.
-                if (response == null || response.getContent().contains("No Bukkit Servers were online to process this request")) {
-                    ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> {
-                        try {
-                            return new InspectPageResponse(PlanPlugin.getInstance().getInfoManager(), uuid);
-                        } catch (ParseException e) {
-                            return new InternalErrorResponse(e, this.getClass().getName());
-                        }
-                    });
+                if (response == null || !(response instanceof InspectPageResponse)) {
+                    InfoSystem.getInstance().generateAndCachePlayerPage(uuid);
                     response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
                 }
                 return response;

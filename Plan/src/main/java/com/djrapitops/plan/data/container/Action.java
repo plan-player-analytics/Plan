@@ -5,7 +5,6 @@
 package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.Actions;
-import com.djrapitops.plan.data.HasDate;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
 
@@ -16,7 +15,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class Action implements HasDate {
+public class Action {
     private final long date;
     private final Actions doneAction;
     private final String additionalInfo;

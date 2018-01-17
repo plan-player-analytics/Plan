@@ -5,7 +5,6 @@
  */
 package com.djrapitops.plan.data.container;
 
-import com.djrapitops.plan.data.HasDate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Objects;
@@ -16,7 +15,7 @@ import java.util.Objects;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class TPS implements HasDate {
+public class TPS {
 
     private final long date;
     private final double ticksPerSecond;

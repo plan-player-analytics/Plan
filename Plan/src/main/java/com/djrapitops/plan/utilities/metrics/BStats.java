@@ -27,8 +27,6 @@ public class BStats {
     }
 
     private void registerConfigSettingGraphs() {
-        // TODO Write a Module bar graph
-
         String serverType = plugin.getServer().getName();
         if ("CraftBukkit".equals(serverType) && Check.isSpigotAvailable()) {
             serverType = "Spigot";

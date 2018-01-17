@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * HTML utility class for creating a Session Accordion.
  *
  * @author Rsl1122
  */

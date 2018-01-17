@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * //TODO Class Javadoc Comment
+ * SQL query that doesn't require preparing that closes proper elements.
  *
  * @author Rsl1122
  */

@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.settings.Settings;
 
 /**
- * //TODO Class Javadoc Comment
+ * Bukkit Database system that initializes SQLite and MySQL database objects.
  *
  * @author Rsl1122
  */

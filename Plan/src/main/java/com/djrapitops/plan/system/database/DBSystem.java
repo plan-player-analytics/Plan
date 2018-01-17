@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * //TODO Class Javadoc Comment
+ * System that holds the active databases.
  *
  * @author Rsl1122
  */

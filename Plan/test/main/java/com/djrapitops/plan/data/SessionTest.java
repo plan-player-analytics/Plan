@@ -7,10 +7,12 @@ package com.djrapitops.plan.data;
 
 import com.djrapitops.plan.data.container.Session;
 import org.junit.Before;
+import org.junit.Ignore;
 
 /**
  * @author Rsl1122
  */
+@Ignore
 public class SessionTest {
 
     private Session session;

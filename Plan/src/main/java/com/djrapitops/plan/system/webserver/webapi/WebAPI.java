@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 /**
  * @author Rsl1122
  */
+@Deprecated
 public abstract class WebAPI {
 
     private static TrustManager[] trustAllCerts = new TrustManager[]{

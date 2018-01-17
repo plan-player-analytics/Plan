@@ -11,7 +11,9 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 
 /**
- * //TODO Class Javadoc Comment
+ * Command for Toggling whether or not BungeeCord accepts set up requests.
+ *
+ * This was added as a security measure against unwanted MySQL snooping.
  *
  * @author Rsl1122
  */

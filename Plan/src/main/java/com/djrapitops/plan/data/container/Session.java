@@ -1,6 +1,5 @@
 package com.djrapitops.plan.data.container;
 
-import com.djrapitops.plan.data.HasDate;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -28,7 +27,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class Session implements HasDate {
+public class Session {
 
     private final long sessionStart;
     private Integer sessionID;
@@ -216,10 +215,5 @@ public class Session implements HasDate {
                 .append("mobKills", mobKills)
                 .append("deaths", deaths)
                 .toString();
-    }
-
-    @Override
-    public long getDate() {
-        return getSessionStart();
     }
 }

@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Operations for transferring data via Database to another server.
+ *
+ * Receiving server has to be using the same database.
  *
  * @author Rsl1122
  */

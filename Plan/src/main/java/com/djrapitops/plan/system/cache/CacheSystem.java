@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 /**
- * //TODO Class Javadoc Comment
+ * System that holds data caches of the plugin.
  *
  * @author Rsl1122
  */

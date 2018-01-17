@@ -7,7 +7,7 @@ package com.djrapitops.plan.utilities;
 import java.util.Base64;
 
 /**
- * //TODO Class Javadoc Comment
+ * Utility for performing Base64 operations.
  *
  * @author Rsl1122
  */

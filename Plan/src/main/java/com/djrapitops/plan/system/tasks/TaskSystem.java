@@ -13,7 +13,9 @@ import com.djrapitops.plugin.task.IRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 /**
- * //TODO Class Javadoc Comment
+ * TaskSystem that registers tasks that were previously registered inside Plugin classes.
+ *
+ * Subclasses register actual tasks.
  *
  * @author Rsl1122
  */

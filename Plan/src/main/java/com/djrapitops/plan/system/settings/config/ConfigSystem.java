@@ -17,7 +17,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import java.io.IOException;
 
 /**
- * //TODO Class Javadoc Comment
+ * System for Config and other user customizable options.
  *
  * @author Rsl1122
  */
@@ -59,6 +59,11 @@ public abstract class ConfigSystem implements SubSystem {
         theme.enable();
     }
 
+    /**
+     * Copies default values from file in jar to Config.
+     *
+     * @throws IOException
+     */
     protected abstract void copyDefaults() throws IOException;
 
     @Override

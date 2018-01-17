@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * HTML utility class used for creating main element on Sessions tabs.
  *
  * @author Rsl1122
  */

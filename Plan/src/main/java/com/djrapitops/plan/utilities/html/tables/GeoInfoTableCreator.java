@@ -16,10 +16,9 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class IpTableCreator {
+public class GeoInfoTableCreator {
 
-
-    public IpTableCreator() {
+    public GeoInfoTableCreator() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -30,7 +29,7 @@ public class IpTableCreator {
             html.append(Html.TABLELINE_3.parse("No Connections", "-", "-"));
         } else {
             for (GeoInfo info : geoInfo) {
-                long date = info.getDate();
+                long date = info.getLastUsed();
                 html.append(Html.TABLELINE_3.parse(
                         FormatUtils.formatIP(info.getIp()),
                         info.getGeolocation(),

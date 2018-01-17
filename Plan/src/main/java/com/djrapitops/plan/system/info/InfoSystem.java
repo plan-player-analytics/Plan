@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.info;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -14,12 +14,19 @@ import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
 
+interface ExceptionLoggingAction {
+
+    void performAction() throws WebException;
+
+}
+
 /**
  * Information management system.
- *
+ * <p>
  * Subclasses should decide how InfoRequests are run locally if necessary.
  *
  * @author Rsl1122
@@ -38,7 +45,7 @@ public abstract class InfoSystem implements SubSystem {
         return infoSystem;
     }
 
-    public void generatePlayerPage(UUID player) throws WebException {
+    public void generateAndCachePlayerPage(UUID player) throws WebException {
         sendRequest(new GenerateInspectPageRequest(player));
     }
 
@@ -76,5 +83,18 @@ public abstract class InfoSystem implements SubSystem {
 
     public ConnectionSystem getConnectionSystem() {
         return connectionSystem;
+    }
+
+    public abstract void updateNetworkPage();
+
+    public void handlePossibleException(ExceptionLoggingAction action) {
+        try {
+            action.performAction();
+        } catch (ConnectionFailException | UnsupportedTransferDatabaseException | UnauthorizedServerException
+                | NotFoundException | NoServersException e) {
+            Log.warn(e.getMessage());
+        } catch (WebException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 }

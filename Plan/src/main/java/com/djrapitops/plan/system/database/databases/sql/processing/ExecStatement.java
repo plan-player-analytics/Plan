@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * //TODO Class Javadoc Comment
+ * SQL executing statement that closes appropriate elements.
  *
  * @author Rsl1122
  */

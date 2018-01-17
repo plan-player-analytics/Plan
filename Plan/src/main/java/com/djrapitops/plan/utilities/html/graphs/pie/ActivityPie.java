@@ -10,7 +10,7 @@ import com.djrapitops.plan.settings.theme.ThemeVal;
 import java.util.*;
 
 /**
- * //TODO Class Javadoc Comment
+ * Utility class for creating Activity Pie data.
  *
  * @author Rsl1122
  */

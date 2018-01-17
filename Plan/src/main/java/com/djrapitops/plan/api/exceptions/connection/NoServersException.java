@@ -5,14 +5,11 @@
 package com.djrapitops.plan.api.exceptions.connection;
 
 /**
- * //TODO Class Javadoc Comment
+ * Thrown when ConnectionSystem can not find any servers to send request to.
  *
  * @author Rsl1122
  */
 public class NoServersException extends WebException {
-
-    public NoServersException() {
-    }
 
     public NoServersException(String message) {
         super(message);

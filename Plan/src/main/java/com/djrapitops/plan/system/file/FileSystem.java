@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * //TODO Class Javadoc Comment
+ * Abstracts File methods of Plugin classes so that they can be tested without Mocks.
  *
  * @author Rsl1122
  */

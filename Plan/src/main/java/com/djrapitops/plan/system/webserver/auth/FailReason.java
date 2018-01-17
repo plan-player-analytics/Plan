@@ -5,9 +5,10 @@
 package com.djrapitops.plan.system.webserver.auth;
 
 /**
- * //TODO Class Javadoc Comment
+ * Reason for WebUserAuthException.
  *
  * @author Rsl1122
+ * @see com.djrapitops.plan.api.exceptions.WebUserAuthException
  */
 public enum FailReason {
     USER_AND_PASS_NOT_SPECIFIED("User and Password not specified"),

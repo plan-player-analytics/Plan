@@ -11,6 +11,8 @@ import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.info.server.BungeeServerInfoManager;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
@@ -26,8 +28,6 @@ import com.djrapitops.plan.system.webserver.webapi.bukkit.InspectWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.IsOnlineWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bungee.RequestPluginsTabWebAPI;
 import com.djrapitops.plan.systems.info.parsing.NetworkPage;
-import com.djrapitops.plan.system.info.server.BungeeServerInfoManager;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plugin.api.utility.log.ErrorLogger;
@@ -387,7 +387,6 @@ public class BungeeInformationManager extends InformationManager {
 
     @Override
     public TreeMap<String, List<String>> getErrors() throws IOException {
-        // TODO Request Bukkit servers for errors
         return ErrorLogger.getLoggedErrors(plugin);
     }
 }

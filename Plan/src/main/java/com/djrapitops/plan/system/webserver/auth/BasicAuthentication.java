@@ -13,7 +13,10 @@ import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 
 /**
- * //TODO Class Javadoc Comment
+ * Authentication handling for Basic Auth.
+ *
+ * Basic access authentication (Wikipedia):
+ * https://en.wikipedia.org/wiki/Basic_access_authentication
  *
  * @author Rsl1122
  */

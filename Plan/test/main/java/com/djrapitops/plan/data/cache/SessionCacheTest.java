@@ -8,6 +8,7 @@ package com.djrapitops.plan.data.cache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -29,6 +30,7 @@ public class SessionCacheTest {
     }
 
     @Test
+    @Ignore
     public void test() {
         // TODO Rewrite
     }

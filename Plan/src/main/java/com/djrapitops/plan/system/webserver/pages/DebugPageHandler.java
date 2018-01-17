@@ -14,7 +14,7 @@ import com.djrapitops.plan.system.webserver.response.pages.DebugPageResponse;
 import java.util.List;
 
 /**
- * //TODO Class Javadoc Comment
+ * PageHandler for /debug page.
  *
  * @author Rsl1122
  */
