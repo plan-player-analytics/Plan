@@ -4,7 +4,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -86,8 +86,8 @@ public class AnalyzeCommand extends SubCommand {
         UUID serverUUID = Plan.getServerUUID();
         if (args.length >= 1 && plugin.getInfoManager().isUsingAnotherWebServer()) {
             try {
-                List<ServerInfo> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
-                Optional<ServerInfo> server = bukkitServers.stream().filter(info -> {
+                List<Server> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
+                Optional<Server> server = bukkitServers.stream().filter(info -> {
                     StringBuilder idBuilder = new StringBuilder(args[0]);
                     if (args.length > 1) {
                         for (int i = 1; i < args.length; i++) {

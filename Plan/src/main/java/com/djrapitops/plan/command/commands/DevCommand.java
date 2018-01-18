@@ -8,6 +8,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.InspectWebAPI;
 import com.djrapitops.plan.utilities.Condition;
@@ -48,9 +49,10 @@ public class DevCommand extends SubCommand {
                 }
                 break;
             case "web":
-                Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
+                ConnectionSystem connectionSystem = ConnectionSystem.getInstance();
+                Optional<String> bungeeConnectionAddress = connectionSystem.getMainAddress();
                 String accessAddress = plugin.getWebServer().getAccessAddress();
-                sender.sendMessage((plugin.getInfoManager().isUsingAnotherWebServer() && bungeeConnectionAddress.isPresent())
+                sender.sendMessage((connectionSystem.isMainServerAvailable() && bungeeConnectionAddress.isPresent())
                         ? "Bungee: " + bungeeConnectionAddress.get() : "Local: " + accessAddress);
                 break;
             default:

@@ -11,8 +11,8 @@ import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.system.info.server.BungeeServerInfoManager;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.BungeeServerInfo;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
@@ -50,8 +50,8 @@ public class BungeeInformationManager extends InformationManager {
     private final PlanBungee plugin;
     private final Map<UUID, String> networkPageContent;
     private final Map<UUID, Map<UUID, String[]>> pluginsTabContent;
-    private final BungeeServerInfoManager serverInfoManager;
-    private Map<UUID, ServerInfo> bukkitServers;
+    private final BungeeServerInfo serverInfoManager;
+    private Map<UUID, Server> bukkitServers;
 
     public BungeeInformationManager(PlanBungee plugin) {
         usingAnotherWebServer = false;
@@ -68,7 +68,7 @@ public class BungeeInformationManager extends InformationManager {
      * @throws SQLException If DB Error occurs.
      */
     private void refreshBukkitServerMap() {
-        bukkitServers = plugin.getDB().getServerTable().getBukkitServers().stream().collect(Collectors.toMap(ServerInfo::getUuid, Function.identity()));
+        bukkitServers = plugin.getDB().getServerTable().getBukkitServers().stream().collect(Collectors.toMap(Server::getUuid, Function.identity()));
     }
 
     /**
@@ -83,14 +83,14 @@ public class BungeeInformationManager extends InformationManager {
         if (PlanBungee.getServerUUID().equals(serverUUID)) {
             return;
         }
-        ServerInfo serverInfo = getOnlineServerInfo(serverUUID);
-        if (serverInfo == null) {
+        Server server = getOnlineServerInfo(serverUUID);
+        if (server == null) {
             return;
         }
 
         AnalyzeWebAPI api = plugin.getWebServer().getWebAPI().getAPI(AnalyzeWebAPI.class);
         try {
-            api.sendRequest(serverInfo.getWebAddress(), serverUUID);
+            api.sendRequest(server.getWebAddress(), serverUUID);
         } catch (ConnectionFailException e) {
             attemptConnection();
         } catch (WebException e) {
@@ -104,24 +104,24 @@ public class BungeeInformationManager extends InformationManager {
      * Returns null if server doesn't exist.
      *
      * @param serverUUID UUID of server
-     * @return Online ServerInfo or null
+     * @return Online Server or null
      */
-    private ServerInfo getOnlineServerInfo(UUID serverUUID) {
-        ServerInfo serverInfo = bukkitServers.get(serverUUID);
-        if (serverInfo == null) {
+    private Server getOnlineServerInfo(UUID serverUUID) {
+        Server server = bukkitServers.get(serverUUID);
+        if (server == null) {
             try {
                 refreshBukkitServerMap();
             } catch (SQLException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
-            serverInfo = bukkitServers.get(serverUUID);
+            server = bukkitServers.get(serverUUID);
         }
-        if (serverInfo == null) {
+        if (server == null) {
             return null;
         }
 
-        if (serverInfoManager.getOnlineBukkitServers().contains(serverInfo) || serverInfoManager.attemptConnection(serverInfo)) {
-            return serverInfo;
+        if (serverInfoManager.getOnlineBukkitServers().contains(server) || serverInfoManager.attemptConnection(server)) {
+            return server;
         }
         return null;
     }
@@ -137,7 +137,7 @@ public class BungeeInformationManager extends InformationManager {
      */
     @Override
     public void cachePlayer(UUID uuid) {
-        ServerInfo inspectServer = null;
+        Server inspectServer = null;
         try {
             inspectServer = getInspectRequestProcessorServer(uuid);
 
@@ -153,17 +153,17 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     /**
-     * Get ServerInfo of an online server that should process an inspect request.
+     * Get Server of an online server that should process an inspect request.
      * <p>
      * If the player is online, an attempt to use the server where the player resides is made.
      * <p>
      * If the player is offline or in the lobby, any server can be used.
      *
      * @param uuid UUID of the player
-     * @return ServerInfo of the server that should handle the request.
+     * @return Server of the server that should handle the request.
      * @throws IllegalStateException If no Bukkit servers are online.
      */
-    private ServerInfo getInspectRequestProcessorServer(UUID uuid) {
+    private Server getInspectRequestProcessorServer(UUID uuid) {
         if (bukkitServers.isEmpty()) {
             try {
                 refreshBukkitServerMap();
@@ -175,9 +175,9 @@ public class BungeeInformationManager extends InformationManager {
             }
         }
 
-        Collection<ServerInfo> onlineServers = serverInfoManager.getOnlineBukkitServers();
+        Collection<Server> onlineServers = serverInfoManager.getOnlineBukkitServers();
         if (plugin.getProxy().getPlayer(uuid) != null) {
-            for (ServerInfo server : onlineServers) {
+            for (Server server : onlineServers) {
                 try {
                     getWebAPI().getAPI(IsOnlineWebAPI.class).sendRequest(server.getWebAddress(), uuid);
                     return server;
@@ -191,7 +191,7 @@ public class BungeeInformationManager extends InformationManager {
             }
         }
 
-        Optional<ServerInfo> bukkitServer = serverInfoManager.getOnlineBukkitServers().stream().findAny();
+        Optional<Server> bukkitServer = serverInfoManager.getOnlineBukkitServers().stream().findAny();
         if (bukkitServer.isPresent()) {
             return bukkitServer.get();
         }
@@ -218,8 +218,8 @@ public class BungeeInformationManager extends InformationManager {
     @Override
     public boolean attemptConnection() {
         try {
-            List<ServerInfo> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
-            for (ServerInfo server : bukkitServers) {
+            List<Server> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
+            for (Server server : bukkitServers) {
                 serverInfoManager.attemptConnection(server);
             }
         } catch (SQLException e) {
@@ -361,9 +361,9 @@ public class BungeeInformationManager extends InformationManager {
     @Override
     public void analysisReady(UUID serverUUID) {
         AnalysisReadyWebAPI api = getWebAPI().getAPI(AnalysisReadyWebAPI.class);
-        for (ServerInfo serverInfo : serverInfoManager.getOnlineBukkitServers()) {
+        for (Server server : serverInfoManager.getOnlineBukkitServers()) {
             try {
-                api.sendRequest(serverInfo.getWebAddress(), serverUUID);
+                api.sendRequest(server.getWebAddress(), serverUUID);
             } catch (WebException ignored) {
                 /*Ignored*/
             }
@@ -380,8 +380,8 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     public void sendConfigSettings() {
-        Collection<ServerInfo> online = serverInfoManager.getOnlineBukkitServers();
-        online.stream().map(ServerInfo::getUuid)
+        Collection<Server> online = serverInfoManager.getOnlineBukkitServers();
+        online.stream().map(Server::getUuid)
                 .forEach(serverInfoManager::sendConfigSettings);
     }
 

@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.*;
 
@@ -33,6 +34,14 @@ public interface FetchOperations {
     // WebUsers
 
     WebUser getWebUser(String username) throws DBException;
+
+    // Servers
+
+    Optional<String> getServerName(UUID serverUUID) throws DBException;
+
+    Optional<Server> getBungeeInformation() throws DBException;
+
+    Optional<Integer> getServerID(UUID serverUUID);
 
     // Raw Data
 
@@ -65,8 +74,6 @@ public interface FetchOperations {
     Map<UUID, String> getPlayerNames() throws DBException;
 
     String getPlayerName(UUID playerUUID) throws DBException;
-
-    Optional<String> getServerName(UUID serverUUID) throws DBException;
 
     List<String> getNicknames(UUID uuid) throws DBException;
 }

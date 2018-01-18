@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatemen
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.*;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -77,7 +77,7 @@ public class ServerTable extends Table {
         }
     }
 
-    public void saveCurrentServerInfo(ServerInfo info) throws SQLException {
+    public void saveCurrentServerInfo(Server info) throws SQLException {
         if (getServerID(info.getUuid()).isPresent()) {
             updateServerInfo(info);
         } else {
@@ -85,7 +85,7 @@ public class ServerTable extends Table {
         }
     }
 
-    private void updateServerInfo(ServerInfo info) throws SQLException {
+    private void updateServerInfo(Server info) throws SQLException {
         String sql = Update.values(tableName,
                 columnServerUUID,
                 columnServerName,
@@ -112,10 +112,10 @@ public class ServerTable extends Table {
      * Inserts new row for a server into the table.
      *
      * @param info Info to instert (All variables should be present.
-     * @throws IllegalStateException if one of the ServerInfo variables is null
+     * @throws IllegalStateException if one of the Server variables is null
      * @throws SQLException          DB Error
      */
-    private void saveNewServerInfo(ServerInfo info) throws SQLException {
+    private void saveNewServerInfo(Server info) throws SQLException {
         UUID uuid = info.getUuid();
         String name = info.getName();
         String webAddress = info.getWebAddress();
@@ -253,21 +253,21 @@ public class ServerTable extends Table {
      * @return information about Bungee server.
      * @throws SQLException DB Error
      */
-    public Optional<ServerInfo> getBungeeInfo() throws SQLException {
+    public Optional<Server> getBungeeInfo() throws SQLException {
         String sql = Select.from(tableName, "*")
                 .where(columnServerName + "=?")
                 .toString();
 
-        return query(new QueryStatement<Optional<ServerInfo>>(sql) {
+        return query(new QueryStatement<Optional<Server>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, "BungeeCord");
             }
 
             @Override
-            public Optional<ServerInfo> processResults(ResultSet set) throws SQLException {
+            public Optional<Server> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(new ServerInfo(
+                    return Optional.of(new Server(
                             set.getInt(columnServerID),
                             UUID.fromString(set.getString(columnServerUUID)),
                             set.getString(columnServerName),
@@ -280,22 +280,22 @@ public class ServerTable extends Table {
         });
     }
 
-    public List<ServerInfo> getBukkitServers() throws SQLException {
+    public List<Server> getBukkitServers() throws SQLException {
         String sql = Select.from(tableName, "*")
                 .where(columnServerName + "!=?")
                 .toString();
 
-        return query(new QueryStatement<List<ServerInfo>>(sql, 100) {
+        return query(new QueryStatement<List<Server>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, "BungeeCord");
             }
 
             @Override
-            public List<ServerInfo> processResults(ResultSet set) throws SQLException {
-                List<ServerInfo> servers = new ArrayList<>();
+            public List<Server> processResults(ResultSet set) throws SQLException {
+                List<Server> servers = new ArrayList<>();
                 while (set.next()) {
-                    servers.add(new ServerInfo(
+                    servers.add(new Server(
                             set.getInt(columnServerID),
                             UUID.fromString(set.getString(columnServerUUID)),
                             set.getString(columnServerName),
@@ -315,15 +315,15 @@ public class ServerTable extends Table {
         return columnServerUUID;
     }
 
-    public void insertAllServers(List<ServerInfo> allServerInfo) throws SQLException {
-        if (Verify.isEmpty(allServerInfo)) {
+    public void insertAllServers(List<Server> allServer) throws SQLException {
+        if (Verify.isEmpty(allServer)) {
             return;
         }
 
         executeBatch(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                for (ServerInfo info : allServerInfo) {
+                for (Server info : allServer) {
                     UUID uuid = info.getUuid();
                     String name = info.getName();
                     String webAddress = info.getWebAddress();
@@ -382,21 +382,21 @@ public class ServerTable extends Table {
         });
     }
 
-    public Optional<ServerInfo> getServerInfo(UUID serverUUID) throws SQLException {
+    public Optional<Server> getServerInfo(UUID serverUUID) throws SQLException {
         String sql = Select.from(tableName, "*")
                 .where(columnServerUUID + "=?")
                 .toString();
 
-        return query(new QueryStatement<Optional<ServerInfo>>(sql) {
+        return query(new QueryStatement<Optional<Server>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
             }
 
             @Override
-            public Optional<ServerInfo> processResults(ResultSet set) throws SQLException {
+            public Optional<Server> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(new ServerInfo(
+                    return Optional.of(new Server(
                             set.getInt(columnServerID),
                             UUID.fromString(set.getString(columnServerUUID)),
                             set.getString(columnServerName),

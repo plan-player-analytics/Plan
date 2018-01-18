@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.SQLException;
@@ -140,7 +140,7 @@ public class BatchOperationTable extends Table {
         }
         Log.debug("Batch Copy Servers");
         ServerTable serverTable = db.getServerTable();
-        List<ServerInfo> servers = serverTable.getBukkitServers();
+        List<Server> servers = serverTable.getBukkitServers();
         serverTable.getBungeeInfo().ifPresent(servers::add);
         toDB.getDb().getServerTable().insertAllServers(servers);
     }

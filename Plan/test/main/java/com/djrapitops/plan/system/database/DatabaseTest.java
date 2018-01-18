@@ -19,8 +19,8 @@ import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -83,7 +83,7 @@ public class DatabaseTest {
         };
         when(plan.getDataCache()).thenReturn(dataCache);
 
-        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", "", 20));
+        db.getServerTable().saveCurrentServerInfo(new Server(-1, TestInit.getServerUUID(), "ServerName", "", 20));
 
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = FileUtil.lines(f).size();
@@ -691,11 +691,11 @@ public class DatabaseTest {
     public void testServerTableBungeeSave() throws SQLException, DBInitException {
         ServerTable serverTable = db.getServerTable();
 
-        Optional<ServerInfo> bungeeInfo = serverTable.getBungeeInfo();
+        Optional<Server> bungeeInfo = serverTable.getBungeeInfo();
         assertFalse(bungeeInfo.isPresent());
 
         UUID bungeeUUID = UUID.randomUUID();
-        ServerInfo bungeeCord = new ServerInfo(-1, bungeeUUID, "BungeeCord", "Random:1234", 20);
+        Server bungeeCord = new Server(-1, bungeeUUID, "BungeeCord", "Random:1234", 20);
         serverTable.saveCurrentServerInfo(bungeeCord);
 
         commitTest();
@@ -716,7 +716,7 @@ public class DatabaseTest {
         testServerTableBungeeSave();
         ServerTable serverTable = db.getServerTable();
 
-        List<ServerInfo> bukkitServers = serverTable.getBukkitServers();
+        List<Server> bukkitServers = serverTable.getBukkitServers();
         assertEquals(1, bukkitServers.size());
     }
 

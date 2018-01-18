@@ -4,8 +4,7 @@
  */
 package com.djrapitops.plan.system.info.server;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -18,28 +17,20 @@ import java.util.UUID;
 /**
  * Manages local server info file.
  * <p>
- * ServerInfo.yml contains current server's ID, UUID and Bungee WebServer connection information.
+ * Server.yml contains current server's ID, UUID and Bungee WebServer connection information.
  * It
  *
  * @author Rsl1122
  */
 public class ServerInfoFile extends Config {
-    public ServerInfoFile(Plan plugin) throws IOException {
-        super(new File(plugin.getDataFolder(), "ServerInfoFile.yml"));
-        copyDefaults(FileUtil.lines(plugin, "DefaultServerInfoFile.yml"));
+    public ServerInfoFile(File dataFolder) throws IOException {
+        super(new File(dataFolder, "ServerInfoFile.yml"));
+        copyDefaults(FileSystem.readFromResource("DefaultServerInfoFile.yml"));
         save();
     }
 
-    public void saveInfo(ServerInfo thisServer, ServerInfo bungee) throws IOException {
-        set("Server.UUID", thisServer.getUuid().toString());
-
-        String oldAddress = getString("Bungee.WebAddress");
-        String newAddress = bungee.getWebAddress();
-
-        if (!newAddress.equals(oldAddress)) {
-            set("Bungee.Fail", 0);
-            set("Bungee.WebAddress", newAddress);
-        }
+    public void saveServerUUID(UUID serverUUID) throws IOException {
+        set("Server.UUID", serverUUID.toString());
         save();
     }
 

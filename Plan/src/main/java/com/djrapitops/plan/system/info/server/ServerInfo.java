@@ -4,85 +4,63 @@
  */
 package com.djrapitops.plan.system.info.server;
 
-import java.util.Objects;
+import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.utilities.NullCheck;
+
 import java.util.UUID;
 
 /**
- * Represents a Server that is running Plan.
+ * SubSystem for managing Server information.
+ *
+ * Most information is accessible via static methods.
  *
  * @author Rsl1122
  */
-public class ServerInfo {
-    private final UUID uuid;
-    private int id;
-    private String name;
-    private String webAddress;
-    private int maxPlayers = -1;
+public abstract class ServerInfo implements SubSystem {
 
-    public ServerInfo(int id, UUID uuid, String name, String webAddress, int maxPlayers) {
-        this.id = id;
-        this.uuid = uuid;
-        this.name = name;
-        this.webAddress = webAddress;
-        this.maxPlayers = maxPlayers;
+    protected Server server;
+    protected ServerProperties serverProperties;
+
+    public static ServerInfo getInstance() {
+        ServerInfo serverInfo = PlanSystem.getInstance().getServerInfo();
+        NullCheck.check(serverInfo, new IllegalStateException("ServerInfo was not initialized."));
+        return serverInfo;
     }
 
-    public int getId() {
-        return id;
+    public static Server getServer() {
+        return getInstance().server;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public static ServerProperties getServerProperties() {
+        return getInstance().serverProperties;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public static UUID getServerUUID() {
+        return getServer().getUuid();
     }
 
-    public String getName() {
-        return name;
+    public static String getServerName() {
+        return getServer().getName();
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getWebAddress() {
-        return webAddress;
-    }
-
-    public void setWebAddress(String webAddress) {
-        this.webAddress = webAddress;
-    }
-
-    public int getMaxPlayers() {
-        return maxPlayers;
+    public static int getServerID() {
+        return getServer().getId();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ServerInfo that = (ServerInfo) o;
-        return id == that.id &&
-                Objects.equals(uuid, that.uuid) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(webAddress, that.webAddress);
+    public void enable() throws EnableException {
+        // ServerProperties are required when creating Server
+        NullCheck.check(serverProperties, new IllegalStateException("Server Properties did not load!"));
+        server = loadServerInfo();
+        NullCheck.check(server, new IllegalStateException("Server information did not load!"));
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, id, name, webAddress);
-    }
+    protected abstract Server loadServerInfo() throws EnableException;
 
     @Override
-    public String toString() {
-        return "ServerInfo{" +
-                "uuid=" + uuid +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", webAddress='" + webAddress + '\'' +
-                ", maxPlayers=" + maxPlayers +
-                '}';
+    public void disable() {
+
     }
 }

@@ -32,6 +32,9 @@ import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.info.server.BukkitServerInfo;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.processing.processors.importing.importers.OfflinePlayerImporter;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
@@ -42,13 +45,11 @@ import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.systems.info.ImporterManager;
 import com.djrapitops.plan.systems.info.InformationManager;
-import com.djrapitops.plan.system.info.server.BukkitServerInfoManager;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.metrics.BStats;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.systems.TaskCenter;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -76,9 +77,9 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     private HookHandler hookHandler; // Manages 3rd party data sources
 
     private BukkitInformationManager infoManager;
-    private BukkitServerInfoManager serverInfoManager;
+    private BukkitServerInfo serverInfoManager;
 
-    private ServerVariableHolder serverVariableHolder;
+    private ServerProperties serverProperties;
 
     /**
      * Used to get the plugin-instance singleton.
@@ -94,7 +95,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     }
 
     public UUID getServerUuid() {
-        return serverInfoManager.getServerUUID();
+        return ServerInfo.getServerUUID();
     }
 
     /**
@@ -128,14 +129,14 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             Theme.getInstance().enable();
 
             Benchmark.start("Reading server variables");
-            serverVariableHolder = new ServerVariableHolder(getServer());
+            serverProperties = new ServerProperties(getServer());
             Benchmark.stop("Enable", "Reading server variables");
 
             DBSystem.getInstance().enable();
 
             Benchmark.start("WebServer Initialization");
 
-            serverInfoManager = new BukkitServerInfoManager(this);
+            serverInfoManager = new BukkitServerInfo(this);
             infoManager = new BukkitInformationManager(this);
             WebServerSystem.getInstance().enable();
             if (!WebServerSystem.isWebServerEnabled()) {
@@ -156,7 +157,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             boolean usingBungeeWebServer = infoManager.isUsingAnotherWebServer();
             boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
 
-            if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
+            if (!usingAlternativeIP && serverProperties.getIp().isEmpty()) {
                 Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
             }
             if (usingBungeeWebServer && usingAlternativeIP) {
@@ -259,26 +260,23 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
      * Used to get the object storing server variables that are constant after
      * boot.
      *
-     * @return ServerVariableHolder
-     * @see ServerVariableHolder
+     * @return ServerProperties
+     * @see ServerProperties
      */
-    public ServerVariableHolder getVariable() {
-        return serverVariableHolder;
+    @Deprecated
+    public ServerProperties getVariable() {
+        return serverProperties;
     }
 
     /**
      * Used to get the object storing server info
      *
-     * @return BukkitServerInfoManager
-     * @see BukkitServerInfoManager
+     * @return BukkitServerInfo
+     * @see BukkitServerInfo
      */
-    public BukkitServerInfoManager getServerInfoManager() {
+    @Deprecated
+    public BukkitServerInfo getServerInfoManager() {
         return serverInfoManager;
-    }
-
-    @Override
-    public Config getMainConfig() {
-        return ConfigSystem.getInstance().getConfig();
     }
 
     @Deprecated

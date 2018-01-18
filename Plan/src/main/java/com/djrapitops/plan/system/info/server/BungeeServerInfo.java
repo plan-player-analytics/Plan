@@ -5,13 +5,11 @@
 package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.ServerVariableHolder;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.ConfigurationWebAPI;
-import com.djrapitops.plan.system.webserver.webapi.universal.PingWebAPI;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -26,16 +24,16 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class BungeeServerInfoManager {
+public class BungeeServerInfo extends ServerInfo {
 
     private final PlanBungee plugin;
     private final Database db;
-    private final Map<UUID, ServerInfo> bukkitServers;
+    private final Map<UUID, Server> bukkitServers;
     private final Set<UUID> onlineServers;
-    private ServerInfo serverInfo;
+    private Server server;
     private ServerTable serverTable;
 
-    public BungeeServerInfoManager(PlanBungee plugin) {
+    public BungeeServerInfo(PlanBungee plugin) {
         this.plugin = plugin;
         this.db = plugin.getDB();
         serverTable = db.getServerTable();
@@ -46,62 +44,56 @@ public class BungeeServerInfoManager {
 
     public void loadServerInfo() throws EnableException {
         try {
-            Optional<ServerInfo> bungeeInfo = db.getServerTable().getBungeeInfo();
+            Optional<Server> bungeeInfo = db.getServerTable().getBungeeInfo();
             if (bungeeInfo.isPresent()) {
-                serverInfo = bungeeInfo.get();
+                server = bungeeInfo.get();
                 String accessAddress = plugin.getWebServer().getAccessAddress();
-                if (!accessAddress.equals(serverInfo.getWebAddress())) {
-                    serverInfo.setWebAddress(accessAddress);
-                    serverTable.saveCurrentServerInfo(serverInfo);
+                if (!accessAddress.equals(server.getWebAddress())) {
+                    server.setWebAddress(accessAddress);
+                    serverTable.saveCurrentServerInfo(server);
                 }
             } else {
-                serverInfo = registerBungeeInfo();
+                server = registerBungeeInfo();
             }
         } catch (SQLException e) {
-            throw new EnableException("Failed to read Database for ServerInfo");
+            throw new EnableException("Failed to read Database for Server");
         }
     }
 
-    private ServerInfo registerBungeeInfo() throws SQLException, EnableException {
-        ServerVariableHolder variable = plugin.getVariable();
+    private Server registerBungeeInfo() throws SQLException, EnableException {
+        ServerProperties variable = plugin.getVariable();
         UUID serverUUID = generateNewUUID(variable);
         String accessAddress = plugin.getWebServer().getAccessAddress();
 
         serverTable.saveCurrentServerInfo(
-                new ServerInfo(-1, serverUUID, "BungeeCord", accessAddress, variable.getMaxPlayers())
+                new Server(-1, serverUUID, "BungeeCord", accessAddress, variable.getMaxPlayers())
         );
 
-        Optional<ServerInfo> bungeeInfo = db.getServerTable().getBungeeInfo();
+        Optional<Server> bungeeInfo = db.getServerTable().getBungeeInfo();
         if (bungeeInfo.isPresent()) {
             return bungeeInfo.get();
         }
         throw new EnableException("BungeeCord registration failed (DB)");
     }
 
-    private UUID generateNewUUID(ServerVariableHolder variableHolder) {
+    private UUID generateNewUUID(ServerProperties variableHolder) {
         String seed = variableHolder.getName() + variableHolder.getIp() + variableHolder.getPort() + variableHolder.getVersion() + variableHolder.getImplVersion();
         return UUID.nameUUIDFromBytes(seed.getBytes());
     }
 
     public UUID getServerUUID() {
-        return serverInfo.getUuid();
+        return server.getUuid();
     }
 
-    public boolean attemptConnection(ServerInfo server, String accessCode) {
+    public boolean attemptConnection(Server server, String accessCode) {
         if (server == null) {
-            Log.debug("Attempted a connection to a null ServerInfo");
+            Log.debug("Attempted a connection to a null Server");
             return false;
         }
         try {
             String webAddress = server.getWebAddress();
             Log.debug("Attempting to connect to Bukkit server.. (" + webAddress + ")");
-            PingWebAPI pingApi = plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class);
-            if (accessCode != null) {
-                pingApi.sendRequest(webAddress, accessCode);
                 plugin.getWebServer().getWebAPI().getAPI(ConfigurationWebAPI.class).sendRequest(webAddress, server.getUuid(), accessCode);
-            } else {
-                pingApi.sendRequest(webAddress);
-            }
             connectedToServer(server);
             return true;
         } catch (WebException e) {
@@ -111,14 +103,14 @@ public class BungeeServerInfoManager {
         }
     }
 
-    public boolean attemptConnection(ServerInfo server) {
+    public boolean attemptConnection(Server server) {
         return attemptConnection(server, null);
     }
 
     public void sendConfigSettings(UUID serverUUID) {
         String webAddress = null;
         try {
-            ServerInfo server = bukkitServers.get(serverUUID);
+            Server server = bukkitServers.get(serverUUID);
             if (server == null) {
                 return;
             }
@@ -131,7 +123,7 @@ public class BungeeServerInfoManager {
         }
     }
 
-    public void connectedToServer(ServerInfo server) {
+    public void connectedToServer(Server server) {
         Log.info("Connection to Bukkit (" + server.getWebAddress() + ") OK");
         bukkitServers.put(server.getUuid(), server);
         onlineServers.add(server.getUuid());
@@ -154,9 +146,9 @@ public class BungeeServerInfoManager {
             return true;
         }
         try {
-            Optional<ServerInfo> serverInfo = db.getServerTable().getServerInfo(serverUUID);
+            Optional<Server> serverInfo = db.getServerTable().getServerInfo(serverUUID);
             if (serverInfo.isPresent()) {
-                ServerInfo server = serverInfo.get();
+                Server server = serverInfo.get();
                 Log.info("Server Info found from DB: " + server.getName());
                 RunnableFactory.createNew("BukkitConnectionTask: " + server.getName(), new AbsRunnable() {
                     @Override
@@ -174,14 +166,14 @@ public class BungeeServerInfoManager {
         return false;
     }
 
-    public Collection<ServerInfo> getOnlineBukkitServers() {
+    public Collection<Server> getOnlineBukkitServers() {
         return bukkitServers.entrySet().stream()
                 .filter(entry -> onlineServers.contains(entry.getKey()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toSet());
     }
 
-    public Collection<ServerInfo> getBukkitServers() {
+    public Collection<Server> getBukkitServers() {
         return bukkitServers.values();
     }
 

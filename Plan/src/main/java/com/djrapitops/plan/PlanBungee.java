@@ -13,6 +13,8 @@ import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.info.server.BungeeServerInfo;
+import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
@@ -21,7 +23,6 @@ import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plan.systems.info.InformationManager;
-import com.djrapitops.plan.system.info.server.BungeeServerInfoManager;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
@@ -45,9 +46,9 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     private BungeeSystem system;
 
-    private BungeeServerInfoManager serverInfoManager;
+    private BungeeServerInfo serverInfoManager;
     private BungeeInformationManager infoManager;
-    private ServerVariableHolder variableHolder;
+    private ServerProperties variableHolder;
 
     @Deprecated
     private boolean setupAllowed = false;
@@ -71,7 +72,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
             VersionCheckSystem.getInstance().enable();
 
-            variableHolder = new ServerVariableHolder(getProxy());
+            variableHolder = new ServerProperties(getProxy());
 
             new Locale().loadLocale();
 
@@ -87,7 +88,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
             Benchmark.start("WebServer Initialization");
 
-            serverInfoManager = new BungeeServerInfoManager(this);
+            serverInfoManager = new BungeeServerInfo(this);
             infoManager = new BungeeInformationManager(this);
 
             WebServerSystem.getInstance().enable();
@@ -132,7 +133,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         return DBSystem.getInstance().getActiveDatabase();
     }
 
-    public BungeeServerInfoManager getServerInfoManager() {
+    public BungeeServerInfo getServerInfoManager() {
         return serverInfoManager;
     }
 
@@ -163,7 +164,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     }
 
     @Override
-    public ServerVariableHolder getVariable() {
+    public ServerProperties getVariable() {
         return variableHolder;
     }
 

@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.database.databases.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.List;
 import java.util.Map;
@@ -64,4 +65,6 @@ public interface SaveOperations {
     void insertTPSforThisServer(TPS tps) throws DBException;
 
     void session(UUID uuid, Session session) throws DBException;
+
+    void serverInfoForThisServer(Server server) throws DBException;
 }

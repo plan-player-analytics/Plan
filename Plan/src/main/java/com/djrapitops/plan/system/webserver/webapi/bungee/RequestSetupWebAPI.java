@@ -9,10 +9,10 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -43,9 +43,9 @@ public class RequestSetupWebAPI extends WebAPI {
         if (!Verify.notNull(serverUUIDS, webAddress, accessCode)) {
             return badRequest("Variable was null");
         }
-        ServerInfo serverInfo = new ServerInfo(-1, UUID.fromString(serverUUIDS), "", webAddress, 0);
+        Server server = new Server(-1, UUID.fromString(serverUUIDS), "", webAddress, 0);
 
-        ((PlanBungee) plugin).getServerInfoManager().attemptConnection(serverInfo, accessCode);
+        ((PlanBungee) plugin).getServerInfoManager().attemptConnection(server, accessCode);
         return success();
     }
 

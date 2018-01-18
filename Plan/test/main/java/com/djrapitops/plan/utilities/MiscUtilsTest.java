@@ -9,7 +9,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
@@ -166,7 +166,7 @@ public class MiscUtilsTest {
         db = new SQLiteDB("debug" + MiscUtils.getTime());
         db.init();
 
-        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", "", 20));
+        db.getServerTable().saveCurrentServerInfo(new Server(-1, TestInit.getServerUUID(), "ServerName", "", 20));
 
         when(plan.getDB()).thenReturn(db);
     }

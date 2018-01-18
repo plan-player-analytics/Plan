@@ -5,10 +5,11 @@
 package com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.ServerVariableHolder;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -107,13 +108,13 @@ public class HtmlStructure {
     }
 
     public static String createServerContainer(Plan plugin) {
-        ServerVariableHolder variable = plugin.getVariable();
+        ServerProperties variable = plugin.getVariable();
         int maxPlayers = variable.getMaxPlayers();
         int online = plugin.getServer().getOnlinePlayers().size();
         Optional<Long> analysisRefreshDate = ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisRefreshDate();
         String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStamp).orElse("-");
 
-        String serverName = plugin.getServerInfoManager().getServerName();
+        String serverName = ServerInfo.getServerName();
         String serverType = variable.getVersion();
         String address = "../server/" + serverName;
 

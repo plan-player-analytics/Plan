@@ -6,12 +6,12 @@ package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.ServerVariableHolder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.info.server.BungeeServerInfo;
+import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.system.info.server.BungeeServerInfoManager;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.Benchmark;
@@ -66,7 +66,7 @@ public class DebugPageResponse extends ErrorResponse {
 
     private void appendServerInformation(StringBuilder content) {
         PlanPlugin plugin = PlanPlugin.getInstance();
-        ServerVariableHolder variable = plugin.getVariable();
+        ServerProperties variable = plugin.getVariable();
 
         content.append("<pre>### Server Information<br>")
                 .append("**Plan Version:** ").append(plugin.getVersion()).append("<br>");
@@ -134,13 +134,13 @@ public class DebugPageResponse extends ErrorResponse {
     private void appendBungeeConfiguration(StringBuilder content) {
 
         PlanBungee plugin = PlanBungee.getInstance();
-        BungeeServerInfoManager serverInfoManager = plugin.getServerInfoManager();
-        Collection<ServerInfo> online = serverInfoManager.getOnlineBukkitServers();
-        Collection<ServerInfo> bukkitServers = serverInfoManager.getBukkitServers();
+        BungeeServerInfo serverInfoManager = plugin.getServerInfoManager();
+        Collection<Server> online = serverInfoManager.getOnlineBukkitServers();
+        Collection<Server> bukkitServers = serverInfoManager.getBukkitServers();
 
         if (!bukkitServers.isEmpty()) {
             content.append("<p>If your issue is about Bungee-Bukkit connection relations, please include the following debug information of available servers as well:</p>");
-            for (ServerInfo info : bukkitServers) {
+            for (Server info : bukkitServers) {
                 String link = Html.LINK.parse(info.getWebAddress() + "/debug", info.getWebAddress() + "/debug");
                 content.append("<p>").append(link).append("</p>");
             }
@@ -150,7 +150,7 @@ public class DebugPageResponse extends ErrorResponse {
 
         content.append("Server name | Online | Address | UUID<br>")
                 .append("-- | -- | -- | --<br>");
-        for (ServerInfo info : bukkitServers) {
+        for (Server info : bukkitServers) {
             content.append(info.getName()).append(" | ")
                     .append(online.contains(info) ? "Online" : "Offline").append(" | ")
                     .append(info.getWebAddress()).append(" | ")

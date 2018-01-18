@@ -34,7 +34,6 @@ import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalysisReadyWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalyzeWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bungee.*;
-import com.djrapitops.plan.system.webserver.webapi.universal.PingWebAPI;
 import com.djrapitops.plan.systems.info.parsing.AnalysisPage;
 import com.djrapitops.plan.systems.info.parsing.InspectPage;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -336,9 +335,9 @@ public class BukkitInformationManager extends InformationManager {
 
         try {
             Log.info("Attempting Bungee Connection.. (" + webServerAddress + ")");
-            PingWebAPI api = getWebAPI().getAPI(PingWebAPI.class);
+//            PingWebAPI api = getWebAPI().getAPI(PingWebAPI.class);
             try {
-                api.sendRequest(webServerAddress);
+//                api.sendRequest(webServerAddress);
                 getWebAPI().getAPI(PostOriginalBukkitSettingsWebAPI.class).sendRequest(webServerAddress);
                 Log.info("Bungee Connection OK");
                 plugin.getServerInfoManager().resetConnectionFails();

@@ -7,7 +7,8 @@ package com.djrapitops.plan.utilities.html.structure;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.info.server.BukkitServerInfoManager;
+import com.djrapitops.plan.system.info.server.BukkitServerInfo;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ import java.util.Map;
 public class InspectPluginsTabContentCreator {
 
     public static String[] createContent(Map<PluginData, InspectContainer> containers) {
-        BukkitServerInfoManager serverInfoManager = Plan.getInstance().getServerInfoManager();
-        String serverName = serverInfoManager.getServerName();
-        String actualServerName = serverName.equals("Plan") ? "Server " + serverInfoManager.getServerID() : serverName;
+        BukkitServerInfo serverInfoManager = Plan.getInstance().getServerInfoManager();
+        String serverName = ServerInfo.getServerName();
+        String actualServerName = serverName.equals("Plan") ? "Server " + ServerInfo.getServerID() : serverName;
 
         if (containers.isEmpty()) {
             return new String[]{"<li><a>" + actualServerName + "(No Data)</a></li>",

@@ -6,12 +6,12 @@ package com.djrapitops.plan.data;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -118,7 +118,7 @@ public class ServerProfile {
     }
 
     public static int getPlayersMax() {
-        return PlanPlugin.getInstance().getVariable().getMaxPlayers();
+        return ServerInfo.getServerProperties().getMaxPlayers();
     }
 
     public static long serverDownTime(List<TPS> tpsData) {

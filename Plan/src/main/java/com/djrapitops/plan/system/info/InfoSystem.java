@@ -56,7 +56,7 @@ public abstract class InfoSystem implements SubSystem {
     }
 
     public void sendRequest(InfoRequest infoRequest) throws WebException {
-        if (!connectionSystem.isServerAvailable()) {
+        if (!connectionSystem.isMainServerAvailable()) {
             runLocally(infoRequest);
         }
         connectionSystem.sendInfoRequest(infoRequest);

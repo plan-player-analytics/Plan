@@ -9,13 +9,13 @@ import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
 
@@ -42,6 +42,7 @@ public abstract class PlanSystem implements SubSystem {
 
     protected ListenerSystem listenerSystem;
     protected TaskSystem taskSystem;
+    protected ServerInfo serverInfo;
 
     public PlanSystem() {
         processingQueue = new ProcessingQueue();
@@ -72,6 +73,7 @@ public abstract class PlanSystem implements SubSystem {
                 configSystem,
                 databaseSystem,
                 webServerSystem,
+                serverInfo,
                 infoSystem,
                 processingQueue,
                 cacheSystem,
@@ -90,8 +92,9 @@ public abstract class PlanSystem implements SubSystem {
                 listenerSystem,
                 processingQueue,
                 databaseSystem,
-                infoSystem,
                 webServerSystem,
+                infoSystem,
+                serverInfo,
                 taskSystem,
                 configSystem,
                 fileSystem,
@@ -153,7 +156,7 @@ public abstract class PlanSystem implements SubSystem {
     }
 
     public ServerInfo getServerInfo() {
-        return null; // TODO
+        return serverInfo;
     }
 
     public CacheSystem getCacheSystem() {

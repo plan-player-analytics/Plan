@@ -10,11 +10,12 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.CacheInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.utilities.NullCheck;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -28,7 +29,7 @@ public abstract class ConnectionSystem implements SubSystem {
 
     protected final Map<String, InfoRequest> dataRequests;
     protected final UUID serverUUID;
-    protected Map<UUID, ServerInfo> servers;
+    protected Map<UUID, Server> servers;
 
     public ConnectionSystem(UUID serverUUID) {
         this.serverUUID = serverUUID;
@@ -53,14 +54,16 @@ public abstract class ConnectionSystem implements SubSystem {
         requests.put(request.getClass().getSimpleName(), request);
     }
 
-    protected abstract ServerInfo selectServerForRequest(InfoRequest infoRequest) throws NoServersException;
+    protected abstract Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException;
 
     public void sendInfoRequest(InfoRequest infoRequest) throws WebException {
-        ServerInfo serverInfo = selectServerForRequest(infoRequest);
-        String address = serverInfo.getWebAddress();
+        Server server = selectServerForRequest(infoRequest);
+        String address = server.getWebAddress();
 
         new ConnectionOut(address, serverUUID, infoRequest).sendRequest();
     }
 
-    public abstract boolean isServerAvailable();
+    public abstract boolean isMainServerAvailable();
+
+    public abstract Optional<String> getMainAddress();
 }

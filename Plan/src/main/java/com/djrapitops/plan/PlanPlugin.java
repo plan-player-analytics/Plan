@@ -5,6 +5,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.IPlugin;
@@ -38,7 +39,7 @@ public interface PlanPlugin extends IPlugin {
     Database getDB();
 
     @Deprecated
-    ServerVariableHolder getVariable();
+    ServerProperties getVariable();
 
     @Deprecated
     UUID getServerUuid();

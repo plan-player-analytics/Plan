@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
@@ -62,8 +62,8 @@ public class RequestPluginsTabWebAPI extends WebAPI {
             @Override
             public void process() {
                 try {
-                    List<ServerInfo> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
-                    for (ServerInfo server : bukkitServers) {
+                    List<Server> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
+                    for (Server server : bukkitServers) {
                         String webAddress = server.getWebAddress();
                         try {
                             plugin.getWebServer().getWebAPI().getAPI(RequestInspectPluginsTabBukkitWebAPI.class).sendRequest(webAddress, uuid);
