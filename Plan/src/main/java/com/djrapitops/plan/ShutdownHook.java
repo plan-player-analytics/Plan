@@ -4,19 +4,19 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,64 +30,57 @@ import java.util.UUID;
 public class ShutdownHook extends Thread {
 
     private static boolean active = false;
-    private static DataCache dataCache;
-    private static SQLDB db;
 
-    public ShutdownHook(Plan plugin) {
+    public void register() {
         if (!active) {
             Runtime.getRuntime().addShutdownHook(this);
         }
         active = true;
-
-        db = (SQLDB) plugin.getDB();
-        dataCache = plugin.getDataCache();
     }
 
     @Override
     public void run() {
         Log.debug("Shutdown hook triggered.");
+
+        Database db = null;
         try {
             Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
             long now = MiscUtils.getTime();
-            if (db == null) {
-                return;
-            }
+            db = Database.getActive();
             if (!db.isOpen()) {
                 db.init();
             }
 
-            saveFirstSessionInformation(now);
-            saveActiveSessions(activeSessions, now);
+            saveFirstSessionInformation(db, now);
+            saveActiveSessions(db, activeSessions, now);
         } catch (DBInitException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
             if (db != null) {
                 try {
                     db.close();
-                } catch (SQLException e) {
+                } catch (DBException e) {
                     Log.toLog(this.getClass().getName(), e);
                 }
             }
-            db = null;
-            dataCache = null;
             StaticHolder.unRegister(Plan.class);
         }
     }
 
-    private void saveFirstSessionInformation(long now) {
+    private void saveFirstSessionInformation(Database db, long now) {
+        DataCache dataCache = CacheSystem.getInstance().getDataCache();
         for (Map.Entry<UUID, Integer> entry : dataCache.getFirstSessionMsgCounts().entrySet()) {
             try {
                 UUID uuid = entry.getKey();
                 int messagesSent = entry.getValue();
-                db.getActionsTable().insertAction(uuid, new Action(now, Actions.FIRST_LOGOUT, "Messages sent: " + messagesSent));
-            } catch (SQLException e) {
+                db.save().action(uuid, new Action(now, Actions.FIRST_LOGOUT, "Messages sent: " + messagesSent));
+            } catch (DBException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
         }
     }
 
-    private void saveActiveSessions(Map<UUID, Session> activeSessions, long now) {
-        SessionsTable sessionsTable = db.getSessionsTable();
+    private void saveActiveSessions(Database db, Map<UUID, Session> activeSessions, long now) {
         for (Map.Entry<UUID, Session> entry : activeSessions.entrySet()) {
             UUID uuid = entry.getKey();
             Session session = entry.getValue();
@@ -98,8 +91,8 @@ public class ShutdownHook extends Thread {
             session.endSession(now);
             try {
                 Log.debug("Shutdown: Saving a session: " + session.getSessionStart());
-                sessionsTable.saveSession(uuid, session);
-            } catch (SQLException e) {
+                db.save().session(uuid, session);
+            } catch (DBException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
         }

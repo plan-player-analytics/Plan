@@ -40,10 +40,10 @@ public class SettingsTest {
     public void testSetValue() {
         Settings gatherCommands = Settings.LOG_UNKNOWN_COMMANDS;
 
-        gatherCommands.setValue(false);
+        gatherCommands.setTemporaryValue(false);
         assertFalse(gatherCommands.isTrue());
 
-        gatherCommands.setValue(true);
+        gatherCommands.setTemporaryValue(true);
         assertTrue(gatherCommands.isTrue());
     }
 

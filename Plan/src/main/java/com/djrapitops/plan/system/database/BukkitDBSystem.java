@@ -22,7 +22,7 @@ public class BukkitDBSystem extends DBSystem {
         databases.add(new SQLiteDB());
 
         String dbType = Settings.DB_TYPE.toString().toLowerCase().trim();
-        db = getActiveDatabase(dbType);
+        db = getActiveDatabaseByName(dbType);
         db.init();
     }
 }

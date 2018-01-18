@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
@@ -26,6 +27,8 @@ public class BukkitSystem extends PlanSystem {
         databaseSystem = new BukkitDBSystem();
         listenerSystem = new BukkitListenerSystem(plugin);
         taskSystem = new BukkitTaskSystem(plugin);
+
+        new ShutdownHook().register();
     }
 
     public static BukkitSystem getInstance() {

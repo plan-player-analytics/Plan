@@ -78,6 +78,6 @@ public class ManageUtils {
 
     @Deprecated
     public static Database getDB(String dbName) throws DBInitException {
-        return DBSystem.getInstance().getActiveDatabase(dbName);
+        return DBSystem.getActiveDatabaseByName(dbName);
     }
 }

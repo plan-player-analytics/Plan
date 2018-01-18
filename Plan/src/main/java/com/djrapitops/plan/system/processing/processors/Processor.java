@@ -18,7 +18,7 @@ public abstract class Processor<T> {
         this.object = object;
     }
 
-    public static void queue(Processor... processors) {
+    public static void queueMany(Processor... processors) {
         ProcessingQueue processingQueue = ProcessingQueue.getInstance();
         for (Processor processor : processors) {
             processingQueue.queue(processor);
@@ -32,6 +32,6 @@ public abstract class Processor<T> {
     }
 
     public void queue() {
-        queue(this);
+        queueMany(this);
     }
 }

@@ -4,8 +4,8 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ServerVariableHolder;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.info.server.BukkitServerInfoManager;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.StaticHolder;
@@ -111,15 +111,13 @@ public class TestInit {
             public void save() {
             }
         };
-        when(planMock.getMainConfig()).thenReturn(iConfig);
-
         Server mockServer = mockServer();
 
         when(planMock.getServer()).thenReturn(mockServer);
 
         // Test log settings
         when(planMock.getLogger()).thenReturn(Logger.getGlobal());
-        Settings.DEBUG.setValue(true);
+        Settings.DEBUG.setTemporaryValue(true);
 
         ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
 

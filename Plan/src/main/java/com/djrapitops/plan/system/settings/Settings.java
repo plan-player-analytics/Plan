@@ -4,7 +4,9 @@ import com.djrapitops.plan.settings.ServerSpecificSettings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.utility.log.Log;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -125,8 +127,12 @@ public enum Settings {
         return !isTrue();
     }
 
-    public void setValue(Boolean value) {
-        this.value = value;
+    public static void save() {
+        try {
+            ConfigSystem.getConfig().save();
+        } catch (IOException e) {
+            Log.toLog(Settings.class, e);
+        }
     }
 
     /**
@@ -162,7 +168,15 @@ public enum Settings {
         return configPath;
     }
 
+    public void setTemporaryValue(Boolean value) {
+        this.value = value;
+    }
+
+    public void set(Object value) {
+        getConfig().set(getPath(), value);
+    }
+
     private Config getConfig() {
-        return ConfigSystem.getInstance().getConfig();
+        return ConfigSystem.getConfig();
     }
 }

@@ -5,8 +5,8 @@
 package com.djrapitops.plan.settings;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -27,7 +27,7 @@ public class ServerSpecificSettings {
 
     public static void updateSettings(Plan plugin, Map<String, String> settings) {
         Log.debug("Checking new settings..");
-        Config config = plugin.getMainConfig();
+        Config config = ConfigSystem.getConfig();
 
         boolean changedSomething = false;
         for (Map.Entry<String, String> setting : settings.entrySet()) {
@@ -77,9 +77,9 @@ public class ServerSpecificSettings {
         return value;
     }
 
-    public void addOriginalBukkitSettings(PlanBungee plugin, UUID serverUUID, Map<String, Object> settings) {
+    public void addOriginalBukkitSettings(UUID serverUUID, Map<String, Object> settings) {
         try {
-            Config config = plugin.getMainConfig();
+            Config config = ConfigSystem.getConfig();
             if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
                 return;
             }
@@ -111,25 +111,25 @@ public class ServerSpecificSettings {
     }
 
     public boolean getBoolean(UUID serverUUID, Settings setting) {
-        Config config = PlanBungee.getInstance().getMainConfig();
+        Config config = ConfigSystem.getConfig();
         String path = getPath(serverUUID, setting);
         return config.getBoolean(path);
     }
 
     public String getString(UUID serverUUID, Settings setting) {
-        Config config = PlanBungee.getInstance().getMainConfig();
+        Config config = ConfigSystem.getConfig();
         String path = getPath(serverUUID, setting);
         return config.getString(path);
     }
 
     public Integer getInt(UUID serverUUID, Settings setting) {
-        Config config = PlanBungee.getInstance().getMainConfig();
+        Config config = ConfigSystem.getConfig();
         String path = getPath(serverUUID, setting);
         return config.getInt(path);
     }
 
     public void set(UUID serverUUID, Settings setting, Object value) throws IOException {
-        Config config = PlanBungee.getInstance().getMainConfig();
+        Config config = ConfigSystem.getConfig();
         String path = getPath(serverUUID, setting);
         config.set(path, value);
         config.save();

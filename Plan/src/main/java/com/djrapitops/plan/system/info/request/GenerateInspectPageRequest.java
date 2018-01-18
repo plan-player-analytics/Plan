@@ -26,6 +26,7 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables {
 
     @Override
     public void placeDataToDatabase() {
+        // No data required in a Generate request
     }
 
     @Override

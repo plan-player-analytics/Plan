@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.info;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -14,15 +14,8 @@ import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.utilities.NullCheck;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
-
-interface ExceptionLoggingAction {
-
-    void performAction() throws WebException;
-
-}
 
 /**
  * Information management system.
@@ -86,15 +79,4 @@ public abstract class InfoSystem implements SubSystem {
     }
 
     public abstract void updateNetworkPage();
-
-    public void handlePossibleException(ExceptionLoggingAction action) {
-        try {
-            action.performAction();
-        } catch (ConnectionFailException | UnsupportedTransferDatabaseException | UnauthorizedServerException
-                | NotFoundException | NoServersException e) {
-            Log.warn(e.getMessage());
-        } catch (WebException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-    }
 }

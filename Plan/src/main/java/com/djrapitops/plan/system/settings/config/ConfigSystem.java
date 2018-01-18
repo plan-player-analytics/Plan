@@ -39,12 +39,12 @@ public abstract class ConfigSystem implements SubSystem {
         return configSystem;
     }
 
-    public Theme getThemeSystem() {
-        return theme;
+    public static Config getConfig() {
+        return getInstance().config;
     }
 
-    public Config getConfig() {
-        return config;
+    public Theme getThemeSystem() {
+        return getInstance().theme;
     }
 
     @Override
@@ -81,6 +81,6 @@ public abstract class ConfigSystem implements SubSystem {
     }
 
     public Locale getLocale() {
-        return locale;
+        return getInstance().locale;
     }
 }

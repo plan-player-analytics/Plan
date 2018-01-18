@@ -46,7 +46,7 @@ public class DeathEventListener implements Listener {
         LivingEntity dead = event.getEntity();
 
         if (dead instanceof Player) {
-            plugin.addToProcessQueue(new DeathProcessor(dead.getUniqueId()));
+            new DeathProcessor(dead.getUniqueId()).queue();
         }
 
         try {

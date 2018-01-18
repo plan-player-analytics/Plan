@@ -79,8 +79,8 @@ public abstract class DBSystem implements SubSystem {
         return db;
     }
 
-    public Database getActiveDatabase(String dbName) throws DBInitException {
-        for (Database database : getDatabases()) {
+    public static Database getActiveDatabaseByName(String dbName) throws DBInitException {
+        for (Database database : getInstance().getDatabases()) {
             String dbConfigName = database.getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
                 database.init();

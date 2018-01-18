@@ -79,6 +79,7 @@ public abstract class SQLDB extends Database {
         countOps = new SQLCountOps(this);
         searchOps = new SQLSearchOps(this);
         saveOps = new SQLSaveOps(this);
+
     }
 
     /**

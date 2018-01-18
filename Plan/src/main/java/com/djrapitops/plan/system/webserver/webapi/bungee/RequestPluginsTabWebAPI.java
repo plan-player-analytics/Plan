@@ -4,14 +4,13 @@
  */
 package com.djrapitops.plan.system.webserver.webapi.bungee;
 
-
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -59,7 +58,7 @@ public class RequestPluginsTabWebAPI extends WebAPI {
     }
 
     public void sendRequestsToBukkitServers(PlanPlugin plugin, UUID uuid) {
-        plugin.addToProcessQueue(new Processor<UUID>(uuid) {
+        new Processor<UUID>(uuid) {
             @Override
             public void process() {
                 try {
@@ -76,6 +75,6 @@ public class RequestPluginsTabWebAPI extends WebAPI {
                     Log.toLog(this.getClass().getName(), e);
                 }
             }
-        });
+        }.queue();
     }
 }

@@ -56,7 +56,7 @@ public class RegisterProcessor extends PlayerProcessor {
         } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
-            Processor.queue(afterProcess);
+            Processor.queueMany(afterProcess);
         }
     }
 }

@@ -5,13 +5,10 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.processing.ProcessingQueue;
-import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.settings.ColorScheme;
 
 import java.io.File;
@@ -54,16 +51,7 @@ public interface PlanPlugin extends IPlugin {
 
     File getDataFolder();
 
-    @Deprecated
-    ProcessingQueue getProcessingQueue();
-
-    @Deprecated
-    void addToProcessQueue(Processor... processors);
-
     InputStream getResource(String resource);
-
-    @Deprecated
-    Config getMainConfig();
 
     ColorScheme getColorScheme();
 

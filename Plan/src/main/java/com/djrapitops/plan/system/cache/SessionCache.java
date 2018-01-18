@@ -1,11 +1,14 @@
 package com.djrapitops.plan.system.cache;
 
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.HashMap;
@@ -32,6 +35,12 @@ public class SessionCache {
         this.system = system;
     }
 
+    public static SessionCache getInstance() {
+        DataCache dataCache = CacheSystem.getInstance().getDataCache();
+        NullCheck.check(dataCache, new IllegalStateException("Data Cache was not initialized."));
+        return dataCache;
+    }
+
     /**
      * Used to get the Map of active sessions.
      * <p>
@@ -52,7 +61,11 @@ public class SessionCache {
         new Processor<PlanSystem>(system) {
             @Override
             public void process() {
-                system.getInfoManager().cachePlayer(uuid);
+                try {
+                    system.getInfoSystem().generateAndCachePlayerPage(uuid);
+                } catch (WebException e) {
+                    WebExceptionLogger.log(this.getClass(), e);
+                }
             }
         }.queue();
     }
@@ -69,7 +82,11 @@ public class SessionCache {
             Log.toLog(this.getClass().getName(), e);
         } finally {
             activeSessions.remove(uuid);
-            system.getInfoManager().cachePlayer(uuid);
+            try {
+                system.getInfoSystem().generateAndCachePlayerPage(uuid);
+            } catch (WebException e) {
+                WebExceptionLogger.log(this.getClass(), e);
+            }
         }
     }
 

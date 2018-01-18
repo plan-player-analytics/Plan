@@ -4,8 +4,6 @@
  */
 package com.djrapitops.plan.system.webserver.webapi.bungee;
 
-
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.settings.Settings;
@@ -43,7 +41,7 @@ public class PostOriginalBukkitSettingsWebAPI extends WebAPI {
         settings.put("WebServerPort", webServerPort);
         settings.put("ServerName", serverName);
         settings.put("ThemeBase", themeBase);
-        Settings.serverSpecific().addOriginalBukkitSettings((PlanBungee) plugin, UUID.fromString(variables.get("sender")), settings);
+        Settings.serverSpecific().addOriginalBukkitSettings(UUID.fromString(variables.get("sender")), settings);
         return success();
     }
 

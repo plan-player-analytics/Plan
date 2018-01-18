@@ -10,6 +10,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.settings.ServerSpecificSettings;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plugin.api.Check;
@@ -33,7 +34,7 @@ public class ConfigurationWebAPI extends WebAPI {
         }
         if (Settings.BUNGEE_COPY_CONFIG.isFalse() || Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()) {
             Log.info("Bungee Config settings overridden on this server.");
-            Log.debug(plugin.getMainConfig().getConfigNode("Plugin.Bungee-Override").getChildren().toString());
+            Log.debug(ConfigSystem.getConfig().getConfigNode("Plugin.Bungee-Override").getChildren().toString());
             return success();
         }
         ServerSpecificSettings.updateSettings((Plan) plugin, variables);

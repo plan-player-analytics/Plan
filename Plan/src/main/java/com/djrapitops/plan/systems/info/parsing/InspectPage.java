@@ -13,7 +13,9 @@ import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -85,7 +87,7 @@ public class InspectPage extends Page {
         addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
         String online = "Offline";
-        Optional<Session> activeSession = plugin.getInfoManager().getDataCache().getCachedSession(uuid);
+        Optional<Session> activeSession = SessionCache.getInstance().getCachedSession(uuid);
         if (activeSession.isPresent()) {
             Session session = activeSession.get();
             session.setSessionID(Integer.MAX_VALUE);
@@ -234,7 +236,7 @@ public class InspectPage extends Page {
 
         addValue("playerStatus", HtmlStructure.playerStatus(online, profile.getBannedOnServers(), profile.isOp()));
 
-        if (!plugin.getInfoManager().isUsingAnotherWebServer()) {
+        if (!InfoSystem.getInstance().getConnectionSystem().isServerAvailable()) {
             addValue("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
         }
 

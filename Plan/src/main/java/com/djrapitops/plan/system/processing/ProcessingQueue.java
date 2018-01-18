@@ -72,7 +72,7 @@ public class ProcessingQueue extends Queue<Processor> implements SubSystem {
      */
     public void queue(Processor processor) {
         if (!queue.offer(processor)) {
-            Log.toLog("ProcessingQueue.queue", new IllegalStateException("Processor was not added to Queue"));
+            Log.toLog(Processor.class, new IllegalStateException("Processor was not added to Queue"));
         }
     }
 }
