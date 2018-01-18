@@ -1,4 +1,4 @@
-package com.djrapitops.plan.api;
+package main.java.com.djrapitops.plan.api;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.ParseException;
@@ -8,6 +8,7 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import org.bukkit.OfflinePlayer;
 
@@ -24,15 +25,14 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
  * Methods can be called from Asynchronous task and are thread safe unless
  * otherwise stated.
  * <p>
- * Use Plan.getPlanAPI() to get the API.
- * <p>
  * More information about API methods can be found on GitHub.
  *
  * @author Rsl1122
  * @see PluginData
- * @see AnalysisType
  * @since 4.0.0
+ * @deprecated Old version of Plan API, use PlanAPI.getInstance() instead.
  */
+@Deprecated
 public class API {
 
     private final Plan plugin;
@@ -51,6 +51,7 @@ public class API {
      *
      * @return true if plugin is enabled correctly.
      */
+    @Deprecated
     public boolean isEnabled() {
         return plugin.isEnabled();
     }
@@ -66,6 +67,7 @@ public class API {
      *                   Analysis and Inspect to manage the data of a plugin correctly.
      * @see PluginData
      */
+    @Deprecated
     public void addPluginDataSource(PluginData dataSource) {
         if (isEnabled()) {
             plugin.getHookHandler().addPluginDataSource(dataSource);
@@ -84,6 +86,7 @@ public class API {
      * @param name Name of the player
      * @return {@code ../player/PlayerName}
      */
+    @Deprecated
     public String getPlayerInspectPageLink(String name) {
         if (name == null) {
             return "#";
@@ -112,6 +115,7 @@ public class API {
      * @param uuid UUID of the player.
      * @return true/false
      */
+    @Deprecated
     public boolean isPlayerHtmlCached(UUID uuid) {
         return plugin.getInfoManager().isCached(uuid);
     }
@@ -136,6 +140,7 @@ public class API {
      * @param uuid UUID of the player.
      * @deprecated use {@code cachePlayerHtml}
      */
+    @Deprecated
     public void cachePlayerHtml(UUID uuid) {
         plugin.getInfoManager().cachePlayer(uuid);
     }
@@ -148,6 +153,7 @@ public class API {
      * @param uuid UUID of the player.
      * @return player.html with all placeholders replaced.
      */
+    @Deprecated
     public String getPlayerHtmlAsString(UUID uuid) throws ParseException {
         return plugin.getInfoManager().getPlayerHtml(uuid);
     }
@@ -157,6 +163,7 @@ public class API {
      *
      * @return true/false
      */
+    @Deprecated
     public boolean isAnalysisCached() {
         return plugin.getInfoManager().isAnalysisCached(Plan.getServerUUID());
     }
@@ -164,6 +171,7 @@ public class API {
     /**
      * Run the analysis.
      */
+    @Deprecated
     public void updateAnalysisCache() {
         plugin.getInfoManager().refreshAnalysis(plugin.getServerUuid());
     }
@@ -176,6 +184,7 @@ public class API {
      * @return server.html with all placeholders replaced.
      * @throws NullPointerException if AnalysisData has not been cached.
      */
+    @Deprecated
     public String getAnalysisHtmlAsString() {
         return plugin.getInfoManager().getAnalysisHtml();
     }
@@ -188,6 +197,7 @@ public class API {
      * @return AnalysisData object.
      * @see AnalysisData
      */
+    @Deprecated
     public AnalysisData getAnalysisDataFromCache() {
         return ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisData();
     }
@@ -201,11 +211,16 @@ public class API {
      * @throws IllegalArgumentException If uuid is null.
      * @throws IllegalStateException    If the player has not played on the server before.
      */
+    @Deprecated
     public String getPlayerName(UUID uuid) {
         Verify.nullCheck(uuid);
-        String playerName = plugin.getDB().getUsersTable().getPlayerName(uuid);
-        if (playerName != null) {
-            return playerName;
+        try {
+            String playerName = Database.getActive().fetch().getPlayerName(uuid);
+            if (playerName != null) {
+                return playerName;
+            }
+        } catch (DBException e) {
+            Log.toLog(API.class, e);
         }
         OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
         if (offlinePlayer != null) {
@@ -234,6 +249,7 @@ public class API {
      * @return UUID of the Player
      * @throws IllegalArgumentException if player's name is not registered at Mojang
      */
+    @Deprecated
     public UUID playerNameToUUID(String playerName) {
         UUID uuid = UUIDUtility.getUUIDOf(playerName);
         if (uuid == null) {
@@ -251,6 +267,7 @@ public class API {
      * @throws SQLException If database error occurs.
      * @since 3.4.2
      */
+    @Deprecated
     public Collection<UUID> getSavedUUIDs() {
         try {
             return Database.getActive().fetch().getSavedUUIDs();
