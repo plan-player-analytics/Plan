@@ -29,7 +29,8 @@ public enum PageId {
     FAVICON_REDIRECT("Redirect:Favicon"),
     AUTH_PROMPT("PromptAuth"),
     //
-    PLAYER_PLUGINS_TAB("playerPluginsTab:");
+    PLAYER_PLUGINS_TAB("playerPluginsTab:"),
+    NETWORK_CONTENT("networkContent:");
 
     private final String id;
 

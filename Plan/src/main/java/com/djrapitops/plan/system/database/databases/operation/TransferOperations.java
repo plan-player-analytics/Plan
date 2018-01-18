@@ -25,4 +25,8 @@ public interface TransferOperations {
     // Get
 
     Map<UUID, String> getPlayerHtml() throws DBException;
+
+    void networkPageContent(UUID serverUUID, String html) throws DBException;
+
+    Map<UUID, String> getNetworkPageContent() throws DBException;
 }
