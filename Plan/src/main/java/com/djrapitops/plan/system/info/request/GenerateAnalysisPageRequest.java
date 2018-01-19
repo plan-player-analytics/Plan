@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
 import java.util.UUID;
@@ -23,7 +24,11 @@ import java.util.UUID;
 public class GenerateAnalysisPageRequest extends InfoRequestWithVariables {
 
     public GenerateAnalysisPageRequest(UUID serverUUID) {
+        Verify.nullCheck(serverUUID);
         variables.put("server", serverUUID.toString());
+    }
+
+    private GenerateAnalysisPageRequest() {
     }
 
     @Override
@@ -52,5 +57,9 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables {
     public String getHtml() {
         // TODO Perform Analysis & get HTML
         return null;
+    }
+
+    public static GenerateAnalysisPageRequest createHandler() {
+        return new GenerateAnalysisPageRequest();
     }
 }

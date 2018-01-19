@@ -35,6 +35,7 @@ public class CacheInspectPageRequest implements InfoRequest {
     }
 
     public CacheInspectPageRequest(UUID player, String html) {
+        Verify.nullCheck(player, html);
         this.player = player;
         this.html = html;
     }

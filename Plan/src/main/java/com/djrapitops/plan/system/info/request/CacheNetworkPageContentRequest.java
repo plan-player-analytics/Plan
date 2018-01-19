@@ -14,6 +14,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.NetworkPageContent;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
 import java.util.UUID;
@@ -29,8 +30,14 @@ public class CacheNetworkPageContentRequest implements InfoRequest {
     private final String html;
 
     public CacheNetworkPageContentRequest(UUID serverUUID, String html) {
+        Verify.nullCheck(serverUUID, html);
         this.serverUUID = serverUUID;
         this.html = html;
+    }
+
+    private CacheNetworkPageContentRequest() {
+        serverUUID = null;
+        html = null;
     }
 
     @Override
@@ -69,5 +76,9 @@ public class CacheNetworkPageContentRequest implements InfoRequest {
         InfoSystem.getInstance().updateNetworkPage();
 
         return DefaultResponses.SUCCESS.get();
+    }
+
+    public static CacheNetworkPageContentRequest createHandler() {
+        return new CacheNetworkPageContentRequest();
     }
 }

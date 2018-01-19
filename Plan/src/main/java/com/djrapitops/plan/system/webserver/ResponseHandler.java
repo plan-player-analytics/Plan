@@ -48,7 +48,9 @@ public class ResponseHandler extends TreePageHandler {
     }
 
     public void registerWebAPIPages() {
-// TODO WebAPIPageHandler
+        registerPage("api", new InfoRequestPageHandler());
+
+        // TODO Remove redundant comment after implementing replacements
 //    private void registerWebAPIs() {
 //        webAPI.registerNewAPI(
 //                new AnalysisReadyWebAPI(),

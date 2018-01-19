@@ -12,9 +12,10 @@ import com.djrapitops.plan.api.exceptions.connection.WebFailException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
+import com.djrapitops.plan.system.webserver.pages.parsing.InspectPage;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.systems.info.parsing.InspectPage;
 import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
 import java.util.UUID;
@@ -26,8 +27,16 @@ import java.util.UUID;
  */
 public class GenerateInspectPageRequest extends InfoRequestWithVariables {
 
+    private GenerateInspectPageRequest() {
+    }
+
     public GenerateInspectPageRequest(UUID uuid) {
+        Verify.nullCheck(uuid);
         variables.put("player", uuid.toString());
+    }
+
+    public static GenerateInspectPageRequest createHandler() {
+        return new GenerateInspectPageRequest();
     }
 
     @Override
@@ -52,7 +61,9 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables {
 
     private String getHtml(UUID uuid) throws WebException {
         try {
+
             return new InspectPage(uuid).toHtml();
+
         } catch (ParseException e) {
             Throwable cause = e.getCause();
             if (cause instanceof DBException) {

@@ -8,8 +8,7 @@ import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.request.CacheInspectPageRequest;
-import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.utilities.NullCheck;
 
@@ -44,14 +43,23 @@ public abstract class ConnectionSystem implements SubSystem {
         return connectionSystem;
     }
 
+    public InfoRequest getInfoRequest(String name) {
+        return dataRequests.get(name.toLowerCase());
+    }
+
     private Map<String, InfoRequest> loadDataRequests() {
         Map<String, InfoRequest> requests = new HashMap<>();
         putRequest(requests, CacheInspectPageRequest.createHandler());
+        putRequest(requests, CacheAnalysisPageRequest.createHandler());
+        putRequest(requests, CacheNetworkPageContentRequest.createHandler());
+
+        putRequest(requests, GenerateAnalysisPageRequest.createHandler());
+        putRequest(requests, GenerateInspectPageRequest.createHandler());
         return requests;
     }
 
     private void putRequest(Map<String, InfoRequest> requests, InfoRequest request) {
-        requests.put(request.getClass().getSimpleName(), request);
+        requests.put(request.getClass().getSimpleName().toLowerCase(), request);
     }
 
     protected abstract Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException;

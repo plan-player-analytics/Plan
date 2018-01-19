@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 
 import java.util.UUID;
 
@@ -14,6 +14,8 @@ public interface CheckOperations {
     boolean doesWebUserExists(String username) throws DBException;
 
     default boolean isPlayerRegisteredOnThisServer(UUID player) throws DBException {
-        return isPlayerRegistered(player, PlanSystem.getInstance().getServerInfo().getUuid());
+        return isPlayerRegistered(player, ServerInfo.getServerUUID());
     }
+
+    boolean isServerInDatabase(UUID serverUUID) throws DBException;
 }

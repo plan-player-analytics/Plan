@@ -144,7 +144,7 @@ public abstract class WebAPI {
                 case 403:
                     throw new ForbiddenException(url.toString());
                 case 404:
-                    throw new NotFoundException();
+                    throw new NotFoundException("");
                 case 500:
                     throw new InternalErrorException();
                 default:

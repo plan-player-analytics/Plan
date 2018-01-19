@@ -35,6 +35,7 @@ public class CacheAnalysisPageRequest implements InfoRequest {
     }
 
     public CacheAnalysisPageRequest(UUID serverUUID, String html) {
+        Verify.nullCheck(serverUUID, html);
         this.serverUUID = serverUUID;
         this.html = html;
     }
