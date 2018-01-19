@@ -7,8 +7,9 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
-import com.djrapitops.plan.system.database.databases.sql.ErrorUtil;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.SQLErrorUtil;
+import com.djrapitops.plan.system.info.server.Server;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -31,7 +32,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             tpsTable.insertAllTPS(ofServers);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -40,7 +41,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             commandUseTable.insertCommandUsage(ofServers);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -49,7 +50,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             usersTable.insertUsers(ofServers);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -58,7 +59,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             sessionsTable.insertSessions(ofServers, containsExtraData);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -67,7 +68,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             usersTable.updateKicked(ofUsers);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -76,7 +77,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             userInfoTable.insertUserInfo(ofServers);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -85,7 +86,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             nicknamesTable.insertNicknames(ofServers);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -94,7 +95,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             geoInfoTable.insertAllGeoInfo(ofUsers);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -103,7 +104,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             userInfoTable.updateBanStatus(uuid, banned);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -112,7 +113,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             userInfoTable.updateOpStatus(uuid, op);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -121,7 +122,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             usersTable.registerUser(uuid, registered, name);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -130,7 +131,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             actionsTable.insertAction(uuid, action);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -139,7 +140,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             geoInfoTable.saveGeoInfo(uuid, geoInfo);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -148,7 +149,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             usersTable.kicked(uuid);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -157,7 +158,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             usersTable.updateName(uuid, playerName);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -166,7 +167,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             nicknamesTable.saveUserName(uuid, displayName);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -175,7 +176,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             userInfoTable.registerUserInfo(uuid, registered);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -184,7 +185,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             commandUseTable.commandUsed(commandName);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -193,7 +194,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             tpsTable.insertTPS(tps);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -202,7 +203,16 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
         try {
             sessionsTable.saveSession(uuid, session);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public void serverInfoForThisServer(Server server) throws DBException {
+        try {
+            serverTable.saveCurrentServerInfo(server);
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 }

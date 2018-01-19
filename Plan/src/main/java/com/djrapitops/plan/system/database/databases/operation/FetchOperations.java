@@ -41,7 +41,7 @@ public interface FetchOperations {
 
     Optional<Server> getBungeeInformation() throws DBException;
 
-    Optional<Integer> getServerID(UUID serverUUID);
+    Optional<Integer> getServerID(UUID serverUUID) throws DBException;
 
     // Raw Data
 

@@ -5,9 +5,9 @@ import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 
 import java.sql.SQLException;
 
-public class ErrorUtil {
+public class SQLErrorUtil {
 
-    private ErrorUtil() {
+    private SQLErrorUtil() {
     }
 
     public static DBException getExceptionFor(SQLException e) {

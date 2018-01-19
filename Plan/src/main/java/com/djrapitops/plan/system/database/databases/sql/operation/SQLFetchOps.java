@@ -6,8 +6,9 @@ import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
-import com.djrapitops.plan.system.database.databases.sql.ErrorUtil;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.SQLErrorUtil;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -45,7 +46,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
             return profile;
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -83,7 +84,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             }
             return players;
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -118,7 +119,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
             return profile;
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -142,7 +143,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return usersTable.getSavedUUIDs();
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -151,7 +152,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return userInfoTable.getSavedUUIDs(server);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -160,7 +161,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return serverTable.getServerNames();
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -169,7 +170,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return serverTable.getServerUUID(serverName);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -178,27 +179,25 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return usersTable.getUuidOf(playerName);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
-
 
     @Override
     public WebUser getWebUser(String username) throws DBException {
         try {
             return securityTable.getWebUser(username);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
-
 
     @Override
     public List<TPS> getTPSData(UUID serverUUID) throws DBException {
         try {
             return tpsTable.getTPSData(serverUUID);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -207,7 +206,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return tpsTable.getNetworkOnlineData();
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -216,7 +215,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return usersTable.getRegisterDates();
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -225,7 +224,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return tpsTable.getAllTimePeak(serverUUID);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -234,7 +233,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return tpsTable.getPeakPlayerCount(serverUUID, afterDate);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -243,7 +242,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return sessionsTable.getAllSessions(false);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -252,7 +251,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return sessionsTable.getAllSessions(true);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -261,7 +260,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return worldTable.getWorldNames(serverUuid);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -270,7 +269,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return nicknamesTable.getNicknames(uuid, serverUUID);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -279,7 +278,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return actionsTable.getActions(uuid);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -288,7 +287,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return usersTable.getUsers();
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -297,7 +296,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return sessionsTable.getLastSeenForAllPlayers();
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -306,7 +305,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return geoInfoTable.getAllGeoInfo();
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -315,7 +314,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return usersTable.getPlayerNames();
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -324,7 +323,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return usersTable.getPlayerName(playerUUID);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -333,7 +332,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return serverTable.getServerName(serverUUID);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 
@@ -342,7 +341,25 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         try {
             return nicknamesTable.getNicknames(uuid);
         } catch (SQLException e) {
-            throw ErrorUtil.getExceptionFor(e);
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Optional<Server> getBungeeInformation() throws DBException {
+        try {
+            return serverTable.getBungeeInfo();
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Optional<Integer> getServerID(UUID serverUUID) throws DBException {
+        try {
+            return serverTable.getServerID(serverUUID);
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
         }
     }
 }
