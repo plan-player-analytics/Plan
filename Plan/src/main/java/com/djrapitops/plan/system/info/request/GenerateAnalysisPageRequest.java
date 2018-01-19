@@ -4,7 +4,13 @@
  */
 package com.djrapitops.plan.system.info.request;
 
+import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.utilities.NullCheck;
 
 import java.util.Map;
 import java.util.UUID;
@@ -26,8 +32,25 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables {
     }
 
     @Override
-    public Response handleRequest(Map<String, String> variables) {
+    public Response handleRequest(Map<String, String> variables) throws WebException {
+        // Variables available: sender, server
 
+        String server = variables.get("server");
+        NullCheck.check(server, new BadRequestException("Server UUID 'server' variable not supplied."));
+
+        UUID serverUUID = UUID.fromString(server);
+        if (!ServerInfo.getServerUUID().equals(serverUUID)) {
+            throw new BadRequestException("Requested Analysis page from wrong server.");
+        }
+        String html = getHtml();
+
+        InfoSystem.getInstance().sendRequest(new CacheAnalysisPageRequest(serverUUID, html));
+
+        return DefaultResponses.SUCCESS.get();
+    }
+
+    public String getHtml() {
+        // TODO Perform Analysis & get HTML
         return null;
     }
 }

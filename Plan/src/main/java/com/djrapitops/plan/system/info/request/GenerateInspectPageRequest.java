@@ -4,10 +4,16 @@
  */
 package com.djrapitops.plan.system.info.request;
 
+import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.api.exceptions.connection.WebFailException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.systems.info.parsing.InspectPage;
 import com.djrapitops.plan.utilities.NullCheck;
 
 import java.util.Map;
@@ -35,12 +41,25 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables {
 
         String player = variables.get("player");
         NullCheck.check(player, new BadRequestException("Player UUID 'player' variable not supplied."));
+
         UUID uuid = UUID.fromString(player);
+        String html = getHtml(uuid);
 
-        // TODO Generate HTML
-
-        // TODO InfoSystem.getInstance().sendRequest(new CacheInspectPageRequest(uuid, html));
+        InfoSystem.getInstance().sendRequest(new CacheInspectPageRequest(uuid, html));
 
         return DefaultResponses.SUCCESS.get();
+    }
+
+    private String getHtml(UUID uuid) throws WebException {
+        try {
+            return new InspectPage(uuid).toHtml();
+        } catch (ParseException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof DBException) {
+                throw new TransferDatabaseException((DBException) cause);
+            } else {
+                throw new WebFailException("Exception during HTML Parsing", cause);
+            }
+        }
     }
 }

@@ -49,11 +49,9 @@ import java.util.stream.Collectors;
 public class InspectPage extends Page {
 
     private final UUID uuid;
-    private final PlanPlugin plugin;
 
-    public InspectPage(UUID uuid, PlanPlugin plugin) {
+    public InspectPage(UUID uuid) {
         this.uuid = uuid;
-        this.plugin = plugin;
     }
 
     public String toHtml() throws ParseException {
