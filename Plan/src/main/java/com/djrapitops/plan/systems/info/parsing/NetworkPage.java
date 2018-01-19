@@ -20,7 +20,7 @@ import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
-import com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;
+import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class NetworkPage extends Page {
             addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
             addValue("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
             addValue("version", plugin.getVersion());
-            addValue("playersOnlineSeries", PlayerActivityGraph.createSeries(networkOnlineData));
+            addValue("playersOnlineSeries", new OnlineActivityGraph(networkOnlineData).toHighChartsSeries());
             addValue("playersGraphColor", Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
             addValue("playersOnline", plugin.getProxy().getOnlineCount());
 

@@ -27,7 +27,7 @@ import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
-import com.djrapitops.plan.utilities.html.graphs.line.ServerPreferencePie;
+import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordionCreator;
 import com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
@@ -110,7 +110,7 @@ public class InspectPage extends Page {
         }
 
         Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
-        addValue("serverPieSeries", ServerPreferencePie.createSeries(serverNames, worldTimesPerServer));
+        addValue("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
         addValue("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
         addValue("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
         addValue("serverPieColors", Theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
@@ -197,14 +197,14 @@ public class InspectPage extends Page {
         List<Action> actions = profile.getAllActions();
         addValue("tableBodyActions", ActionsTableCreator.createTable(actions));
 
-        String punchCardData = PunchCardGraph.createSeries(allSessions);
+        String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
         WorldTimes worldTimes = profile.getWorldTimes();
         AnalysisUtils.addMissingWorlds(worldTimes);
 
-        String[] worldPieData = WorldPie.createSeries(worldTimes);
+        WorldPie worldPie = new WorldPie(worldTimes);
 
-        addValue("worldPieSeries", worldPieData[0]);
-        addValue("gmSeries", worldPieData[1]);
+        addValue("worldPieSeries", worldPie.toHighChartsSeries());
+        addValue("gmSeries", worldPie.toHighChartsDrilldown());
 
         addValue("punchCardSeries", punchCardData);
 

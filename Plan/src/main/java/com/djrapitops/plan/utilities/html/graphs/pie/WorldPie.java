@@ -11,30 +11,18 @@ import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class WorldPie {
+public class WorldPie extends AbstractPieChartWithDrilldown {
 
-    private WorldPie() {
-        throw new IllegalStateException("Utility Class");
-    }
+    private WorldTimes worldTimes;
 
-    /**
-     * Used to create HighCharts series string for series and drilldown.
-     *
-     * @param worldTimes WorldTimes object.
-     * @return String array, index 0: Series data, 1: drilldown data
-     */
-    public static String[] createSeries(WorldTimes worldTimes) {
-        List<PieSlice> slices = turnIntoSlices(worldTimes);
+    public WorldPie(WorldTimes worldTimes) {
+        super(turnIntoSlices(worldTimes));
+
+        this.worldTimes = worldTimes;
 
         if (Settings.ORDER_WORLD_PIE_BY_PERC.isTrue()) {
             slices.sort(new PieSliceComparator());
         }
-
-        String seriesData = PieSeries.createSeries(slices);
-
-        String drilldownData = createDrilldown(worldTimes);
-
-        return new String[]{seriesData, drilldownData};
     }
 
     private static List<PieSlice> turnIntoSlices(WorldTimes worldTimes) {
@@ -59,6 +47,7 @@ public class WorldPie {
             }
             i++;
         }
+
         return slices;
     }
 
@@ -68,8 +57,9 @@ public class WorldPie {
         return transformToAliases(playtimePerWorld, aliases);
     }
 
+    // TODO Move to another class
     public static Map<String, Long> transformToAliases(Map<String, Long> playtimePerWorld, Map<String, String> aliases) {
-        // TODO Optimization is possible
+        // TODO Optimization is possible (WorldAliasSettings)
         WorldAliasSettings aliasSettings = new WorldAliasSettings();
 
         Map<String, Long> playtimePerAlias = new HashMap<>();
@@ -89,7 +79,8 @@ public class WorldPie {
         return playtimePerAlias;
     }
 
-    private static String createDrilldown(WorldTimes worldTimes) {
+    @Override
+    public String toHighChartsDrilldown() {
         StringBuilder drilldownBuilder = new StringBuilder();
         int i = 0;
 
@@ -118,8 +109,8 @@ public class WorldPie {
         return drilldownBuilder.toString();
     }
 
-    private static Map<String, GMTimes> transformToGMAliases(Map<String, GMTimes> gmTimesMap) {
-        // TODO Optimization is possible
+    private Map<String, GMTimes> transformToGMAliases(Map<String, GMTimes> gmTimesMap) {
+        // TODO Optimization is possible (WorldAliasSettings)
         WorldAliasSettings aliasSettings = new WorldAliasSettings();
         Map<String, String> aliases = aliasSettings.getAliases();
 
@@ -138,16 +129,16 @@ public class WorldPie {
 
             String alias = aliases.get(worldName);
 
-            GMTimes aliasGMtimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
+            GMTimes aliasGMTimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
             for (String gm : gms) {
-                aliasGMtimes.addTime(gm, gmTimes.getTime(gm));
+                aliasGMTimes.addTime(gm, gmTimes.getTime(gm));
             }
-            gmTimesPerAlias.put(alias, aliasGMtimes);
+            gmTimesPerAlias.put(alias, aliasGMTimes);
         }
         return gmTimesPerAlias;
     }
 
-    private static void appendGMTimesForWorld(StringBuilder drilldownBuilder, Map.Entry<String, GMTimes> world) {
+    private void appendGMTimesForWorld(StringBuilder drilldownBuilder, Map.Entry<String, GMTimes> world) {
         Map<String, Long> gmTimes = world.getValue().getTimes();
         int smallSize = gmTimes.size();
         int j = 0;

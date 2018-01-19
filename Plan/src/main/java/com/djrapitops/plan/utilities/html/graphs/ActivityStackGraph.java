@@ -4,10 +4,10 @@
  */
 package com.djrapitops.plan.utilities.html.graphs;
 
+import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,30 +15,46 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 /**
- * Graph creation utility for Activity Stack graph.
- *
- * This graph represents evolution of the playerbase.
+ * Stack Graph that represents evolution of the PlayerBase in terms of ActivityIndex Groups.
  *
  * @author Rsl1122
+ * @see ActivityIndex
+ * @since 4.2.0
  */
-public class ActivityStackGraph {
+public class ActivityStackGraph implements HighChart {
+
+    private final String[] builtSeries;
+
+    public ActivityStackGraph(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
+        this.builtSeries = createSeries(activityData);
+    }
+
+    public String toHighChartsLabels() {
+        return builtSeries[0];
+    }
+
+    @Override
+    public String toHighChartsSeries() {
+        return builtSeries[1];
+    }
 
     private ActivityStackGraph() {
         throw new IllegalStateException("Utility Class");
     }
 
-    public static String[] createSeries(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
-        String[] sliceNames = ActivityPie.getSliceNames();
+    private String[] createSeries(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
+        String[] groups = ActivityIndex.getGroups();
         String[] colors = Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
 
-        StringBuilder[] series = new StringBuilder[sliceNames.length + 1];
-        for (int i = 0; i <= sliceNames.length; i++) {
+        // Series 0 is Labels for Graph x-axis, others are data for each group.
+        StringBuilder[] series = new StringBuilder[groups.length + 1];
+        for (int i = 0; i <= groups.length; i++) {
             series[i] = new StringBuilder();
         }
-        for (int i = 1; i <= sliceNames.length; i++) {
+        for (int i = 1; i <= groups.length; i++) {
             series[i] = new StringBuilder("{name: '")
-                    .append(sliceNames[i - 1])
+                    .append(groups[i - 1])
                     .append("',color:").append(colors[(i - 1) % maxCol])
                     .append(",data: [");
         }
@@ -49,13 +65,13 @@ public class ActivityStackGraph {
             Map<String, Set<UUID>> data = activityData.get(date);
 
             series[0].append("'").append(FormatUtils.formatTimeStamp(date)).append("'");
-            for (int j = 1; j <= sliceNames.length; j++) {
-                Set<UUID> players = data.get(sliceNames[j - 1]);
+            for (int j = 1; j <= groups.length; j++) {
+                Set<UUID> players = data.get(groups[j - 1]);
                 series[j].append(players != null ? players.size() : 0);
             }
 
             if (i < size - 1) {
-                for (int j = 0; j <= sliceNames.length; j++) {
+                for (int j = 0; j <= groups.length; j++) {
                     series[j].append(",");
                 }
             }
@@ -64,9 +80,9 @@ public class ActivityStackGraph {
 
         StringBuilder seriesBuilder = new StringBuilder("[");
 
-        for (int j = 1; j <= sliceNames.length; j++) {
+        for (int j = 1; j <= groups.length; j++) {
             seriesBuilder.append(series[j].append("]}").toString());
-            if (j < sliceNames.length) {
+            if (j < groups.length) {
                 seriesBuilder.append(",");
             }
         }

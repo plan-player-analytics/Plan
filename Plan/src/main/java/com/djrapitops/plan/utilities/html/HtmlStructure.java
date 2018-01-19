@@ -13,7 +13,7 @@ import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;
+import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -108,7 +108,7 @@ public class HtmlStructure {
     }
 
     public static String createServerContainer(Plan plugin) {
-        ServerProperties variable = plugin.getVariable();
+        ServerProperties variable = ServerInfo.getServerProperties();
         int maxPlayers = variable.getMaxPlayers();
         int online = plugin.getServer().getOnlinePlayers().size();
         Optional<Long> analysisRefreshDate = ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisRefreshDate();
@@ -127,7 +127,7 @@ public class HtmlStructure {
         String playerData = "[]";
         try {
             playerCount = db.count().getServerPlayerCount(serverUUID);
-            playerData = PlayerActivityGraph.createSeries(db.fetch().getTPSData(serverUUID));
+            playerData = new OnlineActivityGraph(db.fetch().getTPSData(serverUUID)).toHighChartsSeries();
         } catch (DBException e) {
             Log.toLog(HtmlStructure.class.getClass().getName(), e);
         }

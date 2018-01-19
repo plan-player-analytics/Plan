@@ -21,6 +21,10 @@ public class ActivityIndex {
         return value < 0 ? 1 : value;
     }
 
+    public static String[] getGroups() {
+        return new String[]{"Very Active", "Active", "Regular", "Irregular", "Inactive"};
+    }
+
     private double calculate(PlayerProfile player, long date) {
         long week = TimeAmount.WEEK.ms();
         long weekAgo = date - week;

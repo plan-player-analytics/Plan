@@ -144,11 +144,11 @@ public class AnalysisData extends RawData {
 
         Map<String, Set<UUID>> activityNow = activityData.getOrDefault(now, new HashMap<>());
 
-        String[] activityStackSeries = ActivityStackGraph.createSeries(activityData);
-        String activityPieSeries = ActivityPie.createSeries(activityNow);
+        ActivityStackGraph activityStackGraph = new ActivityStackGraph(activityData);
+        String activityPieSeries = new ActivityPie(activityNow).toHighChartsSeries();
 
-        addValue("activityStackCategories", activityStackSeries[0]);
-        addValue("activityStackSeries", activityStackSeries[1]);
+        addValue("activityStackCategories", activityStackGraph.toHighChartsLabels());
+        addValue("activityStackSeries", activityStackGraph.toHighChartsSeries());
         addValue("activityPieSeries", activityPieSeries);
 
         Set<UUID> veryActiveNow = activityNow.getOrDefault("Very Active", new HashSet<>());
@@ -171,7 +171,7 @@ public class AnalysisData extends RawData {
     }
 
     private void geolocationsTab(List<String> geoLocations) {
-        addValue("geoMapSeries", WorldMap.createSeries(geoLocations));
+        addValue("geoMapSeries", new WorldMap(geoLocations).toHighChartsSeries());
     }
 
     private void onlineActivityNumbers(ServerProfile profile, Map<UUID, List<Session>> sessions, List<PlayerProfile> players) {
@@ -286,7 +286,7 @@ public class AnalysisData extends RawData {
         addValue("tableBodySessions", tables[0]);
         addValue("listRecentLogins", tables[1]);
         addValue("sessionAverage", FormatUtils.formatTimeAmount(MathUtils.averageLong(allSessions.stream().map(Session::getLength))));
-        addValue("punchCardSeries", PunchCardGraph.createSeries(sessionsMonth));
+        addValue("punchCardSeries", new PunchCardGraph(sessionsMonth).toHighChartsSeries());
 
         addValue("deaths", ServerProfile.getDeathCount(allSessions));
         addValue("mobKillCount", ServerProfile.getMobKillCount(allSessions));
@@ -303,9 +303,9 @@ public class AnalysisData extends RawData {
                 Html.TABLE_PLAYERS_FOOTER.parse(playersTableBody)
                 : Html.TABLE_PLAYERS.parse(playersTableBody));
         addValue("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
-        String[] seriesData = WorldPie.createSeries(worldTimes);
-        addValue("worldSeries", seriesData[0]);
-        addValue("gmSeries", seriesData[1]);
+        WorldPie worldPie = new WorldPie(worldTimes);
+        addValue("worldSeries", worldPie.toHighChartsSeries());
+        addValue("gmSeries", worldPie.toHighChartsDrilldown());
         addValue("lastPeakTime", lastPeak != -1 ? FormatUtils.formatTimeStampYear(lastPeak) : "No Data");
         addValue("playersLastPeak", lastPeak != -1 ? profile.getLastPeakPlayers() : "-");
         addValue("bestPeakTime", allTimePeak != -1 ? FormatUtils.formatTimeStampYear(allTimePeak) : "No Data");
@@ -320,12 +320,12 @@ public class AnalysisData extends RawData {
         addValue("tpsSpikeWeek", value("tpsSpikeWeek"));
         addValue("tpsSpikeDay", value("tpsSpikeDay"));
 
-        addValue("playersOnlineSeries", PlayerActivityGraph.createSeries(tpsData));
-        addValue("tpsSeries", TPSGraph.createSeries(tpsData));
-        addValue("cpuSeries", CPUGraph.createSeries(tpsData));
-        addValue("ramSeries", RamGraph.createSeries(tpsData));
-        addValue("entitySeries", WorldLoadGraph.createSeriesEntities(tpsData));
-        addValue("chunkSeries", WorldLoadGraph.createSeriesChunks(tpsData));
+        addValue("playersOnlineSeries", new OnlineActivityGraph(tpsData).toHighChartsSeries());
+        addValue("tpsSeries", new TPSGraph(tpsData).toHighChartsSeries());
+        addValue("cpuSeries", new CPUGraph(tpsData).toHighChartsSeries());
+        addValue("ramSeries", new RamGraph(tpsData).toHighChartsSeries());
+        addValue("entitySeries", new EntityGraph(tpsData).toHighChartsSeries());
+        addValue("chunkSeries", new ChunkGraph(tpsData).toHighChartsSeries());
 
         double averageCPUMonth = MathUtils.averageDouble(tpsDataMonth.stream().map(TPS::getCPUUsage).filter(i -> i != 0));
         double averageCPUWeek = MathUtils.averageDouble(tpsDataWeek.stream().map(TPS::getCPUUsage).filter(i -> i != 0));

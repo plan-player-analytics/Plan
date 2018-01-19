@@ -4,40 +4,39 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.pie;
 
+import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 
 import java.util.*;
 
 /**
- * Utility class for creating Activity Pie data.
+ * Pie about different Activity Groups defined by ActivityIndex.
  *
  * @author Rsl1122
+ * @see ActivityIndex
+ * @since 4.2.0
  */
-public class ActivityPie {
+public class ActivityPie extends AbstractPieChart {
 
-    private ActivityPie() {
-        throw new IllegalStateException("Utility Class");
+    public ActivityPie(Map<String, Set<UUID>> activityData) {
+        super(turnToSlices(activityData));
     }
 
-    public static String[] getSliceNames() {
-        return new String[]{"Very Active", "Active", "Regular", "Irregular", "Inactive"};
-    }
-
-    public static String createSeries(Map<String, Set<UUID>> activityData) {
+    private static List<PieSlice> turnToSlices(Map<String, Set<UUID>> activityData) {
         String[] colors = Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
 
         List<PieSlice> slices = new ArrayList<>();
         int i = 0;
-        for (String slice : getSliceNames()) {
-            Set<UUID> players = activityData.getOrDefault(slice, new HashSet<>());
+        for (String group : ActivityIndex.getGroups()) {
+            Set<UUID> players = activityData.getOrDefault(group, new HashSet<>());
             int num = players.size();
 
-            slices.add(new PieSlice(slice, num, colors[i % maxCol], false));
+            slices.add(new PieSlice(group, num, colors[i % maxCol], false));
             i++;
         }
 
-        return PieSeries.createSeries(slices);
+        return slices;
     }
 }

@@ -87,7 +87,7 @@ public class SessionTabStructureCreator {
             WorldTimes worldTimes = session.getWorldTimes();
             AnalysisUtils.addMissingWorlds(worldTimes);
 
-            String[] worldData = WorldPie.createSeries(worldTimes);
+            WorldPie worldPie = new WorldPie(worldTimes);
 
             String killTable = KillsTableCreator.createTable(session.getPlayerKills());
 
@@ -131,8 +131,8 @@ public class SessionTabStructureCreator {
                     .append("<div id=\"").append(worldId).append("\" class=\"dashboard-donut-chart\"></div>")
                     // World Pie data script
                     .append("<script>")
-                    .append("var ").append(worldId).append("series = {name:'World Playtime'," +/*colors: worldPieColors,*/"colorByPoint:true,data:").append(worldData[0]).append("};")
-                    .append("var ").append(worldId).append("gmseries = ").append(worldData[1]).append(";")
+                    .append("var ").append(worldId).append("series = {name:'World Playtime',colorByPoint:true,data:").append(worldPie.toHighChartsSeries()).append("};")
+                    .append("var ").append(worldId).append("gmseries = ").append(worldPie.toHighChartsDrilldown()).append(";")
                     .append("</script>")
                     .append("</div>") // Right col-6
                     .append("</div>") // Closes row clearfix

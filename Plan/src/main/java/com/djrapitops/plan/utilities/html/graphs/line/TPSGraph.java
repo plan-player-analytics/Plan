@@ -7,23 +7,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Graph about TPS gathered by TPSCountTimer.
+ *
  * @author Rsl1122
- * @since 3.5.0
+ * @see com.djrapitops.plan.system.tasks.TPSCountTimer
+ * @since 4.2.0
  */
-public class TPSGraph {
+public class TPSGraph extends AbstractLineGraph {
 
-    /**
-     * Constructor used to hide the public constructor
-     */
-    private TPSGraph() {
-        throw new IllegalStateException("Utility class");
+    public TPSGraph(List<TPS> tpsData) {
+        super(turnToPoints(tpsData));
     }
 
-    public static String createSeries(List<TPS> tpsData) {
-        List<Point> points = tpsData.stream()
+    private static List<Point> turnToPoints(List<TPS> tpsData) {
+        return tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getTicksPerSecond()))
                 .collect(Collectors.toList());
-        return LineSeries.createSeries(points, true);
-
     }
 }
