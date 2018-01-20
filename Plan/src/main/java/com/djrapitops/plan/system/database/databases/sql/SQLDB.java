@@ -39,6 +39,7 @@ public abstract class SQLDB extends Database {
     private final WorldTable worldTable;
     private final WorldTimesTable worldTimesTable;
     private final ServerTable serverTable;
+    private final TransferTable transferTable;
 
     private final SQLBackupOps backupOps;
     private final SQLCheckOps checkOps;
@@ -71,6 +72,7 @@ public abstract class SQLDB extends Database {
         killsTable = new KillsTable(this);
         worldTable = new WorldTable(this);
         worldTimesTable = new WorldTimesTable(this);
+        transferTable = new TransferTable(this);
 
         backupOps = new SQLBackupOps(this);
         checkOps = new SQLCheckOps(this);
@@ -200,7 +202,7 @@ public abstract class SQLDB extends Database {
                 serverTable, usersTable, userInfoTable, geoInfoTable,
                 nicknamesTable, sessionsTable, killsTable,
                 commandUseTable, actionsTable, tpsTable,
-                worldTable, worldTimesTable, securityTable
+                worldTable, worldTimesTable, securityTable, transferTable
         };
     }
 
@@ -211,7 +213,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
-                geoInfoTable, nicknamesTable, killsTable,
+                transferTable, geoInfoTable, nicknamesTable, killsTable,
                 worldTimesTable, sessionsTable, actionsTable,
                 worldTable, userInfoTable, usersTable,
                 commandUseTable, tpsTable, securityTable,
@@ -344,6 +346,10 @@ public abstract class SQLDB extends Database {
 
     public UserInfoTable getUserInfoTable() {
         return userInfoTable;
+    }
+
+    public TransferTable getTransferTable() {
+        return transferTable;
     }
 
     public boolean isUsingMySQL() {

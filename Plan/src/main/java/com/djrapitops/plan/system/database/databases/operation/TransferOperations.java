@@ -20,19 +20,19 @@ public interface TransferOperations {
 
     // Save
 
-    void playerHtml(UUID player, String encodedHtml) throws DBException;
+    void storePlayerHtml(UUID player, String encodedHtml) throws DBException;
 
-    void serverHtml(UUID serverUUID, String encodedHtml) throws DBException;
+    void storeServerHtml(UUID serverUUID, String encodedHtml) throws DBException;
 
-    void networkPageContent(UUID serverUUID, String encodedHtml) throws DBException;
+    void storeNetworkPageContent(UUID serverUUID, String encodedHtml) throws DBException;
 
     // Get
 
-    Map<UUID, String> getPlayerHtml() throws DBException;
+    Map<UUID, String> getEncodedPlayerHtml() throws DBException;
 
-    Map<UUID, String> getNetworkPageContent() throws DBException;
+    Map<UUID, String> getEncodedNetworkPageContent() throws DBException;
 
-    Map<UUID, String> getServerHtml() throws DBException;
+    Map<UUID, String> getEncodedServerHtml() throws DBException;
 
 
 }

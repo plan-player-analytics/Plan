@@ -43,7 +43,7 @@ public class CacheNetworkPageContentRequest implements InfoRequest {
     @Override
     public void placeDataToDatabase() throws WebException {
         try {
-            Database.getActive().transfer().networkPageContent(serverUUID, html);
+            Database.getActive().transfer().storeNetworkPageContent(serverUUID, html);
         } catch (DBException e) {
             throw new TransferDatabaseException(e);
         }
@@ -57,7 +57,7 @@ public class CacheNetworkPageContentRequest implements InfoRequest {
         Map<UUID, String> serverNames;
         try {
             Database database = Database.getActive();
-            networkPageHtml = database.transfer().getNetworkPageContent();
+            networkPageHtml = database.transfer().getEncodedNetworkPageContent();
             serverNames = database.fetch().getServerNames();
         } catch (DBException e) {
             throw new TransferDatabaseException(e);

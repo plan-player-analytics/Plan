@@ -50,7 +50,7 @@ public class CacheAnalysisPageRequest implements InfoRequest {
 
         String encodedHtml = Base64Util.encode(html);
         try {
-            Database.getActive().transfer().serverHtml(serverUUID, encodedHtml);
+            Database.getActive().transfer().storeServerHtml(serverUUID, encodedHtml);
         } catch (DBException e) {
             throw new TransferDatabaseException(e);
         }
@@ -61,7 +61,7 @@ public class CacheAnalysisPageRequest implements InfoRequest {
         // Available variables: sender
 
         try {
-            Map<UUID, String> pages = Database.getActive().transfer().getServerHtml();
+            Map<UUID, String> pages = Database.getActive().transfer().getEncodedServerHtml();
 
             for (Map.Entry<UUID, String> entry : pages.entrySet()) {
                 UUID serverUUID = entry.getKey();

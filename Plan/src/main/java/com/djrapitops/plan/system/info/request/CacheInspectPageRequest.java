@@ -50,7 +50,7 @@ public class CacheInspectPageRequest implements InfoRequest {
 
         String encodedHtml = Base64Util.encode(html);
         try {
-            Database.getActive().transfer().playerHtml(player, encodedHtml);
+            Database.getActive().transfer().storePlayerHtml(player, encodedHtml);
         } catch (DBException e) {
             throw new TransferDatabaseException(e);
         }
@@ -61,7 +61,7 @@ public class CacheInspectPageRequest implements InfoRequest {
         // Available variables: sender
 
         try {
-            Map<UUID, String> pages = Database.getActive().transfer().getPlayerHtml();
+            Map<UUID, String> pages = Database.getActive().transfer().getEncodedPlayerHtml();
 
             for (Map.Entry<UUID, String> entry : pages.entrySet()) {
                 UUID uuid = entry.getKey();

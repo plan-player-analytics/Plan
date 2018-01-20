@@ -20,6 +20,7 @@ public class SQLOps {
     protected final WorldTable worldTable;
     protected final WorldTimesTable worldTimesTable;
     protected final ServerTable serverTable;
+    protected final TransferTable transferTable;
 
     public SQLOps(SQLDB db) {
         this.db = db;
@@ -37,5 +38,6 @@ public class SQLOps {
         worldTable = db.getWorldTable();
         worldTimesTable = db.getWorldTimesTable();
         serverTable = db.getServerTable();
+        transferTable = db.getTransferTable();
     }
 }
