@@ -8,7 +8,6 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.SQLErrorUtil;
 import com.djrapitops.plan.system.info.server.Server;
 
 import java.sql.SQLException;

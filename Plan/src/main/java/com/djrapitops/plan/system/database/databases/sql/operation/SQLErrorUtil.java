@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.database.databases.sql;
+package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;

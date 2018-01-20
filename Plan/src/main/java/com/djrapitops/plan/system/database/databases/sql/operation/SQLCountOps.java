@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.operation.CountOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.SQLErrorUtil;
 
 import java.sql.SQLException;
 import java.util.UUID;

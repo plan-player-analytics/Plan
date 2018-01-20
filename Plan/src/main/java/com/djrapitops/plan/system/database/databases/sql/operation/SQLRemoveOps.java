@@ -4,7 +4,6 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.SQLErrorUtil;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import com.djrapitops.plan.system.database.databases.sql.tables.UserIDTable;
 import com.djrapitops.plugin.api.Benchmark;
