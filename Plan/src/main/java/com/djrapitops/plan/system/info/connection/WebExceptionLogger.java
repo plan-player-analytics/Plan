@@ -14,14 +14,14 @@ import com.djrapitops.plugin.api.utility.log.Log;
  */
 public class WebExceptionLogger {
 
-    public static void log(Class c, ExceptionLoggingAction action) {
+    public static void logIfOccurs(Class c, ExceptionLoggingAction action) {
         try {
             action.performAction();
         } catch (ConnectionFailException | UnsupportedTransferDatabaseException | UnauthorizedServerException
                 | NotFoundException | NoServersException e) {
             Log.warn(e.getMessage());
         } catch (WebException e) {
-            Log.toLog(WebExceptionLogger.class, e);
+            Log.toLog(c, e);
         }
     }
 

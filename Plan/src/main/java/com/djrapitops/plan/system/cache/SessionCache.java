@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.PlanSystem;
@@ -61,11 +60,7 @@ public class SessionCache {
         new Processor<PlanSystem>(system) {
             @Override
             public void process() {
-                try {
-                    system.getInfoSystem().generateAndCachePlayerPage(uuid);
-                } catch (WebException e) {
-                    WebExceptionLogger.log(this.getClass(), e);
-                }
+                WebExceptionLogger.logIfOccurs(this.getClass(), () -> system.getInfoSystem().generateAndCachePlayerPage(uuid));
             }
         }.queue();
     }
@@ -82,11 +77,8 @@ public class SessionCache {
             Log.toLog(this.getClass().getName(), e);
         } finally {
             activeSessions.remove(uuid);
-            try {
-                system.getInfoSystem().generateAndCachePlayerPage(uuid);
-            } catch (WebException e) {
-                WebExceptionLogger.log(this.getClass(), e);
-            }
+
+            WebExceptionLogger.logIfOccurs(this.getClass(), () -> system.getInfoSystem().generateAndCachePlayerPage(uuid));
         }
     }
 

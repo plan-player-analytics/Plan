@@ -29,18 +29,18 @@ public class ResponseCache {
     }
 
     /**
-     * Loads the page from the page cache.
+     * Loads the response from the response cache.
      * <p>
-     * If the {@link Response} isn't cached, {@link PageLoader#createResponse()} in the {@code loader}
+     * If the {@link Response} isn't cached, {@link ResponseLoader#createResponse()} in the {@code loader}
      * is called to create the Response.
      * <p>
      * If the Response is created, it's automatically cached.
      *
      * @param identifier The identifier of the page
-     * @param loader     The {@link PageLoader} (How should it load the page if it's not cached)
-     * @return The Response that was cached or created by the {@link PageLoader loader}
+     * @param loader     The {@link ResponseLoader} (How should it load the page if it's not cached)
+     * @return The Response that was cached or created by the {@link ResponseLoader loader}
      */
-    public static Response loadResponse(String identifier, PageLoader loader) {
+    public static Response loadResponse(String identifier, ResponseLoader loader) {
         Response response = loadResponse(identifier);
 
         if (response != null) {
@@ -72,7 +72,7 @@ public class ResponseCache {
      * @param identifier The identifier of the page
      * @return Copied Response of loadResponse, so that cache contents are not changed.
      */
-    public static Response copyResponse(String identifier, PageLoader loader) {
+    public static Response copyResponse(String identifier, ResponseLoader loader) {
         Response response = loadResponse(identifier, loader);
         if (response instanceof InspectPageResponse) {
             return InspectPageResponse.copyOf((InspectPageResponse) response);
@@ -86,9 +86,9 @@ public class ResponseCache {
      * If the cache already inherits that {@code identifier}, it's renewed.
      *
      * @param identifier The identifier of the page
-     * @param loader     The {@link PageLoader} (How it should load the page)
+     * @param loader     The {@link ResponseLoader} (How it should load the page)
      */
-    public static void cacheResponse(String identifier, PageLoader loader) {
+    public static void cacheResponse(String identifier, ResponseLoader loader) {
         Response response = loader.createResponse();
         cache.put(identifier, response);
     }
@@ -121,5 +121,17 @@ public class ResponseCache {
      */
     public static void clearCache() {
         cache.clear();
+    }
+
+    /**
+     * This interface is used for providing the method to load the page.
+     *
+     * @author Fuzzlemann
+     * @since 4.2.0
+     */
+    public interface ResponseLoader {
+
+        Response createResponse();
+
     }
 }
