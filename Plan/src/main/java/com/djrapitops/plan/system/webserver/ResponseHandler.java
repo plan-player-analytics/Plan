@@ -5,13 +5,17 @@
 package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.pages.*;
 import com.djrapitops.plan.system.webserver.response.*;
+import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.errors.UnauthorizedServerResponse;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.Arrays;
@@ -25,12 +29,10 @@ import java.util.Optional;
  */
 public class ResponseHandler extends TreePageHandler {
 
-    private final boolean authRequired;
-    private final boolean usingHttps;
+    private final WebServer webServer;
 
     public ResponseHandler(WebServer webServer) {
-        authRequired = webServer.isAuthRequired();
-        this.usingHttps = webServer.isUsingHTTPS();
+        this.webServer = webServer;
     }
 
     public void registerDefaultPages() {
@@ -42,7 +44,7 @@ public class ResponseHandler extends TreePageHandler {
         ServerPageHandler serverPageHandler = new ServerPageHandler();
         registerPage("network", serverPageHandler);
         registerPage("server", serverPageHandler);
-        if (authRequired) {
+        if (webServer.isAuthRequired()) {
             registerPage("", new RootPageHandler(this));
         }
     }
@@ -80,38 +82,50 @@ public class ResponseHandler extends TreePageHandler {
         List<String> target = Arrays.asList(targetString.split("/"));
         target.remove(0);
         try {
-            Optional<Authentication> authentication = Optional.empty();
-            if (authRequired) {
-                authentication = request.getAuth();
-                if (!authentication.isPresent()) {
-                    if (usingHttps) {
-                        return DefaultResponses.BASIC_AUTH.get();
-                    } else {
-                        return forbiddenResponse(0, 0);
-                    }
-                }
-            }
-
-            PageHandler pageHandler = getPageHandler(target);
-            if (pageHandler == null) {
-                if (targetString.endsWith(".css")) {
-                    return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> new CSSResponse(targetString));
-                }
-                if (targetString.endsWith(".js")) {
-                    return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
-                }
-                return DefaultResponses.NOT_FOUND.get();
-            } else {
-                if (authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target)) {
-                    return forbiddenResponse(0, 0);
-                }
-                return pageHandler.getResponse(request, target);
-            }
+            return getResponse(request, targetString, target);
         } catch (WebUserAuthException e) {
             return PromptAuthorizationResponse.getBasicAuthResponse(e);
+        } catch (NotFoundException e) {
+            return new NotFoundResponse(e.getMessage());
+        } catch (ForbiddenException e) {
+            return new ForbiddenResponse(e.getMessage());
+        } catch (BadRequestException e) {
+            return new BadRequestResponse(e.getMessage());
+        } catch (UnauthorizedServerException e) {
+            return new UnauthorizedServerResponse(e.getMessage());
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             return new InternalErrorResponse(request.getTarget(), e);
+        }
+    }
+
+    private Response getResponse(Request request, String targetString, List<String> target) throws WebException {
+        Optional<Authentication> authentication = Optional.empty();
+        if (webServer.isAuthRequired()) {
+            authentication = request.getAuth();
+            if (!authentication.isPresent()) {
+                if (webServer.isUsingHTTPS()) {
+                    return DefaultResponses.BASIC_AUTH.get();
+                } else {
+                    return forbiddenResponse(0, 0);
+                }
+            }
+        }
+
+        PageHandler pageHandler = getPageHandler(target);
+        if (pageHandler == null) {
+            if (targetString.endsWith(".css")) {
+                return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> new CSSResponse(targetString));
+            }
+            if (targetString.endsWith(".js")) {
+                return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
+            }
+            return DefaultResponses.NOT_FOUND.get();
+        } else {
+            if (authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target)) {
+                return forbiddenResponse(0, 0);
+            }
+            return pageHandler.getResponse(request, target);
         }
     }
 

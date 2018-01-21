@@ -8,10 +8,12 @@ import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.info.connection.ConnectionLog;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
+import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.Benchmark;
@@ -52,6 +54,8 @@ public class DebugPageResponse extends ErrorResponse {
 
         appendServerInformation(content);
 
+        appendConnectionLog(content);
+
         if (Check.isBungeeAvailable()) {
             appendBungeeConfiguration(content);
         }
@@ -62,6 +66,34 @@ public class DebugPageResponse extends ErrorResponse {
         appendConfig(content);
 
         return content.toString();
+    }
+
+    private void appendConnectionLog(StringBuilder content) {
+        try {
+            Map<Server, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries();
+
+            content.append("<pre>");
+            content.append("Server name | Request Type | Sent | Response<br>")
+                    .append("-- | -- | -- | --<br>");
+            for (Map.Entry<Server, Map<String, ConnectionLog.Entry>> entry : logEntries.entrySet()) {
+                Server server = entry.getKey();
+                Map<String, ConnectionLog.Entry> requests = entry.getValue();
+                for (Map.Entry<String, ConnectionLog.Entry> requestEntry : requests.entrySet()) {
+                    String infoRequest = requestEntry.getKey();
+                    ConnectionLog.Entry logEntry = requestEntry.getValue();
+
+                    content.append(server.getName()).append(" | ")
+                            .append(infoRequest).append(" | ")
+                            .append(logEntry.getResponseCode()).append(" | ")
+                            .append(FormatUtils.formatTimeStampSecond(logEntry.getTimeSent())).append("<br>");
+                }
+
+            }
+            content.append("</pre>");
+
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
+        }
     }
 
     private void appendServerInformation(StringBuilder content) {

@@ -76,4 +76,6 @@ public interface FetchOperations {
     String getPlayerName(UUID playerUUID) throws DBException;
 
     List<String> getNicknames(UUID uuid) throws DBException;
+
+    Set<Server> getBukkitServers() throws DBException;
 }

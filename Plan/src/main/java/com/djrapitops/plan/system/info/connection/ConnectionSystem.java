@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.NullCheck;
 
 import java.util.HashMap;
@@ -26,15 +27,14 @@ import java.util.UUID;
  */
 public abstract class ConnectionSystem implements SubSystem {
 
+    protected final ConnectionLog connectionLog;
     protected final Map<String, InfoRequest> dataRequests;
-    protected final UUID serverUUID;
     protected Map<UUID, Server> servers;
 
-    public ConnectionSystem(UUID serverUUID) {
-        this.serverUUID = serverUUID;
-
+    public ConnectionSystem() {
         servers = new HashMap<>();
         dataRequests = loadDataRequests();
+        connectionLog = new ConnectionLog();
     }
 
     public static ConnectionSystem getInstance() {
@@ -66,9 +66,12 @@ public abstract class ConnectionSystem implements SubSystem {
 
     public void sendInfoRequest(InfoRequest infoRequest) throws WebException {
         Server server = selectServerForRequest(infoRequest);
-        String address = server.getWebAddress();
 
-        new ConnectionOut(address, serverUUID, infoRequest).sendRequest();
+        new ConnectionOut(server, ServerInfo.getServerUUID(), infoRequest).sendRequest();
+    }
+
+    public ConnectionLog getConnectionLog() {
+        return connectionLog;
     }
 
     public abstract boolean isMainServerAvailable();

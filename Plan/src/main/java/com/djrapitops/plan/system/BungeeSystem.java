@@ -7,6 +7,8 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.system.database.BungeeDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.info.BukkitInfoSystem;
+import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
@@ -26,6 +28,9 @@ public class BungeeSystem extends PlanSystem {
         databaseSystem = new BungeeDBSystem();
         listenerSystem = new BungeeListenerSystem(plugin);
         taskSystem = new BungeeTaskSystem(plugin);
+
+        infoSystem = new BukkitInfoSystem();
+        serverInfo = new BungeeServerInfo(plugin);
     }
 
     public static BungeeSystem getInstance() {

@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.api.exceptions;
 
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.auth.FailReason;
 
 /**
@@ -11,7 +12,7 @@ import com.djrapitops.plan.system.webserver.auth.FailReason;
  *
  * @author Rsl1122
  */
-public class WebUserAuthException extends Exception {
+public class WebUserAuthException extends WebException {
 
     private final FailReason failReason;
 

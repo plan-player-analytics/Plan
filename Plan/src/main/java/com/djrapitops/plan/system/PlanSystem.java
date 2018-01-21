@@ -114,6 +114,7 @@ public abstract class PlanSystem implements SubSystem {
             NullCheck.check(configSystem, new IllegalStateException("Config system was not initialized."));
             NullCheck.check(databaseSystem, new IllegalStateException("Database system was not initialized."));
             NullCheck.check(infoSystem, new IllegalStateException("Info system was not initialized."));
+            NullCheck.check(serverInfo, new IllegalStateException("ServerInfo was not initialized."));
             NullCheck.check(listenerSystem, new IllegalStateException("Listener system was not initialized."));
             NullCheck.check(taskSystem, new IllegalStateException("Task system was not initialized."));
         } catch (Exception e) {

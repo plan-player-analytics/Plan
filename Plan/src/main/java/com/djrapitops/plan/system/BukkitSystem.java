@@ -8,6 +8,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
@@ -27,6 +28,8 @@ public class BukkitSystem extends PlanSystem {
         databaseSystem = new BukkitDBSystem();
         listenerSystem = new BukkitListenerSystem(plugin);
         taskSystem = new BukkitTaskSystem(plugin);
+
+        serverInfo = new BukkitServerInfo(plugin);
 
         new ShutdownHook().register();
     }

@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info.connection;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.InfoRequestWithVariables;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -45,25 +46,26 @@ public class ConnectionOut {
             }
     };
 
-    private final String address;
+    private final Server toServer;
     private final UUID serverUUID;
     private final InfoRequest infoRequest;
 
     /**
      * Constructor.
      *
-     * @param address     Full address to another Plan webserver. (http://something:port)
+     * @param toServer     Full address to another Plan webserver. (http://something:port)
      * @param serverUUID  UUID of server this outbound connection.
      * @param infoRequest Type of the action this connection wants to be performed.
      */
-    public ConnectionOut(String address, UUID serverUUID, InfoRequest infoRequest) {
-        Verify.nullCheck(address, serverUUID, infoRequest);
-        this.address = address;
+    public ConnectionOut(Server toServer, UUID serverUUID, InfoRequest infoRequest) {
+        Verify.nullCheck(toServer, serverUUID, infoRequest);
+        this.toServer = toServer;
         this.serverUUID = serverUUID;
         this.infoRequest = infoRequest;
     }
 
     public void sendRequest() throws WebException {
+        String address = toServer.getWebAddress();
         try {
             URL url = new URL(address + "/api/" + this.getClass().getSimpleName().toLowerCase());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -112,7 +114,8 @@ public class ConnectionOut {
             }
 
             int responseCode = connection.getResponseCode();
-            Log.debug("Response: " + responseCode);
+
+            ConnectionLog.logConnection(toServer, infoRequest, responseCode);
             switch (responseCode) {
                 case 200:
                     return;
@@ -130,11 +133,13 @@ public class ConnectionOut {
                     throw new WebException(url.toString() + "| Wrong response code " + responseCode);
             }
         } catch (SocketTimeoutException e) {
+            ConnectionLog.logConnection(toServer, infoRequest, 0);
             throw new ConnectionFailException("Connection timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.toLog(this.getClass().getName(), e);
             }
+            ConnectionLog.logConnection(toServer, infoRequest, -1);
             throw new ConnectionFailException("Connection failed to address: " + address, e);
         }
     }
