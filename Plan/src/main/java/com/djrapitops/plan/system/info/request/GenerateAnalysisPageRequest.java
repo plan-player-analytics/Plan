@@ -21,14 +21,18 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class GenerateAnalysisPageRequest extends InfoRequestWithVariables {
+public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implements GenerateRequest {
+
+    private final UUID serverUUID;
 
     public GenerateAnalysisPageRequest(UUID serverUUID) {
         Verify.nullCheck(serverUUID);
+        this.serverUUID = serverUUID;
         variables.put("server", serverUUID.toString());
     }
 
     private GenerateAnalysisPageRequest() {
+        serverUUID = null;
     }
 
     @Override
@@ -61,5 +65,9 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables {
 
     public static GenerateAnalysisPageRequest createHandler() {
         return new GenerateAnalysisPageRequest();
+    }
+
+    public UUID getServerUUID() {
+        return serverUUID;
     }
 }

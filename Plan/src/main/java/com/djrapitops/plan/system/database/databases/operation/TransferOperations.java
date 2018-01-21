@@ -34,5 +34,5 @@ public interface TransferOperations {
 
     Map<UUID, String> getEncodedServerHtml() throws DBException;
 
-
+    UUID getServerPlayerIsOnline(UUID playerUUID) throws DBException;
 }

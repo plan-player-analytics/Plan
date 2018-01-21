@@ -24,7 +24,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class CacheInspectPageRequest implements InfoRequest {
+public class CacheInspectPageRequest implements CacheRequest {
 
     private final UUID player;
     private final String html;

@@ -22,9 +22,11 @@ import java.util.UUID;
 /**
  * InfoRequest for caching Network page parts to ResponseCache of receiving server.
  *
+ * SHOULD NOT BE SENT TO BUKKIT
+ *
  * @author Rsl1122
  */
-public class CacheNetworkPageContentRequest implements InfoRequest {
+public class CacheNetworkPageContentRequest implements CacheRequest {
 
     private final UUID serverUUID;
     private final String html;
@@ -69,7 +71,7 @@ public class CacheNetworkPageContentRequest implements InfoRequest {
             String html = entry.getValue();
 
             NetworkPageContent response = (NetworkPageContent)
-                    ResponseCache.loadResponse(PageId.NETWORK_CONTENT.of(serverUUID), NetworkPageContent::new);
+                    ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
             response.addElement(serverName, html);
         }
 

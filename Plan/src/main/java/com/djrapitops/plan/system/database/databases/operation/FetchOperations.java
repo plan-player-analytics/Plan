@@ -77,5 +77,5 @@ public interface FetchOperations {
 
     List<String> getNicknames(UUID uuid) throws DBException;
 
-    Set<Server> getBukkitServers() throws DBException;
+    Map<UUID, Server> getBukkitServers() throws DBException;
 }

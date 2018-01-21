@@ -52,7 +52,7 @@ public class DevCommand extends SubCommand {
                 ConnectionSystem connectionSystem = ConnectionSystem.getInstance();
                 Optional<String> bungeeConnectionAddress = connectionSystem.getMainAddress();
                 String accessAddress = plugin.getWebServer().getAccessAddress();
-                sender.sendMessage((connectionSystem.isMainServerAvailable() && bungeeConnectionAddress.isPresent())
+                sender.sendMessage((connectionSystem.isServerAvailable() && bungeeConnectionAddress.isPresent())
                         ? "Bungee: " + bungeeConnectionAddress.get() : "Local: " + accessAddress);
                 break;
             default:

@@ -37,6 +37,11 @@ public class Analysis {
     private final Plan plugin;
     private int taskId = -1;
 
+    public static Optional<Long> getRefreshDate() {
+        // TODO
+        return Optional.empty();
+    }
+
     /**
      * Class Constructor.
      *

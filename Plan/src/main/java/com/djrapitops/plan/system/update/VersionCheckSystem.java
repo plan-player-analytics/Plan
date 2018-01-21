@@ -38,6 +38,10 @@ public class VersionCheckSystem implements SubSystem {
         return getInstance().newVersionAvailable;
     }
 
+    public static String getCurrentVersion() {
+        return getInstance().currentVersion;
+    }
+
     @Override
     public void enable() {
         checkForNewVersion();

@@ -234,7 +234,7 @@ public class InspectPage extends Page {
 
         addValue("playerStatus", HtmlStructure.playerStatus(online, profile.getBannedOnServers(), profile.isOp()));
 
-        if (!InfoSystem.getInstance().getConnectionSystem().isMainServerAvailable()) {
+        if (!InfoSystem.getInstance().getConnectionSystem().isServerAvailable()) {
             addValue("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
         }
 

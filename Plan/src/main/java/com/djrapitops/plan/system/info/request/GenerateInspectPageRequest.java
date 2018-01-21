@@ -25,13 +25,17 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class GenerateInspectPageRequest extends InfoRequestWithVariables {
+public class GenerateInspectPageRequest extends InfoRequestWithVariables implements GenerateRequest {
+
+    private final UUID playerUUID;
 
     private GenerateInspectPageRequest() {
+        playerUUID = null;
     }
 
     public GenerateInspectPageRequest(UUID uuid) {
         Verify.nullCheck(uuid);
+        playerUUID = uuid;
         variables.put("player", uuid.toString());
     }
 
@@ -72,5 +76,9 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables {
                 throw new WebFailException("Exception during HTML Parsing", cause);
             }
         }
+    }
+
+    public UUID getPlayerUUID() {
+        return playerUUID;
     }
 }

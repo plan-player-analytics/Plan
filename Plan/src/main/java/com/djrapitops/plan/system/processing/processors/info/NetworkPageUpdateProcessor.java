@@ -4,8 +4,10 @@
  */
 package com.djrapitops.plan.system.processing.processors.info;
 
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.processing.processors.Processor;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 /**
  * Processor for updating the network page.
@@ -20,6 +22,10 @@ public class NetworkPageUpdateProcessor extends Processor<InfoSystem> {
 
     @Override
     public void process() {
-        InfoSystem.getInstance().updateNetworkPage();
+        try {
+            InfoSystem.getInstance().updateNetworkPage();
+        } catch (WebException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 }

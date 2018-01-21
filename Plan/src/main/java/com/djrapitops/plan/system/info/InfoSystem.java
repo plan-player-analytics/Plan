@@ -56,13 +56,13 @@ public abstract class InfoSystem implements SubSystem {
     }
 
     public void sendRequest(InfoRequest infoRequest) throws WebException {
-        if (!connectionSystem.isMainServerAvailable()) {
+        if (!connectionSystem.isServerAvailable()) {
             runLocally(infoRequest);
         }
         connectionSystem.sendInfoRequest(infoRequest);
     }
 
-    protected abstract void runLocally(InfoRequest infoRequest);
+    protected abstract void runLocally(InfoRequest infoRequest) throws WebException;
 
     @Override
     public void enable() throws EnableException {
@@ -78,5 +78,5 @@ public abstract class InfoSystem implements SubSystem {
         return connectionSystem;
     }
 
-    public abstract void updateNetworkPage();
+    public abstract void updateNetworkPage() throws WebException;
 }

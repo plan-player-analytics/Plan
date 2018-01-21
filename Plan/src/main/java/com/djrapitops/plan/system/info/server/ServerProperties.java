@@ -21,6 +21,8 @@ public class ServerProperties {
     private final String ip;
     private final int maxPlayers;
 
+    private final OnlinePlayersWrapper onlinePlayers;
+
     public ServerProperties(Server server) {
         id = server.getServerId();
         ip = server.getIp();
@@ -30,6 +32,8 @@ public class ServerProperties {
         implVersion = server.getBukkitVersion();
 
         maxPlayers = server.getMaxPlayers();
+
+        onlinePlayers = () -> server.getOnlinePlayers().size();
     }
 
     /**
@@ -46,6 +50,8 @@ public class ServerProperties {
         implVersion = server.getVersion();
 
         maxPlayers = server.getConfig().getPlayerLimit();
+
+        onlinePlayers = server::getOnlineCount;
     }
 
     /**
@@ -79,5 +85,13 @@ public class ServerProperties {
 
     public String getServerId() {
         return id;
+    }
+
+    public int getOnlinePlayers() {
+        return onlinePlayers.getOnlinePlayers();
+    }
+
+    private interface OnlinePlayersWrapper {
+        int getOnlinePlayers();
     }
 }

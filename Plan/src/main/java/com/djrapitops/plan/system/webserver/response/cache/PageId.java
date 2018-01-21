@@ -30,7 +30,7 @@ public enum PageId {
     AUTH_PROMPT("PromptAuth"),
     //
     PLAYER_PLUGINS_TAB("playerPluginsTab:"),
-    NETWORK_CONTENT("networkContent:");
+    NETWORK_CONTENT("networkContent");
 
     private final String id;
 

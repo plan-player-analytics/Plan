@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.webserver.pages.parsing;
 
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
@@ -12,13 +11,16 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.systems.info.BungeeInformationManager;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.response.pages.parts.NetworkPageContent;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
-import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -35,40 +37,35 @@ import java.util.UUID;
  */
 public class NetworkPage extends Page {
 
-    private final PlanBungee plugin;
-
-    public NetworkPage(PlanBungee plugin) {
-        this.plugin = plugin;
-    }
-
     @Override
     public String toHtml() throws ParseException {
         try {
-            UUID serverUUID = plugin.getServerUuid();
+            UUID serverUUID = ServerInfo.getServerUUID();
             long now = MiscUtils.getTime();
-            Database db = plugin.getDB();
-            List<TPS> networkOnlineData = db.fetch().getNetworkOnlineData();
+            Database database = Database.getActive();
+            List<TPS> networkOnlineData = database.fetch().getNetworkOnlineData();
 
-            peakTimes(serverUUID, now, db);
+            peakTimes(serverUUID, now, database);
 
-            uniquePlayers(now, db);
+            uniquePlayers(now, database);
 
             addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
             addValue("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
-            addValue("version", plugin.getVersion());
+            addValue("version", VersionCheckSystem.getCurrentVersion());
             addValue("playersOnlineSeries", new OnlineActivityGraph(networkOnlineData).toHighChartsSeries());
             addValue("playersGraphColor", Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
-            addValue("playersOnline", plugin.getProxy().getOnlineCount());
+            addValue("playersOnline", ServerInfo.getServerProperties().getOnlinePlayers());
 
-            addValue("playersTotal", db.count().getNetworkPlayerCount());
+            addValue("playersTotal", database.count().getNetworkPlayerCount());
 
-            List<Long> registerDates = db.fetch().getRegisterDates();
+            List<Long> registerDates = database.fetch().getRegisterDates();
             addValue("playersNewDay", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.DAY.ms(), now));
             addValue("playersNewWeek", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.WEEK.ms(), now));
             addValue("playersNewMonth", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.MONTH.ms(), now));
 
-            Map<UUID, String> networkPageContents = ((BungeeInformationManager) plugin.getInfoManager()).getNetworkPageContent();
-            addValue("tabContentServers", HtmlStructure.createNetworkPageContent(networkPageContents));
+            NetworkPageContent networkPageContent = (NetworkPageContent)
+                    ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
+            addValue("tabContentServers", networkPageContent.getContents());
 
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("web/network.html"), placeHolders);
         } catch (Exception e) {

@@ -4,15 +4,15 @@
  */
 package com.djrapitops.plan.utilities.html;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
@@ -107,20 +107,21 @@ public class HtmlStructure {
         return b.toString();
     }
 
-    public static String createServerContainer(Plan plugin) {
-        ServerProperties variable = ServerInfo.getServerProperties();
-        int maxPlayers = variable.getMaxPlayers();
-        int online = plugin.getServer().getOnlinePlayers().size();
-        Optional<Long> analysisRefreshDate = ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisRefreshDate();
+    public static String createServerContainer() {
+        ServerProperties properties = ServerInfo.getServerProperties();
+        int maxPlayers = properties.getMaxPlayers();
+        int online = properties.getOnlinePlayers();
+        Optional<Long> analysisRefreshDate = Analysis.getRefreshDate();
         String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStamp).orElse("-");
 
-        String serverName = ServerInfo.getServerName();
-        String serverType = variable.getVersion();
+        Server server = ServerInfo.getServer();
+
+        String serverName = server.getName();
+        String serverType = properties.getVersion();
         String address = "../server/" + serverName;
 
-
-        Database db = plugin.getDB();
-        UUID serverUUID = plugin.getServerUuid();
+        Database db = Database.getActive();
+        UUID serverUUID = server.getUuid();
         String id = serverUUID.toString().replace("-", "");
 
         int playerCount = 0;
