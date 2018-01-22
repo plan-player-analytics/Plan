@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info.connection;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,40 @@ public class ConnectionLog {
         Map<String, Entry> requestMap = log.getOrDefault(toServer, new HashMap<>());
         requestMap.put(request.getClass().getSimpleName(), new Entry(responseCode, MiscUtils.getTime()));
         log.put(toServer, requestMap);
+    }
+
+    public static boolean isConnectionPlausible(Server server) {
+        if (server == null) {
+            return false;
+        }
+
+        Map<String, Entry> serverLog = getInstance().getLog().get(server);
+        if (Verify.isEmpty(serverLog)) {
+            return true;
+        }
+
+        return hasConnectionSucceeded(serverLog);
+    }
+
+    public static boolean hasConnectionSucceeded(Server server) {
+        if (server == null) {
+            return false;
+        }
+        Map<String, Entry> serverLog = getInstance().getLog().get(server);
+        if (Verify.isEmpty(serverLog)) {
+            return false;
+        }
+
+        return hasConnectionSucceeded(serverLog);
+    }
+
+    private static boolean hasConnectionSucceeded(Map<String, Entry> serverLog) {
+        for (Entry entry : serverLog.values()) {
+            if (entry.responseCode == 200) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static ConnectionLog getInstance() {

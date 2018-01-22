@@ -91,12 +91,13 @@ public class BukkitConnectionSystem extends ConnectionSystem {
 
     @Override
     public boolean isServerAvailable() {
-        return false;
+        return ConnectionLog.hasConnectionSucceeded(mainServer);
     }
 
     @Override
-    public Optional<String> getMainAddress() {
-        return Optional.empty();
+    public String getMainAddress() {
+        return isServerAvailable() ? mainServer.getWebAddress() : ServerInfo.getServer().getWebAddress();
+
     }
 
     @Override

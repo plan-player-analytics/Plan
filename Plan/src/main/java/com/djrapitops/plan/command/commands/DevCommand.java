@@ -50,10 +50,9 @@ public class DevCommand extends SubCommand {
                 break;
             case "web":
                 ConnectionSystem connectionSystem = ConnectionSystem.getInstance();
-                Optional<String> bungeeConnectionAddress = connectionSystem.getMainAddress();
-                String accessAddress = plugin.getWebServer().getAccessAddress();
-                sender.sendMessage((connectionSystem.isServerAvailable() && bungeeConnectionAddress.isPresent())
-                        ? "Bungee: " + bungeeConnectionAddress.get() : "Local: " + accessAddress);
+                String accessAddress = connectionSystem.getMainAddress();
+                sender.sendMessage((connectionSystem.isServerAvailable())
+                        ? "Bungee: " + accessAddress : "Local: " + accessAddress);
                 break;
             default:
                 break;

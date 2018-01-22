@@ -15,7 +15,6 @@ import com.djrapitops.plan.utilities.NullCheck;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -82,5 +81,5 @@ public abstract class ConnectionSystem implements SubSystem {
 
     public abstract boolean isServerAvailable();
 
-    public abstract Optional<String> getMainAddress();
+    public abstract String getMainAddress();
 }
