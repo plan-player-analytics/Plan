@@ -1,11 +1,11 @@
 package com.djrapitops.plan.data.plugin;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class responsible for hooking to other plugins and managing the %plugins%
@@ -33,6 +33,10 @@ public class HookHandler {
             Log.toLog(this.getClass().getName(), e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");
         }
+    }
+
+    public static HookHandler getInstance() {
+        return null;// TODO
     }
 
     /**
@@ -71,5 +75,24 @@ public class HookHandler {
      */
     public List<PluginData> getAdditionalDataSources() {
         return additionalDataSources;
+    }
+
+    public Map<PluginData, InspectContainer> getInspectContainersFor(UUID uuid) {
+        List<PluginData> plugins = getAdditionalDataSources();
+        Map<PluginData, InspectContainer> containers = new HashMap<>();
+        for (PluginData pluginData : plugins) {
+            InspectContainer inspectContainer = new InspectContainer();
+            try {
+                InspectContainer container = pluginData.getPlayerData(uuid, inspectContainer);
+                if (container != null && !container.isEmpty()) {
+                    containers.put(pluginData, container);
+                }
+            } catch (Exception e) {
+                String sourcePlugin = pluginData.getSourcePlugin();
+                Log.error("PluginData caused exception: " + sourcePlugin);
+                Log.toLog(this.getClass().getName() + " " + sourcePlugin, e);
+            }
+        }
+        return containers;
     }
 }

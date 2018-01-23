@@ -11,7 +11,7 @@ import java.util.UUID;
 
 /**
  * Operations for transferring data via Database to another server.
- *
+ * <p>
  * Receiving server has to be using the same database.
  *
  * @author Rsl1122
@@ -26,6 +26,8 @@ public interface TransferOperations {
 
     void storeNetworkPageContent(UUID serverUUID, String encodedHtml) throws DBException;
 
+    void storePlayerPluginsTab(UUID player, UUID serverUUID, String encodedHtml) throws DBException;
+
     // Get
 
     Map<UUID, String> getEncodedPlayerHtml() throws DBException;
@@ -35,4 +37,6 @@ public interface TransferOperations {
     Map<UUID, String> getEncodedServerHtml() throws DBException;
 
     UUID getServerPlayerIsOnline(UUID playerUUID) throws DBException;
+
+    Map<UUID, String> getEncodedPlayerPluginsTabs(UUID playerUUID) throws DBException;
 }

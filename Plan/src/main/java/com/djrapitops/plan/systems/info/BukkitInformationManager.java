@@ -12,9 +12,6 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.connection.WebFailException;
 import com.djrapitops.plan.command.commands.AnalyzeCommand;
 import com.djrapitops.plan.data.AnalysisData;
-import com.djrapitops.plan.data.element.InspectContainer;
-import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.processing.processors.Processor;
@@ -31,6 +28,7 @@ import com.djrapitops.plan.system.webserver.response.errors.InternalErrorRespons
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import com.djrapitops.plan.system.webserver.webapi.WebAPIManager;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalysisReadyWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalyzeWebAPI;
@@ -40,7 +38,6 @@ import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
-import com.djrapitops.plan.utilities.html.structure.InspectPluginsTabContentCreator;
 import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -162,24 +159,7 @@ public class BukkitInformationManager extends InformationManager {
                 cacheInspectPluginsTab(uuid, origin);
             }
         } else {
-            HookHandler hookHandler = plugin.getHookHandler();
-            List<PluginData> plugins = hookHandler.getAdditionalDataSources();
-            Map<PluginData, InspectContainer> containers = new HashMap<>();
-            for (PluginData pluginData : plugins) {
-                InspectContainer inspectContainer = new InspectContainer();
-                try {
-                    InspectContainer container = pluginData.getPlayerData(uuid, inspectContainer);
-                    if (container != null && !container.isEmpty()) {
-                        containers.put(pluginData, container);
-                    }
-                } catch (Exception e) {
-                    String sourcePlugin = pluginData.getSourcePlugin();
-                    Log.error("PluginData caused exception: " + sourcePlugin);
-                    Log.toLog(this.getClass().getName() + " " + sourcePlugin, e);
-                }
-            }
-
-            cacheInspectPluginsTab(uuid, InspectPluginsTabContentCreator.createContent(containers));
+            cacheInspectPluginsTab(uuid, InspectPagePluginsContent.generateForThisServer(uuid).getContents());
         }
     }
 

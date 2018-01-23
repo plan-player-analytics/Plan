@@ -4,8 +4,14 @@
  */
 package com.djrapitops.plan.system.webserver.response.pages.parts;
 
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
+import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 
 import java.util.*;
 
@@ -26,9 +32,35 @@ public class InspectPagePluginsContent extends Response {
     }
 
     public InspectPagePluginsContent(UUID serverUUID, String nav, String html) {
-        pluginsTab = new HashMap<>();
-
+        this();
         addTab(serverUUID, nav, html);
+    }
+
+    public static InspectPagePluginsContent generateForThisServer(UUID uuid) {
+        HookHandler hookHandler = HookHandler.getInstance();
+        Map<PluginData, InspectContainer> containers = hookHandler.getInspectContainersFor(uuid);
+        String serverName = ServerInfo.getServerName();
+        String actualServerName = serverName.equals("Plan") ? "Server " + ServerInfo.getServerID() : serverName;
+        if (containers.isEmpty()) {
+            new InspectPagePluginsContent(uuid, "<li><a>" + actualServerName + "(No Data)</a></li>", "");
+        }
+
+        String nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + actualServerName + "</a></li>";
+
+        StringBuilder tab = new StringBuilder();
+        tab.append("<div class=\"tab\"><div class=\"row clearfix\">");
+
+        List<PluginData> order = new ArrayList<>(containers.keySet());
+        order.sort(new PluginDataNameComparator());
+
+        for (PluginData pluginData : order) {
+            InspectContainer container = containers.get(pluginData);
+            AnalysisPluginsTabContentCreator.appendThird(pluginData, container, tab);
+        }
+
+        tab.append("</div></div>");
+
+        return new InspectPagePluginsContent(ServerInfo.getServerUUID(), nav, tab.toString());
     }
 
     public void addTab(UUID serverUUID, String nav, String html) {
