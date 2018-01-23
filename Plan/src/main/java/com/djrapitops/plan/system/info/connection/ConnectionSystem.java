@@ -64,15 +64,8 @@ public abstract class ConnectionSystem implements SubSystem {
     protected abstract Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException;
 
     public void sendInfoRequest(InfoRequest infoRequest) throws WebException {
-        try {
-            Server server = selectServerForRequest(infoRequest);
-
-            new ConnectionOut(server, ServerInfo.getServerUUID(), infoRequest).sendRequest();
-        } catch (NoServersException e) {
-            // At this point ConnectionSystem will return false on isServerAvailable
-            // -> InfoSystem will try to run request locally.
-            InfoSystem.getInstance().sendRequest(infoRequest);
-        }
+        Server server = selectServerForRequest(infoRequest);
+        new ConnectionOut(server, ServerInfo.getServerUUID(), infoRequest).sendRequest();
     }
 
     public ConnectionLog getConnectionLog() {
