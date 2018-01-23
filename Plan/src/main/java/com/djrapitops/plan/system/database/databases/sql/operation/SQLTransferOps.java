@@ -76,4 +76,27 @@ public class SQLTransferOps extends SQLOps implements TransferOperations {
             throw SQLErrorUtil.getExceptionFor(e);
         }
     }
+
+    @Override
+    public void storePlayerPluginsTab(UUID player, String encodedHtml) throws DBException {
+        try {
+            transferTable.storePlayerPluginsTab(player, encodedHtml);
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public UUID getServerPlayerIsOnline(UUID playerUUID) {
+        return null; // TODO
+    }
+
+    @Override
+    public Map<UUID, String> getEncodedPlayerPluginsTabs(UUID playerUUID) throws DBException {
+        try {
+            return transferTable.getPlayerPluginsTabs(playerUUID);
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
 }

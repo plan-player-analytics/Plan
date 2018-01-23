@@ -12,6 +12,7 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.request.CacheAnalysisPageRequest;
 import com.djrapitops.plan.system.info.request.CacheInspectPageRequest;
+import com.djrapitops.plan.system.info.request.CacheInspectPluginsTabRequest;
 import com.djrapitops.plan.system.info.request.CacheNetworkPageContentRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -146,5 +147,52 @@ public class TransferTable extends Table {
 
     public Map<UUID, String> getServerHtml() throws SQLException {
         return getHtmlPerUUIDForCacheRequest(CacheAnalysisPageRequest.class);
+    }
+
+    public void storePlayerPluginsTab(UUID player, String encodedHtml) throws SQLException {
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setLong(2, MiscUtils.getTime() + TimeAmount.MINUTE.ms());
+                statement.setString(3, CacheInspectPluginsTabRequest.class.getSimpleName().toLowerCase());
+                statement.setString(4, player.toString());
+                statement.setString(5, encodedHtml);
+            }
+        });
+    }
+
+    public Map<UUID, String> getPlayerPluginsTabs(UUID playerUUID) throws SQLException {
+        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String sql = "SELECT " +
+                columnContent + ", " +
+                serverUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnSenderID +
+                " WHERE " + columnInfoType + "= ?" +
+                " AND " + columnExpiry + "> ?" +
+                " AND " + columnExtraVariables + "=?";
+
+        return query(new QueryStatement<Map<UUID, String>>(sql, 250) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, CacheInspectPluginsTabRequest.class.getSimpleName().toLowerCase());
+                statement.setLong(2, MiscUtils.getTime());
+                statement.setString(3, playerUUID.toString());
+            }
+
+            @Override
+            public Map<UUID, String> processResults(ResultSet set) throws SQLException {
+                Map<UUID, String> htmlPerUUID = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    String html64 = set.getString(columnContent);
+
+                    htmlPerUUID.put(serverUUID, html64);
+                }
+                return htmlPerUUID;
+            }
+        });
     }
 }

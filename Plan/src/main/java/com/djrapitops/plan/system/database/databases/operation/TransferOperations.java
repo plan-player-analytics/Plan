@@ -26,7 +26,7 @@ public interface TransferOperations {
 
     void storeNetworkPageContent(UUID serverUUID, String encodedHtml) throws DBException;
 
-    void storePlayerPluginsTab(UUID player, UUID serverUUID, String encodedHtml) throws DBException;
+    void storePlayerPluginsTab(UUID player, String encodedHtml) throws DBException;
 
     // Get
 

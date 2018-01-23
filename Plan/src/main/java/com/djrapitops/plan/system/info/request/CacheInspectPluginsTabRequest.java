@@ -9,7 +9,6 @@ import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
@@ -55,7 +54,7 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
 
         String encodedHtml = Base64Util.encode(navAndHtml);
         try {
-            Database.getActive().transfer().storePlayerPluginsTab(player, ServerInfo.getServerUUID(), encodedHtml);
+            Database.getActive().transfer().storePlayerPluginsTab(player, encodedHtml);
         } catch (DBException e) {
             throw new TransferDatabaseException(e);
         }
