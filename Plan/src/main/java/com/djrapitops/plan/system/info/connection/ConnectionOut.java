@@ -67,7 +67,7 @@ public class ConnectionOut {
     public void sendRequest() throws WebException {
         String address = toServer.getWebAddress();
         try {
-            URL url = new URL(address + "/api/" + this.getClass().getSimpleName().toLowerCase());
+            URL url = new URL(address + "/info/" + this.getClass().getSimpleName().toLowerCase());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             if (address.startsWith("https")) {
                 HttpsURLConnection httpsConn = (HttpsURLConnection) connection;

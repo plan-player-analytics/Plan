@@ -89,8 +89,9 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         return (Plan) StaticHolder.getInstance(Plan.class);
     }
 
+    @Deprecated
     public static UUID getServerUUID() {
-        return getInstance().getServerUuid();
+        return ServerInfo.getServerUUID();
     }
 
     public UUID getServerUuid() {

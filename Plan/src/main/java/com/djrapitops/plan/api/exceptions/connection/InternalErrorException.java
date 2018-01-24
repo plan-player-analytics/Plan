@@ -13,4 +13,8 @@ public class InternalErrorException extends WebFailException {
     public InternalErrorException() {
         super("Internal Error occurred on receiving server");
     }
+
+    public InternalErrorException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

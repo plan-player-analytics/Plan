@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 import java.util.Map;
 
 /**
- * //TODO Class Javadoc Comment
+ * Represents a request that Plan servers can send each other.
  *
  * @author Rsl1122
  */

@@ -70,7 +70,7 @@ public class BukkitInformationManager extends InformationManager {
     @Override
     public void refreshAnalysis(UUID serverUUID) {
         if (Plan.getServerUUID().equals(serverUUID)) {
-            analysis.runAnalysis(this);
+            analysis.runAnalysis();
         } else if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(AnalyzeWebAPI.class).sendRequest(webServerAddress, serverUUID);
@@ -97,7 +97,7 @@ public class BukkitInformationManager extends InformationManager {
     @Override
     public String getAnalysisHtml() {
         if (analysisData == null) {
-            analysis.runAnalysis(this);
+            analysis.runAnalysis();
             ErrorResponse analysisRefreshPage = new ErrorResponse();
             analysisRefreshPage.setTitle("Analysis is being refreshed..");
             analysisRefreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"25\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
@@ -134,6 +134,7 @@ public class BukkitInformationManager extends InformationManager {
         cacheAnalysisHtml(getAnalysisHtml());
     }
 
+    @Deprecated
     public void cacheAnalysisHtml(String html) {
         if (usingAnotherWebServer) {
             try {

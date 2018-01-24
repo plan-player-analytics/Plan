@@ -5,12 +5,20 @@
 package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
+import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plan.utilities.analysis.Analysis;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -51,16 +59,26 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
         if (!ServerInfo.getServerUUID().equals(serverUUID)) {
             throw new BadRequestException("Requested Analysis page from wrong server.");
         }
-        String html = getHtml();
 
-        InfoSystem.getInstance().sendRequest(new CacheAnalysisPageRequest(serverUUID, html));
+        InfoSystem infoSystem = InfoSystem.getInstance();
+        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, AnalysisPageResponse.getRefreshingHtml()));
+        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, analyseAndGetHtml()));
 
         return DefaultResponses.SUCCESS.get();
     }
 
-    public String getHtml() {
-        // TODO Perform Analysis & get HTML
-        return null;
+    public String analyseAndGetHtml() throws InternalErrorException {
+        try {
+            UUID serverUUID = ServerInfo.getServerUUID();
+            Database db = Database.getActive();
+            DataCache dataCache = DataCache.getInstance();
+
+            AnalysisData analysisData = Analysis.runAnalysisFor(serverUUID, db, dataCache);
+            return new AnalysisPage(analysisData).toHtml();
+        } catch (Exception e) {
+            Log.toLog(Analysis.class, e);
+            throw new InternalErrorException("Analysis failed due to exception", e);
+        }
     }
 
     public static GenerateAnalysisPageRequest createHandler() {

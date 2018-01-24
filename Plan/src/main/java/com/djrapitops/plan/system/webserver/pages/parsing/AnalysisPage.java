@@ -4,14 +4,10 @@
  */
 package com.djrapitops.plan.system.webserver.pages.parsing;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
-import com.djrapitops.plugin.api.Check;
 
 import java.io.IOException;
 
@@ -23,11 +19,9 @@ import java.io.IOException;
 public class AnalysisPage extends Page {
 
     private final AnalysisData data;
-    private final PlanPlugin plugin;
 
-    public AnalysisPage(AnalysisData analysisData, PlanPlugin plugin) {
+    public AnalysisPage(AnalysisData analysisData) {
         this.data = analysisData;
-        this.plugin = plugin;
     }
 
     @Override
@@ -39,12 +33,5 @@ public class AnalysisPage extends Page {
         } catch (IOException e) {
             throw new ParseException(e);
         }
-    }
-
-    private int getPlayersOnline() {
-        if (Check.isBukkitAvailable()) {
-            return ((Plan) plugin).getServer().getOnlinePlayers().size();
-        }
-        return ((PlanBungee) plugin).getProxy().getOnlineCount();
     }
 }

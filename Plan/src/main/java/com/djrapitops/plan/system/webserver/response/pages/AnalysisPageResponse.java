@@ -50,4 +50,13 @@ public class AnalysisPageResponse extends Response {
         super.setHeader("HTTP/1.1 200 OK");
         super.setContent(html);
     }
+
+    public static String getRefreshingHtml() {
+        ErrorResponse refreshPage = new ErrorResponse();
+        refreshPage.setTitle("Analysis is being refreshed..");
+        refreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"25\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
+        refreshPage.replacePlaceholders();
+        return refreshPage.getContent();
+    }
+
 }

@@ -1,29 +1,26 @@
 package com.djrapitops.plan.utilities.analysis;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.plugin.BanData;
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
-import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
-import com.djrapitops.plan.systems.info.BukkitInformationManager;
-import com.djrapitops.plan.systems.info.InformationManager;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,22 +30,27 @@ import java.util.stream.Collectors;
  */
 public class Analysis {
 
-    private static ServerProfile serverProfile;
-    private final Plan plugin;
-    private int taskId = -1;
+    private static Long refreshDate;
+    private final UUID serverUUID;
+    private final Database database;
 
-    public static Optional<Long> getRefreshDate() {
-        // TODO
-        return Optional.empty();
+    private static ServerProfile serverProfile;
+    private final DataCache dataCache;
+    private boolean analysingThisServer;
+
+    private Analysis(UUID serverUUID, Database database, DataCache dataCache) {
+        this.serverUUID = serverUUID;
+        analysingThisServer = ServerInfo.getServerUUID().equals(serverUUID);
+        this.database = database;
+        this.dataCache = dataCache;
     }
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public Analysis(Plan plugin) {
-        this.plugin = plugin;
+    public static Optional<Long> getRefreshDate() {
+        return Optional.ofNullable(refreshDate);
+    }
+
+    public static AnalysisData runAnalysisFor(UUID serverUUID, Database database, DataCache dataCache) throws Exception {
+        return new Analysis(serverUUID, database, dataCache).runAnalysis();
     }
 
     /**
@@ -60,68 +62,19 @@ public class Analysis {
         return serverProfile;
     }
 
-    /**
-     * Analyzes the data of all offline players on the server.
-     *
-     * @param infoManager InformationManager of the plugin.
-     */
-    public void runAnalysis(InformationManager infoManager) {
-        if (isAnalysisBeingRun()) {
-            return;
-        }
-
+    private AnalysisData runAnalysis() throws Exception {
         ((BukkitTaskSystem) TaskSystem.getInstance()).cancelBootAnalysis();
 
         Benchmark.start("Analysis");
         log(Locale.get(Msg.ANALYSIS_START).toString());
-        // Async task for Analysis
-        RunnableFactory.createNew(new AbsRunnable("AnalysisTask") {
-            @Override
-            public void run() {
-                try {
-                    ErrorResponse analysisRefreshPage = new ErrorResponse();
-                    analysisRefreshPage.setTitle("Analysis is being refreshed..");
-                    analysisRefreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"25\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
-                    analysisRefreshPage.replacePlaceholders();
-                    ((BukkitInformationManager) plugin.getInfoManager()).cacheAnalysisHtml(analysisRefreshPage.getContent());
-                    taskId = this.getTaskId();
-                    analyze(infoManager, plugin.getDB());
-                } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + ":" + this.getTaskName(), e);
-                } finally {
-                    taskId = -1;
-                    this.cancel();
-                }
-
-            }
-        }).runTaskAsynchronously();
+        return analyze();
     }
 
-    /**
-     * Caches analyzed data of db to the provided cache analysisCache.
-     *
-     * @param infoManager InformationManager of the plugin.
-     *                    method.
-     * @param db          Database which data will be analyzed.
-     * @return Whether or not analysis was successful.
-     */
-    public boolean analyze(InformationManager infoManager, Database db) {
+    private AnalysisData analyze() throws Exception {
         log(Locale.get(Msg.ANALYSIS_FETCH).toString());
         Benchmark.start("Fetch Phase");
         Log.logDebug("Database", "Analysis Fetch");
         Log.logDebug("Analysis", "Analysis Fetch Phase");
-
-
-        return analyzeData(infoManager, db);
-    }
-
-    /**
-     * Analyze data in the db about this server.
-     *
-     * @param infoManager InformationManager of the plugin.
-     * @return Success?
-     */
-    public boolean analyzeData(InformationManager infoManager, Database db) {
         try {
             Benchmark.start("Create Empty dataset");
 
@@ -129,8 +82,10 @@ public class Analysis {
 
             Benchmark.stop("Analysis", "Create Empty dataset");
             Benchmark.start("Fetch Phase");
-            ServerProfile profile = db.fetch().getServerProfile(Plan.getServerUUID());
-            profile.addActiveSessions(new HashMap<>(SessionCache.getActiveSessions()));
+            ServerProfile profile = database.fetch().getServerProfile(serverUUID);
+            if (analysingThisServer) {
+                profile.addActiveSessions(new HashMap<>(SessionCache.getActiveSessions()));
+            }
             serverProfile = profile;
 
             updatePlayerNameCache(profile);
@@ -150,31 +105,27 @@ public class Analysis {
             log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
             Log.logDebug("Analysis", "Analyzing additional data sources (3rd party)");
             analysisData.parsePluginsSection(analyzeAdditionalPluginData(profile.getUuids()));
-            ((BukkitInformationManager) infoManager).cacheAnalysisData(analysisData);
-        } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
-            ((BukkitInformationManager) plugin.getInfoManager()).cacheAnalysisHtml(new InternalErrorResponse(e, "Analysis").getContent());
-            Log.logDebug("Analysis", "Error: " + e);
-            return false;
+            return analysisData;
         } finally {
+            refreshDate = MiscUtils.getTime();
             long time = Benchmark.stop("Analysis", "Analysis");
             Log.logDebug("Analysis");
             Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(time, ""));
             serverProfile = null;
         }
-        return true;
     }
 
     private void updatePlayerNameCache(ServerProfile profile) {
-        DataCache dataCache = DataCache.getInstance();
         for (PlayerProfile player : profile.getPlayers()) {
             dataCache.updateNames(player.getUuid(), player.getName(), null);
         }
     }
 
     private void setBannedByPlugins(ServerProfile profile) {
-        UUID serverUUID = Plan.getServerUUID();
-        List<BanData> banPlugins = plugin.getHookHandler().getAdditionalDataSources().stream()
+        if (!analysingThisServer) {
+            return;
+        }
+        List<BanData> banPlugins = HookHandler.getInstance().getAdditionalDataSources().stream()
                 .filter(p -> p instanceof BanData)
                 .map(p -> (BanData) p)
                 .collect(Collectors.toList());
@@ -200,13 +151,17 @@ public class Analysis {
     }
 
     private Map<PluginData, AnalysisContainer> analyzeAdditionalPluginData(Set<UUID> uuids) {
+        if (!analysingThisServer) {
+            return new HashMap<>();
+        }
         Map<PluginData, AnalysisContainer> containers = new HashMap<>();
 
         Benchmark.start("Analysis", "3rd party Analysis");
-        List<PluginData> sources = plugin.getHookHandler().getAdditionalDataSources();
+        List<PluginData> sources = HookHandler.getInstance().getAdditionalDataSources();
 
         Log.logDebug("Analysis", "Additional Sources: " + sources.size());
         sources.parallelStream().forEach(source -> {
+            PlanPlugin plugin = PlanPlugin.getInstance();
             StaticHolder.saveInstance(this.getClass(), plugin.getClass());
             try {
                 Benchmark.start("Analysis", "Source " + source.getSourcePlugin());
@@ -225,14 +180,5 @@ public class Analysis {
         });
         Benchmark.stop("Analysis", "3rd party Analysis");
         return containers;
-    }
-
-    /**
-     * Condition whether or not analysis is being run.
-     *
-     * @return true / false (state)
-     */
-    public boolean isAnalysisBeingRun() {
-        return taskId != -1;
     }
 }

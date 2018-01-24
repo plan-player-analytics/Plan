@@ -50,7 +50,7 @@ public class ResponseHandler extends TreePageHandler {
     }
 
     public void registerWebAPIPages() {
-        registerPage("api", new InfoRequestPageHandler());
+        registerPage("info", new InfoRequestPageHandler());
 
         // TODO Remove redundant comment after implementing replacements
 //    private void registerWebAPIs() {
@@ -93,6 +93,12 @@ public class ResponseHandler extends TreePageHandler {
             return new BadRequestResponse(e.getMessage());
         } catch (UnauthorizedServerException e) {
             return new UnauthorizedServerResponse(e.getMessage());
+        } catch (InternalErrorException e) {
+            if (e.getCause() != null) {
+                return new InternalErrorResponse(request.getTarget(), e.getCause());
+            } else {
+                return new InternalErrorResponse(request.getTarget(), e);
+            }
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             return new InternalErrorResponse(request.getTarget(), e);
