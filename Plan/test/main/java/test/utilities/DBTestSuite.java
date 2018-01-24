@@ -4,7 +4,8 @@
  */
 package test.utilities;
 
-import com.djrapitops.plan.system.database.DatabaseTest;
+import com.djrapitops.plan.system.database.MySQLTest;
+import com.djrapitops.plan.system.database.SQLiteTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -16,7 +17,7 @@ import java.io.File;
  * @author Fuzzlemann
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({DatabaseTest.class})
+@Suite.SuiteClasses({SQLiteTest.class, MySQLTest.class})
 public class DBTestSuite {
     @BeforeClass
     public static void setUp() {

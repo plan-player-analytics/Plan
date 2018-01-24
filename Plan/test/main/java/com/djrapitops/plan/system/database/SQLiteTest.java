@@ -13,9 +13,6 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
@@ -53,19 +50,18 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class})
-public class DatabaseTest {
+public class SQLiteTest {
 
     private final UUID uuid = MockUtils.getPlayerUUID();
     private final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
     private final UUID uuid2 = MockUtils.getPlayer2UUID();
     private Plan plan;
-    private Database db;
-    private Database backup;
+    private SQLDB db;
+    private SQLDB backup;
     private int rows;
 
     @Rule
     public Timeout globalTimeout = Timeout.seconds(7); // 5 seconds max per method tested
-
 
     @Before
     public void setUp() throws Exception {
@@ -76,12 +72,6 @@ public class DatabaseTest {
         db.init();
 
         when(plan.getDB()).thenReturn(db);
-        DataCache dataCache = new DataCache(plan) {
-            @Override
-            public void markFirstSession(UUID uuid) {
-            }
-        };
-//        when(plan.getDataCache()).thenReturn(dataCache);
 
         db.getServerTable().saveCurrentServerInfo(new Server(-1, TestInit.getServerUUID(), "ServerName", "", 20));
 
@@ -118,9 +108,9 @@ public class DatabaseTest {
     public void testNoExceptionWhenCommitEmpty() throws Exception {
         db.init();
 
-        db.commit(((SQLDB) db).getConnection());
-        db.commit(((SQLDB) db).getConnection());
-        db.commit(((SQLDB) db).getConnection());
+        db.commit(db.getConnection());
+        db.commit(db.getConnection());
+        db.commit(db.getConnection());
     }
 
     @Test
@@ -131,16 +121,6 @@ public class DatabaseTest {
     @Test
     public void testSQLiteGetName() {
         assertEquals("SQLite", db.getName());
-    }
-
-    @Test
-    public void testMySQLGetConfigName() {
-        assertEquals("mysql", new MySQLDB().getConfigName());
-    }
-
-    @Test
-    public void testMySQLGetName() {
-        assertEquals("MySQL", new MySQLDB().getName());
     }
 
     @Test(timeout = 3000)
@@ -173,7 +153,7 @@ public class DatabaseTest {
 
         commitTest();
 
-        Map<String, Integer> commandUse = db.getCommandUse();
+        Map<String, Integer> commandUse = db.getCommandUseTable().getCommandUse();
         assertEquals(expected, commandUse);
 
         for (int i = 0; i < 3; i++) {
@@ -187,7 +167,7 @@ public class DatabaseTest {
         expected.put("test", 3);
         expected.put("tp", 6);
 
-        commandUse = db.getCommandUse();
+        commandUse = db.getCommandUseTable().getCommandUse();
 
         assertEquals(expected, commandUse);
     }
@@ -244,19 +224,19 @@ public class DatabaseTest {
         assertEquals(expected, tpsTable.getTPSData());
     }
 
-    private void saveUserOne() {
+    private void saveUserOne() throws SQLException {
         saveUserOne(db);
     }
 
-    private void saveUserOne(Database database) {
+    private void saveUserOne(SQLDB database) throws SQLException {
         database.getUsersTable().registerUser(uuid, 123456789L, "Test");
     }
 
-    private void saveUserTwo() {
+    private void saveUserTwo() throws SQLException {
         saveUserTwo(db);
     }
 
-    private void saveUserTwo(Database database) {
+    private void saveUserTwo(SQLDB database) throws SQLException {
         database.getUsersTable().registerUser(uuid2, 123456789L, "Test");
     }
 
@@ -277,25 +257,24 @@ public class DatabaseTest {
     @Test
     public void testIPTable() throws SQLException, DBInitException {
         saveUserOne();
-        GeoInfoTable ipsTable = db.getIpsTable();
+        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
 
         String expectedIP = "1.2.3.4";
         String expectedGeoLoc = "TestLocation";
         long time = MiscUtils.getTime();
 
         GeoInfo expected = new GeoInfo(expectedIP, expectedGeoLoc, time);
-        ipsTable.saveGeoInfo(uuid, expected);
-        ipsTable.saveGeoInfo(uuid, expected);
+        geoInfoTable.saveGeoInfo(uuid, expected);
+        geoInfoTable.saveGeoInfo(uuid, expected);
         commitTest();
 
-        List<GeoInfo> getInfo = ipsTable.getGeoInfo(uuid);
+        List<GeoInfo> getInfo = geoInfoTable.getGeoInfo(uuid);
         assertEquals(1, getInfo.size());
         GeoInfo actual = getInfo.get(0);
         assertEquals(expected, actual);
         assertEquals(time, actual.getLastUsed());
 
-
-        Optional<String> result = ipsTable.getGeolocation(expectedIP);
+        Optional<String> result = geoInfoTable.getGeolocation(expectedIP);
         assertTrue(result.isPresent());
         assertEquals(expectedGeoLoc, result.get());
     }
@@ -353,11 +332,11 @@ public class DatabaseTest {
         assertEquals(new HashSet<>(worlds), new HashSet<>(saved));
     }
 
-    private void saveTwoWorlds() {
+    private void saveTwoWorlds() throws SQLException {
         saveTwoWorlds(db);
     }
 
-    private void saveTwoWorlds(Database database) {
+    private void saveTwoWorlds(SQLDB database) throws SQLException {
         database.getWorldTable().saveWorlds(worlds);
     }
 
@@ -508,14 +487,16 @@ public class DatabaseTest {
         userInfoTable.registerUserInfo(uuid, 223456789L);
         assertTrue(userInfoTable.isRegistered(uuid));
 
-        userInfoTable.updateOpStatus(uuid, true, true);
+        userInfoTable.updateOpStatus(uuid, true);
+        userInfoTable.updateBanStatus(uuid, true);
         commitTest();
 
         UserInfo userInfo = userInfoTable.getUserInfo(uuid);
         assertTrue(userInfo.isBanned());
         assertTrue(userInfo.isOpped());
 
-        userInfoTable.updateOpStatus(uuid, false, true);
+        userInfoTable.updateOpStatus(uuid, false);
+        userInfoTable.updateBanStatus(uuid, true);
         commitTest();
 
         userInfo = userInfoTable.getUserInfo(uuid);
@@ -523,13 +504,14 @@ public class DatabaseTest {
         assertTrue(userInfo.isBanned());
         assertFalse(userInfo.isOpped());
 
-        userInfoTable.updateOpStatus(uuid, false, false);
+        userInfoTable.updateOpStatus(uuid, true);
+        userInfoTable.updateBanStatus(uuid, false);
         commitTest();
 
         userInfo = userInfoTable.getUserInfo(uuid);
 
         assertFalse(userInfo.isBanned());
-        assertFalse(userInfo.isOpped());
+        assertTrue(userInfo.isOpped());
     }
 
     @Test
@@ -572,7 +554,7 @@ public class DatabaseTest {
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        GeoInfoTable ipsTable = db.getIpsTable();
+        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
         ActionsTable actionsTable = db.getActionsTable();
 
         userInfoTable.registerUserInfo(uuid, 223456789L);
@@ -585,7 +567,7 @@ public class DatabaseTest {
 
         sessionsTable.saveSession(uuid, session);
         nicknamesTable.saveUserName(uuid, "TestNick");
-        ipsTable.saveGeoInfo(uuid, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
+        geoInfoTable.saveGeoInfo(uuid, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
         actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(uuid));
@@ -595,7 +577,7 @@ public class DatabaseTest {
         assertFalse(usersTable.isRegistered(uuid));
         assertFalse(userInfoTable.isRegistered(uuid));
         assertTrue(nicknamesTable.getNicknames(uuid).isEmpty());
-        assertTrue(ipsTable.getGeoInfo(uuid).isEmpty());
+        assertTrue(geoInfoTable.getGeoInfo(uuid).isEmpty());
         assertTrue(sessionsTable.getSessions(uuid).isEmpty());
         assertTrue(actionsTable.getActions(uuid).isEmpty());
     }
@@ -606,7 +588,7 @@ public class DatabaseTest {
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        GeoInfoTable ipsTable = db.getIpsTable();
+        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
         ActionsTable actionsTable = db.getActionsTable();
         TPSTable tpsTable = db.getTpsTable();
         SecurityTable securityTable = db.getSecurityTable();
@@ -620,23 +602,23 @@ public class DatabaseTest {
         assertFalse(userInfoTable.isRegistered(uuid));
 
         assertTrue(nicknamesTable.getNicknames(uuid).isEmpty());
-        assertTrue(ipsTable.getGeoInfo(uuid).isEmpty());
+        assertTrue(geoInfoTable.getGeoInfo(uuid).isEmpty());
         assertTrue(sessionsTable.getSessions(uuid).isEmpty());
         assertTrue(actionsTable.getActions(uuid).isEmpty());
-        assertTrue(db.getCommandUse().isEmpty());
+        assertTrue(db.getCommandUseTable().getCommandUse().isEmpty());
         assertTrue(db.getWorldTable().getWorlds().isEmpty());
         assertTrue(tpsTable.getTPSData().isEmpty());
         assertTrue(db.getServerTable().getBukkitServers().isEmpty());
         assertTrue(securityTable.getUsers().isEmpty());
     }
 
-    private void saveAllData(Database database) throws SQLException {
+    private void saveAllData(SQLDB database) throws SQLException {
         System.out.println("Saving all possible data to the Database..");
         UserInfoTable userInfoTable = database.getUserInfoTable();
         UsersTable usersTable = database.getUsersTable();
         SessionsTable sessionsTable = database.getSessionsTable();
         NicknamesTable nicknamesTable = database.getNicknamesTable();
-        GeoInfoTable ipsTable = database.getIpsTable();
+        GeoInfoTable geoInfoTable = database.getGeoInfoTable();
         ActionsTable actionsTable = database.getActionsTable();
         TPSTable tpsTable = database.getTpsTable();
         SecurityTable securityTable = database.getSecurityTable();
@@ -654,7 +636,7 @@ public class DatabaseTest {
 
         sessionsTable.saveSession(uuid, session);
         nicknamesTable.saveUserName(uuid, "TestNick");
-        ipsTable.saveGeoInfo(uuid, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
+        geoInfoTable.saveGeoInfo(uuid, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
         actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(uuid));
@@ -721,7 +703,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testSessionTableNPEWhenNoPlayers() {
+    public void testSessionTableNPEWhenNoPlayers() throws SQLException {
         Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
         assertTrue(lastSeen.isEmpty());
     }
@@ -803,7 +785,7 @@ public class DatabaseTest {
         assertFalse(ipsTable.getGeoInfo(uuid).isEmpty());
         assertFalse(sessionsTable.getSessions(uuid).isEmpty());
         assertFalse(actionsTable.getActions(uuid).isEmpty());
-        assertFalse(backup.getCommandUse().isEmpty());
+        assertFalse(backup.getCommandUseTable().getCommandUse().isEmpty());
         assertFalse(backup.getWorldTable().getWorlds().isEmpty());
         assertFalse(tpsTable.getTPSData().isEmpty());
         assertFalse(backup.getServerTable().getBukkitServers().isEmpty());
@@ -873,7 +855,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testRegisterProcessorRegisterException() {
+    public void testRegisterProcessorRegisterException() throws SQLException {
         assertFalse(db.getUsersTable().isRegistered(uuid));
         assertFalse(db.getUserInfoTable().isRegistered(uuid));
         for (int i = 0; i < 200; i++) {
@@ -884,7 +866,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testWorldTableGetWorldNamesNoException() {
+    public void testWorldTableGetWorldNamesNoException() throws SQLException {
         Set<String> worldNames = db.getWorldTable().getWorldNames();
     }
 }
