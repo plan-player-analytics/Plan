@@ -1,7 +1,5 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
-import com.djrapitops.plan.system.database.databases.operation.TransferOperations;
-import com.djrapitops.plan.system.database.databases.sql.operation.SQLTransferOps;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -16,15 +14,7 @@ public class MySQLDB extends SQLDB {
 
     private BasicDataSource dataSource;
 
-    private final SQLTransferOps transferOps;
-
     public MySQLDB() {
-        transferOps = new SQLTransferOps(this);
-    }
-
-    @Override
-    public TransferOperations transfer() {
-        return transferOps;
     }
 
     /**

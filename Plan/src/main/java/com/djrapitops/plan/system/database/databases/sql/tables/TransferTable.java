@@ -69,7 +69,7 @@ public class TransferTable extends Table {
                 .column(columnSenderID, Sql.INT).notNull()
                 .column(columnExpiry, Sql.LONG).notNull().defaultValue("0")
                 .column(columnInfoType, Sql.varchar(100)).notNull()
-                .column(columnExtraVariables, Sql.varchar(255)).defaultValue("")
+                .column(columnExtraVariables, Sql.varchar(255)).defaultValue("''")
                 .column(columnContent, usingMySQL ? "MEDIUMTEXT" : Sql.varchar(1)) // SQLite does not enforce varchar limits.
                 .foreignKey(columnSenderID, serverTable.toString(), serverTable.getColumnID())
                 .toString()

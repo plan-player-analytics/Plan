@@ -8,10 +8,6 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.utilities.NullCheck;
-import com.djrapitops.plugin.api.utility.log.Log;
-
-import java.io.IOException;
-import java.net.UnknownHostException;
 
 /**
  * System that holds data caches of the plugin.
@@ -36,13 +32,9 @@ public class CacheSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        try {
-            GeolocationCache.checkDB();
-        } catch (UnknownHostException e) {
-            Log.error("Plan Requires internet access on first run to download GeoLite2 Geolocation database.");
-        } catch (IOException e) {
-            throw new EnableException("Something went wrong saving the downloaded GeoLite2 Geolocation database", e);
-        }
+        dataCache.enable();
+        geolocationCache.enable();
+
     }
 
     @Override

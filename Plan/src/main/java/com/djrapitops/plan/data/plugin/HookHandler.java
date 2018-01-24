@@ -2,8 +2,12 @@ package com.djrapitops.plan.data.plugin;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.pluginbridge.plan.Bridge;
 
 import java.util.*;
 
@@ -14,29 +18,35 @@ import java.util.*;
  * @author Rsl1122
  * @since 2.6.0
  */
-public class HookHandler {
+public class HookHandler implements SubSystem {
 
     private final List<PluginData> additionalDataSources;
-    private final PluginsConfigSection configHandler;
+    private PluginsConfigSection configHandler;
 
-    /**
-     * Class constructor, hooks to plugins.
-     *
-     * @param plugin Current instance of plan.
-     */
-    public HookHandler(Plan plugin) {
+    public HookHandler() {
         additionalDataSources = new ArrayList<>();
+    }
+
+    public static HookHandler getInstance() {
+        HookHandler hookHandler = PlanSystem.getInstance().getHookHandler();
+        NullCheck.check(hookHandler, new IllegalStateException("Plugin Hooks were not initialized."));
+        return hookHandler;
+    }
+
+    @Override
+    public void enable() {
         configHandler = new PluginsConfigSection();
         try {
-//            Bridge.hook(this);
+            Bridge.hook(this);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");
         }
     }
 
-    public static HookHandler getInstance() {
-        return null;// TODO
+    @Override
+    public void disable() {
+
     }
 
     /**

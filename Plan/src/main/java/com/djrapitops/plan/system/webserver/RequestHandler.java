@@ -16,7 +16,6 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -50,7 +49,7 @@ public class RequestHandler implements HttpHandler {
             }
             response.setResponseHeaders(responseHeaders);
             response.send(exchange);
-        } catch (IOException e) {
+        } catch (Exception e) {
             if (Settings.DEV_MODE.isTrue()) {
                 e.printStackTrace();
             }

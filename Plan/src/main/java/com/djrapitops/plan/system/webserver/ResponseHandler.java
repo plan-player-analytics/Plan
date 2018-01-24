@@ -18,6 +18,7 @@ import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.errors.UnauthorizedServerResponse;
 import com.djrapitops.plugin.api.utility.log.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -79,8 +80,10 @@ public class ResponseHandler extends TreePageHandler {
 
     public Response getResponse(Request request) {
         String targetString = request.getTarget();
-        List<String> target = Arrays.asList(targetString.split("/"));
-        target.remove(0);
+        List<String> target = new ArrayList<>(Arrays.asList(targetString.split("/")));
+        if (!target.isEmpty()) {
+            target.remove(0);
+        }
         try {
             return getResponse(request, targetString, target);
         } catch (WebUserAuthException e) {

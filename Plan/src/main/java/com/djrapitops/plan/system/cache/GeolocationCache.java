@@ -1,7 +1,10 @@
 package com.djrapitops.plan.system.cache;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.cache.Cache;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
@@ -13,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
@@ -29,14 +33,29 @@ import java.util.zip.GZIPInputStream;
  * @author Fuzzlemann
  * @since 3.5.5
  */
-public class GeolocationCache {
+public class GeolocationCache implements SubSystem {
 
     private final Map<String, String> geolocationCache;
-    private final File geolocationDB;
+    private File geolocationDB;
 
     public GeolocationCache() {
         geolocationCache = new HashMap<>();
+    }
+
+    @Override
+    public void enable() throws EnableException {
         geolocationDB = new File(FileSystem.getDataFolder(), "GeoIP.dat");
+        try {
+            GeolocationCache.checkDB();
+        } catch (UnknownHostException e) {
+            Log.error("Plan Requires internet access on first run to download GeoLite2 Geolocation database.");
+        } catch (IOException e) {
+            throw new EnableException("Something went wrong saving the downloaded GeoLite2 Geolocation database", e);
+        }
+    }
+
+    @Override
+    public void disable() {
     }
 
     private static GeolocationCache getInstance() {

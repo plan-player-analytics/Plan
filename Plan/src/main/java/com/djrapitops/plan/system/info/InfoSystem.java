@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.info;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
@@ -57,10 +58,14 @@ public abstract class InfoSystem implements SubSystem {
     }
 
     public void sendRequest(InfoRequest infoRequest) throws WebException {
-        if (!connectionSystem.isServerAvailable()) {
+        try {
+            if (!connectionSystem.isServerAvailable()) {
+                runLocally(infoRequest);
+            }
+            connectionSystem.sendInfoRequest(infoRequest);
+        } catch (NoServersException e) {
             runLocally(infoRequest);
         }
-        connectionSystem.sendInfoRequest(infoRequest);
     }
 
     protected abstract void runLocally(InfoRequest infoRequest) throws WebException;
@@ -70,6 +75,8 @@ public abstract class InfoSystem implements SubSystem {
         connectionSystem.enable();
         try {
             updateNetworkPage();
+        } catch (NoServersException e) {
+            /* Ignored */
         } catch (WebException e) {
             // TODO Exception handling
             Log.toLog(this.getClass().getName(), e);
@@ -87,7 +94,7 @@ public abstract class InfoSystem implements SubSystem {
 
     public abstract void updateNetworkPage() throws WebException;
 
-    public void requestSetUp(String address) throws WebException {
+    public void requestSetUp(String address) {
         // TODO
     }
 }

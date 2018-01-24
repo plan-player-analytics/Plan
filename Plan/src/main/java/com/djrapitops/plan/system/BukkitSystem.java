@@ -6,8 +6,11 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ShutdownHook;
+import com.djrapitops.plan.api.BukkitAPI;
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.info.BukkitInfoSystem;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
@@ -30,7 +33,11 @@ public class BukkitSystem extends PlanSystem {
         listenerSystem = new BukkitListenerSystem(plugin);
         taskSystem = new BukkitTaskSystem(plugin);
 
+        infoSystem = new BukkitInfoSystem();
         serverInfo = new BukkitServerInfo(plugin);
+
+        hookHandler = new HookHandler();
+        planAPI = new BukkitAPI(this);
 
         StaticHolder.saveInstance(ShutdownHook.class, plugin.getClass());
         new ShutdownHook().register();

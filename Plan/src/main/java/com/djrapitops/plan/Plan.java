@@ -81,7 +81,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             registerCommand("plan", new PlanCommand(this));
 
             Benchmark.start("Hook to 3rd party plugins");
-            hookHandler = new HookHandler(this);
+            hookHandler = new HookHandler();
             Benchmark.stop("Enable", "Hook to 3rd party plugins");
 
             ImporterManager.registerImporter(new OfflinePlayerImporter());

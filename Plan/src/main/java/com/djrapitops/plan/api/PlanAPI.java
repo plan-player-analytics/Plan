@@ -5,6 +5,7 @@
 package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 
 import java.util.Map;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public interface PlanAPI {
 
     static PlanAPI getInstance() {
-        throw new IllegalAccessError("Not yet implemented"); // TODO
+        return PlanSystem.getInstance().getPlanAPI();
     }
 
     void addPluginDataSource(PluginData pluginData);

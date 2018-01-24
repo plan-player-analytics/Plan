@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -21,9 +22,9 @@ import java.util.*;
  * @author Rsl1122
  * @since 4.0.0
  */
-public class DataCache extends SessionCache {
+public class DataCache extends SessionCache implements SubSystem {
 
-    private final Database db;
+    private Database db;
     private final Map<UUID, String> playerNames;
     private final Map<String, UUID> uuids;
     private final Map<UUID, String> displayNames;
@@ -35,11 +36,19 @@ public class DataCache extends SessionCache {
      */
     public DataCache(PlanSystem system) {
         super(system);
-        db = system.getDatabaseSystem().getActiveDatabase();
 
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
         uuids = new HashMap<>();
+    }
+
+    @Override
+    public void enable() {
+        db = system.getDatabaseSystem().getActiveDatabase();
+    }
+
+    @Override
+    public void disable() {
     }
 
     public static DataCache getInstance() {

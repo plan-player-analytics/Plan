@@ -1,9 +1,7 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.database.databases.operation.TransferOperations;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -35,11 +33,6 @@ public class SQLiteDB extends SQLDB {
 
     public SQLiteDB(String dbName) {
         this.dbName = dbName;
-    }
-
-    @Override
-    public TransferOperations transfer() throws UnsupportedTransferDatabaseException {
-        throw new UnsupportedTransferDatabaseException(this);
     }
 
     /**

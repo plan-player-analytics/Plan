@@ -27,6 +27,9 @@ public class BukkitInfoSystem extends InfoSystem {
 
     @Override
     protected void runLocally(InfoRequest infoRequest) throws WebException {
+        if (infoRequest instanceof CacheNetworkPageContentRequest) {
+            return;
+        }
         if (infoRequest instanceof InfoRequestWithVariables) {
             infoRequest.handleRequest(((InfoRequestWithVariables) infoRequest).getVariables());
         } else {

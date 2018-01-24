@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
@@ -44,17 +45,28 @@ public class WebServer implements SubSystem {
     private ResponseHandler responseHandler;
 
     @Override
-    public void enable() {
+    public void enable() throws EnableException {
         this.port = Settings.WEBSERVER_PORT.getNumber();
+
+        requestHandler = new RequestHandler(this);
+        responseHandler = requestHandler.getResponseHandler();
 
         PlanPlugin plugin = PlanPlugin.getInstance();
         StaticHolder.saveInstance(RequestHandler.class, plugin.getClass());
         StaticHolder.saveInstance(ResponseHandler.class, plugin.getClass());
 
-        requestHandler = new RequestHandler(this);
-        responseHandler = requestHandler.getResponseHandler();
-
         initServer();
+
+        if (!isEnabled()) {
+            if (Check.isBungeeAvailable()) {
+                throw new EnableException("WebServer did not initialize!");
+            }
+            if (Settings.WEBSERVER_DISABLED.isTrue()) {
+                Log.warn("WebServer was not initialized. (WebServer.DisableWebServer: true)");
+            } else {
+                Log.error("WebServer was not initialized successfully. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
+            }
+        }
     }
 
     @Override
@@ -65,7 +77,7 @@ public class WebServer implements SubSystem {
     /**
      * Starts up the WebServer in a new Thread Pool.
      */
-    public void initServer() {
+    private void initServer() {
         // Check if Bukkit WebServer has been disabled.
         if (!Check.isBungeeAvailable() && Settings.WEBSERVER_DISABLED.isTrue()) {
             return;
@@ -86,7 +98,6 @@ public class WebServer implements SubSystem {
                 Log.infoColor("§eUser Authorization Disabled! (Not possible over http)");
                 server = HttpServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
             }
-
             server.createContext("/", requestHandler);
 
             server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));

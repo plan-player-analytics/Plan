@@ -24,12 +24,11 @@ import java.io.IOException;
  */
 public abstract class ConfigSystem implements SubSystem {
 
-    protected final Config config;
+    protected Config config;
     protected final Locale locale;
     protected final Theme theme;
 
     public ConfigSystem() {
-        config = new Config(FileSystem.getConfigFile());
         locale = new Locale();
         theme = new Theme();
     }
@@ -50,6 +49,7 @@ public abstract class ConfigSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
+        config = new Config(FileSystem.getConfigFile());
         try {
             copyDefaults();
             config.save();

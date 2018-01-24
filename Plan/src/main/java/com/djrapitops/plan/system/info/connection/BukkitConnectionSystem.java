@@ -77,7 +77,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
             }
         }
         if (server == null) {
-            throw new NoServersException("Proper server is not available to process requests.");
+            throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());
         }
         return server;
     }

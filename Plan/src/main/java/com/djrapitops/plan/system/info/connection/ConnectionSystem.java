@@ -54,11 +54,13 @@ public abstract class ConnectionSystem implements SubSystem {
     private Map<String, InfoRequest> loadDataRequests() {
         Map<String, InfoRequest> requests = new HashMap<>();
         putRequest(requests, CacheInspectPageRequest.createHandler());
+        putRequest(requests, CacheInspectPluginsTabRequest.createHandler());
         putRequest(requests, CacheAnalysisPageRequest.createHandler());
         putRequest(requests, CacheNetworkPageContentRequest.createHandler());
 
         putRequest(requests, GenerateAnalysisPageRequest.createHandler());
         putRequest(requests, GenerateInspectPageRequest.createHandler());
+        putRequest(requests, GenerateInspectPluginsTabRequest.createHandler());
         return requests;
     }
 

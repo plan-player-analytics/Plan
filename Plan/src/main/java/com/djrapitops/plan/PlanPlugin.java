@@ -24,9 +24,9 @@ public interface PlanPlugin extends IPlugin {
         boolean bungeeAvailable = Check.isBungeeAvailable();
         if (bukkitAvailable && bungeeAvailable) {
             // TODO Test Plugin
-        } else if (bungeeAvailable) {
-            return Plan.getInstance();
         } else if (bukkitAvailable) {
+            return Plan.getInstance();
+        } else if (bungeeAvailable) {
             return PlanBungee.getInstance();
         }
         throw new IllegalAccessError("Plugin instance not available");

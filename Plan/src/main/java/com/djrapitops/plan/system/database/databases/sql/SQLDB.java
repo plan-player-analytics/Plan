@@ -48,6 +48,7 @@ public abstract class SQLDB extends Database {
     private final SQLSearchOps searchOps;
     private final SQLCountOps countOps;
     private final SQLSaveOps saveOps;
+    private final SQLTransferOps transferOps;
 
     private final boolean usingMySQL;
     private boolean open = false;
@@ -81,7 +82,7 @@ public abstract class SQLDB extends Database {
         countOps = new SQLCountOps(this);
         searchOps = new SQLSearchOps(this);
         saveOps = new SQLSaveOps(this);
-
+        transferOps = new SQLTransferOps(this);
     }
 
     /**
@@ -389,5 +390,10 @@ public abstract class SQLDB extends Database {
     @Override
     public SaveOperations save() {
         return saveOps;
+    }
+
+    @Override
+    public TransferOperations transfer() {
+        return transferOps;
     }
 }

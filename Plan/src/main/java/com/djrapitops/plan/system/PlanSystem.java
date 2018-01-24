@@ -4,7 +4,9 @@
  */
 package com.djrapitops.plan.system;
 
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
@@ -43,6 +45,9 @@ public abstract class PlanSystem implements SubSystem {
     protected ListenerSystem listenerSystem;
     protected TaskSystem taskSystem;
     protected ServerInfo serverInfo;
+
+    protected HookHandler hookHandler;
+    protected PlanAPI planAPI;
 
     public PlanSystem() {
         processingQueue = new ProcessingQueue();
@@ -117,6 +122,8 @@ public abstract class PlanSystem implements SubSystem {
             NullCheck.check(serverInfo, new IllegalStateException("ServerInfo was not initialized."));
             NullCheck.check(listenerSystem, new IllegalStateException("Listener system was not initialized."));
             NullCheck.check(taskSystem, new IllegalStateException("Task system was not initialized."));
+            NullCheck.check(hookHandler, new IllegalStateException("Plugin Hooks were not initialized."));
+            NullCheck.check(planAPI, new IllegalStateException("Plan API was not initialized."));
         } catch (Exception e) {
             throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ".", e);
         }
@@ -166,5 +173,13 @@ public abstract class PlanSystem implements SubSystem {
 
     public InfoSystem getInfoSystem() {
         return infoSystem;
+    }
+
+    public HookHandler getHookHandler() {
+        return hookHandler;
+    }
+
+    public PlanAPI getPlanAPI() {
+        return planAPI;
     }
 }
