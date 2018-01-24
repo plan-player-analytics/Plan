@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -99,7 +100,7 @@ public class DebugPageResponse extends ErrorResponse {
 
     private void appendServerInformation(StringBuilder content) {
         PlanPlugin plugin = PlanPlugin.getInstance();
-        ServerProperties variable = plugin.getVariable();
+        ServerProperties variable = ServerInfo.getServerProperties();
 
         content.append("<pre>### Server Information<br>")
                 .append("**Plan Version:** ").append(plugin.getVersion()).append("<br>");

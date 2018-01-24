@@ -10,6 +10,10 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -108,6 +112,17 @@ public class BukkitConnectionSystem extends ConnectionSystem {
                 refreshServerMap();
             }
         }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks() * 30L, TimeAmount.MINUTE.ticks() * 5L);
+
+        boolean usingBungeeWebServer = ConnectionSystem.getInstance().isServerAvailable();
+        boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+
+        if (!usingAlternativeIP && ServerInfo.getServerProperties().getIp().isEmpty()) {
+            Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
+        }
+        if (usingBungeeWebServer && usingAlternativeIP) {
+            String webServerAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+            Log.info("Make sure that this address points to the Bukkit Server: " + webServerAddress);
+        }
     }
 
     @Override

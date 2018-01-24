@@ -8,7 +8,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.settings.ServerSpecificSettings;
+import com.djrapitops.plan.system.settings.ServerSpecificSettings;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.webserver.response.Response;

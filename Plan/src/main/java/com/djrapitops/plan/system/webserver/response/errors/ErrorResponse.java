@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.webserver.response.errors;
 
-import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;

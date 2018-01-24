@@ -1,11 +1,11 @@
 package test.utilities;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.StaticHolder;
@@ -121,7 +121,7 @@ public class TestInit {
 
         ServerProperties serverProperties = new ServerProperties(mockServer);
 
-        when(planMock.getVariable()).thenReturn(serverProperties);
+//        when(planMock.getVariable()).thenReturn(serverProperties);
         BukkitServerInfo bukkitServerInfo = PowerMockito.mock(BukkitServerInfo.class);
 
 //        DataCache dataCache = new DataCache(planMock) {
@@ -134,7 +134,6 @@ public class TestInit {
 
         when(ServerInfo.getServerUUID()).thenReturn(serverUUID);
         when(planMock.getServerUuid()).thenReturn(serverUUID);
-        when(planMock.getServerInfoManager()).thenReturn(bukkitServerInfo);
         ColorScheme cs = new ColorScheme(ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK);
         when(planMock.getColorScheme()).thenReturn(cs);
         initLocale(null);

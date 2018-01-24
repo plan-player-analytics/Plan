@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plugin.StaticHolder;
 
 /**
  * Represents PlanSystem for Plan.
@@ -31,6 +32,7 @@ public class BukkitSystem extends PlanSystem {
 
         serverInfo = new BukkitServerInfo(plugin);
 
+        StaticHolder.saveInstance(ShutdownHook.class, plugin.getClass());
         new ShutdownHook().register();
     }
 

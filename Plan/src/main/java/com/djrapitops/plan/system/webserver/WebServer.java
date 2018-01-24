@@ -1,11 +1,11 @@
 package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Check;

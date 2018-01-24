@@ -5,15 +5,17 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.tasks.bukkit.*;
+import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 /**
  * TaskSystem responsible for registering tasks for Bukkit.
@@ -24,11 +26,14 @@ public class BukkitTaskSystem extends TaskSystem {
 
     private ITask bootAnalysisTask;
 
+    private final Plan plugin;
+
     public BukkitTaskSystem(Plan plugin) {
         tpsCountTimer = Check.isPaperAvailable()
                 ? new PaperTPSCountTimer(plugin)
                 : new BukkitTPSCountTimer(plugin);
 
+        this.plugin = plugin;
     }
 
     @Override
@@ -38,7 +43,6 @@ public class BukkitTaskSystem extends TaskSystem {
 
     private void registerTasks() {
         Benchmark.start("Task Registration");
-
 
         // Analysis refresh settings
         int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
@@ -54,12 +58,18 @@ public class BukkitTaskSystem extends TaskSystem {
         if (analysisRefreshTaskIsEnabled) {
             registerTask(new PeriodicAnalysisTask()).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }
+        if (Settings.ANALYSIS_EXPORT.isTrue()) {
+            RunnableFactory.createNew(new HtmlExport(plugin)).runTaskAsynchronously();
+        }
         Benchmark.stop("Enable", "Task Registration");
     }
 
     public void cancelBootAnalysis() {
         try {
-            bootAnalysisTask.cancel();
+            if (bootAnalysisTask != null) {
+                bootAnalysisTask.cancel();
+                bootAnalysisTask = null;
+            }
         } catch (Exception ignored) {
             /* Ignored */
         }

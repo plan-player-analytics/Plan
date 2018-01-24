@@ -1,11 +1,11 @@
 package com.djrapitops.plan.system.tasks.bukkit;
 
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;

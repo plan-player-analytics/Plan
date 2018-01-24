@@ -2,9 +2,9 @@ package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.comparators.WebUserComparator;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;

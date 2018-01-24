@@ -5,8 +5,8 @@
 package com.djrapitops.plan.utilities.html.graphs.pie;
 
 import com.djrapitops.plan.data.element.ActivityIndex;
-import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package com.djrapitops.plan.settings.locale;
+package com.djrapitops.plan.system.settings.locale;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.file.FileSystem;

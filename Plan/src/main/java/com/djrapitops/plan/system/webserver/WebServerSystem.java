@@ -7,8 +7,11 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
+import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 /**
  * WebServer subsystem for managing WebServer initialization.
@@ -34,10 +37,19 @@ public class WebServerSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
+        Benchmark.start("WebServer Initialization");
         webServer.initServer();
-        if (Check.isBungeeAvailable() && !webServer.isEnabled()) {
-            throw new EnableException("WebServer did not initialize!");
+        if (!webServer.isEnabled()) {
+            if (Check.isBungeeAvailable()) {
+                throw new EnableException("WebServer did not initialize!");
+            }
+            if (Settings.WEBSERVER_DISABLED.isTrue()) {
+                Log.warn("WebServer was not initialized. (WebServer.DisableWebServer: true)");
+            } else {
+                Log.error("WebServer was not initialized successfully. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
+            }
         }
+        Benchmark.stop("Enable", "WebServer Initialization");
         ResponseHandler responseHandler = webServer.getResponseHandler();
         responseHandler.registerWebAPIPages();
         responseHandler.registerDefaultPages();

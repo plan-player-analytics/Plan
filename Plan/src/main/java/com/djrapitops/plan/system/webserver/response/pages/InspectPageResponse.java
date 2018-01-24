@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
-import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;

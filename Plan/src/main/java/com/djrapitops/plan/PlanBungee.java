@@ -5,10 +5,6 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanBungeeCommand;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
-import com.djrapitops.plan.settings.theme.PlanColorScheme;
-import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -17,6 +13,10 @@ import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServer;
@@ -147,7 +147,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         return PlanColorScheme.create();
     }
 
-    @Override
     public ServerProperties getVariable() {
         return variableHolder;
     }

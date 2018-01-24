@@ -5,19 +5,13 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.webserver.webapi.WebAPI;
-import com.djrapitops.plan.system.webserver.webapi.bukkit.InspectWebAPI;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Command used for testing functions that are too difficult to unit test.
@@ -44,9 +38,7 @@ public class DevCommand extends SubCommand {
                 if (!Condition.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
                     break;
                 }
-                if (!webapi(args[1] + "connection", args.length >= 3)) {
-                    sender.sendMessage("[Plan] No such API / Exception occurred.");
-                }
+                sender.sendMessage("[Plan] No implementation.");
                 break;
             case "web":
                 ConnectionSystem connectionSystem = ConnectionSystem.getInstance();
@@ -58,30 +50,5 @@ public class DevCommand extends SubCommand {
                 break;
         }
         return true;
-    }
-
-    private boolean webapi(String method, boolean connectToBungee) {
-        WebAPI api = plugin.getWebServer().getWebAPI().getAPI(method);
-        if (api == null) {
-            return false;
-        }
-        try {
-            String address = plugin.getWebServer().getAccessAddress();
-            if (connectToBungee) {
-                Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
-                if (bungeeConnectionAddress.isPresent()) {
-                    address = bungeeConnectionAddress.get();
-                }
-            }
-            if (api instanceof InspectWebAPI) {
-                ((InspectWebAPI) api).sendRequest(address, UUID.randomUUID());
-            } else {
-                api.sendRequest(address);
-            }
-            return true;
-        } catch (WebException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.webserver.response;
 
-import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.Theme;
 
 /**
  * @author Rsl1122

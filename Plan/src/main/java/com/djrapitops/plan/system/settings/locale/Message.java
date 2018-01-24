@@ -1,4 +1,4 @@
-package com.djrapitops.plan.settings.locale;
+package com.djrapitops.plan.system.settings.locale;
 
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.lang3.text.StrSubstitutor;

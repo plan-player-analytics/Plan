@@ -2,9 +2,9 @@ package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.PlayerKill;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.comparators.KillDataComparator;
 import com.djrapitops.plan.utilities.html.Html;

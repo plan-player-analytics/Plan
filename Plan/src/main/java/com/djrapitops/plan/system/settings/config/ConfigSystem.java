@@ -5,11 +5,12 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -52,6 +53,7 @@ public abstract class ConfigSystem implements SubSystem {
         try {
             copyDefaults();
             config.save();
+            Log.setDebugMode(Settings.DEBUG.toString());
         } catch (IOException e) {
             throw new EnableException("Failed to save default config.", e);
         }

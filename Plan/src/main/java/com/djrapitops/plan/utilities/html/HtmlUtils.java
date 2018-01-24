@@ -1,6 +1,6 @@
 package com.djrapitops.plan.utilities.html;
 
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -43,7 +43,7 @@ public class HtmlUtils {
         if (Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
             ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
         } else {
-            ip = PlanPlugin.getInstance().getVariable().getIp() + ":" + port;
+            ip = ServerInfo.getServerProperties().getIp() + ":" + port;
         }
         return ip;
     }
