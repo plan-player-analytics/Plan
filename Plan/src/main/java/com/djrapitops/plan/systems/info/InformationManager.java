@@ -4,14 +4,8 @@
  */
 package com.djrapitops.plan.systems.info;
 
-import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.webserver.response.cache.PageId;
-import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plugin.command.ISender;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -33,32 +27,11 @@ public abstract class InformationManager {
 
     public abstract boolean attemptConnection();
 
-    public abstract void cachePlayer(UUID uuid);
-
     public String getLinkTo(String target) {
         return getWebServerAddress() + target;
     }
 
     public abstract void refreshAnalysis(UUID serverUUID);
-
-    public abstract DataCache getDataCache();
-
-    public SessionCache getSessionCache() {
-        return getDataCache();
-    }
-
-    public boolean isCached(UUID uuid) {
-        return ResponseCache.isCached(PageId.PLAYER.of(uuid));
-    }
-
-    public abstract String getPlayerHtml(UUID uuid) throws ParseException;
-
-    /**
-     * Used for /server on Bukkit and /network on Bungee
-     *
-     * @return Is page cached.
-     */
-    public abstract boolean isAnalysisCached(UUID serverUUID);
 
     /**
      * Used for /server on Bukkit and /network on Bungee
@@ -73,8 +46,6 @@ public abstract class InformationManager {
         analysisNotification.put(serverUUID, notify);
     }
 
-    public abstract String[] getPluginsTabContent(UUID uuid);
-
     public boolean isUsingAnotherWebServer() {
         return usingAnotherWebServer;
     }
@@ -87,7 +58,4 @@ public abstract class InformationManager {
 
     public abstract void analysisReady(UUID serverUUID);
 
-    public abstract void updateNetworkPageContent();
-
-    public abstract TreeMap<String, List<String>> getErrors() throws IOException;
 }

@@ -1,14 +1,11 @@
 package com.djrapitops.plan.utilities.html;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.system.settings.Settings;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -51,18 +48,6 @@ public class HtmlUtils {
         return ip;
     }
 
-    public static String getProtocol() {
-        return PlanPlugin.getInstance().getWebServer().getProtocol();
-    }
-
-    public static String getRelativeInspectUrl(String playerName) {
-        return "../player/" + playerName.replace(" ", "%20").replace(".", "%2E");
-    }
-
-    public static String getRelativeInspectUrl(UUID uuid) {
-        return PlanAPI.getInstance().getPlayerInspectPageLink(Plan.getInstance().getDataCache().getName(uuid));
-    }
-
     /**
      * Attempts to remove XSS components.
      *
@@ -94,18 +79,5 @@ public class HtmlUtils {
         }
 
         return string.replace("§r", "").replace("§l", "").replace("§m", "").replace("§n", "").replace("§o", "").replace("§k", "");
-    }
-
-    public static String separateWithQuotes(String... strings) {
-        StringBuilder build = new StringBuilder();
-        for (int i = 0; i < strings.length; i++) {
-            build.append("\"");
-            build.append(strings[i]);
-            build.append("\"");
-            if (i < strings.length - 1) {
-                build.append(", ");
-            }
-        }
-        return build.toString();
     }
 }

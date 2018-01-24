@@ -82,7 +82,7 @@ public class SessionCache {
         }
     }
 
-    public void refreshActiveSessionsState() {
+    public static void refreshActiveSessionsState() {
         for (Session session : activeSessions.values()) {
             session.getWorldTimes().updateState(MiscUtils.getTime());
         }
@@ -94,7 +94,7 @@ public class SessionCache {
      * @param uuid UUID of the player.
      * @return Session or null if not cached.
      */
-    public Optional<Session> getCachedSession(UUID uuid) {
+    public static Optional<Session> getCachedSession(UUID uuid) {
         Session session = activeSessions.get(uuid);
         if (session != null) {
             return Optional.of(session);

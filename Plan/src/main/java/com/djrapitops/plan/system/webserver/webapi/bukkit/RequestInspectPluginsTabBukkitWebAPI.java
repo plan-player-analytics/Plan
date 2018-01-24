@@ -8,7 +8,6 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
-import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plugin.api.Check;
 
 import java.util.Map;
@@ -25,6 +24,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class RequestInspectPluginsTabBukkitWebAPI extends WebAPI {
 
     @Override
@@ -39,8 +39,7 @@ public class RequestInspectPluginsTabBukkitWebAPI extends WebAPI {
         }
         UUID uuid = UUID.fromString(uuidS);
 
-        ((BukkitInformationManager) plugin.getInfoManager()).cacheInspectPluginsTab(uuid, this.getClass());
-        return success();
+        return fail("Deprecated");
     }
 
     @Override

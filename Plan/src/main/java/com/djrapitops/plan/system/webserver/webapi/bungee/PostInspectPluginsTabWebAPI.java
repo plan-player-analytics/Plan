@@ -8,7 +8,6 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
-import com.djrapitops.plan.systems.info.BungeeInformationManager;
 
 import java.util.Map;
 import java.util.UUID;
@@ -23,6 +22,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class PostInspectPluginsTabWebAPI extends WebAPI {
     @Override
     public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
@@ -43,9 +43,7 @@ public class PostInspectPluginsTabWebAPI extends WebAPI {
         }
         String[] content = new String[]{nav, html};
 
-        ((BungeeInformationManager) plugin.getInfoManager()).cachePluginsTabContent(serverUUID, uuid, content);
-
-        return success();
+        return fail("Deprecated");
     }
 
     @Override

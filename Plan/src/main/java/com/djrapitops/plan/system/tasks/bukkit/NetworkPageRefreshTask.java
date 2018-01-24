@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.tasks.bukkit;
 
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 public class NetworkPageRefreshTask extends AbsRunnable {
@@ -11,6 +12,6 @@ public class NetworkPageRefreshTask extends AbsRunnable {
 
     @Override
     public void run() {
-        PlanPlugin.getInstance().getInfoManager().updateNetworkPageContent();
+        WebExceptionLogger.logIfOccurs(this.getClass(), () -> InfoSystem.getInstance().updateNetworkPage());
     }
 }

@@ -4,10 +4,10 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
+import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -30,14 +30,13 @@ public class FirstLeaveProcessor extends PlayerProcessor {
 
     @Override
     public void process() {
-        Plan plugin = Plan.getInstance();
         UUID uuid = getUUID();
         try {
             Database.getActive().save().action(uuid, leaveAction);
         } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
-            plugin.getDataCache().endFirstSessionActionTracking(uuid);
+            SessionCache.getInstance().endFirstSessionActionTracking(uuid);
         }
     }
 }

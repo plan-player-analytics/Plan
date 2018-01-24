@@ -4,12 +4,12 @@
  */
 package com.djrapitops.plan.utilities.html.structure;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
@@ -70,7 +70,7 @@ public class SessionTabStructureCreator {
 
             int playerKillCount = session.getPlayerKills().size();
 
-            String name = Plan.getInstance().getDataCache().getName(uuid);
+            String name = DataCache.getInstance().getName(uuid);
             String link = PlanAPI.getInstance().getPlayerInspectPageLink(name);
 
             String dotSeparated2 = appendWorldPerc

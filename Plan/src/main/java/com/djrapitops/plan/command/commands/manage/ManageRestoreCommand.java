@@ -93,9 +93,6 @@ public class ManageRestoreCommand extends SubCommand {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
                     ManageUtils.clearAndCopy(database, backupDB);
-                    if (database.getConfigName().equals(plugin.getDB().getConfigName())) {
-//                            plugin.getDataCache().getCommandUseFromDb();
-                    }
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {

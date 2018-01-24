@@ -1,11 +1,16 @@
 package main.java.com.djrapitops.plan.api;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.systems.info.BukkitInformationManager;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -117,7 +122,7 @@ public class API {
      */
     @Deprecated
     public boolean isPlayerHtmlCached(UUID uuid) {
-        return plugin.getInfoManager().isCached(uuid);
+        return ResponseCache.isCached(PageId.PLAYER.of(uuid));
     }
 
     /**
@@ -142,7 +147,11 @@ public class API {
      */
     @Deprecated
     public void cachePlayerHtml(UUID uuid) {
-        plugin.getInfoManager().cachePlayer(uuid);
+        try {
+            InfoSystem.getInstance().generateAndCachePlayerPage(uuid);
+        } catch (WebException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     /**
@@ -154,8 +163,8 @@ public class API {
      * @return player.html with all placeholders replaced.
      */
     @Deprecated
-    public String getPlayerHtmlAsString(UUID uuid) throws ParseException {
-        return plugin.getInfoManager().getPlayerHtml(uuid);
+    public String getPlayerHtmlAsString(UUID uuid) {
+        return ResponseCache.loadResponse(PageId.PLAYER.of(uuid), DefaultResponses.NOT_FOUND::get).getContent();
     }
 
     /**
@@ -165,7 +174,7 @@ public class API {
      */
     @Deprecated
     public boolean isAnalysisCached() {
-        return plugin.getInfoManager().isAnalysisCached(Plan.getServerUUID());
+        return ResponseCache.isCached(PageId.SERVER.of(ServerInfo.getServerUUID()));
     }
 
     /**

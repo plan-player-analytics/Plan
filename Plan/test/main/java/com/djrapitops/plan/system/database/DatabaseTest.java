@@ -81,7 +81,7 @@ public class DatabaseTest {
             public void markFirstSession(UUID uuid) {
             }
         };
-        when(plan.getDataCache()).thenReturn(dataCache);
+//        when(plan.getDataCache()).thenReturn(dataCache);
 
         db.getServerTable().saveCurrentServerInfo(new Server(-1, TestInit.getServerUUID(), "ServerName", "", 20));
 

@@ -13,37 +13,29 @@ import com.djrapitops.plan.api.exceptions.connection.WebFailException;
 import com.djrapitops.plan.command.commands.AnalyzeCommand;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
-import com.djrapitops.plan.system.webserver.pages.parsing.InspectPage;
-import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
-import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
-import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import com.djrapitops.plan.system.webserver.webapi.WebAPIManager;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalysisReadyWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalyzeWebAPI;
-import com.djrapitops.plan.system.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
-import com.djrapitops.plan.system.webserver.webapi.bungee.*;
+import com.djrapitops.plan.system.webserver.webapi.bungee.PostHtmlWebAPI;
+import com.djrapitops.plan.system.webserver.webapi.bungee.PostOriginalBukkitSettingsWebAPI;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
-import com.djrapitops.plan.utilities.html.HtmlStructure;
-import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Manages the Information going to the ResponseCache.
@@ -56,18 +48,12 @@ import java.util.*;
 public class BukkitInformationManager extends InformationManager {
 
     private final Plan plugin;
-    private final DataCache dataCache;
     private final Analysis analysis;
-    private final Map<UUID, String[]> pluginsTabContents;
     private AnalysisData analysisData;
-    private String analysisPluginsTab;
-    private Long refreshDate;
 
     public BukkitInformationManager(Plan plugin) {
         this.plugin = plugin;
-        dataCache = new DataCache(plugin);
         analysis = new Analysis(plugin);
-        pluginsTabContents = new HashMap<>();
         usingAnotherWebServer = false;
     }
 
@@ -84,7 +70,6 @@ public class BukkitInformationManager extends InformationManager {
     @Override
     public void refreshAnalysis(UUID serverUUID) {
         if (Plan.getServerUUID().equals(serverUUID)) {
-            plugin.getDataCache().cacheSavedNames();
             analysis.runAnalysis(this);
         } else if (usingAnotherWebServer) {
             try {
@@ -97,128 +82,6 @@ public class BukkitInformationManager extends InformationManager {
             }
         }
 
-    }
-
-    @Override
-    public void cachePlayer(UUID uuid) {
-        if (uuid == null) {
-            Log.debug("BukkitInformationManager.cachePlayer: UUID was null");
-            return;
-        }
-        if (usingAnotherWebServer) {
-            try {
-                getWebAPI().getAPI(PostHtmlWebAPI.class).sendInspectHtml(webServerAddress, uuid, getPlayerHtml(uuid));
-            } catch (WebFailException e) {
-                Log.error("Failed to request Inspect from Bungee.");
-            } catch (WebException e) {
-                attemptConnection();
-                cachePlayer(uuid);
-            } catch (ParseException e) {
-                if (!(e.getCause() instanceof IllegalStateException)) {
-                    Log.toLog(this.getClass().getName(), e);
-                }
-            }
-        } else {
-            ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> {
-                try {
-                    return new InspectPageResponse(this, uuid);
-                } catch (ParseException e) {
-                    if (e.getCause() instanceof IllegalStateException) {
-                        return new NotFoundResponse(
-                                "Player just registered, so the data was not yet in the database. " +
-                                        "Please wait until they log off or use /plan inspect <player>"
-                        );
-                    }
-                    return new InternalErrorResponse(e, this.getClass().getName());
-                }
-            });
-            if (Settings.ANALYSIS_EXPORT.isTrue()) {
-                HtmlExport.exportPlayer(uuid);
-            }
-        }
-        new Processor<UUID>(uuid) {
-            @Override
-            public void process() {
-                cacheInspectPluginsTab(object);
-            }
-        }.queue();
-    }
-
-    public void cacheInspectPluginsTab(UUID uuid) {
-        cacheInspectPluginsTab(uuid, this.getClass());
-    }
-
-    public void cacheInspectPluginsTab(UUID uuid, Class origin) {
-        if (usingAnotherWebServer && !origin.equals(RequestInspectPluginsTabBukkitWebAPI.class)) {
-            try {
-                getWebAPI().getAPI(RequestPluginsTabWebAPI.class).sendRequest(webServerAddress, uuid);
-            } catch (WebFailException e) {
-                Log.error("Failed send Player Plugins tab contents to BungeeCord.");
-            } catch (WebException e) {
-                attemptConnection();
-                cacheInspectPluginsTab(uuid, origin);
-            }
-        } else {
-            cacheInspectPluginsTab(uuid, InspectPagePluginsContent.generateForThisServer(uuid).getContents());
-        }
-    }
-
-    public void cacheInspectPluginsTab(UUID uuid, String[] contents) {
-        if (usingAnotherWebServer) {
-            try {
-                getWebAPI().getAPI(PostInspectPluginsTabWebAPI.class).sendPluginsTab(webServerAddress, uuid, contents);
-            } catch (WebFailException e) {
-                Log.error("Failed send Player HTML to BungeeCord.");
-            } catch (WebException e) {
-                attemptConnection();
-                cacheInspectPluginsTab(uuid, contents);
-            }
-        } else {
-            pluginsTabContents.put(uuid, contents);
-            Response inspectResponse = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
-            if (inspectResponse != null && inspectResponse instanceof InspectPageResponse) {
-                ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(contents);
-            }
-        }
-    }
-
-    @Override
-    public String[] getPluginsTabContent(UUID uuid) {
-        String[] calculating = HtmlStructure.createInspectPageTabContentCalculating();
-        return pluginsTabContents.getOrDefault(uuid, calculating);
-    }
-
-    @Override
-    public boolean isCached(UUID uuid) {
-        if (usingAnotherWebServer) {
-            try {
-                return getWebAPI().getAPI(IsCachedWebAPI.class).isInspectCached(webServerAddress, uuid);
-            } catch (WebFailException e) {
-                Log.error("Failed check Bungee Player Cache status.");
-            } catch (WebException e) {
-                attemptConnection();
-                return isCached(uuid);
-            }
-        }
-        return super.isCached(uuid);
-    }
-
-    @Override
-    public boolean isAnalysisCached(UUID serverUUID) {
-        if (Plan.getServerUUID().equals(serverUUID)) {
-            return analysisData != null;
-        }
-        if (usingAnotherWebServer) {
-            try {
-                return getWebAPI().getAPI(IsCachedWebAPI.class).isAnalysisCached(webServerAddress, serverUUID);
-            } catch (WebFailException e) {
-                Log.error("Failed check Bungee Analysis Cache status.");
-            } catch (WebException e) {
-                attemptConnection();
-                return isAnalysisCached(serverUUID);
-            }
-        }
-        return ResponseCache.isCached(PageId.SERVER.of(serverUUID));
     }
 
     private WebAPIManager getWebAPI() {
@@ -248,16 +111,6 @@ public class BukkitInformationManager extends InformationManager {
         }
     }
 
-    @Override
-    public String getPlayerHtml(UUID uuid) throws ParseException {
-        return Theme.replaceColors(new InspectPage(uuid, plugin).toHtml());
-    }
-
-    @Override
-    public DataCache getDataCache() {
-        return dataCache;
-    }
-
     public void cacheAnalysisData(AnalysisData analysisData) {
         this.analysisData = analysisData;
         refreshDate = MiscUtils.getTime();
@@ -266,7 +119,7 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(AnalysisReadyWebAPI.class).sendRequest(webServerAddress, serverUUID);
-                updateNetworkPageContent();
+//                updateNetworkPageContent();
                 return;
             } catch (WebFailException ignored) {
                 Log.error("Failed to notify Bungee of Analysis Completion.");
@@ -302,10 +155,6 @@ public class BukkitInformationManager extends InformationManager {
 
     public AnalysisData getAnalysisData() {
         return analysisData;
-    }
-
-    public Optional<Long> getAnalysisRefreshDate() {
-        return refreshDate != null ? Optional.of(refreshDate) : Optional.empty();
     }
 
     @Override
@@ -358,22 +207,4 @@ public class BukkitInformationManager extends InformationManager {
         analysisNotification.getOrDefault(serverUUID, new HashSet<>()).clear();
     }
 
-    @Override
-    public void updateNetworkPageContent() {
-        if (usingAnotherWebServer) {
-            try {
-                getWebAPI().getAPI(PostNetworkPageContentWebAPI.class).sendNetworkContent(webServerAddress, HtmlStructure.createServerContainer(plugin));
-            } catch (WebFailException ignored) {
-                /* Do nothing */
-            } catch (WebException ignored) {
-                attemptConnection();
-                updateNetworkPageContent();
-            }
-        }
-    }
-
-    @Override
-    public TreeMap<String, List<String>> getErrors() throws IOException {
-        return ErrorLogger.getLoggedErrors(plugin);
-    }
 }

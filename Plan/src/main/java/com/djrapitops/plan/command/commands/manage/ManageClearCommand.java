@@ -7,7 +7,6 @@ import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -88,11 +87,10 @@ public class ManageClearCommand extends SubCommand {
 
                     database.remove().everything();
 
-                    DataCache dataCache = plugin.getDataCache();
                     long now = MiscUtils.getTime();
                     SessionCache.clear();
                     plugin.getServer().getOnlinePlayers().forEach(
-                            player -> dataCache.cacheSession(player.getUniqueId(),
+                            player -> SessionCache.getInstance().cacheSession(player.getUniqueId(),
                                     new Session(now, player.getWorld().getName(), player.getGameMode().name()))
                     );
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());

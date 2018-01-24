@@ -1,8 +1,7 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
@@ -30,19 +29,6 @@ import java.util.UUID;
 public class PlayerOnlineListener implements Listener {
 
     private static boolean countKicks = true;
-
-    private final Plan plugin;
-    private final DataCache cache;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public PlayerOnlineListener(Plan plugin) {
-        this.plugin = plugin;
-        cache = plugin.getDataCache();
-    }
 
     public static void setCountKicks(boolean value) {
         countKicks = value;
@@ -108,7 +94,7 @@ public class PlayerOnlineListener implements Listener {
 
             int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
 
-            cache.cacheSession(uuid, Session.start(time, world, gm));
+            SessionCache.getInstance().cacheSession(uuid, Session.start(time, world, gm));
 
             Processor.queueMany(
                     new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
@@ -141,8 +127,9 @@ public class PlayerOnlineListener implements Listener {
                     new NetworkPageUpdateProcessor()
             );
 
-            if (cache.isFirstSession(uuid)) {
-                int messagesSent = plugin.getDataCache().getFirstSessionMsgCount(uuid);
+            SessionCache sessionCache = SessionCache.getInstance();
+            if (sessionCache.isFirstSession(uuid)) {
+                int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
                 new FirstLeaveProcessor(uuid, time, messagesSent).queue();
             }
         } catch (Exception e) {

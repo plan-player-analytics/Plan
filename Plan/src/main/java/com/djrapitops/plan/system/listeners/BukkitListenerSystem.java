@@ -15,10 +15,10 @@ public class BukkitListenerSystem extends ListenerSystem {
     @Override
     protected void registerListeners() {
         plugin.registerListener(
-                new PlayerOnlineListener(plugin),
-                new ChatListener(plugin),
+                new PlayerOnlineListener(),
+                new ChatListener(),
                 new GamemodeChangeListener(plugin),
-                new WorldChangeListener(plugin),
+                new WorldChangeListener(),
                 new CommandPreprocessListener(plugin),
                 new DeathEventListener(plugin)
         );

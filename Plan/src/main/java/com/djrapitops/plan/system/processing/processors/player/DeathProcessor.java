@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.SessionCache;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -26,7 +26,7 @@ public class DeathProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        Optional<Session> cachedSession = Plan.getInstance().getDataCache().getCachedSession(uuid);
+        Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         cachedSession.ifPresent(Session::died);
     }
 }

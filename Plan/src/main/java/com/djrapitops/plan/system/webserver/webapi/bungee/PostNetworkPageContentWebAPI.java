@@ -4,12 +4,10 @@
  */
 package com.djrapitops.plan.system.webserver.webapi.bungee;
 
-
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
-import com.djrapitops.plan.systems.info.BungeeInformationManager;
 import com.djrapitops.plugin.api.Check;
 
 import java.util.Map;
@@ -20,6 +18,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class PostNetworkPageContentWebAPI extends WebAPI {
     @Override
     public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
@@ -33,8 +32,7 @@ public class PostNetworkPageContentWebAPI extends WebAPI {
             return badRequest("html not present");
         }
 
-        ((BungeeInformationManager) plugin.getInfoManager()).cacheNetworkPageContent(serverUUID, html);
-        return success();
+        return fail("Deprecated");
     }
 
     @Override

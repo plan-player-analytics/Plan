@@ -15,6 +15,7 @@ import java.util.UUID;
 /**
  * @author Rsl1122
  */
+@Deprecated
 public class InspectWebAPI extends WebAPI {
     @Override
     public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
@@ -24,9 +25,7 @@ public class InspectWebAPI extends WebAPI {
         }
         UUID uuid = UUID.fromString(uuidS);
 
-        plugin.getInfoManager().cachePlayer(uuid);
-
-        return success();
+        return fail("WebAPI deprecated");
     }
 
     @Override

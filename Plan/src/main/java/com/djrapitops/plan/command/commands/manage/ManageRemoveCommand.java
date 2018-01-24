@@ -5,7 +5,6 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -95,11 +94,10 @@ public class ManageRemoveCommand extends SubCommand {
 
                     database.remove().player(uuid);
 
-                    DataCache dataCache = plugin.getDataCache();
                     Player player = getPlayer(uuid);
                     if (player != null) {
                         SessionCache.getActiveSessions().remove(uuid);
-                        dataCache.cacheSession(uuid, new Session(MiscUtils.getTime(), player.getWorld().getName(), player.getGameMode().name()));
+                        SessionCache.getInstance().cacheSession(uuid, new Session(MiscUtils.getTime(), player.getWorld().getName(), player.getGameMode().name()));
                     }
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, plugin.getDB().getConfigName()));
                 } catch (DBException e) {

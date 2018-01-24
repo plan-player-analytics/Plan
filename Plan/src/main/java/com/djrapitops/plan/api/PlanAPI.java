@@ -23,6 +23,8 @@ public interface PlanAPI {
 
     void addPluginDataSource(PluginData pluginData);
 
+    String getPlayerInspectPageLink(UUID uuid);
+
     String getPlayerInspectPageLink(String playerName);
 
     String getPlayerName(UUID uuid);

@@ -130,11 +130,10 @@ public class Analysis {
             Benchmark.stop("Analysis", "Create Empty dataset");
             Benchmark.start("Fetch Phase");
             ServerProfile profile = db.fetch().getServerProfile(Plan.getServerUUID());
-            DataCache dataCache = plugin.getDataCache();
             profile.addActiveSessions(new HashMap<>(SessionCache.getActiveSessions()));
             serverProfile = profile;
 
-            updatePlayerNameCache(profile, dataCache);
+            updatePlayerNameCache(profile);
 
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
             setBannedByPlugins(profile);
@@ -166,7 +165,8 @@ public class Analysis {
         return true;
     }
 
-    private void updatePlayerNameCache(ServerProfile profile, DataCache dataCache) {
+    private void updatePlayerNameCache(ServerProfile profile) {
+        DataCache dataCache = DataCache.getInstance();
         for (PlayerProfile player : profile.getPlayers()) {
             dataCache.updateNames(player.getUuid(), player.getName(), null);
         }

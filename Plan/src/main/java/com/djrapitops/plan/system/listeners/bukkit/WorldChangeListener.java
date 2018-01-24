@@ -1,8 +1,8 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.settings.WorldAliasSettings;
+import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.entity.Player;
@@ -15,11 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class WorldChangeListener implements Listener {
-    private final Plan plugin;
-
-    public WorldChangeListener(Plan plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(PlayerChangedWorldEvent event) {
@@ -33,7 +28,7 @@ public class WorldChangeListener implements Listener {
 
             new WorldAliasSettings().addWorld(worldName);
 
-            Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
+            Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
             cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);

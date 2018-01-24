@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.system.cache.SessionCache;
 
 import java.util.UUID;
 
@@ -25,6 +25,6 @@ public class EndSessionProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        Plan.getInstance().getDataCache().endSession(uuid, time);
+        SessionCache.getInstance().endSession(uuid, time);
     }
 }

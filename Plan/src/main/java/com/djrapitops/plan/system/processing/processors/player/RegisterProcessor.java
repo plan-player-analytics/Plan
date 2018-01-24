@@ -4,10 +4,10 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
+import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -39,7 +39,6 @@ public class RegisterProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        Plan plugin = Plan.getInstance();
         Database db = Database.getActive();
         try {
             if (!db.check().isPlayerRegistered(uuid)) {
@@ -51,7 +50,7 @@ public class RegisterProcessor extends PlayerProcessor {
             if (db.fetch().getActions(uuid).size() > 0) {
                 return;
             }
-            plugin.getDataCache().markFirstSession(uuid);
+            SessionCache.getInstance().markFirstSession(uuid);
             db.save().action(uuid, new Action(time, Actions.FIRST_SESSION, "Online: " + playersOnline + " Players"));
         } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);

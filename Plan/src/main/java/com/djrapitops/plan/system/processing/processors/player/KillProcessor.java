@@ -3,6 +3,7 @@ package com.djrapitops.plan.system.processing.processors.player;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.SessionCache;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -45,7 +46,7 @@ public class KillProcessor extends PlayerProcessor {
 
         Plan plugin = Plan.getInstance();
 
-        Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
+        Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         if (!cachedSession.isPresent()) {
             return;
         }

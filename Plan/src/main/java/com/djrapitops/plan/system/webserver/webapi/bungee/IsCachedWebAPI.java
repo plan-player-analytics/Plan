@@ -9,7 +9,6 @@ import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
-import com.djrapitops.plan.systems.info.InformationManager;
 
 import java.util.Map;
 import java.util.UUID;
@@ -19,33 +18,13 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class IsCachedWebAPI extends WebAPI {
 
     @Override
     public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         try {
-            String target = variables.get("target");
-            InformationManager infoManager = plugin.getInfoManager();
-            boolean cached = false;
-            switch (target) {
-                case "inspectPage":
-                    if (infoManager.isCached(UUID.fromString(variables.get("uuid")))) {
-                        cached = true;
-                    }
-                    break;
-                case "analysisPage":
-                    if (infoManager.isAnalysisCached(UUID.fromString(variables.get("serverUUID")))) {
-                        cached = true;
-                    }
-                    break;
-                default:
-                    return badRequest("Faulty Target");
-            }
-            if (cached) {
-                return success();
-            } else {
-                return fail("Not Cached");
-            }
+            return fail("Deprecated");
         } catch (NullPointerException e) {
             return badRequest(e.toString());
         }

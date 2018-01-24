@@ -36,7 +36,7 @@ public class NameProcessor extends PlayerProcessor {
     public void process() {
         UUID uuid = getUUID();
         Plan plugin = Plan.getInstance();
-        DataCache dataCache = plugin.getDataCache();
+        DataCache dataCache = DataCache.getInstance();
         String cachedName = dataCache.getName(uuid);
         String cachedDisplayName = dataCache.getDisplayName(uuid);
 

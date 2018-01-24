@@ -4,12 +4,14 @@
  */
 package com.djrapitops.plan.system.processing.processors.info;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
-import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.processing.processors.player.PlayerProcessor;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 
@@ -33,19 +35,23 @@ public class InspectCacheRequestProcessor extends PlayerProcessor {
 
     @Override
     public void process() {
-        PlanPlugin plugin = PlanPlugin.getInstance();
-        plugin.getInfoManager().cachePlayer(getUUID());
-        DataCache dataCache = plugin.getInfoManager().getDataCache();
-        if (dataCache != null) {
-            dataCache.refreshActiveSessionsState();
+        SessionCache.getInstance().refreshActiveSessionsState();
+        try {
+            InfoSystem.getInstance().generateAndCachePlayerPage(getUUID());
+            sendInspectMsg(sender, playerName);
+        } catch (ConnectionFailException | UnsupportedTransferDatabaseException | UnauthorizedServerException
+                | NotFoundException | NoServersException e) {
+            // TODO Test if this is appropriate
+            sender.sendMessage("§c" + e.getMessage());
+        } catch (WebException e) {
+            Log.toLog(this.getClass().getName(), e);
         }
-        sendInspectMsg(sender, playerName);
     }
 
     private void sendInspectMsg(ISender sender, String playerName) {
         sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + " " + playerName);
         // Link
-        String url = Plan.getInstance().getInfoManager().getLinkTo("/player/" + playerName);
+        String url = ConnectionSystem.getInstance().getMainAddress() + "/player/" + playerName;
         String message = Locale.get(Msg.CMD_INFO_LINK).toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {

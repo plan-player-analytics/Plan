@@ -2,7 +2,6 @@ package test.utilities;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
@@ -125,13 +124,13 @@ public class TestInit {
         when(planMock.getVariable()).thenReturn(serverProperties);
         BukkitServerInfo bukkitServerInfo = PowerMockito.mock(BukkitServerInfo.class);
 
-        DataCache dataCache = new DataCache(planMock) {
-            @Override
-            public String getName(UUID uuid) {
-                return "";
-            }
-        };
-        when(planMock.getDataCache()).thenReturn(dataCache);
+//        DataCache dataCache = new DataCache(planMock) {
+//            @Override
+//            public String getName(UUID uuid) {
+//                return "";
+//            }
+//        };
+//        when(planMock.getDataCache()).thenReturn(dataCache);
 
         when(ServerInfo.getServerUUID()).thenReturn(serverUUID);
         when(planMock.getServerUuid()).thenReturn(serverUUID);

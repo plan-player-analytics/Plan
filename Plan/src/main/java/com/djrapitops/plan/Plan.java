@@ -27,7 +27,6 @@ import com.djrapitops.plan.settings.locale.Msg;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.BukkitSystem;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -217,15 +216,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     @Override
     public void onReload() {
 
-    }
-
-    /**
-     * Used to access Cache.
-     *
-     * @return Current instance of the DataCache
-     */
-    public DataCache getDataCache() {
-        return getInfoManager().getDataCache();
     }
 
     /**

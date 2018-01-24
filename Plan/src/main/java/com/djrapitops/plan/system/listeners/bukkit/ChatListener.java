@@ -1,7 +1,6 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.processors.player.NameProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.entity.Player;
@@ -18,19 +17,6 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class ChatListener implements Listener {
-
-    private final Plan plugin;
-    private final DataCache dataCache;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public ChatListener(Plan plugin) {
-        this.plugin = plugin;
-        dataCache = plugin.getDataCache();
-    }
 
     /**
      * ChatEvent listener.
@@ -49,8 +35,9 @@ public class ChatListener implements Listener {
             String name = p.getName();
             String displayName = p.getDisplayName();
 
-            if (dataCache.isFirstSession(uuid)) {
-                dataCache.firstSessionMessageSent(uuid);
+            SessionCache sessionCache = SessionCache.getInstance();
+            if (sessionCache.isFirstSession(uuid)) {
+                sessionCache.firstSessionMessageSent(uuid);
             }
 
             new NameProcessor(uuid, name, displayName).queue();

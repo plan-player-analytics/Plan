@@ -3,6 +3,7 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.*;
@@ -39,6 +40,12 @@ public class DataCache extends SessionCache {
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
         uuids = new HashMap<>();
+    }
+
+    public static DataCache getInstance() {
+        DataCache dataCache = CacheSystem.getInstance().getDataCache();
+        NullCheck.check(dataCache, new IllegalStateException("Data Cache was not initialized."));
+        return dataCache;
     }
 
     /**

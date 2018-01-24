@@ -5,37 +5,23 @@
 package com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
-import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.pages.parsing.NetworkPage;
-import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.cache.PageId;
-import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
-import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
-import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.system.webserver.webapi.WebAPIManager;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalysisReadyWebAPI;
 import com.djrapitops.plan.system.webserver.webapi.bukkit.AnalyzeWebAPI;
-import com.djrapitops.plan.system.webserver.webapi.bukkit.InspectWebAPI;
-import com.djrapitops.plan.system.webserver.webapi.bukkit.IsOnlineWebAPI;
-import com.djrapitops.plan.system.webserver.webapi.bungee.RequestPluginsTabWebAPI;
-import com.djrapitops.plan.utilities.file.export.HtmlExport;
-import com.djrapitops.plan.utilities.html.HtmlStructure;
-import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -48,15 +34,11 @@ import java.util.stream.Collectors;
 public class BungeeInformationManager extends InformationManager {
 
     private final PlanBungee plugin;
-    private final Map<UUID, String> networkPageContent;
-    private final Map<UUID, Map<UUID, String[]>> pluginsTabContent;
     private final BungeeServerInfo serverInfoManager;
     private Map<UUID, Server> bukkitServers;
 
     public BungeeInformationManager(PlanBungee plugin) {
         usingAnotherWebServer = false;
-        pluginsTabContent = new HashMap<>();
-        networkPageContent = new HashMap<>();
         this.plugin = plugin;
         serverInfoManager = plugin.getServerInfoManager();
         refreshBukkitServerMap();
@@ -127,90 +109,6 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     /**
-     * Caches the inspect page for a matching player.
-     * <p>
-     * Attempt is made to use the server where the player is online.
-     * <p>
-     * If there is no Bukkit server to handle the request it is not fulfilled.
-     *
-     * @param uuid UUID of a player.
-     */
-    @Override
-    public void cachePlayer(UUID uuid) {
-        Server inspectServer = null;
-        try {
-            inspectServer = getInspectRequestProcessorServer(uuid);
-
-            WebAPIManager apiManager = getWebAPI();
-
-            apiManager.getAPI(InspectWebAPI.class).sendRequest(inspectServer.getWebAddress(), uuid);
-            apiManager.getAPI(RequestPluginsTabWebAPI.class).sendRequestsToBukkitServers(plugin, uuid);
-        } catch (IllegalStateException ignored) {
-            /* Ignored */
-        } catch (WebException e) {
-            plugin.getServerInfoManager().attemptConnection(inspectServer);
-        }
-    }
-
-    /**
-     * Get Server of an online server that should process an inspect request.
-     * <p>
-     * If the player is online, an attempt to use the server where the player resides is made.
-     * <p>
-     * If the player is offline or in the lobby, any server can be used.
-     *
-     * @param uuid UUID of the player
-     * @return Server of the server that should handle the request.
-     * @throws IllegalStateException If no Bukkit servers are online.
-     */
-    private Server getInspectRequestProcessorServer(UUID uuid) {
-        if (bukkitServers.isEmpty()) {
-            try {
-                refreshBukkitServerMap();
-            } catch (SQLException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
-            if (bukkitServers.isEmpty()) {
-                throw new IllegalStateException("No Bukkit Servers.");
-            }
-        }
-
-        Collection<Server> onlineServers = serverInfoManager.getOnlineBukkitServers();
-        if (plugin.getProxy().getPlayer(uuid) != null) {
-            for (Server server : onlineServers) {
-                try {
-                    getWebAPI().getAPI(IsOnlineWebAPI.class).sendRequest(server.getWebAddress(), uuid);
-                    return server;
-                } catch (ConnectionFailException e) {
-                    serverInfoManager.serverHasGoneOffline(server.getUuid());
-                } catch (NotFoundException ignored) {
-                    /*continue*/
-                } catch (WebException e) {
-                    Log.toLog(this.getClass().getName(), e);
-                }
-            }
-        }
-
-        Optional<Server> bukkitServer = serverInfoManager.getOnlineBukkitServers().stream().findAny();
-        if (bukkitServer.isPresent()) {
-            return bukkitServer.get();
-        }
-        throw new IllegalStateException("No Bukkit servers online");
-    }
-
-    /**
-     * PlanBungee has no DataCache so this method should not be used.
-     * <p>
-     * DataCache is meant for storing player data.
-     *
-     * @return null
-     */
-    @Override
-    public DataCache getDataCache() {
-        return null;
-    }
-
-    /**
      * Attempts a connection to every Bukkit server in the database.
      *
      * @return true (always)
@@ -229,37 +127,6 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     /**
-     * Condition if analysis page for an UUID is cached.
-     * <p>
-     * If serverUUID is that of Bungee, network page state is returned.
-     *
-     * @param serverUUID UUID of the server
-     * @return true/false
-     */
-    @Override
-    public boolean isAnalysisCached(UUID serverUUID) {
-        return ResponseCache.isCached(PageId.SERVER.of(serverUUID));
-    }
-
-    /**
-     * Returns the Html players inspect page.
-     * <p>
-     * If no Bukkit servers are online a 404 is returned instead.
-     *
-     * @param uuid UUID of the player
-     * @return Html string (Full page)
-     */
-    @Override
-    public String getPlayerHtml(UUID uuid) {
-        Response response = ResponseCache.copyResponse(PageId.PLAYER.of(uuid),
-                () -> new NotFoundResponse("No Bukkit Servers were online to process this request"));
-        if (response instanceof InspectPageResponse) {
-            ((InspectPageResponse) response).setInspectPagePluginsTab(getPluginsTabContent(uuid));
-        }
-        return response.getContent();
-    }
-
-    /**
      * Get the Network page html.
      *
      * @return Html string (Full page)
@@ -270,54 +137,6 @@ public class BungeeInformationManager extends InformationManager {
             return new NetworkPage(plugin).toHtml();
         } catch (ParseException e) {
             return new InternalErrorResponse(e, this.getClass().getSimpleName()).getContent();
-        }
-    }
-
-    /**
-     * Used to parse the Plugins tab html String out of all sent to Bungee.
-     *
-     * @param uuid UUID of the player
-     * @return Html string.
-     */
-    @Override
-    public String[] getPluginsTabContent(UUID uuid) {
-        Map<UUID, String[]> pluginsTab = pluginsTabContent.get(uuid);
-        if (pluginsTab == null) {
-            return HtmlStructure.createInspectPageTabContentCalculating();
-        }
-
-        List<String[]> order = new ArrayList<>(pluginsTab.values());
-        // Sort serverNames alphabetically
-        order.sort(new Comparator<String[]>() {
-            @Override
-            public int compare(String[] o1, String[] o2) {
-                return o1[0].compareTo(o2[0]);
-            }
-        });
-
-        StringBuilder nav = new StringBuilder();
-        StringBuilder tabs = new StringBuilder();
-        for (String[] tab : order) {
-            nav.append(tab[0]);
-            tabs.append(tab[1]);
-        }
-        return new String[]{nav.toString(), tabs.toString()};
-    }
-
-    /**
-     * Places plugins tab content for a single player to the pluginsTabContent map.
-     *
-     * @param serverUUID UUID of the server
-     * @param uuid       UUID of the player
-     * @param html       Plugins tab html for the player on the server
-     */
-    public void cachePluginsTabContent(UUID serverUUID, UUID uuid, String[] html) {
-        Map<UUID, String[]> perServerPluginsTab = pluginsTabContent.getOrDefault(uuid, new HashMap<>());
-        perServerPluginsTab.put(serverUUID, html);
-        pluginsTabContent.put(uuid, perServerPluginsTab);
-        Response inspectResponse = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
-        if (inspectResponse != null && inspectResponse instanceof InspectPageResponse) {
-            ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(getPluginsTabContent(uuid));
         }
     }
 
@@ -340,19 +159,6 @@ public class BungeeInformationManager extends InformationManager {
         return plugin.getWebServer().getAccessAddress();
     }
 
-    public void cacheNetworkPageContent(UUID serverUUID, String html) {
-        networkPageContent.put(serverUUID, html);
-        updateNetworkPageContent();
-    }
-
-    public void removeNetworkPageContent(UUID serverUUID) {
-        networkPageContent.put(serverUUID, HtmlStructure.parseOfflineServerContainer(networkPageContent.get(serverUUID)));
-    }
-
-    public Map<UUID, String> getNetworkPageContent() {
-        return networkPageContent;
-    }
-
     /**
      * Send notification of analysis being ready to all online bukkit servers via WebAPI.
      *
@@ -370,23 +176,10 @@ public class BungeeInformationManager extends InformationManager {
         }
     }
 
-    @Override
-    public void updateNetworkPageContent() {
-        UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
-        ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(this));
-        if (Settings.ANALYSIS_EXPORT.isTrue()) {
-            HtmlExport.exportServer(serverUUID);
-        }
-    }
-
     public void sendConfigSettings() {
         Collection<Server> online = serverInfoManager.getOnlineBukkitServers();
         online.stream().map(Server::getUuid)
                 .forEach(serverInfoManager::sendConfigSettings);
     }
 
-    @Override
-    public TreeMap<String, List<String>> getErrors() throws IOException {
-        return ErrorLogger.getLoggedErrors(plugin);
-    }
 }

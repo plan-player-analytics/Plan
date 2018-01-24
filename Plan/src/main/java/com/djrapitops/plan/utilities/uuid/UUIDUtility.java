@@ -5,9 +5,9 @@
  */
 package com.djrapitops.plan.utilities.uuid;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
@@ -51,7 +51,7 @@ public class UUIDUtility {
     private static UUID getUUIDOf(String playerName, Database db) {
         UUID uuid = null;
         if (Check.isBukkitAvailable()) {
-            UUID uuidOf = Plan.getInstance().getDataCache().getUUIDof(playerName);
+            UUID uuidOf = DataCache.getInstance().getUUIDof(playerName);
             if (uuidOf != null) {
                 return uuidOf;
             }

@@ -1,10 +1,10 @@
 package com.djrapitops.plan.utilities.html.tables;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.comparators.KillDataComparator;
 import com.djrapitops.plan.utilities.html.Html;
@@ -38,6 +38,7 @@ public class KillsTableCreator {
             Collections.reverse(playerKills);
 
             int i = 0;
+            DataCache dataCache = DataCache.getInstance();
             for (PlayerKill kill : playerKills) {
                 if (i >= 20) {
                     break;
@@ -45,7 +46,7 @@ public class KillsTableCreator {
 
                 long date = kill.getTime();
 
-                String name = Plan.getInstance().getDataCache().getName(kill.getVictim());
+                String name = dataCache.getName(kill.getVictim());
                 html.append(Html.TABLELINE_3_CUSTOMKEY_1.parse(
                         String.valueOf(date), FormatUtils.formatTimeStamp(date),
                         Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
