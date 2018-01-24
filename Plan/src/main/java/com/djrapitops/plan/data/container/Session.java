@@ -68,18 +68,6 @@ public class Session {
     }
 
     /**
-     * Starts a new Session.
-     *
-     * @param time  Time the session started.
-     * @param world World the session started in.
-     * @param gm    GameMode the session started in.
-     * @return a new Session object.
-     */
-    public static Session start(long time, String world, String gm) {
-        return new Session(time, world, gm);
-    }
-
-    /**
      * Ends the session with given end point.
      * <p>
      * (Changes the end to the parameter.).

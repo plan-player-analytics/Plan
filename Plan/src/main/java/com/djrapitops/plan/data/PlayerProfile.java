@@ -80,15 +80,11 @@ public class PlayerProfile implements OfflinePlayer {
     }
 
     public static long getPlaytime(Stream<Session> s) {
-        return s.map(Session::getLength)
-                .mapToLong(i -> i)
-                .sum();
+        return s.mapToLong(Session::getLength).sum();
     }
 
     public static long getLongestSession(Stream<Session> s) {
-        OptionalLong longestSession = s.map(Session::getLength)
-                .mapToLong(i -> i)
-                .max();
+        OptionalLong longestSession = s.mapToLong(Session::getLength).max();
         if (longestSession.isPresent()) {
             return longestSession.getAsLong();
         }

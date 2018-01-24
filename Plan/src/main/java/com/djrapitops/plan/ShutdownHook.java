@@ -85,10 +85,9 @@ public class ShutdownHook extends Thread {
             UUID uuid = entry.getKey();
             Session session = entry.getValue();
             long sessionEnd = session.getSessionEnd();
-            if (sessionEnd != -1) {
-                continue;
+            if (sessionEnd == -1) {
+                session.endSession(now);
             }
-            session.endSession(now);
             try {
                 Log.debug("Shutdown: Saving a session: " + session.getSessionStart());
                 db.save().session(uuid, session);

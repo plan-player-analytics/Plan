@@ -35,7 +35,6 @@ public class PlayersPageResponse extends Response {
         super.setHeader("HTTP/1.1 200 OK");
         try {
             PlanSystem system = PlanSystem.getInstance();
-
             PlanPlugin plugin = PlanPlugin.getInstance();
             Database db = system.getDatabaseSystem().getActiveDatabase();
             List<String> names = new ArrayList<>(db.fetch().getPlayerNames().values());
@@ -101,8 +100,8 @@ public class PlayersPageResponse extends Response {
 
                     List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
                     int sessionCount = sessions.size();
-                    long playtime = sessionCount != 0 ? sessions.stream().map(Session::getLength)
-                            .mapToLong(p -> p)
+                    long playtime = sessionCount != 0 ? sessions.stream()
+                            .mapToLong(Session::getLength)
                             .sum() : 0L;
                     long registered = userInfo.getRegistered();
                     long lastSeen = lastSeenForAllPlayers.getOrDefault(uuid, 0L);

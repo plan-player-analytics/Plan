@@ -17,8 +17,12 @@ public class ActivityIndex {
         value = calculate(player, date);
     }
 
-    private static long loadSetting(long value) {
-        return value < 0 ? 1 : value;
+    private long loadSetting(long value) {
+        return value <= 0 ? 1 : value;
+    }
+
+    private int loadSetting(int value) {
+        return value <= 0 ? 1 : value;
     }
 
     public static String[] getGroups() {
@@ -31,14 +35,8 @@ public class ActivityIndex {
         long twoWeeksAgo = date - 2L * week;
         long threeWeeksAgo = date - 3L * week;
 
-        long activePlayThreshold = Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms();
-        if (activePlayThreshold <= 0) {
-            activePlayThreshold = 1;
-        }
-        int activeLoginThreshold = Settings.ACTIVE_LOGIN_THRESHOLD.getNumber();
-        if (activeLoginThreshold <= 0) {
-            activeLoginThreshold = 1;
-        }
+        long activePlayThreshold = loadSetting(Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms());
+        int activeLoginThreshold = loadSetting(Settings.ACTIVE_LOGIN_THRESHOLD.getNumber());
 
         List<Session> sessionsWeek = player.getSessions(weekAgo, date).collect(Collectors.toList());
         List<Session> sessionsWeek2 = player.getSessions(twoWeeksAgo, weekAgo).collect(Collectors.toList());
