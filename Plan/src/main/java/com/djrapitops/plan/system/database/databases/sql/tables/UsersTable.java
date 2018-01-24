@@ -29,7 +29,7 @@ public class UsersTable extends UserIDTable {
 
     public UsersTable(SQLDB db) {
         super("plan_users", db);
-        statementSelectID = "(" + Select.from(tableName, tableName + "." + columnID).where(columnUUID + "=?").toString() + ")";
+        statementSelectID = "(" + Select.from(tableName, tableName + "." + columnID).where(columnUUID + "=?").toString() + " LIMIT 1)";
         insertStatement = Insert.values(tableName,
                 columnUUID,
                 columnRegistered,

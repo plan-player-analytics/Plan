@@ -31,7 +31,7 @@ public class WorldTable extends Table {
 
     public WorldTable(SQLDB db) {
         super("plan_worlds", db);
-        statementSelectID = "(SELECT " + columnWorldId + " FROM " + tableName + " WHERE (" + columnWorldName + "=?))";
+        statementSelectID = "(SELECT " + columnWorldId + " FROM " + tableName + " WHERE (" + columnWorldName + "=?) LIMIT 1)";
     }
 
     @Override
@@ -143,6 +143,24 @@ public class WorldTable extends Table {
                     worldNames.add(set.getString(columnWorldName));
                 }
                 return worldNames;
+            }
+        });
+    }
+
+    public Map<String, Integer> getWorldIds() throws SQLException {
+        String sql = "SELECT DISTINCT " +
+                columnWorldName + ", " +
+                columnWorldId + " FROM " +
+                tableName;
+
+        return query(new QueryAllStatement<Map<String, Integer>>(sql, 200) {
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> worldIds = new HashMap<>();
+                while (set.next()) {
+
+                }
+                return worldIds;
             }
         });
     }
