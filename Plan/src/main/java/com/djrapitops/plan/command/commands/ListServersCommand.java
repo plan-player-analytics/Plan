@@ -1,6 +1,8 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -10,7 +12,6 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 /**
@@ -45,13 +46,13 @@ public class ListServersCommand extends SubCommand {
         String tCol = colorScheme.getTertiaryColor();
         try {
             sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString() + mCol + " Servers");
-            Map<Integer, String> serverNames = plugin.getDB().getServerTable().getServerNamesByID();
+            Map<Integer, String> serverNames = Database.getActive().fetch().getServerNamesByID();
             for (Map.Entry<Integer, String> entry : serverNames.entrySet()) {
                 sender.sendMessage("  " + tCol + entry.getKey() + sCol + " : " + entry.getValue());
             }
             sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
-        } catch (SQLException e) {
-            sender.sendMessage("§cSQLException occurred.");
+        } catch (DBException e) {
+            sender.sendMessage("§cDatabase Exception occurred.");
             Log.toLog(this.getClass().getName(), e);
         }
         return true;

@@ -2,7 +2,6 @@ package test.utilities;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -132,8 +131,6 @@ public class TestInit {
 //        };
 //        when(planMock.getDataCache()).thenReturn(dataCache);
 
-        when(ServerInfo.getServerUUID()).thenReturn(serverUUID);
-        when(planMock.getServerUuid()).thenReturn(serverUUID);
         ColorScheme cs = new ColorScheme(ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK);
         when(planMock.getColorScheme()).thenReturn(cs);
         initLocale(null);

@@ -361,4 +361,31 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             throw SQLErrorUtil.getExceptionFor(e);
         }
     }
+
+    @Override
+    public Map<UUID, Server> getBukkitServers() throws DBException {
+        try {
+            return serverTable.getBukkitServers();
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public List<WebUser> getWebUsers() throws DBException {
+        try {
+            return securityTable.getUsers();
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Map<Integer, String> getServerNamesByID() throws DBException {
+        try {
+            return serverTable.getServerNamesByID();
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
 }

@@ -25,8 +25,8 @@ public class WebServerTest {
     public void setUp() throws Exception {
         TestInit testInit = TestInit.init();
         Plan plugin = testInit.getPlanMock();
-        webServer = new WebServer(plugin);
-        requestHandler = new RequestHandler(plugin, webServer);
+        webServer = new WebServer();
+        requestHandler = new RequestHandler(webServer);
     }
 
     @Test

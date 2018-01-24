@@ -12,7 +12,6 @@ import com.djrapitops.plugin.settings.ColorScheme;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.UUID;
 
 /**
  * Abstraction interface for both Plan and PlanBungee.
@@ -35,9 +34,6 @@ public interface PlanPlugin extends IPlugin {
 
     @Deprecated
     Database getDB();
-
-    @Deprecated
-    UUID getServerUuid();
 
     @Deprecated
     WebServer getWebServer();

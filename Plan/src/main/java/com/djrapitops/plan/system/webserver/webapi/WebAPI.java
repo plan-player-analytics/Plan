@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.webserver.webapi;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
@@ -192,7 +193,7 @@ public abstract class WebAPI {
 
     private String parseVariables() {
         StringBuilder parameters = new StringBuilder();
-        String serverUUID = PlanPlugin.getInstance().getServerUuid().toString();
+        String serverUUID = ServerInfo.getServerUUID().toString();
         parameters.append("sender=").append(serverUUID);
         for (Map.Entry<String, String> entry : variables.entrySet()) {
             parameters.append(";&variable;").append(entry.getKey()).append("=").append(entry.getValue());

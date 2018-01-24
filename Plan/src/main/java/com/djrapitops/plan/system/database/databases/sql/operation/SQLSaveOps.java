@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -210,6 +211,15 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     public void serverInfoForThisServer(Server server) throws DBException {
         try {
             serverTable.saveCurrentServerInfo(server);
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public void webUser(WebUser webUser) throws DBException {
+        try {
+            securityTable.addNewUser(webUser);
         } catch (SQLException e) {
             throw SQLErrorUtil.getExceptionFor(e);
         }

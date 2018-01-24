@@ -5,6 +5,7 @@
 package com.djrapitops.plan.utilities.file.export;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
@@ -104,7 +105,7 @@ public abstract class SpecificExport extends AbsRunnable {
 
         File htmlLocation = null;
         if (usingBungee) {
-            if (serverUUID.equals(PlanPlugin.getInstance().getServerUuid())) {
+            if (serverUUID.equals(ServerInfo.getServerUUID())) {
                 htmlLocation = new File(outputFolder, "network");
             } else {
                 htmlLocation = new File(getServerFolder(), serverName.replace(" ", "%20").replace(".", "%2E"));

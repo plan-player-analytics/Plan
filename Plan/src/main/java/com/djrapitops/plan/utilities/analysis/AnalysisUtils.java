@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -142,7 +143,7 @@ public class AnalysisUtils {
             // Add 0 time for worlds not present.
             Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
             PlanPlugin plugin = PlanPlugin.getInstance();
-            for (String world : Database.getActive().fetch().getWorldNames(plugin.getServerUuid())) {
+            for (String world : Database.getActive().fetch().getWorldNames(ServerInfo.getServerUUID())) {
                 if (nonZeroWorlds.contains(world)) {
                     continue;
                 }

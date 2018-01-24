@@ -4,8 +4,6 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -16,6 +14,7 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.database.databases.sql.statements.Update;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -76,13 +75,13 @@ public class UserInfoTable extends UserIDTable {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
                 statement.setLong(2, registered);
-                statement.setString(3, Plan.getServerUUID().toString());
+                statement.setString(3, ServerInfo.getServerUUID().toString());
             }
         });
     }
 
     public boolean isRegistered(UUID uuid) throws SQLException {
-        return isRegistered(uuid, PlanPlugin.getInstance().getServerUuid());
+        return isRegistered(uuid, ServerInfo.getServerUUID());
     }
 
     public boolean isRegistered(UUID uuid, UUID serverUUID) throws SQLException {
@@ -134,7 +133,7 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public UserInfo getUserInfo(UUID uuid) throws SQLException {
-        return getAllUserInfo(uuid).get(PlanPlugin.getInstance().getServerUuid());
+        return getAllUserInfo(uuid).get(ServerInfo.getServerUUID());
     }
 
     public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) throws SQLException {
@@ -182,7 +181,7 @@ public class UserInfoTable extends UserIDTable {
      * @return List of UserInfo objects.
      */
     public List<UserInfo> getServerUserInfo() throws SQLException {
-        return getServerUserInfo(Plan.getServerUUID());
+        return getServerUserInfo(ServerInfo.getServerUUID());
     }
 
     public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {

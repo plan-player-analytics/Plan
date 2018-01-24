@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.webserver.pages.parsing;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Action;
@@ -14,6 +13,7 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
@@ -66,7 +66,7 @@ public class InspectPage extends Page {
             if (profile == null) {
                 throw new IllegalStateException("Player profile was null!");
             }
-            UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
+            UUID serverUUID = ServerInfo.getServerUUID();
             Map<UUID, String> serverNames = db.fetch().getServerNames();
 
             Benchmark.stop("Inspect Parse, Fetch");

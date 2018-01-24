@@ -6,16 +6,10 @@ package com.djrapitops.plan.system.webserver.webapi.bungee;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
-import com.djrapitops.plan.system.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -58,23 +52,5 @@ public class RequestPluginsTabWebAPI extends WebAPI {
     }
 
     public void sendRequestsToBukkitServers(PlanPlugin plugin, UUID uuid) {
-        new Processor<UUID>(uuid) {
-            @Override
-            public void process() {
-                try {
-                    List<Server> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
-                    for (Server server : bukkitServers) {
-                        String webAddress = server.getWebAddress();
-                        try {
-                            plugin.getWebServer().getWebAPI().getAPI(RequestInspectPluginsTabBukkitWebAPI.class).sendRequest(webAddress, uuid);
-                        } catch (WebException ignore) {
-                            /* ignored */
-                        }
-                    }
-                } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName(), e);
-                }
-            }
-        }.queue();
     }
 }

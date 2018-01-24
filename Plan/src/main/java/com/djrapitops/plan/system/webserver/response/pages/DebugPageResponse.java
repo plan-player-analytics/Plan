@@ -4,12 +4,10 @@
  */
 package com.djrapitops.plan.system.webserver.response.pages;
 
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
-import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
@@ -18,7 +16,6 @@ import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -57,11 +54,6 @@ public class DebugPageResponse extends ErrorResponse {
         appendServerInformation(content);
 
         appendConnectionLog(content);
-
-        if (Check.isBungeeAvailable()) {
-            appendBungeeConfiguration(content);
-        }
-
         appendLoggedErrors(content);
         appendDebugLog(content);
         appendBenchmarks(content);
@@ -75,7 +67,7 @@ public class DebugPageResponse extends ErrorResponse {
             Map<Server, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries();
 
             content.append("<pre>");
-            content.append("Server name | Request Type | Sent | Response<br>")
+            content.append("Server Address | Request Type | Sent | Response<br>")
                     .append("-- | -- | -- | --<br>");
             for (Map.Entry<Server, Map<String, ConnectionLog.Entry>> entry : logEntries.entrySet()) {
                 Server server = entry.getKey();
@@ -84,7 +76,7 @@ public class DebugPageResponse extends ErrorResponse {
                     String infoRequest = requestEntry.getKey();
                     ConnectionLog.Entry logEntry = requestEntry.getValue();
 
-                    content.append(server.getName()).append(" | ")
+                    content.append(server.getWebAddress()).append(" | ")
                             .append(infoRequest).append(" | ")
                             .append(logEntry.getResponseCode()).append(" | ")
                             .append(FormatUtils.formatTimeStampSecond(logEntry.getTimeSent())).append("<br>");
@@ -163,35 +155,6 @@ public class DebugPageResponse extends ErrorResponse {
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
         }
-    }
-
-    private void appendBungeeConfiguration(StringBuilder content) {
-
-        PlanBungee plugin = PlanBungee.getInstance();
-        BungeeServerInfo serverInfoManager = plugin.getServerInfoManager();
-        Collection<Server> online = serverInfoManager.getOnlineBukkitServers();
-        Collection<Server> bukkitServers = serverInfoManager.getBukkitServers();
-
-        if (!bukkitServers.isEmpty()) {
-            content.append("<p>If your issue is about Bungee-Bukkit connection relations, please include the following debug information of available servers as well:</p>");
-            for (Server info : bukkitServers) {
-                String link = Html.LINK.parse(info.getWebAddress() + "/debug", info.getWebAddress() + "/debug");
-                content.append("<p>").append(link).append("</p>");
-            }
-        }
-
-        content.append("<pre>### Bungee Configuration<br>");
-
-        content.append("Server name | Online | Address | UUID<br>")
-                .append("-- | -- | -- | --<br>");
-        for (Server info : bukkitServers) {
-            content.append(info.getName()).append(" | ")
-                    .append(online.contains(info) ? "Online" : "Offline").append(" | ")
-                    .append(info.getWebAddress()).append(" | ")
-                    .append(info.getUuid()).append("<br>");
-        }
-
-        content.append("</pre>");
     }
 
     private void appendBenchmarks(StringBuilder content) {

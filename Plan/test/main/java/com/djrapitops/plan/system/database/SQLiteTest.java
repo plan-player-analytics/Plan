@@ -17,6 +17,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -294,7 +295,7 @@ public class SQLiteTest {
         assertEquals(expected, nicknames.get(0));
 
         Map<UUID, List<String>> allNicknames = nickTable.getAllNicknames(uuid);
-        assertEquals(nicknames, allNicknames.get(Plan.getServerUUID()));
+        assertEquals(nicknames, allNicknames.get(ServerInfo.getServerUUID()));
     }
 
     @Test
@@ -417,7 +418,7 @@ public class SQLiteTest {
             System.out.println(" " + entry.getValue());
         }
 
-        List<Session> savedSessions = sessions.get(Plan.getServerUUID());
+        List<Session> savedSessions = sessions.get(ServerInfo.getServerUUID());
 
         assertNotNull(savedSessions);
         assertEquals(1, savedSessions.size());
@@ -449,7 +450,7 @@ public class SQLiteTest {
         assertEquals(uuid, userInfo.getUuid());
         assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
         assertEquals(123456789L, userInfo.getRegistered());
-        assertEquals(1, userInfoTable.getServerUserCount(Plan.getServerUUID()));
+        assertEquals(1, userInfoTable.getServerUserCount(ServerInfo.getServerUUID()));
         assertEquals("Waiting for Update..", userInfo.getName());
         assertFalse(userInfo.isBanned());
         assertFalse(userInfo.isOpped());
@@ -698,7 +699,7 @@ public class SQLiteTest {
         testServerTableBungeeSave();
         ServerTable serverTable = db.getServerTable();
 
-        List<Server> bukkitServers = serverTable.getBukkitServers();
+        Map<UUID, Server> bukkitServers = serverTable.getBukkitServers();
         assertEquals(1, bukkitServers.size());
     }
 
@@ -821,7 +822,7 @@ public class SQLiteTest {
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
         sessionMap.put(uuid, sessions);
-        map.put(Plan.getServerUUID(), sessionMap);
+        map.put(ServerInfo.getServerUUID(), sessionMap);
 
         worldTimesTable.saveWorldTimes(map);
 
@@ -844,7 +845,7 @@ public class SQLiteTest {
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
         sessionMap.put(uuid, sessions);
-        UUID serverUUID = Plan.getServerUUID();
+        UUID serverUUID = ServerInfo.getServerUUID();
         map.put(serverUUID, sessionMap);
 
         sessionsTable.insertSessions(map, true);

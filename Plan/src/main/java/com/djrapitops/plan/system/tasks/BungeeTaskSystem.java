@@ -5,9 +5,11 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.tasks.bukkit.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bungee.EnableConnectionTask;
+import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.TimeAmount;
 
 /**
@@ -17,8 +19,11 @@ import com.djrapitops.plugin.api.TimeAmount;
  */
 public class BungeeTaskSystem extends TaskSystem {
 
+    private final PlanBungee plugin;
+
     public BungeeTaskSystem(PlanBungee plugin) {
         tpsCountTimer = new BungeeTPSCountTimer(plugin);
+        this.plugin = plugin;
     }
 
     @Override
@@ -30,5 +35,8 @@ public class BungeeTaskSystem extends TaskSystem {
         registerTask(new EnableConnectionTask()).runTaskAsynchronously();
         registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
         registerTask(new NetworkPageRefreshTask()).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
+        if (Settings.ANALYSIS_EXPORT.isTrue()) {
+            registerTask(new HtmlExport(plugin)).runTaskAsynchronously();
+        }
     }
 }

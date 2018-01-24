@@ -2,6 +2,7 @@ package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -39,7 +40,7 @@ public class WebListUsersCommand extends SubCommand {
                 try {
                     ColorScheme cs = plugin.getColorScheme();
                     String mCol = cs.getMainColor();
-                    List<WebUser> users = plugin.getDB().getSecurityTable().getUsers();
+                    List<WebUser> users = Database.getActive().fetch().getWebUsers();
                     users.sort(new WebUserComparator());
                     sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse() + mCol + " WebUsers (" + users.size() + ")");
                     for (WebUser user : users) {

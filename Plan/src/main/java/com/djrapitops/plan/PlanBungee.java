@@ -8,20 +8,13 @@ import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.tasks.TaskSystem;
-import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
@@ -29,10 +22,8 @@ import com.djrapitops.plugin.api.systems.TaskCenter;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.io.InputStream;
-import java.util.UUID;
 
 /**
  * Bungee Main class.
@@ -53,28 +44,14 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         return (PlanBungee) StaticHolder.getInstance(PlanBungee.class);
     }
 
-    public static UUID getServerUUID() {
-        return getInstance().getServerUuid();
-    }
-
     @Override
     public void onEnable() {
         super.onEnable();
         try {
-            FileSystem.getInstance().enable();
-            ConfigSystem.getInstance().enable();
+            system = new BungeeSystem(this);
+            system.enable();
 
-            Log.setDebugMode(Settings.DEBUG.toString());
-
-            VersionCheckSystem.getInstance().enable();
-
-            variableHolder = new ServerProperties(getProxy());
-
-            new Locale().loadLocale();
-
-            Theme.getInstance().enable();
-            DBSystem.getInstance().enable();
-
+            // TODO BungeeServerInfo & move there.
             String ip = variableHolder.getIp();
             if ("0.0.0.0".equals(ip)) {
                 Log.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
@@ -82,20 +59,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
                 return;
             }
 
-            Benchmark.start("WebServer Initialization");
-
-            serverInfoManager = new BungeeServerInfo(this);
-
-            WebServerSystem.getInstance().enable();
-            serverInfoManager.loadServerInfo();
-
-            TaskSystem.getInstance().enable();
-
-            Log.logDebug("Enable", "WebServer Initialization");
             Log.info(Locale.get(Msg.ENABLED).toString());
-            if (Settings.ANALYSIS_EXPORT.isTrue()) {
-                RunnableFactory.createNew(new HtmlExport(this)).runTaskAsynchronously();
-            }
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.toLog(this.getClass().getName(), e);
@@ -128,11 +92,8 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         return DBSystem.getInstance().getActiveDatabase();
     }
 
-    public BungeeServerInfo getServerInfoManager() {
-        return serverInfoManager;
-    }
-
     @Override
+    @Deprecated
     public WebServer getWebServer() {
         return WebServerSystem.getInstance().getWebServer();
     }
@@ -147,18 +108,17 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         return PlanColorScheme.create();
     }
 
+    @Deprecated
     public ServerProperties getVariable() {
         return variableHolder;
     }
 
-    public UUID getServerUuid() {
-        return serverInfoManager.getServerUUID();
-    }
-
+    @Deprecated
     public boolean isSetupAllowed() {
         return setupAllowed;
     }
 
+    @Deprecated
     public void setSetupAllowed(boolean setupAllowed) {
         this.setupAllowed = setupAllowed;
     }

@@ -3,11 +3,11 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.system.webserver.webapi.bungee.RequestSetupWebAPI;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
@@ -66,8 +66,9 @@ public class ManageSetupCommand extends SubCommand {
         try {
             Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.set(false);
             Settings.BUNGEE_COPY_CONFIG.set(true);
-//            plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(address);
-            plugin.getWebServer().getWebAPI().getAPI(RequestSetupWebAPI.class).sendRequest(address);
+
+            InfoSystem.getInstance().requestSetUp(address);
+
             sender.sendMessage("§eConnection successful, Plan may restart in a few seconds, if it doesn't something has gone wrong.");
         } catch (ForbiddenException e) {
             sender.sendMessage("§eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it.");

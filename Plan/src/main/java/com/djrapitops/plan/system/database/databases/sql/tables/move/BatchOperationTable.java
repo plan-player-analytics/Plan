@@ -14,6 +14,7 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -140,7 +141,7 @@ public class BatchOperationTable extends Table {
         }
         Log.debug("Batch Copy Servers");
         ServerTable serverTable = db.getServerTable();
-        List<Server> servers = serverTable.getBukkitServers();
+        List<Server> servers = new ArrayList<>(serverTable.getBukkitServers().values());
         serverTable.getBungeeInfo().ifPresent(servers::add);
         toDB.getDb().getServerTable().insertAllServers(servers);
     }

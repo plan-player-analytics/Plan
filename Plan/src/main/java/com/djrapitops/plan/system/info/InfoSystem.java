@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.info;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.PlanSystem;
@@ -13,6 +12,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -44,12 +44,12 @@ public abstract class InfoSystem implements SubSystem {
     }
 
     public void generateAnalysisPageOfThisServer() throws WebException {
-        generateAnalysisPage(Plan.getServerUUID());
+        generateAnalysisPage(ServerInfo.getServerUUID());
     }
 
     public void generateAnalysisPage(UUID serverUUID) throws WebException {
         GenerateAnalysisPageRequest request = new GenerateAnalysisPageRequest(serverUUID);
-        if (Plan.getServerUUID().equals(serverUUID)) {
+        if (ServerInfo.getServerUUID().equals(serverUUID)) {
             runLocally(request);
         } else {
             sendRequest(request);
@@ -86,4 +86,8 @@ public abstract class InfoSystem implements SubSystem {
     }
 
     public abstract void updateNetworkPage() throws WebException;
+
+    public void requestSetUp(String address) {
+        // TODO
+    }
 }

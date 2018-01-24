@@ -1,12 +1,12 @@
 package com.djrapitops.plan.utilities.html.tables;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -37,7 +37,7 @@ public class PlayersTableCreator {
         StringBuilder html = new StringBuilder();
 
         long now = MiscUtils.getTime();
-        UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
+        UUID serverUUID = ServerInfo.getServerUUID();
 
         int i = 0;
         int maxPlayers = Settings.MAX_PLAYERS.getNumber();

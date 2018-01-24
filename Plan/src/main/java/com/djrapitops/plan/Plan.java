@@ -24,7 +24,6 @@ import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.BukkitSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.OfflinePlayerImporter;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -41,8 +40,6 @@ import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.UUID;
 
 /**
  * Main class for Bukkit that manages the plugin.
@@ -66,15 +63,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
      */
     public static Plan getInstance() {
         return (Plan) StaticHolder.getInstance(Plan.class);
-    }
-
-    @Deprecated
-    public static UUID getServerUUID() {
-        return ServerInfo.getServerUUID();
-    }
-
-    public UUID getServerUuid() {
-        return ServerInfo.getServerUUID();
     }
 
     /**

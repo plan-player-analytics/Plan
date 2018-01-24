@@ -2,7 +2,7 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.system.database.databases.sql.tables.SecurityTable;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -121,12 +121,12 @@ public class RegisterCommand extends SubCommand {
                 final String userName = webUser.getName();
                 final String successMsg = "§aAdded a new user (" + userName + ") successfully!";
                 try {
-                    SecurityTable securityTable = plugin.getDB().getSecurityTable();
-                    boolean userExists = securityTable.userExists(userName);
+                    Database database = Database.getActive();
+                    boolean userExists = database.check().doesWebUserExists(userName);
                     if (!Condition.isTrue(!userExists, existsMsg, sender)) {
                         return;
                     }
-                    securityTable.addNewUser(webUser);
+                    database.save().webUser(webUser);
                     sender.sendMessage(successMsg);
                     Log.info("Registered new user: " + userName + " Perm level: " + webUser.getPermLevel());
                 } catch (Exception e) {

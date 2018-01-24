@@ -8,6 +8,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.ProcessingQueue;
 import com.djrapitops.plan.system.processing.processors.NewNickActionProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -59,7 +60,7 @@ public class NameProcessor extends PlayerProcessor {
     }
 
     private void cueNameChangeActionProcessor(UUID uuid, Database db) throws DBException {
-        List<String> nicknames = db.fetch().getNicknamesOfPlayerOnServer(uuid, Plan.getServerUUID());
+        List<String> nicknames = db.fetch().getNicknamesOfPlayerOnServer(uuid, ServerInfo.getServerUUID());
         if (nicknames.contains(displayName)) {
             return;
         }

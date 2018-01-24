@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.system.info.server.Server;
 
@@ -67,4 +68,6 @@ public interface SaveOperations {
     void session(UUID uuid, Session session) throws DBException;
 
     void serverInfoForThisServer(Server server) throws DBException;
+
+    void webUser(WebUser webUser) throws DBException;
 }

@@ -78,4 +78,8 @@ public interface FetchOperations {
     List<String> getNicknames(UUID uuid) throws DBException;
 
     Map<UUID, Server> getBukkitServers() throws DBException;
+
+    List<WebUser> getWebUsers() throws DBException;
+
+    Map<Integer, String> getServerNamesByID() throws DBException;
 }

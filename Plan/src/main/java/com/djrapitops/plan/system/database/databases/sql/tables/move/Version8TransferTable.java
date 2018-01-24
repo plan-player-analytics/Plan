@@ -4,10 +4,10 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.tables.move;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.Benchmark;
 
 import java.sql.SQLException;
@@ -26,7 +26,7 @@ public class Version8TransferTable extends Table {
 
     public Version8TransferTable(SQLDB db) throws SQLException {
         super("", db);
-        Optional<Integer> serverID = db.getServerTable().getServerID(Plan.getServerUUID());
+        Optional<Integer> serverID = db.getServerTable().getServerID(ServerInfo.getServerUUID());
         if (!serverID.isPresent()) {
             throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
         }

@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
@@ -15,6 +14,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -86,7 +86,7 @@ public class ActionsTable extends UserIDTable {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setString(2, Plan.getServerUUID().toString());
+                statement.setString(2, ServerInfo.getServerUUID().toString());
                 statement.setInt(3, action.getDoneAction().getId());
                 statement.setLong(4, action.getDate());
                 statement.setString(5, action.getAdditionalInfo());

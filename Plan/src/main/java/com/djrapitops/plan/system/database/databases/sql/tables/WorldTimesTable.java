@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.GMTimes;
@@ -11,6 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStat
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -152,7 +152,7 @@ public class WorldTimesTable extends UserIDTable {
     }
 
     public WorldTimes getWorldTimesOfServer() throws SQLException {
-        return getWorldTimesOfServer(Plan.getServerUUID());
+        return getWorldTimesOfServer(ServerInfo.getServerUUID());
     }
 
     public WorldTimes getWorldTimesOfServer(UUID serverUUID) throws SQLException {

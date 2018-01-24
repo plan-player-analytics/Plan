@@ -1,7 +1,6 @@
 package com.djrapitops.plan.data.cache;
 
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.cache.PageLoader;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import org.junit.Test;
 import test.utilities.RandomData;
@@ -20,31 +19,20 @@ public class ResponseCacheTest {
             return RESPONSE_STRING;
         }
     };
-    private final PageLoader LOADER = () -> RESPONSE;
-
-    @Test
-    public void testCreateResponse() {
-        String expResponse = RESPONSE.getResponse();
-        String response = LOADER.createResponse().getResponse();
-
-        assertEquals(expResponse, response);
-    }
 
     @Test
     public void testCache() {
-        Response expResponse = LOADER.createResponse();
-
         assertFalse(ResponseCache.isCached(IDENTIFIER));
 
-        Response response = ResponseCache.loadResponse(IDENTIFIER, LOADER);
+        Response response = ResponseCache.loadResponse(IDENTIFIER, () -> RESPONSE);
         assertTrue(ResponseCache.isCached(IDENTIFIER));
 
-        assertEquals(expResponse, response);
+        assertEquals(RESPONSE, response);
     }
 
     @Test
     public void testClearCache() {
-        ResponseCache.cacheResponse(IDENTIFIER, LOADER);
+        ResponseCache.cacheResponse(IDENTIFIER, () -> RESPONSE);
         assertTrue(ResponseCache.isCached(IDENTIFIER));
 
         ResponseCache.clearCache();
@@ -53,7 +41,7 @@ public class ResponseCacheTest {
 
     @Test
     public void testRemoveIf() {
-        ResponseCache.cacheResponse(IDENTIFIER, LOADER);
+        ResponseCache.cacheResponse(IDENTIFIER, () -> RESPONSE);
         assertTrue(ResponseCache.isCached(IDENTIFIER));
 
         ResponseCache.removeIf(identifier -> identifier.equals(IDENTIFIER));

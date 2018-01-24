@@ -50,8 +50,8 @@ public class WebUserCommand extends TreeCommand<PlanPlugin> {
         add(
                 new WebLevelCommand(plugin),
                 new WebListUsersCommand(plugin),
-                new WebCheckCommand(plugin),
-                new WebDeleteCommand(plugin)
+                new WebCheckCommand(),
+                new WebDeleteCommand()
         );
     }
 }

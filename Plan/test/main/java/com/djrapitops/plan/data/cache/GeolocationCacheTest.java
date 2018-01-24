@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.cache;
 
+import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class GeolocationCacheTest {
     @Before
     public void setUp() throws Exception {
         TestInit.init();
-        GeolocationCache.clearCache();
+        CacheSystem.getInstance().getGeolocationCache().clearCache();
 
         ipsToCountries.put("8.8.8.8", "United States");
         ipsToCountries.put("8.8.4.4", "United States");

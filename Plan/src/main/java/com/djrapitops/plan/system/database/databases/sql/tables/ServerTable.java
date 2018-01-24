@@ -280,24 +280,25 @@ public class ServerTable extends Table {
         });
     }
 
-    public List<Server> getBukkitServers() throws SQLException {
+    public Map<UUID, Server> getBukkitServers() throws SQLException {
         String sql = Select.from(tableName, "*")
                 .where(columnServerName + "!=?")
                 .toString();
 
-        return query(new QueryStatement<List<Server>>(sql, 100) {
+        return query(new QueryStatement<Map<UUID, Server>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, "BungeeCord");
             }
 
             @Override
-            public List<Server> processResults(ResultSet set) throws SQLException {
-                List<Server> servers = new ArrayList<>();
+            public Map<UUID, Server> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Server> servers = new HashMap<>();
                 while (set.next()) {
-                    servers.add(new Server(
+                    UUID serverUUID = UUID.fromString(set.getString(columnServerUUID));
+                    servers.put(serverUUID, new Server(
                             set.getInt(columnServerID),
-                            UUID.fromString(set.getString(columnServerUUID)),
+                            serverUUID,
                             set.getString(columnServerName),
                             set.getString(columnWebserverAddress),
                             set.getInt(columnMaxPlayers)));

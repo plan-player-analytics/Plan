@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -11,6 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
@@ -77,7 +77,7 @@ public class TPSTable extends Table {
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() throws SQLException {
-        return getTPSData(PlanPlugin.getInstance().getServerUuid());
+        return getTPSData(ServerInfo.getServerUUID());
     }
 
     public List<TPS> getTPSData(UUID serverUUID) throws SQLException {
@@ -113,7 +113,7 @@ public class TPSTable extends Table {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, PlanPlugin.getInstance().getServerUuid().toString());
+                statement.setString(1, ServerInfo.getServerUUID().toString());
                 statement.setLong(2, tps.getDate());
                 statement.setDouble(3, tps.getTicksPerSecond());
                 statement.setInt(4, tps.getPlayers());
@@ -163,7 +163,7 @@ public class TPSTable extends Table {
     }
 
     public Optional<TPS> getPeakPlayerCount(long afterDate) throws SQLException {
-        return getPeakPlayerCount(PlanPlugin.getInstance().getServerUuid(), afterDate);
+        return getPeakPlayerCount(ServerInfo.getServerUUID(), afterDate);
     }
 
     public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws SQLException {

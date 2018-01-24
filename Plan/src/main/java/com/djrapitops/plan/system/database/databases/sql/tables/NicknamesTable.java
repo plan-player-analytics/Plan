@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -8,6 +7,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStat
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -104,7 +104,7 @@ public class NicknamesTable extends UserIDTable {
      * @throws SQLException when an error at retrieval happens
      */
     public List<String> getNicknames(UUID uuid) throws SQLException {
-        return getNicknames(uuid, Plan.getServerUUID());
+        return getNicknames(uuid, ServerInfo.getServerUUID());
     }
 
     /**
@@ -156,7 +156,7 @@ public class NicknamesTable extends UserIDTable {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setString(2, Plan.getServerUUID().toString());
+                statement.setString(2, ServerInfo.getServerUUID().toString());
                 statement.setString(3, displayName);
             }
         });

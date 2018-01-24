@@ -1,6 +1,6 @@
 package com.djrapitops.plan.utilities.export;
 
-import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.utilities.file.export.Hastebin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;

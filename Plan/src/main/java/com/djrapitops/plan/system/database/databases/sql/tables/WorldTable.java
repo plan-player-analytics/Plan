@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -8,6 +7,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStat
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -108,7 +108,7 @@ public class WorldTable extends Table {
     }
 
     public Set<String> getWorldNames() throws SQLException {
-        return getWorldNames(PlanPlugin.getInstance().getServerUuid());
+        return getWorldNames(ServerInfo.getServerUUID());
     }
 
     public Set<String> getWorldNames(UUID serverUUID) throws SQLException {

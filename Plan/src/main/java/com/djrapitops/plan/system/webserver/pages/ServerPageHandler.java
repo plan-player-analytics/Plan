@@ -4,15 +4,17 @@
  */
 package com.djrapitops.plan.system.webserver.pages;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +34,7 @@ public class ServerPageHandler extends PageHandler {
     }
 
     private UUID getServerUUID(List<String> target) {
-        UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
+        UUID serverUUID = ServerInfo.getServerUUID();
         if (!target.isEmpty()) {
             try {
                 String serverName = target.get(0).replace("%20", " ");
@@ -42,6 +44,8 @@ public class ServerPageHandler extends PageHandler {
                 }
             } catch (IllegalArgumentException ignore) {
                 /*ignored*/
+            } catch (DBException e) {
+                Log.toLog(this.getClass(), e);
             }
         }
         return serverUUID;

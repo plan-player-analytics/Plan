@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -10,6 +9,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -105,7 +105,7 @@ public class SessionsTable extends UserIDTable {
                 statement.setLong(3, session.getSessionEnd());
                 statement.setInt(4, session.getDeaths());
                 statement.setInt(5, session.getMobKills());
-                statement.setString(6, Plan.getServerUUID().toString());
+                statement.setString(6, ServerInfo.getServerUUID().toString());
             }
         });
     }
@@ -204,7 +204,7 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public long getPlaytime(UUID uuid) throws SQLException {
-        return getPlaytime(uuid, Plan.getServerUUID());
+        return getPlaytime(uuid, ServerInfo.getServerUUID());
     }
 
     /**
@@ -216,7 +216,7 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public long getPlaytime(UUID uuid, long afterDate) throws SQLException {
-        return getPlaytime(uuid, Plan.getServerUUID(), afterDate);
+        return getPlaytime(uuid, ServerInfo.getServerUUID(), afterDate);
     }
 
     /**
@@ -321,7 +321,7 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public long getPlaytimeOfServer() throws SQLException {
-        return getPlaytimeOfServer(Plan.getServerUUID());
+        return getPlaytimeOfServer(ServerInfo.getServerUUID());
     }
 
     /**
@@ -343,7 +343,7 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public long getPlaytimeOfServer(long afterDate) throws SQLException {
-        return getPlaytimeOfServer(Plan.getServerUUID(), afterDate);
+        return getPlaytimeOfServer(ServerInfo.getServerUUID(), afterDate);
     }
 
     /**
@@ -398,7 +398,7 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public int getSessionCount(UUID uuid, long afterDate) throws SQLException {
-        return getSessionCount(uuid, Plan.getServerUUID(), afterDate);
+        return getSessionCount(uuid, ServerInfo.getServerUUID(), afterDate);
     }
 
     /**
@@ -453,7 +453,7 @@ public class SessionsTable extends UserIDTable {
     }
 
     public Map<UUID, List<Session>> getSessionInfoOfServer() throws SQLException {
-        return getSessionInfoOfServer(Plan.getServerUUID());
+        return getSessionInfoOfServer(ServerInfo.getServerUUID());
     }
 
     public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) throws SQLException {

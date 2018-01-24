@@ -4,13 +4,13 @@
  */
 package com.djrapitops.plan.data;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.comparators.ActionComparator;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
@@ -335,7 +335,7 @@ public class PlayerProfile implements OfflinePlayer {
     }
 
     public void addActiveSession(Session activeSession) {
-        UUID serverUUID = PlanPlugin.getInstance().getServerUuid();
+        UUID serverUUID = ServerInfo.getServerUUID();
         List<Session> sessions = getSessions(serverUUID);
         sessions.add(activeSession);
         this.sessions.put(serverUUID, sessions);
@@ -478,7 +478,7 @@ public class PlayerProfile implements OfflinePlayer {
 
     @Override
     public long getLastPlayed() {
-        return getLastSeen(PlanPlugin.getInstance().getServerUuid());
+        return getLastSeen(ServerInfo.getServerUUID());
     }
 
     @Override
@@ -498,7 +498,7 @@ public class PlayerProfile implements OfflinePlayer {
 
     @Override
     public boolean isOp() {
-        return oppedOnServers.contains(PlanPlugin.getInstance().getServerUuid());
+        return oppedOnServers.contains(ServerInfo.getServerUUID());
     }
 
     @Override
@@ -507,7 +507,7 @@ public class PlayerProfile implements OfflinePlayer {
     }
 
     public void calculateWorldTimesPerServer() {
-        if (worldTimesMap.containsKey(PlanPlugin.getInstance().getServerUuid())) {
+        if (worldTimesMap.containsKey(ServerInfo.getServerUUID())) {
             return;
         }
 
