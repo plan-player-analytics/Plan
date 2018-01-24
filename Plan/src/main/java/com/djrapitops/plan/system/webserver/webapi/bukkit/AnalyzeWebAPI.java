@@ -15,16 +15,11 @@ import java.util.UUID;
 /**
  * @author Rsl1122
  */
+@Deprecated
 public class AnalyzeWebAPI extends WebAPI {
     @Override
     public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
-        String serverUUIDS = variables.get("serverUUID");
-        if (serverUUIDS == null) {
-            return badRequest("serverUUID was not present");
-        }
-        UUID serverUUID = UUID.fromString(serverUUIDS);
-        plugin.getInfoManager().refreshAnalysis(serverUUID);
-        return success();
+        return fail("Deprecated");
     }
 
     @Override

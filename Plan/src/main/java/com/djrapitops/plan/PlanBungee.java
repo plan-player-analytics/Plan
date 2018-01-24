@@ -21,13 +21,10 @@ import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.systems.info.BungeeInformationManager;
-import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.systems.TaskCenter;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -47,7 +44,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     private BungeeSystem system;
 
     private BungeeServerInfo serverInfoManager;
-    private BungeeInformationManager infoManager;
     private ServerProperties variableHolder;
 
     @Deprecated
@@ -89,7 +85,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             Benchmark.start("WebServer Initialization");
 
             serverInfoManager = new BungeeServerInfo(this);
-            infoManager = new BungeeInformationManager(this);
 
             WebServerSystem.getInstance().enable();
             serverInfoManager.loadServerInfo();
@@ -138,12 +133,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     }
 
     @Override
-    @Deprecated
-    public InformationManager getInfoManager() {
-        return infoManager;
-    }
-
-    @Override
     public WebServer getWebServer() {
         return WebServerSystem.getInstance().getWebServer();
     }
@@ -151,11 +140,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Override
     public InputStream getResource(String resource) {
         return getResourceAsStream(resource);
-    }
-
-    @Override
-    public Config getMainConfig() {
-        return ConfigSystem.getInstance().getConfig();
     }
 
     @Override

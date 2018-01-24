@@ -28,9 +28,7 @@ public class ServerPageHandler extends PageHandler {
     @Override
     public Response getResponse(Request request, List<String> target) {
         UUID serverUUID = getServerUUID(target);
-        return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID),
-                () -> new AnalysisPageResponse(PlanPlugin.getInstance().getInfoManager())
-        );
+        return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), AnalysisPageResponse::refreshNow);
     }
 
     private UUID getServerUUID(List<String> target) {

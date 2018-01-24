@@ -34,16 +34,14 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
-import com.djrapitops.plan.system.processing.processors.importing.importers.OfflinePlayerImporter;
+import com.djrapitops.plan.system.processing.importing.ImporterManager;
+import com.djrapitops.plan.system.processing.importing.importers.OfflinePlayerImporter;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.systems.info.BukkitInformationManager;
-import com.djrapitops.plan.systems.info.ImporterManager;
-import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.metrics.BStats;
 import com.djrapitops.plugin.BukkitPlugin;
@@ -75,7 +73,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
     private HookHandler hookHandler; // Manages 3rd party data sources
 
-    private BukkitInformationManager infoManager;
     private BukkitServerInfo serverInfoManager;
 
     private ServerProperties serverProperties;
@@ -137,7 +134,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             Benchmark.start("WebServer Initialization");
 
             serverInfoManager = new BukkitServerInfo(this);
-            infoManager = new BukkitInformationManager(this);
             WebServerSystem.getInstance().enable();
             if (!WebServerSystem.isWebServerEnabled()) {
                 if (Settings.WEBSERVER_DISABLED.isTrue()) {
@@ -148,7 +144,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
                 }
             }
             serverInfoManager.updateServerInfo();
-            infoManager.updateConnection();
 
             Benchmark.stop("Enable", "WebServer Initialization");
 
@@ -268,11 +263,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     @Deprecated
     public BukkitServerInfo getServerInfoManager() {
         return serverInfoManager;
-    }
-
-    @Deprecated
-    public InformationManager getInfoManager() {
-        return infoManager;
     }
 
     public boolean isReloading() {

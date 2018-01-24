@@ -7,11 +7,14 @@ import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
+import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
-import com.djrapitops.plan.systems.info.BukkitInformationManager;
+import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -182,7 +185,11 @@ public class API {
      */
     @Deprecated
     public void updateAnalysisCache() {
-        plugin.getInfoManager().refreshAnalysis(plugin.getServerUuid());
+        if (!Analysis.isAnalysisBeingRun()) {
+            WebExceptionLogger.logIfOccurs(this.getClass(), () ->
+                    InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID()))
+            );
+        }
     }
 
     /**
@@ -195,7 +202,7 @@ public class API {
      */
     @Deprecated
     public String getAnalysisHtmlAsString() {
-        return plugin.getInfoManager().getAnalysisHtml();
+        return ResponseCache.loadResponse(PageId.SERVER.of(ServerInfo.getServerUUID()), AnalysisPageResponse::refreshNow).getContent();
     }
 
     /**
@@ -208,7 +215,7 @@ public class API {
      */
     @Deprecated
     public AnalysisData getAnalysisDataFromCache() {
-        return ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisData();
+        return new AnalysisData();
     }
 
     /**

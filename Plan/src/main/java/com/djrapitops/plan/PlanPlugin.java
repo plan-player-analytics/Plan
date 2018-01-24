@@ -7,7 +7,6 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plan.systems.info.InformationManager;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.settings.ColorScheme;
@@ -43,9 +42,6 @@ public interface PlanPlugin extends IPlugin {
 
     @Deprecated
     UUID getServerUuid();
-
-    @Deprecated
-    InformationManager getInfoManager();
 
     @Deprecated
     WebServer getWebServer();

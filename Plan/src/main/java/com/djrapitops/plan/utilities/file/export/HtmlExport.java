@@ -10,9 +10,11 @@ import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
 import com.djrapitops.plan.system.webserver.webapi.bungee.PostHtmlWebAPI;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.RunnableFactory;
 
@@ -57,8 +59,7 @@ public class HtmlExport extends SpecificExport {
     @Override
     public void run() {
         try {
-            boolean usingAnotherWebServer = plugin.getInfoManager().isUsingAnotherWebServer();
-            if (usingAnotherWebServer) {
+            if (Check.isBukkitAvailable() && ConnectionSystem.getInstance().isServerAvailable()) {
                 return;
             }
 

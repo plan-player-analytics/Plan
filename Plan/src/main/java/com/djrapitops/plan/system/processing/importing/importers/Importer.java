@@ -2,7 +2,7 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package com.djrapitops.plan.system.processing.processors.importing.importers;
+package com.djrapitops.plan.system.processing.importing.importers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
@@ -12,9 +12,10 @@ import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.processing.processors.importing.ServerImportData;
-import com.djrapitops.plan.system.processing.processors.importing.UserImportData;
-import com.djrapitops.plan.system.processing.processors.importing.UserImportRefiner;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.processing.importing.ServerImportData;
+import com.djrapitops.plan.system.processing.importing.UserImportData;
+import com.djrapitops.plan.system.processing.importing.UserImportRefiner;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -95,7 +96,7 @@ public abstract class Importer {
         }
 
         Plan plugin = Plan.getInstance();
-        UUID uuid = plugin.getServerInfoManager().getServerUUID();
+        UUID uuid = ServerInfo.getServerUUID();
         Database db = plugin.getDB();
 
         ExecutorService service = Executors.newCachedThreadPool();
@@ -151,7 +152,7 @@ public abstract class Importer {
         UserImportRefiner userImportRefiner = new UserImportRefiner(plugin, userImportData);
         userImportData = userImportRefiner.refineData();
 
-        UUID serverUUID = plugin.getServerInfoManager().getServerUUID();
+        UUID serverUUID = ServerInfo.getServerUUID();
         Database db = plugin.getDB();
 
         Set<UUID> existingUUIDs = db.fetch().getSavedUUIDs();

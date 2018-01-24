@@ -14,6 +14,7 @@ import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
 
@@ -67,6 +68,12 @@ public abstract class InfoSystem implements SubSystem {
     @Override
     public void enable() throws EnableException {
         connectionSystem.enable();
+        try {
+            updateNetworkPage();
+        } catch (WebException e) {
+            // TODO Exception handling
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     @Override

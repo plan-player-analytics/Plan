@@ -2,6 +2,7 @@ package com.djrapitops.plan.utilities.metrics;
 
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -53,7 +54,7 @@ public class BStats {
 
             map.put("HTTPS", isEnabled("HTTPS".equals(plugin.getWebServer().getProtocol().toUpperCase())));
             map.put("HTML Export", isEnabled(Settings.ANALYSIS_EXPORT.isTrue()));
-            boolean isConnectedToBungee = plugin.getInfoManager().isUsingAnotherWebServer();
+            boolean isConnectedToBungee = ConnectionSystem.getInstance().isServerAvailable();
             map.put("BungeeCord Connected", isEnabled(isConnectedToBungee));
             if (isConnectedToBungee) {
                 map.put("Copy Bungee Config Values", isEnabled(Settings.BUNGEE_COPY_CONFIG.isTrue()));
