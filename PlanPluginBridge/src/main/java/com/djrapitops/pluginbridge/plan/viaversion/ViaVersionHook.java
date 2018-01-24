@@ -1,12 +1,12 @@
 package com.djrapitops.pluginbridge.plan.viaversion;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.Hook;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.API;
-import com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.database.databases.SQLDB;
 import us.myles.ViaVersion.api.Via;
 import us.myles.ViaVersion.api.ViaAPI;
 
@@ -26,7 +26,6 @@ public class ViaVersionHook extends Hook {
      * API#addPluginDataSource uses the same method from HookHandler.
      *
      * @param hookH HookHandler instance for registering the data sources.
-     * @see API
      */
     public ViaVersionHook(HookHandler hookH) {
         super("us.myles.ViaVersion.ViaVersionPlugin", hookH);
@@ -38,7 +37,7 @@ public class ViaVersionHook extends Hook {
         }
         Plan plan = Plan.getInstance();
         ViaAPI api = Via.getAPI();
-        ProtocolTable table = new ProtocolTable((SQLDB) plan.getDB());
+        ProtocolTable table = new ProtocolTable((SQLDB) Database.getActive());
         try {
             table.createTable();
         } catch (DBCreateTableException e) {

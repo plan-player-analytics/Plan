@@ -4,13 +4,14 @@
  */
 package com.djrapitops.pluginbridge.plan.protocolsupport;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.database.databases.SQLDB;
 
 /**
  * Hook for ProtocolSupport plugin.
@@ -31,7 +32,7 @@ public class ProtocolSupportHook extends Hook {
             return;
         }
         Plan plan = Plan.getInstance();
-        ProtocolTable table = new ProtocolTable((SQLDB) plan.getDB());
+        ProtocolTable table = new ProtocolTable((SQLDB) Database.getActive());
         try {
             table.createTable();
         } catch (DBCreateTableException e) {

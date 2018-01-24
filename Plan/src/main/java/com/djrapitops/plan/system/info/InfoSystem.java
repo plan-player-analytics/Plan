@@ -87,7 +87,7 @@ public abstract class InfoSystem implements SubSystem {
 
     public abstract void updateNetworkPage() throws WebException;
 
-    public void requestSetUp(String address) {
+    public void requestSetUp(String address) throws WebException {
         // TODO
     }
 }

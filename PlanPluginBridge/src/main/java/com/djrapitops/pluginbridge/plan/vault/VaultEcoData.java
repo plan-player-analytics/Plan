@@ -4,17 +4,17 @@
  */
 package com.djrapitops.pluginbridge.plan.vault;
 
-import com.djrapitops.plugin.utilities.Verify;
-import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.analysis.Analysis;
+import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 
@@ -38,8 +38,8 @@ public class VaultEcoData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
-        String name = Plan.getInstance().getDataCache().getName(uuid);
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
+        String name = DataCache.getInstance().getName(uuid);
         if (name == null) {
             return inspectContainer;
         }
@@ -50,7 +50,7 @@ public class VaultEcoData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         ServerProfile serverProfile = Analysis.getServerProfile();
 
         List<PlayerProfile> profiles = collection.stream()

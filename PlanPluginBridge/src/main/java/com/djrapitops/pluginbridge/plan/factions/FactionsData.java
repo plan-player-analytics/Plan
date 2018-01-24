@@ -4,17 +4,17 @@
  */
 package com.djrapitops.pluginbridge.plan.factions;
 
-import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.factions.entity.FactionColl;
-import com.massivecraft.factions.entity.MPlayer;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
+import com.massivecraft.factions.entity.Faction;
+import com.massivecraft.factions.entity.FactionColl;
+import com.massivecraft.factions.entity.MPlayer;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ public class FactionsData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         MPlayer mPlayer = MPlayer.get(uuid);
 
         if (mPlayer.hasFaction()) {
@@ -43,7 +43,7 @@ public class FactionsData extends PluginData {
             double maxPower = mPlayer.getPowerMax();
             String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
             String factionLeader = faction.getLeader().getName();
-            String factionLeaderLink = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(factionLeader), factionLeader);
+            String factionLeaderLink = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(factionLeader), factionLeader);
 
             inspectContainer.addValue(getWithIcon("Faction", "flag", "deep-purple"), factionName);
             inspectContainer.addValue(getWithIcon("Power", "bolt", "purple"), powerString);
@@ -54,7 +54,7 @@ public class FactionsData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
         List<Faction> factions = getTopFactions();
 
         analysisContainer.addValue(getWithIcon("Number of Factions", "flag", "deep-purple"), factions.size());

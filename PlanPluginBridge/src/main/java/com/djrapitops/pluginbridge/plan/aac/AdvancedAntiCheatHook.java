@@ -4,12 +4,13 @@
  */
 package com.djrapitops.pluginbridge.plan.aac;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.Hook;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.database.databases.SQLDB;
 
 /**
  * Hook for AAC plugin.
@@ -31,7 +32,7 @@ public class AdvancedAntiCheatHook extends Hook {
         }
         Plan plugin = Plan.getInstance();
 
-        HackerTable table = new HackerTable((SQLDB) plugin.getDB());
+        HackerTable table = new HackerTable((SQLDB) Database.getActive());
         try {
             table.createTable();
         } catch (DBCreateTableException e) {

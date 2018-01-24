@@ -31,7 +31,7 @@ public class RedProtectData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         Set<Region> regions = RedProtectAPI.getPlayerRegions(uuid.toString());
 
         inspectContainer.addValue(getWithIcon("Regions", "map-marker", "red"), regions.size());
@@ -50,7 +50,7 @@ public class RedProtectData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         Set<Region> regions = RedProtectAPI.getAllRegions();
 
         analysisContainer.addValue(getWithIcon("All Regions", "map-marker", "red"), regions.size());

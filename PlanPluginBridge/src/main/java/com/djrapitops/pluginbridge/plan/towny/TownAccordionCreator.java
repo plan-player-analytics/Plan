@@ -4,16 +4,16 @@
  */
 package com.djrapitops.pluginbridge.plan.towny;
 
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.ServerProfile;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.utilities.analysis.Analysis;
+import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Coord;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.ServerProfile;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.utilities.analysis.Analysis;
-import com.djrapitops.plan.utilities.html.HtmlStructure;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,7 +49,7 @@ public class TownAccordionCreator {
 
             Set<UUID> members = new HashSet<>();
             for (Resident resident : residents) {
-                UUID uuid = Plan.getInstance().getDataCache().getUUIDof(resident.getName());
+                UUID uuid = DataCache.getInstance().getUUIDof(resident.getName());
                 if (uuid != null) {
                     members.add(uuid);
                 }

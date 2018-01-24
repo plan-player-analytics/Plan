@@ -1,9 +1,8 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import litebans.api.Database;
-import com.djrapitops.plan.api.API;
-import com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to LiteBans and registering data
@@ -21,7 +20,6 @@ public class LiteBansHook extends Hook {
      *
      * @param hookH HookHandler instance for registering the data sources.
      * @throws NoClassDefFoundError when the plugin class can not be found.
-     * @see API
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public LiteBansHook(HookHandler hookH) {

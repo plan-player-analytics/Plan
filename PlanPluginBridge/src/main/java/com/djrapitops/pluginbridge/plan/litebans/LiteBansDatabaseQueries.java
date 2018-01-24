@@ -1,8 +1,7 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
+import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import litebans.api.Database;
-import com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import com.djrapitops.plan.database.tables.Table;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +20,7 @@ public class LiteBansDatabaseQueries extends Table {
     private final Database database;
 
     public LiteBansDatabaseQueries() {
-        super("litebans", null, false);
+        super("litebans", null);
         database = Database.get();
     }
 
@@ -71,7 +70,7 @@ public class LiteBansDatabaseQueries extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() {
         throw new IllegalStateException("Not Supposed to be called.");
     }
 }

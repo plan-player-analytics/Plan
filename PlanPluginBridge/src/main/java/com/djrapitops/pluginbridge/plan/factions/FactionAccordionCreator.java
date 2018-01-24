@@ -4,15 +4,15 @@
  */
 package com.djrapitops.pluginbridge.plan.factions;
 
-import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.factions.entity.MPlayer;
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
+import com.massivecraft.factions.entity.Faction;
+import com.massivecraft.factions.entity.MPlayer;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,7 +49,7 @@ public class FactionAccordionCreator {
                 if (mPlayer == null) {
                     continue;
                 }
-                UUID uuid = Plan.getInstance().getDataCache().getUUIDof(mPlayer.getName());
+                UUID uuid = DataCache.getInstance().getUUIDof(mPlayer.getName());
                 if (uuid != null) {
                     members.add(uuid);
                 }

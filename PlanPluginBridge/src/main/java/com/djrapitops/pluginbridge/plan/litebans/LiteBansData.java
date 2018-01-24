@@ -4,16 +4,17 @@
  */
 package com.djrapitops.pluginbridge.plan.litebans;
 
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.BanData;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -36,7 +37,7 @@ public class LiteBansData extends PluginData implements BanData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
 
         String by = getWithIcon("Banned By", "gavel");
         String reason = getWithIcon("Reason", "balance-scale");
@@ -54,7 +55,7 @@ public class LiteBansData extends PluginData implements BanData {
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     banTable.addRow(
                             expires,
-                            Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(ban.getBannedBy()), ban.getBannedBy()),
+                            Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(ban.getBannedBy()), ban.getBannedBy()),
                             ban.getReason()
                     );
                 }
@@ -80,13 +81,13 @@ public class LiteBansData extends PluginData implements BanData {
         List<BanObject> bans = db.getBans();
         for (BanObject ban : bans) {
             UUID uuid = ban.getUuid();
-            String name = Plan.getInstance().getDataCache().getName(uuid);
+            String name = DataCache.getInstance().getName(uuid);
             long expiry = ban.getExpiry();
             String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
 
             banTable.addRow(
-                    Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(name), name),
-                    Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(ban.getBannedBy()), ban.getBannedBy()),
+                    Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
+                    Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(ban.getBannedBy()), ban.getBannedBy()),
                     ban.getReason(),
                     expires
             );

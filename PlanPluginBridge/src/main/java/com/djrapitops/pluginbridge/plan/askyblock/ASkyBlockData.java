@@ -4,11 +4,11 @@
  */
 package com.djrapitops.pluginbridge.plan.askyblock;
 
-import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -30,7 +30,7 @@ public class ASkyBlockData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         if (api.hasIsland(uuid)) {
             String islandName = api.getIslandName(uuid);
             int level = api.getIslandLevel(uuid);
@@ -47,7 +47,7 @@ public class ASkyBlockData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
         int islandCount = api.getIslandCount();
         String islandWorldName = api.getIslandWorld().getName();
 

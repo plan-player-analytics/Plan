@@ -4,13 +4,13 @@
  */
 package com.djrapitops.pluginbridge.plan.griefprevention;
 
-import com.djrapitops.plugin.utilities.FormatUtils;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
+import com.djrapitops.plugin.utilities.FormatUtils;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.PlayerData;
@@ -35,7 +35,7 @@ public class GriefPreventionData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         Map<String, Integer> claims = dataStore.getClaims().stream()
                 .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.ownerID))
@@ -64,7 +64,7 @@ public class GriefPreventionData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         Map<UUID, Integer> area = new HashMap<>();
 
         for (Claim claim : dataStore.getClaims()) {

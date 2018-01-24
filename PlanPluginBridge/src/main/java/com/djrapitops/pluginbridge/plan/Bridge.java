@@ -1,5 +1,7 @@
 package com.djrapitops.pluginbridge.plan;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.aac.AdvancedAntiCheatHook;
 import com.djrapitops.pluginbridge.plan.advancedachievements.AdvancedAchievementsHook;
@@ -18,8 +20,6 @@ import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.vault.VaultHook;
 import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionHook;
-import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.settings.Settings;
 
 /**
  * Manages connection to other plugins.
