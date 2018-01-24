@@ -5,13 +5,9 @@
 package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
-import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.request.CacheRequest;
-import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
-import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
-import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -20,6 +16,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,12 +28,14 @@ import java.util.UUID;
  */
 public class BukkitConnectionSystem extends ConnectionSystem {
 
-    private long latestServerMapRefresh = 0;
+    private long latestServerMapRefresh;
 
     private Server mainServer;
     private Map<UUID, Server> servers;
 
     public BukkitConnectionSystem() {
+        servers = new HashMap<>();
+        latestServerMapRefresh = 0;
     }
 
     private void refreshServerMap() {
@@ -68,8 +67,10 @@ public class BukkitConnectionSystem extends ConnectionSystem {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
             server = servers.get(serverUUID);
         } else if (infoRequest instanceof GenerateInspectPageRequest) {
-            UUID serverUUID = getServerWherePlayerIsOnline((GenerateInspectPageRequest) infoRequest);
-            server = servers.getOrDefault(serverUUID, ServerInfo.getServer());
+            Optional<UUID> serverUUID = getServerWherePlayerIsOnline((GenerateInspectPageRequest) infoRequest);
+            if (serverUUID.isPresent()) {
+                server = servers.getOrDefault(serverUUID.get(), ServerInfo.getServer());
+            }
         }
         if (server == null) {
             throw new NoServersException("Proper server is not available to process requests.");
@@ -77,16 +78,14 @@ public class BukkitConnectionSystem extends ConnectionSystem {
         return server;
     }
 
-    private UUID getServerWherePlayerIsOnline(GenerateInspectPageRequest infoRequest) {
-        UUID playerUUID = infoRequest.getPlayerUUID();
-        try {
-            return Database.getActive().transfer().getServerPlayerIsOnline(playerUUID);
-        } catch (UnsupportedTransferDatabaseException e) {
-            /* Do nothing */
-        } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+    @Override
+    public void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException {
+        if (servers.isEmpty()) {
+            throw new NoServersException("No Servers Available to make process request.");
         }
-        return null;
+        for (Server server : servers.values()) {
+            WebExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
+        }
     }
 
     @Override

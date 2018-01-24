@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -87,8 +88,12 @@ public class SQLTransferOps extends SQLOps implements TransferOperations {
     }
 
     @Override
-    public UUID getServerPlayerIsOnline(UUID playerUUID) {
-        return null; // TODO
+    public Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) throws DBException {
+        try {
+            return transferTable.getServerPlayerIsOnline(playerUUID);
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
     }
 
     @Override

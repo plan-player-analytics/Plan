@@ -181,4 +181,8 @@ public class Analysis {
         Benchmark.stop("Analysis", "3rd party Analysis");
         return containers;
     }
+
+    public static boolean isAnalysisBeingRun() {
+        return serverProfile != null;
+    }
 }

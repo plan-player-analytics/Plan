@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.database.databases.operation;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -36,7 +37,7 @@ public interface TransferOperations {
 
     Map<UUID, String> getEncodedServerHtml() throws DBException;
 
-    UUID getServerPlayerIsOnline(UUID playerUUID) throws DBException;
+    Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) throws DBException;
 
     Map<UUID, String> getEncodedPlayerPluginsTabs(UUID playerUUID) throws DBException;
 }

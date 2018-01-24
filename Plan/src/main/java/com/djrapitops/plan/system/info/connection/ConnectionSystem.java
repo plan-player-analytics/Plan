@@ -5,16 +5,21 @@
 package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
+import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -63,9 +68,17 @@ public abstract class ConnectionSystem implements SubSystem {
 
     protected abstract Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException;
 
+    public static String getAddress() {
+        return getInstance().getMainAddress();
+    }
+
     public void sendInfoRequest(InfoRequest infoRequest) throws WebException {
         Server server = selectServerForRequest(infoRequest);
-        new ConnectionOut(server, ServerInfo.getServerUUID(), infoRequest).sendRequest();
+        sendInfoRequest(infoRequest, server);
+    }
+
+    public void sendInfoRequest(InfoRequest infoRequest, Server toServer) throws WebException {
+        new ConnectionOut(toServer, ServerInfo.getServerUUID(), infoRequest).sendRequest();
     }
 
     public ConnectionLog getConnectionLog() {
@@ -75,4 +88,18 @@ public abstract class ConnectionSystem implements SubSystem {
     public abstract boolean isServerAvailable();
 
     public abstract String getMainAddress();
+
+    public abstract void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException;
+
+    protected Optional<UUID> getServerWherePlayerIsOnline(GenerateInspectPageRequest infoRequest) {
+        UUID playerUUID = infoRequest.getPlayerUUID();
+        try {
+            return Database.getActive().transfer().getServerPlayerIsOnlineOn(playerUUID);
+        } catch (UnsupportedTransferDatabaseException e) {
+            /* Do nothing */
+        } catch (DBException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        return Optional.empty();
+    }
 }

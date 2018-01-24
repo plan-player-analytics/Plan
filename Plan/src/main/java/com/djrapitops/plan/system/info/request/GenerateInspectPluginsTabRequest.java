@@ -23,7 +23,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables implements GenerateRequest {
+public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables implements GenerateRequest, WideRequest {
 
     private final UUID playerUUID;
 

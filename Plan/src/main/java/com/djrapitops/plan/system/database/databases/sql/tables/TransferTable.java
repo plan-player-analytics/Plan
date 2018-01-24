@@ -23,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -73,6 +74,31 @@ public class TransferTable extends Table {
                 .foreignKey(columnSenderID, serverTable.toString(), serverTable.getColumnID())
                 .toString()
         );
+    }
+
+    public void clean() throws SQLException {
+        String sql = "DELETE FROM " + tableName +
+                " WHERE " + columnExpiry + " < ?" +
+                " AND " + columnInfoType + " != ?";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, MiscUtils.getTime() + TimeAmount.MINUTE.ms());
+                statement.setString(2, "onlineStatus");
+            }
+        });
+        sql = "DELETE FROM " + tableName +
+                " WHERE " + columnSenderID + " = " + serverTable.statementSelectServerID +
+                " AND " + columnInfoType + " != ?";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setString(2, "onlineStatus");
+            }
+        });
     }
 
     public void storePlayerHtml(UUID player, String encodedHtml) throws SQLException {
@@ -192,6 +218,45 @@ public class TransferTable extends Table {
                     htmlPerUUID.put(serverUUID, html64);
                 }
                 return htmlPerUUID;
+            }
+        });
+    }
+
+    public Optional<UUID> getServerPlayerIsOnline(UUID playerUUID) throws SQLException {
+        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String sql = "SELECT " +
+                serverUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnSenderID +
+                " WHERE " + columnExtraVariables + "=?" +
+                " ORDER BY " + columnExpiry + " LIMIT 1";
+
+        return query(new QueryStatement<Optional<UUID>>(sql, 1) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Optional<UUID> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(UUID.fromString(set.getString(columnExtraVariables)));
+                }
+                return Optional.empty();
+            }
+        });
+    }
+
+    public void storePlayerOnlineOnThisServer(UUID playerUUID) throws SQLException {
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setLong(2, MiscUtils.getTime() + TimeAmount.MINUTE.ms());
+                statement.setString(3, "onlineStatus");
+                statement.setString(4, playerUUID.toString());
+                statement.setString(5, null);
             }
         });
     }

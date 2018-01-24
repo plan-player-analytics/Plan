@@ -10,7 +10,6 @@ import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.connection.WebFailException;
-import com.djrapitops.plan.command.commands.AnalyzeCommand;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.Settings;
@@ -32,7 +31,6 @@ import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
@@ -200,11 +198,6 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public void analysisReady(UUID serverUUID) {
-        try {
-            AnalyzeCommand.sendAnalysisMessage(analysisNotification.get(serverUUID), serverUUID);
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
         analysisNotification.getOrDefault(serverUUID, new HashSet<>()).clear();
     }
 
