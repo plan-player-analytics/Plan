@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class TPSInsertProcessor extends Processor<List<TPS>> {
+public class TPSInsertProcessor extends ObjectProcessor<List<TPS>> {
 
     public TPSInsertProcessor(List<TPS> object) {
         super(object);

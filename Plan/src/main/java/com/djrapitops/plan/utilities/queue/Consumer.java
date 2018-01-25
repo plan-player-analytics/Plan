@@ -47,7 +47,5 @@ public abstract class Consumer<T> extends AbsRunnable {
         }
     }
 
-    protected abstract void clearVariables();
-
     protected abstract void consume(T toConsume);
 }

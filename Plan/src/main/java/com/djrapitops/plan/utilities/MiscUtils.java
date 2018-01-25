@@ -107,7 +107,7 @@ public class MiscUtils {
         return matches;
     }
 
-    public static <T> List<T> flatMap(Collection<List<T>> coll) {
+    public static <T> List<T> flatMap(Collection<? extends Collection<T>> coll) {
         return coll.stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 

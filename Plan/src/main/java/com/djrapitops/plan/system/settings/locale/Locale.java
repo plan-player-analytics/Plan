@@ -96,7 +96,7 @@ public class Locale {
                 .collect(Collectors.toList());
         Files.write(FileSystem.getLocaleFile().toPath(), lines, StandardCharsets.UTF_8);
 
-        Config config = ConfigSystem.getInstance().getConfig();
+        Config config = ConfigSystem.getConfig();
         config.set(Settings.WRITE_NEW_LOCALE.getPath(), false);
         config.save();
     }

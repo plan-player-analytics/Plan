@@ -51,7 +51,6 @@ public abstract class SQLDB extends Database {
     private final SQLTransferOps transferOps;
 
     private final boolean usingMySQL;
-    private boolean open = false;
     private ITask dbCleanTask;
 
     public SQLDB() {
@@ -103,7 +102,6 @@ public abstract class SQLDB extends Database {
         try {
             setupDataSource();
             setupDatabase();
-            open = true;
         } finally {
             Benchmark.stop("Database", benchName);
             Log.logDebug("Database");
@@ -229,8 +227,8 @@ public abstract class SQLDB extends Database {
 
     @Override
     public void close() {
-        setStatus("Closed");
         open = false;
+        setStatus("Closed");
         Log.logDebug("Database"); // Log remaining Debug info if present
         if (dbCleanTask != null) {
             dbCleanTask.cancel();
@@ -248,6 +246,7 @@ public abstract class SQLDB extends Database {
     private void clean() throws SQLException {
         Log.info("Cleaning the database.");
         tpsTable.clean();
+        transferTable.clean();
         Log.info("Clean complete.");
     }
 

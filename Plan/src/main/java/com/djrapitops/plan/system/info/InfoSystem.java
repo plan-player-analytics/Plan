@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.api.exceptions.connection.WebFailException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -94,7 +95,8 @@ public abstract class InfoSystem implements SubSystem {
 
     public abstract void updateNetworkPage() throws WebException;
 
-    public void requestSetUp(String address) {
+    public void requestSetUp(String address) throws WebException {
         // TODO
+        throw new WebFailException("");
     }
 }

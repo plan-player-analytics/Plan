@@ -24,9 +24,9 @@ import java.util.UUID;
 /**
  * @author Fuzzlemann
  */
+@Deprecated
 public class ConfigurationWebAPI extends WebAPI {
 
-    @Override
     public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         if (!Check.isBukkitAvailable()) {
             Log.debug("Called a wrong server type");
@@ -42,7 +42,7 @@ public class ConfigurationWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address) throws WebException {
+    public void sendRequest(String address) {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 

@@ -30,9 +30,9 @@ import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordionCreator;
-import com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
-import com.djrapitops.plan.utilities.html.tables.GeoInfoTableCreator;
-import com.djrapitops.plan.utilities.html.tables.NicknameTableCreator;
+import com.djrapitops.plan.utilities.html.tables.ActionsTable;
+import com.djrapitops.plan.utilities.html.tables.GeoInfoTable;
+import com.djrapitops.plan.utilities.html.tables.NicknameTable;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -85,7 +85,7 @@ public class InspectPage extends Page {
         addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
         String online = "Offline";
-        Optional<Session> activeSession = SessionCache.getInstance().getCachedSession(uuid);
+        Optional<Session> activeSession = SessionCache.getCachedSession(uuid);
         if (activeSession.isPresent()) {
             Session session = activeSession.get();
             session.setSessionID(Integer.MAX_VALUE);
@@ -116,8 +116,8 @@ public class InspectPage extends Page {
         String favoriteServer = serverNames.get(profile.getFavoriteServer());
         addValue("favoriteServer", favoriteServer != null ? favoriteServer : "Unknown");
 
-        addValue("tableBodyNicknames", NicknameTableCreator.createTable(profile.getNicknames(), serverNames));
-        addValue("tableBodyIPs", GeoInfoTableCreator.createTable(profile.getGeoInformation()));
+        addValue("tableBodyNicknames", new NicknameTable(profile.getNicknames(), serverNames).parseBody());
+        addValue("tableBodyIPs", new GeoInfoTable(profile.getGeoInformation()).parseBody());
 
         Map<UUID, List<Session>> sessions = profile.getSessions();
         Map<String, List<Session>> sessionsByServerName = sessions.entrySet().stream()
@@ -186,14 +186,13 @@ public class InspectPage extends Page {
         addValue("sessionAverageWeek", sessionAverageWeek > 0L ? FormatUtils.formatTimeAmount(sessionAverageWeek) : "-");
         addValue("sessionAverageMonth", sessionAverageMonth > 0L ? FormatUtils.formatTimeAmount(sessionAverageMonth) : "-");
 
-
         addValue("sessionCount", sessionCount);
         addValue("sessionCountDay", sessionCountDay);
         addValue("sessionCountWeek", sessionCountWeek);
         addValue("sessionCountMonth", sessionCountMonth);
 
         List<Action> actions = profile.getAllActions();
-        addValue("tableBodyActions", ActionsTableCreator.createTable(actions));
+        addValue("tableBodyActions", new ActionsTable(actions).parseBody());
 
         String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
         WorldTimes worldTimes = profile.getWorldTimes();

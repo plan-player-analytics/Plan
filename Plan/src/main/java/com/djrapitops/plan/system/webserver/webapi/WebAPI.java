@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.webserver.webapi;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
@@ -13,7 +12,6 @@ import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -25,11 +23,8 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
@@ -58,33 +53,6 @@ public abstract class WebAPI {
     public WebAPI() {
         this.variables = new HashMap<>();
     }
-
-    public static Map<String, String> readVariables(String requestBody) {
-        String[] variables = requestBody.split(";&variable;");
-
-        return Arrays.stream(variables)
-                .map(variable -> variable.split("=", 2))
-                .filter(splitVariables -> splitVariables.length == 2)
-                .collect(Collectors.toMap(splitVariables -> splitVariables[0], splitVariables -> splitVariables[1], (a, b) -> b));
-    }
-
-    public Response processRequest(PlanPlugin plugin, Map<String, String> variables) {
-        String sender = variables.get("sender");
-        if (sender == null) {
-            Log.debug(getClass().getSimpleName() + ": Sender not Found");
-            return badRequest("Sender not present");
-        } else {
-            try {
-                UUID.fromString(sender);
-            } catch (Exception e) {
-                Log.debug(getClass().getSimpleName() + ": Invalid Sender UUID");
-                return badRequest("Faulty Sender value");
-            }
-        }
-        return onRequest(plugin, variables);
-    }
-
-    public abstract Response onRequest(PlanPlugin plugin, Map<String, String> variables);
 
     public void sendRequest(String address) throws WebException {
         Verify.nullCheck(address);
@@ -165,10 +133,6 @@ public abstract class WebAPI {
         variables.put(key, value);
     }
 
-    public Map<String, String> getVariables() {
-        return variables;
-    }
-
     private SSLSocketFactory getRelaxedSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sc = SSLContext.getInstance("SSL");
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
@@ -177,14 +141,6 @@ public abstract class WebAPI {
 
     protected Response success() {
         return ResponseCache.loadResponse(PageId.TRUE.id(), SuccessResponse::new);
-    }
-
-    protected Response fail(String reason) {
-        return ResponseCache.loadResponse(PageId.FALSE.id(), () -> {
-            NotFoundResponse notFoundResponse = new NotFoundResponse("");
-            notFoundResponse.setContent(reason);
-            return notFoundResponse;
-        });
     }
 
     protected Response badRequest(String error) {

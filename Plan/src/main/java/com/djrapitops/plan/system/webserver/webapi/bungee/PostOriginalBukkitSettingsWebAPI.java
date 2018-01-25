@@ -21,9 +21,9 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class PostOriginalBukkitSettingsWebAPI extends WebAPI {
 
-    @Override
     public Response onRequest(PlanPlugin plugin, Map<String, String> variables) {
         if (Check.isBukkitAvailable()) {
             return badRequest("Called a Bukkit Server");
@@ -45,7 +45,6 @@ public class PostOriginalBukkitSettingsWebAPI extends WebAPI {
         return success();
     }
 
-    @Override
     public void sendRequest(String address) throws WebException {
         addVariable("WebServerPort", Integer.toString(Settings.WEBSERVER_PORT.getNumber()));
         addVariable("ServerName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));

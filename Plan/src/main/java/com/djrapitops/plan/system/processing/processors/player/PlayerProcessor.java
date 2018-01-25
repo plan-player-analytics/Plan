@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.system.processing.processors.Processor;
+import com.djrapitops.plan.system.processing.processors.ObjectProcessor;
 
 import java.util.UUID;
 
@@ -15,7 +15,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public abstract class PlayerProcessor extends Processor<UUID> {
+public abstract class PlayerProcessor extends ObjectProcessor<UUID> {
 
     public PlayerProcessor(UUID uuid) {
         super(uuid);

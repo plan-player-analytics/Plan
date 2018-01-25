@@ -83,13 +83,12 @@ public class InspectCommand extends SubCommand {
                         }
                     }
                     new InspectCacheRequestProcessor(uuid, sender, playerName).queue();
+                } catch (FatalDBException ex) {
+                    Log.toLog(this.getClass().getName(), ex);
+                    sender.sendMessage(ChatColor.RED + "Fatal database exception occurred: " + ex.getMessage());
                 } catch (DBException ex) {
-                    if (ex instanceof FatalDBException) {
-                        Log.toLog(this.getClass().getName(), ex);
-                        sender.sendMessage(ChatColor.RED + "Fatal database exception occurred: " + ex.getMessage());
-                    } else {
-                        sender.sendMessage(ChatColor.YELLOW + "Non-Fatal database exception occurred: " + ex.getMessage());
-                    }
+                    Log.toLog(this.getClass().getName(), ex);
+                    sender.sendMessage(ChatColor.YELLOW + "Non-Fatal database exception occurred: " + ex.getMessage());
                 } finally {
                     this.cancel();
                 }

@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -31,15 +30,12 @@ import com.djrapitops.plugin.task.RunnableFactory;
  */
 public class RegisterCommand extends SubCommand {
 
-    private final PlanPlugin plugin;
-
-    public RegisterCommand(PlanPlugin plugin) {
+    public RegisterCommand() {
         super("register",
                 CommandType.PLAYER_OR_ARGS,
                 "", // No Permission Requirement
                 Locale.get(Msg.CMD_USG_WEB_REGISTER).toString(),
                 "<password> [name] [access lvl]");
-        this.plugin = plugin;
         if (Check.isBukkitAvailable()) {
             setupFilter();
         }

@@ -17,7 +17,7 @@ import com.djrapitops.plan.utilities.NullCheck;
  */
 public abstract class Database {
 
-    private boolean open;
+    protected boolean open = false;
 
     public static Database getActive() {
         Database database = DBSystem.getInstance().getActiveDatabase();

@@ -17,8 +17,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,17 +28,15 @@ import java.util.UUID;
 public class BungeeConnectionSystem extends ConnectionSystem {
 
     private long latestServerMapRefresh;
-    private Map<UUID, Server> servers;
 
     public BungeeConnectionSystem() {
-        servers = new HashMap<>();
         latestServerMapRefresh = 0;
     }
 
     private void refreshServerMap() {
         if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.MINUTE.ms() * 2L) {
             try {
-                servers = Database.getActive().fetch().getBukkitServers();
+                bukkitServers = Database.getActive().fetch().getBukkitServers();
                 latestServerMapRefresh = MiscUtils.getTime();
             } catch (DBException e) {
                 Log.toLog(this.getClass().getName(), e);
@@ -55,11 +51,11 @@ public class BungeeConnectionSystem extends ConnectionSystem {
             throw new NoServersException("Bungee should not send Cache requests.");
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
-            server = servers.get(serverUUID);
+            server = bukkitServers.get(serverUUID);
         } else if (infoRequest instanceof GenerateInspectPageRequest) {
             Optional<UUID> serverUUID = getServerWherePlayerIsOnline((GenerateInspectPageRequest) infoRequest);
             if (serverUUID.isPresent()) {
-                server = servers.getOrDefault(serverUUID.get(), ServerInfo.getServer());
+                server = bukkitServers.getOrDefault(serverUUID.get(), ServerInfo.getServer());
             }
         }
         if (server == null) {
@@ -70,10 +66,10 @@ public class BungeeConnectionSystem extends ConnectionSystem {
 
     @Override
     public void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException {
-        if (servers.isEmpty()) {
+        if (bukkitServers.isEmpty()) {
             throw new NoServersException("No Servers Available to make process request.");
         }
-        for (Server server : servers.values()) {
+        for (Server server : bukkitServers.values()) {
             WebExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
         }
     }

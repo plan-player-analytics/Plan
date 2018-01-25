@@ -20,7 +20,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import org.bukkit.OfflinePlayer;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -280,7 +279,6 @@ public class API {
      * Should be called from async thread.
      *
      * @return Collection of UUIDs that can be found in the database.
-     * @throws SQLException If database error occurs.
      * @since 3.4.2
      */
     @Deprecated

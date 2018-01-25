@@ -45,11 +45,11 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
                 new ListCommand(),
                 new BungeeSetupToggleCommand(plugin)
         );
-        RegisterCommand registerCommand = new RegisterCommand(plugin);
+        RegisterCommand registerCommand = new RegisterCommand();
         add(
                 registerCommand,
                 new WebUserCommand(plugin, registerCommand),
-                new NetworkCommand(plugin),
+                new NetworkCommand(),
                 new ListServersCommand(plugin)
         );
     }

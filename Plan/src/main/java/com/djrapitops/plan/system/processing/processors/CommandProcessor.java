@@ -13,7 +13,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
  *
  * @author Rsl1122
  */
-public class CommandProcessor extends Processor<String> {
+public class CommandProcessor extends ObjectProcessor<String> {
 
     public CommandProcessor(String object) {
         super(object);

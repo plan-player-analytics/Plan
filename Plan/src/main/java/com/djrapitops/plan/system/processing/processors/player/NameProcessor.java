@@ -4,13 +4,15 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.data.Actions;
+import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.ProcessingQueue;
-import com.djrapitops.plan.system.processing.processors.NewNickActionProcessor;
+import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.List;
@@ -36,7 +38,6 @@ public class NameProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        Plan plugin = Plan.getInstance();
         DataCache dataCache = DataCache.getInstance();
         String cachedName = dataCache.getName(uuid);
         String cachedDisplayName = dataCache.getDisplayName(uuid);
@@ -64,6 +65,19 @@ public class NameProcessor extends PlayerProcessor {
         if (nicknames.contains(displayName)) {
             return;
         }
-        ProcessingQueue.getInstance().queue(new NewNickActionProcessor(uuid, displayName));
+
+        long time = MiscUtils.getTime();
+
+        Processor.queue(() -> {
+            String info = HtmlUtils.removeXSS(displayName);
+
+            Action action = new Action(time, Actions.NEW_NICKNAME, info);
+
+            try {
+                Database.getActive().save().action(uuid, action);
+            } catch (DBException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+        });
     }
 }

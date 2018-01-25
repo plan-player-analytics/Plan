@@ -5,7 +5,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
-import com.djrapitops.plan.system.processing.processors.Processor;
+import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -57,12 +57,9 @@ public class SessionCache {
 
     public void cacheSession(UUID uuid, Session session) {
         activeSessions.put(uuid, session);
-        new Processor<PlanSystem>(system) {
-            @Override
-            public void process() {
-                WebExceptionLogger.logIfOccurs(this.getClass(), () -> system.getInfoSystem().generateAndCachePlayerPage(uuid));
-            }
-        }.queue();
+        Processor.queue(() -> WebExceptionLogger.logIfOccurs(this.getClass(), () ->
+                system.getInfoSystem().generateAndCachePlayerPage(uuid))
+        );
     }
 
     public void endSession(UUID uuid, long time) {

@@ -1,7 +1,8 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.processing.processors.player.DeathProcessor;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.processing.processors.player.KillProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -23,17 +24,6 @@ import org.bukkit.projectiles.ProjectileSource;
  */
 public class DeathEventListener implements Listener {
 
-    private final Plan plugin;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public DeathEventListener(Plan plugin) {
-        this.plugin = plugin;
-    }
-
     /**
      * Command use listener.
      *
@@ -46,7 +36,8 @@ public class DeathEventListener implements Listener {
         LivingEntity dead = event.getEntity();
 
         if (dead instanceof Player) {
-            new DeathProcessor(dead.getUniqueId()).queue();
+            // Process Death
+            Processor.queue(() -> SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(Session::died));
         }
 
         try {

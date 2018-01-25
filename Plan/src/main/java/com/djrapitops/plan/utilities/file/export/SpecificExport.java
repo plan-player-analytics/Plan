@@ -103,7 +103,7 @@ public abstract class SpecificExport extends AbsRunnable {
                 .replace("src=\"plugins/", "src=\"../plugins/")
                 .replace("src=\"js/", "src=\"../js/");
 
-        File htmlLocation = null;
+        File htmlLocation;
         if (usingBungee) {
             if (serverUUID.equals(ServerInfo.getServerUUID())) {
                 htmlLocation = new File(outputFolder, "network");

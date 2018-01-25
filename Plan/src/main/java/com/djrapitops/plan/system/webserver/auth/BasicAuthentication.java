@@ -24,8 +24,6 @@ public class BasicAuthentication implements Authentication {
 
     private String authenticationString;
 
-    private WebUser user;
-
     public BasicAuthentication(String authenticationString) {
         this.authenticationString = authenticationString;
     }

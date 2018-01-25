@@ -43,9 +43,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * Main class for Bukkit that manages the plugin.
- * <p>
- * Everything can be accessed through this class. Use Plan.getInstance() to get
- * the initialised instance of Plan.
  *
  * @author Rsl1122
  * @since 1.0.0

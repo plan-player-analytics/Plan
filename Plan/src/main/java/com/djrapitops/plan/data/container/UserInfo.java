@@ -38,16 +38,8 @@ public class UserInfo {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public long getRegistered() {
         return registered;
-    }
-
-    public void setRegistered(long registered) {
-        this.registered = registered;
     }
 
     public long getLastSeen() {
@@ -60,10 +52,6 @@ public class UserInfo {
 
     public boolean isBanned() {
         return banned;
-    }
-
-    public void setBanned(boolean banned) {
-        this.banned = banned;
     }
 
     public boolean isOpped() {

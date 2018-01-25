@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
-import com.djrapitops.plan.system.webserver.webapi.bungee.PostHtmlWebAPI;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -41,7 +40,7 @@ public class HtmlExport extends SpecificExport {
             Optional<String> serverName = Database.getActive().fetch().getServerName(serverUUID);
             serverName.ifPresent(s -> RunnableFactory.createNew(new AnalysisExport(serverUUID, s)).runTaskAsynchronously());
         } catch (DBException e) {
-            Log.toLog(PostHtmlWebAPI.class.getClass().getName(), e);
+            Log.toLog(HtmlExport.class.getClass().getName(), e);
         }
     }
 
@@ -52,7 +51,7 @@ public class HtmlExport extends SpecificExport {
                 RunnableFactory.createNew(new PlayerExport(playerUUID, playerName)).runTaskAsynchronously();
             }
         } catch (DBException e) {
-            Log.toLog(PostHtmlWebAPI.class.getClass().getName(), e);
+            Log.toLog(HtmlExport.class.getClass().getName(), e);
         }
     }
 

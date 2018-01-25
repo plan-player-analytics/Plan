@@ -8,8 +8,7 @@ import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.BungeeServerInfo;
-import com.djrapitops.plan.system.info.server.ServerProperties;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
@@ -34,9 +33,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     private BungeeSystem system;
 
-    private BungeeServerInfo serverInfoManager;
-    private ServerProperties variableHolder;
-
     @Deprecated
     private boolean setupAllowed = false;
 
@@ -52,7 +48,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             system.enable();
 
             // TODO BungeeServerInfo & move there.
-            String ip = variableHolder.getIp();
+            String ip = ServerInfo.getServerProperties().getIp();
             if ("0.0.0.0".equals(ip)) {
                 Log.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
                 Log.info("Player Analytics partially enabled (Use /planbungee to reload config)");
@@ -106,11 +102,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Override
     public ColorScheme getColorScheme() {
         return PlanColorScheme.create();
-    }
-
-    @Deprecated
-    public ServerProperties getVariable() {
-        return variableHolder;
     }
 
     @Deprecated

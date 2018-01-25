@@ -35,7 +35,7 @@ public class InspectCacheRequestProcessor extends PlayerProcessor {
 
     @Override
     public void process() {
-        SessionCache.getInstance().refreshActiveSessionsState();
+        SessionCache.refreshActiveSessionsState();
         try {
             InfoSystem.getInstance().generateAndCachePlayerPage(getUUID());
             sendInspectMsg(sender, playerName);

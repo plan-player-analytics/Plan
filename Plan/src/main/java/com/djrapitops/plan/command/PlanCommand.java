@@ -43,23 +43,23 @@ public class PlanCommand extends TreeCommand<Plan> {
         add(
                 new InspectCommand(plugin),
                 new QInspectCommand(plugin),
-                new AnalyzeCommand(plugin),
-                new SearchCommand(plugin),
+                new AnalyzeCommand(),
+                new SearchCommand(),
                 new InfoCommand(plugin),
                 new ReloadCommand(plugin),
                 new ManageCommand(plugin),
                 new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
                 new ListCommand()
         );
-        RegisterCommand registerCommand = new RegisterCommand(plugin);
+        RegisterCommand registerCommand = new RegisterCommand();
         add(
                 registerCommand,
                 new WebUserCommand(plugin, registerCommand),
-                new NetworkCommand(plugin),
+                new NetworkCommand(),
                 new ListServersCommand(plugin));
 
         if (Settings.DEV_MODE.isTrue()) {
-            add(new DevCommand(plugin));
+            add(new DevCommand());
         }
     }
 }

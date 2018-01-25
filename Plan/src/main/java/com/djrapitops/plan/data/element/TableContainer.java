@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public final class TableContainer {
+public class TableContainer {
 
     private final String[] header;
     private List<Serializable[]> values;
@@ -38,18 +38,18 @@ public final class TableContainer {
         values = new ArrayList<>();
     }
 
-    public void addRow(Serializable... values) {
+    public final void addRow(Serializable... values) {
         this.values.add(values);
     }
 
-    public String parseHtml() {
+    public final String parseHtml() {
         return Html.TABLE_SCROLL.parse() +
                 parseHeader() +
                 parseBody() +
                 "</table>";
     }
 
-    private String parseBody() {
+    public final String parseBody() {
         StringBuilder body = new StringBuilder();
 
         if (values.isEmpty()) {
@@ -73,11 +73,11 @@ public final class TableContainer {
         return Html.TABLE_BODY.parse(body.toString());
     }
 
-    public void setColor(String color) {
+    public final void setColor(String color) {
         this.color = color;
     }
 
-    public String parseHeader() {
+    public final String parseHeader() {
         StringBuilder header = new StringBuilder("<thead" + (color != null ? " class=\"bg-" + color + "\"" : "") + "><tr>");
         for (String title : this.header) {
             header.append("<th>").append(title).append("</th>");

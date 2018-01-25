@@ -7,7 +7,7 @@ import java.util.Comparator;
 /**
  * @author Fuzzlemann
  */
-public class KillDataComparator implements Comparator<PlayerKill> {
+public class PlayerKillComparator implements Comparator<PlayerKill> {
 
     @Override
     public int compare(PlayerKill o1, PlayerKill o2) {

@@ -128,12 +128,7 @@ public class PlayerProfile implements OfflinePlayer {
 
     // Calculating Getters
     public ActivityIndex getActivityIndex(long date) {
-        ActivityIndex index = activityIndexCache.get(date);
-        if (index == null) {
-            index = new ActivityIndex(this, date);
-            activityIndexCache.put(date, index);
-        }
-        return index;
+        return activityIndexCache.computeIfAbsent(date, dateValue -> new ActivityIndex(this, dateValue));
     }
 
     /**

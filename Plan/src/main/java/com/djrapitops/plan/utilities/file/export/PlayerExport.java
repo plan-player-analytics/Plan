@@ -4,6 +4,8 @@
  */
 package com.djrapitops.plan.utilities.file.export;
 
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.IOException;
@@ -29,6 +31,10 @@ public class PlayerExport extends SpecificExport {
     @Override
     public void run() {
         try {
+            if (Check.isBukkitAvailable() && ConnectionSystem.getInstance().isServerAvailable()) {
+                return;
+            }
+
             exportAvailablePlayerPage(uuid, name);
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);

@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -20,11 +19,8 @@ import com.djrapitops.plugin.command.SubCommand;
  */
 public class DevCommand extends SubCommand {
 
-    private final Plan plugin;
-
-    public DevCommand(Plan plugin) {
+    public DevCommand() {
         super("dev", CommandType.PLAYER_OR_ARGS, "plan.*", "Test Plugin functions not testable with unit tests.", "<feature to test>");
-        this.plugin = plugin;
     }
 
     @Override

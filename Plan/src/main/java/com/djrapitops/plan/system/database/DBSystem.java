@@ -46,7 +46,7 @@ public abstract class DBSystem implements SubSystem {
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
-            db.scheduleClean(10L);
+            db.scheduleClean(1L);
             Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
             Benchmark.stop("Enable", "Init Database");
         } catch (DBInitException e) {
@@ -58,10 +58,6 @@ public abstract class DBSystem implements SubSystem {
 
     public Set<Database> getDatabases() {
         return databases;
-    }
-
-    public void setDatabases(Set<Database> databases) {
-        this.databases = databases;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -25,9 +24,8 @@ public class ManageImportCommand extends SubCommand {
     /**
      * Class Constructor.
      *
-     * @param plugin Current instance of Plan
      */
-    public ManageImportCommand(Plan plugin) {
+    public ManageImportCommand() {
         super("import",
                 CommandType.CONSOLE,
                 Permissions.MANAGE.getPermission(),

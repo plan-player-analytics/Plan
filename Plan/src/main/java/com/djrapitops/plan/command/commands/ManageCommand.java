@@ -38,9 +38,9 @@ public class ManageCommand extends TreeCommand<Plan> {
         add(
                 new ManageMoveCommand(plugin),
                 new ManageHotswapCommand(plugin),
-                new ManageBackupCommand(plugin),
+                new ManageBackupCommand(),
                 new ManageRestoreCommand(plugin),
-                new ManageImportCommand(plugin),
+                new ManageImportCommand(),
                 new ManageRemoveCommand(plugin),
                 new ManageClearCommand(plugin),
                 new ManageSetupCommand(plugin),

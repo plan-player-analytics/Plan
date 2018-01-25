@@ -17,7 +17,7 @@ public class Server {
     private int id;
     private String name;
     private String webAddress;
-    private int maxPlayers = -1;
+    private int maxPlayers;
 
     public Server(int id, UUID uuid, String name, String webAddress, int maxPlayers) {
         this.id = id;

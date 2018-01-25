@@ -8,12 +8,15 @@ import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.Base64Util;
+import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -63,11 +66,15 @@ public class CacheInspectPageRequest implements CacheRequest {
         try {
             Map<UUID, String> pages = Database.getActive().transfer().getEncodedPlayerHtml();
 
+            boolean export = Settings.ANALYSIS_EXPORT.isTrue();
             for (Map.Entry<UUID, String> entry : pages.entrySet()) {
                 UUID uuid = entry.getKey();
                 String html = Base64Util.decode(entry.getValue());
 
                 ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
+                if (export) {
+                    Processor.queue(() -> HtmlExport.exportPlayer(uuid));
+                }
             }
         } catch (DBException e) {
             throw new TransferDatabaseException(e);

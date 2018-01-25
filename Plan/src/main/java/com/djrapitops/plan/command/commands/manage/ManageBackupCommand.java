@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -24,21 +23,13 @@ import com.djrapitops.plugin.utilities.Verify;
  */
 public class ManageBackupCommand extends SubCommand {
 
-    private final Plan plugin;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public ManageBackupCommand(Plan plugin) {
+    public ManageBackupCommand() {
         super("backup",
                 CommandType.CONSOLE,
                 Permissions.MANAGE.getPermission(),
                 Locale.get(Msg.CMD_USG_MANAGE_BACKUP).toString(),
                 "<DB>");
 
-        this.plugin = plugin;
     }
 
     @Override

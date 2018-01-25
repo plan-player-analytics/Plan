@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
@@ -22,17 +21,6 @@ import java.util.UUID;
  */
 public class GamemodeChangeListener implements Listener {
 
-    private final Plan plugin;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public GamemodeChangeListener(Plan plugin) {
-        this.plugin = plugin;
-    }
-
     /**
      * GM Change Event Listener.
      *
@@ -52,7 +40,7 @@ public class GamemodeChangeListener implements Listener {
 
             new WorldAliasSettings().addWorld(worldName);
 
-            Optional<Session> cachedSession = SessionCache.getInstance().getCachedSession(uuid);
+            Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
             cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);

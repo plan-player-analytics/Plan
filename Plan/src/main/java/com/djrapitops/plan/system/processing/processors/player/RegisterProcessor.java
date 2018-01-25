@@ -9,7 +9,8 @@ import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.processing.processors.Processor;
+import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.processors.ObjectProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
@@ -25,9 +26,9 @@ public class RegisterProcessor extends PlayerProcessor {
     private final long time;
     private final int playersOnline;
     private final String name;
-    private final Processor[] afterProcess;
+    private final ObjectProcessor[] afterProcess;
 
-    public RegisterProcessor(UUID uuid, long registered, long time, String name, int playersOnline, Processor... afterProcess) {
+    public RegisterProcessor(UUID uuid, long registered, long time, String name, int playersOnline, ObjectProcessor... afterProcess) {
         super(uuid);
         this.registered = registered;
         this.time = time;

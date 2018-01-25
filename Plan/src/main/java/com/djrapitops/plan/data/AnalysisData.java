@@ -17,7 +17,6 @@ import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.html.Html;
-import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
 import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
 import com.djrapitops.plan.utilities.html.graphs.WorldMap;
@@ -26,7 +25,7 @@ import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
-import com.djrapitops.plan.utilities.html.tables.CommandUseTableCreator;
+import com.djrapitops.plan.utilities.html.tables.CommandUseTable;
 import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -86,10 +85,6 @@ public class AnalysisData extends RawData {
 
         addValue("playersMax", ServerProfile.getPlayersMax());
         addValue("playersOnline", ServerProfile.getPlayersOnline());
-    }
-
-    public long getRefreshDate() {
-        return refreshDate;
     }
 
     public void analyze(ServerProfile profile) {
@@ -167,7 +162,7 @@ public class AnalysisData extends RawData {
     private void commandUsage(Map<String, Integer> commandUsage) {
         addValue("commandUniqueCount", String.valueOf(commandUsage.size()));
         addValue("commandCount", MathUtils.sumInt(commandUsage.values().stream().map(i -> (int) i)));
-        addValue("tableBodyCommands", HtmlUtils.removeXSS(CommandUseTableCreator.createTable(commandUsage)));
+        addValue("tableBodyCommands", new CommandUseTable(commandUsage).parseBody());
     }
 
     private void geolocationsTab(List<String> geoLocations) {

@@ -5,8 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Ramer-Douglas-Peucker Point Reduction Algorithm for reducing points from
- * graphs.
+ * Ramer-Douglas-Peucker Point Reduction Algorithm Implementation for reducing points from graphs.
+ *
+ * https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
  *
  * @author Rsl1122
  * @since 3.5.2

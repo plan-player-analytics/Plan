@@ -16,7 +16,7 @@ import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
-import com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
+import com.djrapitops.plan.utilities.html.tables.KillsTable;
 import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -89,7 +89,7 @@ public class SessionTabStructureCreator {
 
             WorldPie worldPie = new WorldPie(worldTimes);
 
-            String killTable = KillsTableCreator.createTable(session.getPlayerKills());
+            String killTable = new KillsTable(session.getPlayerKills()).parseHtml();
 
             // Accordion panel header
             html.append("<div title=\"Session ID: ").append(sessionID)

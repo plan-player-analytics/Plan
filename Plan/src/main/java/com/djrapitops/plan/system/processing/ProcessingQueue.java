@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.processing;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.processing.processors.Processor;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plan.utilities.queue.Consumer;
 import com.djrapitops.plan.utilities.queue.Queue;
@@ -97,10 +96,6 @@ class ProcessConsumer extends Consumer<Processor> {
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
             Log.toLog(this.getTaskName() + ":" + process.getClass().getSimpleName(), e);
         }
-    }
-
-    @Override
-    protected void clearVariables() {
     }
 }
 

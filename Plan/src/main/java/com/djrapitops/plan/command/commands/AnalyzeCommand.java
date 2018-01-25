@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -9,7 +8,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.processors.Processor;
+import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -20,8 +19,6 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.ChatColor;
 
 import java.util.Map;
@@ -39,9 +36,8 @@ public class AnalyzeCommand extends SubCommand {
     /**
      * Subcommand Constructor.
      *
-     * @param plugin Current instance of Plan
      */
-    public AnalyzeCommand(Plan plugin) {
+    public AnalyzeCommand() {
         super("analyze, analyse, analysis, a",
                 CommandType.CONSOLE,
                 Permissions.ANALYZE.getPermission(),
@@ -58,24 +54,21 @@ public class AnalyzeCommand extends SubCommand {
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
 
-        new Processor<ISender>(sender) {
-            @Override
-            public void process() {
-                try {
-                    Server server = getServer(args).orElseGet(ServerInfo::getServer);
-                    UUID serverUUID = server.getUuid();
-                    if (!ServerInfo.getServerUUID().equals(serverUUID) || !Analysis.isAnalysisBeingRun()) {
-                        InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(serverUUID));
-                    }
-                    sendWebUserNotificationIfNecessary(sender);
-                    sendLink(server, sender);
-                } catch (DBException | WebException e) {
-                    // TODO Exception handling
-                    sender.sendMessage(ChatColor.RED + " Error occurred: " + e.toString());
-                    Log.toLog(this.getClass().getName(), e);
+        Processor.queue(() -> {
+            try {
+                Server server = getServer(args).orElseGet(ServerInfo::getServer);
+                UUID serverUUID = server.getUuid();
+                if (!ServerInfo.getServerUUID().equals(serverUUID) || !Analysis.isAnalysisBeingRun()) {
+                    InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(serverUUID));
                 }
+                sendWebUserNotificationIfNecessary(sender);
+                sendLink(server, sender);
+            } catch (DBException | WebException e) {
+                // TODO Exception handling
+                sender.sendMessage(ChatColor.RED + " Error occurred: " + e.toString());
+                Log.toLog(this.getClass().getName(), e);
             }
-        }.queue();
+        });
         return true;
     }
 
@@ -97,21 +90,17 @@ public class AnalyzeCommand extends SubCommand {
 
     private void sendWebUserNotificationIfNecessary(ISender sender) {
         if (WebServerSystem.getInstance().getWebServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {
-            RunnableFactory.createNew(new AbsRunnable("WebUser exist check task") {
-                @Override
-                public void run() {
-                    try {
-                        boolean senderHasWebUser = Database.getActive().check().doesWebUserExists(sender.getName());
-                        if (!senderHasWebUser) {
-                            sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
-                        }
-                    } catch (Exception e) {
-                        Log.toLog(this.getClass().getName() + getName(), e);
-                    } finally {
-                        this.cancel();
+
+            Processor.queue(() -> {
+                try {
+                    boolean senderHasWebUser = Database.getActive().check().doesWebUserExists(sender.getName());
+                    if (!senderHasWebUser) {
+                        sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                     }
+                } catch (Exception e) {
+                    Log.toLog(this.getClass().getName() + getName(), e);
                 }
-            }).runTaskAsynchronously();
+            });
         }
     }
 

@@ -20,8 +20,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,10 +33,8 @@ public class BukkitConnectionSystem extends ConnectionSystem {
     private long latestServerMapRefresh;
 
     private Server mainServer;
-    private Map<UUID, Server> servers;
 
     public BukkitConnectionSystem() {
-        servers = new HashMap<>();
         latestServerMapRefresh = 0;
     }
 
@@ -48,7 +44,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
                 Database database = Database.getActive();
                 Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
                 bungeeInformation.ifPresent(server -> mainServer = server);
-                servers = database.fetch().getBukkitServers();
+                bukkitServers = database.fetch().getBukkitServers();
                 latestServerMapRefresh = MiscUtils.getTime();
             } catch (DBException e) {
                 Log.toLog(this.getClass().getName(), e);
@@ -60,7 +56,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
     protected Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException {
         refreshServerMap();
 
-        if (mainServer == null && servers.isEmpty()) {
+        if (mainServer == null && bukkitServers.isEmpty()) {
             throw new NoServersException("No Servers available to process requests.");
         }
 
@@ -69,11 +65,11 @@ public class BukkitConnectionSystem extends ConnectionSystem {
             server = mainServer;
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
-            server = servers.get(serverUUID);
+            server = bukkitServers.get(serverUUID);
         } else if (infoRequest instanceof GenerateInspectPageRequest) {
             Optional<UUID> serverUUID = getServerWherePlayerIsOnline((GenerateInspectPageRequest) infoRequest);
             if (serverUUID.isPresent()) {
-                server = servers.getOrDefault(serverUUID.get(), ServerInfo.getServer());
+                server = bukkitServers.getOrDefault(serverUUID.get(), ServerInfo.getServer());
             }
         }
         if (server == null) {
@@ -84,10 +80,10 @@ public class BukkitConnectionSystem extends ConnectionSystem {
 
     @Override
     public void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException {
-        if (servers.isEmpty()) {
+        if (bukkitServers.isEmpty()) {
             throw new NoServersException("No Servers Available to make process request.");
         }
-        for (Server server : servers.values()) {
+        for (Server server : bukkitServers.values()) {
             WebExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
         }
     }

@@ -178,15 +178,6 @@ public class HtmlStructure {
                 "})</script>";
     }
 
-    public static String parseOfflineServerContainer(String oldContent) {
-        if (oldContent == null) {
-            return "";
-        }
-        String[] split = oldContent.split("<p>", 2);
-        String[] split2 = split[1].split("box-footer", 2);
-        return split[0] + "<p>Offline</p></div><div class=\"box-footer" + split2[1];
-    }
-
     public static String playerStatus(String online, Set<UUID> banned, boolean op) {
         boolean offline = "offline".equalsIgnoreCase(online);
 

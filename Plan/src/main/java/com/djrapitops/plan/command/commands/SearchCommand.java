@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -28,9 +27,8 @@ public class SearchCommand extends SubCommand {
     /**
      * Class Constructor.
      *
-     * @param plugin Current instance of Plan
      */
-    public SearchCommand(Plan plugin) {
+    public SearchCommand() {
         super("search",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.SEARCH.getPermission(),

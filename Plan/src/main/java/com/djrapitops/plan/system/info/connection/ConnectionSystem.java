@@ -33,10 +33,10 @@ public abstract class ConnectionSystem implements SubSystem {
 
     protected final ConnectionLog connectionLog;
     protected final Map<String, InfoRequest> dataRequests;
-    protected Map<UUID, Server> servers;
+    protected Map<UUID, Server> bukkitServers;
 
     public ConnectionSystem() {
-        servers = new HashMap<>();
+        bukkitServers = new HashMap<>();
         dataRequests = loadDataRequests();
         connectionLog = new ConnectionLog();
     }

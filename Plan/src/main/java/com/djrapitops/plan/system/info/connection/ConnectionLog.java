@@ -43,11 +43,8 @@ public class ConnectionLog {
         }
 
         Map<String, Entry> serverLog = getInstance().getLog().get(server);
-        if (Verify.isEmpty(serverLog)) {
-            return true;
-        }
+        return Verify.isEmpty(serverLog) || hasConnectionSucceeded(serverLog);
 
-        return hasConnectionSucceeded(serverLog);
     }
 
     public static boolean hasConnectionSucceeded(Server server) {
@@ -55,11 +52,9 @@ public class ConnectionLog {
             return false;
         }
         Map<String, Entry> serverLog = getInstance().getLog().get(server);
-        if (Verify.isEmpty(serverLog)) {
-            return false;
-        }
+        return !Verify.isEmpty(serverLog)
+                && hasConnectionSucceeded(serverLog);
 
-        return hasConnectionSucceeded(serverLog);
     }
 
     private static boolean hasConnectionSucceeded(Map<String, Entry> serverLog) {

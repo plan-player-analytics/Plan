@@ -4,34 +4,27 @@
  */
 package com.djrapitops.plan.system.processing.processors;
 
-import com.djrapitops.plan.system.processing.ProcessingQueue;
+import com.djrapitops.plan.system.processing.Processor;
 
 /**
  * Abstract class for processing different objects using Generics.
  *
  * @author Rsl1122
  */
-public abstract class Processor<T> {
+public abstract class ObjectProcessor<T> implements Processor {
     protected final T object;
 
-    public Processor(T object) {
+    public ObjectProcessor(T object) {
         this.object = object;
-    }
-
-    public static void queueMany(Processor... processors) {
-        ProcessingQueue processingQueue = ProcessingQueue.getInstance();
-        for (Processor processor : processors) {
-            processingQueue.queue(processor);
-        }
     }
 
     public abstract void process();
 
-    public T getObject() {
+    protected T getObject() {
         return object;
     }
 
     public void queue() {
-        queueMany(this);
+        Processor.queue(this);
     }
 }

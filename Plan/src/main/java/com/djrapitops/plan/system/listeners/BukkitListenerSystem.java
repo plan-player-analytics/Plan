@@ -17,10 +17,10 @@ public class BukkitListenerSystem extends ListenerSystem {
         plugin.registerListener(
                 new PlayerOnlineListener(),
                 new ChatListener(),
-                new GamemodeChangeListener(plugin),
+                new GamemodeChangeListener(),
                 new WorldChangeListener(),
                 new CommandPreprocessListener(plugin),
-                new DeathEventListener(plugin)
+                new DeathEventListener()
         );
         PlayerOnlineListener.setCountKicks(true);
     }

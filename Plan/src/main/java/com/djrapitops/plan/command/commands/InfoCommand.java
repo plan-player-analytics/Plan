@@ -1,9 +1,11 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
@@ -40,10 +42,13 @@ public class InfoCommand extends SubCommand {
         String sColor = cs.getSecondaryColor();
         String tColor = cs.getTertiaryColor();
         String ball = Locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString();
+
+        String upToDate = VersionCheckSystem.isNewVersionAvailable() ? "Update Available" : "Up to date";
         String[] messages = {
                 Locale.get(Msg.CMD_HEADER_INFO).toString(),
                 ball + mColor + " Version: " + sColor + plugin.getDescription().getVersion(),
-                ball + mColor + " Active Database: " + tColor + plugin.getDB().getConfigName(),
+                ball + mColor + " Up to date: " + sColor + upToDate,
+                ball + mColor + " Active Database: " + tColor + Database.getActive().getConfigName(),
                 Locale.get(Msg.CMD_CONSTANT_FOOTER).toString()
         };
         sender.sendMessage(messages);

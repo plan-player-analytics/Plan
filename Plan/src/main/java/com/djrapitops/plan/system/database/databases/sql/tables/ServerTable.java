@@ -412,12 +412,7 @@ public class ServerTable extends Table {
     public int getMaxPlayers() throws SQLException {
         String sql = "SELECT SUM(" + columnMaxPlayers + ") AS max FROM " + tableName;
 
-        return query(new QueryStatement<Integer>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) {
-
-            }
-
+        return query(new QueryAllStatement<Integer>(sql) {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 if (set.next()) {

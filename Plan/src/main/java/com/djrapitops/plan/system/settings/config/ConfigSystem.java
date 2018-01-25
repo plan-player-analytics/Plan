@@ -64,7 +64,7 @@ public abstract class ConfigSystem implements SubSystem {
     /**
      * Copies default values from file in jar to Config.
      *
-     * @throws IOException
+     * @throws IOException If file can't be read or written.
      */
     protected abstract void copyDefaults() throws IOException;
 

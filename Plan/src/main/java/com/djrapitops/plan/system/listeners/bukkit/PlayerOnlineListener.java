@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.processing.processors.Processor;
+import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
 import com.djrapitops.plan.system.tasks.TaskSystem;
@@ -101,7 +101,8 @@ public class PlayerOnlineListener implements Listener {
                             new IPUpdateProcessor(uuid, ip, time),
                             new NameProcessor(uuid, playerName, displayName)
                     ),
-                    new NetworkPageUpdateProcessor());
+                    new NetworkPageUpdateProcessor()
+            );
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

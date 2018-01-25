@@ -23,7 +23,7 @@ public class PluginsConfigSection {
     }
 
     private ConfigNode getPluginsSection() {
-        return ConfigSystem.getInstance().getConfig().getConfigNode("Plugins");
+        return ConfigSystem.getConfig().getConfigNode("Plugins");
     }
 
     public void createSection(PluginData dataSource) {

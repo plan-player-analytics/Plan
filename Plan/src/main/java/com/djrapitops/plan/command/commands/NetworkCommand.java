@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -20,17 +19,14 @@ import com.djrapitops.plugin.command.SubCommand;
  */
 public class NetworkCommand extends SubCommand {
 
-    private final PlanPlugin plugin;
-
     /**
      * Class Constructor.
      */
-    public NetworkCommand(PlanPlugin plugin) {
+    public NetworkCommand() {
         super("network, n, netw",
                 CommandType.CONSOLE,
                 Permissions.ANALYZE.getPermission(),
                 "Get the link to the network page");
-        this.plugin = plugin;
     }
 
     @Override

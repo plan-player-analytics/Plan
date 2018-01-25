@@ -46,10 +46,6 @@ public class Request {
         return target;
     }
 
-    public boolean isAPIRequest() {
-        return "POST".equals(requestMethod);
-    }
-
     public InputStream getRequestBody() {
         return exchange.getRequestBody();
     }

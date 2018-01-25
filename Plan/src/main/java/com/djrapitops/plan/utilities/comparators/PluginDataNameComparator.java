@@ -10,7 +10,7 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import java.util.Comparator;
 
 /**
- * Comparator for UserInfo for Alphabetical Name order.
+ * Comparator for PluginData for Alphabetical Name order.
  *
  * @author Rsl1122
  */

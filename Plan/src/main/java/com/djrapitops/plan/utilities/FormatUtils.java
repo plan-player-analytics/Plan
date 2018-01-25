@@ -233,8 +233,8 @@ public class FormatUtils {
     /**
      * Gets lines for stack trace recursively.
      *
-     * @param throwable
-     * @return
+     * @param throwable Throwable element
+     * @return lines of stack trace.
      */
     public static List<String> getStackTrace(Throwable throwable) {
         List<String> stackTrace = new ArrayList<>();

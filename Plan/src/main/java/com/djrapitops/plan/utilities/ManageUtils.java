@@ -1,6 +1,5 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -32,7 +31,6 @@ public class ManageUtils {
      * @param copyFromDB Database you want to backup.
      */
     public static void backup(String dbName, Database copyFromDB) throws DBInitException, SQLException {
-        Plan plugin = Plan.getInstance();
         String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
         String fileName = dbName + "-backup-" + timeStamp;
         SQLiteDB backupDB = new SQLiteDB(fileName);
