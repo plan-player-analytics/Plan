@@ -8,6 +8,7 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 
 import java.util.HashMap;

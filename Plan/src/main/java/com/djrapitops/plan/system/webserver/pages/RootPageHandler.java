@@ -10,6 +10,7 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.ResponseHandler;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plugin.api.utility.log.Log;

@@ -9,7 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
@@ -65,7 +65,7 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
         // Available variables: sender, player
 
         String player = variables.get("player");
-        NullCheck.check(player, new BadRequestException("Player UUID 'player' variable not supplied."));
+        NullCheck.check(player, new BadRequestException("Player UUID 'player' variable not supplied in the request."));
 
         UUID uuid = UUID.fromString(player);
 

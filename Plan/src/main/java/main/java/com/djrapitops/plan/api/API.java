@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;

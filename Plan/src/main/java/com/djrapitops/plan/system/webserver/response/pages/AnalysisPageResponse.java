@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -13,12 +14,14 @@ import com.djrapitops.plugin.api.utility.log.Log;
 public class AnalysisPageResponse extends Response {
 
     public static AnalysisPageResponse refreshNow() {
-        try {
-            InfoSystem.getInstance().generateAnalysisPageOfThisServer();
-        } catch (WebException e) {
-            // TODO Exception handling
-            Log.toLog(AnalysisPageResponse.class, e);
-        }
+        Processor.queue(() -> {
+            try {
+                InfoSystem.getInstance().generateAnalysisPageOfThisServer();
+            } catch (WebException e) {
+                // TODO Exception handling
+                Log.toLog(AnalysisPageResponse.class, e);
+            }
+        });
         return new AnalysisPageResponse(getRefreshingHtml());
     }
 

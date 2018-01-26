@@ -16,7 +16,8 @@ public class NotFoundResponse extends ErrorResponse {
     }
 
     public NotFoundResponse(String msg) {
-        this();
+        super.setHeader("HTTP/1.1 404 Not Found");
+        super.setTitle(Html.FONT_AWESOME_ICON.parse("map-signs") + " 404 Not Found");
         super.setParagraph(msg);
         super.replacePlaceholders();
     }

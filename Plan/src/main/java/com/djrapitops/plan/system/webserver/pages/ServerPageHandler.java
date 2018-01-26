@@ -30,7 +30,12 @@ public class ServerPageHandler extends PageHandler {
     @Override
     public Response getResponse(Request request, List<String> target) {
         UUID serverUUID = getServerUUID(target);
-        return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), AnalysisPageResponse::refreshNow);
+        Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
+        if (response != null) {
+            return response;
+        } else {
+            return AnalysisPageResponse.refreshNow();
+        }
     }
 
     private UUID getServerUUID(List<String> target) {

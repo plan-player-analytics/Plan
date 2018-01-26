@@ -59,7 +59,7 @@ public class AnalyzeCommand extends SubCommand {
                 Server server = getServer(args).orElseGet(ServerInfo::getServer);
                 UUID serverUUID = server.getUuid();
                 if (!ServerInfo.getServerUUID().equals(serverUUID) || !Analysis.isAnalysisBeingRun()) {
-                    InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(serverUUID));
+                    InfoSystem.getInstance().generateAnalysisPage(serverUUID);
                 }
                 sendWebUserNotificationIfNecessary(sender);
                 sendLink(server, sender);

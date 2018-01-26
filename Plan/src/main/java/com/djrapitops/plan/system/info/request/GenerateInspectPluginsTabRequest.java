@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.info.request;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
@@ -51,7 +51,7 @@ public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables i
         // Available variables: sender, player
 
         String player = variables.get("player");
-        NullCheck.check(player, new BadRequestException("Player UUID 'player' variable not supplied."));
+        NullCheck.check(player, new BadRequestException("Player UUID 'player' variable not supplied in the request."));
 
         UUID uuid = UUID.fromString(player);
         String[] navAndhtml = getNavAndHtml(uuid);

@@ -56,7 +56,7 @@ public class TransferTable extends Table {
                 columnContent +
                 ") VALUES (" +
                 serverTable.statementSelectServerID + ", " +
-                "?, ?, ?, ?, ?)";
+                "?, ?, ?, ?)";
 
         selectStatement = "SELECT * FROM " + tableName +
                 " WHERE " + columnInfoType + "= ?" +
@@ -241,7 +241,7 @@ public class TransferTable extends Table {
             @Override
             public Optional<UUID> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(UUID.fromString(set.getString(columnExtraVariables)));
+                    return Optional.of(UUID.fromString(set.getString("s_uuid")));
                 }
                 return Optional.empty();
             }

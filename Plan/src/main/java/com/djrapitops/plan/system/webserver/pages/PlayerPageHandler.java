@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.WebUser;
@@ -12,6 +13,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
@@ -54,6 +56,7 @@ public class PlayerPageHandler extends PageHandler {
             }
         } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
+            throw new InternalErrorException("Analysis", e);
         }
         return notFound("Player has not played on this server.");
     }

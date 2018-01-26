@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionIn;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.webserver.Request;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.NullCheck;
 

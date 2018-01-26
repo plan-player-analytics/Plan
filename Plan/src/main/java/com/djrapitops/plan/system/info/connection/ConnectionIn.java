@@ -36,7 +36,7 @@ public class ConnectionIn {
 
     private void checkAuthentication(Map<String, String> variables) throws WebException {
         String sender = variables.get("sender");
-        NullCheck.check(sender, new BadRequestException("Sender ('sender') was not included."));
+        NullCheck.check(sender, new BadRequestException("Sender ('sender') variable not supplied in the request."));
         UUID serverUUID = UUID.fromString(sender);
 
         try {
@@ -44,7 +44,7 @@ public class ConnectionIn {
                 if (infoRequest instanceof RequestSetupRequest) {
                     return;
                 }
-                throw new UnauthorizedServerException(sender + "Sender was not found from database");
+                throw new UnauthorizedServerException(sender + " (Sender) was not found from database");
             }
         } catch (DBException e) {
             throw new TransferDatabaseException(e);

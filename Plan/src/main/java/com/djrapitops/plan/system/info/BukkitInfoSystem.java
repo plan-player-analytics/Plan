@@ -30,6 +30,7 @@ public class BukkitInfoSystem extends InfoSystem {
         if (infoRequest instanceof CacheNetworkPageContentRequest) {
             return;
         }
+        infoRequest.placeDataToDatabase();
         if (infoRequest instanceof InfoRequestWithVariables) {
             infoRequest.handleRequest(((InfoRequestWithVariables) infoRequest).getVariables());
         } else {

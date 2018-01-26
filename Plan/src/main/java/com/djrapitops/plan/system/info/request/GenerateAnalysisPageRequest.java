@@ -12,7 +12,7 @@ import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.pages.DefaultResponses;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
@@ -53,7 +53,7 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
         // Variables available: sender, server
 
         String server = variables.get("server");
-        NullCheck.check(server, new BadRequestException("Server UUID 'server' variable not supplied."));
+        NullCheck.check(server, new BadRequestException("Server UUID 'server' variable not supplied in the request."));
 
         UUID serverUUID = UUID.fromString(server);
         if (!ServerInfo.getServerUUID().equals(serverUUID)) {

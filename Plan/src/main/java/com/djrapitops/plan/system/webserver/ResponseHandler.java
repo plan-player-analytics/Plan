@@ -120,15 +120,14 @@ public class ResponseHandler extends TreePageHandler {
                 }
             }
         }
-
+        if (targetString.endsWith(".css")) {
+            return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> new CSSResponse(targetString));
+        }
+        if (targetString.endsWith(".js")) {
+            return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
+        }
         PageHandler pageHandler = getPageHandler(target);
         if (pageHandler == null) {
-            if (targetString.endsWith(".css")) {
-                return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> new CSSResponse(targetString));
-            }
-            if (targetString.endsWith(".js")) {
-                return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
-            }
             return DefaultResponses.NOT_FOUND.get();
         } else {
             if (authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target)) {
