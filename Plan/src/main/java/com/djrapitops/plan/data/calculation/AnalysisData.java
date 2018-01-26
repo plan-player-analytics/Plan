@@ -1,11 +1,12 @@
-package com.djrapitops.plan.data;
+package com.djrapitops.plan.data.calculation;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.StickyData;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.element.AnalysisContainer;
-import com.djrapitops.plan.data.element.HealthNotes;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.Settings;

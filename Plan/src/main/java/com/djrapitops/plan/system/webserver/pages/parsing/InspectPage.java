@@ -6,9 +6,9 @@ package com.djrapitops.plan.system.webserver.pages.parsing;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.element.ActivityIndex;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;

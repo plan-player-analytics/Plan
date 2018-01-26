@@ -1,9 +1,9 @@
 package com.djrapitops.plan.utilities.analysis;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
+import com.djrapitops.plan.data.calculation.AnalysisData;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.plugin.BanData;
 import com.djrapitops.plan.data.plugin.HookHandler;

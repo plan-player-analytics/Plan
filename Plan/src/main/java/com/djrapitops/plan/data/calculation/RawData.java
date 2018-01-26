@@ -1,4 +1,4 @@
-package com.djrapitops.plan.data;
+package com.djrapitops.plan.data.calculation;
 
 import com.djrapitops.plugin.utilities.Verify;
 

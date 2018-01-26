@@ -3,7 +3,7 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.element.ActivityIndex;
+import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;

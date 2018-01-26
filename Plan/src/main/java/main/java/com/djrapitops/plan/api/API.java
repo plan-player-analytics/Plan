@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.api;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.data.calculation.AnalysisData;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
@@ -214,7 +214,7 @@ public class API {
      */
     @Deprecated
     public AnalysisData getAnalysisDataFromCache() {
-        return new AnalysisData();
+        throw new UnsupportedOperationException("No longer supported");
     }
 
     /**

@@ -2,7 +2,7 @@ package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.element.ActivityIndex;
+import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.PluginData;

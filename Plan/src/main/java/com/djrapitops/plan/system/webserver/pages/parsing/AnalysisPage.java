@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.webserver.pages.parsing;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.data.calculation.AnalysisData;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 

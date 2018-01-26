@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.info.request;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.data.calculation.AnalysisData;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;

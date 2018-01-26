@@ -1,4 +1,4 @@
-package com.djrapitops.plan.data.element;
+package com.djrapitops.plan.data.calculation;
 
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
@@ -17,16 +17,16 @@ public class ActivityIndex {
         value = calculate(player, date);
     }
 
+    public static String[] getGroups() {
+        return new String[]{"Very Active", "Active", "Regular", "Irregular", "Inactive"};
+    }
+
     private long loadSetting(long value) {
         return value <= 0 ? 1 : value;
     }
 
     private int loadSetting(int value) {
         return value <= 0 ? 1 : value;
-    }
-
-    public static String[] getGroups() {
-        return new String[]{"Very Active", "Active", "Regular", "Irregular", "Inactive"};
     }
 
     private double calculate(PlayerProfile player, long date) {
