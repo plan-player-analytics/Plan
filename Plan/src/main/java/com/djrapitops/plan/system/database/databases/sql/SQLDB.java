@@ -96,6 +96,7 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public void init() throws DBInitException {
+        open = true;
         setStatus("Initiating");
         String benchName = "Init " + getConfigName();
         Benchmark.start("Database", benchName);
