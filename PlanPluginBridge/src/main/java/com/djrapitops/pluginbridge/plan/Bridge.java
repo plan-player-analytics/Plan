@@ -2,6 +2,7 @@ package com.djrapitops.pluginbridge.plan;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.aac.AdvancedAntiCheatHook;
 import com.djrapitops.pluginbridge.plan.advancedachievements.AdvancedAchievementsHook;
@@ -51,7 +52,38 @@ public class Bridge {
     }
 
     public static void hook(HookHandler h) {
-        Hook[] hooks = new Hook[]{
+        Hook[] hooks = getHooks(h);
+        hookInto(hooks);
+    }
+
+    private static void hookInto(Hook[] hooks) {
+        for (Hook hook : hooks) {
+            try {
+                hook.hook();
+            } catch (Exception | NoClassDefFoundError e) {
+                if (Settings.DEV_MODE.isTrue()) {
+                    Log.toLog("PluginBridge", e);
+                }
+            }
+        }
+    }
+
+    private static Hook[] getHooks(HookHandler h) {
+        Hook[] hooks;
+        if (Check.isBukkitAvailable()) {
+            hooks = getBukkitHooks(h);
+        } else {
+            hooks = getBungeeHooks(h);
+        }
+        return hooks;
+    }
+
+    private static Hook[] getBungeeHooks(HookHandler h) {
+        return new Hook[0];
+    }
+
+    private static Hook[] getBukkitHooks(HookHandler h) {
+        return new Hook[]{
                 new AdvancedAntiCheatHook(h),
                 new AdvancedAchievementsHook(h),
                 new ASkyBlockHook(h),
@@ -70,14 +102,5 @@ public class Bridge {
                 new VaultHook(h),
                 new ViaVersionHook(h)
         };
-        for (Hook hook : hooks) {
-            try {
-                hook.hook();
-            } catch (Exception | NoClassDefFoundError e) {
-                if (Settings.DEV_MODE.isTrue()) {
-                    Log.toLog("PluginBridge", e);
-                }
-            }
-        }
     }
 }
