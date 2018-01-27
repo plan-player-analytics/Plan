@@ -10,8 +10,7 @@ import com.djrapitops.plan.utilities.NullCheck;
 /**
  * Abstract class representing a Database.
  * <p>
- * All methods should be only called from an asynchronous thread, unless stated
- * otherwise.
+ * All Operations methods should be only called from an asynchronous thread.
  *
  * @author Rsl1122
  */

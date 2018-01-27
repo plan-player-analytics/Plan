@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by Fuzzlemann on 30.07.2017.
+ * Utility for reducing Points in LineGraphs.
+ *
+ * @author Rsl1122 (Refactored into this class by Fuzzlemann)
  */
 public class ReduceGapTriangles {
 

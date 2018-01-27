@@ -122,7 +122,7 @@ public class ConnectionOut {
                 case 400:
                     throw new WebFailException("Bad Request: " + url.toString() + " | " + parameters);
                 case 403:
-                    throw new ForbiddenException(url.toString() + " returned 403, this is not supposed to happen.");
+                    throw new ForbiddenException(url.toString() + " returned 403.");
                 case 404:
                     throw new NotFoundException(url.toString() + " returned a 404, ensure that your server is connected to an up to date Plan server.");
                 case 412:

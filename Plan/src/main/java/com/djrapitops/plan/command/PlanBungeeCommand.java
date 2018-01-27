@@ -43,7 +43,7 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
                 new ReloadCommand(plugin),
                 new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
                 new ListCommand(),
-                new BungeeSetupToggleCommand(plugin)
+                new BungeeSetupToggleCommand()
         );
         RegisterCommand registerCommand = new RegisterCommand();
         add(

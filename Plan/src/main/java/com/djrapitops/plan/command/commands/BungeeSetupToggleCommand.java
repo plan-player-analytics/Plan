@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -19,20 +19,19 @@ import com.djrapitops.plugin.command.SubCommand;
  */
 public class BungeeSetupToggleCommand extends SubCommand {
 
-    private final PlanBungee plugin;
-
-    public BungeeSetupToggleCommand(PlanBungee plugin) {
+    public BungeeSetupToggleCommand() {
         super("setup", CommandType.ALL, Permissions.MANAGE.getPermission(), "Toggle Setup mode for Bungee");
-        this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(ISender sender, String s, String[] strings) {
-        boolean setupAllowed = plugin.isSetupAllowed();
+        boolean setupAllowed = ConnectionSystem.isSetupAllowed();
+        ConnectionSystem connectionSystem = ConnectionSystem.getInstance();
+
         if (setupAllowed) {
-            plugin.setSetupAllowed(false);
+            connectionSystem.setSetupAllowed(false);
         } else {
-            plugin.setSetupAllowed(true);
+            connectionSystem.setSetupAllowed(true);
         }
         String msg = !setupAllowed ? "§aSet-up is now Allowed" : "§cSet-up is now Forbidden";
         sender.sendMessage(msg);

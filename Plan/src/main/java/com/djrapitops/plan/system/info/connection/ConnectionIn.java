@@ -4,7 +4,7 @@ import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.system.info.request.RequestSetupRequest;
+import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.NullCheck;
@@ -41,8 +41,12 @@ public class ConnectionIn {
 
         try {
             if (!Database.getActive().check().isServerInDatabase(serverUUID)) {
-                if (infoRequest instanceof RequestSetupRequest) {
-                    return;
+                if (infoRequest instanceof SetupRequest) {
+                    if (ConnectionSystem.isSetupAllowed()) {
+                        return;
+                    } else {
+                        throw new ForbiddenException("Setup not enabled on this server, use commands to enable.");
+                    }
                 }
                 throw new UnauthorizedServerException(sender + " (Sender) was not found from database");
             }

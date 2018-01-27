@@ -34,8 +34,10 @@ public abstract class ConnectionSystem implements SubSystem {
     protected final ConnectionLog connectionLog;
     protected final Map<String, InfoRequest> dataRequests;
     protected Map<UUID, Server> bukkitServers;
+    private boolean setupAllowed;
 
     public ConnectionSystem() {
+        setupAllowed = false;
         bukkitServers = new HashMap<>();
         dataRequests = loadDataRequests();
         connectionLog = new ConnectionLog();
@@ -47,21 +49,16 @@ public abstract class ConnectionSystem implements SubSystem {
         return connectionSystem;
     }
 
+    public static boolean isSetupAllowed() {
+        return getInstance().setupAllowed;
+    }
+
     public InfoRequest getInfoRequest(String name) {
         return dataRequests.get(name.toLowerCase());
     }
 
-    private Map<String, InfoRequest> loadDataRequests() {
-        Map<String, InfoRequest> requests = new HashMap<>();
-        putRequest(requests, CacheInspectPageRequest.createHandler());
-        putRequest(requests, CacheInspectPluginsTabRequest.createHandler());
-        putRequest(requests, CacheAnalysisPageRequest.createHandler());
-        putRequest(requests, CacheNetworkPageContentRequest.createHandler());
-
-        putRequest(requests, GenerateAnalysisPageRequest.createHandler());
-        putRequest(requests, GenerateInspectPageRequest.createHandler());
-        putRequest(requests, GenerateInspectPluginsTabRequest.createHandler());
-        return requests;
+    public void setSetupAllowed(boolean setupAllowed) {
+        this.setupAllowed = setupAllowed;
     }
 
     private void putRequest(Map<String, InfoRequest> requests, InfoRequest request) {
@@ -103,5 +100,21 @@ public abstract class ConnectionSystem implements SubSystem {
             Log.toLog(this.getClass().getName(), e);
         }
         return Optional.empty();
+    }
+
+    private Map<String, InfoRequest> loadDataRequests() {
+        Map<String, InfoRequest> requests = new HashMap<>();
+        putRequest(requests, CacheInspectPageRequest.createHandler());
+        putRequest(requests, CacheInspectPluginsTabRequest.createHandler());
+        putRequest(requests, CacheAnalysisPageRequest.createHandler());
+        putRequest(requests, CacheNetworkPageContentRequest.createHandler());
+
+        putRequest(requests, GenerateAnalysisPageRequest.createHandler());
+        putRequest(requests, GenerateInspectPageRequest.createHandler());
+        putRequest(requests, GenerateInspectPluginsTabRequest.createHandler());
+
+        putRequest(requests, SaveDBSettingsRequest.createHandler());
+        putRequest(requests, SendDBSettingsRequest.createHandler());
+        return requests;
     }
 }

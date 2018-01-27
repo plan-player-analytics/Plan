@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.system.info.connection.InfoRequestPageHandler;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.pages.*;
 import com.djrapitops.plan.system.webserver.response.*;
