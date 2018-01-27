@@ -22,12 +22,23 @@ public interface PlanPlugin extends IPlugin {
     static PlanPlugin getInstance() {
         boolean bukkitAvailable = Check.isBukkitAvailable();
         boolean bungeeAvailable = Check.isBungeeAvailable();
-        if (bukkitAvailable && bungeeAvailable) {
-            // TODO Test Plugin
-        } else if (bukkitAvailable) {
-            return Plan.getInstance();
-        } else if (bungeeAvailable) {
-            return PlanBungee.getInstance();
+        if (bukkitAvailable) {
+            try {
+                Plan instance = Plan.getInstance();
+                if (instance != null) {
+                    return instance;
+                }
+            } catch (IllegalStateException ignored) {
+            }
+        }
+        if (bungeeAvailable) {
+            try {
+                PlanBungee instance = PlanBungee.getInstance();
+                if (instance != null) {
+                    return instance;
+                }
+            } catch (IllegalStateException ignored) {
+            }
         }
         throw new IllegalAccessError("Plugin instance not available");
     }

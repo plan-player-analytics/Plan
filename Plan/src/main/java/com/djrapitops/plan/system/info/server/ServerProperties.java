@@ -18,14 +18,14 @@ public class ServerProperties {
     private final int port;
     private final String version;
     private final String implVersion;
-    private final String ip;
+    private final IPWrapper ip;
     private final int maxPlayers;
 
     private final OnlinePlayersWrapper onlinePlayers;
 
     public ServerProperties(Server server) {
         id = server.getServerId();
-        ip = server.getIp();
+        ip = server::getIp;
         name = server.getName();
         port = server.getPort();
         version = server.getVersion();
@@ -43,7 +43,7 @@ public class ServerProperties {
      */
     public ServerProperties(ProxyServer server) {
         id = server.getServers().toString();
-        ip = Settings.BUNGEE_IP.toString();
+        ip = Settings.BUNGEE_IP::toString;
         name = "BungeeCord";
         port = -1;
         version = server.getVersion();
@@ -60,7 +60,7 @@ public class ServerProperties {
      * @return the ip.
      */
     public String getIp() {
-        return ip;
+        return ip.getIP();
     }
 
     public String getName() {
@@ -93,5 +93,9 @@ public class ServerProperties {
 
     private interface OnlinePlayersWrapper {
         int getOnlinePlayers();
+    }
+
+    private interface IPWrapper {
+        String getIP();
     }
 }

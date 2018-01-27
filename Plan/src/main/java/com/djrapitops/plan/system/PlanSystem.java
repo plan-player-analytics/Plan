@@ -20,6 +20,7 @@ import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 /**
  * PlanSystem contains everything Plan needs to run.
@@ -29,6 +30,8 @@ import com.djrapitops.plugin.api.Check;
  * @author Rsl1122
  */
 public abstract class PlanSystem implements SubSystem {
+
+    protected static PlanSystem testSystem;
 
     // Initialized in this class
     protected final ProcessingQueue processingQueue;
@@ -59,10 +62,10 @@ public abstract class PlanSystem implements SubSystem {
         boolean bukkitAvailable = Check.isBukkitAvailable();
         boolean bungeeAvailable = Check.isBungeeAvailable();
         if (bukkitAvailable && bungeeAvailable) {
-            // TODO test system.
+            return testSystem;
         } else if (bungeeAvailable) {
             return BungeeSystem.getInstance();
-        } else {
+        } else if (bukkitAvailable) {
             return BukkitSystem.getInstance();
         }
         throw new IllegalAccessError("PlanSystem is not available on this platform.");
@@ -106,8 +109,12 @@ public abstract class PlanSystem implements SubSystem {
                 versionCheckSystem
         };
         for (SubSystem system : systems) {
-            if (system != null) {
-                system.disable();
+            try {
+                if (system != null) {
+                    system.disable();
+                }
+            } catch (Exception e) {
+                Log.toLog(this.getClass(), e);
             }
         }
     }

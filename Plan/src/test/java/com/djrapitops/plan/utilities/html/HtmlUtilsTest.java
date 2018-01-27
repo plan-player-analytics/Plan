@@ -6,11 +6,7 @@
 package com.djrapitops.plan.utilities.html;
 
 import com.google.common.collect.ImmutableMap;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import utilities.RandomData;
 
 import java.io.Serializable;
@@ -21,8 +17,8 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Rsl1122
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
+//@RunWith(PowerMockRunner.class)
+//@PrepareForTest(JavaPlugin.class)
 public class HtmlUtilsTest {
 
     @Test

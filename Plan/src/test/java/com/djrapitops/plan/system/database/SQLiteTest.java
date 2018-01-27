@@ -19,86 +19,74 @@ import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
-import com.djrapitops.plan.utilities.file.FileUtil;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.api.utility.log.Log;
+import org.junit.*;
+import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import utilities.MockUtils;
+import org.mockito.junit.MockitoJUnitRunner;
 import utilities.RandomData;
 import utilities.TestConstants;
-import utilities.TestInit;
+import utilities.TestErrorManager;
+import utilities.mocks.SystemMockUtil;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * @author Rsl1122
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({JavaPlugin.class})
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class SQLiteTest {
 
-    private final UUID uuid = MockUtils.getPlayerUUID();
     private final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
-    private final UUID uuid2 = MockUtils.getPlayer2UUID();
-    private Plan plan;
-    private SQLDB db;
-    private SQLDB backup;
-    private int rows;
-
+    @ClassRule
+    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+    private static SQLDB db;
+    private final UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
+    private final UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
     @Rule
-    public Timeout globalTimeout = Timeout.seconds(7); // 5 seconds max per method tested
+    public Timeout globalTimeout = Timeout.seconds(5);
 
-    @Before
-    public void setUp() throws Exception {
-        TestInit t = TestInit.init();
-        plan = t.getPlanMock();
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        db = new SQLiteDB();
+        SystemMockUtil.setUp(temporaryFolder.getRoot())
+                .enableConfigSystem()
+                .enableDatabaseSystem(db)
+                .enableServerInfoSystem();
+        StaticHolder.saveInstance(SQLDB.class, Plan.class);
+        StaticHolder.saveInstance(SQLiteTest.class, Plan.class);
 
-        db = new SQLiteDB("debug" + MiscUtils.getTime());
+        Log.setErrorManager(new TestErrorManager());
+        Log.setDebugMode("console");
+        Settings.DEV_MODE.setTemporaryValue(true);
+
         db.init();
-
-        when(plan.getDB()).thenReturn(db);
-
-        db.getServerTable().saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));
-
-        File f = new File(plan.getDataFolder(), "Errors.txt");
-        rows = FileUtil.lines(f).size();
     }
 
-    @After
-    public void tearDown() throws IOException {
-        db.close();
-        if (backup != null) {
-            backup.close();
+    @AfterClass
+    public static void tearDownClass() {
+        if (db != null) {
+            db.close();
         }
+    }
 
-        File f = new File(plan.getDataFolder(), "Errors.txt");
-
-        List<String> lines = FileUtil.lines(f);
-        int rowsAgain = lines.size();
-        if (rowsAgain > 0) {
-            for (String line : lines) {
-                System.out.println(line);
-            }
-        }
-
-        assertTrue("Errors were caught.", rows == rowsAgain);
+    @Before
+    public void setUp() throws DBException, SQLException {
+        db.remove().everything();
+        ServerTable serverTable = db.getServerTable();
+        serverTable.saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));
+        assertEquals(ServerInfo.getServerUUID(), TestConstants.SERVER_UUID);
     }
 
     @Test
@@ -108,8 +96,6 @@ public class SQLiteTest {
 
     @Test
     public void testNoExceptionWhenCommitEmpty() throws Exception {
-        db.init();
-
         db.commit(db.getConnection());
         db.commit(db.getConnection());
         db.commit(db.getConnection());
@@ -231,7 +217,7 @@ public class SQLiteTest {
     }
 
     private void saveUserOne(SQLDB database) throws SQLException {
-        database.getUsersTable().registerUser(uuid, 123456789L, "Test");
+        database.getUsersTable().registerUser(playerUUID, 123456789L, "Test");
     }
 
     private void saveUserTwo() throws SQLException {
@@ -239,7 +225,7 @@ public class SQLiteTest {
     }
 
     private void saveUserTwo(SQLDB database) throws SQLException {
-        database.getUsersTable().registerUser(uuid2, 123456789L, "Test");
+        database.getUsersTable().registerUser(player2UUID, 123456789L, "Test");
     }
 
     @Test
@@ -250,9 +236,9 @@ public class SQLiteTest {
         Action save = new Action(234567890L, Actions.FIRST_SESSION, "Additional Info");
         Action expected = new Action(234567890L, Actions.FIRST_SESSION, "Additional Info", 1);
 
-        actionsTable.insertAction(uuid, save);
+        actionsTable.insertAction(playerUUID, save);
 
-        List<Action> actions = actionsTable.getActions(uuid);
+        List<Action> actions = actionsTable.getActions(playerUUID);
         assertEquals(expected, actions.get(0));
     }
 
@@ -266,11 +252,11 @@ public class SQLiteTest {
         long time = MiscUtils.getTime();
 
         GeoInfo expected = new GeoInfo(expectedIP, expectedGeoLoc, time);
-        geoInfoTable.saveGeoInfo(uuid, expected);
-        geoInfoTable.saveGeoInfo(uuid, expected);
+        geoInfoTable.saveGeoInfo(playerUUID, expected);
+        geoInfoTable.saveGeoInfo(playerUUID, expected);
         commitTest();
 
-        List<GeoInfo> getInfo = geoInfoTable.getGeoInfo(uuid);
+        List<GeoInfo> getInfo = geoInfoTable.getGeoInfo(playerUUID);
         assertEquals(1, getInfo.size());
         GeoInfo actual = getInfo.get(0);
         assertEquals(expected, actual);
@@ -287,15 +273,15 @@ public class SQLiteTest {
         NicknamesTable nickTable = db.getNicknamesTable();
 
         String expected = "TestNickname";
-        nickTable.saveUserName(uuid, expected);
-        nickTable.saveUserName(uuid, expected);
+        nickTable.saveUserName(playerUUID, expected);
+        nickTable.saveUserName(playerUUID, expected);
         commitTest();
 
-        List<String> nicknames = nickTable.getNicknames(uuid);
+        List<String> nicknames = nickTable.getNicknames(playerUUID);
         assertEquals(1, nicknames.size());
         assertEquals(expected, nicknames.get(0));
 
-        Map<UUID, List<String>> allNicknames = nickTable.getAllNicknames(uuid);
+        Map<UUID, List<String>> allNicknames = nickTable.getAllNicknames(playerUUID);
         assertEquals(nicknames, allNicknames.get(ServerInfo.getServerUUID()));
     }
 
@@ -357,8 +343,8 @@ public class SQLiteTest {
 
     private List<PlayerKill> createKills() {
         List<PlayerKill> kills = new ArrayList<>();
-        kills.add(new PlayerKill(uuid2, "Iron Sword", 4321L));
-        kills.add(new PlayerKill(uuid2, "Gold Sword", 5321L));
+        kills.add(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Iron Sword", 4321L));
+        kills.add(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Gold Sword", 5321L));
         return kills;
     }
 
@@ -377,20 +363,20 @@ public class SQLiteTest {
         assertEquals(expectedLength, session.getWorldTimes().getTotal());
 
         SessionsTable sessionsTable = db.getSessionsTable();
-        sessionsTable.saveSession(uuid, session);
+        sessionsTable.saveSession(playerUUID, session);
 
         commitTest();
 
-        assertEquals(expectedLength, sessionsTable.getPlaytime(uuid));
-        assertEquals(0L, sessionsTable.getPlaytime(uuid, 30000L));
+        assertEquals(expectedLength, sessionsTable.getPlaytime(playerUUID));
+        assertEquals(0L, sessionsTable.getPlaytime(playerUUID, 30000L));
 
         UUID serverUUID = TestConstants.SERVER_UUID;
         long playtimeOfServer = sessionsTable.getPlaytimeOfServer(serverUUID);
         assertEquals(expectedLength, playtimeOfServer);
         assertEquals(0L, sessionsTable.getPlaytimeOfServer(serverUUID, 30000L));
 
-        assertEquals(1, sessionsTable.getSessionCount(uuid));
-        assertEquals(0, sessionsTable.getSessionCount(uuid, 30000L));
+        assertEquals(1, sessionsTable.getSessionCount(playerUUID));
+        assertEquals(0, sessionsTable.getSessionCount(playerUUID, 30000L));
     }
 
     @Test
@@ -404,11 +390,11 @@ public class SQLiteTest {
         session.setPlayerKills(createKills());
 
         SessionsTable sessionsTable = db.getSessionsTable();
-        sessionsTable.saveSession(uuid, session);
+        sessionsTable.saveSession(playerUUID, session);
 
         commitTest();
 
-        Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessions(playerUUID);
 
         for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
             UUID key = entry.getKey();
@@ -429,27 +415,27 @@ public class SQLiteTest {
         assertEquals(session, savedSessions.get(0));
 
         Map<UUID, Long> lastSeen = sessionsTable.getLastSeenForAllPlayers();
-        assertTrue(lastSeen.containsKey(uuid));
-        assertFalse(lastSeen.containsKey(uuid2));
-        assertEquals(22345L, (long) lastSeen.get(uuid));
+        assertTrue(lastSeen.containsKey(playerUUID));
+        assertFalse(lastSeen.containsKey(TestConstants.PLAYER_TWO_UUID));
+        assertEquals(22345L, (long) lastSeen.get(playerUUID));
     }
 
     @Test
     public void testUserInfoTableRegisterUnRegistered() throws SQLException, DBInitException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
-        assertFalse(userInfoTable.isRegistered(uuid));
+        assertFalse(userInfoTable.isRegistered(playerUUID));
         UsersTable usersTable = db.getUsersTable();
-        assertFalse(usersTable.isRegistered(uuid));
+        assertFalse(usersTable.isRegistered(playerUUID));
 
-        userInfoTable.registerUserInfo(uuid, 123456789L);
+        userInfoTable.registerUserInfo(playerUUID, 123456789L);
 
         commitTest();
 
-        assertTrue(usersTable.isRegistered(uuid));
-        assertTrue(userInfoTable.isRegistered(uuid));
+        assertTrue(usersTable.isRegistered(playerUUID));
+        assertTrue(userInfoTable.isRegistered(playerUUID));
 
-        UserInfo userInfo = userInfoTable.getUserInfo(uuid);
-        assertEquals(uuid, userInfo.getUuid());
+        UserInfo userInfo = userInfoTable.getUserInfo(playerUUID);
+        assertEquals(playerUUID, userInfo.getUuid());
         assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
         assertEquals(123456789L, userInfo.getRegistered());
         assertEquals(1, userInfoTable.getServerUserCount(ServerInfo.getServerUUID()));
@@ -462,19 +448,19 @@ public class SQLiteTest {
     public void testUserInfoTableRegisterRegistered() throws SQLException, DBInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
-        assertTrue(usersTable.isRegistered(uuid));
+        assertTrue(usersTable.isRegistered(playerUUID));
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
-        assertFalse(userInfoTable.isRegistered(uuid));
+        assertFalse(userInfoTable.isRegistered(playerUUID));
 
-        userInfoTable.registerUserInfo(uuid, 223456789L);
+        userInfoTable.registerUserInfo(playerUUID, 223456789L);
         commitTest();
 
-        assertTrue(usersTable.isRegistered(uuid));
-        assertTrue(userInfoTable.isRegistered(uuid));
+        assertTrue(usersTable.isRegistered(playerUUID));
+        assertTrue(userInfoTable.isRegistered(playerUUID));
 
-        UserInfo userInfo = userInfoTable.getUserInfo(uuid);
-        assertEquals(uuid, userInfo.getUuid());
+        UserInfo userInfo = userInfoTable.getUserInfo(playerUUID);
+        assertEquals(playerUUID, userInfo.getUuid());
         assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
         assertEquals(223456789L, userInfo.getRegistered());
         assertEquals("Test", userInfo.getName());
@@ -487,31 +473,31 @@ public class SQLiteTest {
     @Test
     public void testUserInfoTableUpdateBannedOpped() throws SQLException, DBInitException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
-        userInfoTable.registerUserInfo(uuid, 223456789L);
-        assertTrue(userInfoTable.isRegistered(uuid));
+        userInfoTable.registerUserInfo(playerUUID, 223456789L);
+        assertTrue(userInfoTable.isRegistered(playerUUID));
 
-        userInfoTable.updateOpStatus(uuid, true);
-        userInfoTable.updateBanStatus(uuid, true);
+        userInfoTable.updateOpStatus(playerUUID, true);
+        userInfoTable.updateBanStatus(playerUUID, true);
         commitTest();
 
-        UserInfo userInfo = userInfoTable.getUserInfo(uuid);
+        UserInfo userInfo = userInfoTable.getUserInfo(playerUUID);
         assertTrue(userInfo.isBanned());
         assertTrue(userInfo.isOpped());
 
-        userInfoTable.updateOpStatus(uuid, false);
-        userInfoTable.updateBanStatus(uuid, true);
+        userInfoTable.updateOpStatus(playerUUID, false);
+        userInfoTable.updateBanStatus(playerUUID, true);
         commitTest();
 
-        userInfo = userInfoTable.getUserInfo(uuid);
+        userInfo = userInfoTable.getUserInfo(playerUUID);
 
         assertTrue(userInfo.isBanned());
         assertFalse(userInfo.isOpped());
 
-        userInfoTable.updateOpStatus(uuid, true);
-        userInfoTable.updateBanStatus(uuid, false);
+        userInfoTable.updateOpStatus(playerUUID, true);
+        userInfoTable.updateBanStatus(playerUUID, false);
         commitTest();
 
-        userInfo = userInfoTable.getUserInfo(uuid);
+        userInfo = userInfoTable.getUserInfo(playerUUID);
 
         assertFalse(userInfo.isBanned());
         assertTrue(userInfo.isOpped());
@@ -523,30 +509,30 @@ public class SQLiteTest {
 
         UsersTable usersTable = db.getUsersTable();
 
-        assertEquals(uuid, usersTable.getUuidOf("Test"));
-        usersTable.updateName(uuid, "NewName");
+        assertEquals(playerUUID, usersTable.getUuidOf("Test"));
+        usersTable.updateName(playerUUID, "NewName");
 
         commitTest();
 
         assertNull(usersTable.getUuidOf("Test"));
 
-        assertEquals("NewName", usersTable.getPlayerName(uuid));
-        assertEquals(uuid, usersTable.getUuidOf("NewName"));
+        assertEquals("NewName", usersTable.getPlayerName(playerUUID));
+        assertEquals(playerUUID, usersTable.getUuidOf("NewName"));
     }
 
     @Test
     public void testUsersTableKickSaving() throws SQLException, DBInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
-        assertEquals(0, usersTable.getTimesKicked(uuid));
+        assertEquals(0, usersTable.getTimesKicked(playerUUID));
 
         int random = new Random().nextInt(20);
 
         for (int i = 0; i < random + 1; i++) {
-            usersTable.kicked(uuid);
+            usersTable.kicked(playerUUID);
         }
         commitTest();
-        assertEquals(random + 1, usersTable.getTimesKicked(uuid));
+        assertEquals(random + 1, usersTable.getTimesKicked(playerUUID));
     }
 
     @Test
@@ -560,7 +546,7 @@ public class SQLiteTest {
         GeoInfoTable geoInfoTable = db.getGeoInfoTable();
         ActionsTable actionsTable = db.getActionsTable();
 
-        userInfoTable.registerUserInfo(uuid, 223456789L);
+        userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds();
 
         Session session = new Session(12345L, "", "");
@@ -568,21 +554,21 @@ public class SQLiteTest {
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
-        sessionsTable.saveSession(uuid, session);
-        nicknamesTable.saveUserName(uuid, "TestNick");
-        geoInfoTable.saveGeoInfo(uuid, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
-        actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
+        sessionsTable.saveSession(playerUUID, session);
+        nicknamesTable.saveUserName(playerUUID, "TestNick");
+        geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
+        actionsTable.insertAction(playerUUID, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
-        assertTrue(usersTable.isRegistered(uuid));
+        assertTrue(usersTable.isRegistered(playerUUID));
 
-        db.remove().player(uuid);
+        db.remove().player(playerUUID);
 
-        assertFalse(usersTable.isRegistered(uuid));
-        assertFalse(userInfoTable.isRegistered(uuid));
-        assertTrue(nicknamesTable.getNicknames(uuid).isEmpty());
-        assertTrue(geoInfoTable.getGeoInfo(uuid).isEmpty());
-        assertTrue(sessionsTable.getSessions(uuid).isEmpty());
-        assertTrue(actionsTable.getActions(uuid).isEmpty());
+        assertFalse(usersTable.isRegistered(playerUUID));
+        assertFalse(userInfoTable.isRegistered(playerUUID));
+        assertTrue(nicknamesTable.getNicknames(playerUUID).isEmpty());
+        assertTrue(geoInfoTable.getGeoInfo(playerUUID).isEmpty());
+        assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
+        assertTrue(actionsTable.getActions(playerUUID).isEmpty());
     }
 
     @Test
@@ -600,14 +586,14 @@ public class SQLiteTest {
 
         db.remove().everything();
 
-        assertFalse(usersTable.isRegistered(uuid));
-        assertFalse(usersTable.isRegistered(uuid2));
-        assertFalse(userInfoTable.isRegistered(uuid));
+        assertFalse(usersTable.isRegistered(playerUUID));
+        assertFalse(usersTable.isRegistered(TestConstants.PLAYER_TWO_UUID));
+        assertFalse(userInfoTable.isRegistered(playerUUID));
 
-        assertTrue(nicknamesTable.getNicknames(uuid).isEmpty());
-        assertTrue(geoInfoTable.getGeoInfo(uuid).isEmpty());
-        assertTrue(sessionsTable.getSessions(uuid).isEmpty());
-        assertTrue(actionsTable.getActions(uuid).isEmpty());
+        assertTrue(nicknamesTable.getNicknames(playerUUID).isEmpty());
+        assertTrue(geoInfoTable.getGeoInfo(playerUUID).isEmpty());
+        assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
+        assertTrue(actionsTable.getActions(playerUUID).isEmpty());
         assertTrue(db.getCommandUseTable().getCommandUse().isEmpty());
         assertTrue(db.getWorldTable().getWorlds().isEmpty());
         assertTrue(tpsTable.getTPSData().isEmpty());
@@ -629,7 +615,7 @@ public class SQLiteTest {
         saveUserOne(database);
         saveUserTwo(database);
 
-        userInfoTable.registerUserInfo(uuid, 223456789L);
+        userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds(database);
 
         Session session = new Session(12345L, "", "");
@@ -637,12 +623,12 @@ public class SQLiteTest {
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
-        sessionsTable.saveSession(uuid, session);
-        nicknamesTable.saveUserName(uuid, "TestNick");
-        geoInfoTable.saveGeoInfo(uuid, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
-        actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
+        sessionsTable.saveSession(playerUUID, session);
+        nicknamesTable.saveUserName(playerUUID, "TestNick");
+        geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
+        actionsTable.insertAction(playerUUID, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
-        assertTrue(usersTable.isRegistered(uuid));
+        assertTrue(usersTable.isRegistered(playerUUID));
 
         CommandUseTable commandUseTable = database.getCommandUseTable();
         commandUseTable.commandUsed("plan");
@@ -727,7 +713,7 @@ public class SQLiteTest {
         session.setPlayerKills(createKills());
 
         SessionsTable sessionsTable = db.getSessionsTable();
-        sessionsTable.saveSession(uuid, session);
+        sessionsTable.saveSession(playerUUID, session);
 
         commitTest();
 
@@ -736,7 +722,7 @@ public class SQLiteTest {
         session.setPlayerKills(new ArrayList<>());
         session.setWorldTimes(new WorldTimes(new HashMap<>()));
 
-        List<Session> sSessions = sessions.get(uuid);
+        List<Session> sSessions = sessions.get(playerUUID);
         assertFalse(sessions.isEmpty());
         assertNotNull(sSessions);
         assertFalse(sSessions.isEmpty());
@@ -750,12 +736,12 @@ public class SQLiteTest {
 
         KillsTable killsTable = db.getKillsTable();
         List<PlayerKill> expected = createKills();
-        killsTable.savePlayerKills(uuid, 1, expected);
+        killsTable.savePlayerKills(playerUUID, 1, expected);
 
         commitTest();
 
         Map<UUID, List<PlayerKill>> playerKills = killsTable.getPlayerKills();
-        List<PlayerKill> kills = playerKills.get(uuid);
+        List<PlayerKill> kills = playerKills.get(playerUUID);
         assertFalse(playerKills.isEmpty());
         assertNotNull(kills);
         assertFalse(kills.isEmpty());
@@ -780,14 +766,14 @@ public class SQLiteTest {
         TPSTable tpsTable = backup.getTpsTable();
         SecurityTable securityTable = backup.getSecurityTable();
 
-        assertTrue(usersTable.isRegistered(uuid));
-        assertTrue(usersTable.isRegistered(uuid2));
-        assertTrue(userInfoTable.isRegistered(uuid));
+        assertTrue(usersTable.isRegistered(playerUUID));
+        assertTrue(usersTable.isRegistered(TestConstants.PLAYER_TWO_UUID));
+        assertTrue(userInfoTable.isRegistered(playerUUID));
 
-        assertFalse(nicknamesTable.getNicknames(uuid).isEmpty());
-        assertFalse(ipsTable.getGeoInfo(uuid).isEmpty());
-        assertFalse(sessionsTable.getSessions(uuid).isEmpty());
-        assertFalse(actionsTable.getActions(uuid).isEmpty());
+        assertFalse(nicknamesTable.getNicknames(playerUUID).isEmpty());
+        assertFalse(ipsTable.getGeoInfo(playerUUID).isEmpty());
+        assertFalse(sessionsTable.getSessions(playerUUID).isEmpty());
+        assertFalse(actionsTable.getActions(playerUUID).isEmpty());
         assertFalse(backup.getCommandUseTable().getCommandUse().isEmpty());
         assertFalse(backup.getWorldTable().getWorlds().isEmpty());
         assertFalse(tpsTable.getTPSData().isEmpty());
@@ -800,12 +786,12 @@ public class SQLiteTest {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        worldTimesTable.saveWorldTimes(uuid, 1, worldTimes);
+        worldTimesTable.saveWorldTimes(playerUUID, 1, worldTimes);
 
         Session session = new Session(1, 12345L, 23456L, 0, 0);
         Map<Integer, Session> sessions = new HashMap<>();
         sessions.put(1, session);
-        worldTimesTable.addWorldTimesToSessions(uuid, sessions);
+        worldTimesTable.addWorldTimesToSessions(playerUUID, sessions);
 
         assertEquals(worldTimes, session.getWorldTimes());
     }
@@ -823,7 +809,7 @@ public class SQLiteTest {
         Map<UUID, List<Session>> sessionMap = new HashMap<>();
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
-        sessionMap.put(uuid, sessions);
+        sessionMap.put(playerUUID, sessions);
         map.put(ServerInfo.getServerUUID(), sessionMap);
 
         worldTimesTable.saveWorldTimes(map);
@@ -846,7 +832,7 @@ public class SQLiteTest {
         Map<UUID, List<Session>> sessionMap = new HashMap<>();
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
-        sessionMap.put(uuid, sessions);
+        sessionMap.put(playerUUID, sessions);
         UUID serverUUID = ServerInfo.getServerUUID();
         map.put(serverUUID, sessionMap);
 
@@ -854,18 +840,18 @@ public class SQLiteTest {
 
         Map<UUID, Map<UUID, List<Session>>> allSessions = sessionsTable.getAllSessions(true);
 
-        assertEquals(worldTimes, allSessions.get(serverUUID).get(uuid).get(0).getWorldTimes());
+        assertEquals(worldTimes, allSessions.get(serverUUID).get(playerUUID).get(0).getWorldTimes());
     }
 
     @Test
     public void testRegisterProcessorRegisterException() throws SQLException {
-        assertFalse(db.getUsersTable().isRegistered(uuid));
-        assertFalse(db.getUserInfoTable().isRegistered(uuid));
+        assertFalse(db.getUsersTable().isRegistered(playerUUID));
+        assertFalse(db.getUserInfoTable().isRegistered(playerUUID));
         for (int i = 0; i < 200; i++) {
-            new RegisterProcessor(uuid, 500L, 1000L, "name", 4).process();
+            new RegisterProcessor(playerUUID, 500L, 1000L, "name", 4).process();
         }
-        assertTrue(db.getUsersTable().isRegistered(uuid));
-        assertTrue(db.getUserInfoTable().isRegistered(uuid));
+        assertTrue(db.getUsersTable().isRegistered(playerUUID));
+        assertTrue(db.getUserInfoTable().isRegistered(playerUUID));
     }
 
     @Test

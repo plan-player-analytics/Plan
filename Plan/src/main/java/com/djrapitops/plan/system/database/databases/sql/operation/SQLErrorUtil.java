@@ -14,8 +14,11 @@ public class SQLErrorUtil {
         String message = e.getMessage();
         if (message.contains("Communications link failure")) {
             return new FatalDBException("MySQL-connection failed", e);
+        } else if (message.contains("constraint failed")) {
+            return new FatalDBException("There is an error in saving an item.", e);
         } else if (message.contains("syntax")
                 || message.contains("SQL Error or missing database")
+                || message.contains("SQLITE_MISUSE")
                 || message.contains("no such column")) {
             return new FatalDBException("There is an error in SQL syntax", e);
         } else if (message.contains("duplicate key")) {

@@ -5,7 +5,10 @@
 package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.api.BungeeAPI;
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.BungeeDBSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.BungeeInfoSystem;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
@@ -22,6 +25,8 @@ import com.djrapitops.plan.system.update.VersionCheckSystem;
 public class BungeeSystem extends PlanSystem {
 
     public BungeeSystem(PlanBungee plugin) {
+        testSystem = this;
+
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
         fileSystem = new FileSystem(plugin);
         configSystem = new BungeeConfigSystem();
@@ -31,9 +36,16 @@ public class BungeeSystem extends PlanSystem {
 
         infoSystem = new BungeeInfoSystem();
         serverInfo = new BungeeServerInfo(plugin);
+
+        hookHandler = new HookHandler();
+        planAPI = new BungeeAPI(this);
     }
 
     public static BungeeSystem getInstance() {
         return PlanBungee.getInstance().getSystem();
+    }
+
+    public void setDatabaseSystem(DBSystem dbSystem) {
+        this.databaseSystem = dbSystem;
     }
 }

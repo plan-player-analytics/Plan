@@ -81,7 +81,7 @@ public class FileUtil {
                 lines.add(scanner.nextLine());
             }
         } catch (NullPointerException e) {
-            Log.infoColor("§ea Resource was not found inside the jar, Plan does not support /reload or updates using " +
+            Log.infoColor("§ea Resource was not found inside the jar (" + resource + "), Plan does not support /reload or updates using " +
                     "Plugin Managers, restart the server and see if the error persists.");
             throw new FileNotFoundException("File not found inside jar: " + resource);
         } finally {

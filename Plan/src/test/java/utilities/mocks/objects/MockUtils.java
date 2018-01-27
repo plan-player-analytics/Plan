@@ -1,4 +1,4 @@
-package utilities;
+package utilities.mocks.objects;
 
 import com.sun.net.httpserver.*;
 import org.bukkit.GameMode;
@@ -7,7 +7,6 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -17,11 +16,13 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Rsl1122
+ * @deprecated To Be Refactored into multiple classes.
  */
+@Deprecated
 public class MockUtils {
 
     public static World mockWorld() {
@@ -31,7 +32,7 @@ public class MockUtils {
     }
 
     public static Player mockPlayer() {
-        Player p = PowerMockito.mock(Player.class);
+        Player p = Mockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SURVIVAL);
         when(p.getUniqueId()).thenReturn(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"));
         when(p.getFirstPlayed()).thenReturn(1234567L);
@@ -45,12 +46,8 @@ public class MockUtils {
         return p;
     }
 
-    public static UUID getPlayerUUID() {
-        return UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
-    }
-
     public static Player mockPlayer2() {
-        Player p = PowerMockito.mock(Player.class);
+        Player p = Mockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SPECTATOR);
         when(p.getUniqueId()).thenReturn(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"));
         when(p.getFirstPlayed()).thenReturn(3423434L);
@@ -64,19 +61,8 @@ public class MockUtils {
         return p;
     }
 
-    public static UUID getPlayer2UUID() {
-        return UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80");
-    }
-
-    public static Set<UUID> getUUIDs() {
-        Set<UUID> uuids = new HashSet<>();
-        uuids.add(getPlayerUUID());
-        uuids.add(getPlayer2UUID());
-        return uuids;
-    }
-
     public static Player mockBrokenPlayer() {
-        Player p = PowerMockito.mock(Player.class);
+        Player p = Mockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SURVIVAL);
         when(p.getUniqueId()).thenReturn(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"));
         when(p.getFirstPlayed()).thenReturn(1234567L);
@@ -90,11 +76,11 @@ public class MockUtils {
     }
 
     public static CommandSender mockConsoleSender() {
-        return PowerMockito.mock(CommandSender.class);
+        return Mockito.mock(CommandSender.class);
     }
 
     public static HttpServer mockHTTPServer() {
-        HttpServer httpServer = PowerMockito.mock(HttpServer.class);
+        HttpServer httpServer = Mockito.mock(HttpServer.class);
         when(httpServer.getAddress()).thenReturn(new InetSocketAddress(80));
         when(httpServer.getExecutor()).thenReturn(command -> System.out.println("HTTP Server command received"));
         return httpServer;

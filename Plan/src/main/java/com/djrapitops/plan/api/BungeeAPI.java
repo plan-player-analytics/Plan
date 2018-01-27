@@ -5,36 +5,36 @@
 package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.BukkitSystem;
+import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 
 import java.util.UUID;
 
 /**
- * PlanAPI extension for Bukkit
+ * PlanAPI extension for Bungee.
  *
  * @author Rsl1122
  */
-public class BukkitAPI extends CommonAPI {
+public class BungeeAPI extends CommonAPI {
 
-    private final BukkitSystem bukkitSystem;
+    private final BungeeSystem bungeeSystem;
 
-    public BukkitAPI(BukkitSystem bukkitSystem) {
-        this.bukkitSystem = bukkitSystem;
+    public BungeeAPI(BungeeSystem bungeeSystem) {
+        this.bungeeSystem = bungeeSystem;
     }
 
     @Override
     public void addPluginDataSource(PluginData pluginData) {
-        bukkitSystem.getHookHandler().addPluginDataSource(pluginData);
+        bungeeSystem.getHookHandler().addPluginDataSource(pluginData);
     }
 
     @Override
     public String getPlayerName(UUID uuid) {
-        return bukkitSystem.getCacheSystem().getDataCache().getName(uuid);
+        return bungeeSystem.getCacheSystem().getDataCache().getName(uuid);
     }
 
     @Override
     public FetchOperations fetchFromPlanDB() {
-        return bukkitSystem.getDatabaseSystem().getActiveDatabase().fetch();
+        return bungeeSystem.getDatabaseSystem().getActiveDatabase().fetch();
     }
 }

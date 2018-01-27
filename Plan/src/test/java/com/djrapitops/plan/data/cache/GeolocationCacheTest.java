@@ -2,13 +2,14 @@ package com.djrapitops.plan.data.cache;
 
 import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.cache.GeolocationCache;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import utilities.TestInit;
+import org.mockito.junit.MockitoJUnitRunner;
+import utilities.mocks.SystemMockUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,15 +19,23 @@ import static junit.framework.TestCase.*;
 /**
  * @author Fuzzlemann
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class GeolocationCacheTest {
 
     private final Map<String, String> ipsToCountries = new HashMap<>();
 
+    @ClassRule
+    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        SystemMockUtil.setUp(temporaryFolder.getRoot())
+                .enableConfigSystem()
+                .enableCacheSystem();
+    }
+
     @Before
-    public void setUp() throws Exception {
-        TestInit.init();
+    public void setUp() {
         CacheSystem.getInstance().getGeolocationCache().clearCache();
 
         ipsToCountries.put("8.8.8.8", "United States");

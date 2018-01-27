@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -96,7 +97,7 @@ public enum Settings {
     private static final ServerSpecificSettings serverSpecificSettings = new ServerSpecificSettings();
 
     private final String configPath;
-    private Boolean value;
+    private Object tempValue;
 
     Settings(String path) {
         this.configPath = path;
@@ -116,8 +117,8 @@ public enum Settings {
      * @return Boolean value of the config setting, false if not boolean.
      */
     public boolean isTrue() {
-        if (value != null) {
-            return value;
+        if (tempValue != null) {
+            return (Boolean) tempValue;
         }
         return getConfig().getBoolean(configPath);
     }
@@ -141,6 +142,9 @@ public enum Settings {
      */
     @Override
     public String toString() {
+        if (tempValue != null) {
+            return String.valueOf(tempValue);
+        }
         return getConfig().getString(configPath);
     }
 
@@ -150,6 +154,9 @@ public enum Settings {
      * @return Integer value of the config setting
      */
     public int getNumber() {
+        if (tempValue != null) {
+            return (Integer) tempValue;
+        }
         return getConfig().getInt(configPath);
     }
 
@@ -167,8 +174,8 @@ public enum Settings {
         return configPath;
     }
 
-    public void setTemporaryValue(Boolean value) {
-        this.value = value;
+    public void setTemporaryValue(Object value) {
+        this.tempValue = value;
     }
 
     public void set(Object value) {
@@ -176,6 +183,8 @@ public enum Settings {
     }
 
     private Config getConfig() {
-        return ConfigSystem.getConfig();
+        Config config = ConfigSystem.getConfig();
+        NullCheck.check(config, new IllegalStateException("Settings are not supposed to be called before ConfigSystem is Enabled!"));
+        return config;
     }
 }

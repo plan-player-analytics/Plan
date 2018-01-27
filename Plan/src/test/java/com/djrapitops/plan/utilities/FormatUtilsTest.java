@@ -3,15 +3,15 @@ package com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.api.TimeAmount;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import utilities.MockUtils;
+import org.mockito.junit.MockitoJUnitRunner;
 import utilities.RandomData;
-import utilities.TestInit;
+import utilities.mocks.SystemMockUtil;
+import utilities.mocks.objects.MockUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,13 +22,16 @@ import static org.junit.Assert.*;
 /**
  * @author Rsl1122
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class FormatUtilsTest {
 
-    @Before
-    public void setUp() throws Exception {
-        TestInit.init();
+    @ClassRule
+    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        SystemMockUtil.setUp(temporaryFolder.getRoot())
+                .enableConfigSystem();
     }
 
     @Test

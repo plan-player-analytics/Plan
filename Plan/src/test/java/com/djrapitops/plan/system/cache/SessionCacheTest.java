@@ -1,15 +1,13 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import utilities.MockUtils;
-import utilities.TestInit;
+import org.junit.rules.TemporaryFolder;
+import utilities.TestConstants;
+import utilities.mocks.SystemMockUtil;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -17,24 +15,28 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
 public class SessionCacheTest {
 
-    private final UUID uuid = MockUtils.getPlayerUUID();
+    @ClassRule
+    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private SessionCache sessionCache;
     private Session session;
+    private final UUID uuid = TestConstants.PLAYER_ONE_UUID;
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        SystemMockUtil.setUp(temporaryFolder.getRoot())
+                .enableProcessingQueue();
+    }
 
     @Before
-    public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+    public void setUp() {
         sessionCache = new SessionCache(null);
         session = new Session(12345L, "World1", "SURVIVAL");
         sessionCache.cacheSession(uuid, session);
     }
 
     @Test
-    @Ignore("Ignored, Requires more mocks")
     public void testAtomity() {
         SessionCache reloaded = new SessionCache(null);
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);

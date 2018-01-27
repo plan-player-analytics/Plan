@@ -5,13 +5,7 @@
  */
 package com.djrapitops.plan.utilities.analysis;
 
-import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import utilities.TestInit;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,14 +16,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Rsl1122
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
 public class AnalysisUtilsTest {
-
-    @Before
-    public void setUp() throws Exception {
-        TestInit.init();
-    }
 
     @Test
     public void testGetNewPlayers() {

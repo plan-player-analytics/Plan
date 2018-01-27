@@ -2,13 +2,18 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package utilities;
+package utilities.mocks;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.task.RunnableFactory;
+import org.bukkit.Server;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+import utilities.TestConstants;
+import utilities.mocks.objects.FakeConsoleCmdSender;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,21 +28,28 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-public class BukkitMockUtil {
+public class BukkitMockUtil extends MockUtil {
 
     private Plan planMock;
 
     private BukkitMockUtil() {
     }
 
-    public static BukkitMockUtil init() {
+    public static BukkitMockUtil setUp() {
+        RunnableFactory.activateTestMode();
         return new BukkitMockUtil().mockPlugin();
     }
 
-    public BukkitMockUtil mockPlugin() {
+    private BukkitMockUtil mockPlugin() {
         planMock = Mockito.mock(Plan.class);
+        super.planMock = planMock;
         StaticHolder.register(Plan.class, planMock);
         StaticHolder.register(planMock);
+
+        StaticHolder.saveInstance(MockitoJUnitRunner.class, Plan.class);
+
+        doCallRealMethod().when(planMock).getVersion();
+        doCallRealMethod().when(planMock).getColorScheme();
         return this;
     }
 
@@ -52,9 +64,6 @@ public class BukkitMockUtil {
         return this;
     }
 
-    private File getFile(String fileName) {
-        return new File(getClass().getResource(fileName).getPath());
-    }
 
     public BukkitMockUtil withPluginDescription() {
         try {
@@ -68,22 +77,23 @@ public class BukkitMockUtil {
     }
 
     public BukkitMockUtil withResourceFetchingFromJar() throws Exception {
-        withPluginFile("config.yml");
-        withPluginFile("web/server.html");
-        withPluginFile("web/player.html");
+        withPluginFiles();
         return this;
     }
 
-    private void withPluginFile(String fileName) throws Exception {
-        if (planMock.getDataFolder() == null) {
-            throw new IllegalStateException("withDataFolder needs to be called before setting files");
-        }
-        try {
-            File file = getFile("/" + fileName);
-            when(planMock.getResource(fileName)).thenReturn(new FileInputStream(file));
-        } catch (NullPointerException e) {
-            System.out.println("File is missing! " + fileName);
-        }
+    public BukkitMockUtil withServer() {
+        Server serverMock = Mockito.mock(Server.class);
+        when(serverMock.getIp()).thenReturn("");
+        when(serverMock.getName()).thenReturn("Bukkit");
+        when(serverMock.getPort()).thenReturn(25565);
+        when(serverMock.getVersion()).thenReturn("1.12.2");
+        when(serverMock.getBukkitVersion()).thenReturn("32423");
+        when(serverMock.getMaxPlayers()).thenReturn(TestConstants.BUKKIT_MAX_PLAYERS);
+        FakeConsoleCmdSender sender = new FakeConsoleCmdSender();
+        when(serverMock.getConsoleSender()).thenReturn(sender);
+
+        when(planMock.getServer()).thenReturn(serverMock);
+        return this;
     }
 
     public Plan getPlanMock() {

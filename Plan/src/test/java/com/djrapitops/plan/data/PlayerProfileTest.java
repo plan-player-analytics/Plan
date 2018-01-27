@@ -4,13 +4,13 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import utilities.TestInit;
+import org.mockito.junit.MockitoJUnitRunner;
+import utilities.mocks.SystemMockUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +18,15 @@ import java.util.List;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class PlayerProfileTest {
 
-    @Before
-    public void setUp() throws Exception {
-        TestInit.init();
+    @ClassRule
+    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        SystemMockUtil.setUp(temporaryFolder.getRoot()).enableConfigSystem();
     }
 
     @Test

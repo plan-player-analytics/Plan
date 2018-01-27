@@ -26,6 +26,8 @@ import com.djrapitops.plugin.StaticHolder;
 public class BukkitSystem extends PlanSystem {
 
     public BukkitSystem(Plan plugin) {
+        testSystem = this;
+
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
         fileSystem = new FileSystem(plugin);
         configSystem = new BukkitConfigSystem();

@@ -8,7 +8,6 @@ import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
@@ -47,17 +46,9 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             system = new BungeeSystem(this);
             system.enable();
 
-            // TODO BungeeServerInfo & move there.
-            String ip = ServerInfo.getServerProperties().getIp();
-            if ("0.0.0.0".equals(ip)) {
-                Log.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
-                Log.info("Player Analytics partially enabled (Use /planbungee to reload config)");
-                return;
-            }
-
             Log.info(Locale.get(Msg.ENABLED).toString());
         } catch (Exception e) {
-            Log.error("Plugin Failed to Initialize Correctly.");
+            Log.error("Plugin Failed to Initialize Correctly:");
             Log.toLog(this.getClass().getName(), e);
         }
         registerCommand("planbungee", new PlanBungeeCommand(this));

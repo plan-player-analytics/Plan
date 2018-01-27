@@ -5,16 +5,16 @@ import com.djrapitops.plan.utilities.file.export.Hastebin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.collect.Iterables;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import utilities.RandomData;
-import utilities.TestInit;
+import utilities.mocks.SystemMockUtil;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,17 +25,23 @@ import static junit.framework.TestCase.assertNotNull;
 /**
  * @author Fuzzlemann
  */
-@PowerMockIgnore("javax.net.ssl.*")
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class HastebinTest {
 
     private final AtomicBoolean testLink = new AtomicBoolean(false);
 
-    @Before
-    public void checkAvailability() throws Exception {
-        TestInit.init();
+    @ClassRule
+    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        SystemMockUtil.setUp(temporaryFolder.getRoot())
+                .enableConfigSystem()
+                .enableDatabaseSystem();
+    }
+
+    @Before
+    public void checkAvailability() {
         Thread thread = new Thread(() -> {
             StaticHolder.saveInstance(this.getClass(), PlanPlugin.getInstance().getClass());
             try {
@@ -75,13 +81,11 @@ public class HastebinTest {
     }
 
     @Test
-    public void testUpload() throws Exception {
+    public void testUpload() {
         if (!testLink.get()) {
             Log.info("Hastebin not available, skipping testUpload()");
             return;
         }
-
-        TestInit.init();
 
         String link = Hastebin.safeUpload(RandomData.randomString(10));
         assertNotNull(link);
