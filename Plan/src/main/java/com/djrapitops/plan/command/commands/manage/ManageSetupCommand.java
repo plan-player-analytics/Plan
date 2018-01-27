@@ -15,8 +15,7 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 
 /**
- * This manage subcommand is used to swap to a different database and reload the
- * plugin if the connection to the new database can be established.
+ * This manage SubCommand is used to request settings from Bungee so that connection can be established.
  *
  * @author Rsl1122
  * @since 2.3.0
