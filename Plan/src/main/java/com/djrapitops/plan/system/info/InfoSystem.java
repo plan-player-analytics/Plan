@@ -73,7 +73,7 @@ public abstract class InfoSystem implements SubSystem {
         }
     }
 
-    protected abstract void runLocally(InfoRequest infoRequest) throws WebException;
+    public abstract void runLocally(InfoRequest infoRequest) throws WebException;
 
     @Override
     public void enable() throws EnableException {

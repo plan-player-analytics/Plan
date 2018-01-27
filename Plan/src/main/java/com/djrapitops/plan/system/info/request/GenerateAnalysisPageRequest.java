@@ -12,8 +12,8 @@ import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plan.utilities.NullCheck;
@@ -60,14 +60,23 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
             throw new BadRequestException("Requested Analysis page from wrong server.");
         }
 
-        InfoSystem infoSystem = InfoSystem.getInstance();
-        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, AnalysisPageResponse.getRefreshingHtml()));
-        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, analyseAndGetHtml()));
+        generateAndCache(serverUUID);
 
         return DefaultResponses.SUCCESS.get();
     }
 
-    public String analyseAndGetHtml() throws InternalErrorException {
+    private void generateAndCache(UUID serverUUID) throws WebException {
+        InfoSystem infoSystem = InfoSystem.getInstance();
+        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, AnalysisPageResponse.getRefreshingHtml()));
+        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, analyseAndGetHtml()));
+    }
+
+    @Override
+    public void runLocally() throws WebException {
+        generateAndCache(serverUUID);
+    }
+
+    private String analyseAndGetHtml() throws InternalErrorException {
         try {
             UUID serverUUID = ServerInfo.getServerUUID();
             Database db = Database.getActive();

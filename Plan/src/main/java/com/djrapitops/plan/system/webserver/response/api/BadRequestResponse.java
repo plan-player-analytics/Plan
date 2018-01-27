@@ -12,7 +12,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 public class BadRequestResponse extends Response {
 
     public BadRequestResponse(String error) {
-        super.setHeader("HTTP/1.1 400 Bad Request");
-        super.setContent(error);
+        super.setHeader("HTTP/1.1 400 Bad Request " + error);
+        super.setContent("400 Bad Request: " + error);
     }
 }

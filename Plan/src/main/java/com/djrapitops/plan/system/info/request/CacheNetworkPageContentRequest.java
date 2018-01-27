@@ -9,6 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
@@ -21,7 +22,7 @@ import java.util.UUID;
 
 /**
  * InfoRequest for caching Network page parts to ResponseCache of receiving server.
- *
+ * <p>
  * SHOULD NOT BE SENT TO BUKKIT
  *
  * @author Rsl1122
@@ -70,14 +71,22 @@ public class CacheNetworkPageContentRequest implements CacheRequest {
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
             String html = entry.getValue();
 
-            NetworkPageContent response = (NetworkPageContent)
-                    ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
-            response.addElement(serverName, html);
+            NetworkPageContent networkPage = getNetworkPageContent();
+            networkPage.addElement(serverName, html);
         }
 
         InfoSystem.getInstance().updateNetworkPage();
 
         return DefaultResponses.SUCCESS.get();
+    }
+
+    private NetworkPageContent getNetworkPageContent() {
+        return (NetworkPageContent) ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
+    }
+
+    @Override
+    public void runLocally() {
+        getNetworkPageContent().addElement(ServerInfo.getServerName(), html);
     }
 
     public static CacheNetworkPageContentRequest createHandler() {

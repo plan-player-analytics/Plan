@@ -8,11 +8,9 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.connection.BukkitConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheNetworkPageContentRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.system.info.request.InfoRequestWithVariables;
+import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
-
-import java.util.HashMap;
 
 /**
  * InfoSystem for Bukkit servers.
@@ -26,16 +24,11 @@ public class BukkitInfoSystem extends InfoSystem {
     }
 
     @Override
-    protected void runLocally(InfoRequest infoRequest) throws WebException {
-        if (infoRequest instanceof CacheNetworkPageContentRequest) {
+    public void runLocally(InfoRequest infoRequest) throws WebException {
+        if (infoRequest instanceof SetupRequest) {
             return;
         }
-        infoRequest.placeDataToDatabase();
-        if (infoRequest instanceof InfoRequestWithVariables) {
-            infoRequest.handleRequest(((InfoRequestWithVariables) infoRequest).getVariables());
-        } else {
-            infoRequest.handleRequest(new HashMap<>());
-        }
+        infoRequest.runLocally();
     }
 
     @Override

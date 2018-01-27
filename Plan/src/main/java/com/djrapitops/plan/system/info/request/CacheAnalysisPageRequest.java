@@ -71,14 +71,23 @@ public class CacheAnalysisPageRequest implements CacheRequest {
                 UUID serverUUID = entry.getKey();
                 String html = Base64Util.decode(entry.getValue());
 
-                ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
-                if (export) {
-                    Processor.queue(() -> HtmlExport.exportServer(serverUUID));
-                }
+                cache(export, serverUUID, html);
             }
         } catch (DBException e) {
             throw new TransferDatabaseException(e);
         }
         return DefaultResponses.SUCCESS.get();
+    }
+
+    private void cache(boolean export, UUID serverUUID, String html) {
+        ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
+        if (export) {
+            Processor.queue(() -> HtmlExport.exportServer(serverUUID));
+        }
+    }
+
+    @Override
+    public void runLocally() {
+        cache(Settings.ANALYSIS_EXPORT.isTrue(), serverUUID, html);
     }
 }

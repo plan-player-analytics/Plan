@@ -49,6 +49,11 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
     }
 
     @Override
+    public void runLocally() {
+        /* Won't be run */
+    }
+
+    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         if (Check.isBungeeAvailable()) {
             return new BadRequestResponse("Not supposed to be called on a Bungee server");

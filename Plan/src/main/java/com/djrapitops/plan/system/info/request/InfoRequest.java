@@ -20,4 +20,6 @@ public interface InfoRequest {
 
     Response handleRequest(Map<String, String> variables) throws WebException;
 
+    void runLocally() throws WebException;
+
 }

@@ -11,8 +11,8 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.connection.WebFailException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.pages.parsing.InspectPage;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.utilities.Verify;
@@ -56,11 +56,21 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables impleme
         NullCheck.check(player, new BadRequestException("Player UUID 'player' variable not supplied in the request."));
 
         UUID uuid = UUID.fromString(player);
-        String html = getHtml(uuid);
 
-        InfoSystem.getInstance().sendRequest(new CacheInspectPageRequest(uuid, html));
+        generateAndCache(uuid);
 
         return DefaultResponses.SUCCESS.get();
+    }
+
+    private void generateAndCache(UUID uuid) throws WebException {
+        String html = getHtml(uuid);
+        InfoSystem.getInstance().getConnectionSystem().sendWideInfoRequest(new GenerateInspectPluginsTabRequest(uuid));
+        InfoSystem.getInstance().sendRequest(new CacheInspectPageRequest(uuid, html));
+    }
+
+    @Override
+    public void runLocally() throws WebException {
+        generateAndCache(playerUUID);
     }
 
     private String getHtml(UUID uuid) throws WebException {

@@ -71,14 +71,23 @@ public class CacheInspectPageRequest implements CacheRequest {
                 UUID uuid = entry.getKey();
                 String html = Base64Util.decode(entry.getValue());
 
-                ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
-                if (export) {
-                    Processor.queue(() -> HtmlExport.exportPlayer(uuid));
-                }
+                cache(export, uuid, html);
             }
         } catch (DBException e) {
             throw new TransferDatabaseException(e);
         }
         return DefaultResponses.SUCCESS.get();
+    }
+
+    private void cache(boolean export, UUID uuid, String html) {
+        ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
+        if (export) {
+            Processor.queue(() -> HtmlExport.exportPlayer(uuid));
+        }
+    }
+
+    @Override
+    public void runLocally() {
+        cache(Settings.ANALYSIS_EXPORT.isTrue(), player, html);
     }
 }

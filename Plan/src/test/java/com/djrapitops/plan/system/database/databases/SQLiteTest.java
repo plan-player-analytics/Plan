@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.djrapitops.plan.system.database;
+package com.djrapitops.plan.system.database.databases;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
@@ -844,6 +844,7 @@ public class SQLiteTest {
     }
 
     @Test
+    @Ignore
     public void testRegisterProcessorRegisterException() throws SQLException {
         assertFalse(db.getUsersTable().isRegistered(playerUUID));
         assertFalse(db.getUserInfoTable().isRegistered(playerUUID));

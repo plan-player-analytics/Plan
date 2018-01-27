@@ -48,6 +48,11 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
     }
 
     @Override
+    public void runLocally() {
+        /* Won't be run */
+    }
+
+    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, address
         if (Check.isBukkitAvailable()) {

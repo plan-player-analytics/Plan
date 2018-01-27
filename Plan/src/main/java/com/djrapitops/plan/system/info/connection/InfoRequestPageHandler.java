@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plan.utilities.NullCheck;
 
 import java.util.List;
@@ -28,6 +29,10 @@ public class InfoRequestPageHandler extends PageHandler {
     public Response getResponse(Request request, List<String> target) throws WebException {
         if (target.isEmpty()) {
             return DefaultResponses.NOT_FOUND.get();
+        }
+
+        if (!request.getRequestMethod().equals("POST")) {
+            return new BadRequestResponse("POST should be used for Info calls.");
         }
 
         String requestName = target.get(0);

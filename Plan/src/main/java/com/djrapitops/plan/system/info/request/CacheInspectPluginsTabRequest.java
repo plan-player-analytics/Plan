@@ -9,6 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
@@ -29,19 +30,23 @@ import java.util.UUID;
 public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables implements CacheRequest {
 
     private static final String SPLIT = ";;SPLIT;;";
+
     private final UUID player;
-    private final String navAndHtml;
+    private final String nav;
+    private final String html;
 
     private CacheInspectPluginsTabRequest() {
         player = null;
-        navAndHtml = null;
+        nav = null;
+        html = null;
     }
 
     public CacheInspectPluginsTabRequest(UUID player, String nav, String html) {
         Verify.nullCheck(player, nav);
         variables.put("player", player.toString());
         this.player = player;
-        this.navAndHtml = nav + SPLIT + html;
+        this.nav = nav;
+        this.html = html;
     }
 
     public static CacheInspectPluginsTabRequest createHandler() {
@@ -50,9 +55,9 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
 
     @Override
     public void placeDataToDatabase() throws WebException {
-        Verify.nullCheck(player, navAndHtml);
+        Verify.nullCheck(player, nav);
 
-        String encodedHtml = Base64Util.encode(navAndHtml);
+        String encodedHtml = Base64Util.encode(nav + SPLIT + html);
         try {
             Database.getActive().transfer().storePlayerPluginsTab(player, encodedHtml);
         } catch (DBException e) {
@@ -70,20 +75,28 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
         UUID uuid = UUID.fromString(player);
 
         try {
-            Map<UUID, String> pages = Database.getActive().transfer().getEncodedPlayerPluginsTabs(uuid);
+            InspectPagePluginsContent pluginsTab = getPluginsTab(uuid);
 
-            InspectPagePluginsContent pluginsTab = (InspectPagePluginsContent)
-                    ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(uuid), InspectPagePluginsContent::new);
+            Map<UUID, String> pages = Database.getActive().transfer().getEncodedPlayerPluginsTabs(uuid);
 
             for (Map.Entry<UUID, String> entry : pages.entrySet()) {
                 UUID serverUUID = entry.getKey();
-                String[] html = Base64Util.decode(entry.getValue()).split(SPLIT);
+                String[] navAndHtml = Base64Util.decode(entry.getValue()).split(SPLIT);
 
-                pluginsTab.addTab(serverUUID, html[0], html[1]);
+                pluginsTab.addTab(serverUUID, navAndHtml[0], navAndHtml[1]);
             }
         } catch (DBException e) {
             throw new TransferDatabaseException(e);
         }
         return DefaultResponses.SUCCESS.get();
+    }
+
+    private InspectPagePluginsContent getPluginsTab(UUID uuid) {
+        return (InspectPagePluginsContent) ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(uuid), InspectPagePluginsContent::new);
+    }
+
+    @Override
+    public void runLocally() {
+        getPluginsTab(player).addTab(ServerInfo.getServerUUID(), nav, html);
     }
 }

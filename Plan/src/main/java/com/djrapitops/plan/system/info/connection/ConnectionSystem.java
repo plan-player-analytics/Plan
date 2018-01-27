@@ -77,7 +77,11 @@ public abstract class ConnectionSystem implements SubSystem {
     }
 
     public void sendInfoRequest(InfoRequest infoRequest, Server toServer) throws WebException {
-        new ConnectionOut(toServer, ServerInfo.getServerUUID(), infoRequest).sendRequest();
+        if (ServerInfo.getServerUUID().equals(toServer.getUuid())) {
+            InfoSystem.getInstance().runLocally(infoRequest);
+        } else {
+            new ConnectionOut(toServer, ServerInfo.getServerUUID(), infoRequest).sendRequest();
+        }
     }
 
     public ConnectionLog getConnectionLog() {

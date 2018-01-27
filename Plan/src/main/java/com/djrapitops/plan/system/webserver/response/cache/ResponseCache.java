@@ -5,7 +5,6 @@ import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * This class contains the page cache.
@@ -101,19 +100,6 @@ public class ResponseCache {
      */
     public static boolean isCached(String identifier) {
         return cache.containsKey(identifier);
-    }
-
-    /**
-     * Removes all of the elements of this cache that satisfy the given predicate.
-     *
-     * @param filter a predicate which returns true for entries to be removed
-     */
-    public static void removeIf(Predicate<String> filter) {
-        for (String identifier : cache.keySet()) {
-            if (filter.test(identifier)) {
-                cache.remove(identifier);
-            }
-        }
     }
 
     /**

@@ -9,8 +9,6 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.cache.PageId;
-import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.utilities.Verify;
@@ -54,16 +52,20 @@ public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables i
         NullCheck.check(player, new BadRequestException("Player UUID 'player' variable not supplied in the request."));
 
         UUID uuid = UUID.fromString(player);
-        String[] navAndhtml = getNavAndHtml(uuid);
 
-        InfoSystem.getInstance().sendRequest(new CacheInspectPluginsTabRequest(uuid, navAndhtml[0], navAndhtml[1]));
+        generateAndCache(uuid);
 
         return DefaultResponses.SUCCESS.get();
     }
 
-    private String[] getNavAndHtml(UUID uuid) {
-        return ((InspectPagePluginsContent) ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(uuid),
-                InspectPagePluginsContent::new)).getContents();
+    private void generateAndCache(UUID uuid) throws WebException {
+        String[] navAndHtml = InspectPagePluginsContent.generateForThisServer(uuid).getContents();
+        InfoSystem.getInstance().sendRequest(new CacheInspectPluginsTabRequest(uuid, navAndHtml[0], navAndHtml[1]));
+    }
+
+    @Override
+    public void runLocally() throws WebException {
+        generateAndCache(playerUUID);
     }
 
     public UUID getPlayerUUID() {

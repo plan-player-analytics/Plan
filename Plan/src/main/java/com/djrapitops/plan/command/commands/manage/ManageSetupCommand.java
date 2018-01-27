@@ -1,7 +1,9 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
+import com.djrapitops.plan.api.exceptions.connection.UnauthorizedServerException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -68,9 +70,13 @@ public class ManageSetupCommand extends SubCommand {
 
             InfoSystem.getInstance().requestSetUp(address);
 
-            sender.sendMessage("§eConnection successful, Plan may restart in a few seconds, if it doesn't something has gone wrong.");
+            sender.sendMessage("§aConnection successful, Plan may restart in a few seconds..");
         } catch (ForbiddenException e) {
             sender.sendMessage("§eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it.");
+        } catch (BadRequestException e) {
+            sender.sendMessage("§eConnection succeeded, but Receiving server was a Bukkit server. Use Bungee address instead.");
+        } catch (UnauthorizedServerException e) {
+            sender.sendMessage("§eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support");
         } catch (WebException e) {
             Log.toLog(this.getClass().getName(), e);
             sender.sendMessage("§cConnection to Bungee WebServer failed: More info on console");

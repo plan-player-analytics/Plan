@@ -38,13 +38,4 @@ public class ResponseCacheTest {
         ResponseCache.clearCache();
         assertFalse(ResponseCache.isCached(IDENTIFIER));
     }
-
-    @Test
-    public void testRemoveIf() {
-        ResponseCache.cacheResponse(IDENTIFIER, () -> RESPONSE);
-        assertTrue(ResponseCache.isCached(IDENTIFIER));
-
-        ResponseCache.removeIf(identifier -> identifier.equals(IDENTIFIER));
-        assertFalse(ResponseCache.isCached(IDENTIFIER));
-    }
 }
