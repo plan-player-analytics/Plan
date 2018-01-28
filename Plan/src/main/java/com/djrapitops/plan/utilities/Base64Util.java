@@ -13,6 +13,12 @@ import java.util.Base64;
  */
 public class Base64Util {
 
+    /**
+     * Hides public constructor.
+     */
+    private Base64Util() {
+    }
+
     public static String encode(String decoded) {
         byte[] encoded = Base64.getEncoder().encode(decoded.getBytes());
         return new String(encoded);
