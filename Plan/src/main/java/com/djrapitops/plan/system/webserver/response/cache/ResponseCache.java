@@ -1,7 +1,6 @@
 package com.djrapitops.plan.system.webserver.response.cache;
 
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,22 +60,6 @@ public class ResponseCache {
      */
     public static Response loadResponse(String identifier) {
         return cache.get(identifier);
-    }
-
-    /**
-     * Returns a copy some responses
-     * <p>
-     * Currently supported copyable responses: InspectPageResponse
-     *
-     * @param identifier The identifier of the page
-     * @return Copied Response of loadResponse, so that cache contents are not changed.
-     */
-    public static Response copyResponse(String identifier, ResponseLoader loader) {
-        Response response = loadResponse(identifier, loader);
-        if (response instanceof InspectPageResponse) {
-            return InspectPageResponse.copyOf((InspectPageResponse) response);
-        }
-        return response;
     }
 
     /**

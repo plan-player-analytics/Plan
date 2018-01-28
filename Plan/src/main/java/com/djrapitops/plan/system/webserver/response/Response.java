@@ -87,7 +87,7 @@ public abstract class Response {
         exchange.sendResponseHeaders(getCode(), 0);
 
         try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
-             ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
+             ByteArrayInputStream bis = new ByteArrayInputStream(getContent().getBytes())) {
             byte[] buffer = new byte[2048];
             int count;
             while ((count = bis.read(buffer)) != -1) {

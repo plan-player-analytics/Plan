@@ -18,34 +18,27 @@ import java.util.UUID;
 public class InspectPageResponse extends Response {
 
     private final UUID uuid;
-    private InspectPagePluginsContent pluginsTab;
 
     public InspectPageResponse(UUID uuid, String html) {
-        this.uuid = uuid;
         super.setHeader("HTTP/1.1 200 OK");
         super.setContent(Theme.replaceColors(html));
-        pluginsTab = (InspectPagePluginsContent)
-                ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(uuid), InspectPagePluginsContent::new);
-    }
-
-    private InspectPageResponse(InspectPageResponse response) {
-        this.uuid = response.uuid;
-        super.setHeader(response.getHeader());
-        super.setContent(response.getContent());
-    }
-
-    public static InspectPageResponse copyOf(InspectPageResponse response) {
-        return new InspectPageResponse(response);
+        this.uuid = uuid;
     }
 
     @Override
     public String getContent() {
         Map<String, String> replaceMap = new HashMap<>();
-        String[] inspectPagePluginsTab = pluginsTab.getContents();
+        InspectPagePluginsContent pluginsTab = (InspectPagePluginsContent)
+                ResponseCache.loadResponse(PageId.PLAYER_PLUGINS_TAB.of(uuid));
+        String[] inspectPagePluginsTab = pluginsTab != null ? pluginsTab.getContents() : getCalculating();
         replaceMap.put("navPluginsTabs", inspectPagePluginsTab[0]);
         replaceMap.put("pluginsTabs", inspectPagePluginsTab[1]);
 
         return StrSubstitutor.replace(super.getContent(), replaceMap);
+    }
+
+    private String[] getCalculating() {
+        return new String[]{"<meta http-equiv=\"refresh\" content=\"5\" /><li><a><i class=\"fa fa-spin fa-refresh\"></i> Calculating...</a></li>", ""};
     }
 
 }

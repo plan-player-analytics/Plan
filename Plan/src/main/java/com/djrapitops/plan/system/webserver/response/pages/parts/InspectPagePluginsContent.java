@@ -32,7 +32,7 @@ public class InspectPagePluginsContent extends Response {
     }
 
     public InspectPagePluginsContent(UUID serverUUID, String nav, String html) {
-        this();
+        pluginsTab = new HashMap<>();
         addTab(serverUUID, nav, html);
     }
 
@@ -42,7 +42,7 @@ public class InspectPagePluginsContent extends Response {
         String serverName = ServerInfo.getServerName();
         String actualServerName = serverName.equals("Plan") ? "Server " + ServerInfo.getServerID() : serverName;
         if (containers.isEmpty()) {
-            new InspectPagePluginsContent(playerUUID, "<li><a>" + actualServerName + "(No Data)</a></li>", "");
+            return new InspectPagePluginsContent(playerUUID, "<li><a>" + actualServerName + " (No Data)</a></li>", "");
         }
 
         String nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + actualServerName + "</a></li>";

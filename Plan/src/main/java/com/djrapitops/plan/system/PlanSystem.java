@@ -50,6 +50,8 @@ public abstract class PlanSystem implements SubSystem {
     protected ServerInfo serverInfo;
 
     protected HookHandler hookHandler;
+
+    // Not a SubSystem.
     protected PlanAPI planAPI;
 
     public PlanSystem() {
@@ -86,7 +88,8 @@ public abstract class PlanSystem implements SubSystem {
                 processingQueue,
                 cacheSystem,
                 listenerSystem,
-                taskSystem
+                taskSystem,
+                hookHandler
         };
         for (SubSystem system : systems) {
             system.enable();
@@ -96,6 +99,7 @@ public abstract class PlanSystem implements SubSystem {
     @Override
     public void disable() {
         SubSystem[] systems = new SubSystem[]{
+                hookHandler,
                 cacheSystem,
                 listenerSystem,
                 processingQueue,

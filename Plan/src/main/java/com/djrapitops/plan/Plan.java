@@ -75,12 +75,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             system = new BukkitSystem(this);
             system.enable();
 
-            registerCommand("plan", new PlanCommand(this));
-
-            Benchmark.start("Hook to 3rd party plugins");
-            hookHandler = new HookHandler();
-            Benchmark.stop("Enable", "Hook to 3rd party plugins");
-
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 
             BStats bStats = new BStats(this);
@@ -91,10 +85,11 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             Log.logDebug("Enable");
             Log.info(Locale.get(Msg.ENABLED).toString());
         } catch (Exception e) {
-            Log.error("Plugin Failed to Initialize Correctly.");
+            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             Log.toLog(this.getClass().getName(), e);
             onDisable();
         }
+        registerCommand("plan", new PlanCommand(this));
     }
 
     @Override
