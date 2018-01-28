@@ -2,7 +2,6 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.utilities.MiscUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,14 +193,13 @@ public class Session {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("sessionStart", sessionStart)
-                .append("sessionID", sessionID)
-                .append("worldTimes", worldTimes)
-                .append("sessionEnd", sessionEnd)
-                .append("playerKills", playerKills)
-                .append("mobKills", mobKills)
-                .append("deaths", deaths)
-                .toString();
+        return "Session{" +
+                "sessionStart=" + sessionStart + ", " +
+                "sessionID=" + sessionID + ", " +
+                "worldTimes=" + worldTimes + ", " +
+                "sessionEnd=" + sessionEnd + ", " +
+                "playerKills=" + playerKills + ", " +
+                "mobKills=" + mobKills + ", " +
+                "deaths=" + deaths + '}';
     }
 }

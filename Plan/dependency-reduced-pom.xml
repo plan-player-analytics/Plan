@@ -47,7 +47,6 @@
           </execution>
         </executions>
         <configuration>
-          <minimizeJar>true</minimizeJar>
           <artifactSet>
             <excludes>
               <exclude>org.powermock:*</exclude>

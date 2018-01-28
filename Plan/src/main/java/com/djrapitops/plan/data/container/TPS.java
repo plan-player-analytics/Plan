@@ -5,8 +5,6 @@
  */
 package com.djrapitops.plan.data.container;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.util.Objects;
 
 /**
@@ -130,14 +128,13 @@ public class TPS {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("date", date)
-                .append("ticksPerSecond", ticksPerSecond)
-                .append("players", players)
-                .append("cpuUsage", cpuUsage)
-                .append("usedMemory", usedMemory)
-                .append("entityCount", entityCount)
-                .append("chunksLoaded", chunksLoaded)
-                .toString();
+        return "TPS{" +
+                "date=" + date + ", " +
+                "ticksPerSecond=" + ticksPerSecond + ", " +
+                "players=" + players + ", " +
+                "cpuUsage=" + cpuUsage + ", " +
+                "usedMemory=" + usedMemory + ", " +
+                "entityCount=" + entityCount + ", " +
+                "chunksLoaded=" + chunksLoaded + '}';
     }
 }

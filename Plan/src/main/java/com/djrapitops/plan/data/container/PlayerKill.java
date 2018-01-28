@@ -2,7 +2,6 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.system.cache.DataCache;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -81,10 +80,9 @@ public class PlayerKill {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("victim", victim)
-                .append("time", time)
-                .append("weapon", weapon)
-                .toString();
+        return "PlayerKill{" +
+                "victim=" + victim + ", " +
+                "time=" + time + ", " +
+                "weapon='" + weapon + "'}";
     }
 }

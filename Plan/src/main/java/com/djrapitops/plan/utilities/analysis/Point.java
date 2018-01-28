@@ -1,7 +1,5 @@
 package com.djrapitops.plan.utilities.analysis;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.util.Objects;
 
 /**
@@ -41,9 +39,8 @@ public class Point {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("x", x)
-                .append("y", y)
-                .toString();
+        return "Point{" +
+                "x=" + x + ", " +
+                "y=" + y + '}';
     }
 }

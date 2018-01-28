@@ -53,6 +53,8 @@ public class ShutdownHook extends Thread {
 
             saveFirstSessionInformation(db, now);
             saveActiveSessions(db, activeSessions, now);
+        } catch (IllegalStateException ignored) {
+            /* Database is not initialized */
         } catch (DBInitException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
