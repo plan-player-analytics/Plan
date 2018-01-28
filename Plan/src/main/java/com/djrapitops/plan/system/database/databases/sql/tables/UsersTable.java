@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -20,11 +20,11 @@ import java.util.*;
 public class UsersTable extends UserIDTable {
 
     public final String statementSelectID;
-    private final String columnID = "id";
-    private final String columnUUID = "uuid";
-    private final String columnRegistered = "registered";
-    private final String columnName = "name";
-    private final String columnTimesKicked = "times_kicked";
+    private static final String columnID = "id";
+    private static final String columnUUID = "uuid";
+    private static final String columnRegistered = "registered";
+    private static final String columnName = "name";
+    private static final String columnTimesKicked = "times_kicked";
     private String insertStatement;
 
     public UsersTable(SQLDB db) {
@@ -37,7 +37,7 @@ public class UsersTable extends UserIDTable {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .primaryKeyIDColumn(usingMySQL, columnID)
                 .column(columnUUID, Sql.varchar(36)).notNull().unique()

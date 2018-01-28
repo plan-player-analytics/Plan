@@ -36,7 +36,7 @@ public class AnalysisPluginsTabContentCreator {
 
         generalTab.append("<div class=\"tab\"><div class=\"row clearfix\">");
 
-        boolean hasGeneralBoxes = false;
+        boolean displayGeneralTab = false;
 
         for (PluginData pluginData : order) {
             AnalysisContainer container = containers.get(pluginData);
@@ -48,20 +48,19 @@ public class AnalysisPluginsTabContentCreator {
                 case WHOLE:
                     if (!container.hasOnlyValues()) {
                         appendWhole(pluginData, container, generalTab);
-                        hasGeneralBoxes = true;
-                        break;
+                        displayGeneralTab = true;
                     }
-
+                    break;
                 case TWO_THIRDS:
                     if (!container.hasOnlyValues()) {
                         appendTwoThirds(pluginData, container, generalTab);
-                        hasGeneralBoxes = true;
-                        break;
+                        displayGeneralTab = true;
                     }
+                    break;
                 case THIRD:
                 default:
                     appendThird(pluginData, container, generalTab);
-                    hasGeneralBoxes = true;
+                    displayGeneralTab = true;
                     break;
             }
         }
@@ -80,9 +79,9 @@ public class AnalysisPluginsTabContentCreator {
                 "</div></div></div>";
 
         return new String[]{
-                (hasGeneralBoxes ? "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>" : "")
+                (displayGeneralTab ? "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>" : "")
                         + "<li><a class=\"nav-button\" href=\"javascript:void(0)\">Player Data</a></li>" + nav.toString(),
-                (hasGeneralBoxes ? generalTab.toString() : "") + playerListTab + otherTabs.toString()
+                (displayGeneralTab ? generalTab.toString() : "") + playerListTab + otherTabs.toString()
         };
     }
 

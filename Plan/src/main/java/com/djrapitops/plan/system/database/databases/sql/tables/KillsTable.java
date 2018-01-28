@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -21,11 +21,11 @@ import java.util.*;
  */
 public class KillsTable extends UserIDTable {
 
-    private final String columnKillerUserID = "killer_id";
-    private final String columnVictimUserID = "victim_id";
-    private final String columnWeapon = "weapon";
-    private final String columnDate = "date";
-    private final String columnSessionID = "session_id";
+    private static final String columnKillerUserID = "killer_id";
+    private static final String columnVictimUserID = "victim_id";
+    private static final String columnWeapon = "weapon";
+    private static final String columnDate = "date";
+    private static final String columnSessionID = "session_id";
 
     private final SessionsTable sessionsTable;
     private String insertStatement;
@@ -46,7 +46,7 @@ public class KillsTable extends UserIDTable {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnKillerUserID, Sql.INT).notNull()
                 .column(columnVictimUserID, Sql.INT).notNull()

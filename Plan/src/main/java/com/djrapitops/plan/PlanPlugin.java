@@ -4,8 +4,6 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.settings.ColorScheme;
@@ -42,12 +40,6 @@ public interface PlanPlugin extends IPlugin {
         }
         throw new IllegalAccessError("Plugin instance not available");
     }
-
-    @Deprecated
-    Database getDB();
-
-    @Deprecated
-    WebServer getWebServer();
 
     File getDataFolder();
 

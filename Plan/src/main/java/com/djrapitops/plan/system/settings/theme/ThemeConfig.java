@@ -69,17 +69,14 @@ public class ThemeConfig extends Config {
         }
     }
 
-
     private static File getConfigFile() throws IOException {
         File folder = PlanPlugin.getInstance().getDataFolder();
         if (!folder.exists()) {
             folder.mkdirs();
         }
         File themeFile = new File(folder, "theme.yml");
-        if (!themeFile.exists()) {
-            if (!themeFile.createNewFile()) {
-                throw new FileNotFoundException("Failed to create theme.yml");
-            }
+        if (!themeFile.exists() && !themeFile.createNewFile()) {
+            throw new FileNotFoundException("Failed to create theme.yml");
         }
         return themeFile;
     }

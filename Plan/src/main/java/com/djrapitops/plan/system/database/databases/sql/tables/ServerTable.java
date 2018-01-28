@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -37,12 +37,12 @@ public class ServerTable extends Table {
 
     public final String statementSelectServerID;
     public final String statementSelectServerNameID;
-    private final String columnServerID = "id";
-    private final String columnServerUUID = "uuid";
-    private final String columnServerName = "name";
-    private final String columnWebserverAddress = "web_address";
-    private final String columnInstalled = "is_installed";
-    private final String columnMaxPlayers = "max_players";
+    private static final String columnServerID = "id";
+    private static final String columnServerUUID = "uuid";
+    private static final String columnServerName = "name";
+    private static final String columnWebserverAddress = "web_address";
+    private static final String columnInstalled = "is_installed";
+    private static final String columnMaxPlayers = "max_players";
     private String insertStatement;
 
     public ServerTable(SQLDB db) {
@@ -58,7 +58,7 @@ public class ServerTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .primaryKeyIDColumn(usingMySQL, columnServerID)
                 .column(columnServerUUID, Sql.varchar(36)).notNull().unique()

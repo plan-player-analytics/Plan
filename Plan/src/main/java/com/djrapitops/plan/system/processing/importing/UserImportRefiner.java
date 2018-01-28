@@ -27,15 +27,15 @@ public class UserImportRefiner {
     private final Plan plugin;
     private final boolean onlineMode;
 
-    private final List<UserImportData> importers = new Vector<>();
+    private final List<UserImportData> importers = new ArrayList<>();
 
-    private final Map<String, Boolean> worlds = new Hashtable<>();
+    private final Map<String, Boolean> worlds = new HashMap<>();
 
-    private final Map<UserImportData, String> uuidsMissing = new Hashtable<>();
-    private final Map<UserImportData, String> namesMissing = new Hashtable<>();
+    private final Map<UserImportData, String> uuidsMissing = new HashMap<>();
+    private final Map<UserImportData, String> namesMissing = new HashMap<>();
 
-    private final Map<UserImportData, String> foundUUIDs = new Hashtable<>();
-    private final Map<UserImportData, String> foundNames = new Hashtable<>();
+    private final Map<UserImportData, String> foundUUIDs = new HashMap<>();
+    private final Map<UserImportData, String> foundNames = new HashMap<>();
 
     public UserImportRefiner(Plan plugin, List<UserImportData> importers) {
         this.plugin = plugin;
@@ -92,7 +92,7 @@ public class UserImportRefiner {
 
         Benchmark.start(benchmarkName);
 
-        List<UserImportData> invalidData = new Vector<>();
+        List<UserImportData> invalidData = new ArrayList<>();
 
         importers.parallelStream().forEach(importer -> {
             String name = importer.getName();
@@ -161,7 +161,7 @@ public class UserImportRefiner {
     }
 
     private void addMissingUUIDsOverOfflinePlayer() {
-        Map<String, String> result = new Hashtable<>();
+        Map<String, String> result = new HashMap<>();
 
         for (String name : uuidsMissing.values()) {
             String uuid = getUuidByOfflinePlayer(name);
@@ -177,7 +177,7 @@ public class UserImportRefiner {
     }
 
     private void addFoundUUIDs(Map<String, String> foundUUIDs) {
-        List<UserImportData> found = new Vector<>();
+        List<UserImportData> found = new ArrayList<>();
 
         uuidsMissing.entrySet().parallelStream().forEach((entry) -> {
             UserImportData importer = entry.getKey();
@@ -218,7 +218,7 @@ public class UserImportRefiner {
     }
 
     private void addMissingNames() {
-        Map<String, String> result = new Hashtable<>();
+        Map<String, String> result = new HashMap<>();
 
         namesMissing.values().parallelStream().forEach(uuid -> {
             String name = getNameByOfflinePlayer(uuid);
@@ -230,7 +230,7 @@ public class UserImportRefiner {
     }
 
     private void addFoundNames(Map<String, String> foundNames) {
-        List<UserImportData> found = new Vector<>();
+        List<UserImportData> found = new ArrayList<>();
 
         namesMissing.entrySet().parallelStream().forEach(entry -> {
             UserImportData importer = entry.getKey();

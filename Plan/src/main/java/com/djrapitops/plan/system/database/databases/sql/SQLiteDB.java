@@ -58,9 +58,9 @@ public class SQLiteDB extends SQLDB {
 
         String dbFilePath = new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db").getAbsolutePath();
 
-        Connection connection = getConnectionFor(dbFilePath);
-        connection.setAutoCommit(false);
-        return connection;
+        Connection newConnection = getConnectionFor(dbFilePath);
+        newConnection.setAutoCommit(false);
+        return newConnection;
     }
 
     private Connection getConnectionFor(String dbFilePath) throws SQLException {

@@ -58,7 +58,7 @@ public class ManageHotswapCommand extends SubCommand {
             return true;
         }
 
-        if (Condition.isTrue(dbName.equals(plugin.getDB().getConfigName()), Locale.get(Msg.MANAGE_FAIL_SAME_DB).toString(), sender)) {
+        if (Condition.isTrue(dbName.equals(Database.getActive().getConfigName()), Locale.get(Msg.MANAGE_FAIL_SAME_DB).toString(), sender)) {
             return true;
         }
 

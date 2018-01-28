@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -50,13 +50,13 @@ public abstract class Table {
         this.usingMySQL = db.isUsingMySQL();
     }
 
-    public abstract void createTable() throws DBCreateTableException;
+    public abstract void createTable() throws DBInitException;
 
-    protected void createTable(String sql) throws DBCreateTableException {
+    protected void createTable(String sql) throws DBInitException {
         try {
             execute(sql);
         } catch (SQLException e) {
-            throw new DBCreateTableException(tableName, "Failed to create table", e);
+            throw new DBInitException("Failed to create table: " + tableName, e);
         }
     }
 

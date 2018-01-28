@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
@@ -52,7 +53,7 @@ public class ManageSetupCommand extends SubCommand {
         if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
-        if (!plugin.getWebServer().isEnabled()) {
+        if (!WebServerSystem.isWebServerEnabled()) {
             sender.sendMessage("§cWebServer is not enabled on this server! Make sure it enables on boot!");
             return true;
         }

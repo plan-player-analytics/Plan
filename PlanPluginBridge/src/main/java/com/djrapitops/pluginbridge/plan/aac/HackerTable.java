@@ -5,7 +5,7 @@
  */
 package com.djrapitops.pluginbridge.plan.aac;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -41,7 +41,7 @@ public class HackerTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable("CREATE TABLE IF NOT EXISTS " + tableName + " ("
                 + columnUUID + " varchar(36) NOT NULL, "
                 + columnDate + " bigint NOT NULL, "

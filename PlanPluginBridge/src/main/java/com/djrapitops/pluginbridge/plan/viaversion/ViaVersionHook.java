@@ -1,7 +1,7 @@
 package com.djrapitops.pluginbridge.plan.viaversion;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -40,7 +40,7 @@ public class ViaVersionHook extends Hook {
         ProtocolTable table = new ProtocolTable((SQLDB) Database.getActive());
         try {
             table.createTable();
-        } catch (DBCreateTableException e) {
+        } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
             return;
         }

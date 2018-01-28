@@ -12,6 +12,7 @@ import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.importing.ServerImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportData;
@@ -49,23 +50,17 @@ public abstract class Importer {
 
         ExecutorService service = Executors.newCachedThreadPool();
 
-        new ImportExecutorHelper() {
-            @Override
-            void execute() {
-                Benchmark.start(serverBenchmarkName);
-                processServerData();
-                Benchmark.stop(serverBenchmarkName);
-            }
-        }.submit(service);
+        submitTo(service, () -> {
+            Benchmark.start(serverBenchmarkName);
+            processServerData();
+            Benchmark.stop(serverBenchmarkName);
+        });
 
-        new ImportExecutorHelper() {
-            @Override
-            void execute() throws DBException {
-                Benchmark.start(userDataBenchmarkName);
-                processUserData();
-                Benchmark.stop(userDataBenchmarkName);
-            }
-        }.submit(service);
+        submitTo(service, () -> {
+            Benchmark.start(userDataBenchmarkName);
+            processUserData();
+            Benchmark.stop(userDataBenchmarkName);
+        });
 
         service.shutdown();
 
@@ -96,27 +91,16 @@ public abstract class Importer {
             return;
         }
 
-        Plan plugin = Plan.getInstance();
         UUID uuid = ServerInfo.getServerUUID();
-        Database db = plugin.getDB();
+        Database db = Database.getActive();
 
         ExecutorService service = Executors.newCachedThreadPool();
 
         Benchmark.start(insertDataIntoDatabaseBenchmarkName);
 
-        new ImportExecutorHelper() {
-            @Override
-            void execute() throws DBException {
-                db.save().insertTPS(ImmutableMap.of(uuid, serverImportData.getTpsData()));
-            }
-        }.submit(service);
-
-        new ImportExecutorHelper() {
-            @Override
-            void execute() throws DBException {
-                db.save().insertCommandUsage(ImmutableMap.of(uuid, serverImportData.getCommandUsages()));
-            }
-        }.submit(service);
+        SaveOperations save = db.save();
+        submitTo(service, () -> save.insertTPS(ImmutableMap.of(uuid, serverImportData.getTpsData())));
+        submitTo(service, () -> save.insertCommandUsage(ImmutableMap.of(uuid, serverImportData.getCommandUsages())));
 
         service.shutdown();
 
@@ -148,25 +132,23 @@ public abstract class Importer {
             return;
         }
 
-        Plan plugin = Plan.getInstance();
-
-        UserImportRefiner userImportRefiner = new UserImportRefiner(plugin, userImportData);
+        UserImportRefiner userImportRefiner = new UserImportRefiner(Plan.getInstance(), userImportData);
         userImportData = userImportRefiner.refineData();
 
         UUID serverUUID = ServerInfo.getServerUUID();
-        Database db = plugin.getDB();
+        Database db = Database.getActive();
 
         Set<UUID> existingUUIDs = db.fetch().getSavedUUIDs();
         Set<UUID> existingUserInfoTableUUIDs = db.fetch().getSavedUUIDs(serverUUID);
 
         Benchmark.start(insertDataIntoCollectionsBenchmarkName);
 
-        Map<UUID, UserInfo> users = new Hashtable<>();
-        List<UserInfo> userInfo = new Vector<>();
-        Map<UUID, List<String>> nickNames = new Hashtable<>();
-        Map<UUID, List<Session>> sessions = new Hashtable<>();
-        Map<UUID, List<GeoInfo>> geoInfo = new Hashtable<>();
-        Map<UUID, Integer> timesKicked = new Hashtable<>();
+        Map<UUID, UserInfo> users = new HashMap<>();
+        List<UserInfo> userInfo = new ArrayList<>();
+        Map<UUID, List<String>> nickNames = new HashMap<>();
+        Map<UUID, List<Session>> sessions = new HashMap<>();
+        Map<UUID, List<GeoInfo>> geoInfo = new HashMap<>();
+        Map<UUID, Integer> timesKicked = new HashMap<>();
 
         userImportData.parallelStream().forEach(data -> {
             UUID uuid = data.getUuid();
@@ -192,42 +174,14 @@ public abstract class Importer {
 
         Benchmark.start(insertDataIntoDatabaseBenchmarkName);
 
-        db.save().insertUsers(users);
+        SaveOperations save = db.save();
 
-        new ImportExecutorHelper() {
-            @Override
-            void execute() throws DBException {
-                db.save().insertSessions(ImmutableMap.of(serverUUID, sessions), true);
-            }
-        }.submit(service);
-
-        new ImportExecutorHelper() {
-            @Override
-            void execute() throws DBException {
-                db.save().kickAmount(timesKicked);
-            }
-        }.submit(service);
-
-        new ImportExecutorHelper() {
-            @Override
-            void execute() throws DBException {
-                db.save().insertUserInfo(ImmutableMap.of(serverUUID, userInfo));
-            }
-        }.submit(service);
-
-        new ImportExecutorHelper() {
-            @Override
-            void execute() throws DBException {
-                db.save().insertNicknames(ImmutableMap.of(serverUUID, nickNames));
-            }
-        }.submit(service);
-
-        new ImportExecutorHelper() {
-            @Override
-            void execute() throws DBException {
-                db.save().insertAllGeoInfo(geoInfo);
-            }
-        }.submit(service);
+        save.insertUsers(users);
+        submitTo(service, () -> save.insertSessions(ImmutableMap.of(serverUUID, sessions), true));
+        submitTo(service, () -> save.kickAmount(timesKicked));
+        submitTo(service, () -> save.insertUserInfo(ImmutableMap.of(serverUUID, userInfo)));
+        submitTo(service, () -> save.insertNicknames(ImmutableMap.of(serverUUID, nickNames)));
+        submitTo(service, () -> save.insertAllGeoInfo(geoInfo));
 
         service.shutdown();
 
@@ -240,6 +194,10 @@ public abstract class Importer {
 
         Benchmark.stop(insertDataIntoDatabaseBenchmarkName);
         Benchmark.stop(benchmarkName);
+    }
+
+    private void submitTo(ExecutorService service, ImportExecutorHelper helper) {
+        helper.submit(service);
     }
 
     private UserInfo toUserInfo(UserImportData userImportData) {
@@ -274,10 +232,10 @@ public abstract class Importer {
                 }).collect(Collectors.toList());
     }
 
-    private abstract class ImportExecutorHelper {
-        abstract void execute() throws DBException;
+    private interface ImportExecutorHelper {
+        void execute() throws DBException;
 
-        void submit(ExecutorService service) {
+        default void submit(ExecutorService service) {
             service.submit(new Runnable() {
                 @Override
                 public void run() {

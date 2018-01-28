@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.tables.move;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -48,7 +48,7 @@ public class Version8TransferTable extends Table {
         return "DROP TABLE " + name;
     }
 
-    public void alterTablesToV10() throws SQLException, DBCreateTableException {
+    public void alterTablesToV10() throws SQLException, DBInitException {
         Benchmark.start("Schema copy from 8 to 10");
         copyCommandUsage();
 
@@ -76,7 +76,7 @@ public class Version8TransferTable extends Table {
         Benchmark.stop("Schema copy from 8 to 10");
     }
 
-    private void copyUsers() throws SQLException, DBCreateTableException {
+    private void copyUsers() throws SQLException, DBInitException {
         String tempTableName = "temp_users";
         UsersTable usersTable = db.getUsersTable();
         execute(tableRenameSql("plan_users", tempTableName));
@@ -137,7 +137,7 @@ public class Version8TransferTable extends Table {
         }
     }
 
-    private void copyCommandUsage() throws SQLException, DBCreateTableException {
+    private void copyCommandUsage() throws SQLException, DBInitException {
         String tempTableName = "temp_cmdusg";
         CommandUseTable commandUseTable = db.getCommandUseTable();
 
@@ -156,7 +156,7 @@ public class Version8TransferTable extends Table {
         execute(dropTableSql(tempTableName));
     }
 
-    private void copyTPS() throws SQLException, DBCreateTableException {
+    private void copyTPS() throws SQLException, DBInitException {
         String tempTableName = "temp_tps";
         TPSTable tpsTable = db.getTpsTable();
 

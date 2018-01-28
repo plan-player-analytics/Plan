@@ -9,10 +9,10 @@ import com.djrapitops.plan.system.processing.importing.UserImportData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 /**
  * @author Fuzzlemann
@@ -32,7 +32,7 @@ public class OfflinePlayerImporter extends Importer {
 
     @Override
     public List<UserImportData> getUserImportData() {
-        List<UserImportData> dataList = new Vector<>();
+        List<UserImportData> dataList = new ArrayList<>();
 
         Set<OfflinePlayer> operators = Bukkit.getOperators();
         Set<OfflinePlayer> banned = Bukkit.getBannedPlayers();

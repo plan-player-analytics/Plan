@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -21,9 +21,9 @@ import java.util.*;
  */
 public class GeoInfoTable extends UserIDTable {
 
-    private final String columnIP = "ip";
-    private final String columnGeolocation = "geolocation";
-    private final String columnLastUsed = "last_used";
+    private static final String columnIP = "ip";
+    private static final String columnGeolocation = "geolocation";
+    private static final String columnLastUsed = "last_used";
     private String insertStatement;
 
     public GeoInfoTable(SQLDB db) {
@@ -39,7 +39,7 @@ public class GeoInfoTable extends UserIDTable {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnIP, Sql.varchar(39)).notNull()
@@ -110,7 +110,6 @@ public class GeoInfoTable extends UserIDTable {
                 " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
                 " AND " + columnIP + "=?" +
                 " AND " + columnGeolocation + "=?";
-
 
         execute(new ExecStatement(sql) {
             @Override

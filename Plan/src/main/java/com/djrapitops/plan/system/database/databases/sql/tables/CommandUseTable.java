@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -23,10 +23,10 @@ import java.util.UUID;
  */
 public class CommandUseTable extends Table {
 
-    private final String columnCommandId = "id";
-    private final String columnCommand = "command";
-    private final String columnTimesUsed = "times_used";
-    private final String columnServerID = "server_id";
+    private static final String columnCommandId = "id";
+    private static final String columnCommand = "command";
+    private static final String columnTimesUsed = "times_used";
+    private static final String columnServerID = "server_id";
 
     private final ServerTable serverTable;
     private String insertStatement;
@@ -42,7 +42,7 @@ public class CommandUseTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         ServerTable serverTable = db.getServerTable();
         createTable(TableSqlParser.createTable(tableName)
                 .primaryKeyIDColumn(usingMySQL, columnCommandId)

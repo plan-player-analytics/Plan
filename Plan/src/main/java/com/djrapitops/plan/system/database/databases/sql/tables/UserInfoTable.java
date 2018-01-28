@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -31,10 +31,10 @@ import java.util.*;
  */
 public class UserInfoTable extends UserIDTable {
 
-    private final String columnRegistered = "registered";
-    private final String columnOP = "opped";
-    private final String columnBanned = "banned";
-    private final String columnServerID = "server_id";
+    private static final String columnRegistered = "registered";
+    private static final String columnOP = "opped";
+    private static final String columnBanned = "banned";
+    private static final String columnServerID = "server_id";
 
     private final ServerTable serverTable;
 
@@ -44,7 +44,7 @@ public class UserInfoTable extends UserIDTable {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnRegistered, Sql.LONG).notNull()

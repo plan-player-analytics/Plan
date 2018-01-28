@@ -24,16 +24,16 @@ import java.util.stream.Collectors;
  */
 public class HealthNotes {
 
-    private final List<String> healthNotes;
+    private final List<String> notes;
     private final AnalysisData analysisData;
-    private final TreeMap<Long, Map<String, Set<UUID>>> activityData;
+    private final SortedMap<Long, Map<String, Set<UUID>>> activityData;
     private final List<TPS> tpsDataMonth;
     private final long now;
     private final long fourWeeksAgo;
     private double serverHealth;
 
-    public HealthNotes(AnalysisData analysisData, TreeMap<Long, Map<String, Set<UUID>>> activityData, List<TPS> tpsDataMonth, long now) {
-        this.healthNotes = new ArrayList<>();
+    public HealthNotes(AnalysisData analysisData, SortedMap<Long, Map<String, Set<UUID>>> activityData, List<TPS> tpsDataMonth, long now) {
+        this.notes = new ArrayList<>();
         serverHealth = 100.0;
 
         this.analysisData = analysisData;
@@ -52,7 +52,7 @@ public class HealthNotes {
 
     public String parse() {
         StringBuilder healthNoteBuilder = new StringBuilder();
-        for (String healthNote : healthNotes) {
+        for (String healthNote : notes) {
             healthNoteBuilder.append(healthNote);
         }
         return healthNoteBuilder.toString();
@@ -105,20 +105,20 @@ public class HealthNotes {
                     + remain + "/" + activeFWAGNum + ")";
         }
         if (change > 0) {
-            healthNotes.add(
+            notes.add(
                     "<p>" + Html.GREEN_THUMB.parse() + " Number of regular players has increased (+" + change + ")<br>" +
                             remainNote + "</p>");
         } else if (change == 0) {
-            healthNotes.add(
+            notes.add(
                     "<p>" + Html.GREEN_THUMB.parse() + " Number of regular players has stayed the same (+" + change + ")<br>" +
                             remainNote + "</p>");
         } else if (change > -20) {
-            healthNotes.add(
+            notes.add(
                     "<p>" + Html.YELLOW_FLAG.parse() + " Number of regular players has decreased (" + change + ")<br>" +
                             remainNote + "</p>");
             serverHealth -= 5;
         } else {
-            healthNotes.add(
+            notes.add(
                     "<p>" + Html.RED_WARN.parse() + " Number of regular players has decreased (" + change + ")<br>" +
                             remainNote + "</p>");
             serverHealth -= 10;
@@ -128,10 +128,10 @@ public class HealthNotes {
     private void newPlayerNote() {
         double avgOnlineOnRegister = MathUtils.averageInt(analysisData.getStickyMonthData().stream().map(StickyData::getOnlineOnJoin));
         if (avgOnlineOnRegister >= 1) {
-            healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " New Players have players to play with when they join ("
+            notes.add("<p>" + Html.GREEN_THUMB.parse() + " New Players have players to play with when they join ("
                     + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)</p>");
         } else {
-            healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " New Players may not have players to play with when they join ("
+            notes.add("<p>" + Html.YELLOW_FLAG.parse() + " New Players may not have players to play with when they join ("
                     + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)</p>");
             serverHealth -= 5;
         }
@@ -142,10 +142,10 @@ public class HealthNotes {
         if (newM != 0) {
             double stuckPerc = MathUtils.averageDouble(stuckPerM, newM) * 100;
             if (stuckPerc >= 25) {
-                healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
+                notes.add("<p>" + Html.GREEN_THUMB.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
                         + "% of new players have stuck around (" + stuckPerM + "/" + newM + ")</p>");
             } else {
-                healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
+                notes.add("<p>" + Html.YELLOW_FLAG.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
                         + "% of new players have stuck around (" + stuckPerM + "/" + newM + ")</p>");
             }
         }
@@ -171,16 +171,16 @@ public class HealthNotes {
             String avgLastTwoWeeksString = FormatUtils.formatTimeAmount(avgLastTwoWeeks);
             String avgFourToTwoWeeksString = FormatUtils.formatTimeAmount(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
-                healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " Active players seem to have things to do (Played "
+                notes.add("<p>" + Html.GREEN_THUMB.parse() + " Active players seem to have things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)</p>");
             } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeAmount.HOUR.ms() * 2L) {
-                healthNotes.add("<p>" + Html.RED_WARN.parse() + " Active players might be running out of things to do (Played "
+                notes.add("<p>" + Html.RED_WARN.parse() + " Active players might be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)</p>");
                 serverHealth -= 5;
             } else {
-                healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " Active players might be running out of things to do (Played "
+                notes.add("<p>" + Html.YELLOW_FLAG.parse() + " Active players might be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)</p>");
             }
@@ -206,18 +206,18 @@ public class HealthNotes {
                 + FormatUtils.cutDecimals(aboveThreshold * 100.0) + "% of the time";
 
         if (tpsSpikeMonth <= 5) {
-            healthNotes.add("<p>" + Html.GREEN_THUMB.parse()
+            notes.add("<p>" + Html.GREEN_THUMB.parse()
                     + " Average TPS dropped below Low Threshold (" + Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber() + ")" +
                     " " + tpsSpikeMonth + " times<br>" +
                     avgLowThresholdString + "</p>");
         } else if (tpsSpikeMonth <= 25) {
-            healthNotes.add("<p>" + Html.YELLOW_FLAG.parse()
+            notes.add("<p>" + Html.YELLOW_FLAG.parse()
                     + " Average TPS dropped below Low Threshold (" + Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber() + ")" +
                     " " + tpsSpikeMonth + " times<br>" +
                     avgLowThresholdString + "</p>");
             serverHealth *= 0.95;
         } else {
-            healthNotes.add("<p>" + Html.RED_WARN.parse()
+            notes.add("<p>" + Html.RED_WARN.parse()
                     + " Average TPS dropped below Low Threshold (" + Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber() + ")" +
                     " " + tpsSpikeMonth + " times<br>" +
                     avgLowThresholdString + "</p>");
@@ -225,14 +225,14 @@ public class HealthNotes {
         }
 
         if (serverDownTime <= TimeAmount.DAY.ms()) {
-            healthNotes.add("<p>" + Html.GREEN_THUMB.parse() + " Total Server downtime (No Data) was "
+            notes.add("<p>" + Html.GREEN_THUMB.parse() + " Total Server downtime (No Data) was "
                     + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
         } else if (serverDownTime <= TimeAmount.WEEK.ms()) {
-            healthNotes.add("<p>" + Html.YELLOW_FLAG.parse() + " Total Server downtime (No Data) was "
+            notes.add("<p>" + Html.YELLOW_FLAG.parse() + " Total Server downtime (No Data) was "
                     + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
             serverHealth *= (TimeAmount.WEEK.ms() - serverDownTime) * 1.0 / TimeAmount.WEEK.ms();
         } else {
-            healthNotes.add("<p>" + Html.RED_WARN.parse() + " Total Server downtime (No Data) was "
+            notes.add("<p>" + Html.RED_WARN.parse() + " Total Server downtime (No Data) was "
                     + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
             serverHealth *= (TimeAmount.MONTH.ms() - serverDownTime) * 1.0 / TimeAmount.MONTH.ms();
         }

@@ -69,6 +69,11 @@ public class InspectContainer {
         return html.toString();
     }
 
+    /**
+     * Check if InspectContainer has only values, and not HTML or Tables.
+     *
+     * @return true/false
+     */
     public final boolean hasOnlyValues() {
         return html.isEmpty() && tables.isEmpty();
     }

@@ -85,7 +85,7 @@ public class ManageRemoveCommand extends SubCommand {
                         return;
                     }
 
-                    message = Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(plugin.getDB().getConfigName()));
+                    message = Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(Database.getActive().getConfigName()));
                     if (!Condition.isTrue(Verify.contains("-a", args), message, sender)) {
                         return;
                     }
@@ -99,7 +99,7 @@ public class ManageRemoveCommand extends SubCommand {
                         SessionCache.getActiveSessions().remove(uuid);
                         SessionCache.getInstance().cacheSession(uuid, new Session(MiscUtils.getTime(), player.getWorld().getName(), player.getGameMode().name()));
                     }
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, plugin.getDB().getConfigName()));
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, Database.getActive().getConfigName()));
                 } catch (DBException e) {
                     Log.toLog(this.getClass().getName(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());

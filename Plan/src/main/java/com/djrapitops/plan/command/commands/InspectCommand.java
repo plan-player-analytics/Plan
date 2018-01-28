@@ -8,6 +8,7 @@ import com.djrapitops.plan.system.processing.processors.info.InspectCacheRequest
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -75,7 +76,7 @@ public class InspectCommand extends SubCommand {
                     if (!Condition.isTrue(activeDB.check().isPlayerRegistered(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
                         return;
                     }
-                    if (CommandUtils.isPlayer(sender) && plugin.getWebServer().isAuthRequired()) {
+                    if (CommandUtils.isPlayer(sender) && WebServer.getInstance().isAuthRequired()) {
                         boolean senderHasWebUser = activeDB.check().doesWebUserExists(sender.getName());
 
                         if (!senderHasWebUser) {

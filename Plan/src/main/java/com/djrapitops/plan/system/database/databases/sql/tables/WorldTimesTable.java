@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
  */
 public class WorldTimesTable extends UserIDTable {
 
-    private final String columnSessionID = "session_id";
-    private final String columnWorldId = "world_id";
-    private final String columnSurvival = "survival_time";
-    private final String columnCreative = "creative_time";
-    private final String columnAdventure = "adventure_time";
-    private final String columnSpectator = "spectator_time";
+    private static final String columnSessionID = "session_id";
+    private static final String columnWorldId = "world_id";
+    private static final String columnSurvival = "survival_time";
+    private static final String columnCreative = "creative_time";
+    private static final String columnAdventure = "adventure_time";
+    private static final String columnSpectator = "spectator_time";
 
     private final WorldTable worldTable;
     private final SessionsTable sessionsTable;
@@ -57,7 +57,7 @@ public class WorldTimesTable extends UserIDTable {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnWorldId, Sql.INT).notNull()

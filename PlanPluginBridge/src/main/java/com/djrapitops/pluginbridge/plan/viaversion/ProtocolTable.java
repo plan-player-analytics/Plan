@@ -5,7 +5,7 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -38,7 +38,7 @@ public class ProtocolTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable("CREATE TABLE IF NOT EXISTS " + tableName + " ("
                 + columnUUID + " varchar(36) NOT NULL UNIQUE, "
                 + columnProtocolVersion + " integer NOT NULL"

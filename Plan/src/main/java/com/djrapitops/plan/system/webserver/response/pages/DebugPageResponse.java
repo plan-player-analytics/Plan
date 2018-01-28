@@ -115,7 +115,7 @@ public class DebugPageResponse extends ErrorResponse {
                 .append(" ").append(variable.getVersion());
         content.append("<br>");
 
-        Database database = plugin.getDB();
+        Database database = Database.getActive();
         content.append("**Database:** ").append(database.getName());
 
         if (database instanceof SQLDB) {

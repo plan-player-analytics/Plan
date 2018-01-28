@@ -5,12 +5,12 @@
 package com.djrapitops.plan.system.webserver.webapi.bukkit;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.settings.ServerSpecificSettings;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.webapi.WebAPI;
 import com.djrapitops.plugin.api.Check;
@@ -50,7 +50,7 @@ public class ConfigurationWebAPI extends WebAPI {
         if (accessKey != null) {
             addVariable("accessKey", accessKey);
         }
-        addVariable("webAddress", PlanBungee.getInstance().getWebServer().getAccessAddress());
+        addVariable("webAddress", WebServer.getInstance().getAccessAddress());
 
         sendRequest(address, serverUUID);
     }

@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -33,16 +33,16 @@ import java.util.UUID;
  */
 public class TransferTable extends Table {
 
-    private final String columnSenderID = "sender_server_id";
-    private final String columnExpiry = "expiry_date";
-    private final String columnInfoType = "type";
-    private final String columnContent = "content_64";
-    private final String columnExtraVariables = "extra_variables";
+    private static final String columnSenderID = "sender_server_id";
+    private static final String columnExpiry = "expiry_date";
+    private static final String columnInfoType = "type";
+    private static final String columnContent = "content_64";
+    private static final String columnExtraVariables = "extra_variables";
 
     private final ServerTable serverTable;
 
     private final String insertStatement;
-    private String selectStatement;
+    private final String selectStatement;
 
     public TransferTable(SQLDB db) {
         super("plan_transfer", db);
@@ -64,7 +64,7 @@ public class TransferTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnSenderID, Sql.INT).notNull()
                 .column(columnExpiry, Sql.LONG).notNull().defaultValue("0")

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -28,14 +28,14 @@ import java.util.*;
  */
 public class TPSTable extends Table {
 
-    private final String columnServerID = "server_id";
-    private final String columnDate = "date";
-    private final String columnTPS = "tps";
-    private final String columnPlayers = "players_online";
-    private final String columnCPUUsage = "cpu_usage";
-    private final String columnRAMUsage = "ram_usage";
-    private final String columnEntities = "entities";
-    private final String columnChunksLoaded = "chunks_loaded";
+    private static final String columnServerID = "server_id";
+    private static final String columnDate = "date";
+    private static final String columnTPS = "tps";
+    private static final String columnPlayers = "players_online";
+    private static final String columnCPUUsage = "cpu_usage";
+    private static final String columnRAMUsage = "ram_usage";
+    private static final String columnEntities = "entities";
+    private static final String columnChunksLoaded = "chunks_loaded";
 
     private final ServerTable serverTable;
     private String insertStatement;
@@ -58,7 +58,7 @@ public class TPSTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnServerID, Sql.INT).notNull()
                 .column(columnDate, Sql.LONG).notNull()

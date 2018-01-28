@@ -20,17 +20,12 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.BukkitSystem;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.OfflinePlayerImporter;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
-import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.metrics.BStats;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.StaticHolder;
@@ -50,8 +45,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class Plan extends BukkitPlugin implements PlanPlugin {
 
     private BukkitSystem system;
-
-    private HookHandler hookHandler; // Manages 3rd party data sources
 
     /**
      * Used to get the plugin-instance singleton.
@@ -118,34 +111,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     @Override
     public void onReload() {
 
-    }
-
-    /**
-     * Used to access active Database.
-     *
-     * @return the Current Database
-     */
-    @Deprecated
-    public Database getDB() {
-        return DBSystem.getInstance().getActiveDatabase();
-    }
-
-    /**
-     * Used to access WebServer.
-     *
-     * @return the WebServer
-     */
-    public WebServer getWebServer() {
-        return WebServerSystem.getInstance().getWebServer();
-    }
-
-    /**
-     * Used to access HookHandler.
-     *
-     * @return HookHandler that manages Hooks to other plugins.
-     */
-    public HookHandler getHookHandler() {
-        return hookHandler;
     }
 
     public boolean isReloading() {

@@ -5,7 +5,7 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -28,9 +28,9 @@ import java.util.List;
  */
 public class SecurityTable extends Table {
 
-    private final String columnUser = "username";
-    private final String columnSaltedHash = "salted_pass_hash";
-    private final String columnPermLevel = "permission_level";
+    private static final String columnUser = "username";
+    private static final String columnSaltedHash = "salted_pass_hash";
+    private static final String columnPermLevel = "permission_level";
     private String insertStatement;
 
     public SecurityTable(SQLDB db) {
@@ -42,7 +42,7 @@ public class SecurityTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnUser, Sql.varchar(100)).notNull().unique()
                 .column(columnSaltedHash, Sql.varchar(100)).notNull().unique()

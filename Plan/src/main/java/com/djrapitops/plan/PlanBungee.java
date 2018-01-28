@@ -6,13 +6,9 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.system.BungeeSystem;
-import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
-import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
@@ -31,9 +27,6 @@ import java.io.InputStream;
 public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     private BungeeSystem system;
-
-    @Deprecated
-    private boolean setupAllowed = false;
 
     public static PlanBungee getInstance() {
         return (PlanBungee) StaticHolder.getInstance(PlanBungee.class);
@@ -74,18 +67,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     }
 
     @Override
-    @Deprecated
-    public Database getDB() {
-        return DBSystem.getInstance().getActiveDatabase();
-    }
-
-    @Override
-    @Deprecated
-    public WebServer getWebServer() {
-        return WebServerSystem.getInstance().getWebServer();
-    }
-
-    @Override
     public InputStream getResource(String resource) {
         return getResourceAsStream(resource);
     }
@@ -93,16 +74,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Override
     public ColorScheme getColorScheme() {
         return PlanColorScheme.create();
-    }
-
-    @Deprecated
-    public boolean isSetupAllowed() {
-        return setupAllowed;
-    }
-
-    @Deprecated
-    public void setSetupAllowed(boolean setupAllowed) {
-        this.setupAllowed = setupAllowed;
     }
 
     public BungeeSystem getSystem() {

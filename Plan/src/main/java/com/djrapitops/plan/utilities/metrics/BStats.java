@@ -1,9 +1,10 @@
 package com.djrapitops.plan.utilities.metrics;
 
-
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -32,7 +33,7 @@ public class BStats {
         if ("CraftBukkit".equals(serverType) && Check.isSpigotAvailable()) {
             serverType = "Spigot";
         }
-        String databaseType = plugin.getDB().getName();
+        String databaseType = Database.getActive().getName();
         String analysisRefreshPeriod = Integer.toString(Settings.ANALYSIS_AUTO_REFRESH.getNumber());
         String themeBase = Settings.THEME_BASE.toString();
 
@@ -52,7 +53,7 @@ public class BStats {
         metrics.addCustomChart(new Metrics.AdvancedBarChart(id, () -> {
             Map<String, int[]> map = new HashMap<>();
 
-            map.put("HTTPS", isEnabled("HTTPS".equals(plugin.getWebServer().getProtocol().toUpperCase())));
+            map.put("HTTPS", isEnabled("HTTPS".equals(WebServer.getInstance().getProtocol().toUpperCase())));
             map.put("HTML Export", isEnabled(Settings.ANALYSIS_EXPORT.isTrue()));
             boolean isConnectedToBungee = ConnectionSystem.getInstance().isServerAvailable();
             map.put("BungeeCord Connected", isEnabled(isConnectedToBungee));

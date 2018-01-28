@@ -19,6 +19,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -116,7 +117,7 @@ public class HtmlExport extends SpecificExport {
                 "web/css/style.css",
                 "web/css/themes/all-themes.css"
         };
-        copyFromJar(resources, true);
+        copyFromJar(resources);
     }
 
     private void exportJs() {
@@ -138,7 +139,7 @@ public class HtmlExport extends SpecificExport {
                 "web/js/charts/worldPie.js",
                 "web/js/charts/healthGauge.js"
         };
-        copyFromJar(resources, false);
+        copyFromJar(resources);
 
         try {
             String demo = FileUtil.getStringFromResource("web/js/demo.js")
@@ -164,27 +165,28 @@ public class HtmlExport extends SpecificExport {
                 "web/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js",
                 "web/plugins/jquery-datatable/jquery.dataTables.js"
         };
-        copyFromJar(resources, true);
+        copyFromJar(resources);
     }
 
-    private void copyFromJar(String[] resources, boolean overwrite) {
+    private void copyFromJar(String[] resources) {
         for (String resource : resources) {
             try {
-                copyFromJar(resource, overwrite);
+                copyFromJar(resource);
             } catch (IOException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
         }
     }
 
-    private void copyFromJar(String resource, boolean overwrite) throws IOException {
+    private void copyFromJar(String resource) throws IOException {
         String possibleFile = resource.replace("web/", "").replace("/", File.separator);
         List<String> lines = FileUtil.lines(plugin, new File(plugin.getDataFolder(), possibleFile), resource);
         String outputFile = possibleFile.replace("web/", "");
         File to = new File(outputFolder, outputFile);
         to.getParentFile().mkdirs();
         if (to.exists()) {
-            if (!to.delete() || !to.createNewFile()) {
+            Files.delete(to.toPath());
+            if (to.createNewFile()) {
                 return;
             }
         }

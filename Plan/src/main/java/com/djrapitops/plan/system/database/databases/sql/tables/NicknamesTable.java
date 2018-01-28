@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -20,8 +20,8 @@ import java.util.*;
  */
 public class NicknamesTable extends UserIDTable {
 
-    private final String columnNick = "nickname";
-    private final String columnServerID = "server_id";
+    private static final String columnNick = "nickname";
+    private static final String columnServerID = "server_id";
 
     private final ServerTable serverTable;
     private String insertStatement;
@@ -40,7 +40,7 @@ public class NicknamesTable extends UserIDTable {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnNick, Sql.varchar(75)).notNull()

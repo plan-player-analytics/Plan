@@ -70,49 +70,8 @@ public class Analysis {
         return analyze();
     }
 
-    private AnalysisData analyze() throws Exception {
-        log(Locale.get(Msg.ANALYSIS_FETCH).toString());
-        Benchmark.start("Fetch Phase");
-        Log.logDebug("Database", "Analysis Fetch");
-        Log.logDebug("Analysis", "Analysis Fetch Phase");
-        try {
-            Benchmark.start("Create Empty dataset");
-
-            AnalysisData analysisData = new AnalysisData();
-
-            Benchmark.stop("Analysis", "Create Empty dataset");
-            Benchmark.start("Fetch Phase");
-            ServerProfile profile = database.fetch().getServerProfile(serverUUID);
-            if (analysingThisServer) {
-                profile.addActiveSessions(new HashMap<>(SessionCache.getActiveSessions()));
-            }
-            serverProfile = profile;
-
-            updatePlayerNameCache(profile);
-
-            long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
-            setBannedByPlugins(profile);
-
-            Benchmark.start("Analysis Phase");
-            Log.logDebug("Analysis", "Analysis Phase");
-
-            log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(profile.getPlayerCount(), fetchPhaseLength));
-
-            analysisData.analyze(profile);
-
-            Benchmark.stop("Analysis", "Analysis Phase");
-
-            log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
-            Log.logDebug("Analysis", "Analyzing additional data sources (3rd party)");
-            analysisData.parsePluginsSection(analyzeAdditionalPluginData(profile.getUuids()));
-            return analysisData;
-        } finally {
-            refreshDate = MiscUtils.getTime();
-            long time = Benchmark.stop("Analysis", "Analysis");
-            Log.logDebug("Analysis");
-            Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(time, ""));
-            serverProfile = null;
-        }
+    private static void updateRefreshDate() {
+        Analysis.refreshDate = MiscUtils.getTime();
     }
 
     private void updatePlayerNameCache(ServerProfile profile) {
@@ -184,5 +143,54 @@ public class Analysis {
 
     public static boolean isAnalysisBeingRun() {
         return serverProfile != null;
+    }
+
+    private static void setServerProfile(ServerProfile serverProfile) {
+        Analysis.serverProfile = serverProfile;
+    }
+
+    private AnalysisData analyze() throws Exception {
+        log(Locale.get(Msg.ANALYSIS_FETCH).toString());
+        Benchmark.start("Fetch Phase");
+        Log.logDebug("Database", "Analysis Fetch");
+        Log.logDebug("Analysis", "Analysis Fetch Phase");
+        try {
+            Benchmark.start("Create Empty dataset");
+
+            AnalysisData analysisData = new AnalysisData();
+
+            Benchmark.stop("Analysis", "Create Empty dataset");
+            Benchmark.start("Fetch Phase");
+            ServerProfile server = database.fetch().getServerProfile(serverUUID);
+            if (analysingThisServer) {
+                server.addActiveSessions(new HashMap<>(SessionCache.getActiveSessions()));
+            }
+            Analysis.setServerProfile(server);
+
+            updatePlayerNameCache(server);
+
+            long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
+            setBannedByPlugins(server);
+
+            Benchmark.start("Analysis Phase");
+            Log.logDebug("Analysis", "Analysis Phase");
+
+            log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(server.getPlayerCount(), fetchPhaseLength));
+
+            analysisData.analyze(server);
+
+            Benchmark.stop("Analysis", "Analysis Phase");
+
+            log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
+            Log.logDebug("Analysis", "Analyzing additional data sources (3rd party)");
+            analysisData.parsePluginsSection(analyzeAdditionalPluginData(server.getUuids()));
+            return analysisData;
+        } finally {
+            Analysis.updateRefreshDate();
+            long time = Benchmark.stop("Analysis", "Analysis");
+            Log.logDebug("Analysis");
+            Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(time, ""));
+            Analysis.setServerProfile(null);
+        }
     }
 }

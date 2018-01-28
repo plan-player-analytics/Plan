@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -26,8 +26,8 @@ import java.util.*;
 public class WorldTable extends Table {
 
     public final String statementSelectID;
-    private final String columnWorldId = "id";
-    private final String columnWorldName = "world_name";
+    private static final String columnWorldId = "id";
+    private static final String columnWorldName = "world_name";
 
     public WorldTable(SQLDB db) {
         super("plan_worlds", db);
@@ -35,7 +35,7 @@ public class WorldTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .primaryKeyIDColumn(usingMySQL, columnWorldId)
                 .column(columnWorldName, Sql.varchar(100)).notNull()

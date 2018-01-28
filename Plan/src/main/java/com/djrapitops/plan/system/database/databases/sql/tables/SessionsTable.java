@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
-import com.djrapitops.plan.api.exceptions.database.DBCreateTableException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
  */
 public class SessionsTable extends UserIDTable {
 
-    private final String columnID = "id";
-    private final String columnSessionStart = "session_start";
-    private final String columnSessionEnd = "session_end";
-    private final String columnServerID = "server_id";
-    private final String columnMobKills = "mob_kills";
-    private final String columnDeaths = "deaths";
+    private static final String columnID = "id";
+    private static final String columnSessionStart = "session_start";
+    private static final String columnSessionEnd = "session_end";
+    private static final String columnServerID = "server_id";
+    private static final String columnMobKills = "mob_kills";
+    private static final String columnDeaths = "deaths";
 
     private final ServerTable serverTable;
     private String insertStatement;
@@ -51,7 +51,7 @@ public class SessionsTable extends UserIDTable {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(this.tableName)
                 .primaryKeyIDColumn(usingMySQL, columnID)
                 .column(columnUserID, Sql.INT).notNull()
