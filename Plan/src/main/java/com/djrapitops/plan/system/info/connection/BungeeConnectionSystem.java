@@ -54,6 +54,8 @@ public class BungeeConnectionSystem extends ConnectionSystem {
             Optional<UUID> serverUUID = getServerWherePlayerIsOnline((GenerateInspectPageRequest) infoRequest);
             if (serverUUID.isPresent()) {
                 server = bukkitServers.getOrDefault(serverUUID.get(), getOneBukkitServer());
+            } else {
+                server = getOneBukkitServer();
             }
         }
         if (server == null) {

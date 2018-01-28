@@ -93,7 +93,7 @@ public class DebugPageResponse extends ErrorResponse {
             for (Server server : servers) {
                 content.append(server.getName()).append(" | ")
                         .append(server.getWebAddress()).append(" | ")
-                        .append(server.getUuid()).append(" | ").append("<br>");
+                        .append(server.getUuid()).append("<br>");
             }
             content.append("</pre>");
 

@@ -8,6 +8,7 @@ import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
@@ -18,7 +19,9 @@ import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
@@ -71,7 +74,9 @@ public class CacheInspectPageRequest implements CacheRequest {
                 UUID uuid = entry.getKey();
                 String html = Base64Util.decode(entry.getValue());
 
-                cache(export, uuid, html);
+                Map<String, String> replace = Collections.singletonMap("networkName", ServerInfo.getServerName());
+
+                cache(export, uuid, StrSubstitutor.replace(html, replace));
             }
         } catch (DBException e) {
             throw new TransferDatabaseException(e);

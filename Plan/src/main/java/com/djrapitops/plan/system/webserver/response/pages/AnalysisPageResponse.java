@@ -1,11 +1,15 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
+import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
@@ -24,9 +28,11 @@ public class AnalysisPageResponse extends Response {
         Processor.queue(() -> {
             try {
                 InfoSystem.getInstance().generateAnalysisPage(serverUUID);
+            } catch (NoServersException e) {
+                ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new NotFoundResponse(e.getMessage()));
             } catch (WebException e) {
                 // TODO Exception handling
-                Log.toLog(AnalysisPageResponse.class, e);
+                Log.toLog(AnalysisPageResponse.class.getName(), e);
             }
         });
         return new AnalysisPageResponse(getRefreshingHtml());

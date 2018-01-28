@@ -69,6 +69,7 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
         InfoSystem infoSystem = InfoSystem.getInstance();
         infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, AnalysisPageResponse.getRefreshingHtml()));
         infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, analyseAndGetHtml()));
+        infoSystem.updateNetworkPage();
     }
 
     @Override
