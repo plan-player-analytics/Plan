@@ -9,13 +9,10 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -34,7 +31,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     }
 
     private void refreshServerMap() {
-        if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.MINUTE.ms() * 2L) {
+        if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.SECOND.ms() * 15L) {
             try {
                 bukkitServers = Database.getActive().fetch().getBukkitServers();
                 latestServerMapRefresh = MiscUtils.getTime();
@@ -46,6 +43,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
 
     @Override
     protected Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException {
+        refreshServerMap();
         Server server = null;
         if (infoRequest instanceof CacheRequest) {
             throw new NoServersException("Bungee should not send Cache requests.");
@@ -55,7 +53,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
         } else if (infoRequest instanceof GenerateInspectPageRequest) {
             Optional<UUID> serverUUID = getServerWherePlayerIsOnline((GenerateInspectPageRequest) infoRequest);
             if (serverUUID.isPresent()) {
-                server = bukkitServers.getOrDefault(serverUUID.get(), ServerInfo.getServer());
+                server = bukkitServers.getOrDefault(serverUUID.get(), getOneBukkitServer());
             }
         }
         if (server == null) {
@@ -64,10 +62,16 @@ public class BungeeConnectionSystem extends ConnectionSystem {
         return server;
     }
 
+    private Server getOneBukkitServer() {
+        Optional<Server> first = bukkitServers.values().stream().findAny();
+        return first.orElse(null);
+    }
+
     @Override
     public void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException {
+        refreshServerMap();
         if (bukkitServers.isEmpty()) {
-            throw new NoServersException("No Servers Available to make process request.");
+            throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
         }
         for (Server server : bukkitServers.values()) {
             WebExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
@@ -87,12 +91,6 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     @Override
     public void enable() {
         refreshServerMap();
-        RunnableFactory.createNew("Server List Update Task", new AbsRunnable() {
-            @Override
-            public void run() {
-                refreshServerMap();
-            }
-        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks() * 30L, TimeAmount.MINUTE.ticks() * 5L);
     }
 
     @Override

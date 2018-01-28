@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.info;
 
+import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.connection.BukkitConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheNetworkPageContentRequest;
@@ -26,7 +27,7 @@ public class BukkitInfoSystem extends InfoSystem {
     @Override
     public void runLocally(InfoRequest infoRequest) throws WebException {
         if (infoRequest instanceof SetupRequest) {
-            return;
+            throw new NoServersException("Set-up requests can not be run locally.");
         }
         infoRequest.runLocally();
     }

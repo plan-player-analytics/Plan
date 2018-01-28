@@ -30,7 +30,7 @@ public class BungeeInfoSystem extends InfoSystem {
     @Override
     public void runLocally(InfoRequest infoRequest) throws WebException {
         // runLocally is called when ConnectionSystem has no servers.
-        throw new NoServersException("No servers were available to process this request.");
+        throw new NoServersException("No servers were available to process this request (Local attempt): " + infoRequest.getClass().getSimpleName());
     }
 
     @Override

@@ -66,10 +66,16 @@ public abstract class InfoSystem implements SubSystem {
         try {
             if (!connectionSystem.isServerAvailable()) {
                 runLocally(infoRequest);
+                return;
             }
             connectionSystem.sendInfoRequest(infoRequest);
-        } catch (NoServersException e) {
-            runLocally(infoRequest);
+        } catch (WebException original) {
+            try {
+                // Attempt to run locally.
+                runLocally(infoRequest);
+            } catch (NoServersException e2) {
+                throw original;
+            }
         }
     }
 

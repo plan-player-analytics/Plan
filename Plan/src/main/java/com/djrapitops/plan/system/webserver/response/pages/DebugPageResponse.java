@@ -8,6 +8,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
@@ -66,8 +67,8 @@ public class DebugPageResponse extends ErrorResponse {
         try {
             Map<Server, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries();
 
-            content.append("<pre>");
-            content.append("Server Address | Request Type | Sent | Response<br>")
+            content.append("<pre>**Connection Log:**<br>");
+            content.append("Server Address | Request Type | Response | Sent<br>")
                     .append("-- | -- | -- | --<br>");
             for (Map.Entry<Server, Map<String, ConnectionLog.Entry>> entry : logEntries.entrySet()) {
                 Server server = entry.getKey();
@@ -82,6 +83,17 @@ public class DebugPageResponse extends ErrorResponse {
                             .append(FormatUtils.formatTimeStampSecond(logEntry.getTimeSent())).append("<br>");
                 }
 
+            }
+            content.append("</pre>");
+
+            content.append("<pre>**Servers:**<br>");
+            List<Server> servers = ConnectionSystem.getInstance().getBukkitServers();
+            content.append("Server Name | Address | UUID <br>")
+                    .append("-- | -- | --<br>");
+            for (Server server : servers) {
+                content.append(server.getName()).append(" | ")
+                        .append(server.getWebAddress()).append(" | ")
+                        .append(server.getUuid()).append(" | ").append("<br>");
             }
             content.append("</pre>");
 

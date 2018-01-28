@@ -2,10 +2,13 @@ package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plugin.api.utility.log.Log;
+
+import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -14,9 +17,13 @@ import com.djrapitops.plugin.api.utility.log.Log;
 public class AnalysisPageResponse extends Response {
 
     public static AnalysisPageResponse refreshNow() {
+        return refreshNow(ServerInfo.getServerUUID());
+    }
+
+    public static AnalysisPageResponse refreshNow(UUID serverUUID) {
         Processor.queue(() -> {
             try {
-                InfoSystem.getInstance().generateAnalysisPageOfThisServer();
+                InfoSystem.getInstance().generateAnalysisPage(serverUUID);
             } catch (WebException e) {
                 // TODO Exception handling
                 Log.toLog(AnalysisPageResponse.class, e);

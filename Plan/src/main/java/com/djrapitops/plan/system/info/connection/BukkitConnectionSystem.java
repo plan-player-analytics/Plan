@@ -17,8 +17,6 @@ import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +37,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
     }
 
     private void refreshServerMap() {
-        if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.MINUTE.ms() * 2L) {
+        if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.SECOND.ms() * 15L) {
             try {
                 Database database = Database.getActive();
                 Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
@@ -57,7 +55,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
         refreshServerMap();
 
         if (mainServer == null && bukkitServers.isEmpty()) {
-            throw new NoServersException("No Servers available to process requests.");
+            throw new NoServersException("Zero servers available to process requests.");
         }
 
         Server server = null;
@@ -81,7 +79,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
     @Override
     public void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException {
         if (bukkitServers.isEmpty()) {
-            throw new NoServersException("No Servers Available to make process request.");
+            throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
         }
         for (Server server : bukkitServers.values()) {
             WebExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
@@ -90,7 +88,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
 
     @Override
     public boolean isServerAvailable() {
-        return ConnectionLog.hasConnectionSucceeded(mainServer);
+        return mainServer != null && Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse();
     }
 
     @Override
@@ -102,12 +100,6 @@ public class BukkitConnectionSystem extends ConnectionSystem {
     @Override
     public void enable() {
         refreshServerMap();
-        RunnableFactory.createNew("Server List Update Task", new AbsRunnable() {
-            @Override
-            public void run() {
-                refreshServerMap();
-            }
-        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks() * 30L, TimeAmount.MINUTE.ticks() * 5L);
 
         boolean usingBungeeWebServer = ConnectionSystem.getInstance().isServerAvailable();
         boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();

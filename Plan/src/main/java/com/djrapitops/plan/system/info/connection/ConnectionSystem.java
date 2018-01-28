@@ -17,10 +17,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * ConnectionSystem manages out- and inbound InfoRequest connections.
@@ -120,5 +117,9 @@ public abstract class ConnectionSystem implements SubSystem {
         putRequest(requests, SaveDBSettingsRequest.createHandler());
         putRequest(requests, SendDBSettingsRequest.createHandler());
         return requests;
+    }
+
+    public List<Server> getBukkitServers() {
+        return new ArrayList<>(bukkitServers.values());
     }
 }

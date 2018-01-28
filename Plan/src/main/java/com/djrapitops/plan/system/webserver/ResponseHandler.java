@@ -87,10 +87,10 @@ public class ResponseHandler extends TreePageHandler {
         }
         try {
             return getResponse(request, targetString, target);
+        } catch (NoServersException | NotFoundException e) {
+            return new NotFoundResponse(e.getMessage());
         } catch (WebUserAuthException e) {
             return PromptAuthorizationResponse.getBasicAuthResponse(e);
-        } catch (NotFoundException e) {
-            return new NotFoundResponse(e.getMessage());
         } catch (ForbiddenException e) {
             return new ForbiddenResponse(e.getMessage());
         } catch (BadRequestException e) {
