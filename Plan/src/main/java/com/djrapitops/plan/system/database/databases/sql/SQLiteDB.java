@@ -57,17 +57,19 @@ public class SQLiteDB extends SQLDB {
         }
 
         String dbFilePath = new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db").getAbsolutePath();
-        Connection connection;
 
-        try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath + "?journal_mode=WAL");
-        } catch (SQLException ignored) {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
-            Log.info("SQLite WAL mode not supported on this server version, using default. This may or may not affect performance.");
-        }
+        Connection connection = getConnectionFor(dbFilePath);
         connection.setAutoCommit(false);
-
         return connection;
+    }
+
+    private Connection getConnectionFor(String dbFilePath) throws SQLException {
+        try {
+            return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath + "?journal_mode=WAL");
+        } catch (SQLException ignored) {
+            Log.info("SQLite WAL mode not supported on this server version, using default. This may or may not affect performance.");
+            return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
+        }
     }
 
     private void startConnectionPingTask() {
@@ -84,6 +86,7 @@ public class SQLiteDB extends SQLDB {
                             statement.execute("/* ping */ SELECT 1");
                         }
                     } catch (SQLException e) {
+                        Log.debug("Something went wrong during Ping task.");
                         try {
                             connection = getNewConnection(dbName);
                         } catch (SQLException e1) {

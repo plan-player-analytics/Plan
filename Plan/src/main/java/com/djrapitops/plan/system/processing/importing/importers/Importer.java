@@ -73,6 +73,7 @@ public abstract class Importer {
             service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {
             Log.toLog(this.getClass().getName(), e);
+            Thread.currentThread().interrupt();
         }
 
         Benchmark.stop(benchmarkName);

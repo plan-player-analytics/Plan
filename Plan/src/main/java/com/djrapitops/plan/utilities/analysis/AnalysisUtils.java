@@ -123,7 +123,7 @@ public class AnalysisUtils {
     }
 
     public static double getAveragePerDay(long after, long before, long total) {
-        return total / getNumberOfDaysBetween(after, before);
+        return (double) total / getNumberOfDaysBetween(after, before);
     }
 
     public static long getNumberOfDaysBetween(long start, long end) {
@@ -134,7 +134,7 @@ public class AnalysisUtils {
             test += day;
             value++;
         }
-        return value;
+        return value == 0 ? 1 : value;
     }
 
     public static void addMissingWorlds(WorldTimes worldTimes) {
@@ -196,7 +196,7 @@ public class AnalysisUtils {
                     stickM++;
                 }
             }
-            probability *= (stickM / similarM.size());
+            probability *= ((double) stickM / similarM.size());
         }
 
         if (!similarW.isEmpty()) {
@@ -207,7 +207,7 @@ public class AnalysisUtils {
                 }
             }
 
-            probability *= (stickW / similarW.size());
+            probability *= ((double) stickW / similarW.size());
         }
 
         return probability;

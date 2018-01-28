@@ -167,7 +167,6 @@ public class HtmlExport extends SpecificExport {
         copyFromJar(resources, true);
     }
 
-
     private void copyFromJar(String[] resources, boolean overwrite) {
         for (String resource : resources) {
             try {
@@ -185,8 +184,9 @@ public class HtmlExport extends SpecificExport {
         File to = new File(outputFolder, outputFile);
         to.getParentFile().mkdirs();
         if (to.exists()) {
-            to.delete();
-            to.createNewFile();
+            if (!to.delete() || !to.createNewFile()) {
+                return;
+            }
         }
         export(to, lines);
     }

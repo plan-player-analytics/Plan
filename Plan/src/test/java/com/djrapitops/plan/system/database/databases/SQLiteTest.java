@@ -856,6 +856,16 @@ public class SQLiteTest {
     }
 
     @Test
+    public void testRegister() throws DBException {
+        assertFalse(db.check().isPlayerRegistered(playerUUID));
+        assertFalse(db.check().isPlayerRegisteredOnThisServer(playerUUID));
+        db.save().registerNewUser(playerUUID, 1000L, "name");
+        db.save().registerNewUserOnThisServer(playerUUID, 500L);
+        assertTrue(db.check().isPlayerRegistered(playerUUID));
+        assertTrue(db.check().isPlayerRegisteredOnThisServer(playerUUID));
+    }
+
+    @Test
     public void testWorldTableGetWorldNamesNoException() throws SQLException {
         Set<String> worldNames = db.getWorldTable().getWorldNames();
     }
