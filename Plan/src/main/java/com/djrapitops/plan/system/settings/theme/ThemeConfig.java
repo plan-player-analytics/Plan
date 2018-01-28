@@ -10,6 +10,7 @@ import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -76,7 +77,9 @@ public class ThemeConfig extends Config {
         }
         File themeFile = new File(folder, "theme.yml");
         if (!themeFile.exists()) {
-            themeFile.createNewFile();
+            if (!themeFile.createNewFile()) {
+                throw new FileNotFoundException("Failed to create theme.yml");
+            }
         }
         return themeFile;
     }
