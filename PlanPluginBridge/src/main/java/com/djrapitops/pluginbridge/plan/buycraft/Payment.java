@@ -11,20 +11,22 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class Payment {
+public class Payment implements Comparable<Payment> {
 
     private final double amount;
     private final String currency;
     private final UUID uuid;
     private final String playerName;
     private final long date;
+    private final String packages;
 
-    public Payment(double amount, String currency, UUID uuid, String playerName, long date) {
+    public Payment(double amount, String currency, UUID uuid, String playerName, long date, String packages) {
         this.amount = amount;
         this.currency = currency;
         this.uuid = uuid;
         this.playerName = playerName;
         this.date = date;
+        this.packages = packages;
     }
 
     public double getAmount() {
@@ -45,5 +47,14 @@ public class Payment {
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public String getPackages() {
+        return packages;
+    }
+
+    @Override
+    public int compareTo(Payment o) {
+        return this.playerName.toLowerCase().compareTo(o.playerName.toLowerCase());
     }
 }

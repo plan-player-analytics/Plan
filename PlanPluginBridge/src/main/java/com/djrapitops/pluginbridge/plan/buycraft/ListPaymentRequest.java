@@ -17,8 +17,8 @@ import java.net.URL;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Request to Buycraft API for payment listings.
@@ -39,7 +39,6 @@ public class ListPaymentRequest {
 
         connection.setRequestMethod("GET");
         connection.setRequestProperty("X-BuyCraft-Secret", secret);
-        connection.getOutputStream().write(0);
 
         JsonElement json;
         try {
@@ -64,20 +63,28 @@ public class ListPaymentRequest {
 
     private void readAndAddPayments(JsonElement json, List<Payment> payments) {
         JsonArray jsonArray = json.getAsJsonArray();
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
         for (JsonElement element : jsonArray) {
+//            System.out.println(element.toString().replace(",", ",\n"));
             JsonObject payment = element.getAsJsonObject();
             double amount = payment.get("amount").getAsDouble();
             String dateString = payment.get("date").getAsString();
-            long date = dateFormat.parse(dateString, new ParsePosition(0)).getTime();
-            String currency = payment.get("currency").getAsJsonObject().get("symbol").getAsString();
+            Date dateObj = dateFormat.parse(dateString, new ParsePosition(0));
+            long date = dateObj.getTime();
+            String currency = payment.get("currency").getAsJsonObject().get("iso_4217").getAsString();
             JsonObject player = payment.get("player").getAsJsonObject();
             String playerName = player.get("name").getAsString();
-            UUID uuid = UUID.fromString(player.get("uuid").getAsString());
+//            UUID uuid = UUID.fromString(player.get("uuid").getAsString().replaceFirst(
+//                    "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"
+//            ));
+            StringBuilder packages = new StringBuilder();
+            for (JsonElement pack : payment.get("packages").getAsJsonArray()) {
+                packages.append(pack.getAsJsonObject().get("name")).append("<br>");
+            }
 
-            payments.add(new Payment(amount, currency, uuid, playerName, date));
+            payments.add(new Payment(amount, currency, null, playerName, date, packages.toString()));
+//            System.out.println();
         }
     }
 

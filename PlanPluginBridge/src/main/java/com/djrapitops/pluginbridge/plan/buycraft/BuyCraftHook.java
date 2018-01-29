@@ -21,6 +21,7 @@ public class BuyCraftHook extends Hook {
         super(hookHandler);
 
         secret = Settings.PLUGIN_BUYCRAFT_SECRET.toString();
+
         enabled = !secret.equals("-") && !secret.isEmpty();
     }
 

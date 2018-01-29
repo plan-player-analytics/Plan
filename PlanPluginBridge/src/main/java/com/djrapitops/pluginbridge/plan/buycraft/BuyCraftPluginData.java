@@ -14,11 +14,7 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * PluginData for BuyCraft plugin.
@@ -30,7 +26,7 @@ public class BuyCraftPluginData extends PluginData {
     private final String secret;
 
     public BuyCraftPluginData(String secret) {
-        super(ContainerSize.TWO_THIRDS, "BuyCraft");
+        super(ContainerSize.TAB, "BuyCraft");
         super.setIconColor("blue");
         super.setPluginIcon("shopping-bag");
 
@@ -47,29 +43,46 @@ public class BuyCraftPluginData extends PluginData {
         try {
 
             List<Payment> payments = new ListPaymentRequest(secret).makeRequest();
-            TableContainer payTable = new TableContainer(true, getWithIcon("Date", "calendar"), getWithIcon("Donation", "money"));
-            payTable.setColor("blue");
+            Collections.sort(payments);
 
-            for (Payment payment : payments) {
-                String name = payment.getPlayerName();
-                payTable.addRow(
-                        Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
-                        FormatUtils.formatTimeStampYear(payment.getDate()),
-                        FormatUtils.cutDecimals(payment.getAmount()) + payment.getCurrency()
-                );
-            }
+            addPaymentTotals(analysisContainer, payments);
+            addPlayerTable(analysisContainer, payments);
 
-            analysisContainer.addTable("payTable", payTable);
-
-            Map<UUID, String> playerTableValues = payments.stream()
-                    .collect(Collectors.toMap(Payment::getUuid, payment -> payment.getAmount() + payment.getCurrency()));
-            analysisContainer.addPlayerTableValues(getWithIcon("Donation", "money"), playerTableValues);
-
-        } catch (IllegalStateException | NullPointerException e) {
-            analysisContainer.addValue("JSON error", e.getMessage());
         } catch (ForbiddenException e) {
             analysisContainer.addValue("Configuration error", e.getMessage());
         }
         return analysisContainer;
+    }
+
+    private void addPlayerTable(AnalysisContainer analysisContainer, List<Payment> payments) {
+        TableContainer payTable = new TableContainer(
+                true,
+                getWithIcon("Date", "calendar"),
+                getWithIcon("Amount", "money"),
+                getWithIcon("Packages", "cube")
+        );
+        payTable.setColor("blue");
+        for (Payment payment : payments) {
+            String name = payment.getPlayerName();
+            payTable.addRow(
+                    Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
+                    FormatUtils.formatTimeStampYear(payment.getDate()),
+                    FormatUtils.cutDecimals(payment.getAmount()) + " " + payment.getCurrency(),
+                    payment.getPackages()
+            );
+        }
+        analysisContainer.addTable("payTable", payTable);
+    }
+
+    private void addPaymentTotals(AnalysisContainer analysisContainer, List<Payment> payments) {
+        Map<String, Double> paymentTotals = new HashMap<>();
+        for (Payment payment : payments) {
+            String currency = payment.getCurrency();
+            double amount = payment.getAmount();
+            paymentTotals.put(currency, paymentTotals.getOrDefault(currency, 0.0) + amount);
+        }
+        for (Map.Entry<String, Double> entry : paymentTotals.entrySet()) {
+            analysisContainer.addValue(getWithIcon("Total " + entry.getKey(), "money", "blue"), FormatUtils.cutDecimals(entry.getValue()));
+        }
     }
 }
