@@ -2,6 +2,7 @@ package com.djrapitops.pluginbridge.plan.litebans;
 
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import litebans.api.Database;
+import org.bukkit.Bukkit;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,17 +19,20 @@ import java.util.UUID;
  */
 public class LiteBansDatabaseQueries extends Table {
     private final Database database;
+    private String litebansTable;
 
     public LiteBansDatabaseQueries() {
         super("litebans", null);
         database = Database.get();
+        String tablePrefix = Bukkit.getPluginManager().getPlugin("LiteBans").getConfig().getString("sql.table_prefix");
+        litebansTable = tablePrefix + "bans";
     }
 
     public List<BanObject> getBans() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = database.prepareStatement("SELECT uuid, reason, banned_by_name, until FROM litebans_bans");
+            statement = database.prepareStatement("SELECT uuid, reason, banned_by_name, until FROM " + litebansTable);
             set = statement.executeQuery();
             return getBanObjects(set);
         } finally {
@@ -59,7 +63,7 @@ public class LiteBansDatabaseQueries extends Table {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = database.prepareStatement("SELECT uuid, reason, banned_by_name, until FROM litebans_bans WHERE uuid=?");
+            statement = database.prepareStatement("SELECT uuid, reason, banned_by_name, until FROM " + litebansTable + " WHERE uuid=?");
             statement.setString(1, playerUUID.toString());
             set = statement.executeQuery();
             return getBanObjects(set);
