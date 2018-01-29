@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class KingdomAccordionCreator {
 
     public static String createAccordion(Map<String, OfflineKingdom> kingdoms) {
-        StringBuilder html = new StringBuilder("<div class=\"panel-group scrollbar\" id=\"towny_accordion\" role=\"tablist\" aria-multiselectable=\"true\">");
+        StringBuilder html = new StringBuilder("<div class=\"panel-group scrollbar\" id=\"kingdoms_accordion\" role=\"tablist\" aria-multiselectable=\"true\">");
 
         ServerProfile serverProfile = Analysis.getServerProfile();
         List<PlayerProfile> players = serverProfile != null ? serverProfile.getPlayers() : new ArrayList<>();
@@ -60,15 +60,15 @@ public class KingdomAccordionCreator {
             html.append("<div class=\"panel panel-col-amber\">")
                     .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
                     .append("<h4 class=\"panel-title\">")
-                    .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
-                    .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
-                    .append("aria-controls=\"session_").append(htmlID).append("\">")
+                    .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#kingdoms_accordion\" ")
+                    .append("href=\"#").append(htmlID).append("\" aria-expanded=\"false\" ")
+                    .append("aria-controls=\"").append(htmlID).append("\">")
                     .append(kingdomName).append("<span class=\"pull-right\">").append(separated).append("</span>") // Title (header)
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 
             // Content
-            html.append("<div id=\"session_").append(htmlID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
+            html.append("<div id=\"").append(htmlID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
                     .append(" aria-labelledby=\"heading_").append(htmlID).append("\">")
                     .append("<div class=\"panel-body\"><div class=\"row clearfix\">")
                     .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">"); // Left col-6

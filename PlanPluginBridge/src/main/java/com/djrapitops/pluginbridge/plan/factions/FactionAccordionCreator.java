@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -55,7 +55,6 @@ public class FactionAccordionCreator {
                 }
             }
 
-
             List<PlayerProfile> memberProfiles = players.stream().filter(p -> members.contains(p.getUniqueId())).collect(Collectors.toList());
 
             List<Session> sessions = memberProfiles.stream()
@@ -69,21 +68,21 @@ public class FactionAccordionCreator {
 
             String separated = HtmlStructure.separateWithDots(("Power: " + powerString), leaderName);
 
-            String htmlID = "faction_" + createdAtMillis;
+            String htmlID = "faction_" + factionName + "_" + createdAtMillis;
 
             // Accordion panel header
             html.append("<div class=\"panel panel-col-deep-purple\">")
                     .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
                     .append("<h4 class=\"panel-title\">")
-                    .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
-                    .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
-                    .append("aria-controls=\"session_").append(htmlID).append("\">")
+                    .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#faction_accordion\" ")
+                    .append("href=\"#").append(htmlID).append("\" aria-expanded=\"false\" ")
+                    .append("aria-controls=\"").append(htmlID).append("\">")
                     .append(factionName).append("<span class=\"pull-right\">").append(separated).append("</span>") // Title (header)
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 
             // Content
-            html.append("<div id=\"session_").append(htmlID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
+            html.append("<div id=\"").append(htmlID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
                     .append(" aria-labelledby=\"heading_").append(htmlID).append("\">")
                     .append("<div class=\"panel-body\"><div class=\"row clearfix\">")
                     .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Left col-6
