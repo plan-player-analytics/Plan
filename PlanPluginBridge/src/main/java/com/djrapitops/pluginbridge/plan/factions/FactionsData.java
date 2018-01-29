@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -36,19 +36,26 @@ public class FactionsData extends PluginData {
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         MPlayer mPlayer = MPlayer.get(uuid);
 
+        if (mPlayer == null) {
+            return inspectContainer;
+        }
+
         if (mPlayer.hasFaction()) {
             Faction faction = mPlayer.getFaction();
-            String factionName = faction.isNone() ? "-" : faction.getName();
-            double power = mPlayer.getPower();
-            double maxPower = mPlayer.getPowerMax();
-            String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
-            String factionLeader = faction.getLeader().getName();
-            String factionLeaderLink = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(factionLeader), factionLeader);
+            if (faction != null) {
+                String factionName = faction.isNone() ? "-" : faction.getName();
+                String factionLeader = faction.getLeader().getName();
+                String factionLeaderLink = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(factionLeader), factionLeader);
 
-            inspectContainer.addValue(getWithIcon("Faction", "flag", "deep-purple"), factionName);
-            inspectContainer.addValue(getWithIcon("Power", "bolt", "purple"), powerString);
-            inspectContainer.addValue(getWithIcon("Leader", "user", "purple"), factionLeaderLink);
+                inspectContainer.addValue(getWithIcon("Faction", "flag", "deep-purple"), factionName);
+                inspectContainer.addValue(getWithIcon("Leader", "user", "purple"), factionLeaderLink);
+            }
         }
+
+        double power = mPlayer.getPower();
+        double maxPower = mPlayer.getPowerMax();
+        String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
+        inspectContainer.addValue(getWithIcon("Power", "bolt", "purple"), powerString);
 
         return inspectContainer;
     }
