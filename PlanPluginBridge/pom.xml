@@ -149,6 +149,13 @@
             <version>16.7.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://github.com/KaiKikuchi/GriefPreventionPlus/releases -->
+        <dependency>
+            <groupId>net.kaikk.mc</groupId>
+            <artifactId>GriefPreventionPlus</artifactId>
+            <version>RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>litebans</groupId>
             <artifactId>api</artifactId>
