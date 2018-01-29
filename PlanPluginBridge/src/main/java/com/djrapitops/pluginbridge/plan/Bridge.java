@@ -8,9 +8,11 @@ import com.djrapitops.pluginbridge.plan.aac.AdvancedAntiCheatHook;
 import com.djrapitops.pluginbridge.plan.advancedachievements.AdvancedAchievementsHook;
 import com.djrapitops.pluginbridge.plan.askyblock.ASkyBlockHook;
 import com.djrapitops.pluginbridge.plan.banmanager.BanManagerHook;
+import com.djrapitops.pluginbridge.plan.buycraft.BuyCraftHook;
 import com.djrapitops.pluginbridge.plan.essentials.EssentialsHook;
 import com.djrapitops.pluginbridge.plan.factions.FactionsHook;
 import com.djrapitops.pluginbridge.plan.griefprevention.GriefPreventionHook;
+import com.djrapitops.pluginbridge.plan.griefprevention.plus.GriefPreventionPlusHook;
 import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
 import com.djrapitops.pluginbridge.plan.kingdoms.KingdomsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansHook;
@@ -26,23 +28,6 @@ import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionHook;
  * Manages connection to other plugins.
  *
  * @author Rsl1122
- * @see AdvancedAntiCheatHook
- * @see AdvancedAchievementsHook
- * @see ASkyBlockHook
- * @see BanManagerHook
- * @see EssentialsHook
- * @see FactionsHook
- * @see GriefPreventionHook
- * @see JobsHook
- * @see KingdomsHook
- * @see LiteBansHook
- * @see McmmoHook
- * @see SuperbVoteHook
- * @see ProtocolSupportHook
- * @see RedProtectHook
- * @see TownyHook
- * @see VaultHook
- * @see ViaVersionHook
  */
 @SuppressWarnings("WeakerAccess")
 public class Bridge {
@@ -88,9 +73,11 @@ public class Bridge {
                 new AdvancedAchievementsHook(h),
                 new ASkyBlockHook(h),
                 new BanManagerHook(h),
+                new BuyCraftHook(h),
                 new EssentialsHook(h),
                 new FactionsHook(h),
                 new GriefPreventionHook(h),
+                new GriefPreventionPlusHook(h),
                 new JobsHook(h),
                 new KingdomsHook(h),
                 new LiteBansHook(h),

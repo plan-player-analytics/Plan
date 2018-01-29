@@ -61,6 +61,7 @@ public enum Settings {
     WEBSERVER_CERTIFICATE_STOREPASS("WebServer.Security.SSL-Certificate.StorePass"),
     WEBSERVER_CERTIFICATE_ALIAS("WebServer.Security.SSL-Certificate.Alias"),
     EXTERNAL_WEBSERVER_LINK("WebServer.ExternalWebServerAddress"),
+    PLUGIN_BUYCRAFT_SECRET("Plugins.BuyCraft.Secret"),
     //
     SERVER_NAME("Server.ServerName"),
     //
