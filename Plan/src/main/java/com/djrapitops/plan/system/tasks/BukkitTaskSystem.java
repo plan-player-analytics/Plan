@@ -11,7 +11,6 @@ import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.tasks.bukkit.*;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.ITask;
@@ -29,7 +28,9 @@ public class BukkitTaskSystem extends TaskSystem {
     private final Plan plugin;
 
     public BukkitTaskSystem(Plan plugin) {
-        tpsCountTimer = Check.isPaperAvailable()
+        String serverName = plugin.getServer().getServerName();
+        boolean isPaper = serverName.equals("Paper") || serverName.equals("TacoSpigot");
+        tpsCountTimer = isPaper
                 ? new PaperTPSCountTimer(plugin)
                 : new BukkitTPSCountTimer(plugin);
 
