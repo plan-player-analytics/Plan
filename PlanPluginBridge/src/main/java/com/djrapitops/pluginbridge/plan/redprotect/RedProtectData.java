@@ -4,8 +4,8 @@
  */
 package com.djrapitops.pluginbridge.plan.redprotect;
 
-import br.net.fabiozumbi12.RedProtect.API.RedProtectAPI;
-import br.net.fabiozumbi12.RedProtect.Region;
+import br.net.fabiozumbi12.RedProtect.Bukkit.RedProtect;
+import br.net.fabiozumbi12.RedProtect.Bukkit.Region;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
@@ -32,7 +32,7 @@ public class RedProtectData extends PluginData {
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
-        Set<Region> regions = RedProtectAPI.getPlayerRegions(uuid.toString());
+        Set<Region> regions = RedProtect.get().getAPI().getPlayerRegions(uuid.toString());
 
         inspectContainer.addValue(getWithIcon("Regions", "map-marker", "red"), regions.size());
 
@@ -51,7 +51,7 @@ public class RedProtectData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
-        Set<Region> regions = RedProtectAPI.getAllRegions();
+        Set<Region> regions = RedProtect.get().getAPI().getAllRegions();
 
         analysisContainer.addValue(getWithIcon("All Regions", "map-marker", "red"), regions.size());
 
