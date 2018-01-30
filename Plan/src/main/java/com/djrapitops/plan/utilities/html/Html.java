@@ -51,6 +51,11 @@ public enum Html {
     DIV_W_CLASS_STYLE("<div class=\"${0}\" style=\"${1}\">${2}</div>"),
     //
     ROW("<div class=\"row\">${0}</div>"),
+    CARD("<div class=\"card\">${0}</div>"),
+    BODY("<div class=\"body\">${0}</div>"),
+    PANEL("<div class=\"panel panel-default\">${0}</div>"),
+    PANEL_BODY("<div class=\"panel-body\">${0}</div>"),
+
     //
     TABLE_END("</tbody></table>"),
     TABLE("<table class=\"table table-striped\">"),
