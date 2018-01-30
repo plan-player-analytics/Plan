@@ -66,11 +66,11 @@ public class PlayersTableCreator {
                 html.append(Html.TABLELINE_PLAYERS.parse(
                         Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(profile.getName()), profile.getName()),
                         activityString,
-                        String.valueOf(playtime), FormatUtils.formatTimeAmount(playtime),
-                        String.valueOf(loginTimes),
-                        String.valueOf(registered), FormatUtils.formatTimeStampYear(registered),
-                        String.valueOf(lastSeen), lastSeen != 0 ? FormatUtils.formatTimeStamp(lastSeen) : "-",
-                        String.valueOf(geoLocation)
+                        playtime, FormatUtils.formatTimeAmount(playtime),
+                        loginTimes,
+                        registered, FormatUtils.formatTimeStampYear(registered),
+                        lastSeen, lastSeen != 0 ? FormatUtils.formatTimeStamp(lastSeen) : "-",
+                        geoLocation
                 ));
             } catch (NullPointerException e) {
                 if (Settings.DEV_MODE.isTrue()) {

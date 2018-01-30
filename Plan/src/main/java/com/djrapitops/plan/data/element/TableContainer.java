@@ -21,6 +21,8 @@ public class TableContainer {
     private final String[] header;
     private List<Serializable[]> values;
 
+    private boolean jqueryDatatable;
+
     private String color;
 
     /**
@@ -43,7 +45,7 @@ public class TableContainer {
     }
 
     public final String parseHtml() {
-        return Html.TABLE_SCROLL.parse() +
+        return getTableHeader() +
                 parseHeader() +
                 parseBody() +
                 "</table>";
@@ -84,5 +86,22 @@ public class TableContainer {
         }
         header.append("</tr></thead>");
         return header.toString();
+    }
+
+    /**
+     * Make use of JQuery Datatables plugin.
+     * <p>
+     * If this is called, result of {@code parseHtml()} should be wrapped with {@code Html.PANEL.parse(Html.PANEL_BODY.parse(result))}
+     */
+    public void useJqueryDataTables() {
+        this.jqueryDatatable = true;
+    }
+
+    private String getTableHeader() {
+        if (jqueryDatatable) {
+            return "<div class=\"table-responsive\">" + Html.TABLE_JQUERY.parse() + "</div>";
+        } else {
+            return Html.TABLE_SCROLL.parse();
+        }
     }
 }
