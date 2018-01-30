@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.database.databases.sql.processing;
 
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.PreparedStatement;
@@ -18,29 +19,36 @@ import java.sql.SQLException;
 public abstract class ExecStatement {
 
     private final String sql;
+    private final boolean devMode;
 
     public ExecStatement(String sql) {
         this.sql = sql;
-        if (Settings.DEV_MODE.isTrue()) {
-            Log.debug("Execute Statement: " + sql);
-        }
+        devMode = Settings.DEV_MODE.isTrue();
     }
 
     public boolean execute(PreparedStatement statement) throws SQLException {
+        Benchmark.start(sql);
         try {
             prepare(statement);
             return statement.executeUpdate() > 0;
         } finally {
             statement.close();
+            if (devMode) {
+                Log.debug(Benchmark.stopAndFormat(sql));
+            }
         }
     }
 
     public void executeBatch(PreparedStatement statement) throws SQLException {
+        Benchmark.start(sql + " (Batch)");
         try {
             prepare(statement);
             statement.executeBatch();
         } finally {
             statement.close();
+            if (devMode) {
+                Log.debug(Benchmark.stopAndFormat(sql + " (Batch)"));
+            }
         }
     }
 

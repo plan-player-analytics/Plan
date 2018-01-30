@@ -37,17 +37,11 @@ public abstract class Table {
      *
      * @param name       Name of the table in the db.
      * @param db         Database to use.
-     * @param usingMySQL Is the database using MySQL?
      */
-    @Deprecated
-    public Table(String name, SQLDB db, boolean usingMySQL) {
-        this(name, db);
-    }
-
     public Table(String name, SQLDB db) {
         this.tableName = name;
         this.db = db;
-        this.usingMySQL = db.isUsingMySQL();
+        this.usingMySQL = db != null && db.isUsingMySQL();
     }
 
     public abstract void createTable() throws DBInitException;

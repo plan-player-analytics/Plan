@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.database.databases.sql.processing;
 
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.PreparedStatement;
@@ -20,6 +21,7 @@ public abstract class QueryStatement<T> {
 
     private final String sql;
     private final int fetchSize;
+    private boolean devMode;
 
     public QueryStatement(String sql) {
         this(sql, 10);
@@ -27,13 +29,12 @@ public abstract class QueryStatement<T> {
 
     public QueryStatement(String sql, int fetchSize) {
         this.sql = sql;
-        if (Settings.DEV_MODE.isTrue()) {
-            Log.debug("Query Statement: " + sql);
-        }
+        devMode = Settings.DEV_MODE.isTrue();
         this.fetchSize = fetchSize;
     }
 
     public T executeQuery(PreparedStatement statement) throws SQLException {
+        Benchmark.start(sql);
         try {
             statement.setFetchSize(fetchSize);
             prepare(statement);
@@ -42,6 +43,9 @@ public abstract class QueryStatement<T> {
             }
         } finally {
             statement.close();
+            if (devMode) {
+                Log.debug(Benchmark.stopAndFormat(sql));
+            }
         }
     }
 

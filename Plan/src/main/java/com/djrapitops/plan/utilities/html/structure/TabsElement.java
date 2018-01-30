@@ -19,7 +19,7 @@ public class TabsElement {
         this.tabs = tabs;
     }
 
-    public String toHtml() {
+    public String[] toHtml() {
         StringBuilder nav = new StringBuilder();
         StringBuilder content = new StringBuilder();
 
@@ -36,13 +36,13 @@ public class TabsElement {
                     .append(navText).append("</a></li>");
             content.append("<div role=\"tabpanel\" class=\"tab-pane fade").append(first ? " in active" : "")
                     .append("\" id=\"").append(id).append("\">")
-                    .append(contentHtml).append("</div>");
+                    .append(contentHtml).append("</div></div>");
             first = false;
         }
         content.append("</div>");
         nav.append("</ul>");
 
-        return nav.toString() + content.toString();
+        return new String[]{nav.toString(), content.toString()};
     }
 
     public static class Tab {
