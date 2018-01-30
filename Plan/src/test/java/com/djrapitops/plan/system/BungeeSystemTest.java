@@ -52,6 +52,7 @@ public class BungeeSystemTest {
     public void testEnable() throws EnableException {
         bungeeSystem = new BungeeSystem(planMock);
 
+        Settings.WEBSERVER_PORT.setTemporaryValue(9000);
         Settings.BUNGEE_IP.setTemporaryValue("8.8.8.8");
         Settings.DB_TYPE.setTemporaryValue("sqlite");
         bungeeSystem.setDatabaseSystem(new BukkitDBSystem());
@@ -66,6 +67,7 @@ public class BungeeSystemTest {
 
         bungeeSystem = new BungeeSystem(planMock);
 
+        Settings.WEBSERVER_PORT.setTemporaryValue(9000);
         Settings.DB_TYPE.setTemporaryValue("sqlite");
         bungeeSystem.setDatabaseSystem(new BukkitDBSystem());
 

@@ -255,6 +255,15 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     }
 
     @Override
+    public Map<UUID, Map<UUID, List<Session>>> getSessionsInLastMonth() throws DBException {
+        try {
+            return sessionsTable.getSessionInLastMonth();
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
     public Set<String> getWorldNames(UUID serverUuid) throws DBException {
         try {
             return worldTable.getWorldNames(serverUuid);

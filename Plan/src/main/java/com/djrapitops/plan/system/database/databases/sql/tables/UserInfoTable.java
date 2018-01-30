@@ -185,17 +185,10 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {
-        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
-        String usersNameColumn = usersTable + "." + usersTable.getColumnName() + " as name";
-        String sql = "SELECT " +
-                tableName + "." + columnRegistered + ", " +
-                columnOP + ", " +
-                columnBanned + ", " +
-                usersNameColumn + ", " +
-                usersUUIDColumn +
-                " FROM " + tableName +
-                " LEFT JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+        Map<UUID, String> playerNames = usersTable.getPlayerNames();
+        Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
+
+        String sql = "SELECT * FROM " + tableName +
                 " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
 
         return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
@@ -211,8 +204,9 @@ public class UserInfoTable extends UserIDTable {
                     long registered = set.getLong(columnRegistered);
                     boolean opped = set.getBoolean(columnOP);
                     boolean banned = set.getBoolean(columnBanned);
-                    String name = set.getString("name");
-                    UUID uuid = UUID.fromString(set.getString("uuid"));
+                    int userId = set.getInt(columnUserID);
+                    UUID uuid = uuidsByID.get(userId);
+                    String name = playerNames.getOrDefault(uuid, "Unknown");
                     UserInfo info = new UserInfo(uuid, name, registered, opped, banned);
                     if (!userInfo.contains(info)) {
                         userInfo.add(info);

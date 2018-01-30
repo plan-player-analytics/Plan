@@ -6,6 +6,7 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.settings.Settings;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -48,6 +49,8 @@ public class BukkitSystemTest {
 
     @Test
     public void testEnable() throws EnableException {
+        Settings.WEBSERVER_PORT.setTemporaryValue(9000);
+
         bukkitSystem = new BukkitSystem(planMock);
         bukkitSystem.enable();
     }

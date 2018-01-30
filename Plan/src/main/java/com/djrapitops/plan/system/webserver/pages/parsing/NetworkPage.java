@@ -74,7 +74,7 @@ public class NetworkPage extends Page {
     }
 
     private void uniquePlayers(long now, Database db) throws DBException {
-        Map<UUID, Map<UUID, List<Session>>> allSessions = db.fetch().getSessionsWithNoExtras();
+        Map<UUID, Map<UUID, List<Session>>> allSessions = db.fetch().getSessionsInLastMonth();
         Map<UUID, List<Session>> userSessions = AnalysisUtils.sortSessionsByUser(allSessions);
 
         long dayAgo = now - TimeAmount.DAY.ms();

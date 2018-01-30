@@ -433,4 +433,23 @@ public class UsersTable extends UserIDTable {
             }
         });
     }
+
+    public Map<Integer, UUID> getUUIDsByID() throws SQLException {
+        String sql = Select.from(tableName, columnID, columnUUID).toString();
+
+        return query(new QueryAllStatement<Map<Integer, UUID>>(sql, 20000) {
+            @Override
+            public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
+                Map<Integer, UUID> uuidsByID = new TreeMap<>();
+
+                while (set.next()) {
+                    int id = set.getInt(columnID);
+                    UUID uuid = UUID.fromString(set.getString(columnUUID));
+                    uuidsByID.put(id, uuid);
+                }
+
+                return uuidsByID;
+            }
+        });
+    }
 }

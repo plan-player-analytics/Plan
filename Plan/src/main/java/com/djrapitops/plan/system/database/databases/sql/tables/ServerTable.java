@@ -47,8 +47,8 @@ public class ServerTable extends Table {
 
     public ServerTable(SQLDB db) {
         super("plan_servers", db);
-        statementSelectServerID = "(" + Select.from(tableName, tableName + "." + columnServerID).where(columnServerUUID + "=?").toString() + " LIMIT 1)";
-        statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + columnServerName).where(columnServerID + "=?").toString() + " LIMIT 1)";
+        statementSelectServerID = "(" + Select.from(tableName, tableName + "." + columnServerID).where(tableName + "." + columnServerUUID + "=?").toString() + " LIMIT 1)";
+        statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + columnServerName).where(tableName + "." + columnServerID + "=?").toString() + " LIMIT 1)";
         insertStatement = Insert.values(tableName,
                 columnServerUUID,
                 columnServerName,
@@ -229,7 +229,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public Map<Integer, UUID> getServerUuids() throws SQLException {
+    public Map<Integer, UUID> getServerUUIDsByID() throws SQLException {
         String sql = Select.from(tableName,
                 columnServerID, columnServerUUID)
                 .toString();

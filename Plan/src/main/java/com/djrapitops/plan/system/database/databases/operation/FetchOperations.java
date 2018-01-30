@@ -82,4 +82,6 @@ public interface FetchOperations {
     List<WebUser> getWebUsers() throws DBException;
 
     Map<Integer, String> getServerNamesByID() throws DBException;
+
+    Map<UUID, Map<UUID, List<Session>>> getSessionsInLastMonth() throws DBException;
 }

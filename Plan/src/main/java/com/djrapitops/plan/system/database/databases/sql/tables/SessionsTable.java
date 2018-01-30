@@ -10,6 +10,8 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -152,7 +154,7 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     private Map<UUID, List<Session>> getSessionInformation(UUID uuid) throws SQLException {
-        Map<Integer, UUID> serverUUIDs = serverTable.getServerUuids();
+        Map<Integer, UUID> serverUUIDs = serverTable.getServerUUIDsByID();
         String sql = Select.from(tableName, "*")
                 .where(columnUserID + "=" + usersTable.statementSelectID)
                 .toString();
@@ -544,29 +546,26 @@ public class SessionsTable extends UserIDTable {
     }
 
     public Map<UUID, Map<UUID, List<Session>>> getAllSessions(boolean getKillsAndWorldTimes) throws SQLException {
-        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
-        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
+        Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
+
         String sql = "SELECT " +
-                tableName + "." + columnID + ", " +
+                columnID + ", " +
+                columnUserID + ", " +
+                columnServerID + ", " +
                 columnSessionStart + ", " +
                 columnSessionEnd + ", " +
                 columnDeaths + ", " +
-                columnMobKills + ", " +
-                usersUUIDColumn + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                columnMobKills +
+                " FROM " + tableName;
 
         return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Session>>>>(sql, 20000) {
             @Override
             public Map<UUID, Map<UUID, List<Session>>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-                    UUID uuid = UUID.fromString(set.getString("uuid"));
+                    UUID serverUUID = serverUUIDsByID.get(set.getInt(columnServerID));
+                    UUID uuid = uuidsByID.get(set.getInt(columnUserID));
 
                     Map<UUID, List<Session>> sessionsByUser = map.getOrDefault(serverUUID, new HashMap<>());
                     List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
@@ -677,5 +676,54 @@ public class SessionsTable extends UserIDTable {
 
     String getcolumnServerID() {
         return columnServerID;
+    }
+
+    public Map<UUID, Map<UUID, List<Session>>> getSessionInLastMonth() throws SQLException {
+        Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
+        Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
+
+        String sql = "SELECT " +
+                columnID + ", " +
+                columnUserID + ", " +
+                columnServerID + ", " +
+                columnSessionStart + ", " +
+                columnSessionEnd + ", " +
+                columnDeaths + ", " +
+                columnMobKills +
+                " FROM " + tableName +
+                " WHERE " + columnSessionStart + ">?";
+
+        return query(new QueryStatement<Map<UUID, Map<UUID, List<Session>>>>(sql, 20000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, MiscUtils.getTime() - TimeAmount.MONTH.ms());
+            }
+
+            @Override
+            public Map<UUID, Map<UUID, List<Session>>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = serverUUIDsByID.get(set.getInt(columnServerID));
+                    UUID uuid = uuidsByID.get(set.getInt(columnUserID));
+
+                    Map<UUID, List<Session>> sessionsByUser = map.getOrDefault(serverUUID, new HashMap<>());
+                    List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
+
+                    long start = set.getLong(columnSessionStart);
+                    long end = set.getLong(columnSessionEnd);
+
+                    int deaths = set.getInt(columnDeaths);
+                    int mobKills = set.getInt(columnMobKills);
+                    int id = set.getInt(columnID);
+
+                    Session session = new Session(id, start, end, mobKills, deaths);
+                    sessions.add(session);
+
+                    sessionsByUser.put(uuid, sessions);
+                    map.put(serverUUID, sessionsByUser);
+                }
+                return map;
+            }
+        });
     }
 }
