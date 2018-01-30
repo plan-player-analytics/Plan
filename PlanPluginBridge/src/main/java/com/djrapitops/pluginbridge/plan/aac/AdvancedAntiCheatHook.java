@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -19,8 +19,6 @@ import com.djrapitops.pluginbridge.plan.Hook;
  */
 public class AdvancedAntiCheatHook extends Hook {
 
-    private static PlayerHackKickListener listener;
-
     public AdvancedAntiCheatHook(HookHandler hookHandler) {
         super("me.konsolas.aac.AAC", hookHandler);
     }
@@ -40,10 +38,7 @@ public class AdvancedAntiCheatHook extends Hook {
             return;
         }
 
-        if (listener == null) {
-            listener = new PlayerHackKickListener();
-            plugin.registerListener(listener);
-        }
+        plugin.registerListener(new PlayerHackKickListener());
         addPluginDataSource(new AdvancedAntiCheatData(table));
     }
 }

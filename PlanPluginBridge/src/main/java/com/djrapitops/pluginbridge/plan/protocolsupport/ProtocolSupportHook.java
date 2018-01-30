@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -20,8 +20,6 @@ import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
  */
 public class ProtocolSupportHook extends Hook {
 
-    private static PlayerVersionListener listener;
-
     public ProtocolSupportHook(HookHandler hookHandler) {
         super("protocolsupport.ProtocolSupport", hookHandler);
     }
@@ -39,10 +37,7 @@ public class ProtocolSupportHook extends Hook {
             Log.toLog(this.getClass().getName(), e);
             return;
         }
-        if (listener == null) {
-            listener = new PlayerVersionListener();
-            plan.registerListener(listener);
-        }
+        plan.registerListener(new PlayerVersionListener());
         addPluginDataSource(new ProtocolSupportData(table));
     }
 }
