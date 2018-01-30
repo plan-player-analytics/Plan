@@ -112,7 +112,12 @@ public class LiteBansDatabaseQueries extends Table {
     private List<LiteBansDBObj> getObjs(UUID playerUUID, String table) throws SQLException {
         String sql = selectSQL + table + " WHERE uuid=?";
 
-        return query(new QueryAllStatement<List<LiteBansDBObj>>(sql, 2000) {
+        return query(new QueryStatement<List<LiteBansDBObj>>(sql, 2000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
             @Override
             public List<LiteBansDBObj> processResults(ResultSet resultSet) throws SQLException {
                 return processIntoObjects(resultSet);

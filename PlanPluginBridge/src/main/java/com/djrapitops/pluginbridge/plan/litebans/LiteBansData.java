@@ -40,32 +40,67 @@ public class LiteBansData extends PluginData implements BanData {
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
 
+        String what = getWithIcon("Effect", "times-circle-o");
         String by = getWithIcon("Banned By", "gavel");
         String reason = getWithIcon("Reason", "balance-scale");
         String date = getWithIcon("Expires", "calendar-times-o");
-        TableContainer banTable = new TableContainer(date, by, reason);
-        banTable.setColor("red");
+        TableContainer table = new TableContainer(what, date, by, reason);
+        table.setColor("red");
 
         try {
             List<LiteBansDBObj> bans = db.getBans(uuid);
-            if (bans.isEmpty()) {
-                banTable.addRow("Not LiteBanned");
+            List<LiteBansDBObj> mutes = db.getMutes(uuid);
+            List<LiteBansDBObj> warns = db.getWarnings(uuid);
+            List<LiteBansDBObj> kicks = db.getKicks(uuid);
+            if (bans.isEmpty() && mutes.isEmpty() && warns.isEmpty() && kicks.isEmpty()) {
+                table.addRow("Not Banned/Muted/Warned/Kicked");
             } else {
                 for (LiteBansDBObj ban : bans) {
                     long expiry = ban.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
-                    banTable.addRow(
-                            expires,
+                    table.addRow(
+                            "Ban",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(ban.getBannedBy()), ban.getBannedBy()),
-                            ban.getReason()
+                            ban.getReason(),
+                            expires
+                    );
+                }
+                for (LiteBansDBObj mute : mutes) {
+                    long expiry = mute.getExpiry();
+                    String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
+                    table.addRow(
+                            "Mute",
+                            Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mute.getBannedBy()), mute.getBannedBy()),
+                            mute.getReason(),
+                            expires
+                    );
+                }
+                for (LiteBansDBObj warn : warns) {
+                    long expiry = warn.getExpiry();
+                    String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
+                    table.addRow(
+                            "Warning",
+                            Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(warn.getBannedBy()), warn.getBannedBy()),
+                            warn.getReason(),
+                            expires
+                    );
+                }
+                for (LiteBansDBObj kick : kicks) {
+                    long expiry = kick.getExpiry();
+                    String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
+                    table.addRow(
+                            "Kick",
+                            Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(kick.getBannedBy()), kick.getBannedBy()),
+                            kick.getReason(),
+                            expires
                     );
                 }
             }
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
-            banTable.addRow("Error: " + ex);
+            table.addRow("Error: " + ex);
         }
-        inspectContainer.addTable("banTable", banTable);
+        inspectContainer.addTable("table", table);
 
         return inspectContainer;
     }
