@@ -111,7 +111,7 @@ public class KillsTable extends UserIDTable {
                 columnWeapon + ", " +
                 usersUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
                 " WHERE " + columnKillerUserID + "=" + usersTable.statementSelectID;
 
         query(new QueryStatement<Object>(sql, 50000) {
@@ -150,8 +150,8 @@ public class KillsTable extends UserIDTable {
                 usersVictimUUIDColumn + ", " +
                 usersKillerUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersVictimIDColumn + "=" + columnVictimUserID +
-                " JOIN " + usersTable + " a on " + usersKillerIDColumn + "=" + columnKillerUserID;
+                " INNER JOIN " + usersTable + " on " + usersVictimIDColumn + "=" + columnVictimUserID +
+                " INNER JOIN " + usersTable + " a on " + usersKillerIDColumn + "=" + columnKillerUserID;
 
         return query(new QueryAllStatement<Map<UUID, List<PlayerKill>>>(sql, 50000) {
             @Override
@@ -230,7 +230,7 @@ public class KillsTable extends UserIDTable {
                 columnWeapon + ", " +
                 usersUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID;
 
         return query(new QueryAllStatement<Map<Integer, List<PlayerKill>>>(sql, 50000) {
             @Override

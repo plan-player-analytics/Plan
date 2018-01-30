@@ -265,7 +265,7 @@ public class UsersTable extends UserIDTable {
         String sql = "SELECT DISTINCT " + columnName + " FROM " + tableName +
                 " WHERE " + columnName + " LIKE ?" +
                 " UNION SELECT DISTINCT " + columnName + " FROM " + tableName +
-                " JOIN " + nicknamesTable + " on " + columnID + "=" + nicknamesTable + "." + nicknamesTable.getColumnUserID() +
+                " INNER JOIN " + nicknamesTable + " on " + columnID + "=" + nicknamesTable + "." + nicknamesTable.getColumnUserID() +
                 " WHERE " + nicknamesTable.getColumnNick() + " LIKE ?";
 
         return query(new QueryStatement<List<String>>(sql, 5000) {

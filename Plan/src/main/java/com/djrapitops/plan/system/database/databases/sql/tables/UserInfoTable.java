@@ -148,8 +148,8 @@ public class UserInfoTable extends UserIDTable {
                 usersNameColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID +
                 " WHERE " + columnUserID + "=" + usersTable.statementSelectID;
 
         return query(new QueryStatement<Map<UUID, UserInfo>>(sql) {
@@ -195,7 +195,7 @@ public class UserInfoTable extends UserIDTable {
                 usersNameColumn + ", " +
                 usersUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " LEFT JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
                 " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
 
         return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
@@ -235,8 +235,8 @@ public class UserInfoTable extends UserIDTable {
                 usersUUIDColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
         return query(new QueryAllStatement<Map<UUID, List<UserInfo>>>(sql, 50000) {
             @Override
@@ -306,8 +306,8 @@ public class UserInfoTable extends UserIDTable {
                 usersUUIDColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
         return query(new QueryAllStatement<Map<UUID, Set<UUID>>>(sql, 50000) {
             @Override

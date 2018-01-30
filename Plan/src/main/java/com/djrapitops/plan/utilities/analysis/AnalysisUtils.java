@@ -1,16 +1,10 @@
 package com.djrapitops.plan.utilities.analysis;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.StickyData;
-import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -135,21 +129,6 @@ public class AnalysisUtils {
             value++;
         }
         return value == 0 ? 1 : value;
-    }
-
-    public static void addMissingWorlds(WorldTimes worldTimes) {
-        try {
-            // Add 0 time for worlds not present.
-            Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
-            for (String world : Database.getActive().fetch().getWorldNames(ServerInfo.getServerUUID())) {
-                if (nonZeroWorlds.contains(world)) {
-                    continue;
-                }
-                worldTimes.setGMTimesForWorld(world, new GMTimes());
-            }
-        } catch (DBException e) {
-            Log.toLog(AnalysisUtils.class, e);
-        }
     }
 
     public static Map<UUID, List<Session>> sortSessionsByUser(Map<UUID, Map<UUID, List<Session>>> allSessions) {

@@ -114,7 +114,7 @@ public class WorldTimesTable extends UserIDTable {
                 columnSpectator + ", " +
                 worldNameColumn +
                 " FROM " + tableName +
-                " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
+                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
                 " WHERE " + columnUserID + "=" + usersTable.statementSelectID;
 
         query(new QueryStatement<Object>(sql, 2000) {
@@ -167,8 +167,8 @@ public class WorldTimesTable extends UserIDTable {
                 "SUM(" + columnSpectator + ") as spectator, " +
                 worldNameColumn +
                 " FROM " + tableName +
-                " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
-                " JOIN " + sessionsTable + " on " + sessionIDColumn + "=" + columnSessionID +
+                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
+                " INNER JOIN " + sessionsTable + " on " + sessionIDColumn + "=" + columnSessionID +
                 " WHERE " + sessionServerIDColumn + "=" + db.getServerTable().statementSelectServerID +
                 " GROUP BY " + columnWorldId;
 
@@ -210,7 +210,7 @@ public class WorldTimesTable extends UserIDTable {
                 "SUM(" + columnSpectator + ") as spectator, " +
                 worldNameColumn +
                 " FROM " + tableName +
-                " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
+                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
                 " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
                 " GROUP BY " + columnWorldId;
 
@@ -317,7 +317,7 @@ public class WorldTimesTable extends UserIDTable {
                 columnSpectator + ", " +
                 worldNameColumn +
                 " FROM " + tableName +
-                " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId;
+                " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId;
 
         return query(new QueryAllStatement<Map<Integer, WorldTimes>>(sql, 50000) {
             @Override

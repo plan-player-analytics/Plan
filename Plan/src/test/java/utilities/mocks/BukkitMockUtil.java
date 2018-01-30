@@ -85,6 +85,7 @@ public class BukkitMockUtil extends MockUtil {
         Server serverMock = Mockito.mock(Server.class);
         when(serverMock.getIp()).thenReturn("");
         when(serverMock.getName()).thenReturn("Bukkit");
+        when(serverMock.getServerName()).thenReturn("Bukkit");
         when(serverMock.getPort()).thenReturn(25565);
         when(serverMock.getVersion()).thenReturn("1.12.2");
         when(serverMock.getBukkitVersion()).thenReturn("32423");

@@ -139,8 +139,8 @@ public class ActionsTable extends UserIDTable {
                 usersUUIDColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
         return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Action>>>>(sql, 20000) {
             @Override
@@ -204,7 +204,7 @@ public class ActionsTable extends UserIDTable {
                 columnAdditionalInfo + ", " +
                 usersUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
                 " WHERE " + serverTable.statementSelectServerID + "=" + columnServerID;
 
         return query(new QueryStatement<Map<UUID, List<Action>>>(sql, 20000) {

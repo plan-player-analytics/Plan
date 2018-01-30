@@ -152,7 +152,7 @@ public class GeoInfoTable extends UserIDTable {
                 columnLastUsed + ", " +
                 usersUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID;
 
         return query(new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 50000) {
             @Override

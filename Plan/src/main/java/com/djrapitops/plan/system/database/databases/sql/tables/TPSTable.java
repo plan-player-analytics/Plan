@@ -210,7 +210,7 @@ public class TPSTable extends Table {
                 columnChunksLoaded + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
         return query(new QueryAllStatement<Map<UUID, List<TPS>>>(sql, 50000) {
             @Override

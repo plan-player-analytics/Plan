@@ -19,7 +19,6 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
@@ -196,7 +195,6 @@ public class InspectPage extends Page {
 
         String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
         WorldTimes worldTimes = profile.getWorldTimes();
-        AnalysisUtils.addMissingWorlds(worldTimes);
 
         WorldPie worldPie = new WorldPie(worldTimes);
 

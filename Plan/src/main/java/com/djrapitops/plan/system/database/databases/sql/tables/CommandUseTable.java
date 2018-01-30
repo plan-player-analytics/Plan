@@ -176,7 +176,7 @@ public class CommandUseTable extends Table {
                 columnTimesUsed + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
         return query(new QueryAllStatement<Map<UUID, Map<String, Integer>>>(sql, 10000) {
             @Override

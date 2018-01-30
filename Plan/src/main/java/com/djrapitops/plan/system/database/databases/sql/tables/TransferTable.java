@@ -195,7 +195,7 @@ public class TransferTable extends Table {
                 columnContent + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnSenderID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnSenderID +
                 " WHERE " + columnInfoType + "= ?" +
                 " AND " + columnExpiry + "> ?" +
                 " AND " + columnExtraVariables + "=?";
@@ -228,7 +228,7 @@ public class TransferTable extends Table {
         String sql = "SELECT " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnSenderID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnSenderID +
                 " WHERE " + columnExtraVariables + "=?" +
                 " ORDER BY " + columnExpiry + " LIMIT 1";
 

@@ -467,7 +467,7 @@ public class SessionsTable extends UserIDTable {
                 columnMobKills + ", " +
                 usersUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
                 " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
 
         return query(new QueryStatement<Map<UUID, List<Session>>>(sql, 5000) {
@@ -526,7 +526,7 @@ public class SessionsTable extends UserIDTable {
                 " MAX(" + columnSessionEnd + ") as last_seen, " +
                 usersUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
                 " GROUP BY uuid";
 
         return query(new QueryAllStatement<Map<UUID, Long>>(sql, 20000) {
@@ -557,8 +557,8 @@ public class SessionsTable extends UserIDTable {
                 usersUUIDColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
         return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Session>>>>(sql, 20000) {
             @Override

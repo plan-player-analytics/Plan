@@ -67,7 +67,7 @@ public class NicknamesTable extends UserIDTable {
                 columnNick + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID +
                 " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")";
 
         return query(new QueryStatement<Map<UUID, List<String>>>(sql, 5000) {
@@ -172,8 +172,8 @@ public class NicknamesTable extends UserIDTable {
                 usersUUIDColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
         return query(new QueryAllStatement<Map<UUID, Map<UUID, List<String>>>>(sql, 5000) {
             @Override

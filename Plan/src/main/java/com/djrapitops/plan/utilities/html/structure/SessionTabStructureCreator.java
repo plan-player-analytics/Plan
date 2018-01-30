@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
@@ -85,7 +84,6 @@ public class SessionTabStructureCreator {
 
             String worldId = "worldPie" + session.getSessionStart() + i;
             WorldTimes worldTimes = session.getWorldTimes();
-            AnalysisUtils.addMissingWorlds(worldTimes);
 
             WorldPie worldPie = new WorldPie(worldTimes);
 

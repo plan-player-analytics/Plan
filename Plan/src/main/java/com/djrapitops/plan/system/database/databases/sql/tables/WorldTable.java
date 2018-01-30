@@ -126,8 +126,8 @@ public class WorldTable extends Table {
         String sql = "SELECT DISTINCT " +
                 columnWorldName + " FROM " +
                 tableName +
-                " JOIN " + worldTimesTable + " on " + worldIDColumn + "=" + tableName + "." + columnWorldId +
-                " JOIN " + sessionsTable + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
+                " INNER JOIN " + worldTimesTable + " on " + worldIDColumn + "=" + tableName + "." + columnWorldId +
+                " INNER JOIN " + sessionsTable + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
                 " WHERE " + statementSelectServerID + "=" + sessionServerIDColumn;
 
         return query(new QueryStatement<Set<String>>(sql, 1000) {
