@@ -28,7 +28,7 @@ public class BuyCraftHook extends Hook {
     @Override
     public void hook() throws NoClassDefFoundError {
         if (enabled) {
-            hookHandler.addPluginDataSource(new BuyCraftPluginData(secret));
+            hookHandler.addPluginDataSource(new BuyCraftData(secret));
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.Hook;
 import litebans.api.Database;
 
@@ -28,6 +30,9 @@ public class LiteBansHook extends Hook {
             Database.get();
             enabled = true;
         } catch (NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError | Exception e) {
+            if (Settings.DEV_MODE.isTrue()) {
+                Log.toLog(this.getClass(), e);
+            }
             enabled = false;
         }
     }

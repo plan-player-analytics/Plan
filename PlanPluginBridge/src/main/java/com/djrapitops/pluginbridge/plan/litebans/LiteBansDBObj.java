@@ -7,17 +7,19 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BanObject {
+public class LiteBansDBObj {
     private final UUID uuid;
     private final String reason;
     private final String bannedBy;
-    private final long expires;
+    private final long expiry;
+    private final boolean active;
 
-    public BanObject(UUID uuid, String reason, String bannedBy, long expires) {
+    public LiteBansDBObj(UUID uuid, String reason, String bannedBy, long expiry, boolean active) {
         this.uuid = uuid;
         this.reason = reason;
         this.bannedBy = bannedBy;
-        this.expires = expires;
+        this.expiry = expiry;
+        this.active = active;
     }
 
     public UUID getUuid() {
@@ -33,6 +35,10 @@ public class BanObject {
     }
 
     public long getExpiry() {
-        return expires;
+        return expiry;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

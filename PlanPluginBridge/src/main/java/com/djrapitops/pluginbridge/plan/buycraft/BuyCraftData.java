@@ -21,11 +21,11 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class BuyCraftPluginData extends PluginData {
+public class BuyCraftData extends PluginData {
 
     private final String secret;
 
-    public BuyCraftPluginData(String secret) {
+    public BuyCraftData(String secret) {
         super(ContainerSize.TAB, "BuyCraft");
         super.setIconColor("blue");
         super.setPluginIcon("shopping-bag");
