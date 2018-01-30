@@ -12,6 +12,7 @@ import java.util.concurrent.BlockingQueue;
  */
 public abstract class Queue<T> {
 
+    protected boolean run = true;
     protected final BlockingQueue<T> queue;
     protected Setup<T> setup;
 
@@ -30,7 +31,9 @@ public abstract class Queue<T> {
      * @param object Object to add.
      */
     public void add(T object) {
-        queue.add(object);
+        if (run) {
+            queue.add(object);
+        }
     }
 
     /**
@@ -39,6 +42,7 @@ public abstract class Queue<T> {
      * @return List of unprocessed objects.
      */
     public List<T> stopAndReturnLeftovers() {
+        run = false;
         try {
             if (setup != null) {
                 setup.stop();
@@ -54,6 +58,7 @@ public abstract class Queue<T> {
      * Stops all activity and clears the queue.
      */
     public void stop() {
+        run = false;
         if (setup != null) {
             setup.stop();
         }

@@ -23,6 +23,5 @@ public class BukkitDBSystem extends DBSystem {
 
         String dbType = Settings.DB_TYPE.toString().toLowerCase().trim();
         db = getActiveDatabaseByName(dbType);
-        db.init();
     }
 }
