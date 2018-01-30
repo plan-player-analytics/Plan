@@ -160,7 +160,7 @@ public class DebugPageResponse extends ErrorResponse {
             if (configFile.exists()) {
                 content.append("<pre>### config.yml<br>&#96;&#96;&#96;<br>");
                 FileUtil.lines(configFile, Charset.forName("UTF-8"))
-                        .stream().filter(line -> !line.toLowerCase().contains("pass"))
+                        .stream().filter(line -> !line.toLowerCase().contains("pass") && !line.toLowerCase().contains("secret"))
                         .forEach(line -> content.append(line).append("<br>"));
                 content.append("&#96;&#96;&#96;</pre>");
             }
