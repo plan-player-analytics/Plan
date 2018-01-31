@@ -1,4 +1,4 @@
-package com.djrapitops.plan.utilities.analysis;
+package com.djrapitops.plan.utilities.html.graphs.line;
 
 import java.util.Objects;
 

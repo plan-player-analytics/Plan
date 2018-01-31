@@ -4,14 +4,16 @@
  */
 package com.djrapitops.plan.utilities.html.graphs;
 
+import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.graphs.line.*;
+import com.djrapitops.plan.utilities.html.graphs.stack.AbstractStackGraph;
 import org.junit.Before;
 import org.junit.Test;
+import utilities.RandomData;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 
@@ -23,11 +25,22 @@ import static org.junit.Assert.assertTrue;
 public class GraphTest {
 
     private final List<TPS> tpsList = new ArrayList<>();
+    private final TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
 
     @Before
     public void setUp() {
+        String[] groups = ActivityIndex.getGroups();
         for (int i = 0; i < 10; i++) {
             tpsList.add(new TPS(i, i, i, i, i, i, i));
+            Map<String, Set<UUID>> gData = new HashMap<>();
+            for (String group : groups) {
+                Set<UUID> uuids = new HashSet<>();
+                for (int j = 0; j < RandomData.randomInt(1, 20); j++) {
+                    uuids.add(UUID.randomUUID());
+                }
+                gData.put(group, uuids);
+            }
+            activityData.put((long) i, gData);
         }
     }
 
@@ -49,6 +62,28 @@ public class GraphTest {
             System.out.println(series);
 
             char[] chars = series.toCharArray();
+            assertBracketMatch(chars);
+        }
+    }
+
+    @Test
+    public void testStackGraphsForBracketErrors() {
+        Settings.FORMAT_DECIMALS.setTemporaryValue("#.##");
+
+        AbstractStackGraph[] graphs = new AbstractStackGraph[]{
+                new ActivityStackGraph(activityData)
+        };
+
+        for (AbstractStackGraph graph : graphs) {
+            System.out.print("Bracket Test: " + graph.getClass().getSimpleName() + " | ");
+            String series = graph.toHighChartsSeries();
+            System.out.println(series);
+            char[] chars = series.toCharArray();
+            assertBracketMatch(chars);
+
+            String labels = graph.toHighChartsLabels();
+            System.out.println(labels);
+            chars = labels.toCharArray();
             assertBracketMatch(chars);
         }
     }

@@ -5,7 +5,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import com.djrapitops.plan.utilities.analysis.Point;
+import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;

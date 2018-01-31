@@ -7,7 +7,7 @@ import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.settings.locale.Message;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import com.djrapitops.plan.utilities.analysis.Point;
+import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import com.google.common.collect.Ordering;
 import org.junit.Test;
 import utilities.RandomData;

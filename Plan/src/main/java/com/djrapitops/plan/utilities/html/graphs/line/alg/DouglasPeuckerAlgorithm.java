@@ -1,4 +1,7 @@
-package com.djrapitops.plan.utilities.analysis;
+package com.djrapitops.plan.utilities.html.graphs.line.alg;
+
+import com.djrapitops.plan.utilities.html.graphs.line.Line;
+import com.djrapitops.plan.utilities.html.graphs.line.Point;
 
 import java.util.ArrayList;
 import java.util.Arrays;

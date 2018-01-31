@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.djrapitops.plan.utilities.analysis;
+package com.djrapitops.plan.utilities.html.graphs.line;
 
 /**
  * This math object is used in Ramer–Douglas–Peucker algorithm.

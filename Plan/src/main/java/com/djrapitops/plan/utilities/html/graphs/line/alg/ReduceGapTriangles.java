@@ -1,6 +1,7 @@
-package com.djrapitops.plan.utilities.analysis;
+package com.djrapitops.plan.utilities.html.graphs.line.alg;
 
 import com.djrapitops.plan.utilities.comparators.PointComparator;
+import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 

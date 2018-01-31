@@ -943,7 +943,7 @@
 <script src="js/charts/punchCard.js"></script>
 <script src="js/charts/healthGauge.js"></script>
 <script src="js/charts/activityPie.js"></script>
-<script src="js/charts/activityStackGraph.js"></script>
+<script src="js/charts/stackGraph.js"></script>
 <script src="js/charts/worldPie.js"></script>
 <script src="js/charts/performanceGraph.js"></script>
 <script src="js/charts/tpsGraph.js"></script>
@@ -958,7 +958,7 @@
         global: {
             timezoneOffset: ${timeZone} * 60
         }
-    });
+    })
 
     // Data Variables
     var playersOnlineSeries = {
@@ -1049,7 +1049,8 @@
         data: ${punchCardSeries}
     };
     var activityStackSeries = ${activityStackSeries};
-    var activityCategories = [${activityStackCategories}]
+    var activityCategories =
+    ${activityStackCategories}
 </script>
 
 <!-- Plan load script -->
@@ -1078,7 +1079,7 @@
 
         // Chart draw scripts
         activityPie('activityPie', activitySeries);
-        activityStackChart('activityStackGraph', activityCategories, activityStackSeries);
+        stackChart('activityStackGraph', activityCategories, activityStackSeries, 'Players');
         worldPie('worldPie', worldSeries, gmSeries);
         playersChart('playerChartDay', playersOnlineSeries, 3);
         playersChart('playerChartMonth', playersOnlineSeries, 2);

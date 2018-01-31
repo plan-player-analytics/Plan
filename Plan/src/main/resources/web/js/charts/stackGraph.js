@@ -1,4 +1,4 @@
-function activityStackChart(id, categories, activitySeries) {
+function stackChart(id, categories, series, label) {
     Highcharts.chart(id, {
         chart: {
             type: 'area'
@@ -15,7 +15,7 @@ function activityStackChart(id, categories, activitySeries) {
         },
         yAxis: {
             title: {
-                text: 'Players'
+                text: label
             },
             labels: {
                 formatter: function () {
@@ -25,20 +25,14 @@ function activityStackChart(id, categories, activitySeries) {
         },
         tooltip: {
             split: true,
-            valueSuffix: ' Players'
+            valueSuffix: ' ' + label
         },
         plotOptions: {
             area: {
                 stacking: 'normal',
-                // lineColor: '#666666',
                 lineWidth: 1
-                // ,
-                // marker: {
-                //     lineWidth: 1,
-                //     lineColor: '#666666'
-                // }
             }
         },
-        series: activitySeries
+        series: series
     });
 }

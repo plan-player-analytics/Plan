@@ -1,7 +1,6 @@
 package com.djrapitops.plan.utilities.html.graphs.line;
 
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.utilities.analysis.Point;
 
 import java.util.List;
 import java.util.stream.Collectors;

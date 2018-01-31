@@ -5,10 +5,9 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.line;
 
-import com.djrapitops.plan.utilities.analysis.DouglasPeuckerAlgorithm;
-import com.djrapitops.plan.utilities.analysis.Point;
-import com.djrapitops.plan.utilities.analysis.ReduceGapTriangles;
 import com.djrapitops.plan.utilities.html.graphs.HighChart;
+import com.djrapitops.plan.utilities.html.graphs.line.alg.DouglasPeuckerAlgorithm;
+import com.djrapitops.plan.utilities.html.graphs.line.alg.ReduceGapTriangles;
 
 import java.util.ArrayList;
 import java.util.Collection;

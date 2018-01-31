@@ -34,7 +34,11 @@ public class Theme implements SubSystem {
     }
 
     public static String getValue(ThemeVal variable) {
-        return getInstance().getThemeValue(variable);
+        try {
+            return getInstance().getThemeValue(variable);
+        } catch (NullPointerException | IllegalStateException e) {
+            return variable.getDefaultValue();
+        }
     }
 
     public static String replaceColors(String resourceString) {

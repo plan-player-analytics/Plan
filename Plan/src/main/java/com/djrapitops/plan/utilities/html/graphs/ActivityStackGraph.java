@@ -8,11 +8,10 @@ import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.graphs.stack.AbstractStackGraph;
+import com.djrapitops.plan.utilities.html.graphs.stack.StackDataSet;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Stack Graph that represents evolution of the PlayerBase in terms of ActivityIndex Groups.
@@ -21,72 +20,37 @@ import java.util.UUID;
  * @see ActivityIndex
  * @since 4.2.0
  */
-public class ActivityStackGraph implements HighChart {
-
-    private final String[] builtSeries;
+public class ActivityStackGraph extends AbstractStackGraph {
 
     public ActivityStackGraph(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
-        this.builtSeries = createSeries(activityData);
+        super(getLabels(activityData.navigableKeySet()), getDataSets(activityData));
     }
 
-    public String toHighChartsLabels() {
-        return builtSeries[0];
+    private static String[] getLabels(NavigableSet<Long> dates) {
+        return dates.stream()
+                .map(FormatUtils::formatTimeStamp)
+                .toArray(String[]::new);
     }
 
-    @Override
-    public String toHighChartsSeries() {
-        return builtSeries[1];
-    }
-
-    private ActivityStackGraph() {
-        throw new IllegalStateException("Utility Class");
-    }
-
-    private String[] createSeries(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
+    private static StackDataSet[] getDataSets(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
         String[] groups = ActivityIndex.getGroups();
         String[] colors = Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
+        StackDataSet[] dataSets = new StackDataSet[groups.length];
 
-        // Series 0 is Labels for Graph x-axis, others are data for each group.
-        StringBuilder[] series = new StringBuilder[groups.length + 1];
-        for (int i = 0; i <= groups.length; i++) {
-            series[i] = new StringBuilder();
-        }
-        for (int i = 1; i <= groups.length; i++) {
-            series[i] = new StringBuilder("{name: '")
-                    .append(groups[i - 1])
-                    .append("',color:").append(colors[(i - 1) % maxCol])
-                    .append(",data: [");
+        for (int i = 0; i < groups.length; i++) {
+            dataSets[i] = new StackDataSet(new ArrayList<>(), groups[i], colors[(i) % maxCol]);
         }
 
-        int size = activityData.size();
-        int i = 0;
         for (Long date : activityData.navigableKeySet()) {
             Map<String, Set<UUID>> data = activityData.get(date);
 
-            series[0].append("'").append(FormatUtils.formatTimeStamp(date)).append("'");
-            for (int j = 1; j <= groups.length; j++) {
-                Set<UUID> players = data.get(groups[j - 1]);
-                series[j].append(players != null ? players.size() : 0);
-            }
-
-            if (i < size - 1) {
-                for (int j = 0; j <= groups.length; j++) {
-                    series[j].append(",");
-                }
-            }
-            i++;
-        }
-
-        StringBuilder seriesBuilder = new StringBuilder("[");
-
-        for (int j = 1; j <= groups.length; j++) {
-            seriesBuilder.append(series[j].append("]}").toString());
-            if (j < groups.length) {
-                seriesBuilder.append(",");
+            for (int j = 0; j < groups.length; j++) {
+                Set<UUID> players = data.get(groups[j]);
+                dataSets[j].add((double) (players != null ? players.size() : 0));
             }
         }
 
-        return new String[]{series[0].toString(), seriesBuilder.append("]").toString()};
+        return dataSets;
     }
 }
