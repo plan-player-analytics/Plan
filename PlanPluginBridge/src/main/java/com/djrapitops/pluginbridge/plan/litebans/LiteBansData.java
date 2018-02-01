@@ -53,7 +53,7 @@ public class LiteBansData extends PluginData implements BanData {
             List<LiteBansDBObj> warns = db.getWarnings(uuid);
             List<LiteBansDBObj> kicks = db.getKicks(uuid);
             if (bans.isEmpty() && mutes.isEmpty() && warns.isEmpty() && kicks.isEmpty()) {
-                table.addRow("Not Banned/Muted/Warned/Kicked");
+                table.addRow("None");
             } else {
                 for (LiteBansDBObj ban : bans) {
                     long expiry = ban.getExpiry();
