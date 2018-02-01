@@ -7,7 +7,8 @@ function punchCard(id, punchcardSeries) {
 		xAxis: {
 			type: 'datetime',
 			dateTimeLabelFormats: {
-				hour: '%I %P'
+                hour: '%I %P',
+                day: '%H %P'
 			},
 			tickInterval: 3600000
 		},
