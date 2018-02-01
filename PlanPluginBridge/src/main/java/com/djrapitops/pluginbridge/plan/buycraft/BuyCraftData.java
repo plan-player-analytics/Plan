@@ -72,6 +72,15 @@ public class BuyCraftData extends PluginData {
             );
         }
         analysisContainer.addTable("payTable", payTable);
+
+        MoneyStackGraph moneyStackGraph = MoneyStackGraph.create(payments);
+        String graphHtml = Html.PANEL_BODY.parse("<div id=\"buycraftChart\" class=\"dashboard-flot-chart\"></div>") +
+                "<script>$(function () {setTimeout(function() {" +
+                "stackChart('buycraftChart', "
+                + moneyStackGraph.toHighChartsLabels() + ", "
+                + moneyStackGraph.toHighChartsSeries() + ", '');}, 1000)});</script>";
+
+        analysisContainer.addHtml("moneygraph", graphHtml);
     }
 
     private void addPaymentTotals(AnalysisContainer analysisContainer, List<Payment> payments) {

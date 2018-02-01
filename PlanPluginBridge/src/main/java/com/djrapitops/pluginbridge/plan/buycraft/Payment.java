@@ -9,6 +9,8 @@ import java.util.UUID;
 /**
  * Represents a BuyCraft payment.
  *
+ * Payments are sorted most recent first by natural ordering.
+ *
  * @author Rsl1122
  */
 public class Payment implements Comparable<Payment> {
@@ -55,6 +57,6 @@ public class Payment implements Comparable<Payment> {
 
     @Override
     public int compareTo(Payment o) {
-        return this.playerName.toLowerCase().compareTo(o.playerName.toLowerCase());
+        return -Long.compare(this.date, o.date);
     }
 }
