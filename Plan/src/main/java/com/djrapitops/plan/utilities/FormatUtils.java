@@ -47,6 +47,16 @@ public class FormatUtils {
         return formatMilliseconds(Math.abs(after - before));
     }
 
+    public static String formatTimeStampDay(long epochMs) {
+        String format = "MMMMM d";
+
+        if (Settings.FORMAT_DATE_RECENT_DAYS.isTrue()) {
+            format = replaceRecentDays(epochMs, format, "MMMMM");
+        }
+
+        return format(epochMs, format);
+    }
+
     public static String formatTimeStampClock(long epochMs) {
         String format = Settings.FORMAT_DATE_CLOCK.toString();
 
@@ -71,9 +81,12 @@ public class FormatUtils {
     }
 
     private static String replaceRecentDays(long epochMs, String format) {
+        return replaceRecentDays(epochMs, format, Settings.FORMAT_DATE_RECENT_DAYS_PATTERN.toString());
+    }
+
+    private static String replaceRecentDays(long epochMs, String format, String pattern) {
         long now = MiscUtils.getTime();
 
-        String pattern = Settings.FORMAT_DATE_RECENT_DAYS_PATTERN.toString();
         long fromStartOfDay = now % TimeAmount.DAY.ms();
         if (epochMs > now - fromStartOfDay) {
             format = format.replace(pattern, "'Today'");
