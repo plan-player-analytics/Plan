@@ -25,7 +25,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class GenerateInspectPageRequest extends InfoRequestWithVariables implements GenerateRequest {
+public class GenerateInspectPageRequest extends InfoRequestWithVariables implements GenerateRequest, WideRequest {
 
     private final UUID playerUUID;
 

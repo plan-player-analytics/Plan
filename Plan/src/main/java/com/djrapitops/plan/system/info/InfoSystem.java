@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.info;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.PlanSystem;
@@ -46,7 +47,12 @@ public abstract class InfoSystem implements SubSystem {
     }
 
     public void generateAndCachePlayerPage(UUID player) throws WebException {
-        sendRequest(new GenerateInspectPageRequest(player));
+        GenerateInspectPageRequest infoRequest = new GenerateInspectPageRequest(player);
+        try {
+            sendRequest(infoRequest);
+        } catch (ConnectionFailException e) {
+            connectionSystem.sendWideInfoRequest(infoRequest);
+        }
     }
 
     public void generateAnalysisPageOfThisServer() throws WebException {
