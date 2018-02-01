@@ -112,7 +112,7 @@ public class HtmlStructure {
         int maxPlayers = properties.getMaxPlayers();
         int online = properties.getOnlinePlayers();
         Optional<Long> analysisRefreshDate = Analysis.getRefreshDate();
-        String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStamp).orElse("-");
+        String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStampClock).orElse("-");
 
         Server server = ServerInfo.getServer();
 

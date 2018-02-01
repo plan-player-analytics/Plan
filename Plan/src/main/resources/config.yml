@@ -89,6 +89,17 @@ Customization:
     PlayerTableFooter: true
   Formatting:
     DecimalPoints: '#.##'
+    # Dates settings use Java SimpleDateFormat.
+    # You can find the patterns & examples here:
+    # https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+    Dates:
+      # RecentDays replaces date with Today, Yesterday, Wednesday etc.
+      RecentDays: true
+        # Non-regex pattern to replace
+        DatePattern: 'MMM d YYYY'
+      Full: 'MMM d YYYY, HH:mm:ss'
+      NoSeconds: 'MMM d YYYY, HH:mm'
+      JustClock: 'HH:mm:ss'
     TimeAmount:
       Year: '1 year, '
       Years: '%years% years, '

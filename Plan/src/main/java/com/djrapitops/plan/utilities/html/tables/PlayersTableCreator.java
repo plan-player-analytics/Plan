@@ -69,7 +69,7 @@ public class PlayersTableCreator {
                         playtime, FormatUtils.formatTimeAmount(playtime),
                         loginTimes,
                         registered, FormatUtils.formatTimeStampYear(registered),
-                        lastSeen, lastSeen != 0 ? FormatUtils.formatTimeStamp(lastSeen) : "-",
+                        lastSeen, lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-",
                         geoLocation
                 ));
             } catch (NullPointerException e) {

@@ -79,7 +79,7 @@ public class SessionsTableCreator {
             }
 
             String name = dataCache.getName(uuid);
-            String start = FormatUtils.formatTimeStamp(session.getSessionStart());
+            String start = FormatUtils.formatTimeStampYear(session.getSessionStart());
             String length = session.getSessionEnd() != -1 ? FormatUtils.formatTimeAmount(session.getLength()) : "Online";
             String world = getLongestWorldPlayed(session);
 

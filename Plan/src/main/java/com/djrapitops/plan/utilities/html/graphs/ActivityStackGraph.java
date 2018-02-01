@@ -28,7 +28,7 @@ public class ActivityStackGraph extends AbstractStackGraph {
 
     private static String[] getLabels(NavigableSet<Long> dates) {
         return dates.stream()
-                .map(FormatUtils::formatTimeStamp)
+                .map(FormatUtils::formatTimeStampYear)
                 .toArray(String[]::new);
     }
 

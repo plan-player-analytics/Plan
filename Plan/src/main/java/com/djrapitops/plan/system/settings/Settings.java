@@ -33,6 +33,7 @@ public enum Settings {
     ORDER_WORLD_PIE_BY_PERC("Customization.Display.OrderWorldPieByPercentage"),
     PLAYERTABLE_FOOTER("Customization.Display.PlayerTableFooter"),
     WEBSERVER_DISABLED("WebServer.DisableWebServer"),
+    FORMAT_DATE_RECENT_DAYS("Customization.Formatting.Dates.RecentDays"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),
@@ -65,6 +66,10 @@ public enum Settings {
     //
     SERVER_NAME("Server.ServerName"),
     //
+    FORMAT_DATE_FULL("Customization.Formatting.Dates.Full"),
+    FORMAT_DATE_NO_SECONDS("Customization.Formatting.Dates.NoSeconds"),
+    FORMAT_DATE_CLOCK("Customization.Formatting.Dates.JustClock"),
+    FORMAT_DATE_RECENT_DAYS_PATTERN("Customization.Formatting.Dates.RecentDays.DatePattern"),
     FORMAT_YEAR("Customization.Formatting.TimeAmount.Year"),
     FORMAT_YEARS("Customization.Formatting.TimeAmount.Years"),
     FORMAT_MONTH("Customization.Formatting.TimeAmount.Month"),

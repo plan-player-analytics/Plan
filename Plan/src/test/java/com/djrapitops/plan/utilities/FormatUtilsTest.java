@@ -13,9 +13,7 @@ import utilities.RandomData;
 import utilities.mocks.SystemMockUtil;
 import utilities.mocks.objects.MockUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -54,52 +52,7 @@ public class FormatUtilsTest {
     }
 
     @Test
-    public void testFormatTimeStamp() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, HH:mm", Locale.ENGLISH);
-
-        Date date = new Date();
-        date.setTime(0);
-
-        String expResult = dateFormat.format(date);
-
-        long epochZero = 0L;
-        String result = FormatUtils.formatTimeStamp(epochZero);
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testFormatTimeStampYear() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd YYYY, HH:mm", Locale.ENGLISH);
-
-        Date date = new Date();
-        date.setTime(0);
-
-        String expResult = dateFormat.format(date);
-
-        long epochZero = 0L;
-        String result = FormatUtils.formatTimeStampYear(epochZero);
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testFormatTimeStampSecond() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, HH:mm:ss", Locale.ENGLISH);
-
-        Date date = new Date();
-        date.setTime(0);
-
-        String expResult = dateFormat.format(date);
-
-        long epochZero = 0L;
-        String result = FormatUtils.formatTimeStampSecond(epochZero);
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testFormatTimeStampMonths() {
+    public void testFormatTimeAmountMonths() {
         long time = TimeAmount.DAY.ms() * 40L;
         assertEquals("1 month, 10d ", FormatUtils.formatTimeAmount(time));
     }

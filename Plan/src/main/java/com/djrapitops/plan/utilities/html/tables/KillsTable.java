@@ -41,7 +41,7 @@ public class KillsTable extends TableContainer {
 
             String name = dataCache.getName(kill.getVictim());
             addRow(
-                    FormatUtils.formatTimeStamp(date),
+                    FormatUtils.formatTimeStampYear(date),
                     Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
                     kill.getWeapon()
             );

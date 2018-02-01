@@ -79,7 +79,7 @@ public class InspectPage extends Page {
     public String parse(PlayerProfile profile, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
         long now = MiscUtils.getTime();
 
-        addValue("refresh", FormatUtils.formatTimeStamp(now));
+        addValue("refresh", FormatUtils.formatTimeStampClock(now));
         addValue("version", MiscUtils.getPlanVersion());
         addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
 

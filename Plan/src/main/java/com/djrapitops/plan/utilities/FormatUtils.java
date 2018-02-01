@@ -1,13 +1,16 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Format;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Rsl1122
@@ -44,16 +47,51 @@ public class FormatUtils {
         return formatMilliseconds(Math.abs(after - before));
     }
 
-    public static String formatTimeStamp(long epochMs) {
-        return com.djrapitops.plugin.utilities.FormatUtils.formatTimeStamp(epochMs);
+    public static String formatTimeStampClock(long epochMs) {
+        String format = Settings.FORMAT_DATE_CLOCK.toString();
+
+        return format(epochMs, format);
+    }
+
+    private static String format(long epochMs, String format) {
+        String locale = Settings.LOCALE.toString();
+        Locale usedLocale = locale.equalsIgnoreCase("default") ? Locale.ENGLISH : Locale.forLanguageTag(locale);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format, usedLocale);
+        return dateFormat.format(epochMs);
     }
 
     public static String formatTimeStampSecond(long epochMs) {
-        return com.djrapitops.plugin.utilities.FormatUtils.formatTimeStampSecond(epochMs);
+        String format = Settings.FORMAT_DATE_FULL.toString();
+
+        if (Settings.FORMAT_DATE_RECENT_DAYS.isTrue()) {
+            format = replaceRecentDays(epochMs, format);
+        }
+
+        return format(epochMs, format);
+    }
+
+    private static String replaceRecentDays(long epochMs, String format) {
+        long now = MiscUtils.getTime();
+
+        String pattern = Settings.FORMAT_DATE_RECENT_DAYS_PATTERN.toString();
+        long fromStartOfDay = now % TimeAmount.DAY.ms();
+        if (epochMs > now - fromStartOfDay) {
+            format = format.replace(pattern, "'Today'");
+        } else if (epochMs > now - TimeAmount.DAY.ms() - fromStartOfDay) {
+            format = format.replace(pattern, "'Yesterday'");
+        } else if (epochMs > now - TimeAmount.DAY.ms() * 5L) {
+            format = format.replace(pattern, "EEEE");
+        }
+        return format;
     }
 
     public static String formatTimeStampYear(long epochMs) {
-        return com.djrapitops.plugin.utilities.FormatUtils.formatTimeStampYear(epochMs);
+        String format = Settings.FORMAT_DATE_NO_SECONDS.toString();
+
+        if (Settings.FORMAT_DATE_RECENT_DAYS.isTrue()) {
+            format = replaceRecentDays(epochMs, format);
+        }
+        return format(epochMs, format);
     }
 
     /**
