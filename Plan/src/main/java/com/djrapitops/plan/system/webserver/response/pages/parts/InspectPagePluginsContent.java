@@ -10,6 +10,7 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 
@@ -42,7 +43,7 @@ public class InspectPagePluginsContent extends Response {
         String serverName = ServerInfo.getServerName();
         String actualServerName = serverName.equals("Plan") ? "Server " + ServerInfo.getServerID() : serverName;
         if (containers.isEmpty()) {
-            return new InspectPagePluginsContent(playerUUID, "<li><a>" + actualServerName + " (No Data)</a></li>", "");
+            return new InspectPagePluginsContent(playerUUID, "<li><a>" + actualServerName + " (No Data)</a></li>", Html.CARD.parse("<p>No Data (" + actualServerName + ")</p>"));
         }
 
         String nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + actualServerName + "</a></li>";

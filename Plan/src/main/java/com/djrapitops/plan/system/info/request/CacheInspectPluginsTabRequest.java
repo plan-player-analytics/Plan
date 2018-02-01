@@ -29,7 +29,7 @@ import java.util.UUID;
  */
 public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables implements CacheRequest {
 
-    private static final String SPLIT = ";;SPLIT;;";
+    private static final String SPLIT = "AASPLITAA";
 
     private final UUID player;
     private final String nav;
@@ -83,6 +83,9 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
                 UUID serverUUID = entry.getKey();
                 String[] navAndHtml = Base64Util.decode(entry.getValue()).split(SPLIT);
 
+                if (navAndHtml.length <= 1) {
+                    continue;
+                }
                 pluginsTab.addTab(serverUUID, navAndHtml[0], navAndHtml[1]);
             }
         } catch (DBException e) {
