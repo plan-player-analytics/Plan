@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.webserver.response.pages;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
@@ -19,10 +18,6 @@ import java.util.UUID;
  * @since 3.5.2
  */
 public class AnalysisPageResponse extends Response {
-
-    public static AnalysisPageResponse refreshNow() {
-        return refreshNow(ServerInfo.getServerUUID());
-    }
 
     public static AnalysisPageResponse refreshNow(UUID serverUUID) {
         Processor.queue(() -> {

@@ -34,7 +34,7 @@ public class ServerPageHandler extends PageHandler {
         if (response != null) {
             return response;
         } else {
-            return AnalysisPageResponse.refreshNow();
+            return AnalysisPageResponse.refreshNow(serverUUID);
         }
     }
 
