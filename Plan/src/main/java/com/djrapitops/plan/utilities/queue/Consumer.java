@@ -42,7 +42,7 @@ public abstract class Consumer<T> extends AbsRunnable {
         run = false;
         try {
             super.cancel();
-        } catch (NullPointerException ignore) {
+        } catch (NullPointerException | IllegalArgumentException ignore) {
             /*ignored*/
         }
     }
