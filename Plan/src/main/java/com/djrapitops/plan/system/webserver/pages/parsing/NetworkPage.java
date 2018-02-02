@@ -81,9 +81,9 @@ public class NetworkPage extends Page {
         long weekAgo = now - TimeAmount.WEEK.ms();
         long monthAgo = now - TimeAmount.MONTH.ms();
 
-        addValue("playersUniqueDay", AnalysisUtils.getUniqueJoinsPerDay(userSessions, dayAgo));
-        addValue("playersUniqueWeek", AnalysisUtils.getUniqueJoinsPerDay(userSessions, weekAgo));
-        addValue("playersUniqueMonth", AnalysisUtils.getUniqueJoinsPerDay(userSessions, monthAgo));
+        addValue("playersUniqueDay", AnalysisUtils.getUniquePlayers(userSessions, dayAgo));
+        addValue("playersUniqueWeek", AnalysisUtils.getUniquePlayers(userSessions, weekAgo));
+        addValue("playersUniqueMonth", AnalysisUtils.getUniquePlayers(userSessions, monthAgo));
     }
 
     private void peakTimes(UUID serverUUID, long now, Database db) throws DBException {

@@ -33,6 +33,24 @@ public class AnalysisUtils {
         return newPlayers;
     }
 
+    public static int getUniquePlayers(Map<UUID, List<Session>> sessions, long after) {
+        Set<UUID> uuids = new HashSet<>();
+
+        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
+            UUID uuid = entry.getKey();
+            for (Session session : entry.getValue()) {
+                if (session.getSessionStart() < after) {
+                    continue;
+                } else {
+                    uuids.add(uuid);
+                    break;
+                }
+            }
+        }
+
+        return uuids.size();
+    }
+
     public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long after) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
 
