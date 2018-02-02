@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.info.connection;
 
+import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -82,7 +83,13 @@ public class BukkitConnectionSystem extends ConnectionSystem {
             throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
         }
         for (Server server : bukkitServers.values()) {
-            WebExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
+            WebExceptionLogger.logIfOccurs(this.getClass(), () -> {
+                try {
+                    sendInfoRequest(infoRequest, server);
+                } catch (ConnectionFailException ignored) {
+                    /* Wide Requests are used when at least one result is wanted. */
+                }
+            });
         }
     }
 

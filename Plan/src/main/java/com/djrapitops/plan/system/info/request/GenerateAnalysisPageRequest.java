@@ -15,7 +15,6 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -67,7 +66,7 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
 
     private void generateAndCache(UUID serverUUID) throws WebException {
         InfoSystem infoSystem = InfoSystem.getInstance();
-        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, AnalysisPageResponse.getRefreshingHtml()));
+        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, AnalysisPage.getRefreshingHtml()));
         infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, analyseAndGetHtml()));
         infoSystem.updateNetworkPage();
     }

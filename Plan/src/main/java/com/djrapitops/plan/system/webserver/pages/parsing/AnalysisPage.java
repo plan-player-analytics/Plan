@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.webserver.pages.parsing;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.calculation.AnalysisData;
+import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 
@@ -22,6 +23,14 @@ public class AnalysisPage extends Page {
 
     public AnalysisPage(AnalysisData analysisData) {
         this.data = analysisData;
+    }
+
+    public static String getRefreshingHtml() {
+        ErrorResponse refreshPage = new ErrorResponse();
+        refreshPage.setTitle("Analysis is being refreshed..");
+        refreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"5\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
+        refreshPage.replacePlaceholders();
+        return refreshPage.getContent();
     }
 
     @Override

@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
+import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.WebUser;
@@ -53,12 +54,16 @@ public class PlayerPageHandler extends PageHandler {
                     response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
                 }
                 return response;
+            } else {
+                return notFound("Player has not played on this server.");
             }
         } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
             throw new InternalErrorException("Analysis", e);
+        } catch (NoServersException e) {
+            ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> new NotFoundResponse(e.getMessage()));
         }
-        return notFound("Player has not played on this server.");
+        return InspectPageResponse.getRefreshing();
     }
 
     private Response notFound(String error) {

@@ -1,13 +1,14 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
+import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -23,27 +24,18 @@ public class AnalysisPageResponse extends Response {
         Processor.queue(() -> {
             try {
                 InfoSystem.getInstance().generateAnalysisPage(serverUUID);
-            } catch (NoServersException e) {
+            } catch (NoServersException | ConnectionFailException e) {
                 ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new NotFoundResponse(e.getMessage()));
             } catch (WebException e) {
                 // TODO Exception handling
                 Log.toLog(AnalysisPageResponse.class.getName(), e);
             }
         });
-        return new AnalysisPageResponse(getRefreshingHtml());
+        return new AnalysisPageResponse(AnalysisPage.getRefreshingHtml());
     }
 
     public AnalysisPageResponse(String html) {
         super.setHeader("HTTP/1.1 200 OK");
         super.setContent(html);
     }
-
-    public static String getRefreshingHtml() {
-        ErrorResponse refreshPage = new ErrorResponse();
-        refreshPage.setTitle("Analysis is being refreshed..");
-        refreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"5\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
-        refreshPage.replacePlaceholders();
-        return refreshPage.getContent();
-    }
-
 }
