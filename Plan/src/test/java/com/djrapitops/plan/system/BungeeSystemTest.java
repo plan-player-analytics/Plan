@@ -13,6 +13,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import utilities.Teardown;
 import utilities.mocks.BungeeMockUtil;
 
 /**
@@ -30,8 +31,8 @@ public class BungeeSystemTest {
     public ExpectedException thrown = ExpectedException.none();
     private BungeeSystem bungeeSystem;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUpClass() throws Exception {
         BungeeMockUtil mockUtil = BungeeMockUtil.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
                 .withLogging()
@@ -46,6 +47,7 @@ public class BungeeSystemTest {
         if (bungeeSystem != null) {
             bungeeSystem.disable();
         }
+        Teardown.resetSettingsTempValues();
     }
 
     @Test

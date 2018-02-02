@@ -13,9 +13,11 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.BungeeInfoSystem;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
+import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 /**
  * Represents PlanSystem for PlanBungee.
@@ -26,6 +28,8 @@ public class BungeeSystem extends PlanSystem {
 
     public BungeeSystem(PlanBungee plugin) {
         testSystem = this;
+
+        Log.setErrorManager(new PlanErrorManager());
 
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
         fileSystem = new FileSystem(plugin);

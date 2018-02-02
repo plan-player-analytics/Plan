@@ -7,6 +7,7 @@ package utilities.mocks;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.task.ThreadRunnable;
 import org.bukkit.Server;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -47,6 +48,7 @@ public class BukkitMockUtil extends MockUtil {
         StaticHolder.register(planMock);
 
         StaticHolder.saveInstance(MockitoJUnitRunner.class, Plan.class);
+        StaticHolder.saveInstance(ThreadRunnable.class, Plan.class);
 
         doCallRealMethod().when(planMock).getVersion();
         doCallRealMethod().when(planMock).getColorScheme();

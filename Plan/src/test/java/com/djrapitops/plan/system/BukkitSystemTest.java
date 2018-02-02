@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import utilities.Teardown;
 import utilities.mocks.BukkitMockUtil;
 
 /**
@@ -45,6 +46,7 @@ public class BukkitSystemTest {
         if (bukkitSystem != null) {
             bukkitSystem.disable();
         }
+        Teardown.resetSettingsTempValues();
     }
 
     @Test
