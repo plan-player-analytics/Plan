@@ -28,13 +28,13 @@ public class TPSInsertProcessor extends ObjectProcessor<List<TPS>> {
         List<TPS> history = object;
         final long lastDate = history.get(history.size() - 1).getDate();
         final double averageTPS = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getTicksPerSecond)));
-        final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
+        final int peakPlayersOnline = history.stream().mapToInt(TPS::getPlayers).max().orElse(0);
         final double averageCPUUsage = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage)));
         final long averageUsedMemory = MathUtils.averageLong(history.stream().map(TPS::getUsedMemory));
         final int averageEntityCount = (int) MathUtils.averageInt(history.stream().map(TPS::getEntityCount));
         final int averageChunksLoaded = (int) MathUtils.averageInt(history.stream().map(TPS::getChunksLoaded));
 
-        TPS tps = new TPS(lastDate, averageTPS, averagePlayersOnline, averageCPUUsage, averageUsedMemory, averageEntityCount, averageChunksLoaded);
+        TPS tps = new TPS(lastDate, averageTPS, peakPlayersOnline, averageCPUUsage, averageUsedMemory, averageEntityCount, averageChunksLoaded);
         try {
             Database.getActive().save().insertTPSforThisServer(tps);
         } catch (DBException e) {
