@@ -5,15 +5,13 @@
 package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
-import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
-import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.connection.WebFailException;
+import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.pages.parsing.InspectPage;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -63,8 +61,13 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables impleme
     }
 
     private void generateAndCache(UUID uuid) throws WebException {
-        String html = getHtml(uuid);
-        InfoSystem.getInstance().getConnectionSystem().sendWideInfoRequest(new GenerateInspectPluginsTabRequest(uuid));
+        String html;
+        try {
+            html = getHtml(uuid);
+            InfoSystem.getInstance().getConnectionSystem().sendWideInfoRequest(new GenerateInspectPluginsTabRequest(uuid));
+        } catch (NotFoundException e) {
+            html = new NotFoundResponse(e.getMessage()).getContent();
+        }
         InfoSystem.getInstance().sendRequest(new CacheInspectPageRequest(uuid, html));
     }
 
@@ -82,6 +85,8 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables impleme
             Throwable cause = e.getCause();
             if (cause instanceof DBException) {
                 throw new TransferDatabaseException((DBException) cause);
+            } else if (cause instanceof IllegalStateException && "Player profile was null!".equals(cause.getMessage())) {
+                throw new NotFoundException("Player has not played on this server.");
             } else {
                 throw new WebFailException("Exception during HTML Parsing", cause);
             }
