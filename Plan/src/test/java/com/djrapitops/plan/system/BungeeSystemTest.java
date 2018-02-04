@@ -42,6 +42,12 @@ public class BungeeSystemTest {
         planMock = mockUtil.getPlanMock();
     }
 
+
+    @Before
+    public void setUp() {
+        Teardown.resetSettingsTempValues();
+    }
+    
     @After
     public void tearDown() {
         if (bungeeSystem != null) {

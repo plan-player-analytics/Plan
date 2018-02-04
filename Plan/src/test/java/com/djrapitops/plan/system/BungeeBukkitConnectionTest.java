@@ -27,7 +27,7 @@ import java.util.UUID;
 /**
  * @author Rsl1122
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class BungeeBukkitConnectionTest {
 
     @ClassRule
@@ -65,6 +65,7 @@ public class BungeeBukkitConnectionTest {
 
     @Before
     public void setUp() {
+        Teardown.resetSettingsTempValues();
         Settings.DEBUG.setTemporaryValue("console");
         Settings.DEV_MODE.setTemporaryValue(true);
     }

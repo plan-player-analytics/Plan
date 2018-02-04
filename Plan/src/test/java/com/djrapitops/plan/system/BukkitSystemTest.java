@@ -7,10 +7,7 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.settings.Settings;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -41,6 +38,11 @@ public class BukkitSystemTest {
         planMock = mockUtil.getPlanMock();
     }
 
+    @Before
+    public void setUp() {
+        Teardown.resetSettingsTempValues();
+    }
+    
     @After
     public void tearDown() {
         if (bukkitSystem != null) {
