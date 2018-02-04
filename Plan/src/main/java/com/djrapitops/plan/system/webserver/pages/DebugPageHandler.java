@@ -28,6 +28,6 @@ public class DebugPageHandler extends PageHandler {
     @Override
     public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
         WebUser webUser = auth.getWebUser();
-        return webUser.getPermLevel() == 0;
+        return webUser.getPermLevel() <= 0;
     }
 }

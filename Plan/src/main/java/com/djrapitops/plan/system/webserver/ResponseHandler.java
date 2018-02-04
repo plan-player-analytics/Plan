@@ -117,7 +117,7 @@ public class ResponseHandler extends TreePageHandler {
                 if (webServer.isUsingHTTPS()) {
                     return DefaultResponses.BASIC_AUTH.get();
                 } else {
-                    return forbiddenResponse(0, 0);
+                    return forbiddenResponse();
                 }
             }
         }
@@ -132,17 +132,15 @@ public class ResponseHandler extends TreePageHandler {
             return DefaultResponses.NOT_FOUND.get();
         } else {
             if (authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target)) {
-                return forbiddenResponse(0, 0);
+                return pageHandler.getResponse(request, target);
             }
-            return pageHandler.getResponse(request, target);
+            return forbiddenResponse();
         }
     }
 
-    public Response forbiddenResponse(int required, int permLevel) {
-        return ResponseCache.loadResponse(PageId.FORBIDDEN.of(required + "/" + permLevel), () ->
+    public Response forbiddenResponse() {
+        return ResponseCache.loadResponse(PageId.FORBIDDEN.id(), () ->
                 new ForbiddenResponse("Unauthorized User.<br>"
-                        + "Make sure your user has the correct access level.<br>"
-                        + "This page requires permission level of " + required + ",<br>"
-                        + "This user has permission level of " + permLevel));
+                        + "Make sure your user has the correct access level."));
     }
 }

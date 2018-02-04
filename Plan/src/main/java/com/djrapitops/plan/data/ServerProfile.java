@@ -4,21 +4,17 @@
  */
 package com.djrapitops.plan.data;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.comparators.PlayerProfileLastPlayedComparator;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
@@ -107,18 +103,6 @@ public class ServerProfile {
             total += session.getDeaths();
         }
         return total;
-    }
-
-    public static int getPlayersOnline() {
-        if (Check.isBungeeAvailable()) {
-            return PlanBungee.getInstance().getProxy().getOnlineCount();
-        } else {
-            return Plan.getInstance().getServer().getOnlinePlayers().size();
-        }
-    }
-
-    public static int getPlayersMax() {
-        return ServerInfo.getServerProperties().getMaxPlayers();
     }
 
     public static long serverDownTime(List<TPS> tpsData) {

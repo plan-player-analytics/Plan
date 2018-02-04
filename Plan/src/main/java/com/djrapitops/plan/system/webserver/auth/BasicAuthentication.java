@@ -31,6 +31,7 @@ public class BasicAuthentication implements Authentication {
     @Override
     public WebUser getWebUser() throws WebUserAuthException {
         String decoded = Base64Util.decode(authenticationString);
+
         String[] userInfo = decoded.split(":");
         if (userInfo.length != 2) {
             throw new WebUserAuthException(FailReason.USER_AND_PASS_NOT_SPECIFIED);

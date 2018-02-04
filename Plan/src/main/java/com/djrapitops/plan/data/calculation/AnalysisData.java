@@ -9,6 +9,8 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
@@ -84,8 +86,9 @@ public class AnalysisData extends RawData {
         addValue("tpsMedium", Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber());
         addValue("tpsHigh", Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH.getNumber());
 
-        addValue("playersMax", ServerProfile.getPlayersMax());
-        addValue("playersOnline", ServerProfile.getPlayersOnline());
+        ServerProperties serverProperties = ServerInfo.getServerProperties();
+        addValue("playersMax", serverProperties.getMaxPlayers());
+        addValue("playersOnline", serverProperties.getOnlinePlayers());
     }
 
     public void analyze(ServerProfile profile) {

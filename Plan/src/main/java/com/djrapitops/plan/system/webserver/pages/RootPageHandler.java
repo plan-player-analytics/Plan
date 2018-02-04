@@ -53,7 +53,7 @@ public class RootPageHandler extends PageHandler {
                 case 2:
                     return responseHandler.getPageHandler("player").getResponse(request, Collections.singletonList(webUser.getName()));
                 default:
-                    return responseHandler.forbiddenResponse(permLevel, 0);
+                    return responseHandler.forbiddenResponse();
             }
         } catch (WebUserAuthException e) {
             Log.toLog(this.getClass(), e);

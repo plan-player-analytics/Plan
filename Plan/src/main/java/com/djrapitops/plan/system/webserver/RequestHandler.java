@@ -47,6 +47,7 @@ public class RequestHandler implements HttpHandler {
             if (response instanceof PromptAuthorizationResponse) {
                 responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\";");
             }
+
             response.setResponseHeaders(responseHeaders);
             response.send(exchange);
         } catch (Exception e) {
