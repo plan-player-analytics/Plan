@@ -101,11 +101,8 @@ public class InspectPage extends Page {
         addValue("registered", FormatUtils.formatTimeStampYear(registered));
         addValue("playerName", playerName);
         addValue("kickCount", timesKicked);
-        if (lastSeen != 0) {
-            addValue("lastSeen", FormatUtils.formatTimeStampYear(lastSeen));
-        } else {
-            addValue("lastSeen", "-");
-        }
+
+        addValue("lastSeen", lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-");
 
         Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
         addValue("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());

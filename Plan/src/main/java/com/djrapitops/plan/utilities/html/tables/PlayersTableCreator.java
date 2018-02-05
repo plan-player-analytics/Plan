@@ -20,6 +20,7 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
+// TODO Start using TableContainer for both tables
 public class PlayersTableCreator {
 
     /**

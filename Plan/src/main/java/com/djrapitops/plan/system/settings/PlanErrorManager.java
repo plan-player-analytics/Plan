@@ -44,9 +44,8 @@ public class PlanErrorManager extends ErrorManager {
             System.out.println("Failed to log error to file because of " + exception);
             System.out.println("Error:");
             // Fallback
-            Logger.getGlobal().log(Level.WARNING, source, e);
             System.out.println("Fail Reason:");
-            exception.printStackTrace();
+            Logger.getGlobal().log(Level.WARNING, source, e);
         }
     }
 }

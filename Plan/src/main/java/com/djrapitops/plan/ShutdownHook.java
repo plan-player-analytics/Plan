@@ -29,13 +29,22 @@ import java.util.UUID;
  */
 public class ShutdownHook extends Thread {
 
-    private static boolean active = false;
+    private static boolean activated = false;
+
+    private static boolean isActivated() {
+        return activated;
+    }
+
+    private static void activate(ShutdownHook hook) {
+        activated = true;
+        Runtime.getRuntime().addShutdownHook(hook);
+    }
 
     public void register() {
-        if (!active) {
-            Runtime.getRuntime().addShutdownHook(this);
+        if (isActivated()) {
+            return;
         }
-        active = true;
+        activate(this);
     }
 
     @Override

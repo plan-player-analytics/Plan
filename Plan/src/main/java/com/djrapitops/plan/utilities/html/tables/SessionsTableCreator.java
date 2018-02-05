@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
+// TODO start using TableContainer
 public class SessionsTableCreator {
 
     private static Map<Integer, UUID> getUUIDsByID(Map<UUID, List<Session>> sessionsByUser) {
