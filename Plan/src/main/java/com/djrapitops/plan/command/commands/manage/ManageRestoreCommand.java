@@ -1,6 +1,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -61,7 +62,7 @@ public class ManageRestoreCommand extends SubCommand {
         }
 
         try {
-            final Database database = ManageUtils.getDB(db);
+            final Database database = DBSystem.getActiveDatabaseByName(db);
 
             runRestoreTask(args, sender, database);
         } catch (Exception e) {

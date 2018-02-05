@@ -158,7 +158,9 @@ public class WorldTable extends Table {
             public Map<String, Integer> processResults(ResultSet set) throws SQLException {
                 Map<String, Integer> worldIds = new HashMap<>();
                 while (set.next()) {
-
+                    String worldName = set.getString(columnWorldName);
+                    int worldId = set.getInt(columnWorldId);
+                    worldIds.put(worldName, worldId);
                 }
                 return worldIds;
             }

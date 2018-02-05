@@ -39,9 +39,7 @@ public class AnalysisUtils {
         for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
             UUID uuid = entry.getKey();
             for (Session session : entry.getValue()) {
-                if (session.getSessionStart() < after) {
-                    continue;
-                } else {
+                if (session.getSessionStart() >= after) {
                     uuids.add(uuid);
                     break;
                 }

@@ -110,6 +110,7 @@ public abstract class SQLDB extends Database {
         setStatus("Open");
     }
 
+    @Override
     public void scheduleClean(long secondsDelay) {
         dbCleanTask = RunnableFactory.createNew("DB Clean Task", new AbsRunnable() {
             @Override

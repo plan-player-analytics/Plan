@@ -41,11 +41,13 @@ public interface PlanPlugin extends IPlugin {
         throw new IllegalAccessError("Plugin instance not available");
     }
 
+    @Override
     File getDataFolder();
 
     InputStream getResource(String resource);
 
     ColorScheme getColorScheme();
 
+    @Override
     boolean isReloading();
 }

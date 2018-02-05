@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.api.exceptions.connection.UnauthorizedServerException;
@@ -25,22 +24,12 @@ import com.djrapitops.plugin.command.SubCommand;
  */
 public class ManageSetupCommand extends SubCommand {
 
-    private final Plan plugin;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public ManageSetupCommand(Plan plugin) {
+    public ManageSetupCommand() {
         super("setup",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE.getPermission(),
                 "Set-Up Bungee WebServer connection",
                 "<Bungee WebServer address>");
-
-        this.plugin = plugin;
-
     }
 
     @Override

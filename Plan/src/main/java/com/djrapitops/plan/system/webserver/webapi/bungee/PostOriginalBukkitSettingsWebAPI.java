@@ -45,6 +45,7 @@ public class PostOriginalBukkitSettingsWebAPI extends WebAPI {
         return success();
     }
 
+    @Override
     public void sendRequest(String address) throws WebException {
         addVariable("WebServerPort", Integer.toString(Settings.WEBSERVER_PORT.getNumber()));
         addVariable("ServerName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));

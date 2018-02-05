@@ -33,11 +33,6 @@ public class InternalErrorResponse extends ErrorResponse {
         super.replacePlaceholders();
     }
 
-    @Deprecated
-    public InternalErrorResponse(Throwable e, String cause) {
-        this(cause, e);
-    }
-
     private void appendCause(Throwable cause, StringBuilder paragraph) {
         paragraph.append("<br>Caused by: ").append(cause);
         for (StackTraceElement element : cause.getStackTrace()) {

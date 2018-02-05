@@ -117,6 +117,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
     }
 
+    @Override
     public boolean isReloading() {
         return reloading;
     }

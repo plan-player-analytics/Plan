@@ -23,8 +23,8 @@ public class ComparatorTest {
     public void testPointComparator() {
         List<Point> points = RandomData.randomPoints();
 
-        List<Long> longValues = points.stream().map(Point::getX).map(i -> (long) (double) i).collect(Collectors.toList());
-        longValues.sort(Long::compare);
+        List<Long> longValues = points.stream().map(Point::getX).map(i -> (long) (double) i)
+                .sorted(Long::compare).collect(Collectors.toList());
 
         points.sort(new PointComparator());
 
@@ -36,8 +36,8 @@ public class ComparatorTest {
     public void testSessionDataComparator() {
         List<Session> sessions = RandomData.randomSessions();
 
-        List<Long> longValues = sessions.stream().map(Session::getSessionStart).collect(Collectors.toList());
-        longValues.sort(Long::compare);
+        List<Long> longValues = sessions.stream().map(Session::getSessionStart)
+                .sorted(Long::compare).collect(Collectors.toList());
 
         Collections.reverse(longValues);
         sessions.sort(new SessionStartComparator());
@@ -50,8 +50,8 @@ public class ComparatorTest {
     public void testTPSComparator() {
         List<TPS> tpsList = RandomData.randomTPS();
 
-        List<Long> longValues = tpsList.stream().map(TPS::getDate).collect(Collectors.toList());
-        longValues.sort(Long::compare);
+        List<Long> longValues = tpsList.stream().map(TPS::getDate)
+                .sorted(Long::compare).collect(Collectors.toList());
 
         tpsList.sort(new TPSComparator());
         List<Long> afterSort = tpsList.stream().map(TPS::getDate).collect(Collectors.toList());
@@ -63,8 +63,8 @@ public class ComparatorTest {
     public void testUserDataLastPlayedComparator() {
         List<UserInfo> userInfo = RandomData.randomUserData();
 
-        List<Long> longValues = userInfo.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
-        longValues.sort(Long::compare);
+        List<Long> longValues = userInfo.stream().map(UserInfo::getLastSeen)
+                .sorted(Long::compare).collect(Collectors.toList());
 
         Collections.reverse(longValues);
         System.out.println(longValues);
@@ -78,8 +78,8 @@ public class ComparatorTest {
     public void testUserDataNameComparator() {
         List<UserInfo> userInfo = RandomData.randomUserData();
 
-        List<String> stringValues = userInfo.stream().map(UserInfo::getName).collect(Collectors.toList());
-        Collections.sort(stringValues);
+        List<String> stringValues = userInfo.stream().map(UserInfo::getName)
+                .sorted().collect(Collectors.toList());
 
         userInfo.sort(new UserInfoNameComparator());
         List<String> afterSort = userInfo.stream().map(UserInfo::getName).collect(Collectors.toList());
@@ -91,8 +91,8 @@ public class ComparatorTest {
     public void testWebUserComparator() throws PassEncryptUtil.CannotPerformOperationException {
         List<WebUser> webUsers = RandomData.randomWebUsers();
 
-        List<Integer> intValues = webUsers.stream().map(WebUser::getPermLevel).collect(Collectors.toList());
-        intValues.sort(Integer::compare);
+        List<Integer> intValues = webUsers.stream().map(WebUser::getPermLevel)
+                .sorted(Integer::compare).collect(Collectors.toList());
         Collections.reverse(intValues);
 
         webUsers.sort(new WebUserComparator());

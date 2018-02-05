@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
@@ -32,22 +31,12 @@ import static org.bukkit.Bukkit.getPlayer;
  */
 public class ManageRemoveCommand extends SubCommand {
 
-    private final Plan plugin;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public ManageRemoveCommand(Plan plugin) {
+    public ManageRemoveCommand() {
         super("remove",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE.getPermission(),
                 Locale.get(Msg.CMD_USG_MANAGE_REMOVE).toString(),
                 "<player> [-a]");
-
-        this.plugin = plugin;
-
     }
 
     @Override

@@ -125,7 +125,7 @@ public class PlayersPageResponse extends Response {
             return html.append("</tbody></table>").toString();
         } catch (DBException e) {
             Log.toLog(PlayersPageResponse.class.getClass().getName(), e);
-            return new InternalErrorResponse(e, "/players").getContent();
+            return new InternalErrorResponse("/players", e).getContent();
         }
     }
 }

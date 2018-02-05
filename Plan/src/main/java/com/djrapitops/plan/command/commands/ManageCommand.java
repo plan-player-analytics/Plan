@@ -36,14 +36,14 @@ public class ManageCommand extends TreeCommand<Plan> {
     @Override
     public void addCommands() {
         add(
-                new ManageMoveCommand(plugin),
+                new ManageMoveCommand(),
                 new ManageHotswapCommand(plugin),
                 new ManageBackupCommand(),
                 new ManageRestoreCommand(plugin),
                 new ManageImportCommand(),
-                new ManageRemoveCommand(plugin),
+                new ManageRemoveCommand(),
                 new ManageClearCommand(plugin),
-                new ManageSetupCommand(plugin),
+                new ManageSetupCommand(),
                 new ManageDisableCommand()
         );
     }

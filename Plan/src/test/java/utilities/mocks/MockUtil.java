@@ -16,15 +16,15 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-public abstract class MockUtil {
+abstract class MockUtil {
 
-    protected PlanPlugin planMock;
+    PlanPlugin planMock;
 
-    protected File getFile(String fileName) {
+    File getFile(String fileName) {
         return new File(getClass().getResource(fileName).getPath());
     }
 
-    protected void withPluginFile(String fileName) throws Exception {
+    private void withPluginFile(String fileName) throws Exception {
         if (planMock.getDataFolder() == null) {
             throw new IllegalStateException("withDataFolder needs to be called before setting files");
         }
@@ -36,7 +36,7 @@ public abstract class MockUtil {
         }
     }
 
-    protected void withPluginFiles() throws Exception {
+    void withPluginFiles() throws Exception {
         withPluginFile("bungeeconfig.yml");
         withPluginFile("config.yml");
         withPluginFile("web/server.html");

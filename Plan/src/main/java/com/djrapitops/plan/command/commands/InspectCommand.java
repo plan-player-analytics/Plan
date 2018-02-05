@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -25,29 +24,19 @@ import org.bukkit.ChatColor;
 import java.util.UUID;
 
 /**
- * This command is used to cache UserInfo to InspectCache and display the link.
+ * This command is used to refresh Inspect page and display link.
  *
  * @author Rsl1122
  * @since 1.0.0
  */
 public class InspectCommand extends SubCommand {
 
-    private final Plan plugin;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public InspectCommand(Plan plugin) {
+    public InspectCommand() {
         super("inspect",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.INSPECT.getPermission(),
                 Locale.get(Msg.CMD_USG_INSPECT).toString(),
                 "<player>");
-
-        this.plugin = plugin;
-
     }
 
     @Override

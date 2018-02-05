@@ -28,17 +28,15 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             profile.setPlayers(getPlayers(serverUUID));
             profile.setTps(tpsTable.getTPSData(serverUUID));
             Optional<TPS> allTimePeak = tpsTable.getAllTimePeak(serverUUID);
-            if (allTimePeak.isPresent()) {
-                TPS peak = allTimePeak.get();
+            allTimePeak.ifPresent(peak -> {
                 profile.setAllTimePeak(peak.getDate());
                 profile.setAllTimePeakPlayers(peak.getPlayers());
-            }
+            });
             Optional<TPS> lastPeak = tpsTable.getPeakPlayerCount(serverUUID, MiscUtils.getTime() - (TimeAmount.DAY.ms() * 2L));
-            if (lastPeak.isPresent()) {
-                TPS peak = lastPeak.get();
+            lastPeak.ifPresent(peak -> {
                 profile.setLastPeakDate(peak.getDate());
                 profile.setLastPeakPlayers(peak.getPlayers());
-            }
+            });
 
             profile.setCommandUsage(commandUseTable.getCommandUse(serverUUID));
             profile.setServerWorldtimes(worldTimesTable.getWorldTimesOfServer(serverUUID));

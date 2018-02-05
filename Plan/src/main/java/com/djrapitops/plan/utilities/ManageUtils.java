@@ -2,7 +2,6 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
@@ -72,10 +71,5 @@ public class ManageUtils {
 
         toDB.removeAllData();
         fromDB.copyEverything(toDB);
-    }
-
-    @Deprecated
-    public static Database getDB(String dbName) throws DBInitException {
-        return DBSystem.getActiveDatabaseByName(dbName);
     }
 }

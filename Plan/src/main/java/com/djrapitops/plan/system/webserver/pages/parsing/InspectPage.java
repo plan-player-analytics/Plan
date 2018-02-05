@@ -53,6 +53,7 @@ public class InspectPage extends Page {
         this.uuid = uuid;
     }
 
+    @Override
     public String toHtml() throws ParseException {
         try {
             if (uuid == null) {

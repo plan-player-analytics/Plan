@@ -5,7 +5,6 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processor;

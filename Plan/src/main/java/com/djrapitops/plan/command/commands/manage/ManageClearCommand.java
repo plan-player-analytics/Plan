@@ -6,12 +6,12 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
-import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
@@ -70,7 +70,7 @@ public class ManageClearCommand extends SubCommand {
         }
 
         try {
-            Database database = ManageUtils.getDB(dbName);
+            Database database = DBSystem.getActiveDatabaseByName(dbName);
             runClearTask(sender, database);
         } catch (DBInitException e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());

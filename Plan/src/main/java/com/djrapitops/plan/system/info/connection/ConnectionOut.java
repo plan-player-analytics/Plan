@@ -32,14 +32,17 @@ public class ConnectionOut {
 
     private static final TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
+                @Override
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                     return null;
                 }
 
+                @Override
                 public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
                     //No need to implement.
                 }
 
+                @Override
                 public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
                     //No need to implement.
                 }

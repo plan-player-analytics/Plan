@@ -388,6 +388,7 @@ public class PlayerProfile implements OfflinePlayer {
         return uuid;
     }
 
+    @Override
     public String getName() {
         return name;
     }

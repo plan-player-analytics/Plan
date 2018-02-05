@@ -18,6 +18,7 @@ public abstract class ObjectProcessor<T> implements Processor {
         this.object = object;
     }
 
+    @Override
     public abstract void process();
 
     protected T getObject() {

@@ -28,6 +28,7 @@ import java.util.zip.GZIPOutputStream;
  * <p>
  * Condition out https://bStats.org/ to learn more about bStats!
  */
+@SuppressWarnings("unchecked")
 public class Metrics {
 
     // The version of this bStats class

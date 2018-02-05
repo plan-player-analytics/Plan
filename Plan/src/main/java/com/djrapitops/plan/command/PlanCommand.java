@@ -41,7 +41,7 @@ public class PlanCommand extends TreeCommand<Plan> {
     @Override
     public void addCommands() {
         add(
-                new InspectCommand(plugin),
+                new InspectCommand(),
                 new QInspectCommand(plugin),
                 new AnalyzeCommand(),
                 new SearchCommand(),

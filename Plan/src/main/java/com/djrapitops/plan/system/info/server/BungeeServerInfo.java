@@ -25,6 +25,7 @@ public class BungeeServerInfo extends ServerInfo {
         serverProperties = new ServerProperties(plugin.getProxy());
     }
 
+    @Override
     public Server loadServerInfo() throws EnableException {
         checkIfDefaultIP();
 
