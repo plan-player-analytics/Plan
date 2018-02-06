@@ -7,7 +7,6 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.ByteArrayOutputStream;
@@ -36,7 +35,7 @@ public class ConnectionIn {
 
     private void checkAuthentication(Map<String, String> variables) throws WebException {
         String sender = variables.get("sender");
-        NullCheck.check(sender, new BadRequestException("Sender ('sender') variable not supplied in the request."));
+        Verify.nullCheck(sender, () -> new BadRequestException("Sender ('sender') variable not supplied in the request."));
         UUID serverUUID = UUID.fromString(sender);
 
         try {

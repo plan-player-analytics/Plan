@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.processing;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plan.utilities.queue.Consumer;
 import com.djrapitops.plan.utilities.queue.Queue;
 import com.djrapitops.plan.utilities.queue.Setup;
@@ -12,6 +11,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -33,7 +33,7 @@ public class ProcessingQueue extends Queue<Processor> implements SubSystem {
 
     public static ProcessingQueue getInstance() {
         ProcessingQueue processingQueue = PlanSystem.getInstance().getProcessingQueue();
-        NullCheck.check(processingQueue, new IllegalStateException("ProcessingQueue has not been initialized."));
+        Verify.nullCheck(processingQueue, () -> new IllegalStateException("ProcessingQueue has not been initialized."));
         return processingQueue;
     }
 

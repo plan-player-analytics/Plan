@@ -12,7 +12,7 @@ import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
-import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class InfoRequestPageHandler extends PageHandler {
         String requestName = target.get(0);
         InfoRequest infoRequest = ConnectionSystem.getInstance().getInfoRequest(requestName);
 
-        NullCheck.check(infoRequest, new NotFoundException("Info Request has not been registered."));
+        Verify.nullCheck(infoRequest, () -> new NotFoundException("Info Request has not been registered."));
 
         return new ConnectionIn(request, infoRequest).handleRequest();
     }

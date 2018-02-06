@@ -5,7 +5,7 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.operation.*;
-import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.utilities.Verify;
 
 /**
  * Abstract class representing a Database.
@@ -20,7 +20,7 @@ public abstract class Database {
 
     public static Database getActive() {
         Database database = DBSystem.getInstance().getActiveDatabase();
-        NullCheck.check(database, new IllegalStateException("Database was not initialized."));
+        Verify.nullCheck(database, () -> new IllegalStateException("Database was not initialized."));
         return database;
     }
 

@@ -11,9 +11,9 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.IOException;
 
@@ -35,7 +35,7 @@ public abstract class ConfigSystem implements SubSystem {
 
     public static ConfigSystem getInstance() {
         ConfigSystem configSystem = PlanSystem.getInstance().getConfigSystem();
-        NullCheck.check(configSystem, new IllegalStateException("Config System has not been initialized."));
+        Verify.nullCheck(configSystem, () -> new IllegalStateException("Config System has not been initialized."));
         return configSystem;
     }
 

@@ -4,9 +4,9 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.pluginbridge.plan.Bridge;
 
 import java.util.*;
@@ -29,7 +29,7 @@ public class HookHandler implements SubSystem {
 
     public static HookHandler getInstance() {
         HookHandler hookHandler = PlanSystem.getInstance().getHookHandler();
-        NullCheck.check(hookHandler, new IllegalStateException("Plugin Hooks were not initialized."));
+        Verify.nullCheck(hookHandler, () -> new IllegalStateException("Plugin Hooks were not initialized."));
         return hookHandler;
     }
 

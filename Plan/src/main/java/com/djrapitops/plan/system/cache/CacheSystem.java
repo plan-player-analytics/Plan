@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.utilities.Verify;
 
 /**
  * System that holds data caches of the plugin.
@@ -26,7 +26,7 @@ public class CacheSystem implements SubSystem {
 
     public static CacheSystem getInstance() {
         CacheSystem cacheSystem = PlanSystem.getInstance().getCacheSystem();
-        NullCheck.check(cacheSystem, new IllegalStateException("Cache System was not initialized."));
+        Verify.nullCheck(cacheSystem, () -> new IllegalStateException("Cache System was not initialized."));
         return cacheSystem;
     }
 

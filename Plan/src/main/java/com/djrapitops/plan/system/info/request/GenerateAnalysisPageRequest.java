@@ -15,7 +15,6 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -52,7 +51,7 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
         // Variables available: sender, server
 
         String server = variables.get("server");
-        NullCheck.check(server, new BadRequestException("Server UUID 'server' variable not supplied in the request."));
+        Verify.nullCheck(server, () -> new BadRequestException("Server UUID 'server' variable not supplied in the request."));
 
         UUID serverUUID = UUID.fromString(server);
         if (!ServerInfo.getServerUUID().equals(serverUUID)) {

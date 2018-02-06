@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.webserver.pages.parsing.InspectPage;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -51,7 +50,7 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables impleme
         // Available variables: sender, player
 
         String player = variables.get("player");
-        NullCheck.check(player, new BadRequestException("Player UUID 'player' variable not supplied in the request."));
+        Verify.nullCheck(player, () -> new BadRequestException("Player UUID 'player' variable not supplied in the request."));
 
         UUID uuid = UUID.fromString(player);
 

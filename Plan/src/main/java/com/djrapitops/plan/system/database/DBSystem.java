@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -36,7 +35,7 @@ public abstract class DBSystem implements SubSystem {
 
     public static DBSystem getInstance() {
         DBSystem dbSystem = PlanSystem.getInstance().getDatabaseSystem();
-        NullCheck.check(dbSystem, new IllegalStateException("Database system was not initialized."));
+        Verify.nullCheck(dbSystem, () -> new IllegalStateException("Database system was not initialized."));
         return dbSystem;
     }
 

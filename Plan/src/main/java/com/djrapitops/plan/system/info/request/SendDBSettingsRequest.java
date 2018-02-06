@@ -12,8 +12,8 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ import java.util.UUID;
 public class SendDBSettingsRequest extends InfoRequestWithVariables implements SetupRequest {
 
     public SendDBSettingsRequest(String webServerAddress) {
-        NullCheck.check(webServerAddress, new IllegalArgumentException("webServerAddress can not be null."));
+        Verify.nullCheck(webServerAddress, () -> new IllegalArgumentException("webServerAddress can not be null."));
 
         variables.put("address", webServerAddress);
         variables.put("WebServerPort", Integer.toString(Settings.WEBSERVER_PORT.getNumber()));
@@ -60,14 +60,14 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
         }
 
         String address = variables.get("address");
-        NullCheck.check(address, new BadRequestException("WebServer Address ('address') not specified in the request."));
+        Verify.nullCheck(address, () -> new BadRequestException("WebServer Address ('address') not specified in the request."));
 
         String webServerPortS = variables.get("WebServerPort");
         String serverName = variables.get("ServerName");
         String themeBase = variables.get("ThemeBase");
-        NullCheck.check(webServerPortS, new BadRequestException("WebServer Port ('WebServerPort') not specified in the request."));
-        NullCheck.check(serverName, new BadRequestException("Server Name ('ServerName') not specified in the request."));
-        NullCheck.check(themeBase, new BadRequestException("Theme Base ('ThemeBase') not specified in the request."));
+        Verify.nullCheck(webServerPortS, () -> new BadRequestException("WebServer Port ('WebServerPort') not specified in the request."));
+        Verify.nullCheck(serverName, () -> new BadRequestException("Server Name ('ServerName') not specified in the request."));
+        Verify.nullCheck(themeBase, () -> new BadRequestException("Theme Base ('ThemeBase') not specified in the request."));
 
         UUID serverUUID = UUID.fromString(variables.get("sender"));
         setOriginalSettings(serverUUID, webServerPortS, serverName, themeBase);

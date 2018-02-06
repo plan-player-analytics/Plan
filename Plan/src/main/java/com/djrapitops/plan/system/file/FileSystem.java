@@ -7,8 +7,8 @@ package com.djrapitops.plan.system.file;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class FileSystem implements SubSystem {
 
     public static FileSystem getInstance() {
         FileSystem fileSystem = PlanSystem.getInstance().getFileSystem();
-        NullCheck.check(fileSystem, new IllegalStateException("File system was not initialized."));
+        Verify.nullCheck(fileSystem, () -> new IllegalStateException("File system was not initialized."));
         return fileSystem;
     }
 

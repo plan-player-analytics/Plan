@@ -16,7 +16,6 @@ import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import com.djrapitops.plan.utilities.Base64Util;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -70,7 +69,7 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
         // Available variables: sender, player
 
         String player = variables.get("player");
-        NullCheck.check(player, new BadRequestException("Player UUID 'player' variable not supplied in the request."));
+        Verify.nullCheck(player, () -> new BadRequestException("Player UUID 'player' variable not supplied in the request."));
 
         UUID uuid = UUID.fromString(player);
 

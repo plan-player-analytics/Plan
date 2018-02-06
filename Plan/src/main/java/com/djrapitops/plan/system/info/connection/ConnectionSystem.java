@@ -14,8 +14,8 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;
 
@@ -42,7 +42,7 @@ public abstract class ConnectionSystem implements SubSystem {
 
     public static ConnectionSystem getInstance() {
         ConnectionSystem connectionSystem = InfoSystem.getInstance().getConnectionSystem();
-        NullCheck.check(connectionSystem, new IllegalStateException("Connection System was not initialized"));
+        Verify.nullCheck(connectionSystem, () -> new IllegalStateException("Connection System was not initialized"));
         return connectionSystem;
     }
 

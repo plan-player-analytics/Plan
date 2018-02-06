@@ -11,8 +11,8 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.processing.processors.ObjectProcessor;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
 
@@ -42,7 +42,7 @@ public class RegisterProcessor extends PlayerProcessor {
     public void process() {
         UUID uuid = getUUID();
         Database db = Database.getActive();
-        NullCheck.check(uuid, new IllegalStateException("UUID was null"));
+        Verify.nullCheck(uuid, () -> new IllegalStateException("UUID was null"));
         try {
             if (!db.check().isPlayerRegistered(uuid)) {
                 db.save().registerNewUser(uuid, registered, name);

@@ -31,6 +31,7 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import utilities.RandomData;
+import utilities.Teardown;
 import utilities.TestConstants;
 import utilities.TestErrorManager;
 import utilities.mocks.SystemMockUtil;
@@ -79,6 +80,7 @@ public class SQLiteTest {
         if (db != null) {
             db.close();
         }
+        Teardown.resetSettingsTempValues();
     }
 
     @Before

@@ -19,9 +19,9 @@ import com.djrapitops.plan.system.info.request.SendDBSettingsRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
 
@@ -42,7 +42,7 @@ public abstract class InfoSystem implements SubSystem {
 
     public static InfoSystem getInstance() {
         InfoSystem infoSystem = PlanSystem.getInstance().getInfoSystem();
-        NullCheck.check(infoSystem, new IllegalStateException("Info System was not initialized."));
+        Verify.nullCheck(infoSystem, () -> new IllegalStateException("Info System was not initialized."));
         return infoSystem;
     }
 

@@ -4,8 +4,8 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;
 
@@ -48,7 +48,7 @@ public class DataCache extends SessionCache implements SubSystem {
 
     public static DataCache getInstance() {
         DataCache dataCache = CacheSystem.getInstance().getDataCache();
-        NullCheck.check(dataCache, new IllegalStateException("Data Cache was not initialized."));
+        Verify.nullCheck(dataCache, () -> new IllegalStateException("Data Cache was not initialized."));
         return dataCache;
     }
 

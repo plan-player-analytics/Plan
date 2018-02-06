@@ -3,8 +3,8 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.cache.Cache;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
@@ -60,7 +60,7 @@ public class GeolocationCache implements SubSystem {
 
     private static GeolocationCache getInstance() {
         GeolocationCache geolocationCache = CacheSystem.getInstance().getGeolocationCache();
-        NullCheck.check(geolocationCache, new IllegalStateException("GeolocationCache was not initialized."));
+        Verify.nullCheck(geolocationCache, () -> new IllegalStateException("GeolocationCache was not initialized."));
         return geolocationCache;
     }
 

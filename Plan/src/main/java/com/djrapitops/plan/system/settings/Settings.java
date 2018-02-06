@@ -1,10 +1,10 @@
 package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.IOException;
 import java.util.List;
@@ -190,7 +190,7 @@ public enum Settings {
 
     private Config getConfig() {
         Config config = ConfigSystem.getConfig();
-        NullCheck.check(config, new IllegalStateException("Settings are not supposed to be called before ConfigSystem is Enabled!"));
+        Verify.nullCheck(config, () -> new IllegalStateException("Settings are not supposed to be called before ConfigSystem is Enabled!"));
         return config;
     }
 }

@@ -5,7 +5,6 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
 import com.djrapitops.plan.utilities.comparators.StringLengthComparator;
 import com.djrapitops.plan.utilities.file.FileUtil;
@@ -46,7 +45,7 @@ public class Locale {
 
     public static Locale getInstance() {
         Locale locale = ConfigSystem.getInstance().getLocale();
-        NullCheck.check(locale, new IllegalStateException("Locale has not been initialized."));
+        Verify.nullCheck(locale, () -> new IllegalStateException("Locale has not been initialized."));
         return locale;
     }
 

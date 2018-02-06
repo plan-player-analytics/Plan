@@ -6,11 +6,11 @@ package com.djrapitops.plan.system.update;
 
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Priority;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class VersionCheckSystem implements SubSystem {
 
     public static VersionCheckSystem getInstance() {
         VersionCheckSystem versionCheckSystem = PlanSystem.getInstance().getVersionCheckSystem();
-        NullCheck.check(versionCheckSystem, new IllegalStateException("Version Check system has not been initialized."));
+        Verify.nullCheck(versionCheckSystem, () -> new IllegalStateException("Version Check system has not been initialized."));
         return versionCheckSystem;
     }
 

@@ -7,13 +7,13 @@ package com.djrapitops.plan.system.info.server;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.utilities.NullCheck;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
 
 /**
  * SubSystem for managing Server information.
- *
+ * <p>
  * Most information is accessible via static methods.
  *
  * @author Rsl1122
@@ -25,7 +25,7 @@ public abstract class ServerInfo implements SubSystem {
 
     public static ServerInfo getInstance() {
         ServerInfo serverInfo = PlanSystem.getInstance().getServerInfo();
-        NullCheck.check(serverInfo, new IllegalStateException("ServerInfo was not initialized."));
+        Verify.nullCheck(serverInfo, () -> new IllegalStateException("ServerInfo was not initialized."));
         return serverInfo;
     }
 
@@ -52,9 +52,9 @@ public abstract class ServerInfo implements SubSystem {
     @Override
     public void enable() throws EnableException {
         // ServerProperties are required when creating Server
-        NullCheck.check(serverProperties, new IllegalStateException("Server Properties did not load!"));
+        Verify.nullCheck(serverProperties, () -> new IllegalStateException("Server Properties did not load!"));
         server = loadServerInfo();
-        NullCheck.check(server, new IllegalStateException("Server information did not load!"));
+        Verify.nullCheck(server, () -> new IllegalStateException("Server information did not load!"));
     }
 
     protected abstract Server loadServerInfo() throws EnableException;

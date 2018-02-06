@@ -7,11 +7,11 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
@@ -47,7 +47,7 @@ public class WebServer implements SubSystem {
 
     public static WebServer getInstance() {
         WebServer webServer = WebServerSystem.getInstance().getWebServer();
-        NullCheck.check(webServer, new IllegalStateException("WebServer was not initialized."));
+        Verify.nullCheck(webServer, () -> new IllegalStateException("WebServer was not initialized."));
         return webServer;
     }
 

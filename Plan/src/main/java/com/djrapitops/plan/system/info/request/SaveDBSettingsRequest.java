@@ -11,9 +11,9 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
 
@@ -79,12 +79,12 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
         String database = variables.get("DB_DATABASE");
         String portS = variables.get("DB_PORT");
 
-        NullCheck.check(type, new BadRequestException("DB_TYPE not specified in the request."));
-        NullCheck.check(host, new BadRequestException("DB_HOST not specified in the request."));
-        NullCheck.check(user, new BadRequestException("DB_USER not specified in the request."));
-        NullCheck.check(pass, new BadRequestException("DB_PASS not specified in the request."));
-        NullCheck.check(database, new BadRequestException("DB_DATABASE not specified in the request."));
-        NullCheck.check(portS, new BadRequestException("DB_PORT not specified in the request."));
+        Verify.nullCheck(type, () -> new BadRequestException("DB_TYPE not specified in the request."));
+        Verify.nullCheck(host, () -> new BadRequestException("DB_HOST not specified in the request."));
+        Verify.nullCheck(user, () -> new BadRequestException("DB_USER not specified in the request."));
+        Verify.nullCheck(pass, () -> new BadRequestException("DB_PASS not specified in the request."));
+        Verify.nullCheck(database, () -> new BadRequestException("DB_DATABASE not specified in the request."));
+        Verify.nullCheck(portS, () -> new BadRequestException("DB_PORT not specified in the request."));
 
         try {
             Settings.DB_PORT.set(Integer.valueOf(portS));

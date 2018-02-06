@@ -13,6 +13,7 @@ import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import utilities.Teardown;
 import utilities.TestConstants;
 import utilities.mocks.objects.FakeConsoleCmdSender;
 
@@ -38,6 +39,7 @@ public class BukkitMockUtil extends MockUtil {
 
     public static BukkitMockUtil setUp() {
         RunnableFactory.activateTestMode();
+        Teardown.resetSettingsTempValues();
         return new BukkitMockUtil().mockPlugin();
     }
 

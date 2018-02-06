@@ -18,9 +18,9 @@ import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 /**
  * PlanSystem contains everything Plan needs to run.
@@ -125,16 +125,16 @@ public abstract class PlanSystem implements SubSystem {
 
     private void checkSubSystemInitialization() throws EnableException {
         try {
-            NullCheck.check(versionCheckSystem, new IllegalStateException("Version Check system was not initialized."));
-            NullCheck.check(fileSystem, new IllegalStateException("File system was not initialized."));
-            NullCheck.check(configSystem, new IllegalStateException("Config system was not initialized."));
-            NullCheck.check(databaseSystem, new IllegalStateException("Database system was not initialized."));
-            NullCheck.check(infoSystem, new IllegalStateException("Info system was not initialized."));
-            NullCheck.check(serverInfo, new IllegalStateException("ServerInfo was not initialized."));
-            NullCheck.check(listenerSystem, new IllegalStateException("Listener system was not initialized."));
-            NullCheck.check(taskSystem, new IllegalStateException("Task system was not initialized."));
-            NullCheck.check(hookHandler, new IllegalStateException("Plugin Hooks were not initialized."));
-            NullCheck.check(planAPI, new IllegalStateException("Plan API was not initialized."));
+            Verify.nullCheck(versionCheckSystem, () -> new IllegalStateException("Version Check system was not initialized."));
+            Verify.nullCheck(fileSystem, () -> new IllegalStateException("File system was not initialized."));
+            Verify.nullCheck(configSystem, () -> new IllegalStateException("Config system was not initialized."));
+            Verify.nullCheck(databaseSystem, () -> new IllegalStateException("Database system was not initialized."));
+            Verify.nullCheck(infoSystem, () -> new IllegalStateException("Info system was not initialized."));
+            Verify.nullCheck(serverInfo, () -> new IllegalStateException("ServerInfo was not initialized."));
+            Verify.nullCheck(listenerSystem, () -> new IllegalStateException("Listener system was not initialized."));
+            Verify.nullCheck(taskSystem, () -> new IllegalStateException("Task system was not initialized."));
+            Verify.nullCheck(hookHandler, () -> new IllegalStateException("Plugin Hooks were not initialized."));
+            Verify.nullCheck(planAPI, () -> new IllegalStateException("Plan API was not initialized."));
         } catch (Exception e) {
             throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ".", e);
         }

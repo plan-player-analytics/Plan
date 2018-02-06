@@ -8,7 +8,6 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.EnumUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -29,7 +28,7 @@ public class Theme implements SubSystem {
 
     public static Theme getInstance() {
         Theme themeSystem = ConfigSystem.getInstance().getThemeSystem();
-        NullCheck.check(themeSystem, new IllegalStateException("Theme System has not been initialized."));
+        Verify.nullCheck(themeSystem, () -> new IllegalStateException("Theme System has not been initialized."));
         return themeSystem;
     }
 

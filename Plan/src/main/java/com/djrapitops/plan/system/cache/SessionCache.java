@@ -7,8 +7,8 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.NullCheck;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class SessionCache {
 
     public static SessionCache getInstance() {
         DataCache dataCache = CacheSystem.getInstance().getDataCache();
-        NullCheck.check(dataCache, new IllegalStateException("Data Cache was not initialized."));
+        Verify.nullCheck(dataCache, () -> new IllegalStateException("Data Cache was not initialized."));
         return dataCache;
     }
 
