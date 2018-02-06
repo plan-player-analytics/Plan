@@ -17,17 +17,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This subcommand is used to search for a user, and to view all matches' data.
+ * This SubCommand is used to search for a user.
  *
  * @author Rsl1122
  * @since 2.0.0
  */
 public class SearchCommand extends SubCommand {
 
-    /**
-     * Class Constructor.
-     *
-     */
     public SearchCommand() {
         super("search",
                 CommandType.PLAYER_OR_ARGS,

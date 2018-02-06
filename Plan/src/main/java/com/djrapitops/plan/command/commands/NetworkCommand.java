@@ -10,18 +10,12 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 
 /**
- * Command used to display link to the player list webpage.
- * <p>
- * Subcommand is not registered if Webserver is not enabled.
+ * Command used to display url to the network page.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class NetworkCommand extends SubCommand {
 
-    /**
-     * Class Constructor.
-     */
     public NetworkCommand() {
         super("network, n, netw",
                 CommandType.CONSOLE,

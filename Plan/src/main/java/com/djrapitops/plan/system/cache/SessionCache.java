@@ -27,9 +27,6 @@ public class SessionCache {
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
     protected final PlanSystem system;
 
-    /**
-     * Class Constructor.
-     */
     public SessionCache(PlanSystem system) {
         this.system = system;
     }

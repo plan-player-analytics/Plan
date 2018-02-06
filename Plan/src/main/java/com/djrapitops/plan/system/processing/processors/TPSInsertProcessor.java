@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.processing.processors;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -34,7 +35,16 @@ public class TPSInsertProcessor extends ObjectProcessor<List<TPS>> {
         final int averageEntityCount = (int) MathUtils.averageInt(history.stream().map(TPS::getEntityCount));
         final int averageChunksLoaded = (int) MathUtils.averageInt(history.stream().map(TPS::getChunksLoaded));
 
-        TPS tps = new TPS(lastDate, averageTPS, peakPlayersOnline, averageCPUUsage, averageUsedMemory, averageEntityCount, averageChunksLoaded);
+        TPS tps = TPSBuilder.get()
+                .date(lastDate)
+                .tps(averageTPS)
+                .playersOnline(peakPlayersOnline)
+                .usedCPU(averageCPUUsage)
+                .usedMemory(averageUsedMemory)
+                .entities(averageEntityCount)
+                .chunksLoaded(averageChunksLoaded)
+                .toTPS();
+
         try {
             Database.getActive().save().insertTPSforThisServer(tps);
         } catch (DBException e) {

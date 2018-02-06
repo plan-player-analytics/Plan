@@ -25,17 +25,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * This subcommand is used to run the analysis and access the /server link.
+ * This SubCommand is used to run the analysis and access the /server link.
  *
  * @author Rsl1122
  * @since 2.0.0
  */
 public class AnalyzeCommand extends SubCommand {
 
-    /**
-     * Subcommand Constructor.
-     *
-     */
     public AnalyzeCommand() {
         super("analyze, analyse, analysis, a",
                 CommandType.CONSOLE,

@@ -15,7 +15,7 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.utilities.Verify;
 
 /**
- * This manage subcommand is used to swap to a different database and reload the
+ * This manage SubCommand is used to swap to a different database and reload the
  * plugin if the connection to the new database can be established.
  *
  * @author Rsl1122
@@ -25,11 +25,6 @@ public class ManageHotswapCommand extends SubCommand {
 
     private final Plan plugin;
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
     public ManageHotswapCommand(Plan plugin) {
         super("hotswap",
                 CommandType.PLAYER_OR_ARGS,

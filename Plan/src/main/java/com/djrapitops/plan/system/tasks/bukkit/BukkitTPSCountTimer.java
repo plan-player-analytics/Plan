@@ -83,6 +83,7 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
 
         long twentySeconds = 20L * TimeAmount.SECOND.ns();
         while (difference > twentySeconds) {
+            // Add 0 TPS since more than 20 ticks has passed.
             history.add(new TPS(now, 0, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded));
             difference -= twentySeconds;
         }

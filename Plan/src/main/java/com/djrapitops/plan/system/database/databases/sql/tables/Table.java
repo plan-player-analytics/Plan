@@ -17,19 +17,8 @@ import java.sql.Statement;
  */
 public abstract class Table {
 
-    /**
-     *
-     */
     protected final String tableName;
-
-    /**
-     *
-     */
     protected final SQLDB db;
-
-    /**
-     *
-     */
     protected final boolean usingMySQL;
 
     /**

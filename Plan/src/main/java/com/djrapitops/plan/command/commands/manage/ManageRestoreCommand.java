@@ -20,7 +20,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.io.File;
 
 /**
- * This manage subcommand is used to restore a backup.db file in the
+ * This manage SubCommand is used to restore a backup.db file in the
  * /plugins/Plan folder.
  *
  * @author Rsl1122
@@ -29,11 +29,6 @@ public class ManageRestoreCommand extends SubCommand {
 
     private final Plan plugin;
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
     public ManageRestoreCommand(Plan plugin) {
         super("restore",
                 CommandType.CONSOLE,

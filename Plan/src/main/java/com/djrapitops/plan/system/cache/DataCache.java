@@ -29,11 +29,6 @@ public class DataCache extends SessionCache implements SubSystem {
     private final Map<String, UUID> uuids;
     private final Map<UUID, String> displayNames;
 
-    /**
-     * Class Constructor.
-     *
-     * @param system Instance of PlanSystem
-     */
     public DataCache(PlanSystem system) {
         super(system);
 

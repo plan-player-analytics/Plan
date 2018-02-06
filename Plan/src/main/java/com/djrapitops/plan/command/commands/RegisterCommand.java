@@ -19,11 +19,10 @@ import com.djrapitops.plugin.task.RunnableFactory;
 /**
  * Command for registering web users.
  * <p>
- * Registers a new webuser to the database.
+ * Registers a new WebUser to the database.
  * <p>
- * No permission required for self registration. (Constructor string is empty)
- * <p>
- * plan.webmanage required for registering other users.
+ * No permission required for self registration. (Super constructor string is empty).
+ * {@code Permissions.MANAGE_WEB} required for registering other users.
  *
  * @author Rsl1122
  * @since 3.5.2

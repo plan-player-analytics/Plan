@@ -10,21 +10,15 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 
 /**
- * Command used to display link to the player list webpage.
- * <p>
- * Subcommand is not registered if Webserver is not enabled.
+ * Command used to display url to the player list page.
  *
  * @author Rsl1122
  * @since 3.5.2
  */
 public class ListCommand extends SubCommand {
 
-    /**
-     * Class Constructor.
-     */
     public ListCommand() {
-        super("list, pl", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), Locale.get(Msg.CMD_USG_LIST).toString(), "");
-
+        super("list, pl, playerlist, players", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), Locale.get(Msg.CMD_USG_LIST).toString(), "");
     }
 
     @Override

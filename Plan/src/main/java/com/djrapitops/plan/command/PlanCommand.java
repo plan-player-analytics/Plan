@@ -11,7 +11,7 @@ import com.djrapitops.plugin.command.TreeCommand;
 import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
 
 /**
- * TreeCommand for the /plan command, and all subcommands.
+ * TreeCommand for the /plan command, and all SubCommands.
  * <p>
  * Uses the Abstract Plugin Framework for easier command management.
  *
@@ -20,13 +20,6 @@ import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
  */
 public class PlanCommand extends TreeCommand<Plan> {
 
-    /**
-     * CommandExecutor class Constructor.
-     * <p>
-     * Initializes Subcommands
-     *
-     * @param plugin Current instance of Plan
-     */
     public PlanCommand(Plan plugin) {
         super(plugin, "plan", CommandType.CONSOLE, "", "", "plan");
         super.setDefaultCommand("inspect");

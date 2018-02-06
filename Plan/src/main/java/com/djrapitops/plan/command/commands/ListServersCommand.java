@@ -15,20 +15,14 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import java.util.Map;
 
 /**
- * This subcommand is used to reload the plugin.
+ * This SubCommand is used to list all servers found in the database.
  *
  * @author Rsl1122
- * @since 2.0.0
  */
 public class ListServersCommand extends SubCommand {
 
     private final PlanPlugin plugin;
 
-    /**
-     * Subcommand constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
     public ListServersCommand(PlanPlugin plugin) {
         super("servers, serverlist, listservers, sl",
                 CommandType.CONSOLE,

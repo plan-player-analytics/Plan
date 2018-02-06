@@ -36,11 +36,6 @@ public class ServerProperties {
         onlinePlayers = () -> server.getOnlinePlayers().size();
     }
 
-    /**
-     * Constructor, grabs the variables.
-     *
-     * @param server instance the plugin is running on.
-     */
     public ServerProperties(ProxyServer server) {
         id = server.getServers().toString();
         ip = Settings.BUNGEE_IP::toString;

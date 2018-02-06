@@ -22,7 +22,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 /**
- * This manage subcommand is used to clear a database of all data.
+ * This manage SubCommand is used to clear a database of all data.
  *
  * @author Rsl1122
  * @since 2.3.0
@@ -31,11 +31,6 @@ public class ManageClearCommand extends SubCommand {
 
     private final Plan plugin;
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
     public ManageClearCommand(Plan plugin) {
         super("clear",
                 CommandType.PLAYER_OR_ARGS,

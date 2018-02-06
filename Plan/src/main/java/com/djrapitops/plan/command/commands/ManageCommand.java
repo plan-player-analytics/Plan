@@ -9,20 +9,13 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
 
 /**
- * This command is used to manage the database of the plugin.
- * <p>
- * No arguments will run ManageHelpCommand. Contains subcommands.
+ * This SubCommand is used to manage the the plugin's database and components.
  *
  * @author Rsl1122
  * @since 2.3.0
  */
 public class ManageCommand extends TreeCommand<Plan> {
 
-    /**
-     * Subcommand Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
     public ManageCommand(Plan plugin) {
         super(plugin, "manage,m", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Locale.get(Msg.CMD_USG_MANAGE).toString(), "plan m");
         super.setColorScheme(plugin.getColorScheme());

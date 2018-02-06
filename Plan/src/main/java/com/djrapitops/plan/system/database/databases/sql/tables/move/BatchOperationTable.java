@@ -40,7 +40,9 @@ import java.util.UUID;
 public class BatchOperationTable extends Table {
 
     /**
-     * Constructor, call to access copy functionality.
+     * Constructor.
+     * <p>
+     * Call to access copy functionality.
      *
      * @param database Database to copy things from
      * @throws IllegalStateException if database.init has not been called.

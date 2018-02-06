@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -95,14 +96,18 @@ public class TPSTable extends Table {
             public List<TPS> processResults(ResultSet set) throws SQLException {
                 List<TPS> data = new ArrayList<>();
                 while (set.next()) {
-                    long date = set.getLong(columnDate);
-                    double tps = set.getDouble(columnTPS);
-                    int players = set.getInt(columnPlayers);
-                    double cpuUsage = set.getDouble(columnCPUUsage);
-                    long ramUsage = set.getLong(columnRAMUsage);
-                    int entities = set.getInt(columnEntities);
-                    int chunksLoaded = set.getInt(columnChunksLoaded);
-                    data.add(new TPS(date, tps, players, cpuUsage, ramUsage, entities, chunksLoaded));
+
+                    TPS tps = TPSBuilder.get()
+                            .date(set.getLong(columnDate))
+                            .tps(set.getDouble(columnTPS))
+                            .playersOnline(set.getInt(columnPlayers))
+                            .usedCPU(set.getDouble(columnCPUUsage))
+                            .usedMemory(set.getLong(columnRAMUsage))
+                            .entities(set.getInt(columnEntities))
+                            .chunksLoaded(set.getInt(columnChunksLoaded))
+                            .toTPS();
+
+                    data.add(tps);
                 }
                 return data;
             }
@@ -183,14 +188,18 @@ public class TPSTable extends Table {
             @Override
             public Optional<TPS> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    long date = set.getLong(columnDate);
-                    double tps = set.getDouble(columnTPS);
-                    int players = set.getInt(columnPlayers);
-                    double cpuUsage = set.getDouble(columnCPUUsage);
-                    long ramUsage = set.getLong(columnRAMUsage);
-                    int entities = set.getInt(columnEntities);
-                    int chunksLoaded = set.getInt(columnChunksLoaded);
-                    return Optional.of(new TPS(date, tps, players, cpuUsage, ramUsage, entities, chunksLoaded));
+
+                    TPS tps = TPSBuilder.get()
+                            .date(set.getLong(columnDate))
+                            .tps(set.getDouble(columnTPS))
+                            .playersOnline(set.getInt(columnPlayers))
+                            .usedCPU(set.getDouble(columnCPUUsage))
+                            .usedMemory(set.getLong(columnRAMUsage))
+                            .entities(set.getInt(columnEntities))
+                            .chunksLoaded(set.getInt(columnChunksLoaded))
+                            .toTPS();
+
+                    return Optional.of(tps);
                 }
                 return Optional.empty();
             }
@@ -221,15 +230,17 @@ public class TPSTable extends Table {
 
                     List<TPS> tpsList = serverMap.getOrDefault(serverUUID, new ArrayList<>());
 
-                    long date = set.getLong(columnDate);
-                    double tps = set.getDouble(columnTPS);
-                    int players = set.getInt(columnPlayers);
-                    double cpuUsage = set.getDouble(columnCPUUsage);
-                    long ramUsage = set.getLong(columnRAMUsage);
-                    int entities = set.getInt(columnEntities);
-                    int chunksLoaded = set.getInt(columnChunksLoaded);
+                    TPS tps = TPSBuilder.get()
+                            .date(set.getLong(columnDate))
+                            .tps(set.getDouble(columnTPS))
+                            .playersOnline(set.getInt(columnPlayers))
+                            .usedCPU(set.getDouble(columnCPUUsage))
+                            .usedMemory(set.getLong(columnRAMUsage))
+                            .entities(set.getInt(columnEntities))
+                            .chunksLoaded(set.getInt(columnChunksLoaded))
+                            .toTPS();
 
-                    tpsList.add(new TPS(date, tps, players, cpuUsage, ramUsage, entities, chunksLoaded));
+                    tpsList.add(tps);
                     serverMap.put(serverUUID, tpsList);
                 }
                 return serverMap;
@@ -289,10 +300,14 @@ public class TPSTable extends Table {
             public List<TPS> processResults(ResultSet set) throws SQLException {
                 List<TPS> tpsList = new ArrayList<>();
                 while (set.next()) {
-                    long date = set.getLong(columnDate);
-                    int players = set.getInt(columnPlayers);
 
-                    tpsList.add(new TPS(date, 0, players, 0, 0, 0, 0));
+                    TPS tps = TPSBuilder.get()
+                            .date(set.getLong(columnDate))
+                            .skipTPS()
+                            .playersOnline(set.getInt(columnPlayers))
+                            .toTPS();
+
+                    tpsList.add(tps);
                 }
                 return tpsList;
             }

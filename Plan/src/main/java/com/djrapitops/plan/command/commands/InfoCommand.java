@@ -12,7 +12,7 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 
 /**
- * This subcommand is used to view the version and the database type in use.
+ * This SubCommand is used to view the version and the database type in use.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -21,11 +21,6 @@ public class InfoCommand extends SubCommand {
 
     private final Plan plugin;
 
-    /**
-     * Subcommand Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
     public InfoCommand(Plan plugin) {
         super("info",
                 CommandType.CONSOLE,

@@ -20,15 +20,15 @@ public abstract class Response {
 
     private Headers responseHeaders;
 
-    /**
-     * Class Constructor.
-     */
     public Response(ResponseType type) {
         this.type = type.get();
     }
 
+    /**
+     * Default Response constructor that defaults ResponseType to HTML.
+     */
     public Response() {
-        this.type = ResponseType.HTML.get();
+        this(ResponseType.HTML);
     }
 
     protected String getHeader() {

@@ -10,7 +10,7 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 
 /**
- * This subcommand is used to reload the plugin.
+ * This SubCommand is used to reload the plugin.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -19,11 +19,6 @@ public class ReloadCommand extends SubCommand {
 
     private final PlanPlugin plugin;
 
-    /**
-     * Subcommand constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
     public ReloadCommand(PlanPlugin plugin) {
         super("reload",
                 CommandType.CONSOLE,

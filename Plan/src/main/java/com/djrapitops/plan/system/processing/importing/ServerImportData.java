@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.processing.importing;
 
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.builders.TPSBuilder;
 
 import java.util.*;
 
@@ -61,7 +62,15 @@ public class ServerImportData {
         }
 
         public ServerImportDataBuilder tpsData(long date, double ticksPerSecond, int players, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded) {
-            TPS tps = new TPS(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded);
+            TPS tps = TPSBuilder.get()
+                    .date(date)
+                    .tps(ticksPerSecond)
+                    .playersOnline(players)
+                    .usedCPU(cpuUsage)
+                    .usedMemory(usedMemory)
+                    .entities(entityCount)
+                    .chunksLoaded(chunksLoaded)
+                    .toTPS();
             this.tpsData.add(tps);
             return this;
         }
