@@ -69,9 +69,11 @@ public class ConnectionOut {
 
     public void sendRequest() throws WebException {
         String address = toServer.getWebAddress();
+
+        HttpURLConnection connection = null;
         try {
             URL url = new URL(address + "/info/" + infoRequest.getClass().getSimpleName().toLowerCase());
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             if (address.startsWith("https")) {
                 HttpsURLConnection httpsConn = (HttpsURLConnection) connection;
 
@@ -118,7 +120,7 @@ public class ConnectionOut {
 
             int responseCode = connection.getResponseCode();
 
-            ConnectionLog.logConnection(toServer, infoRequest, responseCode);
+            ConnectionLog.logConnectionTo(toServer, infoRequest, responseCode);
             switch (responseCode) {
                 case 200:
                     return;
@@ -136,14 +138,18 @@ public class ConnectionOut {
                     throw new WebException(url.toString() + "| Wrong response code " + responseCode);
             }
         } catch (SocketTimeoutException e) {
-            ConnectionLog.logConnection(toServer, infoRequest, 0);
+            ConnectionLog.logConnectionTo(toServer, infoRequest, 0);
             throw new ConnectionFailException("Connection timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.toLog(this.getClass().getName(), e);
             }
-            ConnectionLog.logConnection(toServer, infoRequest, -1);
+            ConnectionLog.logConnectionTo(toServer, infoRequest, -1);
             throw new ConnectionFailException("Connection failed to address: " + address, e);
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
     }
 

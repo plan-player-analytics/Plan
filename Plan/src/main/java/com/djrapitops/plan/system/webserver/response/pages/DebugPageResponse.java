@@ -65,19 +65,19 @@ public class DebugPageResponse extends ErrorResponse {
 
     private void appendConnectionLog(StringBuilder content) {
         try {
-            Map<Server, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries();
+            Map<String, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries();
 
             content.append("<pre>**Connection Log:**<br>");
             content.append("Server Address | Request Type | Response | Sent<br>")
                     .append("-- | -- | -- | --<br>");
-            for (Map.Entry<Server, Map<String, ConnectionLog.Entry>> entry : logEntries.entrySet()) {
-                Server server = entry.getKey();
+            for (Map.Entry<String, Map<String, ConnectionLog.Entry>> entry : logEntries.entrySet()) {
+                String address = entry.getKey();
                 Map<String, ConnectionLog.Entry> requests = entry.getValue();
                 for (Map.Entry<String, ConnectionLog.Entry> requestEntry : requests.entrySet()) {
                     String infoRequest = requestEntry.getKey();
                     ConnectionLog.Entry logEntry = requestEntry.getValue();
 
-                    content.append(server.getWebAddress()).append(" | ")
+                    content.append(address).append(" | ")
                             .append(infoRequest).append(" | ")
                             .append(logEntry.getResponseCode()).append(" | ")
                             .append(FormatUtils.formatTimeStampSecond(logEntry.getTimeSent())).append("<br>");

@@ -18,29 +18,41 @@ import java.util.Map;
  */
 public class ConnectionLog {
 
-    private Map<Server, Map<String, Entry>> log;
+    private Map<String, Map<String, Entry>> log;
 
     public ConnectionLog() {
         this.log = new HashMap<>();
     }
 
-    public static Map<Server, Map<String, Entry>> getLogEntries() {
+    /**
+     * Get a map sorted by Addresses, then Requests and then Log entries.
+     *
+     * @return {@code Map<"-> "/"<- "+Address, Map<InfoRequestClassname, ConnectionLog.Entry>>}
+     */
+    public static Map<String, Map<String, Entry>> getLogEntries() {
         return getInstance().getLog();
     }
 
-    public static void logConnection(Server toServer, InfoRequest request, int responseCode) {
-        Map<Server, Map<String, Entry>> log = getInstance().log;
+    public static void logConnectionTo(Server server, InfoRequest request, int responseCode) {
+        logConnection(server.getWebAddress(), "-> " + request.getClass().getSimpleName(), responseCode);
+    }
 
-        Map<String, Entry> requestMap = log.getOrDefault(toServer, new HashMap<>());
-        requestMap.put(request.getClass().getSimpleName(), new Entry(responseCode, MiscUtils.getTime()));
-        log.put(toServer, requestMap);
+    public static void logConnectionFrom(String server, String requestTarget, int responseCode) {
+        logConnection(server, "<- " + requestTarget, responseCode);
+    }
+
+    private static void logConnection(String address, String infoRequestName, int responseCode) {
+        Map<String, Map<String, Entry>> log = getInstance().log;
+        Map<String, Entry> requestMap = log.getOrDefault(address, new HashMap<>());
+        requestMap.put(infoRequestName, new Entry(responseCode, MiscUtils.getTime()));
+        log.put(address, requestMap);
     }
 
     private static ConnectionLog getInstance() {
         return ConnectionSystem.getInstance().getConnectionLog();
     }
 
-    public Map<Server, Map<String, Entry>> getLog() {
+    public Map<String, Map<String, Entry>> getLog() {
         return log;
     }
 

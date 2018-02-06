@@ -21,11 +21,14 @@ public class Request {
     private final String requestMethod;
     private final String target;
     private final HttpExchange exchange;
+    private final String remoteAddress;
     private Authentication auth;
 
     public Request(HttpExchange exchange) {
         this.requestMethod = exchange.getRequestMethod();
         this.target = exchange.getRequestURI().toString();
+
+        remoteAddress = exchange.getRemoteAddress().getAddress().getHostAddress();
 
         this.exchange = exchange;
     }
@@ -53,5 +56,9 @@ public class Request {
     @Override
     public String toString() {
         return "Request:" + requestMethod + " " + target;
+    }
+
+    public String getRemoteAddress() {
+        return remoteAddress;
     }
 }
