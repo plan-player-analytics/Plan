@@ -93,7 +93,7 @@ public class AnalyzeCommand extends SubCommand {
                         sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                     }
                 } catch (Exception e) {
-                    Log.toLog(this.getClass() + getName(), e);
+                    Log.toLog(this.getClass(), e);
                 }
             });
         }

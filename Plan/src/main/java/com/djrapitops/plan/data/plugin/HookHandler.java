@@ -100,7 +100,7 @@ public class HookHandler implements SubSystem {
             } catch (Exception e) {
                 String sourcePlugin = pluginData.getSourcePlugin();
                 Log.error("PluginData caused exception: " + sourcePlugin);
-                Log.toLog(this.getClass() + " " + sourcePlugin, e);
+                Log.toLog(this.getClass().getName() + " " + sourcePlugin, e);
             }
         }
         return containers;
