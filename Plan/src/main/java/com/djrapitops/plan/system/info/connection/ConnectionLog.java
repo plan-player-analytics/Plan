@@ -27,18 +27,18 @@ public class ConnectionLog {
     /**
      * Get a map sorted by Addresses, then Requests and then Log entries.
      *
-     * @return {@code Map<"-> "/"<- "+Address, Map<InfoRequestClassname, ConnectionLog.Entry>>}
+     * @return {@code Map<"In:  "/"Out: "+Address, Map<InfoRequestClassname, ConnectionLog.Entry>>}
      */
     public static Map<String, Map<String, Entry>> getLogEntries() {
         return getInstance().getLog();
     }
 
     public static void logConnectionTo(Server server, InfoRequest request, int responseCode) {
-        logConnection(server.getWebAddress(), "-> " + request.getClass().getSimpleName(), responseCode);
+        logConnection(server.getWebAddress(), "Out: " + request.getClass().getSimpleName(), responseCode);
     }
 
     public static void logConnectionFrom(String server, String requestTarget, int responseCode) {
-        logConnection(server, "<- " + requestTarget, responseCode);
+        logConnection(server, "In:  " + requestTarget, responseCode);
     }
 
     private static void logConnection(String address, String infoRequestName, int responseCode) {

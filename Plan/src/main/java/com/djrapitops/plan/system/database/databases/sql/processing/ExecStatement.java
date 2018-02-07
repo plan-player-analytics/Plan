@@ -27,27 +27,27 @@ public abstract class ExecStatement {
     }
 
     public boolean execute(PreparedStatement statement) throws SQLException {
-        Benchmark.start(sql);
+        Benchmark.start("SQL: " + sql);
         try {
             prepare(statement);
             return statement.executeUpdate() > 0;
         } finally {
             statement.close();
             if (devMode) {
-                Log.debug(Benchmark.stopAndFormat(sql));
+                Log.debug(Benchmark.stopAndFormat("SQL: " + sql));
             }
         }
     }
 
     public void executeBatch(PreparedStatement statement) throws SQLException {
-        Benchmark.start(sql + " (Batch)");
+        Benchmark.start("SQL: " + sql + " (Batch)");
         try {
             prepare(statement);
             statement.executeBatch();
         } finally {
             statement.close();
             if (devMode) {
-                Log.debug(Benchmark.stopAndFormat(sql + " (Batch)"));
+                Log.debug(Benchmark.stopAndFormat("SQL: " + sql + " (Batch)"));
             }
         }
     }

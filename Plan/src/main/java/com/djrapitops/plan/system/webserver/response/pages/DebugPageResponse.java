@@ -56,8 +56,8 @@ public class DebugPageResponse extends ErrorResponse {
 
         appendConnectionLog(content);
         appendLoggedErrors(content);
-        appendDebugLog(content);
         appendBenchmarks(content);
+        appendDebugLog(content);
         appendConfig(content);
 
         return content.toString();

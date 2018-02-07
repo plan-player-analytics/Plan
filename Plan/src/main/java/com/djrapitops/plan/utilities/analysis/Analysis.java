@@ -65,7 +65,7 @@ public class Analysis {
     private AnalysisData runAnalysis() throws Exception {
         ((BukkitTaskSystem) TaskSystem.getInstance()).cancelBootAnalysis();
 
-        Benchmark.start("Analysis");
+        Benchmark.start("Analysis: Total");
         log(Locale.get(Msg.ANALYSIS_START).toString());
         return analyze();
     }
@@ -115,7 +115,7 @@ public class Analysis {
         }
         Map<PluginData, AnalysisContainer> containers = new HashMap<>();
 
-        Benchmark.start("Analysis", "3rd party Analysis");
+        Benchmark.start("Analysis", "Analysis: 3rd party");
         List<PluginData> sources = HookHandler.getInstance().getAdditionalDataSources();
 
         Log.logDebug("Analysis", "Additional Sources: " + sources.size());
@@ -123,7 +123,7 @@ public class Analysis {
             PlanPlugin plugin = PlanPlugin.getInstance();
             StaticHolder.saveInstance(this.getClass(), plugin.getClass());
             try {
-                Benchmark.start("Analysis", "Source " + source.getSourcePlugin());
+                Benchmark.start("Analysis", "Analysis: Source " + source.getSourcePlugin());
 
                 AnalysisContainer container = source.getServerData(uuids, new AnalysisContainer());
                 if (container != null && !container.isEmpty()) {
@@ -134,10 +134,10 @@ public class Analysis {
                 Log.error("A PluginData-source caused an exception: " + source.getSourcePlugin());
                 Log.toLog(this.getClass().getName(), e);
             } finally {
-                Benchmark.stop("Analysis", "Source " + source.getSourcePlugin());
+                Benchmark.stop("Analysis", "Analysis: Source " + source.getSourcePlugin());
             }
         });
-        Benchmark.stop("Analysis", "3rd party Analysis");
+        Benchmark.stop("Analysis", "Analysis: 3rd party");
         return containers;
     }
 
@@ -151,16 +151,11 @@ public class Analysis {
 
     private AnalysisData analyze() throws Exception {
         log(Locale.get(Msg.ANALYSIS_FETCH).toString());
-        Benchmark.start("Fetch Phase");
-        Log.logDebug("Database", "Analysis Fetch");
         Log.logDebug("Analysis", "Analysis Fetch Phase");
+        Benchmark.start("Analysis", "Analysis: Fetch Phase");
         try {
-            Benchmark.start("Create Empty dataset");
-
             AnalysisData analysisData = new AnalysisData();
 
-            Benchmark.stop("Analysis", "Create Empty dataset");
-            Benchmark.start("Fetch Phase");
             ServerProfile server = database.fetch().getServerProfile(serverUUID);
             if (analysingThisServer) {
                 server.addActiveSessions(new HashMap<>(SessionCache.getActiveSessions()));
@@ -169,17 +164,17 @@ public class Analysis {
 
             updatePlayerNameCache(server);
 
-            long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
+            long fetchPhaseLength = Benchmark.stop("Analysis", "Analysis: Fetch Phase");
             setBannedByPlugins(server);
 
-            Benchmark.start("Analysis Phase");
+            Benchmark.start("Analysis", "Analysis: Data Analysis");
             Log.logDebug("Analysis", "Analysis Phase");
 
             log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(server.getPlayerCount(), fetchPhaseLength));
 
             analysisData.analyze(server);
 
-            Benchmark.stop("Analysis", "Analysis Phase");
+            Benchmark.stop("Analysis", "Analysis: Data Analysis");
 
             log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
             Log.logDebug("Analysis", "Analyzing additional data sources (3rd party)");
@@ -187,7 +182,7 @@ public class Analysis {
             return analysisData;
         } finally {
             Analysis.updateRefreshDate();
-            long time = Benchmark.stop("Analysis", "Analysis");
+            long time = Benchmark.stop("Analysis", "Analysis: Total");
             Log.logDebug("Analysis");
             Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(time, ""));
             Analysis.setServerProfile(null);

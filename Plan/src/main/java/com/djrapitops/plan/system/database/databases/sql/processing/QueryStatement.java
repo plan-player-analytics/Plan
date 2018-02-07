@@ -34,7 +34,7 @@ public abstract class QueryStatement<T> {
     }
 
     public T executeQuery(PreparedStatement statement) throws SQLException {
-        Benchmark.start(sql);
+        Benchmark.start("SQL: " + sql);
         try {
             statement.setFetchSize(fetchSize);
             prepare(statement);
@@ -44,7 +44,7 @@ public abstract class QueryStatement<T> {
         } finally {
             statement.close();
             if (devMode) {
-                Log.debug(Benchmark.stopAndFormat(sql));
+                Log.debug(Benchmark.stopAndFormat("SQL: " + sql));
             }
         }
     }
