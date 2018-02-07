@@ -53,30 +53,6 @@ public class ResponseHandler extends TreePageHandler {
 
     public void registerWebAPIPages() {
         registerPage("info", new InfoRequestPageHandler());
-
-        // TODO Remove redundant comment after implementing replacements
-//    private void registerWebAPIs() {
-//        webAPI.registerNewAPI(
-//                new AnalysisReadyWebAPI(),
-//                new AnalyzeWebAPI(),
-//                new ConfigurationWebAPI(),
-//                new InspectWebAPI(),
-//                new IsOnlineWebAPI(),
-//                new RequestInspectPluginsTabBukkitWebAPI(),
-//                new PingWebAPI()
-//        );
-//
-//        webAPI.registerNewAPI(
-//                new IsCachedWebAPI(),
-//                new PostHtmlWebAPI(),
-//                new PostInspectPluginsTabWebAPI(),
-//                new PostNetworkPageContentWebAPI(),
-//                new PostOriginalBukkitSettingsWebAPI(),
-//                new RequestPluginsTabWebAPI(),
-//                new RequestSetupWebAPI()
-//        );
-//    }
-        //Log.infoColor("§aWebServer Running in WebAPI-only Mode");
     }
 
     public Response getResponse(Request request) {
