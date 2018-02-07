@@ -66,7 +66,6 @@ public class SQLiteTest {
         SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem()
                 .enableDatabaseSystem(db)
-                .enableServerInfoSystem()
                 .enableServerInfoSystem();
         StaticHolder.saveInstance(SQLDB.class, Plan.class);
         StaticHolder.saveInstance(SQLiteTest.class, Plan.class);
@@ -89,6 +88,7 @@ public class SQLiteTest {
 
     @Before
     public void setUp() throws DBException, SQLException {
+        assertEquals(db, Database.getActive());
         System.out.println("\n-- Clearing Test Database --");
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
@@ -858,8 +858,12 @@ public class SQLiteTest {
         assertFalse(db.getUsersTable().isRegistered(playerUUID));
         assertFalse(db.getUserInfoTable().isRegistered(playerUUID));
         System.out.println("\n- Running RegisterProcessors -");
+        List<RegisterProcessor> processors = new ArrayList<>();
         for (int i = 0; i < 200; i++) {
-            new RegisterProcessor(playerUUID, 500L, 1000L, "name", 4).process();
+            processors.add(new RegisterProcessor(playerUUID, 500L, 1000L, "name", 4));
+        }
+        for (RegisterProcessor processor : processors) {
+            processor.process();
         }
         System.out.println("- RegisterProcessors Run -\n");
         assertTrue(db.getUsersTable().isRegistered(playerUUID));

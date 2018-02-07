@@ -165,18 +165,16 @@ public abstract class Table {
     }
 
     protected boolean execute(ExecStatement statement) throws SQLException {
-        boolean updatedSomething;
         Connection connection = null;
         try {
             connection = getConnection();
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
-                updatedSomething = statement.execute(preparedStatement);
+                return statement.execute(preparedStatement);
             }
         } finally {
             commit(connection);
             db.returnToPool(connection);
         }
-        return updatedSomething;
     }
 
     protected void executeBatch(ExecStatement statement) throws SQLException {

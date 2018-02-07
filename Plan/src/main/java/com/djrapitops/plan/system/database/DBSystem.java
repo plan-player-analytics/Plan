@@ -85,7 +85,8 @@ public abstract class DBSystem implements SubSystem {
         throw new DBInitException(Locale.get(Msg.ENABLE_FAIL_WRONG_DB) + " " + dbName);
     }
 
-    public void setActiveDatabase(Database db) {
+    public void setActiveDatabase(Database db) throws DBException {
+        this.db.close();
         this.db = db;
     }
 }

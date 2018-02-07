@@ -6,6 +6,7 @@ package utilities.mocks;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.BukkitSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -65,10 +66,10 @@ public class SystemMockUtil {
         return this;
     }
 
-    public SystemMockUtil enableDatabaseSystem(SQLDB db) throws EnableException {
+    public SystemMockUtil enableDatabaseSystem(SQLDB db) throws EnableException, DBException {
         DBSystem dbSystem = bukkitSystem.getDatabaseSystem();
-        dbSystem.setActiveDatabase(db);
         dbSystem.enable();
+        dbSystem.setActiveDatabase(db);
         return this;
     }
 }
