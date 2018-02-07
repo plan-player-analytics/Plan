@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Manages the Server information required for Bungee-Bukkit WebAPI connection.
+ * Manages the Server UUID for Bukkit servers.
  * <p>
  * Also manages Server ID required for MySQL database independence.
  *

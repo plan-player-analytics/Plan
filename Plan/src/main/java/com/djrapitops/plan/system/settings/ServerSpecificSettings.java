@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.settings;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public class ServerSpecificSettings {
 
-    public static void updateSettings(Plan plugin, Map<String, String> settings) {
+    public static void updateSettings(Map<String, String> settings) {
         Log.debug("Checking new settings..");
         Config config = ConfigSystem.getConfig();
 
@@ -52,12 +52,12 @@ public class ServerSpecificSettings {
             try {
                 config.save();
             } catch (IOException e) {
-                Log.toLog("ServerSpecificSettings / ConfigSave", e);
+                Log.toLog(ServerSpecificSettings.class, e);
             }
             Log.info("----------------------------------");
             Log.info("The Received Bungee Settings changed the config values, restarting Plan..");
             Log.info("----------------------------------");
-            plugin.reloadPlugin(true);
+            PlanPlugin.getInstance().reloadPlugin(true);
         } else {
             Log.debug("Settings up to date");
         }
@@ -73,6 +73,7 @@ public class ServerSpecificSettings {
         } else if ("false".equalsIgnoreCase(value)) {
             return false;
         }
+        // Value is a string
         return value;
     }
 

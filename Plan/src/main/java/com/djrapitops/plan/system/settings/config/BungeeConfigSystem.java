@@ -4,7 +4,9 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.settings.network.NetworkSettings;
 
 import java.io.IOException;
 
@@ -20,5 +22,11 @@ public class BungeeConfigSystem extends ConfigSystem {
     @Override
     protected void copyDefaults() throws IOException {
         config.copyDefaults(FileSystem.readFromResource("bungeeconfig.yml"));
+    }
+
+    @Override
+    public void enable() throws EnableException {
+        super.enable();
+        NetworkSettings.placeSettingsToDB();
     }
 }

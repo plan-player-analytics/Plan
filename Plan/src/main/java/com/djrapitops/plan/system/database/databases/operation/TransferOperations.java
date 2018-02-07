@@ -29,6 +29,8 @@ public interface TransferOperations {
 
     void storePlayerPluginsTab(UUID player, String encodedHtml) throws DBException;
 
+    void storeConfigSettings(String encodedSettingString) throws DBException;
+
     // Get
 
     Map<UUID, String> getEncodedPlayerHtml() throws DBException;
@@ -40,4 +42,6 @@ public interface TransferOperations {
     Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) throws DBException;
 
     Map<UUID, String> getEncodedPlayerPluginsTabs(UUID playerUUID) throws DBException;
+
+    Optional<String> getEncodedConfigSettings() throws DBException;
 }

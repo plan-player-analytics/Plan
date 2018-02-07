@@ -86,4 +86,6 @@ public interface FetchOperations {
     Map<UUID, Map<UUID, List<Session>>> getSessionsInLastMonth() throws DBException;
 
     List<Server> getServers() throws DBException;
+
+    List<UUID> getServerUUIDs() throws DBException;
 }

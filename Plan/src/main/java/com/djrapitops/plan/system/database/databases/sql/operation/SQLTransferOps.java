@@ -104,4 +104,22 @@ public class SQLTransferOps extends SQLOps implements TransferOperations {
             throw SQLErrorUtil.getExceptionFor(e);
         }
     }
+
+    @Override
+    public void storeConfigSettings(String encodedSettingString) throws DBException {
+        try {
+            transferTable.storeConfigSettings(encodedSettingString);
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
+
+    @Override
+    public Optional<String> getEncodedConfigSettings() throws DBException {
+        try {
+            return transferTable.getConfigSettings();
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
 }

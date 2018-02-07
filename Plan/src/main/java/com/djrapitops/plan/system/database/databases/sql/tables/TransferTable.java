@@ -60,7 +60,8 @@ public class TransferTable extends Table {
 
         selectStatement = "SELECT * FROM " + tableName +
                 " WHERE " + columnInfoType + "= ?" +
-                " AND " + columnExpiry + "> ?";
+                " AND " + columnExpiry + "> ?" +
+                " ORDER BY " + columnExpiry + " DESC";
     }
 
     @Override
@@ -257,6 +258,37 @@ public class TransferTable extends Table {
                 statement.setString(3, "onlineStatus");
                 statement.setString(4, playerUUID.toString());
                 statement.setString(5, null);
+            }
+        });
+    }
+
+    public void storeConfigSettings(String encodedSettingString) throws SQLException {
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setLong(2, MiscUtils.getTime() + TimeAmount.HOUR.ms());
+                statement.setString(3, "configSettings");
+                statement.setString(4, null);
+                statement.setString(5, encodedSettingString);
+            }
+        });
+    }
+
+    public Optional<String> getConfigSettings() throws SQLException {
+        return query(new QueryStatement<Optional<String>>(selectStatement, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, "configSettings");
+                statement.setLong(2, MiscUtils.getTime());
+            }
+
+            @Override
+            public Optional<String> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.ofNullable(set.getString(columnContent));
+                }
+                return Optional.empty();
             }
         });
     }

@@ -84,7 +84,7 @@ public class ConnectionOut {
 
                 // This allows connecting to connections with invalid certificate
                 // Drawback: MitM attack possible between connections to servers that are not local.
-                // Scope: WebAPI transmissions
+                // Scope: InfoRequest transmissions
                 // Risk: Attacker sets up a server between Bungee and Bukkit WebServers
                 //       - Negotiates SSL Handshake with both servers
                 //       - Receives the SSL encrypted data, but decrypts it in the MitM server.
@@ -93,7 +93,7 @@ public class ConnectionOut {
                 // Mitigating factors:
                 // - If Server owner has access to all routing done on the domain (IP/Address)
                 // - If Direct IPs are used to transfer between servers
-                // Alternative solution: WebAPI run only on HTTP, HTTP can be read during transmission,
+                // Alternative solution: InfoRequests run only on HTTP, HTTP can be read during transmission,
                 // would require running two WebServers when HTTPS is used.
                 httpsConn.setSSLSocketFactory(getRelaxedSocketFactory());
             }
