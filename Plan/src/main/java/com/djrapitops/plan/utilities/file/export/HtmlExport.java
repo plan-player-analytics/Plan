@@ -155,6 +155,7 @@ public class HtmlExport extends SpecificExport {
 
     private void exportPlugins() {
         String[] resources = new String[]{
+                "web/plugins/font-awesome/fa-script.js",
                 "web/plugins/bootstrap/css/bootstrap.css",
                 "web/plugins/node-waves/waves.css",
                 "web/plugins/node-waves/waves.js",
