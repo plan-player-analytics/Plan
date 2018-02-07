@@ -407,4 +407,13 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         Collections.sort(servers);
         return servers;
     }
+
+    @Override
+    public List<UUID> getServerUUIDs() throws DBException {
+        try {
+            return serverTable.getServerUUIDs();
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
 }

@@ -49,7 +49,7 @@ public class PromptAuthorizationResponse extends ErrorResponse {
             reason += errorBuilder.toString();
         }
 
-        response.setParagraph("Authentication Failed.<br>Reason: " + reason + TIPS);
+        response.setParagraph("Authentication Failed.</p><p><b>Reason: " + reason + "</b></p><p>" + TIPS);
         response.replacePlaceholders();
         return response;
     }

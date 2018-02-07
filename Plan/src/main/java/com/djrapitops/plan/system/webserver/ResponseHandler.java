@@ -87,6 +87,13 @@ public class ResponseHandler extends TreePageHandler {
 
     private Response getResponse(Request request, String targetString, List<String> target) throws WebException {
         Optional<Authentication> authentication = Optional.empty();
+
+        if (targetString.endsWith(".css")) {
+            return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> new CSSResponse(targetString));
+        }
+        if (targetString.endsWith(".js")) {
+            return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
+        }
         if (webServer.isAuthRequired()) {
             authentication = request.getAuth();
             if (!authentication.isPresent()) {
@@ -96,12 +103,6 @@ public class ResponseHandler extends TreePageHandler {
                     return forbiddenResponse();
                 }
             }
-        }
-        if (targetString.endsWith(".css")) {
-            return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> new CSSResponse(targetString));
-        }
-        if (targetString.endsWith(".js")) {
-            return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
         }
         PageHandler pageHandler = getPageHandler(target);
         if (pageHandler == null) {
