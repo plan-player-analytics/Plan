@@ -12,7 +12,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class Server {
+public class Server implements Comparable<Server> {
     private final UUID uuid;
     private int id;
     private String name;
@@ -84,5 +84,10 @@ public class Server {
                 ", webAddress='" + webAddress + '\'' +
                 ", maxPlayers=" + maxPlayers +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Server other) {
+        return Integer.compare(this.id, other.id);
     }
 }

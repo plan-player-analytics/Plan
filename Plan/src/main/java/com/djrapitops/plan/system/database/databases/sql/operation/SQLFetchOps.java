@@ -395,4 +395,16 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             throw SQLErrorUtil.getExceptionFor(e);
         }
     }
+
+    @Override
+    public List<Server> getServers() throws DBException {
+        Map<UUID, Server> bukkitServers = getBukkitServers();
+        Optional<Server> bungeeInformation = getBungeeInformation();
+
+        List<Server> servers = new ArrayList<>(bukkitServers.values());
+        bungeeInformation.ifPresent(servers::add);
+
+        Collections.sort(servers);
+        return servers;
+    }
 }
