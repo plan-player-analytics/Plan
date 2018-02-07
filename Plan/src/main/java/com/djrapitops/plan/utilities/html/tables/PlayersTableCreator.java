@@ -75,6 +75,7 @@ public class PlayersTableCreator {
                 ));
             } catch (NullPointerException e) {
                 if (Settings.DEV_MODE.isTrue()) {
+                    Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
                     Log.toLog(PlayersTableCreator.class.getName(), e);
                 }
             }

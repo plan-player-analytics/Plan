@@ -52,7 +52,8 @@ public class RequestHandler implements HttpHandler {
             response.send(exchange);
         } catch (Exception e) {
             if (Settings.DEV_MODE.isTrue()) {
-                e.printStackTrace();
+                Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
+                Log.toLog(this.getClass(), e);
             }
         } finally {
             exchange.close();

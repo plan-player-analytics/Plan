@@ -6,7 +6,6 @@ package com.djrapitops.plan.system.webserver.webapi;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
@@ -125,9 +124,6 @@ public abstract class WebAPI {
         } catch (SocketTimeoutException e) {
             throw new ConnectionFailException("Connection timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
-            if (Settings.DEV_MODE.isTrue()) {
-                Log.toLog(this.getClass().getName(), e);
-            }
             throw new ConnectionFailException("API connection failed. address: " + address, e);
         }
     }

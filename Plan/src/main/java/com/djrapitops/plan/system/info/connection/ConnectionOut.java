@@ -142,6 +142,7 @@ public class ConnectionOut {
             throw new ConnectionFailException("Connection timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
             if (Settings.DEV_MODE.isTrue()) {
+                Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
                 Log.toLog(this.getClass().getName(), e);
             }
             ConnectionLog.logConnectionTo(toServer, infoRequest, -1);
