@@ -71,7 +71,7 @@ public class HtmlExport extends SpecificExport {
             exportAvailablePlayers();
             exportPlayersPage();
         } catch (IOException | DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } finally {
             try {
                 this.cancel();
@@ -149,7 +149,7 @@ public class HtmlExport extends SpecificExport {
             outputFolder.mkdirs();
             export(new File(outputFolder, "demo.js"), lines);
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 
@@ -174,7 +174,7 @@ public class HtmlExport extends SpecificExport {
             try {
                 copyFromJar(resource);
             } catch (IOException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         }
     }

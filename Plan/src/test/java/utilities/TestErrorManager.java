@@ -15,6 +15,6 @@ public class TestErrorManager extends ErrorManager {
 
     @Override
     public void toLog(String s, Throwable throwable, Class aClass) {
-        throw new IllegalStateException(throwable);
+        throw new RuntimeException("Error During Test.", throwable);
     }
 }

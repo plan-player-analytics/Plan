@@ -90,7 +90,7 @@ public class ManageRemoveCommand extends SubCommand {
                     }
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, Database.getActive().getConfigName()));
                 } catch (DBException e) {
-                    Log.toLog(this.getClass().getName(), e);
+                    Log.toLog(this.getClass(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();

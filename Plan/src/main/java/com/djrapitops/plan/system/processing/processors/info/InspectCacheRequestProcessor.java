@@ -44,7 +44,7 @@ public class InspectCacheRequestProcessor extends PlayerProcessor {
             // TODO Test if this is appropriate
             sender.sendMessage("§c" + e.getMessage());
         } catch (WebException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 

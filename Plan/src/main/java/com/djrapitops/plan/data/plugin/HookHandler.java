@@ -39,7 +39,7 @@ public class HookHandler implements SubSystem {
         try {
             Bridge.hook(this);
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");
         }
     }
@@ -73,7 +73,7 @@ public class HookHandler implements SubSystem {
                 additionalDataSources.add(dataSource);
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             Log.error("Attempting to register PluginDataSource caused an exception.");
         }
     }
@@ -100,7 +100,7 @@ public class HookHandler implements SubSystem {
             } catch (Exception e) {
                 String sourcePlugin = pluginData.getSourcePlugin();
                 Log.error("PluginData caused exception: " + sourcePlugin);
-                Log.toLog(this.getClass().getName() + " " + sourcePlugin, e);
+                Log.toLog(this.getClass() + " " + sourcePlugin, e);
             }
         }
         return containers;

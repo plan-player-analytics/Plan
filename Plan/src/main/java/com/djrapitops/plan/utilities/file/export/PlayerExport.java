@@ -37,7 +37,7 @@ public class PlayerExport extends SpecificExport {
 
             exportAvailablePlayerPage(uuid, name);
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } finally {
             try {
                 this.cancel();

@@ -46,7 +46,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
                 bukkitServers = database.fetch().getBukkitServers();
                 latestServerMapRefresh = MiscUtils.getTime();
             } catch (DBException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         }
     }

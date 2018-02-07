@@ -61,7 +61,7 @@ public class AnalyzeCommand extends SubCommand {
             } catch (DBException | WebException e) {
                 // TODO Exception handling
                 sender.sendMessage(ChatColor.RED + " Error occurred: " + e.toString());
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         });
         return true;
@@ -93,7 +93,7 @@ public class AnalyzeCommand extends SubCommand {
                         sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                     }
                 } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + getName(), e);
+                    Log.toLog(this.getClass() + getName(), e);
                 }
             });
         }

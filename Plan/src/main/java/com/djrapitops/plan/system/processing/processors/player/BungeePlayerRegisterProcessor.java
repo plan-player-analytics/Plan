@@ -36,7 +36,7 @@ public class BungeePlayerRegisterProcessor extends PlayerProcessor {
             }
             database.save().registerNewUser(uuid, registered, name);
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 }

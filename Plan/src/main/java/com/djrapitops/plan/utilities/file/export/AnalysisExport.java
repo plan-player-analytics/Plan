@@ -37,7 +37,7 @@ public class AnalysisExport extends SpecificExport {
 
             exportAvailableServerPage(serverUUID, serverName);
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } finally {
             try {
                 this.cancel();

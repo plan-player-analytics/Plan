@@ -82,7 +82,7 @@ public class QInspectCommand extends SubCommand {
                     sendMsgs(sender, playerProfile);
 
                 } catch (DBException ex) {
-                    Log.toLog(this.getClass().getName(), ex);
+                    Log.toLog(this.getClass(), ex);
                 } finally {
                     this.cancel();
                 }

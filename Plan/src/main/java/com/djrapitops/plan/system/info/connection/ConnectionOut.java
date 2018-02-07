@@ -143,7 +143,7 @@ public class ConnectionOut {
         } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
             ConnectionLog.logConnectionTo(toServer, infoRequest, -1);
             throw new ConnectionFailException("Connection failed to address: " + address, e);

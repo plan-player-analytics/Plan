@@ -26,7 +26,7 @@ public class KickProcessor extends PlayerProcessor {
         try {
             Database.getActive().save().playerWasKicked(uuid);
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 }

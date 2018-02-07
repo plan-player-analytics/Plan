@@ -122,7 +122,7 @@ public class DebugPageResponse extends ErrorResponse {
             try {
                 content.append(" schema v").append(((SQLDB) database).getVersion());
             } catch (SQLException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         }
 
@@ -165,7 +165,7 @@ public class DebugPageResponse extends ErrorResponse {
                 content.append("&#96;&#96;&#96;</pre>");
             }
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 
@@ -210,7 +210,7 @@ public class DebugPageResponse extends ErrorResponse {
             }
             content.append("</pre>");
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 

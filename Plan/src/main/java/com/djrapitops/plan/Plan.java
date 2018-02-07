@@ -80,7 +80,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             Log.info(Locale.get(Msg.ENABLED).toString());
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             onDisable();
         }
         registerCommand("plan", new PlanCommand(this));

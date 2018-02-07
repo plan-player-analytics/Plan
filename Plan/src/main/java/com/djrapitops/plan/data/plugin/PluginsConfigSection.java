@@ -35,7 +35,7 @@ public class PluginsConfigSection {
             section.sort();
             section.save();
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 

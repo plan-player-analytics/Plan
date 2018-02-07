@@ -49,7 +49,7 @@ public class PlayersPageResponse extends Response {
             replace.put("version", plugin.getVersion());
             super.setContent(Theme.replaceColors(StrSubstitutor.replace(FileUtil.getStringFromResource("web/players.html"), replace)));
         } catch (DBException | IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             setContent(new InternalErrorResponse("/players", e).getContent());
         }
     }

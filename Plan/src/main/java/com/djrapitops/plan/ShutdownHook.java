@@ -65,13 +65,13 @@ public class ShutdownHook extends Thread {
         } catch (IllegalStateException ignored) {
             /* Database is not initialized */
         } catch (DBInitException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } finally {
             if (db != null) {
                 try {
                     db.close();
                 } catch (DBException e) {
-                    Log.toLog(this.getClass().getName(), e);
+                    Log.toLog(this.getClass(), e);
                 }
             }
             StaticHolder.unRegister(Plan.class);
@@ -86,7 +86,7 @@ public class ShutdownHook extends Thread {
                 int messagesSent = entry.getValue();
                 db.save().action(uuid, new Action(now, Actions.FIRST_LOGOUT, "Messages sent: " + messagesSent));
             } catch (DBException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         }
     }
@@ -103,7 +103,7 @@ public class ShutdownHook extends Thread {
                 Log.debug("Shutdown: Saving a session: " + session.getSessionStart());
                 db.save().session(uuid, session);
             } catch (DBException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         }
         activeSessions.clear();

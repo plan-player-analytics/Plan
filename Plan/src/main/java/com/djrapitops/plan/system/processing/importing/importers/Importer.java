@@ -67,7 +67,7 @@ public abstract class Importer {
         try {
             service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             Thread.currentThread().interrupt();
         }
 
@@ -108,7 +108,7 @@ public abstract class Importer {
             service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
 
         Benchmark.stop(insertDataIntoDatabaseBenchmarkName);
@@ -189,7 +189,7 @@ public abstract class Importer {
             service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
 
         Benchmark.stop(insertDataIntoDatabaseBenchmarkName);
@@ -242,7 +242,7 @@ public abstract class Importer {
                     try {
                         execute();
                     } catch (DBException e) {
-                        Log.toLog(this.getClass().getName(), e);
+                        Log.toLog(this.getClass(), e);
                     }
                 }
             });

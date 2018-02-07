@@ -153,7 +153,7 @@ public class UserImportRefiner {
             result = uuidFetcher.call().entrySet().parallelStream()
                     .collect(Collectors.toMap(entry -> entry.getValue().toString(), Map.Entry::getKey));
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             return;
         }
 

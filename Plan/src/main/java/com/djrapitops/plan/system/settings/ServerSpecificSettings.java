@@ -88,7 +88,7 @@ public class ServerSpecificSettings {
             }
             config.save();
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 

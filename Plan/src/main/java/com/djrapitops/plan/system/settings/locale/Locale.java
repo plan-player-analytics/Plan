@@ -74,7 +74,7 @@ public class Locale {
                 loadFromResource("locale_" + locale + ".txt");
             }
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } finally {
             Benchmark.stop("Enable", "Initializing locale");
         }
@@ -316,7 +316,7 @@ public class Locale {
             Log.error("Could not find file inside the jar: " + fileName);
             Log.info("Using Locale: Default (EN)");
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             Log.info("Using Locale: Default (EN)");
         }
     }

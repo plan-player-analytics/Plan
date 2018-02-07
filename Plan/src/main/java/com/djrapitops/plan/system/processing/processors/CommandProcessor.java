@@ -24,7 +24,7 @@ public class CommandProcessor extends ObjectProcessor<String> {
         try {
             Database.getActive().save().commandUsed(object);
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 }

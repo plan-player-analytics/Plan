@@ -48,7 +48,7 @@ public class TPSInsertProcessor extends ObjectProcessor<List<TPS>> {
         try {
             Database.getActive().save().insertTPSforThisServer(tps);
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 }

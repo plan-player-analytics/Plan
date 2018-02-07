@@ -77,7 +77,7 @@ public class DataCache extends SessionCache implements SubSystem {
                 uuids.put(entry.getValue(), entry.getKey());
             }
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 
@@ -94,7 +94,7 @@ public class DataCache extends SessionCache implements SubSystem {
                 name = db.fetch().getPlayerName(uuid);
                 playerNames.put(uuid, name);
             } catch (DBException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
                 name = "Error occurred";
             }
         }
@@ -119,7 +119,7 @@ public class DataCache extends SessionCache implements SubSystem {
                     return nicknames.get(nicknames.size() - 1);
                 }
             } catch (DBException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         }
         return cached;

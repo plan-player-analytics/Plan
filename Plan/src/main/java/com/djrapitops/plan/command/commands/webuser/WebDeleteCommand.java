@@ -47,7 +47,7 @@ public class WebDeleteCommand extends SubCommand {
                     database.remove().webUser(user);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_SUCCESS).parse());
                 } catch (Exception ex) {
-                    Log.toLog(this.getClass().getName(), ex);
+                    Log.toLog(this.getClass(), ex);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
                 } finally {
                     this.cancel();

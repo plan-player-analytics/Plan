@@ -48,7 +48,7 @@ public class WebCheckCommand extends SubCommand {
                     WebUser info = database.fetch().getWebUser(user);
                     sender.sendMessage(info.getName() + ": Permission level: " + info.getPermLevel());
                 } catch (Exception ex) {
-                    Log.toLog(this.getClass().getName(), ex);
+                    Log.toLog(this.getClass(), ex);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
                 } finally {
                     this.cancel();

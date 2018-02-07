@@ -31,10 +31,6 @@ public class NetworkSettings {
     private static final String SPLIT = ";;SETTING;;";
     private static final String VAL_SPLIT = ";;VALUE;;";
 
-    private NetworkSettings() {
-        /* Hides Constructor */
-    }
-
     public static void loadSettingsFromDB() {
         if (Check.isBungeeAvailable()) {
             return;
@@ -69,7 +65,7 @@ public class NetworkSettings {
         });
     }
 
-    private void loadFromDatabase() throws DBException, UnsupportedTransferDatabaseException {
+    public void loadFromDatabase() throws DBException, UnsupportedTransferDatabaseException {
         Optional<String> encodedConfigSettings = Database.getActive().transfer().getEncodedConfigSettings();
 
         if (!encodedConfigSettings.isPresent()) {
@@ -78,7 +74,6 @@ public class NetworkSettings {
         }
 
         String configSettings = Base64Util.decode(encodedConfigSettings.get());
-
         Map<String, String> pathValueMap = getPathsAndValues(configSettings);
 
         ServerSpecificSettings.updateSettings(pathValueMap);
@@ -110,7 +105,7 @@ public class NetworkSettings {
         return pathValueMap;
     }
 
-    private void placeToDatabase() throws DBException, UnsupportedTransferDatabaseException {
+    public void placeToDatabase() throws DBException, UnsupportedTransferDatabaseException {
         Map<String, Object> configValues = getConfigValues();
 
         StringBuilder transferBuilder = new StringBuilder();

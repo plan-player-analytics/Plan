@@ -54,7 +54,7 @@ public class NameProcessor extends PlayerProcessor {
 
             database.save().playerDisplayName(uuid, displayName);
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
 
         dataCache.updateNames(uuid, playerName, displayName);
@@ -76,7 +76,7 @@ public class NameProcessor extends PlayerProcessor {
             try {
                 Database.getActive().save().action(uuid, action);
             } catch (DBException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         });
     }

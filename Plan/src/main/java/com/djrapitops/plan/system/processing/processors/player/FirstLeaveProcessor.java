@@ -34,7 +34,7 @@ public class FirstLeaveProcessor extends PlayerProcessor {
         try {
             Database.getActive().save().action(uuid, leaveAction);
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } finally {
             SessionCache.getInstance().endFirstSessionActionTracking(uuid);
         }

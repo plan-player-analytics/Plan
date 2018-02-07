@@ -68,7 +68,7 @@ public class ManageSetupCommand extends SubCommand {
         } catch (UnauthorizedServerException e) {
             sender.sendMessage("§eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support");
         } catch (WebException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             sender.sendMessage("§cConnection to Bungee WebServer failed: More info on console");
         }
         return true;

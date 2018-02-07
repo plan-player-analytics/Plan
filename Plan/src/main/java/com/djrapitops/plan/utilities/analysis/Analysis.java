@@ -132,7 +132,7 @@ public class Analysis {
 
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
                 Log.error("A PluginData-source caused an exception: " + source.getSourcePlugin());
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             } finally {
                 Benchmark.stop("Analysis", "Analysis: Source " + source.getSourcePlugin());
             }

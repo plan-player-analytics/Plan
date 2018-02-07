@@ -20,6 +20,7 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -846,7 +847,6 @@ public class SQLiteTest {
     }
 
     @Test
-    @Ignore
     public void testRegisterProcessorRegisterException() throws SQLException {
         assertFalse(db.getUsersTable().isRegistered(playerUUID));
         assertFalse(db.getUserInfoTable().isRegistered(playerUUID));
@@ -870,5 +870,17 @@ public class SQLiteTest {
     @Test
     public void testWorldTableGetWorldNamesNoException() throws SQLException {
         Set<String> worldNames = db.getWorldTable().getWorldNames();
+    }
+
+    @Test
+    public void testSettingTransfer() throws SQLException {
+        String testString = RandomData.randomString(100);
+
+        TransferTable transferTable = db.getTransferTable();
+        transferTable.storeConfigSettings(Base64Util.encode(testString));
+        Optional<String> configSettings = transferTable.getConfigSettings();
+
+        assertTrue(configSettings.isPresent());
+        assertEquals(testString, Base64Util.decode(configSettings.get()));
     }
 }

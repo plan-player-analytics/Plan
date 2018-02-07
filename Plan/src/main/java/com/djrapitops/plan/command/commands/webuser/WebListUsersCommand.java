@@ -48,7 +48,7 @@ public class WebListUsersCommand extends SubCommand {
                     }
                     sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
                 } catch (Exception ex) {
-                    Log.toLog(this.getClass().getName(), ex);
+                    Log.toLog(this.getClass(), ex);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
                 } finally {
                     this.cancel();

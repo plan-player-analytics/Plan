@@ -70,7 +70,7 @@ public class ManageHotswapCommand extends SubCommand {
                 return true;
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
             return true;
         }

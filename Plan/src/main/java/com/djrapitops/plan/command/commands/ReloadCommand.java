@@ -33,7 +33,7 @@ public class ReloadCommand extends SubCommand {
         try {
             plugin.reloadPlugin(true);
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             sender.sendMessage("§cSomething went wrong during reload of the plugin, a restart is recommended.");
         }
         sender.sendMessage(Locale.get(Msg.CMD_INFO_RELOAD_COMPLETE).toString());

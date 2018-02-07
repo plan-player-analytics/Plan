@@ -68,7 +68,7 @@ public class SessionCache {
             session.endSession(time);
             Database.getActive().save().session(uuid, session);
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } finally {
             activeSessions.remove(uuid);
 

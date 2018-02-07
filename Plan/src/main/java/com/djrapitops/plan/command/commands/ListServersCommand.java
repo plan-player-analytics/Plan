@@ -48,7 +48,7 @@ public class ListServersCommand extends SubCommand {
             sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
         } catch (DBException e) {
             sender.sendMessage("§cDatabase Exception occurred.");
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
         return true;
     }

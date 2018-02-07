@@ -42,7 +42,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             Log.info(Locale.get(Msg.ENABLED).toString());
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly:");
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
         registerCommand("planbungee", new PlanBungeeCommand(this));
     }

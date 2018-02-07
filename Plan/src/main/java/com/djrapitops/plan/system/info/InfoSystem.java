@@ -96,7 +96,7 @@ public abstract class InfoSystem implements SubSystem {
             /* Ignored */
         } catch (WebException e) {
             // TODO Exception handling
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 

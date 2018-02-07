@@ -35,7 +35,7 @@ public class IPUpdateProcessor extends PlayerProcessor {
         try {
             Database.getActive().save().geoInfo(uuid, new GeoInfo(ip, country, time));
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 }

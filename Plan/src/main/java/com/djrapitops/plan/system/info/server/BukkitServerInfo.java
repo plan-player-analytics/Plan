@@ -111,7 +111,7 @@ public class BukkitServerInfo extends ServerInfo {
                 return Optional.of(bungeeInfo.get().getWebAddress());
             }
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
         return Optional.empty();
     }

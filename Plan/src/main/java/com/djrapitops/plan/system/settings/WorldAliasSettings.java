@@ -59,7 +59,7 @@ public class WorldAliasSettings {
                 try {
                     aliasSect.save();
                 } catch (IOException e) {
-                    Log.toLog(this.getClass().getName(), e);
+                    Log.toLog(this.getClass(), e);
                 }
             });
         }

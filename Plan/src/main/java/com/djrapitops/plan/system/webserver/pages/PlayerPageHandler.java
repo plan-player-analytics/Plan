@@ -58,7 +58,7 @@ public class PlayerPageHandler extends PageHandler {
                 return notFound("Player has not played on this server.");
             }
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             throw new InternalErrorException("Analysis", e);
         } catch (NoServersException e) {
             ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> new NotFoundResponse(e.getMessage()));

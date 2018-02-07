@@ -37,7 +37,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
                 bukkitServers = Database.getActive().fetch().getBukkitServers();
                 latestServerMapRefresh = MiscUtils.getTime();
             } catch (DBException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         }
     }

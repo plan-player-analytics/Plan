@@ -84,7 +84,7 @@ public class ManageMoveCommand extends SubCommand {
                     boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), Database.getActive().getConfigName());
                     Condition.isTrue(!movedToCurrentDatabase, Locale.get(Msg.MANAGE_INFO_CONFIG_REMINDER).toString(), sender);
                 } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
+                    Log.toLog(this.getClass() + " " + getTaskName(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();

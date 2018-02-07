@@ -92,7 +92,7 @@ public class ManageRestoreCommand extends SubCommand {
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
+                    Log.toLog(this.getClass() + " " + getTaskName(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();

@@ -56,7 +56,7 @@ public class RegisterProcessor extends PlayerProcessor {
             SessionCache.getInstance().markFirstSession(uuid);
             db.save().action(uuid, new Action(time, Actions.FIRST_SESSION, "Online: " + playersOnline + " Players"));
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } finally {
             Processor.queueMany(afterProcess);
         }

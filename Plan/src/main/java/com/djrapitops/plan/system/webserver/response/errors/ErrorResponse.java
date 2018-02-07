@@ -29,7 +29,7 @@ public class ErrorResponse extends Response {
         try {
             setContent(Theme.replaceColors(FileUtil.getStringFromResource("web/error.html")));
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 

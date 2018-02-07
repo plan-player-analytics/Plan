@@ -9,8 +9,8 @@ import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.base.Objects;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * @author Rsl1122
@@ -24,8 +24,8 @@ public abstract class Table {
     /**
      * Constructor.
      *
-     * @param name       Name of the table in the db.
-     * @param db         Database to use.
+     * @param name Name of the table in the db.
+     * @param db   Database to use.
      */
     public Table(String name, SQLDB db) {
         this.tableName = name;
@@ -71,19 +71,12 @@ public abstract class Table {
      * @throws SQLException DB error
      */
     protected boolean execute(String statementString) throws SQLException {
-        Statement statement = null;
-        Connection connection = null;
-        try {
-            connection = getConnection();
-            statement = connection.createStatement();
-            boolean b = statement.execute(statementString);
-//            Log.debug("Execute: " + statementString);
-            commit(connection);
-            return b;
-        } finally {
-            close(statement);
-            db.returnToPool(connection);
-        }
+        return execute(new ExecStatement(statementString) {
+            @Override
+            public void prepare(PreparedStatement statement) {
+                /* No preparations necessary */
+            }
+        });
     }
 
     /**
@@ -176,9 +169,11 @@ public abstract class Table {
         Connection connection = null;
         try {
             connection = getConnection();
-            updatedSomething = statement.execute(connection.prepareStatement(statement.getSql()));
-            commit(connection);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
+                updatedSomething = statement.execute(preparedStatement);
+            }
         } finally {
+            commit(connection);
             db.returnToPool(connection);
         }
         return updatedSomething;
@@ -188,9 +183,11 @@ public abstract class Table {
         Connection connection = null;
         try {
             connection = getConnection();
-            statement.executeBatch(connection.prepareStatement(statement.getSql()));
-            commit(connection);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
+                statement.executeBatch(preparedStatement);
+            }
         } finally {
+            commit(connection);
             db.returnToPool(connection);
         }
     }
@@ -199,7 +196,9 @@ public abstract class Table {
         Connection connection = null;
         try {
             connection = getConnection();
-            return statement.executeQuery(connection.prepareStatement(statement.getSql()));
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
+                return statement.executeQuery(preparedStatement);
+            }
         } finally {
             db.returnToPool(connection);
         }

@@ -66,7 +66,7 @@ public abstract class DBSystem implements SubSystem {
                 db.close();
             }
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 

@@ -10,10 +10,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * @author Rsl1122
@@ -52,13 +49,14 @@ public class SQLiteDB extends SQLDB {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             return null; // Should never happen.
         }
 
         String dbFilePath = new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db").getAbsolutePath();
 
         Connection newConnection = getConnectionFor(dbFilePath);
+        Log.debug("SQLite: Opened a new Connection");
         newConnection.setAutoCommit(false);
         return newConnection;
     }
@@ -80,22 +78,23 @@ public class SQLiteDB extends SQLDB {
                 @Override
                 public void run() {
                     Statement statement = null;
+                    ResultSet resultSet = null;
                     try {
                         if (connection != null && !connection.isClosed()) {
                             statement = connection.createStatement();
-                            statement.execute("/* ping */ SELECT 1");
+                            resultSet = statement.executeQuery("/* ping */ SELECT 1");
                         }
                     } catch (SQLException e) {
                         Log.debug("Something went wrong during Ping task.");
                         try {
                             connection = getNewConnection(dbName);
                         } catch (SQLException e1) {
-                            Log.toLog(this.getClass().getName(), e1);
+                            Log.toLog(this.getClass(), e1);
                             Log.error("SQLite connection maintaining task had to be closed due to exception.");
                             this.cancel();
                         }
                     } finally {
-                        MiscUtils.close(statement);
+                        MiscUtils.close(statement, resultSet);
                     }
                 }
             }).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);

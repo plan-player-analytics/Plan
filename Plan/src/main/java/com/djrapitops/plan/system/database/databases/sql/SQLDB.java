@@ -120,7 +120,7 @@ public abstract class SQLDB extends Database {
                         clean();
                     }
                 } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName(), e);
+                    Log.toLog(this.getClass(), e);
                 } finally {
                     cancel();
                 }
@@ -157,7 +157,7 @@ public abstract class SQLDB extends Database {
                         try {
                             new Version8TransferTable(db).alterTablesToV10();
                         } catch (DBInitException | SQLException e) {
-                            Log.toLog(this.getClass().getName(), e);
+                            Log.toLog(this.getClass(), e);
                         }
                     }
                 }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
@@ -270,7 +270,7 @@ public abstract class SQLDB extends Database {
             }
         } catch (SQLException e) {
             if (!e.getMessage().contains("cannot commit")) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         } finally {
             returnToPool(connection);

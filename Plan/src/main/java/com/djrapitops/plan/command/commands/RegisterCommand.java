@@ -125,7 +125,7 @@ public class RegisterCommand extends SubCommand {
                     sender.sendMessage(successMsg);
                     Log.info("Registered new user: " + userName + " Perm level: " + webUser.getPermLevel());
                 } catch (Exception e) {
-                    Log.toLog(this.getClass().getName(), e);
+                    Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();
                 }

@@ -114,7 +114,7 @@ public class WebServer implements SubSystem {
 
             Log.info(Locale.get(Msg.ENABLE_WEBSERVER_INFO).parse(server.getAddress().getPort()) + " (" + getAccessAddress() + ")");
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             enabled = false;
         }
     }
@@ -164,16 +164,16 @@ public class WebServer implements SubSystem {
             startSuccessful = true;
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             Log.error("WebServer: SSL Context Initialization Failed.");
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } catch (FileNotFoundException e) {
             Log.infoColor("§eWebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
             Log.info("No Certificate -> Using Http server for Visualization.");
         } catch (IOException e) {
             Log.error("WebServer: " + e);
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
             Log.error("WebServer: SSL Certificate loading Failed.");
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
         return startSuccessful;
     }

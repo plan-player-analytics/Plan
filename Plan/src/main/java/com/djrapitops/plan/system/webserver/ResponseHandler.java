@@ -80,7 +80,7 @@ public class ResponseHandler extends TreePageHandler {
                 return new InternalErrorResponse(request.getTarget(), e);
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             return new InternalErrorResponse(request.getTarget(), e);
         }
     }

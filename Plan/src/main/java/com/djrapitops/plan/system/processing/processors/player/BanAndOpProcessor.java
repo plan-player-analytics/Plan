@@ -35,7 +35,7 @@ public class BanAndOpProcessor extends PlayerProcessor {
             save.banStatus(uuid, banned);
             save.opStatus(uuid, opped);
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 }

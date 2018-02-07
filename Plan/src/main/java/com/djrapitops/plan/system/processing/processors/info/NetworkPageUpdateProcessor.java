@@ -21,7 +21,7 @@ public class NetworkPageUpdateProcessor implements Processor {
         try {
             InfoSystem.getInstance().updateNetworkPage();
         } catch (WebException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 }

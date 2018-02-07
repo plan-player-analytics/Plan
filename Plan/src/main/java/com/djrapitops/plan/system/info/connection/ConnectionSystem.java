@@ -98,7 +98,7 @@ public abstract class ConnectionSystem implements SubSystem {
         } catch (UnsupportedTransferDatabaseException e) {
             /* Do nothing */
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
         return Optional.empty();
     }
