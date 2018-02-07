@@ -6,6 +6,7 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.BungeeAPI;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.BungeeDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -15,6 +16,7 @@ import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
+import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -51,5 +53,11 @@ public class BungeeSystem extends PlanSystem {
 
     public void setDatabaseSystem(DBSystem dbSystem) {
         this.databaseSystem = dbSystem;
+    }
+
+    @Override
+    public void enable() throws EnableException {
+        super.enable();
+        NetworkSettings.placeSettingsToDB();
     }
 }

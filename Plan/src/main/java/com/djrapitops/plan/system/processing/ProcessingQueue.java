@@ -94,7 +94,7 @@ class ProcessConsumer extends Consumer<Processor> {
             process.process();
             Benchmark.stop(benchName);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-            Log.toLog(this.getTaskName() + ":" + process.getClass().getSimpleName(), e);
+            Log.toLog(process.getClass(), e);
         }
     }
 }

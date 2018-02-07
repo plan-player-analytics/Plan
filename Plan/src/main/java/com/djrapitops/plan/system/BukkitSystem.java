@@ -7,6 +7,7 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.api.BukkitAPI;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
@@ -15,6 +16,7 @@ import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
+import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.StaticHolder;
@@ -51,5 +53,11 @@ public class BukkitSystem extends PlanSystem {
 
     public static BukkitSystem getInstance() {
         return Plan.getInstance().getSystem();
+    }
+
+    @Override
+    public void enable() throws EnableException {
+        super.enable();
+        NetworkSettings.loadSettingsFromDB();
     }
 }

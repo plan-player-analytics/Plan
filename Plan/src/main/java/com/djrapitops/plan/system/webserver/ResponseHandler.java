@@ -108,7 +108,9 @@ public class ResponseHandler extends TreePageHandler {
         if (pageHandler == null) {
             return DefaultResponses.NOT_FOUND.get();
         } else {
-            if (authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target)) {
+            boolean noAuthRequired = !webServer.isAuthRequired();
+            boolean isAuthorized = authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target);
+            if (noAuthRequired || isAuthorized) {
                 return pageHandler.getResponse(request, target);
             }
             return forbiddenResponse();
