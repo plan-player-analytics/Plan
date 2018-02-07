@@ -119,7 +119,7 @@ public class ResponseHandler extends TreePageHandler {
 
     public Response forbiddenResponse() {
         return ResponseCache.loadResponse(PageId.FORBIDDEN.id(), () ->
-                new ForbiddenResponse("Unauthorized User.<br>"
-                        + "Make sure your user has the correct access level."));
+                new ForbiddenResponse("Your user is not authorized to view this page.<br>"
+                        + "If you believe this is an error contact staff to change your access level."));
     }
 }
