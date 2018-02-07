@@ -56,7 +56,7 @@ public class SQLiteDB extends SQLDB {
         String dbFilePath = new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db").getAbsolutePath();
 
         Connection newConnection = getConnectionFor(dbFilePath);
-        Log.debug("SQLite: Opened a new Connection");
+        Log.debug("SQLite " + dbName + ": Opened a new Connection");
         newConnection.setAutoCommit(false);
         return newConnection;
     }
@@ -130,8 +130,10 @@ public class SQLiteDB extends SQLDB {
     @Override
     public void close() {
         stopConnectionPingTask();
-        Log.debug("SQLite: Closed Connection");
-        MiscUtils.close(connection);
+        if (connection != null) {
+            Log.debug("SQLite " + dbName + ": Closed Connection");
+            MiscUtils.close(connection);
+        }
         super.close();
     }
 }

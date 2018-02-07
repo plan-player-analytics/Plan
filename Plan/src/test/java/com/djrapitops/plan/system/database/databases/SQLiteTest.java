@@ -61,10 +61,12 @@ public class SQLiteTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        System.out.println("--- Test Class Setup     ---");
         db = new SQLiteDB();
         SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem()
                 .enableDatabaseSystem(db)
+                .enableServerInfoSystem()
                 .enableServerInfoSystem();
         StaticHolder.saveInstance(SQLDB.class, Plan.class);
         StaticHolder.saveInstance(SQLiteTest.class, Plan.class);
@@ -74,6 +76,7 @@ public class SQLiteTest {
         Settings.DEV_MODE.setTemporaryValue(true);
 
         db.init();
+        System.out.println("--- Class Setup Complete ---\n");
     }
 
     @AfterClass
@@ -86,12 +89,12 @@ public class SQLiteTest {
 
     @Before
     public void setUp() throws DBException, SQLException {
-        System.out.println("-- Clearing Test Database --");
+        System.out.println("\n-- Clearing Test Database --");
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));
         assertEquals(ServerInfo.getServerUUID(), TestConstants.SERVER_UUID);
-        System.out.println("--     Clear Complete     --");
+        System.out.println("--     Clear Complete     --\n");
     }
 
     @Test
@@ -755,8 +758,10 @@ public class SQLiteTest {
 
     @Test
     public void testBackupAndRestore() throws SQLException, DBInitException {
+        System.out.println("- Creating Backup Database -");
         SQLiteDB backup = new SQLiteDB("debug-backup" + MiscUtils.getTime());
         backup.init();
+        System.out.println("- Backup Database Created  -");
 
         saveAllData(db);
 
@@ -852,9 +857,11 @@ public class SQLiteTest {
     public void testRegisterProcessorRegisterException() throws SQLException {
         assertFalse(db.getUsersTable().isRegistered(playerUUID));
         assertFalse(db.getUserInfoTable().isRegistered(playerUUID));
+        System.out.println("\n- Running RegisterProcessors -");
         for (int i = 0; i < 200; i++) {
             new RegisterProcessor(playerUUID, 500L, 1000L, "name", 4).process();
         }
+        System.out.println("- RegisterProcessors Run -\n");
         assertTrue(db.getUsersTable().isRegistered(playerUUID));
         assertTrue(db.getUserInfoTable().isRegistered(playerUUID));
     }

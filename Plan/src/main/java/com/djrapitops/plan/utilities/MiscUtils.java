@@ -116,8 +116,11 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (IOException ignored) {
-                    /* Ignored */
+                } catch (IOException e) {
+                    if (Settings.DEV_MODE.isTrue()) {
+                        Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
+                        Log.toLog(MiscUtils.class, e);
+                    }
                 }
             }
         }
@@ -128,8 +131,11 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (Exception ignored) {
-                    /* Ignored */
+                } catch (Exception e) {
+                    if (Settings.DEV_MODE.isTrue()) {
+                        Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
+                        Log.toLog(MiscUtils.class, e);
+                    }
                 }
             }
         }
