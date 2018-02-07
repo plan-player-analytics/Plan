@@ -155,9 +155,10 @@ public class TransferTable extends Table {
                 while (set.next()) {
                     String uuidString = set.getString(columnExtraVariables);
                     UUID uuid = UUID.fromString(uuidString);
-                    String html64 = set.getString(columnContent);
 
-                    htmlPerUUID.put(uuid, html64);
+                    if (!htmlPerUUID.containsKey(uuid)) {
+                        htmlPerUUID.put(uuid, set.getString(columnContent));
+                    }
                 }
                 return htmlPerUUID;
             }
