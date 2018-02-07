@@ -16,11 +16,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import utilities.Teardown;
 import utilities.TestConstants;
 import utilities.mocks.objects.FakeConsoleCmdSender;
+import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.logging.Logger;
 
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
@@ -64,7 +64,8 @@ public class BukkitMockUtil extends MockUtil {
 
     public BukkitMockUtil withLogging() {
         doCallRealMethod().when(planMock).log(Mockito.anyString(), Mockito.anyString());
-        when(planMock.getLogger()).thenReturn(Logger.getGlobal());
+        TestLogger testLogger = new TestLogger();
+        when(planMock.getLogger()).thenReturn(testLogger);
         return this;
     }
 

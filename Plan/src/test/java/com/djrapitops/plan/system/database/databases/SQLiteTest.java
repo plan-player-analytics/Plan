@@ -86,10 +86,12 @@ public class SQLiteTest {
 
     @Before
     public void setUp() throws DBException, SQLException {
+        System.out.println("-- Clearing Test Database --");
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));
         assertEquals(ServerInfo.getServerUUID(), TestConstants.SERVER_UUID);
+        System.out.println("--     Clear Complete     --");
     }
 
     @Test

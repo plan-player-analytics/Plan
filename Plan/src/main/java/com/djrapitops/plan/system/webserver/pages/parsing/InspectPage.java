@@ -34,7 +34,6 @@ import com.djrapitops.plan.utilities.html.tables.GeoInfoTable;
 import com.djrapitops.plan.utilities.html.tables.NicknameTable;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.IOException;
 import java.util.*;
@@ -59,7 +58,6 @@ public class InspectPage extends Page {
             if (uuid == null) {
                 throw new IllegalStateException("UUID was null!");
             }
-            Log.logDebug("Database", "Inspect Parse Fetch");
             Benchmark.start("Inspect Parse, Fetch");
             Database db = Database.getActive();
             PlayerProfile profile = db.fetch().getPlayerProfile(uuid);

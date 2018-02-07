@@ -130,6 +130,7 @@ public class SQLiteDB extends SQLDB {
     @Override
     public void close() {
         stopConnectionPingTask();
+        Log.debug("SQLite: Closed Connection");
         MiscUtils.close(connection);
         super.close();
     }

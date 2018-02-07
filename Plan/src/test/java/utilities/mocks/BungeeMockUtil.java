@@ -18,10 +18,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import utilities.Teardown;
 import utilities.TestConstants;
 import utilities.mocks.objects.FakeBungeeConsole;
+import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.logging.Logger;
 
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
@@ -70,7 +70,8 @@ public class BungeeMockUtil extends MockUtil {
 
     public BungeeMockUtil withLogging() {
         doCallRealMethod().when(planMock).log(Mockito.anyString(), Mockito.anyString());
-        when(planMock.getLogger()).thenReturn(Logger.getGlobal());
+        TestLogger testLogger = new TestLogger();
+        when(planMock.getLogger()).thenReturn(testLogger);
         return this;
     }
 

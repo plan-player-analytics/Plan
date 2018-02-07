@@ -6,8 +6,6 @@ import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import com.djrapitops.plan.system.database.databases.sql.tables.UserIDTable;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -25,8 +23,6 @@ public class SQLRemoveOps extends SQLOps implements RemoveOperations {
         }
 
         try {
-            Log.logDebug("Database", "Removing Account: " + uuid);
-            Benchmark.start("Database", "Remove Account");
             String webUser = usersTable.getPlayerName(uuid);
 
             for (Table t : db.getAllTablesInRemoveOrder()) {
@@ -41,8 +37,6 @@ public class SQLRemoveOps extends SQLOps implements RemoveOperations {
             securityTable.removeUser(webUser);
         } catch (SQLException e) {
             throw SQLErrorUtil.getFatalExceptionFor(e);
-        } finally {
-            Benchmark.stop("Database", "Remove Account");
         }
     }
 

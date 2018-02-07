@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.database.databases.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.database.databases.sql.tables.move.Version8TransferTable;
-import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -97,17 +96,8 @@ public abstract class SQLDB extends Database {
     @Override
     public void init() throws DBInitException {
         open = true;
-        setStatus("Initiating");
-        String benchName = "Init " + getConfigName();
-        Benchmark.start("Database", benchName);
-        try {
-            setupDataSource();
-            setupDatabase();
-        } finally {
-            Benchmark.stop("Database", benchName);
-            Log.logDebug("Database");
-        }
-        setStatus("Open");
+        setupDataSource();
+        setupDatabase();
     }
 
     @Override
@@ -186,11 +176,9 @@ public abstract class SQLDB extends Database {
      * Updates table columns to latest schema.
      */
     private void createTables() throws DBInitException {
-        Benchmark.start("Database", "Create tables");
         for (Table table : getAllTables()) {
             table.createTable();
         }
-        Benchmark.stop("Database", "Create tables");
     }
 
     /**
@@ -230,8 +218,6 @@ public abstract class SQLDB extends Database {
     @Override
     public void close() {
         open = false;
-        setStatus("Closed");
-        Log.logDebug("Database"); // Log remaining Debug info if present
         if (dbCleanTask != null) {
             dbCleanTask.cancel();
         }
@@ -250,10 +236,6 @@ public abstract class SQLDB extends Database {
         tpsTable.clean();
         transferTable.clean();
         Log.info("Clean complete.");
-    }
-
-    private void setStatus(String status) {
-        Log.logDebug("Database", status);
     }
 
     public abstract Connection getConnection() throws SQLException;
