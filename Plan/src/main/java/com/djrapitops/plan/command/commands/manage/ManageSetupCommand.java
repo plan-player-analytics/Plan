@@ -1,9 +1,6 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
-import com.djrapitops.plan.api.exceptions.connection.ForbiddenException;
-import com.djrapitops.plan.api.exceptions.connection.UnauthorizedServerException;
-import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
@@ -47,7 +44,7 @@ public class ManageSetupCommand extends SubCommand {
             return true;
         }
         String address = args[0].toLowerCase();
-        if (!address.startsWith("http")) {
+        if (!address.startsWith("http") || address.endsWith("://")) {
             sender.sendMessage("§cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address.");
             return true;
         }
@@ -67,9 +64,13 @@ public class ManageSetupCommand extends SubCommand {
             sender.sendMessage("§eConnection succeeded, but Receiving server was a Bukkit server. Use Bungee address instead.");
         } catch (UnauthorizedServerException e) {
             sender.sendMessage("§eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support");
+        } catch (ConnectionFailException e) {
+            sender.sendMessage("§eConnection failed: " + e.getMessage());
+        } catch (InternalErrorException e) {
+            sender.sendMessage("§eConnection succeeded. " + e.getMessage() + ", check possible ErrorLog on receiving server's debug page.");
         } catch (WebException e) {
             Log.toLog(this.getClass(), e);
-            sender.sendMessage("§cConnection to Bungee WebServer failed: More info on console");
+            sender.sendMessage("§cConnection to Bungee WebServer failed: More info in the error log.");
         }
         return true;
     }

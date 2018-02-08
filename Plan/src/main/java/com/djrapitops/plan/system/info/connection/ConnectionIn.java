@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.ByteArrayOutputStream;
@@ -26,31 +27,42 @@ public class ConnectionIn {
     public ConnectionIn(Request httpRequest, InfoRequest infoRequest) throws WebException {
         Verify.nullCheck(httpRequest, infoRequest);
 
-        Map<String, String> variables = readVariables(httpRequest);
-        checkAuthentication(variables);
-
-        this.variables = variables;
+        this.variables = readVariables(httpRequest);
         this.infoRequest = infoRequest;
+
+        checkAuthentication();
     }
 
-    private void checkAuthentication(Map<String, String> variables) throws WebException {
-        String sender = variables.get("sender");
-        Verify.nullCheck(sender, () -> new BadRequestException("Sender ('sender') variable not supplied in the request."));
-        UUID serverUUID = UUID.fromString(sender);
+    private void checkAuthentication() throws WebException {
+        UUID serverUUID = getServerUUID();
 
         try {
-            if (!Database.getActive().check().isServerInDatabase(serverUUID)) {
-                if (infoRequest instanceof SetupRequest) {
-                    if (ConnectionSystem.isSetupAllowed()) {
-                        return;
-                    } else {
-                        throw new ForbiddenException("Setup not enabled on this server, use commands to enable.");
-                    }
-                }
-                throw new UnauthorizedServerException(sender + " (Sender) was not found from database");
+            if (Database.getActive().check().isServerInDatabase(serverUUID)) {
+                return;
             }
         } catch (DBException e) {
             throw new TransferDatabaseException(e);
+        }
+
+        Log.debug("ConnectionIn: " + infoRequest.getClass().getSimpleName());
+
+        if (infoRequest instanceof SetupRequest) {
+            if (!ConnectionSystem.isSetupAllowed()) {
+                throw new ForbiddenException("Setup not enabled on this server, use commands to enable.");
+            }
+        } else {
+            throw new UnauthorizedServerException(serverUUID + " (Sender) was not found from database");
+        }
+    }
+
+    private UUID getServerUUID() throws BadRequestException {
+        String sender = variables.get("sender");
+        Verify.nullCheck(sender, () -> new BadRequestException("Sender ('sender') variable not supplied in the request."));
+
+        try {
+            return UUID.fromString(sender);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Sender ('sender') was not a valid UUID: " + e.getMessage());
         }
     }
 
