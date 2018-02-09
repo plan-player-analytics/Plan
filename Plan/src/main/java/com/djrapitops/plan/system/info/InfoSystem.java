@@ -18,6 +18,7 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SendDBSettingsRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -29,6 +30,8 @@ import java.util.UUID;
  * Information management system.
  * <p>
  * Subclasses should decide how InfoRequests are run locally if necessary.
+ *
+ * Everything should be called from an Async thread.
  *
  * @author Rsl1122
  */
@@ -46,6 +49,14 @@ public abstract class InfoSystem implements SubSystem {
         return infoSystem;
     }
 
+    /**
+     * Refreshes Player page.
+     * <p>
+     * No calls from non-async thread found on 09.02.2018
+     *
+     * @param player UUID of the player.
+     * @throws WebException If fails.
+     */
     public void generateAndCachePlayerPage(UUID player) throws WebException {
         GenerateInspectPageRequest infoRequest = new GenerateInspectPageRequest(player);
         try {
@@ -55,10 +66,14 @@ public abstract class InfoSystem implements SubSystem {
         }
     }
 
-    public void generateAnalysisPageOfThisServer() throws WebException {
-        generateAnalysisPage(ServerInfo.getServerUUID());
-    }
-
+    /**
+     * Refreshes Analysis page.
+     *
+     * No calls from non-async thread found on 09.02.2018
+     *
+     * @param serverUUID UUID of the server to analyze
+     * @throws WebException If fails.
+     */
     public void generateAnalysisPage(UUID serverUUID) throws WebException {
         GenerateAnalysisPageRequest request = new GenerateAnalysisPageRequest(serverUUID);
         if (ServerInfo.getServerUUID().equals(serverUUID)) {
@@ -68,6 +83,14 @@ public abstract class InfoSystem implements SubSystem {
         }
     }
 
+    /**
+     * Send an InfoRequest to another server or run locally if necessary.
+     *
+     * No calls from non-async thread found on 09.02.2018
+     *
+     * @param infoRequest InfoRequest to send or run.
+     * @throws WebException If fails.
+     */
     public void sendRequest(InfoRequest infoRequest) throws WebException {
         try {
             if (!connectionSystem.isServerAvailable()) {
@@ -85,19 +108,29 @@ public abstract class InfoSystem implements SubSystem {
         }
     }
 
+    /**
+     * Run the InfoRequest locally.
+     *
+     * No calls from non-async thread found on 09.02.2018
+     *
+     * @param infoRequest InfoRequest to run.
+     * @throws WebException If fails.
+     */
     public abstract void runLocally(InfoRequest infoRequest) throws WebException;
 
     @Override
     public void enable() throws EnableException {
         connectionSystem.enable();
-        try {
-            updateNetworkPage();
-        } catch (NoServersException e) {
-            /* Ignored */
-        } catch (WebException e) {
-            // TODO Exception handling
-            Log.toLog(this.getClass(), e);
-        }
+        Processor.queue(() -> {
+            try {
+                updateNetworkPage();
+            } catch (NoServersException e) {
+                /* Ignored */
+            } catch (WebException e) {
+                // TODO Exception handling
+                Log.toLog(this.getClass(), e);
+            }
+        });
     }
 
     @Override
@@ -109,8 +142,23 @@ public abstract class InfoSystem implements SubSystem {
         return connectionSystem;
     }
 
+    /**
+     * Updates Network page.
+     *
+     * No calls from non-async thread found on 09.02.2018
+     *
+     * @throws WebException If fails.
+     */
     public abstract void updateNetworkPage() throws WebException;
 
+    /**
+     * Requests Set up from Bungee.
+     *
+     * No calls from non-async thread found on 09.02.2018
+     *
+     * @param addressToRequestServer Address of Bungee server.
+     * @throws WebException If fails.
+     */
     public void requestSetUp(String addressToRequestServer) throws WebException {
         if (Check.isBungeeAvailable()) {
             throw new BadRequestException("Method not available on Bungee.");

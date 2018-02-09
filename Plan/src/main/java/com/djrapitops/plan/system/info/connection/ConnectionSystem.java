@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.info.connection;
 
+import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
@@ -14,6 +15,7 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -93,6 +95,11 @@ public abstract class ConnectionSystem implements SubSystem {
 
     protected Optional<UUID> getServerWherePlayerIsOnline(GenerateInspectPageRequest infoRequest) {
         UUID playerUUID = infoRequest.getPlayerUUID();
+
+        if (Check.isBukkitAvailable() && Plan.getInstance().getServer().getPlayer(playerUUID) != null) {
+            return Optional.of(ServerInfo.getServerUUID());
+        }
+
         try {
             return Database.getActive().transfer().getServerPlayerIsOnlineOn(playerUUID);
         } catch (UnsupportedTransferDatabaseException e) {

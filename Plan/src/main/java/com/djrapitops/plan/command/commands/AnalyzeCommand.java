@@ -83,19 +83,13 @@ public class AnalyzeCommand extends SubCommand {
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 
-    private void sendWebUserNotificationIfNecessary(ISender sender) {
+    private void sendWebUserNotificationIfNecessary(ISender sender) throws DBException {
         if (WebServerSystem.getInstance().getWebServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {
 
-            Processor.queue(() -> {
-                try {
-                    boolean senderHasWebUser = Database.getActive().check().doesWebUserExists(sender.getName());
-                    if (!senderHasWebUser) {
-                        sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
-                    }
-                } catch (Exception e) {
-                    Log.toLog(this.getClass(), e);
-                }
-            });
+            boolean senderHasWebUser = Database.getActive().check().doesWebUserExists(sender.getName());
+            if (!senderHasWebUser) {
+                sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
+            }
         }
     }
 
