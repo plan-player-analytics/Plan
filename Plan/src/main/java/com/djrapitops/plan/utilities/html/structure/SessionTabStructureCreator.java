@@ -51,7 +51,7 @@ public class SessionTabStructureCreator {
             maxSessions = 50;
         }
 
-        boolean appendWorldPerc = Settings.APPEND_WORLD_PERC.isTrue();
+        boolean appendWorldPercentage = Settings.APPEND_WORLD_PERC.isTrue();
 
         for (Session session : allSessions) {
             if (i >= maxSessions) {
@@ -72,12 +72,12 @@ public class SessionTabStructureCreator {
             String name = DataCache.getInstance().getName(uuid);
             String link = PlanAPI.getInstance().getPlayerInspectPageLink(name);
 
-            String dotSeparated2 = appendWorldPerc
+            String info = appendWorldPercentage
                     ? HtmlStructure.separateWithDots(sessionStart, SessionsTableCreator.getLongestWorldPlayed(session))
                     : sessionStart;
-            String dotSeparated = appendName ?
-                    HtmlStructure.separateWithDots(name, dotSeparated2) :
-                    HtmlStructure.separateWithDots(serverName, dotSeparated2);
+            String nameAndInfo = appendName ?
+                    HtmlStructure.separateWithDots(name, info) :
+                    HtmlStructure.separateWithDots(serverName, info);
 
 
             String htmlID = "" + session.getSessionStart() + sessionID + i;
@@ -93,11 +93,12 @@ public class SessionTabStructureCreator {
             html.append("<div title=\"Session ID: ").append(sessionID)
                     .append("\"class=\"panel panel-col-").append(Theme.getValue(ThemeVal.PARSED_SESSION_ACCORDION)).append("\">")
                     .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
-                    .append("<h4 class=\"panel-title\">")
+                    .append("<h4 class=\"panel-title\">") // Title (header)
                     .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
                     .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
                     .append("aria-controls=\"session_").append(htmlID).append("\">")
-                    .append(dotSeparated).append("<span class=\"pull-right\">").append(sessionEnd).append("</span>") // Title (header)
+                    .append(nameAndInfo)
+                    .append("<span class=\"pull-right\">").append(sessionLength).append("</span>")
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 

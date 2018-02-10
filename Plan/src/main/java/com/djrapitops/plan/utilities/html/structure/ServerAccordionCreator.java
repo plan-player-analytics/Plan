@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * HTML utility class for creating a Session Accordion.
+ * HTML utility class for creating a Server Accordion.
  *
  * @author Rsl1122
  */
