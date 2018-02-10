@@ -99,6 +99,7 @@ public abstract class PlanSystem implements SubSystem {
     @Override
     public void disable() {
         SubSystem[] systems = new SubSystem[]{
+                taskSystem,
                 hookHandler,
                 cacheSystem,
                 listenerSystem,
@@ -107,7 +108,6 @@ public abstract class PlanSystem implements SubSystem {
                 webServerSystem,
                 infoSystem,
                 serverInfo,
-                taskSystem,
                 configSystem,
                 fileSystem,
                 versionCheckSystem

@@ -1,16 +1,12 @@
 package com.djrapitops.plan.system.processing;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.utilities.queue.Consumer;
 import com.djrapitops.plan.utilities.queue.Queue;
 import com.djrapitops.plan.utilities.queue.Setup;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.List;
@@ -45,22 +41,9 @@ public class ProcessingQueue extends Queue<Processor> implements SubSystem {
     @Override
     public void disable() {
         List<Processor> processors = stopAndReturnLeftovers();
-        if (PlanPlugin.getInstance().isReloading()) {
-            RunnableFactory.createNew("Re-Add processors", new AbsRunnable() {
-                @Override
-                public void run() {
-                    ProcessingQueue que = ProcessingQueue.getInstance();
-                    for (Processor processor : processors) {
-                        que.queue(processor);
-                    }
-                    cancel();
-                }
-            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
-        } else {
-            Log.info("Processing unprocessed processors. (" + processors.size() + ")");
-            for (Processor processor : processors) {
-                processor.process();
-            }
+        Log.info("Processing unprocessed processors. (" + processors.size() + ")");
+        for (Processor processor : processors) {
+            processor.process();
         }
     }
 
@@ -77,7 +60,6 @@ public class ProcessingQueue extends Queue<Processor> implements SubSystem {
 }
 
 class ProcessConsumer extends Consumer<Processor> {
-
 
     ProcessConsumer(BlockingQueue<Processor> q) {
         super(q, "ProcessQueueConsumer");

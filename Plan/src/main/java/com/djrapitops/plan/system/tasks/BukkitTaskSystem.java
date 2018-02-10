@@ -15,6 +15,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
+import org.bukkit.Bukkit;
 
 /**
  * TaskSystem responsible for registering tasks for Bukkit.
@@ -40,6 +41,12 @@ public class BukkitTaskSystem extends TaskSystem {
     @Override
     public void enable() {
         registerTasks();
+    }
+
+    @Override
+    public void disable() {
+        super.disable();
+        Bukkit.getScheduler().cancelTasks(plugin);
     }
 
     private void registerTasks() {

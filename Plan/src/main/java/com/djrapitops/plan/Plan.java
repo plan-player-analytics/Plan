@@ -30,11 +30,9 @@ import com.djrapitops.plan.utilities.metrics.BStats;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.systems.TaskCenter;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -101,8 +99,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         Log.info(Locale.get(Msg.DISABLED).toString());
         Benchmark.pluginDisabled(Plan.class);
         DebugLog.pluginDisabled(Plan.class);
-        TaskCenter.cancelAllKnownTasks(Plan.class);
-        Bukkit.getScheduler().cancelTasks(this);
     }
 
     @Override
