@@ -878,7 +878,9 @@
                                         <h2><i class="col-lime fa fa-terminal"></i> Command Usage</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <p class="pull-right"><i class="col-light-green fa fa-chevron-right"></i> Used Commands: ${commandCount} <i class="col-lime fa fa-chevron-right"></i> Unique: ${commandUniqueCount}</p>
+                                        <p class="pull-right"><i class="col-light-green fa fa-chevron-right"></i> Used
+                                            Commands: ${commandCount} <i class="col-lime fa fa-chevron-right"></i>
+                                            Unique: ${commandUniqueCount}</p>
                                     </div>
                                 </div>
                             </div>
@@ -997,94 +999,109 @@
     };
 
     // HighCharts Series
-    var playersOnlineSeries = {
-        name: 'Players Online',
-        data: v.data.playersOnline,
-        type: 'areaspline',
-        color: v.colors.playersOnline,
+    var s = {
+        name: {
+            playersOnline: 'Players Online',
+            tps: 'TPS',
+            cpu: 'CPU Usage (%)',
+            ram: 'RAM Usage (MB)',
+            entities: 'Loaded Entities',
+            chunks: 'Loaded Chunks'
+        },
         tooltip: {
-            valueDecimals: 0
+            twoDecimals: {
+                valueDecimals: 2
+            },
+            zeroDecimals: {
+                valueDecimals: 0
+            }
+        },
+        type: {
+            areaSpline: 'areaspline',
+            spline: 'spline'
+        },
+        zones: {
+            tps: [{
+                value: v.values.tpsMed,
+                color: v.colors.tpsLow
+            }, {
+                value: v.values.tpsHigh,
+                color: v.colors.tpsMed
+            }, {
+                value: 30,
+                color: v.colors.tpsHigh
+            }]
         }
     };
-    var tpsSeries = {
-        name: 'TPS',
-        data: v.data.tps,
-        type: 'spline',
-        zones: [{
-            value: v.values.tpsMed,
-            color: v.colors.tpsLow
-        }, {
-            value: v.values.tpsHigh,
-            color: v.colors.tpsMed
-        }, {
-            value: 30,
-            color: v.colors.tpsHigh
-        }],
-        tooltip: {
-            valueDecimals: 2
-        }
+    var series = {
+        playersOnline: {
+            name: s.name.playersOnline,
+            type: s.type.areaSpline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.playersOnline,
+            color: v.colors.playersOnline
+        },
+        tps: {
+            name: s.name.tps,
+            type: s.type.spline,
+            zones: s.zones.tps,
+            tooltip: s.tooltip.twoDecimals,
+            data: v.data.tps
+        },
+        cpu: {
+            name: s.name.cpu,
+            type: s.type.spline,
+            tooltip: s.tooltip.twoDecimals,
+            data: v.data.cpu,
+            color: v.colors.cpu
+        },
+        ram: {
+            name: s.name.ram,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.ram,
+            color: v.colors.ram
+        },
+        entities: {
+            name: s.name.entities,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.entities,
+            color: v.colors.entities
+        },
+        chunks: {
+            name: s.name.chunks,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.chunks,
+            colors: v.colors.chunks
+        },
+        activityPie: {
+            name: 'Players',
+            colorByPoint: true,
+            data: v.data.activityPie
+        },
+        worldPie: {
+            name: 'World Playtime',
+            colorByPoint: true,
+            data: v.data.worldPie
+        },
+        worldPieDrillDown: v.data.worldPieDrillDown,
+        geolocations: {
+            name: 'Players',
+            type: 'map',
+            mapData: Highcharts.maps['custom/world'],
+            data: v.data.geolocations,
+            joinBy: ['iso-a3', 'code']
+        },
+        punchCard: {
+            name: 'Relative Activity',
+            color: v.colors.punchCard,
+            data: v.data.punchCard
+        },
+        activityStack: v.data.activityStack,
+        activityStackCategories: v.data.activityStackCategories
     };
-    var cpuSeries = {
-        name: 'CPU Usage (%)',
-        data: v.data.cpu,
-        type: 'spline',
-        color: v.colors.cpu,
-        tooltip: {
-            valueDecimals: 2
-        }
-    };
-    var ramSeries = {
-        name: 'RAM Usage (MB)',
-        data: v.data.ram,
-        type: 'spline',
-        color: v.colors.ram,
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var entitySeries = {
-        name: 'Loaded Entities',
-        data: v.data.entities,
-        type: 'spline',
-        color: v.colors.entities,
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var chunkSeries = {
-        name: 'Loaded Chunks',
-        data: v.data.chunks,
-        type: 'spline',
-        color: v.colors.chunks,
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var activitySeries = {
-        name: 'Players',
-        colorByPoint: true,
-        data: v.data.activityPie
-    };
-    var worldSeries = {
-        name: 'World Playtime',
-        colorByPoint: true,
-        data: v.data.worldPie
-    };
-    var gmSeries = v.data.worldPieDrillDown;
-    var mapSeries = {
-        name: 'Players',
-        type: 'map',
-        mapData: Highcharts.maps['custom/world'],
-        data: v.data.geolocations,
-        joinBy: ['iso-a3', 'code']
-    };
-    var punchcardSeries = {
-        name: 'Relative Activity',
-        color: v.colors.punchCard,
-        data: v.data.punchCard
-    };
-    var activityStackSeries = v.data.activityStack;
-    var activityCategories = v.data.activityStackCategories
 </script>
 
 <!-- Plan load script -->
@@ -1112,17 +1129,17 @@
         openFunc(slideIndex)();
 
         // Chart draw scripts
-        activityPie('activityPie', activitySeries);
-        stackChart('activityStackGraph', activityCategories, activityStackSeries, 'Players');
-        worldPie('worldPie', worldSeries, gmSeries);
-        playersChart('playerChartDay', playersOnlineSeries, 3);
-        playersChart('playerChartMonth', playersOnlineSeries, 2);
-        performanceChart('performanceGraph', playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries);
-        tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
-        resourceChart('resourceGraph', cpuSeries, ramSeries, playersOnlineSeries);
-        worldChart('worldGraph', entitySeries, chunkSeries, playersOnlineSeries);
-        worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, mapSeries);
-        punchCard('punchCard', punchcardSeries);
+        activityPie('activityPie', series.activityPie);
+        stackChart('activityStackGraph', series.activityStackCategories, series.activityStack, 'Players');
+        worldPie('worldPie', series.worldPie, series.worldPieDrillDown);
+        playersChart('playerChartDay', series.playersOnline, 3);
+        playersChart('playerChartMonth', series.playersOnline, 2);
+        performanceChart('performanceGraph', series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks);
+        tpsChart('tpsGraph', series.tps, series.playersOnline);
+        resourceChart('resourceGraph', series.cpu, series.ram, series.playersOnline);
+        worldChart('worldGraph', series.entities, series.chunks, series.playersOnline);
+        worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, series.geolocations);
+        punchCard('punchCard', series.punchCard);
         healthGauge('healthGauge', [v.data.healthIndex]);
         ${sessionTabGraphViewFunctions}
 
