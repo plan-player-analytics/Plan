@@ -962,22 +962,6 @@
 
     // Replaced Variables
     var v = {
-        data: {
-            playersOnline: ${playersOnlineSeries},
-            tps: ${tpsSeries},
-            cpu: ${cpuSeries},
-            ram: ${ramSeries},
-            entities: ${entitySeries},
-            chunks:  ${chunkSeries},
-            activityPie: ${activityPieSeries},
-            worldPie: ${worldSeries},
-            worldPieDrillDown: ${gmSeries},
-            geolocations: ${geoMapSeries},
-            punchCard: ${punchCardSeries},
-            activityStack: ${activityStackSeries},
-            activityStackCategories: ${activityStackCategories},
-            healthIndex: ${healthIndex}
-        },
         colors: {
             playersOnline: '${playersGraphColor}',
             tpsLow: '${tpsLowColor}',
@@ -994,8 +978,23 @@
         values: {
             tpsMed: ${tpsMedium},
             tpsHigh: ${tpsHigh}
+        },
+        data: {
+            playersOnline: ${playersOnlineSeries},
+            tps: ${tpsSeries},
+            cpu: ${cpuSeries},
+            ram: ${ramSeries},
+            entities: ${entitySeries},
+            chunks:  ${chunkSeries},
+            activityPie: ${activityPieSeries},
+            worldPie: ${worldSeries},
+            worldPieDrillDown: ${gmSeries},
+            geolocations: ${geoMapSeries},
+            punchCard: ${punchCardSeries},
+            activityStack: ${activityStackSeries},
+            activityStackCategories: ${activityStackCategories},
+            healthIndex: ${healthIndex}
         }
-
     };
 
     // HighCharts Series
@@ -1039,42 +1038,80 @@
             type: s.type.areaSpline,
             tooltip: s.tooltip.zeroDecimals,
             data: v.data.playersOnline,
-            color: v.colors.playersOnline
+            color: v.colors.playersOnline,
+            yAxis: 0
         },
         tps: {
             name: s.name.tps,
             type: s.type.spline,
             zones: s.zones.tps,
             tooltip: s.tooltip.twoDecimals,
-            data: v.data.tps
+            data: v.data.tps,
+            yAxis: 1
         },
         cpu: {
             name: s.name.cpu,
             type: s.type.spline,
             tooltip: s.tooltip.twoDecimals,
             data: v.data.cpu,
-            color: v.colors.cpu
+            color: v.colors.cpu,
+            yAxis: 2
+        },
+        cpu_alt: {
+            name: s.name.cpu,
+            type: s.type.spline,
+            tooltip: s.tooltip.twoDecimals,
+            data: v.data.cpu,
+            color: v.colors.cpu,
+            yAxis: 1
         },
         ram: {
             name: s.name.ram,
             type: s.type.spline,
             tooltip: s.tooltip.zeroDecimals,
             data: v.data.ram,
-            color: v.colors.ram
+            color: v.colors.ram,
+            yAxis: 3
+        },
+        ram_alt: {
+            name: s.name.ram,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.ram,
+            color: v.colors.ram,
+            yAxis: 2
         },
         entities: {
             name: s.name.entities,
             type: s.type.spline,
             tooltip: s.tooltip.zeroDecimals,
             data: v.data.entities,
-            color: v.colors.entities
+            color: v.colors.entities,
+            yAxis: 4
+        },
+        entities_alt: {
+            name: s.name.entities,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.entities,
+            color: v.colors.entities,
+            yAxis: 1
         },
         chunks: {
             name: s.name.chunks,
             type: s.type.spline,
             tooltip: s.tooltip.zeroDecimals,
             data: v.data.chunks,
-            colors: v.colors.chunks
+            color: v.colors.chunks,
+            yAxis: 5
+        },
+        chunks_alt: {
+            name: s.name.chunks,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.chunks,
+            color: v.colors.chunks,
+            yAxis: 2
         },
         activityPie: {
             name: 'Players',
@@ -1136,8 +1173,8 @@
         playersChart('playerChartMonth', series.playersOnline, 2);
         performanceChart('performanceGraph', series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks);
         tpsChart('tpsGraph', series.tps, series.playersOnline);
-        resourceChart('resourceGraph', series.cpu, series.ram, series.playersOnline);
-        worldChart('worldGraph', series.entities, series.chunks, series.playersOnline);
+        resourceChart('resourceGraph', series.cpu_alt, series.ram_alt, series.playersOnline);
+        worldChart('worldGraph', series.entities_alt, series.chunks_alt, series.playersOnline);
         worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, series.geolocations);
         punchCard('punchCard', series.punchCard);
         healthGauge('healthGauge', [v.data.healthIndex]);
