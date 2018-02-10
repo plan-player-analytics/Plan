@@ -85,13 +85,13 @@ public class TransferTable extends Table {
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, MiscUtils.getTime() + TimeAmount.MINUTE.ms());
+                statement.setLong(1, MiscUtils.getTime());
                 statement.setString(2, "onlineStatus");
             }
         });
         sql = "DELETE FROM " + tableName +
                 " WHERE " + columnSenderID + " = " + serverTable.statementSelectServerID +
-                " AND " + columnInfoType + " != ?";
+                " AND " + columnInfoType + " = ?";
 
         execute(new ExecStatement(sql) {
             @Override

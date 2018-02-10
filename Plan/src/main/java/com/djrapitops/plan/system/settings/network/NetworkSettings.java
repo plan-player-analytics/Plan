@@ -54,8 +54,6 @@ public class NetworkSettings {
             return;
         }
 
-        Log.debug("Saving Config settings to database.");
-
         Processor.queue(() -> {
             try {
                 new NetworkSettings().placeToDatabase();
@@ -66,22 +64,25 @@ public class NetworkSettings {
     }
 
     public void loadFromDatabase() throws DBException, UnsupportedTransferDatabaseException {
+        Log.debug("NetworkSettings: Fetch Config settings from database..");
         Optional<String> encodedConfigSettings = Database.getActive().transfer().getEncodedConfigSettings();
 
         if (!encodedConfigSettings.isPresent()) {
-            Log.debug("No Config settings in database.");
+            Log.debug("NetworkSettings: No Config settings in database.");
             return;
         }
 
         String configSettings = Base64Util.decode(encodedConfigSettings.get());
         Map<String, String> pathValueMap = getPathsAndValues(configSettings);
 
+        Log.debug("NetworkSettings: Updating Settings");
         ServerSpecificSettings.updateSettings(pathValueMap);
     }
 
     private Map<String, String> getPathsAndValues(String configSettings) {
         Map<String, String> pathValueMap = new HashMap<>();
 
+        Log.debug("NetworkSettings: Reading Config String..");
         String[] settings = configSettings.split(SPLIT);
         UUID thisServerUUID = ServerInfo.getServerUUID();
         for (String settingAndVal : settings) {
@@ -108,6 +109,7 @@ public class NetworkSettings {
     public void placeToDatabase() throws DBException, UnsupportedTransferDatabaseException {
         Map<String, Object> configValues = getConfigValues();
 
+        Log.debug("NetworkSettings: Building Base64 String..");
         StringBuilder transferBuilder = new StringBuilder();
         int size = configValues.size();
         int i = 0;
@@ -125,10 +127,12 @@ public class NetworkSettings {
 
         String base64 = Base64Util.encode(transferBuilder.toString());
 
+        Log.debug("NetworkSettings: Saving Config settings to database..");
         Database.getActive().transfer().storeConfigSettings(base64);
     }
 
     private Map<String, Object> getConfigValues() throws DBException {
+        Log.debug("NetworkSettings: Loading Config Values..");
         Map<String, Object> configValues = new HashMap<>();
         addConfigValue(configValues, Settings.DB_TYPE, "mysql");
         Settings[] sameStrings = new Settings[]{
@@ -138,6 +142,7 @@ public class NetworkSettings {
                 Settings.FORMAT_MINUTES, Settings.FORMAT_MONTHS, Settings.FORMAT_MONTH,
                 Settings.FORMAT_YEAR, Settings.FORMAT_YEARS, Settings.FORMAT_ZERO_SECONDS
         };
+        Log.debug("NetworkSettings: Adding Config Values..");
         for (Settings setting : sameStrings) {
             addConfigValue(configValues, setting, setting.toString());
         }
@@ -159,6 +164,7 @@ public class NetworkSettings {
     }
 
     private void addServerSpecificValues(Map<String, Object> configValues) throws DBException {
+        Log.debug("NetworkSettings: Adding Server-specific Config Values..");
         ServerSpecificSettings settings = Settings.serverSpecific();
 
         for (UUID serverUUID : Database.getActive().fetch().getServerUUIDs()) {
