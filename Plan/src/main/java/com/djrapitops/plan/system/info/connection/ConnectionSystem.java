@@ -120,6 +120,7 @@ public abstract class ConnectionSystem implements SubSystem {
         putRequest(requests, GenerateAnalysisPageRequest.createHandler());
         putRequest(requests, GenerateInspectPageRequest.createHandler());
         putRequest(requests, GenerateInspectPluginsTabRequest.createHandler());
+        putRequest(requests, GenerateNetworkPageContentRequest.createHandler());
 
         putRequest(requests, SaveDBSettingsRequest.createHandler());
         putRequest(requests, SendDBSettingsRequest.createHandler());

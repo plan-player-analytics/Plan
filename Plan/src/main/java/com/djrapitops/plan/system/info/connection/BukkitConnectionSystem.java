@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -38,17 +39,19 @@ public class BukkitConnectionSystem extends ConnectionSystem {
     }
 
     private void refreshServerMap() {
-        if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.SECOND.ms() * 15L) {
-            try {
-                Database database = Database.getActive();
-                Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
-                bungeeInformation.ifPresent(server -> mainServer = server);
-                bukkitServers = database.fetch().getBukkitServers();
-                latestServerMapRefresh = MiscUtils.getTime();
-            } catch (DBException e) {
-                Log.toLog(this.getClass(), e);
+        Processor.queue(() -> {
+            if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.SECOND.ms() * 15L) {
+                try {
+                    Database database = Database.getActive();
+                    Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
+                    bungeeInformation.ifPresent(server -> mainServer = server);
+                    bukkitServers = database.fetch().getBukkitServers();
+                    latestServerMapRefresh = MiscUtils.getTime();
+                } catch (DBException e) {
+                    Log.toLog(this.getClass(), e);
+                }
             }
-        }
+        });
     }
 
     @Override
@@ -116,7 +119,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
         }
         if (usingBungeeWebServer && usingAlternativeIP) {
             String webServerAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
-            Log.info("Make sure that this address points to the Bukkit Server: " + webServerAddress);
+            Log.info("Make sure that this address points to THIS Bukkit Server: " + webServerAddress);
         }
     }
 
