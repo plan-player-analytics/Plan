@@ -8,9 +8,11 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.task.ThreadRunnable;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import utilities.Teardown;
@@ -22,8 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Mocking Utility for Bukkit version of Plan.
@@ -54,6 +55,7 @@ public class BukkitMockUtil extends MockUtil {
 
         doCallRealMethod().when(planMock).getVersion();
         doCallRealMethod().when(planMock).getColorScheme();
+
         return this;
     }
 
@@ -65,7 +67,7 @@ public class BukkitMockUtil extends MockUtil {
     public BukkitMockUtil withLogging() {
         doCallRealMethod().when(planMock).log(Mockito.anyString(), Mockito.anyString());
         TestLogger testLogger = new TestLogger();
-        when(planMock.getLogger()).thenReturn(testLogger);
+        doReturn(testLogger).when(planMock).getLogger();
         return this;
     }
 
@@ -97,6 +99,11 @@ public class BukkitMockUtil extends MockUtil {
         when(serverMock.getMaxPlayers()).thenReturn(TestConstants.BUKKIT_MAX_PLAYERS);
         FakeConsoleCmdSender sender = new FakeConsoleCmdSender();
         when(serverMock.getConsoleSender()).thenReturn(sender);
+
+        BukkitScheduler bukkitScheduler = Mockito.mock(BukkitScheduler.class);
+        doReturn(bukkitScheduler).when(serverMock).getScheduler();
+
+        Bukkit.setServer(serverMock);
 
         when(planMock.getServer()).thenReturn(serverMock);
         return this;

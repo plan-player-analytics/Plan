@@ -43,7 +43,11 @@ public class ProcessingQueue extends Queue<Processor> implements SubSystem {
         List<Processor> processors = stopAndReturnLeftovers();
         Log.info("Processing unprocessed processors. (" + processors.size() + ")");
         for (Processor processor : processors) {
-            processor.process();
+            try {
+                processor.process();
+            } catch (Exception e) {
+                Log.toLog(this.getClass(), e);
+            }
         }
     }
 

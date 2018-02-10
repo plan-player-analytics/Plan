@@ -9,7 +9,7 @@ import com.djrapitops.plan.PlanPlugin;
 import java.io.File;
 import java.io.FileInputStream;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doReturn;
 
 /**
  * Abstract MockUtil for methods that can be used for both Bungee and Bukkit.
@@ -30,7 +30,7 @@ abstract class MockUtil {
         }
         try {
             File file = getFile("/" + fileName);
-            when(planMock.getResource(fileName)).thenReturn(new FileInputStream(file));
+            doReturn(new FileInputStream(file)).when(planMock).getResource(fileName);
         } catch (NullPointerException e) {
             System.out.println("File is missing! " + fileName);
         }

@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info.request;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.calculation.AnalysisData;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -83,8 +84,13 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
 
             AnalysisData analysisData = Analysis.runAnalysisFor(serverUUID, db, dataCache);
             return new AnalysisPage(analysisData).toHtml();
+        } catch (DBException e) {
+            if (!e.getCause().getMessage().contains("Connection is closed")) {
+                Log.toLog(this.getClass(), e);
+            }
+            throw new InternalErrorException("Analysis failed due to exception", e);
         } catch (Exception e) {
-            Log.toLog(Analysis.class, e);
+            Log.toLog(this.getClass(), e);
             throw new InternalErrorException("Analysis failed due to exception", e);
         }
     }
