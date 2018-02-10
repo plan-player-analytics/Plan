@@ -14,7 +14,7 @@ import com.djrapitops.plan.utilities.PassEncryptUtil;
 
 /**
  * Authentication handling for Basic Auth.
- *
+ * <p>
  * Basic access authentication (Wikipedia):
  * https://en.wikipedia.org/wiki/Basic_access_authentication
  *
@@ -44,14 +44,14 @@ public class BasicAuthentication implements Authentication {
 
             Database database = Database.getActive();
             if (!database.check().doesWebUserExists(user)) {
-                throw new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST);
+                throw new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user);
             }
 
             WebUser webUser = database.fetch().getWebUser(user);
 
             boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, webUser.getSaltedPassHash());
             if (!correctPass) {
-                throw new WebUserAuthException(FailReason.USER_PASS_MISMATCH);
+                throw new WebUserAuthException(FailReason.USER_PASS_MISMATCH, user);
             }
             return webUser;
         } catch (DBException | PassEncryptException e) {

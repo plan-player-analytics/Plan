@@ -21,6 +21,11 @@ public class WebUserAuthException extends WebException {
         this.failReason = failReason;
     }
 
+    public WebUserAuthException(FailReason failReason, String additionalInfo) {
+        super(failReason.getReason() + ": " + additionalInfo);
+        this.failReason = failReason;
+    }
+
     public WebUserAuthException(Throwable cause) {
         super(FailReason.ERROR.getReason(), cause);
         this.failReason = FailReason.ERROR;
