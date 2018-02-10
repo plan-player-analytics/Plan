@@ -177,8 +177,7 @@ public class PlayerProfile implements OfflinePlayer {
     }
 
     public long getLastSeen(Stream<Session> s) {
-        OptionalLong max = s.mapToLong(Session::getSessionEnd)
-                .max();
+        OptionalLong max = s.mapToLong(session -> Math.max(session.getSessionStart(), session.getSessionEnd())).max();
         if (max.isPresent()) {
             return max.getAsLong();
         }
