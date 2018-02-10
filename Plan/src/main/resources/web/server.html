@@ -958,29 +958,67 @@
         }
     })
 
-    // Data Variables
+    // Replaced Variables
+    var v = {
+        data: {
+            playersOnline: ${playersOnlineSeries},
+            tps: ${tpsSeries},
+            cpu: ${cpuSeries},
+            ram: ${ramSeries},
+            entities: ${entitySeries},
+            chunks:  ${chunkSeries},
+            activityPie: ${activityPieSeries},
+            worldPie: ${worldSeries},
+            worldPieDrillDown: ${gmSeries},
+            geolocations: ${geoMapSeries},
+            punchCard: ${punchCardSeries},
+            activityStack: ${activityStackSeries},
+            activityStackCategories: ${activityStackCategories},
+            healthIndex: ${healthIndex}
+        },
+        colors: {
+            playersOnline: '${playersGraphColor}',
+            tpsLow: '${tpsLowColor}',
+            tpsMed: '${tpsMediumColor}',
+            tpsHigh: '${tpsHighColor}',
+            cpu: '#e0d264',
+            ram: '#7dcc24',
+            entities: '#ac69ef',
+            chunks: '#b58310',
+            geolocationsLow: '${worldMapColLow}',
+            geolocationsHigh: '${worldMapColHigh}',
+            punchCard: '#222'
+        },
+        values: {
+            tpsMed: ${tpsMedium},
+            tpsHigh: ${tpsHigh}
+        }
+
+    };
+
+    // HighCharts Series
     var playersOnlineSeries = {
         name: 'Players Online',
-        data: ${playersOnlineSeries},
+        data: v.data.playersOnline,
         type: 'areaspline',
-        color: '${playersGraphColor}',
+        color: v.colors.playersOnline,
         tooltip: {
             valueDecimals: 0
         }
     };
     var tpsSeries = {
         name: 'TPS',
-        data: ${tpsSeries},
+        data: v.data.tps,
         type: 'spline',
         zones: [{
-            value: ${tpsMedium},
-            color: '${tpsLowColor}'
+            value: v.values.tpsMed,
+            color: v.colors.tpsLow
         }, {
-            value: ${tpsHigh},
-            color: '${tpsMediumColor}'
+            value: v.values.tpsHigh,
+            color: v.colors.tpsMed
         }, {
             value: 30,
-            color: '${tpsHighColor}'
+            color: v.colors.tpsHigh
         }],
         tooltip: {
             valueDecimals: 2
@@ -988,36 +1026,36 @@
     };
     var cpuSeries = {
         name: 'CPU Usage (%)',
-        data: ${cpuSeries},
+        data: v.data.cpu,
         type: 'spline',
-        color: '#e0d264',
+        color: v.colors.cpu,
         tooltip: {
             valueDecimals: 2
         }
     };
     var ramSeries = {
         name: 'RAM Usage (MB)',
-        data: ${ramSeries},
+        data: v.data.ram,
         type: 'spline',
-        color: '#7dcc24',
+        color: v.colors.ram,
         tooltip: {
             valueDecimals: 0
         }
     };
     var entitySeries = {
         name: 'Loaded Entities',
-        data: ${entitySeries},
+        data: v.data.entities,
         type: 'spline',
-        color: '#ac69ef',
+        color: v.colors.entities,
         tooltip: {
             valueDecimals: 0
         }
     };
     var chunkSeries = {
         name: 'Loaded Chunks',
-        data: ${chunkSeries},
+        data: v.data.chunks,
         type: 'spline',
-        color: '#b58310',
+        color: v.colors.chunks,
         tooltip: {
             valueDecimals: 0
         }
@@ -1025,30 +1063,28 @@
     var activitySeries = {
         name: 'Players',
         colorByPoint: true,
-        data: ${activityPieSeries}
+        data: v.data.activityPie
     };
     var worldSeries = {
         name: 'World Playtime',
         colorByPoint: true,
-//        colors: worldPieColors,
-        data: ${worldSeries}
+        data: v.data.worldPie
     };
-    var gmSeries = ${gmSeries};
+    var gmSeries = v.data.worldPieDrillDown;
     var mapSeries = {
         name: 'Players',
         type: 'map',
         mapData: Highcharts.maps['custom/world'],
-        data: ${geoMapSeries},
+        data: v.data.geolocations,
         joinBy: ['iso-a3', 'code']
     };
     var punchcardSeries = {
         name: 'Relative Activity',
-        color: '#222',
-        data: ${punchCardSeries}
+        color: v.colors.punchCard,
+        data: v.data.punchCard
     };
-    var activityStackSeries = ${activityStackSeries};
-    var activityCategories =
-    ${activityStackCategories}
+    var activityStackSeries = v.data.activityStack;
+    var activityCategories = v.data.activityStackCategories
 </script>
 
 <!-- Plan load script -->
@@ -1085,9 +1121,9 @@
         tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
         resourceChart('resourceGraph', cpuSeries, ramSeries, playersOnlineSeries);
         worldChart('worldGraph', entitySeries, chunkSeries, playersOnlineSeries);
-        worldMap('worldMap', '${worldMapColLow}', '${worldMapColHigh}', mapSeries);
+        worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, mapSeries);
         punchCard('punchCard', punchcardSeries);
-        healthGauge('healthGauge', [${healthIndex}]);
+        healthGauge('healthGauge', [v.data.healthIndex]);
         ${sessionTabGraphViewFunctions}
 
         /**/
