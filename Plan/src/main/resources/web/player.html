@@ -588,11 +588,10 @@
 <!-- Chart Data -->
 <script>
     Highcharts.setOptions({
-        global: {
+        time: {
             timezoneOffset: ${timeZone} * 60
-    }
-    })
-    ;
+        }
+    });
     var serverSeries = {
         name: 'Server Playtime',
         colorByPoint: true,

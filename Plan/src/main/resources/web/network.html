@@ -317,11 +317,10 @@
 <script>
     Highcharts.setOptions({
         lang: {noData: "No Data to Display"},
-        global: {
+        time: {
             timezoneOffset: ${timeZone} * 60
-    }
-    })
-    ;
+        }
+    });
     // Data Variables
     var playersOnlineSeries = {
         name: 'Players Online',

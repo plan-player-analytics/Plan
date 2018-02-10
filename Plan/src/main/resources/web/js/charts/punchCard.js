@@ -12,6 +12,9 @@ function punchCard(id, punchcardSeries) {
 			},
 			tickInterval: 3600000
 		},
+        time: {
+        	timezoneOffset: 0
+        },
 		yAxis: {
 			categories: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 		},
