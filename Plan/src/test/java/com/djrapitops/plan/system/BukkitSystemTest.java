@@ -19,7 +19,7 @@ import utilities.mocks.BukkitMockUtil;
  *
  * @author Rsl1122
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class BukkitSystemTest {
 
     @ClassRule

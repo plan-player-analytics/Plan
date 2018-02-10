@@ -8,7 +8,6 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.task.ThreadRunnable;
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -102,8 +101,6 @@ public class BukkitMockUtil extends MockUtil {
 
         BukkitScheduler bukkitScheduler = Mockito.mock(BukkitScheduler.class);
         doReturn(bukkitScheduler).when(serverMock).getScheduler();
-
-        Bukkit.setServer(serverMock);
 
         when(planMock.getServer()).thenReturn(serverMock);
         return this;
