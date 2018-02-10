@@ -66,8 +66,8 @@ public class InfoRequestPageHandler extends PageHandler {
             return 500;
         } else if (e instanceof ConnectionFailException) {
             return -1;
+        } else {
+            return 0;
         }
-
-        return 0;
     }
 }

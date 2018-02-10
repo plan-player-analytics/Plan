@@ -189,8 +189,8 @@ public class WebServer implements SubSystem {
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
     public void stop() {
-        Log.info(Locale.get(Msg.DISABLE_WEBSERVER).toString());
         if (server != null) {
+            Log.info(Locale.get(Msg.DISABLE_WEBSERVER).toString());
             server.stop(0);
         }
         enabled = false;

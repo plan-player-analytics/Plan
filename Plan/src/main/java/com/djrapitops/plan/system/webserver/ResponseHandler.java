@@ -94,7 +94,9 @@ public class ResponseHandler extends TreePageHandler {
         if (targetString.endsWith(".js")) {
             return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
         }
-        if (webServer.isAuthRequired()) {
+        boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
+        boolean isAuthRequired = webServer.isAuthRequired() && isNotInfoRequest;
+        if (isAuthRequired) {
             authentication = request.getAuth();
             if (!authentication.isPresent()) {
                 if (webServer.isUsingHTTPS()) {
@@ -108,9 +110,8 @@ public class ResponseHandler extends TreePageHandler {
         if (pageHandler == null) {
             return DefaultResponses.NOT_FOUND.get();
         } else {
-            boolean noAuthRequired = !webServer.isAuthRequired();
             boolean isAuthorized = authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target);
-            if (noAuthRequired || isAuthorized) {
+            if (!isAuthRequired || isAuthorized) {
                 return pageHandler.getResponse(request, target);
             }
             return forbiddenResponse();
