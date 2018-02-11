@@ -1,5 +1,6 @@
 package com.djrapitops.plan.system.tasks.bukkit;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
@@ -18,13 +19,20 @@ public class BootAnalysisTask extends AbsRunnable {
 
     @Override
     public void run() {
-        String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
-        Log.info(bootAnalysisRunMsg);
-        if (!Analysis.isAnalysisBeingRun()) {
-            WebExceptionLogger.logIfOccurs(this.getClass(), () ->
-                    InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID()))
-            );
+        try {
+            String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
+            Log.info(bootAnalysisRunMsg);
+            if (!Analysis.isAnalysisBeingRun()) {
+                WebExceptionLogger.logIfOccurs(this.getClass(), () ->
+                        InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID()))
+                );
+            }
+        } catch (IllegalStateException e) {
+            if (!PlanPlugin.getInstance().isReloading()) {
+                Log.toLog(this.getClass(), e);
+            }
+        } finally {
+            cancel();
         }
-        cancel();
     }
 }

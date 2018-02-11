@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.settings.theme;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.settings.Settings;
@@ -68,6 +69,10 @@ public class Theme implements SubSystem {
                 return "url(\"" + value + "\")";
             } else {
                 return value;
+            }
+        } catch (IllegalStateException e) {
+            if (!PlanPlugin.getInstance().isReloading()) {
+                Log.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
             }
         } catch (Exception | NoSuchFieldError e) {
             Log.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
