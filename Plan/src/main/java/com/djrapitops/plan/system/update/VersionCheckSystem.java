@@ -51,8 +51,14 @@ public class VersionCheckSystem implements SubSystem {
         String githubVersionUrl = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml";
         String spigotUrl = "https://www.spigotmc.org/resources/plan-player-analytics.32536/";
         try {
-            newVersionAvailable = Version.checkVersion(currentVersion, githubVersionUrl)
-                    || Version.checkVersion(currentVersion, spigotUrl);
+            newVersionAvailable = Version.checkVersion(currentVersion, githubVersionUrl);
+            if (!newVersionAvailable) {
+                try {
+                    newVersionAvailable = Version.checkVersion(currentVersion, spigotUrl);
+                } catch (NoClassDefFoundError ignore) {
+                    /* 1.7.4 Does not have google gson JSONParser */
+                }
+            }
             if (newVersionAvailable) {
                 String newVersionNotification = "New Version is available at " + spigotUrl;
                 Log.infoColor("§a----------------------------------------");
