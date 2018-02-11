@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.processing.processors.TPSInsertProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -36,7 +37,7 @@ public abstract class TPSCountTimer<T extends PlanPlugin> extends AbsRunnable {
         addNewTPSEntry(nanoTime, now);
 
         if (history.size() >= 60) {
-            new TPSInsertProcessor(new ArrayList<>(history)).queue();
+            Processor.queue(new TPSInsertProcessor(new ArrayList<>(history)));
             history.clear();
         }
     }
