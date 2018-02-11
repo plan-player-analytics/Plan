@@ -43,7 +43,7 @@ public class PlayerPageHandler extends PageHandler {
         UUID uuid = UUIDUtility.getUUIDOf(playerName);
 
         if (uuid == null) {
-            return notFound("Player has no UUID");
+            return notFound("Player UUID was not found in the database.");
         }
 
         try {
