@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -15,6 +16,7 @@ import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -74,7 +76,14 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
 
         Server bukkit = new Server(-1, serverUUID, serverName, address, -1);
 
-        InfoSystem.getInstance().getConnectionSystem().sendInfoRequest(new SaveDBSettingsRequest(), bukkit);
+        try {
+            InfoSystem.getInstance().getConnectionSystem().sendInfoRequest(new SaveDBSettingsRequest(), bukkit);
+        } catch (ConnectionFailException e) {
+            Throwable cause = e.getCause();
+            if (!(cause instanceof SocketException) || !cause.getMessage().contains("Unexpected end of file from server")) {
+                throw e;
+            }
+        }
 
         return DefaultResponses.SUCCESS.get();
     }

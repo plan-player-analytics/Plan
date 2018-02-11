@@ -62,13 +62,15 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
             return new BadRequestResponse("Bungee config settings overridden on this server.");
         }
 
-        setSettings(variables);
-        Log.info("----------------------------------");
-        Log.info("The Received Bungee Database Settings, restarting Plan..");
-        Log.info("----------------------------------");
-        Plan.getInstance().reloadPlugin(true);
-
-        return DefaultResponses.SUCCESS.get();
+        try {
+            setSettings(variables);
+            Log.info("----------------------------------");
+            Log.info("The Received Bungee Database Settings, restarting Plan..");
+            Log.info("----------------------------------");
+            return DefaultResponses.SUCCESS.get();
+        } finally {
+            Plan.getInstance().reloadPlugin(true);
+        }
     }
 
     private void setSettings(Map<String, String> variables) throws BadRequestException {
