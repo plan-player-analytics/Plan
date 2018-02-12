@@ -1,11 +1,11 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.database.databases.SQLiteDB;
-import com.djrapitops.plan.database.tables.move.BatchOperationTable;
-import com.djrapitops.plan.systems.file.database.DBSystem;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
+import com.djrapitops.plan.system.database.databases.sql.tables.move.BatchOperationTable;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.SQLException;
@@ -29,8 +29,7 @@ public class ManageUtils {
      * @param dbName     Name of database (mysql/sqlite)
      * @param copyFromDB Database you want to backup.
      */
-    public static void backup(String dbName, Database copyFromDB) throws DatabaseInitException, SQLException {
-        Plan plugin = Plan.getInstance();
+    public static void backup(String dbName, Database copyFromDB) throws DBInitException, SQLException {
         String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
         String fileName = dbName + "-backup-" + timeStamp;
         SQLiteDB backupDB = new SQLiteDB(fileName);
@@ -52,9 +51,9 @@ public class ManageUtils {
     public static Collection<UUID> getUUIDS(Database db) {
         final Set<UUID> uuids = new HashSet<>();
         try {
-            uuids.addAll(db.getSavedUUIDs());
-        } catch (SQLException e) {
-            Log.toLog("ManageUtils.getUUIDS", e);
+            uuids.addAll(db.fetch().getSavedUUIDs());
+        } catch (DBException e) {
+            Log.toLog(ManageUtils.class, e);
         }
         return uuids;
     }
@@ -67,15 +66,10 @@ public class ManageUtils {
      * @param copyFromDB       Database where data will be copied from
      */
     public static void clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) throws SQLException {
-        BatchOperationTable toDB = new BatchOperationTable(clearAndCopyToDB);
-        BatchOperationTable fromDB = new BatchOperationTable(copyFromDB);
+        BatchOperationTable toDB = new BatchOperationTable((SQLDB) clearAndCopyToDB);
+        BatchOperationTable fromDB = new BatchOperationTable((SQLDB) copyFromDB);
 
         toDB.removeAllData();
         fromDB.copyEverything(toDB);
-    }
-
-    @Deprecated
-    public static Database getDB(String dbName) throws DatabaseInitException {
-        return DBSystem.getActiveDatabase(dbName);
     }
 }

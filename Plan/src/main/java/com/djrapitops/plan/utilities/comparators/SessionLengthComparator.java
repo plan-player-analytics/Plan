@@ -5,6 +5,8 @@ import com.djrapitops.plan.data.container.Session;
 import java.util.Comparator;
 
 /**
+ * Comparator for Sessions in descending length order.
+ *
  * @author Rsl1122
  */
 public class SessionLengthComparator implements Comparator<Session> {

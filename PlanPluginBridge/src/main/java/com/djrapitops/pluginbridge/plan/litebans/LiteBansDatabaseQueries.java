@@ -1,8 +1,10 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
+import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
+import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import litebans.api.Database;
-import com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import com.djrapitops.plan.database.tables.Table;
+import org.bukkit.Bukkit;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,26 +22,60 @@ import java.util.UUID;
 public class LiteBansDatabaseQueries extends Table {
     private final Database database;
 
+    private final String banTable;
+    private final String mutesTable;
+    private final String warningsTable;
+    private final String kicksTable;
+
+    private final String selectSQL;
+
     public LiteBansDatabaseQueries() {
-        super("litebans", null, false);
+        super("litebans", null);
         database = Database.get();
+        String tablePrefix = Bukkit.getPluginManager().getPlugin("LiteBans").getConfig().getString("sql.table_prefix");
+        banTable = tablePrefix + "bans";
+        mutesTable = tablePrefix + "mutes";
+        warningsTable = tablePrefix + "warnings";
+        kicksTable = tablePrefix + "kicks";
+        selectSQL = "SELECT uuid, reason, banned_by_name, until, active FROM ";
     }
 
-    public List<BanObject> getBans() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            statement = database.prepareStatement("SELECT uuid, reason, banned_by_name, until FROM litebans_bans");
-            set = statement.executeQuery();
-            return getBanObjects(set);
-        } finally {
-            close(set);
-            close(statement);
+    @Override
+    protected <T> T query(QueryStatement<T> statement) throws SQLException {
+        try (PreparedStatement preparedStatement = database.prepareStatement(statement.getSql())) {
+            return statement.executeQuery(preparedStatement);
         }
     }
 
-    private List<BanObject> getBanObjects(ResultSet set) throws SQLException {
-        List<BanObject> bans = new ArrayList<>();
+    private List<LiteBansDBObj> getObjs(String table) throws SQLException {
+        String sql = selectSQL + table + " LIMIT 5000";
+
+        return query(new QueryAllStatement<List<LiteBansDBObj>>(sql, 2000) {
+            @Override
+            public List<LiteBansDBObj> processResults(ResultSet resultSet) throws SQLException {
+                return processIntoObjects(resultSet);
+            }
+        });
+    }
+
+    public List<LiteBansDBObj> getBans() throws SQLException {
+        return getObjs(banTable);
+    }
+
+    public List<LiteBansDBObj> getMutes() throws SQLException {
+        return getObjs(mutesTable);
+    }
+
+    public List<LiteBansDBObj> getWarnings() throws SQLException {
+        return getObjs(warningsTable);
+    }
+
+    public List<LiteBansDBObj> getKicks() throws SQLException {
+        return getObjs(kicksTable);
+    }
+
+    private List<LiteBansDBObj> processIntoObjects(ResultSet set) throws SQLException {
+        List<LiteBansDBObj> objs = new ArrayList<>();
         while (set.next()) {
             String uuidS = set.getString("uuid");
             UUID uuid;
@@ -51,27 +87,46 @@ public class LiteBansDatabaseQueries extends Table {
             String reason = set.getString("reason");
             String bannedBy = set.getString("banned_by_name");
             long time = set.getLong("until");
-            bans.add(new BanObject(uuid, reason, bannedBy, time));
+            boolean active = set.getBoolean("active");
+            objs.add(new LiteBansDBObj(uuid, reason, bannedBy, time, active));
         }
-        return bans;
+        return objs;
     }
 
-    public List<BanObject> getBans(UUID playerUUID) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            statement = database.prepareStatement("SELECT uuid, reason, banned_by_name, until FROM litebans_bans WHERE uuid=?");
-            statement.setString(1, playerUUID.toString());
-            set = statement.executeQuery();
-            return getBanObjects(set);
-        } finally {
-            close(set);
-            close(statement);
-        }
+    public List<LiteBansDBObj> getBans(UUID playerUUID) throws SQLException {
+        return getObjs(playerUUID, banTable);
+    }
+
+    public List<LiteBansDBObj> getMutes(UUID playerUUID) throws SQLException {
+        return getObjs(playerUUID, mutesTable);
+    }
+
+    public List<LiteBansDBObj> getWarnings(UUID playerUUID) throws SQLException {
+        return getObjs(playerUUID, warningsTable);
+    }
+
+    public List<LiteBansDBObj> getKicks(UUID playerUUID) throws SQLException {
+        return getObjs(playerUUID, kicksTable);
+    }
+
+    private List<LiteBansDBObj> getObjs(UUID playerUUID, String table) throws SQLException {
+        String sql = selectSQL + table + " WHERE uuid=?";
+
+        return query(new QueryStatement<List<LiteBansDBObj>>(sql, 2000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public List<LiteBansDBObj> processResults(ResultSet resultSet) throws SQLException {
+                return processIntoObjects(resultSet);
+            }
+        });
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() {
         throw new IllegalStateException("Not Supposed to be called.");
     }
 }

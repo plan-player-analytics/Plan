@@ -1,35 +1,26 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.api.IPlan;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 
 /**
- * Command used to display link to the player list webpage.
- * <p>
- * Subcommand is not registered if Webserver is not enabled.
+ * Command used to display url to the network page.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class NetworkCommand extends SubCommand {
 
-    private final IPlan plugin;
-
-    /**
-     * Class Constructor.
-     */
-    public NetworkCommand(IPlan plugin) {
+    public NetworkCommand() {
         super("network, n, netw",
                 CommandType.CONSOLE,
                 Permissions.ANALYZE.getPermission(),
                 "Get the link to the network page");
-        this.plugin = plugin;
     }
 
     @Override
@@ -42,7 +33,7 @@ public class NetworkCommand extends SubCommand {
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
 
         // Link
-        String url = plugin.getInfoManager().getLinkTo("/network/");
+        String url = ConnectionSystem.getAddress() + "/network/";
         String message = Locale.get(Msg.CMD_INFO_LINK).toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {

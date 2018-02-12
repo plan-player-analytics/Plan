@@ -2,9 +2,9 @@ package com.djrapitops.plan.command;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.command.commands.*;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
 import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
@@ -43,13 +43,13 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
                 new ReloadCommand(plugin),
                 new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
                 new ListCommand(),
-                new BungeeSetupToggleCommand(plugin)
+                new BungeeSetupToggleCommand()
         );
-        RegisterCommand registerCommand = new RegisterCommand(plugin);
+        RegisterCommand registerCommand = new RegisterCommand();
         add(
                 registerCommand,
                 new WebUserCommand(plugin, registerCommand),
-                new NetworkCommand(plugin),
+                new NetworkCommand(),
                 new ListServersCommand(plugin)
         );
     }

@@ -7,10 +7,9 @@ package com.djrapitops.plan.utilities.html.structure;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plugin.utilities.Format;
@@ -20,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * HTML utility class for creating a Server Accordion.
  *
  * @author Rsl1122
  */
@@ -66,9 +65,8 @@ public class ServerAccordionCreator {
             String htmlID = "server_" + sanitizedServerName;
 
             String worldId = "worldPieServer" + sanitizedServerName;
-            AnalysisUtils.addMissingWorlds(worldTimes);
 
-            String[] worldData = WorldPie.createSeries(worldTimes);
+            WorldPie worldPie = new WorldPie(worldTimes);
 
             // Accordion panel header
             html.append("<div class=\"panel panel-col-").append(Theme.getValue(ThemeVal.PARSED_SERVER_ACCORDION)).append("\">")
@@ -104,8 +102,8 @@ public class ServerAccordionCreator {
                     .append("<div id=\"").append(worldId).append("\" class=\"dashboard-donut-chart\"></div>")
                     // World Pie data script
                     .append("<script>")
-                    .append("var ").append(worldId).append("series = {name:'World Playtime'," +/*colors: worldPieColors,*/"colorByPoint:true,data:").append(worldData[0]).append("};")
-                    .append("var ").append(worldId).append("gmseries = ").append(worldData[1]).append(";")
+                    .append("var ").append(worldId).append("series = {name:'World Playtime',colorByPoint:true,data:").append(worldPie.toHighChartsSeries()).append("};")
+                    .append("var ").append(worldId).append("gmseries = ").append(worldPie.toHighChartsDrilldown()).append(";")
                     .append("</script>")
                     .append("</div>") // Right col-6
                     .append("</div>") // Closes row clearfix

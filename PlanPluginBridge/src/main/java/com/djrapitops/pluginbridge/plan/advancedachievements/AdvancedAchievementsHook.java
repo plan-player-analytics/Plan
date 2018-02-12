@@ -1,11 +1,10 @@
 package com.djrapitops.pluginbridge.plan.advancedachievements;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.hm.achievement.AdvancedAchievements;
 import com.hm.achievement.api.AdvancedAchievementsAPI;
 import com.hm.achievement.api.AdvancedAchievementsBukkitAPI;
-import com.djrapitops.plan.api.API;
-import com.djrapitops.plan.data.plugin.HookHandler;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -25,7 +24,6 @@ public class AdvancedAchievementsHook extends Hook {
      *
      * @param hookH HookHandler instance for registering the data sources.
      * @throws NoClassDefFoundError when the plugin class can not be found.
-     * @see API
      */
     public AdvancedAchievementsHook(HookHandler hookH) {
         super("com.hm.achievement.AdvancedAchievements", hookH);

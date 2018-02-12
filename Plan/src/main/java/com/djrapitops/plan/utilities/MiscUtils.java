@@ -2,12 +2,12 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.api.IPlan;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.Settings;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -16,7 +16,6 @@ import com.djrapitops.plugin.command.ISender;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -96,19 +95,19 @@ public class MiscUtils {
      * @return Alphabetically sorted list of matching player names.
      */
     public static List<String> getMatchingPlayerNames(String search) {
-        Database db = getIPlan().getDB();
+        Database db = Database.getActive();
         List<String> matches;
         try {
-            matches = db.getUsersTable().getMatchingNames(search);
-        } catch (SQLException e) {
-            Log.toLog("MiscUtils.getMatchingPlayerNames", e);
+            matches = db.search().matchingPlayers(search);
+        } catch (DBException e) {
+            Log.toLog(MiscUtils.class, e);
             return new ArrayList<>();
         }
         Collections.sort(matches);
         return matches;
     }
 
-    public static <T> List<T> flatMap(Collection<List<T>> coll) {
+    public static <T> List<T> flatMap(Collection<? extends Collection<T>> coll) {
         return coll.stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
@@ -117,8 +116,11 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (IOException ignored) {
-                    /* Ignored */
+                } catch (IOException e) {
+                    if (Settings.DEV_MODE.isTrue()) {
+                        Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
+                        Log.toLog(MiscUtils.class, e);
+                    }
                 }
             }
         }
@@ -129,8 +131,11 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (Exception ignored) {
-                    /* Ignored */
+                } catch (Exception e) {
+                    if (Settings.DEV_MODE.isTrue()) {
+                        Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
+                        Log.toLog(MiscUtils.class, e);
+                    }
                 }
             }
         }
@@ -141,14 +146,6 @@ public class MiscUtils {
             return Plan.getInstance().getDescription().getVersion();
         } else {
             return PlanBungee.getInstance().getDescription().getVersion();
-        }
-    }
-
-    public static IPlan getIPlan() {
-        if (Check.isBukkitAvailable()) {
-            return Plan.getInstance();
-        } else {
-            return PlanBungee.getInstance();
         }
     }
 }

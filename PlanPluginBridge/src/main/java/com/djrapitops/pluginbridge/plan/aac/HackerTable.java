@@ -5,13 +5,13 @@
  */
 package com.djrapitops.pluginbridge.plan.aac;
 
-import com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import com.djrapitops.plan.database.databases.SQLDB;
-import com.djrapitops.plan.database.processing.ExecStatement;
-import com.djrapitops.plan.database.processing.QueryAllStatement;
-import com.djrapitops.plan.database.processing.QueryStatement;
-import com.djrapitops.plan.database.sql.Select;
-import com.djrapitops.plan.database.tables.Table;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
+import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
+import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.database.databases.sql.statements.Select;
+import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import me.konsolas.aac.api.HackType;
 
 import java.sql.PreparedStatement;
@@ -33,7 +33,7 @@ public class HackerTable extends Table {
     private final String columnViolations;
 
     public HackerTable(SQLDB db) {
-        super("plan_aac_hack_table", db, db.isUsingMySQL());
+        super("plan_aac_hack_table", db);
         columnUUID = "uuid";
         columnDate = "date";
         columnHackType = "hack_type";
@@ -41,7 +41,7 @@ public class HackerTable extends Table {
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable("CREATE TABLE IF NOT EXISTS " + tableName + " ("
                 + columnUUID + " varchar(36) NOT NULL, "
                 + columnDate + " bigint NOT NULL, "

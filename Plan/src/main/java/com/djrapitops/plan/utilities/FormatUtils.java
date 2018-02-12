@@ -1,11 +1,16 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.settings.Settings;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Format;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Rsl1122
@@ -42,16 +47,64 @@ public class FormatUtils {
         return formatMilliseconds(Math.abs(after - before));
     }
 
-    public static String formatTimeStamp(long epochMs) {
-        return com.djrapitops.plugin.utilities.FormatUtils.formatTimeStamp(epochMs);
+    public static String formatTimeStampDay(long epochMs) {
+        String format = "MMMMM d";
+
+        if (Settings.FORMAT_DATE_RECENT_DAYS.isTrue()) {
+            format = replaceRecentDays(epochMs, format, "MMMMM");
+        }
+
+        return format(epochMs, format);
+    }
+
+    public static String formatTimeStampClock(long epochMs) {
+        String format = Settings.FORMAT_DATE_CLOCK.toString();
+
+        return format(epochMs, format);
+    }
+
+    private static String format(long epochMs, String format) {
+        String locale = Settings.LOCALE.toString();
+        Locale usedLocale = locale.equalsIgnoreCase("default") ? Locale.ENGLISH : Locale.forLanguageTag(locale);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format, usedLocale);
+        return dateFormat.format(epochMs);
     }
 
     public static String formatTimeStampSecond(long epochMs) {
-        return com.djrapitops.plugin.utilities.FormatUtils.formatTimeStampSecond(epochMs);
+        String format = Settings.FORMAT_DATE_FULL.toString();
+
+        if (Settings.FORMAT_DATE_RECENT_DAYS.isTrue()) {
+            format = replaceRecentDays(epochMs, format);
+        }
+
+        return format(epochMs, format);
+    }
+
+    private static String replaceRecentDays(long epochMs, String format) {
+        return replaceRecentDays(epochMs, format, Settings.FORMAT_DATE_RECENT_DAYS_PATTERN.toString());
+    }
+
+    private static String replaceRecentDays(long epochMs, String format, String pattern) {
+        long now = MiscUtils.getTime();
+
+        long fromStartOfDay = now % TimeAmount.DAY.ms();
+        if (epochMs > now - fromStartOfDay) {
+            format = format.replace(pattern, "'Today'");
+        } else if (epochMs > now - TimeAmount.DAY.ms() - fromStartOfDay) {
+            format = format.replace(pattern, "'Yesterday'");
+        } else if (epochMs > now - TimeAmount.DAY.ms() * 5L) {
+            format = format.replace(pattern, "EEEE");
+        }
+        return format;
     }
 
     public static String formatTimeStampYear(long epochMs) {
-        return com.djrapitops.plugin.utilities.FormatUtils.formatTimeStampYear(epochMs);
+        String format = Settings.FORMAT_DATE_NO_SECONDS.toString();
+
+        if (Settings.FORMAT_DATE_RECENT_DAYS.isTrue()) {
+            format = replaceRecentDays(epochMs, format);
+        }
+        return format(epochMs, format);
     }
 
     /**
@@ -212,20 +265,6 @@ public class FormatUtils {
         return df.format(d);
     }
 
-    public static String[] readableActivityIndex(double activityIndex) {
-        if (activityIndex >= 3.5) {
-            return new String[]{"green", "Very Active"};
-        } else if (activityIndex >= 1.75) {
-            return new String[]{"green", "Active"};
-        } else if (activityIndex >= 1.0) {
-            return new String[]{"lime", "Regular"};
-        } else if (activityIndex >= 0.5) {
-            return new String[]{"amber", "Irregular"};
-        } else {
-            return new String[]{"blue-gray", "Inactive"};
-        }
-    }
-
     public static String formatIP(String ip) {
         StringBuilder b = new StringBuilder();
         int i = 0;
@@ -240,5 +279,30 @@ public class FormatUtils {
         }
 
         return b.append("xx").toString();
+    }
+
+    /**
+     * Gets lines for stack trace recursively.
+     *
+     * @param throwable Throwable element
+     * @return lines of stack trace.
+     */
+    public static List<String> getStackTrace(Throwable throwable) {
+        List<String> stackTrace = new ArrayList<>();
+        stackTrace.add(throwable.toString());
+        for (StackTraceElement element : throwable.getStackTrace()) {
+            stackTrace.add("    " + element.toString());
+        }
+
+        Throwable cause = throwable.getCause();
+        if (cause != null) {
+            List<String> causeTrace = getStackTrace(cause);
+            if (!causeTrace.isEmpty()) {
+                causeTrace.set(0, "Caused by: " + causeTrace.get(0));
+                stackTrace.addAll(causeTrace);
+            }
+        }
+
+        return stackTrace;
     }
 }

@@ -1,16 +1,17 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
-import com.djrapitops.plan.systems.cache.DataCache;
-import com.djrapitops.plan.systems.cache.SessionCache;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
-import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
@@ -20,10 +21,8 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.SQLException;
-
 /**
- * This manage subcommand is used to clear a database of all data.
+ * This manage SubCommand is used to clear a database of all data.
  *
  * @author Rsl1122
  * @since 2.3.0
@@ -32,11 +31,6 @@ public class ManageClearCommand extends SubCommand {
 
     private final Plan plugin;
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
     public ManageClearCommand(Plan plugin) {
         super("clear",
                 CommandType.PLAYER_OR_ARGS,
@@ -71,9 +65,9 @@ public class ManageClearCommand extends SubCommand {
         }
 
         try {
-            Database database = ManageUtils.getDB(dbName);
+            Database database = DBSystem.getActiveDatabaseByName(dbName);
             runClearTask(sender, database);
-        } catch (DatabaseInitException e) {
+        } catch (DBInitException e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
         }
         return true;
@@ -86,19 +80,22 @@ public class ManageClearCommand extends SubCommand {
                 try {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    database.removeAllData();
+                    database.remove().everything();
 
-                    DataCache dataCache = plugin.getDataCache();
                     long now = MiscUtils.getTime();
                     SessionCache.clear();
                     plugin.getServer().getOnlinePlayers().forEach(
-                            player -> dataCache.cacheSession(player.getUniqueId(),
+                            player -> SessionCache.getInstance().cacheSession(player.getUniqueId(),
                                     new Session(now, player.getWorld().getName(), player.getGameMode().name()))
                     );
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
-                } catch (SQLException e) {
+                } catch (FatalDBException e) {
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString()
+                            + " Error was fatal, so all information may not have been removed.");
+                    Log.toLog(this.getClass(), e);
+                } catch (DBException e) {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
-                    Log.toLog(this.getClass().getSimpleName() + "/" + this.getTaskName(), e);
+                    Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();
                 }

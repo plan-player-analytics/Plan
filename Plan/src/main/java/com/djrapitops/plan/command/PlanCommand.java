@@ -2,16 +2,16 @@ package com.djrapitops.plan.command;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.commands.*;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.Settings;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
 import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
 
 /**
- * TreeCommand for the /plan command, and all subcommands.
+ * TreeCommand for the /plan command, and all SubCommands.
  * <p>
  * Uses the Abstract Plugin Framework for easier command management.
  *
@@ -20,13 +20,6 @@ import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
  */
 public class PlanCommand extends TreeCommand<Plan> {
 
-    /**
-     * CommandExecutor class Constructor.
-     * <p>
-     * Initializes Subcommands
-     *
-     * @param plugin Current instance of Plan
-     */
     public PlanCommand(Plan plugin) {
         super(plugin, "plan", CommandType.CONSOLE, "", "", "plan");
         super.setDefaultCommand("inspect");
@@ -41,25 +34,25 @@ public class PlanCommand extends TreeCommand<Plan> {
     @Override
     public void addCommands() {
         add(
-                new InspectCommand(plugin),
+                new InspectCommand(),
                 new QInspectCommand(plugin),
-                new AnalyzeCommand(plugin),
-                new SearchCommand(plugin),
+                new AnalyzeCommand(),
+                new SearchCommand(),
                 new InfoCommand(plugin),
                 new ReloadCommand(plugin),
                 new ManageCommand(plugin),
                 new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
                 new ListCommand()
         );
-        RegisterCommand registerCommand = new RegisterCommand(plugin);
+        RegisterCommand registerCommand = new RegisterCommand();
         add(
                 registerCommand,
                 new WebUserCommand(plugin, registerCommand),
-                new NetworkCommand(plugin),
+                new NetworkCommand(),
                 new ListServersCommand(plugin));
 
         if (Settings.DEV_MODE.isTrue()) {
-            add(new DevCommand(plugin));
+            add(new DevCommand());
         }
     }
 }

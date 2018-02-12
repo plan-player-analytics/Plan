@@ -1,24 +1,20 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package com.djrapitops.plan.data;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.settings.Settings;
-import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.comparators.PlayerProfileLastPlayedComparator;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
@@ -64,6 +60,113 @@ public class ServerProfile {
         lastPeakPlayers = -1;
     }
 
+    public static long getLowSpikeCount(List<TPS> tpsData) {
+        int mediumThreshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
+
+        boolean wasLow = false;
+        long spikeCount = 0L;
+
+        for (TPS tpsObj : tpsData) {
+            double tps = tpsObj.getTicksPerSecond();
+            if (tps < mediumThreshold) {
+                if (!wasLow) {
+                    spikeCount++;
+                    wasLow = true;
+                }
+            } else {
+                wasLow = false;
+            }
+        }
+
+        return spikeCount;
+    }
+
+    public static List<PlayerKill> getPlayerKills(List<Session> s) {
+        List<PlayerKill> kills = new ArrayList<>();
+        for (Session session : s) {
+            kills.addAll(session.getPlayerKills());
+        }
+        return kills;
+    }
+
+    public static long getMobKillCount(List<Session> s) {
+        long total = 0;
+        for (Session session : s) {
+            total += session.getMobKills();
+        }
+        return total;
+    }
+
+    public static long getDeathCount(List<Session> s) {
+        long total = 0;
+        for (Session session : s) {
+            total += session.getDeaths();
+        }
+        return total;
+    }
+
+    public static long serverDownTime(List<TPS> tpsData) {
+        long lastDate = -1;
+        long downTime = 0;
+        for (TPS tps : tpsData) {
+            long date = tps.getDate();
+            if (lastDate == -1) {
+                lastDate = date;
+                continue;
+            }
+
+            long diff = date - lastDate;
+            if (diff > TimeAmount.MINUTE.ms() * 3L) {
+                downTime += diff;
+            }
+            lastDate = date;
+        }
+
+        return downTime;
+    }
+
+    public static long serverIdleTime(List<TPS> tpsData) {
+        long lastDate = -1;
+        int lastPlayers = 0;
+        long idleTime = 0;
+        for (TPS tps : tpsData) {
+            long date = tps.getDate();
+            int players = tps.getPlayers();
+            if (lastDate == -1) {
+                lastDate = date;
+                lastPlayers = players;
+                continue;
+            }
+
+            long diff = date - lastDate;
+            if (lastPlayers == 0 && players == 0) {
+                idleTime += diff;
+            }
+
+            lastDate = date;
+            lastPlayers = players;
+        }
+
+        return idleTime;
+    }
+
+    public static double aboveLowThreshold(List<TPS> tpsData) {
+        if (tpsData.isEmpty()) {
+            return 1;
+        }
+
+        int threshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
+
+        long count = 0;
+        for (TPS tps : tpsData) {
+            if (tps.getTicksPerSecond() >= threshold) {
+                count++;
+            }
+        }
+
+        return count * 1.0 / tpsData.size();
+    }
+
     public List<PlayerProfile> getPlayers() {
         return players;
     }
@@ -86,27 +189,6 @@ public class ServerProfile {
 
     public void setCommandUsage(Map<String, Integer> commandUsage) {
         this.commandUsage = commandUsage;
-    }
-
-    public static long getLowSpikeCount(List<TPS> tpsData) {
-        int mediumThreshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
-
-        boolean wasLow = false;
-        long spikeCount = 0L;
-
-        for (TPS tpsObj : tpsData) {
-            double tps = tpsObj.getTicksPerSecond();
-            if (tps < mediumThreshold) {
-                if (!wasLow) {
-                    spikeCount++;
-                    wasLow = true;
-                }
-            } else {
-                wasLow = false;
-            }
-        }
-
-        return spikeCount;
     }
 
     public double getAverageTPS(long after, long before) {
@@ -200,6 +282,8 @@ public class ServerProfile {
                 .collect(Collectors.toList());
     }
 
+    // Default setters & getters
+
     public long getTotalPlaytime() {
         return serverWorldtimes.getTotal();
     }
@@ -219,32 +303,6 @@ public class ServerProfile {
     public List<Session> getAllSessions() {
         return players.stream().map(p -> p.getSessions(serverUUID)).flatMap(Collection::stream).collect(Collectors.toList());
     }
-
-    public static List<PlayerKill> getPlayerKills(List<Session> s) {
-        List<PlayerKill> kills = new ArrayList<>();
-        for (Session session : s) {
-            kills.addAll(session.getPlayerKills());
-        }
-        return kills;
-    }
-
-    public static long getMobKillCount(List<Session> s) {
-        long total = 0;
-        for (Session session : s) {
-            total += session.getMobKills();
-        }
-        return total;
-    }
-
-    public static long getDeathCount(List<Session> s) {
-        long total = 0;
-        for (Session session : s) {
-            total += session.getDeaths();
-        }
-        return total;
-    }
-
-    // Default setters & getters
 
     public WorldTimes getServerWorldtimes() {
         return serverWorldtimes;
@@ -286,18 +344,6 @@ public class ServerProfile {
         this.allTimePeakPlayers = allTimePeakPlayers;
     }
 
-    public static int getPlayersOnline() {
-        if (Check.isBungeeAvailable()) {
-            return PlanBungee.getInstance().getProxy().getOnlineCount();
-        } else {
-            return Plan.getInstance().getServer().getOnlinePlayers().size();
-        }
-    }
-
-    public static int getPlayersMax() {
-        return MiscUtils.getIPlan().getVariable().getMaxPlayers();
-    }
-
     public Stream<PlayerProfile> getOps() {
         return players.stream().filter(PlayerProfile::isOp);
     }
@@ -316,72 +362,10 @@ public class ServerProfile {
                 .collect(Collectors.toList()));
     }
 
-    public static long serverDownTime(List<TPS> tpsData) {
-        long lastDate = -1;
-        long downTime = 0;
-        for (TPS tps : tpsData) {
-            long date = tps.getDate();
-            if (lastDate == -1) {
-                lastDate = date;
-                continue;
-            }
-
-            long diff = date - lastDate;
-            if (diff > TimeAmount.MINUTE.ms() * 3L) {
-                downTime += diff;
-            }
-            lastDate = date;
-        }
-
-        return downTime;
-    }
-
     public long serverIdleTime(long after, long before) {
         return serverIdleTime(getTPSData(after, before)
                 .sorted(new TPSComparator())
                 .collect(Collectors.toList()));
-    }
-
-    public static long serverIdleTime(List<TPS> tpsData) {
-        long lastDate = -1;
-        int lastPlayers = 0;
-        long idleTime = 0;
-        for (TPS tps : tpsData) {
-            long date = tps.getDate();
-            int players = tps.getPlayers();
-            if (lastDate == -1) {
-                lastDate = date;
-                lastPlayers = players;
-                continue;
-            }
-
-            long diff = date - lastDate;
-            if (lastPlayers == 0 && players == 0) {
-                idleTime += diff;
-            }
-
-            lastDate = date;
-            lastPlayers = players;
-        }
-
-        return idleTime;
-    }
-
-    public static double aboveLowThreshold(List<TPS> tpsData) {
-        if (tpsData.isEmpty()) {
-            return 1;
-        }
-
-        int threshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
-
-        long count = 0;
-        for (TPS tps : tpsData) {
-            if (tps.getTicksPerSecond() >= threshold) {
-                count++;
-            }
-        }
-
-        return count * 1.0 / tpsData.size();
     }
 
     public PlayerProfile getPlayer(UUID uuid) {

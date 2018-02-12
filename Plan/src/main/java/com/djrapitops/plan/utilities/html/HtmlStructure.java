@@ -1,23 +1,24 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package com.djrapitops.plan.utilities.html;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.ServerVariableHolder;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Settings;
-import com.djrapitops.plan.systems.info.BukkitInformationManager;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerProperties;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.html.graphs.line.PlayerActivityGraph;
+import com.djrapitops.plan.utilities.analysis.Analysis;
+import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -106,27 +107,29 @@ public class HtmlStructure {
         return b.toString();
     }
 
-    public static String createServerContainer(Plan plugin) {
-        ServerVariableHolder variable = plugin.getVariable();
-        int maxPlayers = variable.getMaxPlayers();
-        int online = plugin.getServer().getOnlinePlayers().size();
-        Optional<Long> analysisRefreshDate = ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisRefreshDate();
-        String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStamp).orElse("-");
+    public static String createServerContainer() {
+        ServerProperties properties = ServerInfo.getServerProperties();
+        int maxPlayers = properties.getMaxPlayers();
+        int online = properties.getOnlinePlayers();
+        Optional<Long> analysisRefreshDate = Analysis.getRefreshDate();
+        String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStampClock).orElse("-");
 
-        String serverName = plugin.getServerInfoManager().getServerName();
-        String serverType = variable.getVersion();
+        Server server = ServerInfo.getServer();
+
+        String serverName = server.getName();
+        String serverType = properties.getVersion();
         String address = "../server/" + serverName;
 
-
-        Database db = plugin.getDB();
-        UUID serverUUID = plugin.getServerUuid();
+        Database db = Database.getActive();
+        UUID serverUUID = server.getUuid();
         String id = serverUUID.toString().replace("-", "");
 
-        int playerCount = db.getUserInfoTable().getServerUserCount(serverUUID);
+        int playerCount = 0;
         String playerData = "[]";
         try {
-            playerData = PlayerActivityGraph.createSeries(db.getTpsTable().getTPSData(serverUUID));
-        } catch (SQLException e) {
+            playerCount = db.count().getServerPlayerCount(serverUUID);
+            playerData = new OnlineActivityGraph(db.fetch().getTPSData(serverUUID)).toHighChartsSeries();
+        } catch (DBException e) {
             Log.toLog(HtmlStructure.class.getClass().getName(), e);
         }
 
@@ -173,15 +176,6 @@ public class HtmlStructure {
                 "function() {" +
                 "playersChartNoNav(playerChart" + id + ", playersOnlineSeries" + id + ");}, 1000);" +
                 "})</script>";
-    }
-
-    public static String parseOfflineServerContainer(String oldContent) {
-        if (oldContent == null) {
-            return "";
-        }
-        String[] split = oldContent.split("<p>", 2);
-        String[] split2 = split[1].split("box-footer", 2);
-        return split[0] + "<p>Offline</p></div><div class=\"box-footer" + split2[1];
     }
 
     public static String playerStatus(String online, Set<UUID> banned, boolean op) {

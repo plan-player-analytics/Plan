@@ -1,12 +1,15 @@
 package com.djrapitops.plan.data.plugin;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.pluginbridge.plan.Bridge;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class responsible for hooking to other plugins and managing the %plugins%
@@ -15,25 +18,35 @@ import java.util.List;
  * @author Rsl1122
  * @since 2.6.0
  */
-public class HookHandler {
+public class HookHandler implements SubSystem {
 
     private final List<PluginData> additionalDataSources;
-    private final PluginsConfigSection configHandler;
+    private PluginsConfigSection configHandler;
 
-    /**
-     * Class constructor, hooks to plugins.
-     *
-     * @param plugin Current instance of plan.
-     */
-    public HookHandler(Plan plugin) {
+    public HookHandler() {
         additionalDataSources = new ArrayList<>();
+    }
+
+    public static HookHandler getInstance() {
+        HookHandler hookHandler = PlanSystem.getInstance().getHookHandler();
+        Verify.nullCheck(hookHandler, () -> new IllegalStateException("Plugin Hooks were not initialized."));
+        return hookHandler;
+    }
+
+    @Override
+    public void enable() {
         configHandler = new PluginsConfigSection();
         try {
             Bridge.hook(this);
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");
         }
+    }
+
+    @Override
+    public void disable() {
+
     }
 
     /**
@@ -60,7 +73,7 @@ public class HookHandler {
                 additionalDataSources.add(dataSource);
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
             Log.error("Attempting to register PluginDataSource caused an exception.");
         }
     }
@@ -72,5 +85,24 @@ public class HookHandler {
      */
     public List<PluginData> getAdditionalDataSources() {
         return additionalDataSources;
+    }
+
+    public Map<PluginData, InspectContainer> getInspectContainersFor(UUID uuid) {
+        List<PluginData> plugins = getAdditionalDataSources();
+        Map<PluginData, InspectContainer> containers = new HashMap<>();
+        for (PluginData pluginData : plugins) {
+            InspectContainer inspectContainer = new InspectContainer();
+            try {
+                InspectContainer container = pluginData.getPlayerData(uuid, inspectContainer);
+                if (container != null && !container.isEmpty()) {
+                    containers.put(pluginData, container);
+                }
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
+                String sourcePlugin = pluginData.getSourcePlugin();
+                Log.error("PluginData caused exception: " + sourcePlugin);
+                Log.toLog(this.getClass().getName() + " " + sourcePlugin, e);
+            }
+        }
+        return containers;
     }
 }

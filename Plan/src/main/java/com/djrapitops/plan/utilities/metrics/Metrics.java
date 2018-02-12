@@ -28,6 +28,7 @@ import java.util.zip.GZIPOutputStream;
  * <p>
  * Condition out https://bStats.org/ to learn more about bStats!
  */
+@SuppressWarnings("unchecked")
 public class Metrics {
 
     // The version of this bStats class
@@ -59,11 +60,6 @@ public class Metrics {
     // A list with all custom charts
     private final List<CustomChart> charts = new ArrayList<>();
 
-    /**
-     * Class constructor.
-     *
-     * @param plugin The plugin which stats should be submitted.
-     */
     public Metrics(JavaPlugin plugin) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null!");
@@ -328,19 +324,10 @@ public class Metrics {
         }).start();
     }
 
-    /**
-     * Represents a custom chart.
-     */
     public abstract static class CustomChart {
 
-        // The id of the chart
         final String chartId;
 
-        /**
-         * Class constructor.
-         *
-         * @param chartId The id of the chart.
-         */
         CustomChart(String chartId) {
             if (chartId == null || chartId.isEmpty()) {
                 throw new IllegalArgumentException("ChartId cannot be null or empty!");
@@ -371,9 +358,6 @@ public class Metrics {
 
     }
 
-    /**
-     * Represents a custom simple pie.
-     */
     public static class SimplePie extends CustomChart {
 
         private final Callable<String> callable;
@@ -402,9 +386,6 @@ public class Metrics {
         }
     }
 
-    /**
-     * Represents a custom advanced pie.
-     */
     public static class AdvancedPie extends CustomChart {
 
         private final Callable<Map<String, Integer>> callable;
@@ -446,9 +427,6 @@ public class Metrics {
         }
     }
 
-    /**
-     * Represents a custom drilldown pie.
-     */
     public static class DrilldownPie extends CustomChart {
 
         private final Callable<Map<String, Map<String, Integer>>> callable;
@@ -495,9 +473,6 @@ public class Metrics {
         }
     }
 
-    /**
-     * Represents a custom single line chart.
-     */
     public static class SingleLineChart extends CustomChart {
 
         private final Callable<Integer> callable;
@@ -527,9 +502,6 @@ public class Metrics {
 
     }
 
-    /**
-     * Represents a custom multi line chart.
-     */
     public static class MultiLineChart extends CustomChart {
 
         private final Callable<Map<String, Integer>> callable;
@@ -572,9 +544,6 @@ public class Metrics {
 
     }
 
-    /**
-     * Represents a custom simple bar chart.
-     */
     public static class SimpleBarChart extends CustomChart {
 
         private final Callable<Map<String, Integer>> callable;
@@ -610,9 +579,6 @@ public class Metrics {
 
     }
 
-    /**
-     * Represents a custom advanced bar chart.
-     */
     public static class AdvancedBarChart extends CustomChart {
 
         private final Callable<Map<String, int[]>> callable;

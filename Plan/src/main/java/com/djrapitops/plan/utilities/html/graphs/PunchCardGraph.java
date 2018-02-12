@@ -14,27 +14,26 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Utility class for creating Punch Card Data Array for the JavaScripts.
+ * Bubble Chart that represents login "punches" of players.
  *
  * @author Rsl1122
- * @since 3.6.0
+ * @since 4.2.0
  */
-public class PunchCardGraph {
+public class PunchCardGraph implements HighChart {
+
+    private final Collection<Session> sessions;
 
     /**
-     * Constructor used to hide the public constructor
+     * Constuctor for the graph.
+     *
+     * @param sessions All sessions of All users this PunchCard represents.
      */
-    private PunchCardGraph() {
-        throw new IllegalStateException("Utility class");
+    public PunchCardGraph(Collection<Session> sessions) {
+        this.sessions = sessions;
     }
 
-    /**
-     * Creates a PunchCard series data Array for HighCharts
-     *
-     * @param sessions Sessions (Unique/Player) to be placed into the PunchCard.
-     * @return Data array as a string.
-     */
-    public static String createSeries(Collection<Session> sessions) {
+    @Override
+    public String toHighChartsSeries() {
         List<Long> sessionStarts = getSessionStarts(sessions);
         List<int[]> daysAndHours = AnalysisUtils.getDaysAndHours(sessionStarts);
         int[][] dataArray = turnIntoArray(daysAndHours);

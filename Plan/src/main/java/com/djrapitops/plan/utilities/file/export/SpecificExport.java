@@ -4,11 +4,12 @@
  */
 package com.djrapitops.plan.utilities.file.export;
 
-import com.djrapitops.plan.settings.Settings;
-import com.djrapitops.plan.systems.webserver.pagecache.PageCache;
-import com.djrapitops.plan.systems.webserver.pagecache.PageId;
-import com.djrapitops.plan.systems.webserver.response.Response;
-import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -51,7 +52,7 @@ public abstract class SpecificExport extends AbsRunnable {
             }
             return folder;
         }
-        File dataFolder = MiscUtils.getIPlan().getDataFolder();
+        File dataFolder = PlanPlugin.getInstance().getDataFolder();
         File folder = new File(dataFolder, path);
         folder.mkdirs();
         return folder;
@@ -74,7 +75,7 @@ public abstract class SpecificExport extends AbsRunnable {
     }
 
     protected void exportAvailablePlayerPage(UUID uuid, String name) throws IOException {
-        Response response = PageCache.loadPage(PageId.PLAYER.of(uuid));
+        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
         if (response == null) {
             return;
         }
@@ -91,7 +92,7 @@ public abstract class SpecificExport extends AbsRunnable {
 
     protected void exportAvailableServerPage(UUID serverUUID, String serverName) throws IOException {
 
-        Response response = PageCache.loadPage(PageId.SERVER.of(serverUUID));
+        Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
         if (response == null) {
             return;
         }
@@ -102,9 +103,9 @@ public abstract class SpecificExport extends AbsRunnable {
                 .replace("src=\"plugins/", "src=\"../plugins/")
                 .replace("src=\"js/", "src=\"../js/");
 
-        File htmlLocation = null;
+        File htmlLocation;
         if (usingBungee) {
-            if (serverUUID.equals(MiscUtils.getIPlan().getServerUuid())) {
+            if (serverUUID.equals(ServerInfo.getServerUUID())) {
                 htmlLocation = new File(outputFolder, "network");
             } else {
                 htmlLocation = new File(getServerFolder(), serverName.replace(" ", "%20").replace(".", "%2E"));

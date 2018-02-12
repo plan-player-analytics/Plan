@@ -58,6 +58,10 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
+            <id>redprotect-repo</id>
+            <url>https://raw.github.com/FabioZumbi12/RedProtect/mvn-repo/</url>
+        </repository>
+        <repository>
             <id>viaversion-repo</id>
             <url>https://repo.viaversion.com</url>
         </repository>
@@ -145,6 +149,13 @@
             <version>16.7.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://github.com/KaiKikuchi/GriefPreventionPlus/releases -->
+        <dependency>
+            <groupId>net.kaikk.mc</groupId>
+            <artifactId>GriefPreventionPlus</artifactId>
+            <version>RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>litebans</groupId>
             <artifactId>api</artifactId>
@@ -189,8 +200,8 @@
         </dependency>
         <dependency>
             <groupId>br.net.fabiozumbi12.RedProtect</groupId>
-            <artifactId>RedProtect</artifactId>
-            <version>7.3.0</version>
+            <artifactId>RedProtect-Spigot</artifactId>
+            <version>RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -208,7 +219,7 @@
                 <artifactId>maven-install-plugin</artifactId>
                 <version>2.5.2</version>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
@@ -234,7 +245,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.5</version>

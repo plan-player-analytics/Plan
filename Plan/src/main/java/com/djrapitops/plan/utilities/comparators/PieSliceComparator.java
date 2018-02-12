@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -9,7 +9,9 @@ import com.djrapitops.plan.utilities.html.graphs.pie.PieSlice;
 import java.util.Comparator;
 
 /**
- * Compares PieSlices to descending Percentage order.
+ * Comparator for PieSlices to descending Percentage order.
+ *
+ * @author Rsl1122
  */
 public class PieSliceComparator implements Comparator<PieSlice> {
 

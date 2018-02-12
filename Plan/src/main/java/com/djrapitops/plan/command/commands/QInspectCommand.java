@@ -1,10 +1,13 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.data.calculation.ActivityIndex;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -19,7 +22,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -30,14 +32,14 @@ import java.util.UUID;
  */
 public class QInspectCommand extends SubCommand {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
     /**
      * Class Constructor.
      *
      * @param plugin Current instance of Plan
      */
-    public QInspectCommand(IPlan plugin) {
+    public QInspectCommand(PlanPlugin plugin) {
         super("qinspect",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.QUICK_INSPECT.getPermission(),
@@ -70,16 +72,17 @@ public class QInspectCommand extends SubCommand {
                     if (!Condition.isTrue(Verify.notNull(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString(), sender)) {
                         return;
                     }
-                    if (!Condition.isTrue(plugin.getDB().wasSeenBefore(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
+                    Database database = Database.getActive();
+                    if (!Condition.isTrue(database.check().isPlayerRegistered(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
                         return;
                     }
 
-                    PlayerProfile playerProfile = plugin.getDB().getPlayerProfile(uuid);
+                    PlayerProfile playerProfile = database.fetch().getPlayerProfile(uuid);
 
                     sendMsgs(sender, playerProfile);
 
-                } catch (SQLException ex) {
-                    Log.toLog(this.getClass().getName(), ex);
+                } catch (DBException ex) {
+                    Log.toLog(this.getClass(), ex);
                 } finally {
                     this.cancel();
                 }
@@ -100,9 +103,9 @@ public class QInspectCommand extends SubCommand {
 
         sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + profile.getName());
 
-        double activityIndex = profile.getActivityIndex(now);
+        ActivityIndex activityIndex = profile.getActivityIndex(now);
 
-        sender.sendMessage(colT + ball + " " + colM + " Activity Index: " + colS + FormatUtils.cutDecimals(activityIndex) + " | " + FormatUtils.readableActivityIndex(activityIndex)[1]);
+        sender.sendMessage(colT + ball + " " + colM + " Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getColor());
         sender.sendMessage(colT + ball + " " + colM + " Registered: " + colS + FormatUtils.formatTimeStampYear(profile.getRegistered()));
         sender.sendMessage(colT + ball + " " + colM + " Last Seen: " + colS + FormatUtils.formatTimeStampYear(profile.getLastSeen()));
         sender.sendMessage(colT + ball + " " + colM + " Logged in from: " + colS + profile.getMostRecentGeoInfo().getGeolocation());

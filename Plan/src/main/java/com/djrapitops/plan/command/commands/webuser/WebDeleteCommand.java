@@ -1,10 +1,9 @@
 package com.djrapitops.plan.command.commands.webuser;
 
-import com.djrapitops.plan.api.IPlan;
-import com.djrapitops.plan.database.tables.SecurityTable;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
@@ -22,15 +21,12 @@ import net.md_5.bungee.api.ChatColor;
  */
 public class WebDeleteCommand extends SubCommand {
 
-    private final IPlan plugin;
-
-    public WebDeleteCommand(IPlan plugin) {
+    public WebDeleteCommand() {
         super("delete, remove",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE_WEB.getPerm(),
                 Locale.get(Msg.CMD_USG_WEB_DELETE).toString(),
                 "<username>");
-        this.plugin = plugin;
     }
 
     @Override
@@ -38,20 +34,20 @@ public class WebDeleteCommand extends SubCommand {
         if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).parse() + " <username>", sender)) {
             return true;
         }
-        SecurityTable table = plugin.getDB().getSecurityTable();
+        Database database = Database.getActive();
         String user = args[0];
 
         RunnableFactory.createNew(new AbsRunnable("Webuser Delete Task: " + user) {
             @Override
             public void run() {
                 try {
-                    if (!Condition.isTrue(table.userExists(user), ChatColor.RED + "[Plan] User Doesn't exist.", sender)) {
+                    if (!Condition.isTrue(database.check().doesWebUserExists(user), ChatColor.RED + "[Plan] User Doesn't exist.", sender)) {
                         return;
                     }
-                    table.removeUser(user);
+                    database.remove().webUser(user);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_SUCCESS).parse());
                 } catch (Exception ex) {
-                    Log.toLog(this.getClass().getName(), ex);
+                    Log.toLog(this.getClass(), ex);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
                 } finally {
                     this.cancel();

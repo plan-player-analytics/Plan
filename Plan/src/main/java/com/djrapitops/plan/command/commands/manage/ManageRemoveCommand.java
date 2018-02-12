@@ -1,12 +1,12 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
-import com.djrapitops.plan.systems.cache.DataCache;
-import com.djrapitops.plan.systems.cache.SessionCache;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -19,7 +19,6 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 import static org.bukkit.Bukkit.getPlayer;
@@ -32,22 +31,12 @@ import static org.bukkit.Bukkit.getPlayer;
  */
 public class ManageRemoveCommand extends SubCommand {
 
-    private final Plan plugin;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public ManageRemoveCommand(Plan plugin) {
+    public ManageRemoveCommand() {
         super("remove",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE.getPermission(),
                 Locale.get(Msg.CMD_USG_MANAGE_REMOVE).toString(),
                 "<player> [-a]");
-
-        this.plugin = plugin;
-
     }
 
     @Override
@@ -80,30 +69,29 @@ public class ManageRemoveCommand extends SubCommand {
                     }
 
                     message = Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString();
-                    if (!Condition.isTrue(plugin.getDB().wasSeenBefore(uuid), message, sender)) {
+                    Database database = Database.getActive();
+                    if (!Condition.isTrue(database.check().isPlayerRegistered(uuid), message, sender)) {
                         return;
                     }
 
-                    message = Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(plugin.getDB().getConfigName()));
+                    message = Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(Database.getActive().getConfigName()));
                     if (!Condition.isTrue(Verify.contains("-a", args), message, sender)) {
                         return;
                     }
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
-                    try {
-                        plugin.getDB().removeAccount(uuid);
 
-                        DataCache dataCache = plugin.getDataCache();
-                        Player player = getPlayer(uuid);
-                        if (player != null) {
-                            SessionCache.getActiveSessions().remove(uuid);
-                            dataCache.cacheSession(uuid, new Session(MiscUtils.getTime(), player.getWorld().getName(), player.getGameMode().name()));
-                        }
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, plugin.getDB().getConfigName()));
-                    } catch (SQLException e) {
-                        Log.toLog(this.getClass().getName(), e);
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    database.remove().player(uuid);
+
+                    Player player = getPlayer(uuid);
+                    if (player != null) {
+                        SessionCache.getActiveSessions().remove(uuid);
+                        SessionCache.getInstance().cacheSession(uuid, new Session(MiscUtils.getTime(), player.getWorld().getName(), player.getGameMode().name()));
                     }
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, Database.getActive().getConfigName()));
+                } catch (DBException e) {
+                    Log.toLog(this.getClass(), e);
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();
                 }

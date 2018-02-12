@@ -1,9 +1,8 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.command.CommandType;
@@ -18,19 +17,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This subcommand is used to search for a user, and to view all matches' data.
+ * This SubCommand is used to search for a user.
  *
  * @author Rsl1122
  * @since 2.0.0
  */
 public class SearchCommand extends SubCommand {
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public SearchCommand(Plan plugin) {
+    public SearchCommand() {
         super("search",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.SEARCH.getPermission(),

@@ -1,14 +1,25 @@
 function worldPie(id, worldSeries, gmSeries) {
-    Highcharts.chart(id, {
+    var defaultTitle = '';
+    var defaultSubtitle = 'Click the slices to view used GameMode';
+
+    var chart = Highcharts.chart(id, {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            type: 'pie'
+            type: 'pie',
+            events: {
+                drilldown: function (e) {
+                    chart.setTitle({text: '' + e.point.name}, {text: ''});
+                },
+                drillup: function (e) {
+                    chart.setTitle({text: defaultTitle}, {text: defaultSubtitle});
+                }
+            }
         },
-        title: {text: ''},
+        title: {text: defaultTitle},
         subtitle: {
-            text: 'Click the slices to view used GameMode'
+            text: defaultSubtitle
         },
         plotOptions: {
             pie: {

@@ -1,10 +1,11 @@
 package com.djrapitops.plan.command.commands.webuser;
 
-import com.djrapitops.plan.api.IPlan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.comparators.WebUserComparator;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
@@ -24,9 +25,9 @@ import java.util.List;
  */
 public class WebListUsersCommand extends SubCommand {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
-    public WebListUsersCommand(IPlan plugin) {
+    public WebListUsersCommand(PlanPlugin plugin) {
         super("list", CommandType.CONSOLE, Permissions.MANAGE_WEB.getPerm(), "List registered web users & permission levels.");
         this.plugin = plugin;
     }
@@ -39,7 +40,7 @@ public class WebListUsersCommand extends SubCommand {
                 try {
                     ColorScheme cs = plugin.getColorScheme();
                     String mCol = cs.getMainColor();
-                    List<WebUser> users = plugin.getDB().getSecurityTable().getUsers();
+                    List<WebUser> users = Database.getActive().fetch().getWebUsers();
                     users.sort(new WebUserComparator());
                     sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse() + mCol + " WebUsers (" + users.size() + ")");
                     for (WebUser user : users) {
@@ -47,7 +48,7 @@ public class WebListUsersCommand extends SubCommand {
                     }
                     sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
                 } catch (Exception ex) {
-                    Log.toLog(this.getClass().getName(), ex);
+                    Log.toLog(this.getClass(), ex);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
                 } finally {
                     this.cancel();

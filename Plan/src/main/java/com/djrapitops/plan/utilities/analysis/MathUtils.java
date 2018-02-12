@@ -3,7 +3,9 @@ package com.djrapitops.plan.utilities.analysis;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.*;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
 /**
@@ -151,34 +153,6 @@ public class MathUtils {
         return values
                 .mapToDouble(value -> (Double) value)
                 .sum();
-    }
-
-    /**
-     * Gets the biggest Integer in a Collection with Integer as Entry
-     * If the Collection is empty, it will return 1.
-     *
-     * @param values The Collection with Integer as the Entry
-     * @return The biggest Integer
-     * @see #getBiggestLong(Collection)
-     */
-    public static int getBiggest(Collection<Integer> values) {
-        OptionalInt biggest = values.stream().mapToInt(i -> i).max();
-
-        return biggest.isPresent() ? biggest.getAsInt() : 1;
-    }
-
-    /**
-     * Gets the biggest Long in a Collection with Long as Entry
-     * If the Collection is empty, it will return 1.
-     *
-     * @param values The Collection with Long as the Entry
-     * @return The biggest Integer
-     * @see #getBiggest(Collection)
-     */
-    public static long getBiggestLong(Collection<Long> values) {
-        OptionalLong biggest = values.stream().mapToLong(i -> i).max();
-
-        return biggest.isPresent() ? biggest.getAsLong() : 1;
     }
 
     /**

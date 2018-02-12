@@ -1,17 +1,11 @@
 package com.djrapitops.plan.utilities.analysis;
 
-import com.djrapitops.plan.api.IPlan;
 import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.StickyData;
-import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,6 +31,22 @@ public class AnalysisUtils {
         }
         // Filters out register dates before scale
         return newPlayers;
+    }
+
+    public static int getUniquePlayers(Map<UUID, List<Session>> sessions, long after) {
+        Set<UUID> uuids = new HashSet<>();
+
+        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
+            UUID uuid = entry.getKey();
+            for (Session session : entry.getValue()) {
+                if (session.getSessionStart() >= after) {
+                    uuids.add(uuid);
+                    break;
+                }
+            }
+        }
+
+        return uuids.size();
     }
 
     public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long after) {
@@ -123,7 +133,7 @@ public class AnalysisUtils {
     }
 
     public static double getAveragePerDay(long after, long before, long total) {
-        return total / getNumberOfDaysBetween(after, before);
+        return (double) total / getNumberOfDaysBetween(after, before);
     }
 
     public static long getNumberOfDaysBetween(long start, long end) {
@@ -134,23 +144,7 @@ public class AnalysisUtils {
             test += day;
             value++;
         }
-        return value;
-    }
-
-    public static void addMissingWorlds(WorldTimes worldTimes) {
-        try {
-            // Add 0 time for worlds not present.
-            Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
-            IPlan plugin = MiscUtils.getIPlan();
-            for (String world : plugin.getDB().getWorldTable().getWorldNames(plugin.getServerUuid())) {
-                if (nonZeroWorlds.contains(world)) {
-                    continue;
-                }
-                worldTimes.setGMTimesForWorld(world, new GMTimes());
-            }
-        } catch (SQLException e) {
-            Log.toLog("AnalysisUtils.addMissingWorlds", e);
-        }
+        return value == 0 ? 1 : value;
     }
 
     public static Map<UUID, List<Session>> sortSessionsByUser(Map<UUID, Map<UUID, List<Session>>> allSessions) {
@@ -197,7 +191,7 @@ public class AnalysisUtils {
                     stickM++;
                 }
             }
-            probability *= (stickM / similarM.size());
+            probability *= ((double) stickM / similarM.size());
         }
 
         if (!similarW.isEmpty()) {
@@ -208,7 +202,7 @@ public class AnalysisUtils {
                 }
             }
 
-            probability *= (stickW / similarW.size());
+            probability *= ((double) stickW / similarW.size());
         }
 
         return probability;
@@ -219,13 +213,13 @@ public class AnalysisUtils {
         if (!players.isEmpty()) {
             for (PlayerProfile player : players) {
                 for (long date = time; date >= time - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms()) {
-                    double activityIndex = player.getActivityIndex(date);
-                    String index = FormatUtils.readableActivityIndex(activityIndex)[1];
+                    ActivityIndex activityIndex = player.getActivityIndex(date);
+                    String activityGroup = activityIndex.getGroup();
 
                     Map<String, Set<UUID>> map = activityData.getOrDefault(date, new HashMap<>());
-                    Set<UUID> uuids = map.getOrDefault(index, new HashSet<>());
+                    Set<UUID> uuids = map.getOrDefault(activityGroup, new HashSet<>());
                     uuids.add(player.getUuid());
-                    map.put(index, uuids);
+                    map.put(activityGroup, uuids);
                     activityData.put(date, map);
                 }
             }

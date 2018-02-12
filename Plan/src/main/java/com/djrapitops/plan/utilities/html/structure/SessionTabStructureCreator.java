@@ -4,18 +4,18 @@
  */
 package com.djrapitops.plan.utilities.html.structure;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.settings.Settings;
-import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
-import com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
+import com.djrapitops.plan.utilities.html.tables.KillsTable;
 import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * HTML utility class used for creating main element on Sessions tabs.
  *
  * @author Rsl1122
  */
@@ -51,7 +51,7 @@ public class SessionTabStructureCreator {
             maxSessions = 50;
         }
 
-        boolean appendWorldPerc = Settings.APPEND_WORLD_PERC.isTrue();
+        boolean appendWorldPercentage = Settings.APPEND_WORLD_PERC.isTrue();
 
         for (Session session : allSessions) {
             if (i >= maxSessions) {
@@ -69,36 +69,36 @@ public class SessionTabStructureCreator {
 
             int playerKillCount = session.getPlayerKills().size();
 
-            String name = Plan.getInstance().getDataCache().getName(uuid);
-            String link = Plan.getPlanAPI().getPlayerInspectPageLink(name);
+            String name = DataCache.getInstance().getName(uuid);
+            String link = PlanAPI.getInstance().getPlayerInspectPageLink(name);
 
-            String dotSeparated2 = appendWorldPerc
+            String info = appendWorldPercentage
                     ? HtmlStructure.separateWithDots(sessionStart, SessionsTableCreator.getLongestWorldPlayed(session))
                     : sessionStart;
-            String dotSeparated = appendName ?
-                    HtmlStructure.separateWithDots(name, dotSeparated2) :
-                    HtmlStructure.separateWithDots(serverName, dotSeparated2);
+            String nameAndInfo = appendName ?
+                    HtmlStructure.separateWithDots(name, info) :
+                    HtmlStructure.separateWithDots(serverName, info);
 
 
             String htmlID = "" + session.getSessionStart() + sessionID + i;
 
             String worldId = "worldPie" + session.getSessionStart() + i;
             WorldTimes worldTimes = session.getWorldTimes();
-            AnalysisUtils.addMissingWorlds(worldTimes);
 
-            String[] worldData = WorldPie.createSeries(worldTimes);
+            WorldPie worldPie = new WorldPie(worldTimes);
 
-            String killTable = KillsTableCreator.createTable(session.getPlayerKills());
+            String killTable = new KillsTable(session.getPlayerKills()).parseHtml();
 
             // Accordion panel header
             html.append("<div title=\"Session ID: ").append(sessionID)
                     .append("\"class=\"panel panel-col-").append(Theme.getValue(ThemeVal.PARSED_SESSION_ACCORDION)).append("\">")
                     .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
-                    .append("<h4 class=\"panel-title\">")
+                    .append("<h4 class=\"panel-title\">") // Title (header)
                     .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
                     .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
                     .append("aria-controls=\"session_").append(htmlID).append("\">")
-                    .append(dotSeparated).append("<span class=\"pull-right\">").append(sessionEnd).append("</span>") // Title (header)
+                    .append(nameAndInfo)
+                    .append("<span class=\"pull-right\">").append(sessionLength).append("</span>")
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 
@@ -130,8 +130,8 @@ public class SessionTabStructureCreator {
                     .append("<div id=\"").append(worldId).append("\" class=\"dashboard-donut-chart\"></div>")
                     // World Pie data script
                     .append("<script>")
-                    .append("var ").append(worldId).append("series = {name:'World Playtime'," +/*colors: worldPieColors,*/"colorByPoint:true,data:").append(worldData[0]).append("};")
-                    .append("var ").append(worldId).append("gmseries = ").append(worldData[1]).append(";")
+                    .append("var ").append(worldId).append("series = {name:'World Playtime',colorByPoint:true,data:").append(worldPie.toHighChartsSeries()).append("};")
+                    .append("var ").append(worldId).append("gmseries = ").append(worldPie.toHighChartsDrilldown()).append(";")
                     .append("</script>")
                     .append("</div>") // Right col-6
                     .append("</div>") // Closes row clearfix

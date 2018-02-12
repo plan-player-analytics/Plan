@@ -1,10 +1,9 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package com.djrapitops.plan.data.container;
 
-import com.djrapitops.plan.data.HasDate;
 import com.google.common.base.Objects;
 
 /**
@@ -12,7 +11,7 @@ import com.google.common.base.Objects;
  *
  * @author Rsl1122
  */
-public class GeoInfo implements HasDate {
+public class GeoInfo {
 
     private final String ip;
     private final String geolocation;
@@ -34,11 +33,6 @@ public class GeoInfo implements HasDate {
 
     public long getLastUsed() {
         return lastUsed;
-    }
-
-    @Override
-    public long getDate() {
-        return getLastUsed();
     }
 
     @Override

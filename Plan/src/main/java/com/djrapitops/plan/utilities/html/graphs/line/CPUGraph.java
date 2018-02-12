@@ -1,24 +1,26 @@
 package com.djrapitops.plan.utilities.html.graphs.line;
 
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.utilities.analysis.Point;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CPUGraph {
+/**
+ * Graph about CPU Usage gathered by TPSCountTimer.
+ *
+ * @author Rsl1122
+ * @see com.djrapitops.plan.system.tasks.TPSCountTimer
+ * @since 4.2.0
+ */
+public class CPUGraph extends AbstractLineGraph {
 
-    /**
-     * Constructor used to hide the public constructor
-     */
-    private CPUGraph() {
-        throw new IllegalStateException("Utility class");
+    public CPUGraph(List<TPS> tpsData) {
+        super(transformToPoints(tpsData));
     }
 
-    public static String createSeries(List<TPS> tpsData) {
-        List<Point> points = tpsData.stream()
+    private static List<Point> transformToPoints(List<TPS> tpsData) {
+        return tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getCPUUsage()))
                 .collect(Collectors.toList());
-        return LineSeries.createSeries(points, true);
     }
 }

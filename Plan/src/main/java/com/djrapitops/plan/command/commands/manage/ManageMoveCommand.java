@@ -1,10 +1,10 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -16,7 +16,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 /**
- * This manage subcommand is used to move all data from one database to another.
+ * This manage SubCommand is used to move all data from one database to another.
  * <p>
  * Destination database will be cleared.
  *
@@ -25,21 +25,12 @@ import com.djrapitops.plugin.utilities.Verify;
  */
 public class ManageMoveCommand extends SubCommand {
 
-    private final Plan plugin;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public ManageMoveCommand(Plan plugin) {
+    public ManageMoveCommand() {
         super("move",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE.getPermission(),
                 Locale.get(Msg.CMD_USG_MANAGE_MOVE).toString(),
                 "<fromDB> <toDB> [-a]");
-
-        this.plugin = plugin;
     }
 
     @Override
@@ -71,8 +62,8 @@ public class ManageMoveCommand extends SubCommand {
         }
 
         try {
-            final Database fromDatabase = ManageUtils.getDB(fromDB);
-            final Database toDatabase = ManageUtils.getDB(toDB);
+            final Database fromDatabase = DBSystem.getActiveDatabaseByName(fromDB);
+            final Database toDatabase = DBSystem.getActiveDatabaseByName(toDB);
 
             runMoveTask(fromDatabase, toDatabase, sender);
         } catch (Exception e) {
@@ -90,10 +81,10 @@ public class ManageMoveCommand extends SubCommand {
 
                     ManageUtils.clearAndCopy(toDatabase, fromDatabase);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_MOVE_SUCCESS).toString());
-                    boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), plugin.getDB().getConfigName());
+                    boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), Database.getActive().getConfigName());
                     Condition.isTrue(!movedToCurrentDatabase, Locale.get(Msg.MANAGE_INFO_CONFIG_REMINDER).toString(), sender);
                 } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
+                    Log.toLog(this.getClass(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();

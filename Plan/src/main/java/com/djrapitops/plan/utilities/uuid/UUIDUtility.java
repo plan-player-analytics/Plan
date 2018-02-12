@@ -5,14 +5,14 @@
  */
 package com.djrapitops.plan.utilities.uuid;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.FatalDBException;
+import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -35,7 +35,7 @@ public class UUIDUtility {
      */
     public static UUID getUUIDOf(String playerName) {
         try {
-            return getUUIDOf(playerName, MiscUtils.getIPlan().getDB());
+            return getUUIDOf(playerName, Database.getActive());
         } catch (Exception e) {
             return null;
         }
@@ -48,18 +48,20 @@ public class UUIDUtility {
      * @param db         Database to check from.
      * @return UUID of the player
      */
-    public static UUID getUUIDOf(String playerName, Database db) {
+    private static UUID getUUIDOf(String playerName, Database db) {
         UUID uuid = null;
         if (Check.isBukkitAvailable()) {
-            UUID uuidOf = Plan.getInstance().getDataCache().getUUIDof(playerName);
+            UUID uuidOf = DataCache.getInstance().getUUIDof(playerName);
             if (uuidOf != null) {
                 return uuidOf;
             }
         }
         try {
-            uuid = db.getUsersTable().getUuidOf(playerName);
-        } catch (SQLException e) {
-            Log.toLog("UUIDUtility", e);
+            uuid = db.fetch().getUuidOf(playerName);
+        } catch (FatalDBException e) {
+            Log.toLog(UUIDUtility.class, e);
+        } catch (DBException e) {
+            /* Ignored */
         }
         try {
             if (uuid == null) {

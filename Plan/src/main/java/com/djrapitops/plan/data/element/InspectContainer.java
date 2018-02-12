@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -69,6 +69,11 @@ public class InspectContainer {
         return html.toString();
     }
 
+    /**
+     * Check if InspectContainer has only values, and not HTML or Tables.
+     *
+     * @return true/false
+     */
     public final boolean hasOnlyValues() {
         return html.isEmpty() && tables.isEmpty();
     }

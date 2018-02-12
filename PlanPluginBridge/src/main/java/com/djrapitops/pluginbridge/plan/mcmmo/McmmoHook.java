@@ -1,8 +1,7 @@
 package com.djrapitops.pluginbridge.plan.mcmmo;
 
-import com.djrapitops.pluginbridge.plan.Hook;
-import com.djrapitops.plan.api.API;
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.pluginbridge.plan.Hook;
 
 /**
  * A Class responsible for hooking to MCMMO and registering data sources.
@@ -18,7 +17,6 @@ public class McmmoHook extends Hook {
      * API#addPluginDataSource uses the same method from HookHandler.
      *
      * @param hookH HookHandler instance for registering the data sources.
-     * @see API
      */
     public McmmoHook(HookHandler hookH) {
         super("com.gmail.nossr50.mcMMO", hookH);

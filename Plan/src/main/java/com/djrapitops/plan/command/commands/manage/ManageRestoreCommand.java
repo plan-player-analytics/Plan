@@ -1,11 +1,12 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.database.databases.SQLiteDB;
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -19,7 +20,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.io.File;
 
 /**
- * This manage subcommand is used to restore a backup.db file in the
+ * This manage SubCommand is used to restore a backup.db file in the
  * /plugins/Plan folder.
  *
  * @author Rsl1122
@@ -28,11 +29,6 @@ public class ManageRestoreCommand extends SubCommand {
 
     private final Plan plugin;
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
     public ManageRestoreCommand(Plan plugin) {
         super("restore",
                 CommandType.CONSOLE,
@@ -61,7 +57,7 @@ public class ManageRestoreCommand extends SubCommand {
         }
 
         try {
-            final Database database = ManageUtils.getDB(db);
+            final Database database = DBSystem.getActiveDatabaseByName(db);
 
             runRestoreTask(args, sender, database);
         } catch (Exception e) {
@@ -93,13 +89,10 @@ public class ManageRestoreCommand extends SubCommand {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
                     ManageUtils.clearAndCopy(database, backupDB);
-                    if (database.getConfigName().equals(plugin.getDB().getConfigName())) {
-//                            plugin.getDataCache().getCommandUseFromDb();
-                    }
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
+                    Log.toLog(this.getClass(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();

@@ -1,8 +1,7 @@
 package com.djrapitops.pluginbridge.plan.vault;
 
-import com.djrapitops.pluginbridge.plan.Hook;
-import com.djrapitops.plan.api.API;
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.pluginbridge.plan.Hook;
 import net.milkbowl.vault.economy.Economy;
 
 import static org.bukkit.Bukkit.getServer;
@@ -22,7 +21,6 @@ public class VaultHook extends Hook {
      *
      * @param hookH HookHandler instance for registering the data sources.
      * @throws NoClassDefFoundError when the plugin class can not be found.
-     * @see API
      */
     public VaultHook(HookHandler hookH) throws NoClassDefFoundError {
         super("net.milkbowl.vault.Vault", hookH);
