@@ -35,15 +35,9 @@ public class WebExceptionLogger {
     }
 
     private static boolean shouldLog(ConnectionFailException e) {
-        String address = null;
-        if (e.getMessage().contains("to address")) {
-            String[] split = e.getMessage().split("to address: ");
-            if (split.length == 2) {
-                String[] split2 = split[1].split("<br>");
-                if (split2.length == 2) {
-                    address = split2[0];
-                }
-            }
+        String address = getAddress(e);
+        if (address == null) {
+            return true;
         }
         Map<String, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries();
         Map<String, ConnectionLog.Entry> entries = logEntries.get("Out: " + address);
@@ -53,6 +47,19 @@ public class WebExceptionLogger {
             return connections.isEmpty() || connections.get(0).getResponseCode() != -1;
         }
         return true;
+    }
+
+    private static String getAddress(ConnectionFailException e) {
+        if (e.getMessage().contains("to address")) {
+            String[] split = e.getMessage().split("to address: ");
+            if (split.length == 2) {
+                String[] split2 = split[1].split("<br>");
+                if (split2.length == 2) {
+                    return split2[0];
+                }
+            }
+        }
+        return null;
     }
 
     public interface ExceptionLoggingAction {
