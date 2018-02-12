@@ -56,7 +56,7 @@ public class ConnectionLog {
         return log;
     }
 
-    public static class Entry {
+    public static class Entry implements Comparable<Entry> {
 
         private final int responseCode;
         private final long timeSent;
@@ -72,6 +72,17 @@ public class ConnectionLog {
 
         public long getTimeSent() {
             return timeSent;
+        }
+
+        /**
+         * Most recent first.
+         *
+         * @param o
+         * @return
+         */
+        @Override
+        public int compareTo(Entry o) {
+            return -Long.compare(this.timeSent, o.timeSent);
         }
     }
 
