@@ -1,13 +1,12 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data.container;
+package com.djrapitops.plan.data.container;
 
-import main.java.com.djrapitops.plan.data.HasDate;
-import main.java.com.djrapitops.plan.database.tables.Actions;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.data.Actions;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.Html;
 
 import java.util.Objects;
 
@@ -16,7 +15,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class Action implements HasDate {
+public class Action {
     private final long date;
     private final Actions doneAction;
     private final String additionalInfo;

@@ -1,6 +1,6 @@
-package main.java.com.djrapitops.plan.data.time;
+package com.djrapitops.plan.data.time;
 
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,9 +1,8 @@
 package com.djrapitops.pluginbridge.plan.essentials;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.earth2me.essentials.Essentials;
-import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -22,7 +21,6 @@ public class EssentialsHook extends Hook {
      *
      * @param hookH HookHandler instance for registering the data sources.
      * @throws NoClassDefFoundError when the plugin class can not be found.
-     * @see API
      */
     public EssentialsHook(HookHandler hookH) {
         super("com.earth2me.essentials.Essentials", hookH);

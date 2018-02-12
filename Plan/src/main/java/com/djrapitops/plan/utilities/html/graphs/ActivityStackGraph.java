@@ -1,74 +1,56 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.html.graphs;
+package com.djrapitops.plan.utilities.html.graphs;
 
-import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
-import main.java.com.djrapitops.plan.settings.theme.Theme;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
+import com.djrapitops.plan.data.calculation.ActivityIndex;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.graphs.stack.AbstractStackGraph;
+import com.djrapitops.plan.utilities.html.graphs.stack.StackDataSet;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 
 /**
- * //TODO Class Javadoc Comment
+ * Stack Graph that represents evolution of the PlayerBase in terms of ActivityIndex Groups.
  *
  * @author Rsl1122
+ * @see ActivityIndex
+ * @since 4.2.0
  */
-public class ActivityStackGraph {
+public class ActivityStackGraph extends AbstractStackGraph {
 
-    private ActivityStackGraph() {
-        throw new IllegalStateException("Utility Class");
+    public ActivityStackGraph(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
+        super(getLabels(activityData.navigableKeySet()), getDataSets(activityData));
     }
 
-    public static String[] createSeries(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
-        String[] sliceNames = ActivityPie.getSliceNames();
+    private static String[] getLabels(NavigableSet<Long> dates) {
+        return dates.stream()
+                .map(FormatUtils::formatTimeStampDay)
+                .toArray(String[]::new);
+    }
+
+    private static StackDataSet[] getDataSets(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
+        String[] groups = ActivityIndex.getGroups();
         String[] colors = Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
+        StackDataSet[] dataSets = new StackDataSet[groups.length];
 
-        StringBuilder[] series = new StringBuilder[sliceNames.length + 1];
-        for (int i = 0; i <= sliceNames.length; i++) {
-            series[i] = new StringBuilder();
-        }
-        for (int i = 1; i <= sliceNames.length; i++) {
-            series[i] = new StringBuilder("{name: '")
-                    .append(sliceNames[i - 1])
-                    .append("',color:").append(colors[(i - 1) % maxCol])
-                    .append(",data: [");
+        for (int i = 0; i < groups.length; i++) {
+            dataSets[i] = new StackDataSet(new ArrayList<>(), groups[i], colors[(i) % maxCol]);
         }
 
-        int size = activityData.size();
-        int i = 0;
         for (Long date : activityData.navigableKeySet()) {
             Map<String, Set<UUID>> data = activityData.get(date);
 
-            series[0].append("'").append(FormatUtils.formatTimeStamp(date)).append("'");
-            for (int j = 1; j <= sliceNames.length; j++) {
-                Set<UUID> players = data.get(sliceNames[j - 1]);
-                series[j].append(players != null ? players.size() : 0);
-            }
-
-            if (i < size - 1) {
-                for (int j = 0; j <= sliceNames.length; j++) {
-                    series[j].append(",");
-                }
-            }
-            i++;
-        }
-
-        StringBuilder seriesBuilder = new StringBuilder("[");
-
-        for (int j = 1; j <= sliceNames.length; j++) {
-            seriesBuilder.append(series[j].append("]}").toString());
-            if (j < sliceNames.length) {
-                seriesBuilder.append(",");
+            for (int j = 0; j < groups.length; j++) {
+                Set<UUID> players = data.get(groups[j]);
+                dataSets[j].add((double) (players != null ? players.size() : 0));
             }
         }
 
-        return new String[]{series[0].toString(), seriesBuilder.append("]").toString()};
+        return dataSets;
     }
 }

@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.utilities.comparators;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,20 +28,6 @@ public class MapComparator {
         List<String[]> sortedList = new ArrayList<>();
         map.keySet().forEach(key -> sortedList.add(new String[]{String.valueOf(map.get(key)), key}));
         sortedList.sort(Comparator.comparingInt(strings -> Integer.parseInt(strings[0])));
-        return sortedList;
-    }
-
-    /**
-     * Sorts a Map of String, Long by the Values of the Map.
-     *
-     * @param map Map to sort
-     * @return List with String Array, where first value is the value and second
-     * is the key.
-     */
-    public static List<String[]> sortByValueLong(Map<String, Long> map) {
-        List<String[]> sortedList = new ArrayList<>();
-        map.keySet().forEach(key -> sortedList.add(new String[]{String.valueOf(map.get(key)), key}));
-        sortedList.sort(Comparator.comparing(strings -> Long.valueOf(strings[0])));
         return sortedList;
     }
 

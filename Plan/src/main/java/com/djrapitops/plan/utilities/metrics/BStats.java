@@ -1,10 +1,12 @@
-package main.java.com.djrapitops.plan.utilities.metrics;
+package com.djrapitops.plan.utilities.metrics;
 
-
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.settings.Settings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,13 +29,11 @@ public class BStats {
     }
 
     private void registerConfigSettingGraphs() {
-        // TODO Write a Module bar graph
-
         String serverType = plugin.getServer().getName();
         if ("CraftBukkit".equals(serverType) && Check.isSpigotAvailable()) {
             serverType = "Spigot";
-        } 
-        String databaseType = plugin.getDB().getName();
+        }
+        String databaseType = Database.getActive().getName();
         String analysisRefreshPeriod = Integer.toString(Settings.ANALYSIS_AUTO_REFRESH.getNumber());
         String themeBase = Settings.THEME_BASE.toString();
 
@@ -41,7 +41,7 @@ public class BStats {
         addStringSettingPie("database_type", databaseType);
         addStringSettingPie("analysis_periodic_refresh", analysisRefreshPeriod);
         addStringSettingPie("theme_base", themeBase);
-        
+
         addFeatureBarChart("features");
     }
 
@@ -53,14 +53,14 @@ public class BStats {
         metrics.addCustomChart(new Metrics.AdvancedBarChart(id, () -> {
             Map<String, int[]> map = new HashMap<>();
 
-            map.put("HTTPS", isEnabled("HTTPS".equals(plugin.getWebServer().getProtocol().toUpperCase())));
+            map.put("HTTPS", isEnabled("HTTPS".equals(WebServer.getInstance().getProtocol().toUpperCase())));
             map.put("HTML Export", isEnabled(Settings.ANALYSIS_EXPORT.isTrue()));
-            boolean isConnectedToBungee = plugin.getInfoManager().isUsingAnotherWebServer();
+            boolean isConnectedToBungee = ConnectionSystem.getInstance().isServerAvailable();
             map.put("BungeeCord Connected", isEnabled(isConnectedToBungee));
             if (isConnectedToBungee) {
                 map.put("Copy Bungee Config Values", isEnabled(Settings.BUNGEE_COPY_CONFIG.isTrue()));
                 map.put("Standalone Override", isEnabled(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()));
-            }            
+            }
             map.put("Log Unknown Commands", isEnabled(Settings.LOG_UNKNOWN_COMMANDS.isTrue()));
             map.put("Combine Command Aliases", isEnabled(Settings.COMBINE_COMMAND_ALIASES.isTrue()));
             return map;

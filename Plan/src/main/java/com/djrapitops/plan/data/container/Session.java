@@ -1,9 +1,7 @@
-package main.java.com.djrapitops.plan.data.container;
+package com.djrapitops.plan.data.container;
 
-import main.java.com.djrapitops.plan.data.HasDate;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +26,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class Session implements HasDate {
+public class Session {
 
     private final long sessionStart;
     private Integer sessionID;
@@ -66,18 +64,6 @@ public class Session implements HasDate {
         this.playerKills = new ArrayList<>();
         this.mobKills = mobKills;
         this.deaths = deaths;
-    }
-
-    /**
-     * Starts a new Session.
-     *
-     * @param time  Time the session started.
-     * @param world World the session started in.
-     * @param gm    GameMode the session started in.
-     * @return a new Session object.
-     */
-    public static Session start(long time, String world, String gm) {
-        return new Session(time, world, gm);
     }
 
     /**
@@ -207,19 +193,13 @@ public class Session implements HasDate {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("sessionStart", sessionStart)
-                .append("sessionID", sessionID)
-                .append("worldTimes", worldTimes)
-                .append("sessionEnd", sessionEnd)
-                .append("playerKills", playerKills)
-                .append("mobKills", mobKills)
-                .append("deaths", deaths)
-                .toString();
-    }
-
-    @Override
-    public long getDate() {
-        return getSessionStart();
+        return "Session{" +
+                "sessionStart=" + sessionStart + ", " +
+                "sessionID=" + sessionID + ", " +
+                "worldTimes=" + worldTimes + ", " +
+                "sessionEnd=" + sessionEnd + ", " +
+                "playerKills=" + playerKills + ", " +
+                "mobKills=" + mobKills + ", " +
+                "deaths=" + deaths + '}';
     }
 }

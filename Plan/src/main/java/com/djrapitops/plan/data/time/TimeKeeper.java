@@ -1,7 +1,6 @@
-package main.java.com.djrapitops.plan.data.time;
+package com.djrapitops.plan.data.time;
 
 import com.djrapitops.plugin.utilities.Verify;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -155,10 +154,7 @@ public abstract class TimeKeeper {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("times", times)
-                .append("state", state)
-                .append("lastStateChange", lastStateChange)
-                .toString();
+        return "TimeKeeper{" + "times=" + times +
+                ", state='" + state + "', lastStateChange=" + lastStateChange + '}';
     }
 }

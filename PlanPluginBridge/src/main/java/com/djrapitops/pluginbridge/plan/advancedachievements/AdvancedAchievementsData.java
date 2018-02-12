@@ -4,15 +4,15 @@
  */
 package com.djrapitops.pluginbridge.plan.advancedachievements;
 
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.hm.achievement.api.AdvancedAchievementsAPI;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.util.Collection;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class AdvancedAchievementsData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         String text = getWithIcon("Achievements", "check-circle-o", "green");
         inspectContainer.addValue(text, aaAPI.getPlayerTotalAchievements(uuid));
 
@@ -46,7 +46,7 @@ public class AdvancedAchievementsData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         if (MiscUtils.getTime() - lastRefresh > TimeAmount.MINUTE.ms() * 5L) {
             refreshTotalAchievements();
         }

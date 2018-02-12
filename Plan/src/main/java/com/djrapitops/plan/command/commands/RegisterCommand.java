@@ -1,5 +1,12 @@
-package main.java.com.djrapitops.plan.command.commands;
+package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.utilities.Condition;
+import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
@@ -8,38 +15,26 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.database.tables.SecurityTable;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.Condition;
-import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 
 /**
  * Command for registering web users.
  * <p>
- * Registers a new webuser to the database.
+ * Registers a new WebUser to the database.
  * <p>
- * No permission required for self registration. (Constructor string is empty)
- * <p>
- * plan.webmanage required for registering other users.
+ * No permission required for self registration. (Super constructor string is empty).
+ * {@code Permissions.MANAGE_WEB} required for registering other users.
  *
  * @author Rsl1122
  * @since 3.5.2
  */
 public class RegisterCommand extends SubCommand {
 
-    private final IPlan plugin;
-
-    public RegisterCommand(IPlan plugin) {
+    public RegisterCommand() {
         super("register",
                 CommandType.PLAYER_OR_ARGS,
                 "", // No Permission Requirement
                 Locale.get(Msg.CMD_USG_WEB_REGISTER).toString(),
                 "<password> [name] [access lvl]");
-        this.plugin = plugin;
         if (Check.isBukkitAvailable()) {
             setupFilter();
         }
@@ -121,16 +116,16 @@ public class RegisterCommand extends SubCommand {
                 final String userName = webUser.getName();
                 final String successMsg = "§aAdded a new user (" + userName + ") successfully!";
                 try {
-                    SecurityTable securityTable = plugin.getDB().getSecurityTable();
-                    boolean userExists = securityTable.userExists(userName);
+                    Database database = Database.getActive();
+                    boolean userExists = database.check().doesWebUserExists(userName);
                     if (!Condition.isTrue(!userExists, existsMsg, sender)) {
                         return;
                     }
-                    securityTable.addNewUser(webUser);
+                    database.save().webUser(webUser);
                     sender.sendMessage(successMsg);
                     Log.info("Registered new user: " + userName + " Perm level: " + webUser.getPermLevel());
                 } catch (Exception e) {
-                    Log.toLog(this.getClass().getName(), e);
+                    Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();
                 }

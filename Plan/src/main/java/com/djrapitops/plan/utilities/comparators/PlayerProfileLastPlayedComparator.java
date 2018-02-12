@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.PlayerProfile;
 
 import java.util.Comparator;
 

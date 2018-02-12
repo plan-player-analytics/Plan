@@ -1,11 +1,11 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data.element;
+package com.djrapitops.plan.data.element;
 
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.Html;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,10 +16,12 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public final class TableContainer {
+public class TableContainer {
 
     private final String[] header;
     private List<Serializable[]> values;
+
+    private boolean jqueryDatatable;
 
     private String color;
 
@@ -38,18 +40,18 @@ public final class TableContainer {
         values = new ArrayList<>();
     }
 
-    public void addRow(Serializable... values) {
+    public final void addRow(Serializable... values) {
         this.values.add(values);
     }
 
-    public String parseHtml() {
-        return Html.TABLE_SCROLL.parse() +
+    public final String parseHtml() {
+        return getTableHeader() +
                 parseHeader() +
                 parseBody() +
                 "</table>";
     }
 
-    private String parseBody() {
+    public final String parseBody() {
         StringBuilder body = new StringBuilder();
 
         if (values.isEmpty()) {
@@ -73,16 +75,33 @@ public final class TableContainer {
         return Html.TABLE_BODY.parse(body.toString());
     }
 
-    public void setColor(String color) {
+    public final void setColor(String color) {
         this.color = color;
     }
 
-    public String parseHeader() {
+    public final String parseHeader() {
         StringBuilder header = new StringBuilder("<thead" + (color != null ? " class=\"bg-" + color + "\"" : "") + "><tr>");
         for (String title : this.header) {
             header.append("<th>").append(title).append("</th>");
         }
         header.append("</tr></thead>");
         return header.toString();
+    }
+
+    /**
+     * Make use of JQuery Datatables plugin.
+     * <p>
+     * If this is called, result of {@code parseHtml()} should be wrapped with {@code Html.PANEL.parse(Html.PANEL_BODY.parse(result))}
+     */
+    public void useJqueryDataTables() {
+        this.jqueryDatatable = true;
+    }
+
+    private String getTableHeader() {
+        if (jqueryDatatable) {
+            return "<div class=\"table-responsive\">" + Html.TABLE_JQUERY.parse() + "</div>";
+        } else {
+            return Html.TABLE_SCROLL.parse();
+        }
     }
 }

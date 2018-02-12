@@ -2,21 +2,24 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.file.export;
+package com.djrapitops.plan.utilities.file.export;
 
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
+import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.data.container.UserInfo;
-import main.java.com.djrapitops.plan.settings.theme.Theme;
-import main.java.com.djrapitops.plan.settings.theme.ThemeVal;
-import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostHtmlWebAPI;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -26,38 +29,37 @@ import java.util.*;
  */
 public class HtmlExport extends SpecificExport {
 
-    private final IPlan plugin;
+    private final PlanPlugin plugin;
 
-    public HtmlExport(IPlan plugin) {
+    public HtmlExport(PlanPlugin plugin) {
         super("HtmlExportTask");
         this.plugin = plugin;
     }
 
-    public static void exportServer(IPlan plugin, UUID serverUUID) {
+    public static void exportServer(UUID serverUUID) {
         try {
-            Optional<String> serverName = plugin.getDB().getServerTable().getServerName(serverUUID);
+            Optional<String> serverName = Database.getActive().fetch().getServerName(serverUUID);
             serverName.ifPresent(s -> RunnableFactory.createNew(new AnalysisExport(serverUUID, s)).runTaskAsynchronously());
-        } catch (SQLException e) {
-            Log.toLog(PostHtmlWebAPI.class.getClass().getName(), e);
+        } catch (DBException e) {
+            Log.toLog(HtmlExport.class.getClass().getName(), e);
         }
     }
 
-    public static void exportPlayer(IPlan plugin, UUID playerUUID) {
+    public static void exportPlayer(UUID playerUUID) {
         try {
-            String playerName = plugin.getDB().getUsersTable().getPlayerName(playerUUID);
+            String playerName = Database.getActive().fetch().getPlayerName(playerUUID);
             if (playerName != null) {
                 RunnableFactory.createNew(new PlayerExport(playerUUID, playerName)).runTaskAsynchronously();
             }
-        } catch (SQLException e) {
-            Log.toLog(PostHtmlWebAPI.class.getClass().getName(), e);
+        } catch (DBException e) {
+            Log.toLog(HtmlExport.class.getClass().getName(), e);
         }
     }
 
     @Override
     public void run() {
         try {
-            boolean usingAnotherWebServer = plugin.getInfoManager().isUsingAnotherWebServer();
-            if (usingAnotherWebServer) {
+            if (Check.isBukkitAvailable() && ConnectionSystem.getInstance().isServerAvailable()) {
                 return;
             }
 
@@ -68,8 +70,8 @@ public class HtmlExport extends SpecificExport {
             exportAvailableServerPages();
             exportAvailablePlayers();
             exportPlayersPage();
-        } catch (IOException | SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+        } catch (IOException | DBException e) {
+            Log.toLog(this.getClass(), e);
         } finally {
             try {
                 this.cancel();
@@ -94,14 +96,14 @@ public class HtmlExport extends SpecificExport {
         export(exportFile, lines);
     }
 
-    private void exportAvailablePlayers() throws SQLException, IOException {
-        for (Map.Entry<UUID, UserInfo> entry : plugin.getDB().getUsersTable().getUsers().entrySet()) {
+    private void exportAvailablePlayers() throws DBException, IOException {
+        for (Map.Entry<UUID, UserInfo> entry : Database.getActive().fetch().getUsers().entrySet()) {
             exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
         }
     }
 
-    private void exportAvailableServerPages() throws SQLException, IOException {
-        Map<UUID, String> serverNames = plugin.getDB().getServerTable().getServerNames();
+    private void exportAvailableServerPages() throws IOException, DBException {
+        Map<UUID, String> serverNames = Database.getActive().fetch().getServerNames();
 
         for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
             exportAvailableServerPage(entry.getKey(), entry.getValue());
@@ -115,7 +117,7 @@ public class HtmlExport extends SpecificExport {
                 "web/css/style.css",
                 "web/css/themes/all-themes.css"
         };
-        copyFromJar(resources, true);
+        copyFromJar(resources);
     }
 
     private void exportJs() {
@@ -124,7 +126,7 @@ public class HtmlExport extends SpecificExport {
                 "web/js/helpers.js",
                 "web/js/script.js",
                 "web/js/charts/activityPie.js",
-                "web/js/charts/activityStackGraph.js",
+                "web/js/charts/stackGraph.js",
                 "web/js/charts/performanceGraph.js",
                 "web/js/charts/playerGraph.js",
                 "web/js/charts/playerGraphNoNav.js",
@@ -137,7 +139,7 @@ public class HtmlExport extends SpecificExport {
                 "web/js/charts/worldPie.js",
                 "web/js/charts/healthGauge.js"
         };
-        copyFromJar(resources, false);
+        copyFromJar(resources);
 
         try {
             String demo = FileUtil.getStringFromResource("web/js/demo.js")
@@ -147,12 +149,13 @@ public class HtmlExport extends SpecificExport {
             outputFolder.mkdirs();
             export(new File(outputFolder, "demo.js"), lines);
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass(), e);
         }
     }
 
     private void exportPlugins() {
         String[] resources = new String[]{
+                "web/plugins/font-awesome/fa-script.js",
                 "web/plugins/bootstrap/css/bootstrap.css",
                 "web/plugins/node-waves/waves.css",
                 "web/plugins/node-waves/waves.js",
@@ -163,29 +166,30 @@ public class HtmlExport extends SpecificExport {
                 "web/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js",
                 "web/plugins/jquery-datatable/jquery.dataTables.js"
         };
-        copyFromJar(resources, true);
+        copyFromJar(resources);
     }
 
-
-    private void copyFromJar(String[] resources, boolean overwrite) {
+    private void copyFromJar(String[] resources) {
         for (String resource : resources) {
             try {
-                copyFromJar(resource, overwrite);
+                copyFromJar(resource);
             } catch (IOException e) {
-                Log.toLog(this.getClass().getName(), e);
+                Log.toLog(this.getClass(), e);
             }
         }
     }
 
-    private void copyFromJar(String resource, boolean overwrite) throws IOException {
+    private void copyFromJar(String resource) throws IOException {
         String possibleFile = resource.replace("web/", "").replace("/", File.separator);
         List<String> lines = FileUtil.lines(plugin, new File(plugin.getDataFolder(), possibleFile), resource);
         String outputFile = possibleFile.replace("web/", "");
         File to = new File(outputFolder, outputFile);
         to.getParentFile().mkdirs();
         if (to.exists()) {
-            to.delete();
-            to.createNewFile();
+            Files.delete(to.toPath());
+            if (to.createNewFile()) {
+                return;
+            }
         }
         export(to, lines);
     }

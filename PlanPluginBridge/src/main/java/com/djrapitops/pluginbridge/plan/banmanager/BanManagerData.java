@@ -4,14 +4,14 @@
  */
 package com.djrapitops.pluginbridge.plan.banmanager;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.plugin.BanData;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.BanData;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.Html;
 import me.confuser.banmanager.BmAPI;
 import me.confuser.banmanager.data.PlayerBanData;
 import me.confuser.banmanager.data.PlayerMuteData;
@@ -34,7 +34,7 @@ public class BanManagerData extends PluginData implements BanData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         boolean banned = BmAPI.isBanned(uuid);
         boolean muted = BmAPI.isMuted(uuid);
 
@@ -43,7 +43,7 @@ public class BanManagerData extends PluginData implements BanData {
         if (banned) {
             PlayerBanData currentBan = BmAPI.getCurrentBan(uuid);
             String bannedBy = currentBan.getActor().getName();
-            String link = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(bannedBy), bannedBy);
+            String link = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(bannedBy), bannedBy);
             long date = currentBan.getCreated();
             long ends = currentBan.getExpires();
             String reason = currentBan.getReason();
@@ -57,7 +57,7 @@ public class BanManagerData extends PluginData implements BanData {
         if (muted) {
             PlayerMuteData currentMute = BmAPI.getCurrentMute(uuid);
             String mutedBy = currentMute.getActor().getName();
-            String link = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(mutedBy), mutedBy);
+            String link = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mutedBy), mutedBy);
             long date = currentMute.getCreated();
             long ends = currentMute.getExpires();
             String reason = currentMute.getReason();
@@ -72,7 +72,7 @@ public class BanManagerData extends PluginData implements BanData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         return analysisContainer;
     }
 

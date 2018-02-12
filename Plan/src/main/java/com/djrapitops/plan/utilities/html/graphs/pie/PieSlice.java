@@ -1,8 +1,8 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.html.graphs.pie;
+package com.djrapitops.plan.utilities.html.graphs.pie;
 
 /**
  * Represents a slice of a pie.
@@ -15,6 +15,18 @@ public class PieSlice {
     private final String color;
     private final boolean drilldown;
 
+    public PieSlice(String name, long y) {
+        this(name, y, null, false);
+    }
+
+    public PieSlice(String name, long y, String color) {
+        this(name, y, color, false);
+    }
+
+    public PieSlice(String name, long y, boolean drilldown) {
+        this(name, y, null, drilldown);
+    }
+
     public PieSlice(String name, long y, String color, boolean drilldown) {
         this.name = name;
         this.y = y;
@@ -25,8 +37,8 @@ public class PieSlice {
     @Override
     public String toString() {
         return "{name:'" + name + "'," +
-                "y:" + y + "," +
-                "color:" + color
+                "y:" + y
+                + (color != null ? "," + "color:" + color : "")
                 + (drilldown ? "," + "drilldown: '" + name + "'" : "")
                 + "}";
     }

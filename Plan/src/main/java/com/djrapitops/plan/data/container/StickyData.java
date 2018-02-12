@@ -2,12 +2,14 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data.container;
+package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.Actions;
+import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.google.common.base.Objects;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.database.tables.Actions;
+
+import java.util.List;
 
 public class StickyData {
     private final double activityIndex;
@@ -15,35 +17,51 @@ public class StickyData {
     private Integer onlineOnJoin;
 
     public StickyData(PlayerProfile player) {
-        activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms());
-        for (Action action : player.getActions()) {
-            if (messagesSent == null && action.getDoneAction() == Actions.FIRST_LOGOUT) {
-                String additionalInfo = action.getAdditionalInfo();
-                String[] split = additionalInfo.split(": ");
-                if (split.length == 2) {
-                    try {
-                        messagesSent = Integer.parseInt(split[1]);
-                    } catch (NumberFormatException ignored) {
-                    }
+        activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms()).getValue();
+        loadActionVariables(player.getActions());
+    }
+
+    private void loadActionVariables(List<Action> actions) {
+        for (Action action : actions) {
+            try {
+                if (messagesSent == null && action.getDoneAction() == Actions.FIRST_LOGOUT) {
+                    messagesSent = loadSentMessages(action);
                 }
-            }
-            if (onlineOnJoin == null && action.getDoneAction() == Actions.FIRST_SESSION) {
-                String additionalInfo = action.getAdditionalInfo();
-                String[] split = additionalInfo.split(" ");
-                if (split.length == 3) {
-                    try {
-                        onlineOnJoin = Integer.parseInt(split[1]);
-                    } catch (NumberFormatException ignored) {
-                    }
+                if (onlineOnJoin == null && action.getDoneAction() == Actions.FIRST_SESSION) {
+                    onlineOnJoin = loadOnlineOnJoin(action);
                 }
+            } catch (IllegalArgumentException ignore) {
+                /* continue */
             }
         }
+        setDefaultValuesIfNull();
+    }
+
+    private void setDefaultValuesIfNull() {
         if (messagesSent == null) {
             messagesSent = 0;
         }
         if (onlineOnJoin == null) {
             onlineOnJoin = 0;
         }
+    }
+
+    private int loadOnlineOnJoin(Action action) {
+        String additionalInfo = action.getAdditionalInfo();
+        String[] split = additionalInfo.split(" ");
+        if (split.length == 3) {
+            return Integer.parseInt(split[1]);
+        }
+        throw new IllegalArgumentException("Improper Action");
+    }
+
+    private int loadSentMessages(Action action) {
+        String additionalInfo = action.getAdditionalInfo();
+        String[] split = additionalInfo.split(": ");
+        if (split.length == 2) {
+            return Integer.parseInt(split[1]);
+        }
+        throw new IllegalArgumentException("Improper Action");
     }
 
     public double distance(StickyData data) {

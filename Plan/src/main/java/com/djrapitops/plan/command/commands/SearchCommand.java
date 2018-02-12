@@ -1,5 +1,10 @@
-package main.java.com.djrapitops.plan.command.commands;
+package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.utilities.Condition;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
@@ -7,30 +12,19 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.FormatUtils;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.Condition;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * This subcommand is used to search for a user, and to view all matches' data.
+ * This SubCommand is used to search for a user.
  *
  * @author Rsl1122
  * @since 2.0.0
  */
 public class SearchCommand extends SubCommand {
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public SearchCommand(Plan plugin) {
+    public SearchCommand() {
         super("search",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.SEARCH.getPermission(),

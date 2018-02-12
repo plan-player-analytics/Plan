@@ -4,14 +4,14 @@
  */
 package com.djrapitops.pluginbridge.plan.protocolsupport;
 
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.viaversion.Protocol;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.element.TableContainer;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public class ProtocolSupportData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         try {
             int protocolVersion = table.getProtocolVersion(uuid);
 
@@ -51,7 +51,7 @@ public class ProtocolSupportData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         Map<UUID, Integer> versions;
 
         try {

@@ -4,20 +4,20 @@
  */
 package com.djrapitops.pluginbridge.plan.mcmmo;
 
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.analysis.MathUtils;
+import com.djrapitops.plan.utilities.html.Html;
 import com.gmail.nossr50.database.DatabaseManager;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.player.PlayerProfile;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.mcMMO;
 import com.gmail.nossr50.util.player.UserManager;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.element.TableContainer;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -40,7 +40,7 @@ public class McMmoData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         DatabaseManager db = mcMMO.getDatabaseManager();
 
         PlayerProfile profile = db.loadPlayerProfile(uuid);
@@ -50,8 +50,7 @@ public class McMmoData extends PluginData {
         TableContainer skillTable = new TableContainer(skillS, levelS);
         skillTable.setColor("indigo");
 
-        List<SkillType> skills = new ArrayList<>();
-        skills.addAll(Arrays.stream(SkillType.values()).distinct().collect(Collectors.toList()));
+        List<SkillType> skills = Arrays.stream(SkillType.values()).distinct().collect(Collectors.toList());
         for (SkillType skill : skills) {
             skillTable.addRow(StringUtils.capitalize(skill.getName().toLowerCase()), profile.getSkillLevel(skill));
         }
@@ -60,7 +59,7 @@ public class McMmoData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         String skillS = Html.FONT_AWESOME_ICON.parse("star") + " Skill";
         String tLevel = Html.FONT_AWESOME_ICON.parse("plus") + " Total Level";
         String aLevel = Html.FONT_AWESOME_ICON.parse("plus") + " Average Level";

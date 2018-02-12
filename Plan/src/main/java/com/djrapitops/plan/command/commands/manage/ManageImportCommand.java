@@ -1,33 +1,25 @@
-package main.java.com.djrapitops.plan.command.commands.manage;
+package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.system.processing.importing.ImporterManager;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.systems.info.ImporterManager;
-import main.java.com.djrapitops.plan.utilities.Condition;
 
 /**
- * This manage subcommand is used to import data from 3rd party plugins.
- * <p>
- * Supported plugins (v3.0.0) : OnTime
+ * This manage SubCommand is used to import data from 3rd party plugins.
  *
  * @author Rsl1122
  * @since 2.3.0
  */
 public class ManageImportCommand extends SubCommand {
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public ManageImportCommand(Plan plugin) {
+    public ManageImportCommand() {
         super("import",
                 CommandType.CONSOLE,
                 Permissions.MANAGE.getPermission(),

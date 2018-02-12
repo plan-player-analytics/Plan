@@ -1,8 +1,7 @@
 package com.djrapitops.pluginbridge.plan.jobs;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
-import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to Jobs and registering data sources.
@@ -18,7 +17,6 @@ public class JobsHook extends Hook {
      * API#addPluginDataSource uses the same method from HookHandler.
      *
      * @param hookH HookHandler instance for registering the data sources.
-     * @see API
      */
     public JobsHook(HookHandler hookH) {
         super("com.gamingmesh.jobs.Jobs", hookH);

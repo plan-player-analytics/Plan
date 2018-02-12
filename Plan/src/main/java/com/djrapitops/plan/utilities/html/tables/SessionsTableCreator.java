@@ -1,29 +1,30 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.utilities.html.tables;
+package com.djrapitops.plan.utilities.html.tables;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.settings.WorldAliasSettings;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.cache.SessionCache;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
-import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.WorldAliasSettings;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
+import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * //TODO Class Javadoc Comment
+ * Utility for creating HTML {@code <table>}-element with Sessions inside it.
  *
  * @author Rsl1122
  */
+// TODO start using TableContainer
 public class SessionsTableCreator {
 
     private static Map<Integer, UUID> getUUIDsByID(Map<UUID, List<Session>> sessionsByUser) {
@@ -53,7 +54,7 @@ public class SessionsTableCreator {
 
         Set<String> recentLoginsNames = new HashSet<>();
 
-        DataCache dataCache = Plan.getInstance().getDataCache();
+
 
         Map<Long, UUID> uuidBySessionStart = new HashMap<>();
         for (Map.Entry<UUID, Session> entry : SessionCache.getActiveSessions().entrySet()) {
@@ -64,6 +65,8 @@ public class SessionsTableCreator {
         if (maxSessions <= 0) {
             maxSessions = 50;
         }
+
+        DataCache dataCache = DataCache.getInstance();
         for (Session session : allSessions) {
             if (i >= maxSessions) {
                 break;
@@ -77,11 +80,11 @@ public class SessionsTableCreator {
             }
 
             String name = dataCache.getName(uuid);
-            String start = FormatUtils.formatTimeStamp(session.getSessionStart());
+            String start = FormatUtils.formatTimeStampYear(session.getSessionStart());
             String length = session.getSessionEnd() != -1 ? FormatUtils.formatTimeAmount(session.getLength()) : "Online";
             String world = getLongestWorldPlayed(session);
 
-            String inspectUrl = Plan.getPlanAPI().getPlayerInspectPageLink(name);
+            String inspectUrl = PlanAPI.getInstance().getPlayerInspectPageLink(name);
             String toolTip = "Session ID: " + (session.isFetchedFromDB() ? session.getSessionID() : "Not Saved.");
             sessionTableBuilder.append(Html.TABLELINE_4.parse(
                     Html.LINK_TOOLTIP.parse(inspectUrl, name, toolTip),

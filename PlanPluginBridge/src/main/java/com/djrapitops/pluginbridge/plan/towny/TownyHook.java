@@ -1,8 +1,7 @@
 package com.djrapitops.pluginbridge.plan.towny;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
-import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to Towny and registering 2 data sources.
@@ -18,7 +17,6 @@ public class TownyHook extends Hook {
      * API#addPluginDataSource uses the same method from HookHandler.
      *
      * @param hookH HookHandler instance for registering the data sources.
-     * @see API
      * @throws NoClassDefFoundError when the plugin class can not be found.
      */
     public TownyHook(HookHandler hookH) {

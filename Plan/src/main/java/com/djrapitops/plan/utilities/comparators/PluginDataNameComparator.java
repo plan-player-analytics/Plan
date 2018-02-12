@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.plugin.PluginData;
 
 import java.util.Comparator;
 
 /**
- * Comparator for UserInfo for Alphabetical Name order.
+ * Comparator for PluginData for Alphabetical Name order.
  *
  * @author Rsl1122
  */

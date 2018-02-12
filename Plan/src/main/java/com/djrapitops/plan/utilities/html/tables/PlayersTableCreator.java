@@ -1,15 +1,17 @@
-package main.java.com.djrapitops.plan.utilities.html.tables;
+package com.djrapitops.plan.utilities.html.tables;
 
+import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.calculation.ActivityIndex;
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.TableContainer;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.Serializable;
@@ -18,6 +20,7 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
+// TODO Start using TableContainer for both tables
 public class PlayersTableCreator {
 
     /**
@@ -35,7 +38,7 @@ public class PlayersTableCreator {
         StringBuilder html = new StringBuilder();
 
         long now = MiscUtils.getTime();
-        UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
+        UUID serverUUID = ServerInfo.getServerUUID();
 
         int i = 0;
         int maxPlayers = Settings.MAX_PLAYERS.getNumber();
@@ -55,23 +58,24 @@ public class PlayersTableCreator {
 
                 long lastSeen = profile.getLastSeen();
 
-                double activityIndex = profile.getActivityIndex(now);
-                String readableIndex = FormatUtils.readableActivityIndex(activityIndex)[1];
-                String activityString = FormatUtils.cutDecimals(activityIndex)
-                        + (isBanned ? " (<b>Banned</b>)" : " (" + readableIndex + ")");
+                ActivityIndex activityIndex = profile.getActivityIndex(now);
+                String activityGroup = activityIndex.getGroup();
+                String activityString = activityIndex.getFormattedValue()
+                        + (isBanned ? " (<b>Banned</b>)" : " (" + activityGroup + ")");
 
                 String geoLocation = profile.getMostRecentGeoInfo().getGeolocation();
                 html.append(Html.TABLELINE_PLAYERS.parse(
-                        Html.LINK_EXTERNAL.parse(Plan.getPlanAPI().getPlayerInspectPageLink(profile.getName()), profile.getName()),
+                        Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(profile.getName()), profile.getName()),
                         activityString,
-                        String.valueOf(playtime), FormatUtils.formatTimeAmount(playtime),
-                        String.valueOf(loginTimes),
-                        String.valueOf(registered), FormatUtils.formatTimeStampYear(registered),
-                        String.valueOf(lastSeen), lastSeen != 0 ? FormatUtils.formatTimeStamp(lastSeen) : "-",
-                        String.valueOf(geoLocation)
+                        playtime, FormatUtils.formatTimeAmount(playtime),
+                        loginTimes,
+                        registered, FormatUtils.formatTimeStampYear(registered),
+                        lastSeen, lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-",
+                        geoLocation
                 ));
             } catch (NullPointerException e) {
                 if (Settings.DEV_MODE.isTrue()) {
+                    Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
                     Log.toLog(PlayersTableCreator.class.getName(), e);
                 }
             }
@@ -131,7 +135,7 @@ public class PlayersTableCreator {
                     break;
                 }
                 UUID uuid = profile.getUuid();
-                String link = Html.LINK_EXTERNAL.parse(Plan.getPlanAPI().getPlayerInspectPageLink(profile.getName()), profile.getName());
+                String link = Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(profile.getName()), profile.getName());
 
                 String[] playerData = FormatUtils.mergeArrays(new String[]{link}, sortedData.getOrDefault(uuid, new String[]{}));
                 tableContainer.addRow(ArrayUtils.addAll(playerData));

@@ -4,14 +4,14 @@
  */
 package com.djrapitops.pluginbridge.plan.essentials;
 
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.UserMap;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.element.TableContainer;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
 
 import java.util.*;
 
@@ -32,7 +32,7 @@ public class EssentialsData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         if (essentials.getUserMap().userExists(uuid)) {
             User user = essentials.getUser(uuid);
 
@@ -48,7 +48,7 @@ public class EssentialsData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
         UserMap userMap = essentials.getUserMap();
 
         Map<UUID, String> jailed = new HashMap<>();

@@ -1,7 +1,7 @@
-package main.java.com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.settings.locale.Message;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.locale.Message;
+import com.djrapitops.plan.system.settings.locale.Msg;
 
 import java.util.Comparator;
 import java.util.Map;

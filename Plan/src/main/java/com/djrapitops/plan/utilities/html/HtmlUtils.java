@@ -1,13 +1,11 @@
-package main.java.com.djrapitops.plan.utilities.html;
+package com.djrapitops.plan.utilities.html;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.settings.Settings;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -45,21 +43,9 @@ public class HtmlUtils {
         if (Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
             ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
         } else {
-            ip = MiscUtils.getIPlan().getVariable().getIp() + ":" + port;
+            ip = ServerInfo.getServerProperties().getIp() + ":" + port;
         }
         return ip;
-    }
-
-    public static String getProtocol() {
-        return MiscUtils.getIPlan().getWebServer().getProtocol();
-    }
-
-    public static String getRelativeInspectUrl(String playerName) {
-        return "../player/" + playerName.replace(" ", "%20").replace(".", "%2E");
-    }
-
-    public static String getRelativeInspectUrl(UUID uuid) {
-        return Plan.getPlanAPI().getPlayerInspectPageLink(Plan.getInstance().getDataCache().getName(uuid));
     }
 
     /**
@@ -93,18 +79,5 @@ public class HtmlUtils {
         }
 
         return string.replace("§r", "").replace("§l", "").replace("§m", "").replace("§n", "").replace("§o", "").replace("§k", "");
-    }
-
-    public static String separateWithQuotes(String... strings) {
-        StringBuilder build = new StringBuilder();
-        for (int i = 0; i < strings.length; i++) {
-            build.append("\"");
-            build.append(strings[i]);
-            build.append("\"");
-            if (i < strings.length - 1) {
-                build.append(", ");
-            }
-        }
-        return build.toString();
     }
 }

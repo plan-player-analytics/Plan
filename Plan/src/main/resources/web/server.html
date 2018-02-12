@@ -31,6 +31,9 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="css/themes/all-themes.css" rel="stylesheet"/>
+
+    <!-- Jquery Core Js -->
+    <script src="plugins/jquery/jquery.min.js"></script>
 </head>
 
 <body class="theme-red">
@@ -281,7 +284,7 @@
                                 <i class="material-icons">person</i>
                             </div>
                             <div class="content">
-                                <div class="text">UNIQUE PLAYERS / 24h</div>
+                                <div class="text">UNIQUE / 24h</div>
                                 <div class="number">${playersDay}</div>
                             </div>
                         </div>
@@ -292,7 +295,7 @@
                                 <i class="material-icons">person_add</i>
                             </div>
                             <div class="content">
-                                <div class="text">NEW PLAYERS / 24h</div>
+                                <div class="text">NEW / 24h</div>
                                 <div class="number">${playersNewDay}</div>
                             </div>
                         </div>
@@ -636,9 +639,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel-group" id="session_list" role="tablist" aria-multiselectable="true">
-                                ${accordionSessions}
-                            </div>
+                            ${accordionSessions}
                         </div>
                     </div>
                     <!-- #END# Sessions -->
@@ -682,16 +683,16 @@
                                 <!-- Tab panes -->
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane fade in active" id="performance">
-                                        <div id="performanceGraph" class="dashboard-flot-chart"></div>
+                                        <div id="performanceGraph" style="height: 500px;"></div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane fade" id="tps">
-                                        <div id="tpsGraph" class="dashboard-flot-chart"></div>
+                                        <div id="tpsGraph" style="height: 500px;"></div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane fade" id="resource">
-                                        <div id="resourceGraph" class="dashboard-flot-chart"></div>
+                                        <div id="resourceGraph" style="height: 500px;"></div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane fade" id="world">
-                                        <div id="worldGraph" class="dashboard-flot-chart"></div>
+                                        <div id="worldGraph" style="height: 500px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -877,7 +878,9 @@
                                         <h2><i class="col-lime fa fa-terminal"></i> Command Usage</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <p class="pull-right"><i class="col-light-green fa fa-chevron-right"></i> Used Commands: ${commandCount} <i class="col-lime fa fa-chevron-right"></i> Unique: ${commandUniqueCount}</p>
+                                        <p class="pull-right"><i class="col-light-green fa fa-chevron-right"></i> Used
+                                            Commands: ${commandCount} <i class="col-lime fa fa-chevron-right"></i>
+                                            Unique: ${commandUniqueCount}</p>
                                     </div>
                                 </div>
                             </div>
@@ -907,9 +910,6 @@
     </div>
 </section>
 
-<!-- Jquery Core Js -->
-<script src="plugins/jquery/jquery.min.js"></script>
-
 <!-- Bootstrap Core Js -->
 <script src="plugins/bootstrap/js/bootstrap.js"></script>
 
@@ -933,7 +933,7 @@
 <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 
 <!-- Font Awesome -->
-<script src="https://use.fontawesome.com/df48eb908b.js"></script>
+<script src="plugins/font-awesome/fa-script.js"></script>
 
 <!-- Header, Sidenav & Skin changer -->
 <script src="js/admin.js"></script>
@@ -943,7 +943,7 @@
 <script src="js/charts/punchCard.js"></script>
 <script src="js/charts/healthGauge.js"></script>
 <script src="js/charts/activityPie.js"></script>
-<script src="js/charts/activityStackGraph.js"></script>
+<script src="js/charts/stackGraph.js"></script>
 <script src="js/charts/worldPie.js"></script>
 <script src="js/charts/performanceGraph.js"></script>
 <script src="js/charts/tpsGraph.js"></script>
@@ -955,101 +955,190 @@
 <script>
     Highcharts.setOptions({
         lang: {noData: "No Data to Display"},
-        global: {
+        time: {
             timezoneOffset: ${timeZone} * 60
         }
-    });
+    })
 
-    // Data Variables
-    var playersOnlineSeries = {
-        name: 'Players Online',
-        data: ${playersOnlineSeries},
-        type: 'areaspline',
-        color: '${playersGraphColor}',
-        tooltip: {
-            valueDecimals: 0
+    // Replaced Variables
+    var v = {
+        colors: {
+            playersOnline: '${playersGraphColor}',
+            tpsLow: '${tpsLowColor}',
+            tpsMed: '${tpsMediumColor}',
+            tpsHigh: '${tpsHighColor}',
+            cpu: '#e0d264',
+            ram: '#7dcc24',
+            entities: '#ac69ef',
+            chunks: '#b58310',
+            geolocationsLow: '${worldMapColLow}',
+            geolocationsHigh: '${worldMapColHigh}',
+            punchCard: '#222'
+        },
+        values: {
+            tpsMed: ${tpsMedium},
+            tpsHigh: ${tpsHigh}
+        },
+        data: {
+            playersOnline: ${playersOnlineSeries},
+            tps: ${tpsSeries},
+            cpu: ${cpuSeries},
+            ram: ${ramSeries},
+            entities: ${entitySeries},
+            chunks:  ${chunkSeries},
+            activityPie: ${activityPieSeries},
+            worldPie: ${worldSeries},
+            worldPieDrillDown: ${gmSeries},
+            geolocations: ${geoMapSeries},
+            punchCard: ${punchCardSeries},
+            activityStack: ${activityStackSeries},
+            activityStackCategories: ${activityStackCategories},
+            healthIndex: ${healthIndex}
         }
     };
-    var tpsSeries = {
-        name: 'TPS',
-        data: ${tpsSeries},
-        type: 'spline',
-        zones: [{
-            value: ${tpsMedium},
-            color: '${tpsLowColor}'
-        }, {
-            value: ${tpsHigh},
-            color: '${tpsMediumColor}'
-        }, {
-            value: 30,
-            color: '${tpsHighColor}'
-        }],
+
+    // HighCharts Series
+    var s = {
+        name: {
+            playersOnline: 'Players Online',
+            tps: 'TPS',
+            cpu: 'CPU Usage (%)',
+            ram: 'RAM Usage (MB)',
+            entities: 'Loaded Entities',
+            chunks: 'Loaded Chunks'
+        },
         tooltip: {
-            valueDecimals: 2
+            twoDecimals: {
+                valueDecimals: 2
+            },
+            zeroDecimals: {
+                valueDecimals: 0
+            }
+        },
+        type: {
+            areaSpline: 'areaspline',
+            spline: 'spline'
+        },
+        zones: {
+            tps: [{
+                value: v.values.tpsMed,
+                color: v.colors.tpsLow
+            }, {
+                value: v.values.tpsHigh,
+                color: v.colors.tpsMed
+            }, {
+                value: 30,
+                color: v.colors.tpsHigh
+            }]
         }
     };
-    var cpuSeries = {
-        name: 'CPU Usage (%)',
-        data: ${cpuSeries},
-        type: 'spline',
-        color: '#e0d264',
-        tooltip: {
-            valueDecimals: 2
-        }
+    var series = {
+        playersOnline: {
+            name: s.name.playersOnline,
+            type: s.type.areaSpline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.playersOnline,
+            color: v.colors.playersOnline,
+            yAxis: 0
+        },
+        tps: {
+            name: s.name.tps,
+            type: s.type.spline,
+            zones: s.zones.tps,
+            tooltip: s.tooltip.twoDecimals,
+            data: v.data.tps,
+            yAxis: 1
+        },
+        cpu: {
+            name: s.name.cpu,
+            type: s.type.spline,
+            tooltip: s.tooltip.twoDecimals,
+            data: v.data.cpu,
+            color: v.colors.cpu,
+            yAxis: 2
+        },
+        cpu_alt: {
+            name: s.name.cpu,
+            type: s.type.spline,
+            tooltip: s.tooltip.twoDecimals,
+            data: v.data.cpu,
+            color: v.colors.cpu,
+            yAxis: 1
+        },
+        ram: {
+            name: s.name.ram,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.ram,
+            color: v.colors.ram,
+            yAxis: 3
+        },
+        ram_alt: {
+            name: s.name.ram,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.ram,
+            color: v.colors.ram,
+            yAxis: 2
+        },
+        entities: {
+            name: s.name.entities,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.entities,
+            color: v.colors.entities,
+            yAxis: 4
+        },
+        entities_alt: {
+            name: s.name.entities,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.entities,
+            color: v.colors.entities,
+            yAxis: 1
+        },
+        chunks: {
+            name: s.name.chunks,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.chunks,
+            color: v.colors.chunks,
+            yAxis: 5
+        },
+        chunks_alt: {
+            name: s.name.chunks,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.chunks,
+            color: v.colors.chunks,
+            yAxis: 2
+        },
+        activityPie: {
+            name: 'Players',
+            colorByPoint: true,
+            data: v.data.activityPie
+        },
+        worldPie: {
+            name: 'World Playtime',
+            colorByPoint: true,
+            data: v.data.worldPie
+        },
+        worldPieDrillDown: v.data.worldPieDrillDown,
+        geolocations: {
+            name: 'Players',
+            type: 'map',
+            mapData: Highcharts.maps['custom/world'],
+            data: v.data.geolocations,
+            joinBy: ['iso-a3', 'code']
+        },
+        punchCard: {
+            name: 'Relative Activity',
+            color: v.colors.punchCard,
+            data: v.data.punchCard
+        },
+        activityStack: v.data.activityStack,
+        activityStackCategories: v.data.activityStackCategories
     };
-    var ramSeries = {
-        name: 'RAM Usage (MB)',
-        data: ${ramSeries},
-        type: 'spline',
-        color: '#7dcc24',
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var entitySeries = {
-        name: 'Loaded Entities',
-        data: ${entitySeries},
-        type: 'spline',
-        color: '#ac69ef',
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var chunkSeries = {
-        name: 'Loaded Chunks',
-        data: ${chunkSeries},
-        type: 'spline',
-        color: '#b58310',
-        tooltip: {
-            valueDecimals: 0
-        }
-    };
-    var activitySeries = {
-        name: 'Players',
-        colorByPoint: true,
-        data: ${activityPieSeries}
-    };
-    var worldSeries = {
-        name: 'World Playtime',
-        colorByPoint: true,
-//        colors: worldPieColors,
-        data: ${worldSeries}
-    };
-    var gmSeries = ${gmSeries};
-    var mapSeries = {
-        name: 'Players',
-        type: 'map',
-        mapData: Highcharts.maps['custom/world'],
-        data: ${geoMapSeries},
-        joinBy: ['iso-a3', 'code']
-    };
-    var punchcardSeries = {
-        name: 'Relative Activity',
-        color: '#222',
-        data: ${punchCardSeries}
-    };
-    var activityStackSeries = ${activityStackSeries};
-    var activityCategories = [${activityStackCategories}]
 </script>
 
 <!-- Plan load script -->
@@ -1077,18 +1166,18 @@
         openFunc(slideIndex)();
 
         // Chart draw scripts
-        activityPie('activityPie', activitySeries);
-        activityStackChart('activityStackGraph', activityCategories, activityStackSeries);
-        worldPie('worldPie', worldSeries, gmSeries);
-        playersChart('playerChartDay', playersOnlineSeries, 3);
-        playersChart('playerChartMonth', playersOnlineSeries, 2);
-        performanceChart('performanceGraph', playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries);
-        tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
-        resourceChart('resourceGraph', cpuSeries, ramSeries, playersOnlineSeries);
-        worldChart('worldGraph', entitySeries, chunkSeries, playersOnlineSeries);
-        worldMap('worldMap', '${worldMapColLow}', '${worldMapColHigh}', mapSeries);
-        punchCard('punchCard', punchcardSeries);
-        healthGauge('healthGauge', [${healthIndex}]);
+        activityPie('activityPie', series.activityPie);
+        stackChart('activityStackGraph', series.activityStackCategories, series.activityStack, 'Players');
+        worldPie('worldPie', series.worldPie, series.worldPieDrillDown);
+        playersChart('playerChartDay', series.playersOnline, 3);
+        playersChart('playerChartMonth', series.playersOnline, 2);
+        performanceChart('performanceGraph', series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks);
+        tpsChart('tpsGraph', series.tps, series.playersOnline);
+        resourceChart('resourceGraph', series.cpu_alt, series.ram_alt, series.playersOnline);
+        worldChart('worldGraph', series.entities_alt, series.chunks_alt, series.playersOnline);
+        worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, series.geolocations);
+        punchCard('punchCard', series.punchCard);
+        healthGauge('healthGauge', [v.data.healthIndex]);
         ${sessionTabGraphViewFunctions}
 
         /**/

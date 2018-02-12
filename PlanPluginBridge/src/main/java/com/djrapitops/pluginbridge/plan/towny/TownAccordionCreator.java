@@ -4,16 +4,16 @@
  */
 package com.djrapitops.pluginbridge.plan.towny;
 
+import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.ServerProfile;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.utilities.analysis.Analysis;
+import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Coord;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.PlayerProfile;
-import main.java.com.djrapitops.plan.data.ServerProfile;
-import main.java.com.djrapitops.plan.data.container.Session;
-import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
-import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,7 +49,7 @@ public class TownAccordionCreator {
 
             Set<UUID> members = new HashSet<>();
             for (Resident resident : residents) {
-                UUID uuid = Plan.getInstance().getDataCache().getUUIDof(resident.getName());
+                UUID uuid = DataCache.getInstance().getUUIDof(resident.getName());
                 if (uuid != null) {
                     members.add(uuid);
                 }
@@ -75,15 +75,15 @@ public class TownAccordionCreator {
             html.append("<div class=\"panel panel-col-brown\">")
                     .append("<div class=\"panel-heading\" role=\"tab\" id=\"heading_").append(htmlID).append("\">")
                     .append("<h4 class=\"panel-title\">")
-                    .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#session_accordion\" ")
-                    .append("href=\"#session_").append(htmlID).append("\" aria-expanded=\"false\" ")
-                    .append("aria-controls=\"session_").append(htmlID).append("\">")
+                    .append("<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#towny_accordion\" ")
+                    .append("href=\"#").append(htmlID).append("\" aria-expanded=\"false\" ")
+                    .append("aria-controls=\"").append(htmlID).append("\">")
                     .append(townName).append("<span class=\"pull-right\">").append(separated).append("</span>") // Title (header)
                     .append("</a></h4>") // Closes collapsed, panel title
                     .append("</div>"); // Closes panel heading
 
             // Content
-            html.append("<div id=\"session_").append(htmlID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
+            html.append("<div id=\"").append(htmlID).append("\" class=\"panel-collapse collapse\" role=\"tabpanel\"")
                     .append(" aria-labelledby=\"heading_").append(htmlID).append("\">")
                     .append("<div class=\"panel-body\"><div class=\"row clearfix\">")
                     .append("<div class=\"col-xs-12 col-sm-6 col-md-6 col-lg-6\">") // Left col-6

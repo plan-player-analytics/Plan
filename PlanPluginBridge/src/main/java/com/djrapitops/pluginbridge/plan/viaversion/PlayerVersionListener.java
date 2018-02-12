@@ -5,11 +5,10 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plugin.api.utility.log.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.systems.processing.Processor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -37,16 +36,11 @@ public class PlayerVersionListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         int playerVersion = viaAPI.getPlayerVersion(uuid);
-        Plan plan = Plan.getInstance();
-        plan.addToProcessQueue(new Processor<UUID>(uuid) {
-            @Override
-            public void process() {
-                try {
-
-                    new ProtocolTable((SQLDB) plan.getDB()).saveProtocolVersion(uuid, playerVersion);
-                } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName() + ":PlanViaVersionJoinListener", e);
-                }
+        Processor.queue(() -> {
+            try {
+                new ProtocolTable((SQLDB) Database.getActive()).saveProtocolVersion(uuid, playerVersion);
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName() + ":PlanViaVersionJoinListener", e);
             }
         });
     }

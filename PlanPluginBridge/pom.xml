@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>PlanPluginBridge</artifactId>
-    <version>4.1.3-SNAPSHOT</version>
+    <version>4.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -42,12 +42,24 @@
 
     <repositories>
         <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>paper-repo</id>
+            <url>https://repo.destroystokyo.com/repository/maven-public/</url>
+        </repository>
+        <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>redprotect-repo</id>
+            <url>https://raw.github.com/FabioZumbi12/RedProtect/mvn-repo/</url>
         </repository>
         <repository>
             <id>viaversion-repo</id>
@@ -59,13 +71,22 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>Plan</artifactId>
-            <version>4.1.3</version>
+            <version>4.2.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!--        Paper API -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper</artifactId>
-            <version>1.12-R0.1-20170725.202533-1</version>
+            <artifactId>paper-api</artifactId>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--        Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.12-R0.1-SNAPSHOT</version>
+            <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -128,6 +149,13 @@
             <version>16.7.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://github.com/KaiKikuchi/GriefPreventionPlus/releases -->
+        <dependency>
+            <groupId>net.kaikk.mc</groupId>
+            <artifactId>GriefPreventionPlus</artifactId>
+            <version>RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>litebans</groupId>
             <artifactId>api</artifactId>
@@ -172,8 +200,8 @@
         </dependency>
         <dependency>
             <groupId>br.net.fabiozumbi12.RedProtect</groupId>
-            <artifactId>RedProtect</artifactId>
-            <version>7.3.0</version>
+            <artifactId>RedProtect-Spigot</artifactId>
+            <version>RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -184,8 +212,14 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
@@ -224,7 +258,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

@@ -1,9 +1,8 @@
 package com.djrapitops.pluginbridge.plan.askyblock;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
-import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * A Class responsible for hooking to ASkyBlock and registering data sources.
@@ -20,7 +19,6 @@ public class ASkyBlockHook extends Hook {
      *
      * @param hookH HookHandler instance for registering the data sources.
      * @throws NoClassDefFoundError when the plugin class can not be found.
-     * @see API
      */
     public ASkyBlockHook(HookHandler hookH) throws NoClassDefFoundError {
         super("com.wasteofplastic.askyblock.ASkyBlock", hookH);

@@ -3,10 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.data.container;
-
-import main.java.com.djrapitops.plan.data.HasDate;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+package com.djrapitops.plan.data.container;
 
 import java.util.Objects;
 
@@ -16,7 +13,7 @@ import java.util.Objects;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class TPS implements HasDate {
+public class TPS {
 
     private final long date;
     private final double ticksPerSecond;
@@ -131,14 +128,13 @@ public class TPS implements HasDate {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("date", date)
-                .append("ticksPerSecond", ticksPerSecond)
-                .append("players", players)
-                .append("cpuUsage", cpuUsage)
-                .append("usedMemory", usedMemory)
-                .append("entityCount", entityCount)
-                .append("chunksLoaded", chunksLoaded)
-                .toString();
+        return "TPS{" +
+                "date=" + date + ", " +
+                "ticksPerSecond=" + ticksPerSecond + ", " +
+                "players=" + players + ", " +
+                "cpuUsage=" + cpuUsage + ", " +
+                "usedMemory=" + usedMemory + ", " +
+                "entityCount=" + entityCount + ", " +
+                "chunksLoaded=" + chunksLoaded + '}';
     }
 }

@@ -4,15 +4,15 @@
  */
 package com.djrapitops.pluginbridge.plan.jobs;
 
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.dao.JobsDAOData;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.element.TableContainer;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,7 +31,7 @@ public class JobsData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         List<JobsDAOData> playersJobs = Jobs.getDBManager().getDB().getAllJobs(null, uuid);
 
         TableContainer jobTable = new TableContainer(getWithIcon("Job", "suitcase"), getWithIcon("Level", "plus"));
@@ -47,7 +47,7 @@ public class JobsData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         List<JobsDAOData> allJobs = Jobs.getDBManager().getDB().getAllJobs()
                 .values().stream()
                 .flatMap(Collection::stream)

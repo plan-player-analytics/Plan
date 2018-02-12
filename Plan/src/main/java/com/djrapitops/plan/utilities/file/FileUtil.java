@@ -1,9 +1,9 @@
-package main.java.com.djrapitops.plan.utilities.file;
+package com.djrapitops.plan.utilities.file;
 
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,14 +24,14 @@ public class FileUtil {
 
     public static String getStringFromResource(String fileName) throws IOException {
         StringBuilder html = new StringBuilder();
-        IPlan plugin = MiscUtils.getIPlan();
+        PlanPlugin plugin = PlanPlugin.getInstance();
 
-        lines(MiscUtils.getIPlan(), new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName)
+        lines(PlanPlugin.getInstance(), new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName)
                 .forEach(line -> html.append(line).append("\r\n"));
         return html.toString();
     }
 
-    public static List<String> lines(IPlan plugin, File savedFile, String defaults) throws IOException {
+    public static List<String> lines(PlanPlugin plugin, File savedFile, String defaults) throws IOException {
         if (savedFile.exists()) {
             return lines(savedFile);
         } else {
@@ -72,7 +72,7 @@ public class FileUtil {
         return null;
     }
 
-    public static List<String> lines(IPlan plugin, String resource) throws IOException {
+    public static List<String> lines(PlanPlugin plugin, String resource) throws IOException {
         List<String> lines = new ArrayList<>();
         Scanner scanner = null;
         try (InputStream inputStream = plugin.getResource(resource)) {
@@ -81,7 +81,7 @@ public class FileUtil {
                 lines.add(scanner.nextLine());
             }
         } catch (NullPointerException e) {
-            Log.infoColor("§ea Resource was not found inside the jar, Plan does not support /reload or updates using " +
+            Log.infoColor("§ea Resource was not found inside the jar (" + resource + "), Plan does not support /reload or updates using " +
                     "Plugin Managers, restart the server and see if the error persists.");
             throw new FileNotFoundException("File not found inside jar: " + resource);
         } finally {

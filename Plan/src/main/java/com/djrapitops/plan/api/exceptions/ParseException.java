@@ -1,11 +1,11 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.api.exceptions;
+package com.djrapitops.plan.api.exceptions;
 
 /**
- * Exception thrown when PageParser encounters an Exception.
+ * Exception thrown when Page encounters an Exception.
  *
  * @author Rsl1122
  */

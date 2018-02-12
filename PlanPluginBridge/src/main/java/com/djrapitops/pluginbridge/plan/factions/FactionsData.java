@@ -1,20 +1,20 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package com.djrapitops.pluginbridge.plan.factions;
 
+import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.Html;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
-import main.java.com.djrapitops.plan.settings.Settings;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,28 +33,35 @@ public class FactionsData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         MPlayer mPlayer = MPlayer.get(uuid);
+
+        if (mPlayer == null) {
+            return inspectContainer;
+        }
 
         if (mPlayer.hasFaction()) {
             Faction faction = mPlayer.getFaction();
-            String factionName = faction.isNone() ? "-" : faction.getName();
-            double power = mPlayer.getPower();
-            double maxPower = mPlayer.getPowerMax();
-            String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
-            String factionLeader = faction.getLeader().getName();
-            String factionLeaderLink = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(factionLeader), factionLeader);
+            if (faction != null) {
+                String factionName = faction.isNone() ? "-" : faction.getName();
+                String factionLeader = faction.getLeader().getName();
+                String factionLeaderLink = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(factionLeader), factionLeader);
 
-            inspectContainer.addValue(getWithIcon("Faction", "flag", "deep-purple"), factionName);
-            inspectContainer.addValue(getWithIcon("Power", "bolt", "purple"), powerString);
-            inspectContainer.addValue(getWithIcon("Leader", "user", "purple"), factionLeaderLink);
+                inspectContainer.addValue(getWithIcon("Faction", "flag", "deep-purple"), factionName);
+                inspectContainer.addValue(getWithIcon("Leader", "user", "purple"), factionLeaderLink);
+            }
         }
+
+        double power = mPlayer.getPower();
+        double maxPower = mPlayer.getPowerMax();
+        String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
+        inspectContainer.addValue(getWithIcon("Power", "bolt", "purple"), powerString);
 
         return inspectContainer;
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
         List<Faction> factions = getTopFactions();
 
         analysisContainer.addValue(getWithIcon("Number of Factions", "flag", "deep-purple"), factions.size());

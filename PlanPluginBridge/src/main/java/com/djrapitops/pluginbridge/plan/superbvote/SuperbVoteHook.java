@@ -1,10 +1,9 @@
 package com.djrapitops.pluginbridge.plan.superbvote;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import io.minimum.minecraft.superbvote.SuperbVote;
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
-import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -24,7 +23,6 @@ public class SuperbVoteHook extends Hook {
      *
      * @param hookH HookHandler instance for registering the data sources.
      * @throws NoClassDefFoundError when the plugin class can not be found.
-     * @see API
      */
     public SuperbVoteHook(HookHandler hookH) {
         super("io.minimum.minecraft.superbvote.SuperbVote", hookH);

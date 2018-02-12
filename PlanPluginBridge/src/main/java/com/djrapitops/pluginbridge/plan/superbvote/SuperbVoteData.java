@@ -4,11 +4,11 @@
  */
 package com.djrapitops.pluginbridge.plan.superbvote;
 
+import com.djrapitops.plan.data.element.AnalysisContainer;
+import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.ContainerSize;
+import com.djrapitops.plan.data.plugin.PluginData;
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
-import main.java.com.djrapitops.plan.data.element.AnalysisContainer;
-import main.java.com.djrapitops.plan.data.element.InspectContainer;
-import main.java.com.djrapitops.plan.data.plugin.ContainerSize;
-import main.java.com.djrapitops.plan.data.plugin.PluginData;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public class SuperbVoteData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         int votes = store.getVotes(uuid);
 
         inspectContainer.addValue(getWithIcon("Votes", "check", "teal"), votes);
@@ -40,7 +40,7 @@ public class SuperbVoteData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
         Map<UUID, Integer> votes = new HashMap<>();
         long total = 0;
         for (UUID uuid : uuids) {

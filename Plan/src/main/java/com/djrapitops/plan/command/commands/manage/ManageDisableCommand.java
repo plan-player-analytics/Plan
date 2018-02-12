@@ -1,13 +1,13 @@
-package main.java.com.djrapitops.plan.command.commands.manage;
+package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.system.listeners.bukkit.PlayerOnlineListener;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.systems.listeners.PlanPlayerListener;
-import main.java.com.djrapitops.plan.utilities.Condition;
 
 /**
  * This manage SubCommand is used to disable some features of the plugin temporarily.
@@ -34,7 +34,7 @@ public class ManageDisableCommand extends SubCommand {
         }
         switch (args[0].toLowerCase()) {
             case "kickcount":
-                PlanPlayerListener.setCountKicks(false);
+                PlayerOnlineListener.setCountKicks(false);
                 sender.sendMessage("§aDisabled Kick Counting temporarily until next plugin reload.");
                 break;
             default:

@@ -35,7 +35,7 @@ WebServer:
       Alias: 'alias'
   # For those that want to serve Html from their own WebServer instead.
   # Set up Html Export (https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/External-WebServer-Use)
-  # ATTENTION: On BungeeCord systems it is not possible to disable the WebServer on the plugin due to WebAPI requirements.
+  # ATTENTION: On BungeeCord systems it is not possible to disable the WebServer on the plugin due to connection requirements.
   # If the WebServer is disabled with this setting BungeeCord systems will cease to function.
   DisableWebServer: false
   ExternalWebServerAddress: "https://www.example.address"
@@ -89,6 +89,17 @@ Customization:
     PlayerTableFooter: true
   Formatting:
     DecimalPoints: '#.##'
+    # Dates settings use Java SimpleDateFormat.
+    # You can find the patterns & examples here:
+    # https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+    Dates:
+      # RecentDays replaces date with Today, Yesterday, Wednesday etc.
+      RecentDays: true
+        # Non-regex pattern to replace
+        DatePattern: 'MMM d YYYY'
+      Full: 'MMM d YYYY, HH:mm:ss'
+      NoSeconds: 'MMM d YYYY, HH:mm'
+      JustClock: 'HH:mm:ss'
     TimeAmount:
       Year: '1 year, '
       Years: '%years% years, '
@@ -123,3 +134,6 @@ Plugins:
   Towny:
     HideTowns:
       - ExampleTown
+  BuyCraft:
+    # http://help.buycraft.net/article/36-where-to-find-the-secret-key
+    Secret: "-"

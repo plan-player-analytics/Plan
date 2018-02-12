@@ -5,7 +5,7 @@
 package com.djrapitops.pluginbridge.plan.banmanager;
 
 import com.djrapitops.pluginbridge.plan.Hook;
-import main.java.com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.data.plugin.HookHandler;
 
 /**
  * Hook for BanManager plugin.

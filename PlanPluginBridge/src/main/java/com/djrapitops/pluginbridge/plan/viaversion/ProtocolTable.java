@@ -5,13 +5,13 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.processing.ExecStatement;
-import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
-import main.java.com.djrapitops.plan.database.processing.QueryStatement;
-import main.java.com.djrapitops.plan.database.sql.Select;
-import main.java.com.djrapitops.plan.database.tables.Table;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
+import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
+import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.database.databases.sql.statements.Select;
+import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,13 +32,13 @@ public class ProtocolTable extends Table {
     private final String columnProtocolVersion;
 
     public ProtocolTable(SQLDB db) {
-        super("plan_version_protocol", db, db.isUsingMySQL());
+        super("plan_version_protocol", db);
         columnUUID = "uuid";
         columnProtocolVersion = "protocol_version";
     }
 
     @Override
-    public void createTable() throws DBCreateTableException {
+    public void createTable() throws DBInitException {
         createTable("CREATE TABLE IF NOT EXISTS " + tableName + " ("
                 + columnUUID + " varchar(36) NOT NULL UNIQUE, "
                 + columnProtocolVersion + " integer NOT NULL"

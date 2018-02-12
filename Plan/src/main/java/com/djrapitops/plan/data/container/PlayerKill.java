@@ -1,9 +1,7 @@
-package main.java.com.djrapitops.plan.data.container;
+package com.djrapitops.plan.data.container;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.HasDate;
-import main.java.com.djrapitops.plan.database.tables.Actions;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import com.djrapitops.plan.data.Actions;
+import com.djrapitops.plan.system.cache.DataCache;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -14,7 +12,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PlayerKill implements HasDate {
+public class PlayerKill {
 
     private final UUID victim;
     private final long time;
@@ -51,11 +49,6 @@ public class PlayerKill implements HasDate {
         return time;
     }
 
-    @Override
-    public long getDate() {
-        return getTime();
-    }
-
     /**
      * Get the Weapon used as string.
      *
@@ -66,7 +59,7 @@ public class PlayerKill implements HasDate {
     }
 
     public Action convertToAction() {
-        String name = Plan.getInstance().getDataCache().getName(victim);
+        String name = DataCache.getInstance().getName(victim);
         return new Action(time, Actions.KILLED, name + " with " + weapon);
     }
 
@@ -87,10 +80,9 @@ public class PlayerKill implements HasDate {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("victim", victim)
-                .append("time", time)
-                .append("weapon", weapon)
-                .toString();
+        return "PlayerKill{" +
+                "victim=" + victim + ", " +
+                "time=" + time + ", " +
+                "weapon='" + weapon + "'}";
     }
 }

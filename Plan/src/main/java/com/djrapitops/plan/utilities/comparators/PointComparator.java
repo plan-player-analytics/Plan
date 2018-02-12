@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.djrapitops.plan.utilities.comparators;
+package com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.utilities.analysis.Point;
+import com.djrapitops.plan.utilities.html.graphs.line.Point;
 
 import java.util.Comparator;
 
 /**
+ * Comparator for Points for ascending x value order.
+ *
  * @author Rsl1122
  * @since 3.5.2
  */

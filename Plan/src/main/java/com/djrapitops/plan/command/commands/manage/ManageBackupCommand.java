@@ -1,5 +1,13 @@
-package main.java.com.djrapitops.plan.command.commands.manage;
+package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.utilities.Condition;
+import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -7,14 +15,6 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.settings.Permissions;
-import main.java.com.djrapitops.plan.settings.locale.Locale;
-import main.java.com.djrapitops.plan.settings.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.Condition;
-import main.java.com.djrapitops.plan.utilities.ManageUtils;
 
 /**
  * This manage subcommand is used to backup a database to a .db file.
@@ -24,21 +24,13 @@ import main.java.com.djrapitops.plan.utilities.ManageUtils;
  */
 public class ManageBackupCommand extends SubCommand {
 
-    private final Plan plugin;
-
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public ManageBackupCommand(Plan plugin) {
+    public ManageBackupCommand() {
         super("backup",
                 CommandType.CONSOLE,
                 Permissions.MANAGE.getPermission(),
                 Locale.get(Msg.CMD_USG_MANAGE_BACKUP).toString(),
                 "<DB>");
 
-        this.plugin = plugin;
     }
 
     @Override
@@ -54,7 +46,7 @@ public class ManageBackupCommand extends SubCommand {
                 return true;
             }
 
-            final Database database = ManageUtils.getDB(dbName);
+            final Database database = DBSystem.getActiveDatabaseByName(dbName);
 
             // If DB is null return
             if (!Condition.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
@@ -63,7 +55,7 @@ public class ManageBackupCommand extends SubCommand {
             }
             Log.debug("Backup", "Start");
             runBackupTask(sender, args, database);
-        } catch (DatabaseInitException | NullPointerException e) {
+        } catch (DBInitException | NullPointerException e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
         } finally {
             Log.logDebug("Backup");
@@ -80,7 +72,7 @@ public class ManageBackupCommand extends SubCommand {
                     ManageUtils.backup(args[0], database);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
+                    Log.toLog(this.getClass(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();

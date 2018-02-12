@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.command.commands;
+package com.djrapitops.plan.command.commands;
 
 import com.google.common.collect.ImmutableSet;
 import org.apache.logging.log4j.Level;
