@@ -122,4 +122,13 @@ public class SQLTransferOps extends SQLOps implements TransferOperations {
             throw SQLErrorUtil.getExceptionFor(e);
         }
     }
+
+    @Override
+    public void playerOnline(UUID playerUUID) throws DBException {
+        try {
+            transferTable.storePlayerOnlineOnThisServer(playerUUID);
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
 }

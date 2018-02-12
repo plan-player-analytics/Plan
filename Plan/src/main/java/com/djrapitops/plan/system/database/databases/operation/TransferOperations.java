@@ -31,6 +31,8 @@ public interface TransferOperations {
 
     void storeConfigSettings(String encodedSettingString) throws DBException;
 
+    void playerOnline(UUID playerUUID) throws DBException;
+
     // Get
 
     Map<UUID, String> getEncodedPlayerHtml() throws DBException;

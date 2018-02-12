@@ -10,6 +10,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import utilities.RandomData;
+import utilities.Teardown;
 import utilities.mocks.SystemMockUtil;
 import utilities.mocks.objects.MockUtils;
 
@@ -30,6 +31,7 @@ public class FormatUtilsTest {
     public static void setUpClass() throws Exception {
         SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
+        Teardown.resetSettingsTempValues();
     }
 
     @Test
