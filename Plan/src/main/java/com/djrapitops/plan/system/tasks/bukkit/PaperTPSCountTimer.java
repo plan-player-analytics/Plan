@@ -13,7 +13,12 @@ public class PaperTPSCountTimer extends BukkitTPSCountTimer {
 
     @Override
     protected TPS getTPS(long diff, long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline) {
-        double tps = plugin.getServer().getTPS()[0];
+        double tps;
+        try {
+            tps = plugin.getServer().getTPS()[0];
+        } catch (NoSuchMethodError e) {
+            return super.getTPS(diff, now, cpuUsage, usedMemory, entityCount, chunksLoaded, playersOnline);
+        }
 
         if (tps > 20) {
             tps = 20;
