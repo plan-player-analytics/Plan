@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.file;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.utilities.file.FileUtil;
@@ -56,8 +57,16 @@ public class FileSystem implements SubSystem {
     }
 
     @Override
-    public void enable() {
+    public void enable() throws EnableException {
         dataFolder.mkdirs();
+        try {
+            if (configFile.exists()) {
+                configFile.createNewFile();
+            }
+        } catch (IOException e) {
+            throw new EnableException("Failed to create config.yml", e);
+        }
+
     }
 
     @Override
