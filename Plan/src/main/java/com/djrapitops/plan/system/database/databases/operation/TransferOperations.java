@@ -31,6 +31,7 @@ public interface TransferOperations {
 
     void storeConfigSettings(String encodedSettingString) throws DBException;
 
+    @Deprecated
     void playerOnline(UUID playerUUID) throws DBException;
 
     // Get
@@ -41,6 +42,7 @@ public interface TransferOperations {
 
     Map<UUID, String> getEncodedServerHtml() throws DBException;
 
+    @Deprecated
     Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) throws DBException;
 
     Map<UUID, String> getEncodedPlayerPluginsTabs(UUID playerUUID) throws DBException;

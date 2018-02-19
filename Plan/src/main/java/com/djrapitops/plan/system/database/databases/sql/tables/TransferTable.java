@@ -224,6 +224,7 @@ public class TransferTable extends Table {
         });
     }
 
+    @Deprecated
     public Optional<UUID> getServerPlayerIsOnline(UUID playerUUID) throws SQLException {
         String serverIDColumn = serverTable + "." + serverTable.getColumnID();
         String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
@@ -250,6 +251,7 @@ public class TransferTable extends Table {
         });
     }
 
+    @Deprecated
     public void storePlayerOnlineOnThisServer(UUID playerUUID) throws SQLException {
         execute(new ExecStatement(insertStatement) {
             @Override

@@ -115,7 +115,7 @@ public abstract class SQLDB extends Database {
                     cancel();
                 }
             }
-        }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay);
+        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay, TimeAmount.MINUTE.ticks() * 5L);
     }
 
     /**
@@ -232,10 +232,8 @@ public abstract class SQLDB extends Database {
     }
 
     private void clean() throws SQLException {
-        Log.info("Cleaning the database.");
         tpsTable.clean();
         transferTable.clean();
-        Log.info("Clean complete.");
     }
 
     public abstract Connection getConnection() throws SQLException;

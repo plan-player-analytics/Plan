@@ -134,6 +134,8 @@ public class ConnectionOut {
                     throw new UnauthorizedServerException(url.toString() + " reported that it does not recognize this server. Make sure '/plan m setup' was successful.");
                 case 500:
                     throw new InternalErrorException();
+                case 504:
+                    throw new GatewayException(url.toString() + " reported that it failed to connect to this server.");
                 default:
                     throw new WebException(url.toString() + "| Wrong response code " + responseCode);
             }
