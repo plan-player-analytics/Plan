@@ -43,7 +43,8 @@ public class InspectPagePluginsContent extends Response {
         String serverName = ServerInfo.getServerName();
         String actualServerName = serverName.equals("Plan") ? "Server " + ServerInfo.getServerID() : serverName;
         if (containers.isEmpty()) {
-            return new InspectPagePluginsContent(playerUUID, "<li><a>" + actualServerName + " (No Data)</a></li>", Html.CARD.parse("<p>No Data (" + actualServerName + ")</p>"));
+            return new InspectPagePluginsContent(playerUUID, "<li><a>" + actualServerName + " (No Data)</a></li>",
+                    "<div class=\"tab\"><div class=\"row clearfix\">" + Html.CARD.parse("<p>No Data (" + actualServerName + ")</p>") + "</div></div>");
         }
 
         String nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + actualServerName + "</a></li>";
