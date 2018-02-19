@@ -148,7 +148,7 @@ public class ConnectionOut {
                 Log.toLog(this.getClass(), e);
             }
             ConnectionLog.logConnectionTo(toServer, infoRequest, -1);
-            throw new ConnectionFailException("Connection failed to address: " + address + "<br>Make sure the server is online.", e);
+            throw new ConnectionFailException("Connection failed to address: " + address + " - Make sure the server is online.", e);
         } finally {
             if (connection != null) {
                 connection.disconnect();
