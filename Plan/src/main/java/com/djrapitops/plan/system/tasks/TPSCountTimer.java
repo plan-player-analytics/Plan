@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.processing.processors.TPSInsertProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ public abstract class TPSCountTimer<T extends PlanPlugin> extends AbsRunnable {
     protected final T plugin;
     protected final List<TPS> history;
 
-
     protected int latestPlayersOnline = 0;
 
     public TPSCountTimer(T plugin) {
@@ -31,14 +31,20 @@ public abstract class TPSCountTimer<T extends PlanPlugin> extends AbsRunnable {
 
     @Override
     public void run() {
-        long nanoTime = System.nanoTime();
-        long now = MiscUtils.getTime();
+        try {
+            long nanoTime = System.nanoTime();
+            long now = MiscUtils.getTime();
 
-        addNewTPSEntry(nanoTime, now);
+            addNewTPSEntry(nanoTime, now);
 
-        if (history.size() >= 60) {
-            Processor.queue(new TPSInsertProcessor(new ArrayList<>(history)));
-            history.clear();
+            if (history.size() >= 60) {
+                Processor.queue(new TPSInsertProcessor(new ArrayList<>(history)));
+                history.clear();
+            }
+        } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
+            Log.error("TPS Count Task Disabled due to error, reload Plan to re-enable.");
+            Log.toLog(this.getClass(), e);
+            cancel();
         }
     }
 

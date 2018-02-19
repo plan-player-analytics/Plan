@@ -37,7 +37,8 @@ public class ManageCommand extends TreeCommand<Plan> {
                 new ManageRemoveCommand(),
                 new ManageClearCommand(plugin),
                 new ManageSetupCommand(),
-                new ManageDisableCommand()
+                new ManageDisableCommand(),
+                new ManageConDebugCommand()
         );
     }
 }

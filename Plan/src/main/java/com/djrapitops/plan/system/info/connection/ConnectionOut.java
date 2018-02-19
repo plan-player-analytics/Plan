@@ -134,6 +134,8 @@ public class ConnectionOut {
                     throw new UnauthorizedServerException(url.toString() + " reported that it does not recognize this server. Make sure '/plan m setup' was successful.");
                 case 500:
                     throw new InternalErrorException();
+                case 504:
+                    throw new GatewayException(url.toString() + " reported that it failed to connect to this server.");
                 default:
                     throw new WebException(url.toString() + "| Wrong response code " + responseCode);
             }
@@ -146,7 +148,7 @@ public class ConnectionOut {
                 Log.toLog(this.getClass(), e);
             }
             ConnectionLog.logConnectionTo(toServer, infoRequest, -1);
-            throw new ConnectionFailException("Connection failed to address: " + address + "<br>Make sure the server is online.", e);
+            throw new ConnectionFailException("Connection failed to address: " + address + " - Make sure the server is online.", e);
         } finally {
             if (connection != null) {
                 connection.disconnect();

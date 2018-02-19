@@ -13,10 +13,7 @@ import com.djrapitops.plan.system.webserver.response.*;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.errors.ForbiddenResponse;
-import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
-import com.djrapitops.plan.system.webserver.response.errors.UnauthorizedServerResponse;
+import com.djrapitops.plan.system.webserver.response.errors.*;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.ArrayList;
@@ -73,6 +70,8 @@ public class ResponseHandler extends TreePageHandler {
             return new BadRequestResponse(e.getMessage());
         } catch (UnauthorizedServerException e) {
             return new UnauthorizedServerResponse(e.getMessage());
+        } catch (GatewayException e) {
+            return new GatewayErrorResponse(e.getMessage());
         } catch (InternalErrorException e) {
             if (e.getCause() != null) {
                 return new InternalErrorResponse(request.getTarget(), e.getCause());
