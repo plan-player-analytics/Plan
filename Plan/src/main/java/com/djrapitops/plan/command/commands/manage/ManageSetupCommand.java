@@ -77,6 +77,8 @@ public class ManageSetupCommand extends SubCommand {
                 sender.sendMessage("§eConnection failed: " + e.getMessage());
             } catch (InternalErrorException e) {
                 sender.sendMessage("§eConnection succeeded. " + e.getMessage() + ", check possible ErrorLog on receiving server's debug page.");
+            } catch (GatewayException e) {
+                sender.sendMessage("§eConnection succeeded, but Bungee failed to connect to this server. Use Connection debug commands for more.");
             } catch (WebException e) {
                 Log.toLog(this.getClass(), e);
                 sender.sendMessage("§cConnection to Bungee WebServer failed: More info in the error log.");
