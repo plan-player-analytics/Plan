@@ -12,6 +12,7 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 /**
  * InfoSystem for Bukkit servers.
@@ -29,6 +30,7 @@ public class BukkitInfoSystem extends InfoSystem {
         if (infoRequest instanceof SetupRequest) {
             throw new NoServersException("Set-up requests can not be run locally.");
         }
+        Log.debug("LocalRun: " + infoRequest.getClass().getSimpleName());
         infoRequest.runLocally();
     }
 
