@@ -48,6 +48,11 @@ Commands:
 
 Analysis:
   AutoRefreshPeriod: 60
+  Active:
+    # Minutes a player should play per week to be considered active
+    PlaytimeThreshold: 30
+    # How many days player should join per week to be considered active
+    LoginThreshold: 2
   Export:
     Enabled: false
     DestinationFolder: 'Analysis Results'
@@ -58,8 +63,27 @@ Data:
     CombineCommandAliases: true
 # -----------------------------------------------------
 Customization:
+  UseServerTime: true
+  Display:
+    SessionsAsTable: false
+    LargestWorldPercInSessionTitle: false
+    # By Default WorldPie is ordered alphabetically, colors are still determined alphabetically.
+    OrderWorldPieByPercentage: false
+    MaxSessions: 50
+    MaxPlayers: 2500
+    MaxPlayersPlayersPage: 25000
+    PlayerTableFooter: true
+    PlayerIPs: true
   Formatting:
     DecimalPoints: '#.##'
+    Dates:
+      # RecentDays replaces date with Today, Yesterday, Wednesday etc.
+      RecentDays: true
+        # Non-regex pattern to replace
+        DatePattern: 'MMM d YYYY'
+      Full: 'MMM d YYYY, HH:mm:ss'
+      NoSeconds: 'MMM d YYYY, HH:mm'
+      JustClock: 'HH:mm:ss'
     TimeAmount:
       Year: '1 year, '
       Years: '%years% years, '

@@ -34,6 +34,7 @@ public enum Settings {
     PLAYERTABLE_FOOTER("Customization.Display.PlayerTableFooter"),
     WEBSERVER_DISABLED("WebServer.DisableWebServer"),
     FORMAT_DATE_RECENT_DAYS("Customization.Formatting.Dates.RecentDays"),
+    DISPLAY_PLAYER_IPS("Customization.Display.PlayerIPs"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),

@@ -137,10 +137,17 @@ public class NetworkSettings {
         addConfigValue(configValues, Settings.DB_TYPE, "mysql");
         Settings[] sameStrings = new Settings[]{
                 Settings.DB_HOST, Settings.DB_USER, Settings.DB_PASS,
-                Settings.DB_DATABASE, Settings.FORMAT_DECIMALS, Settings.FORMAT_SECONDS,
+                Settings.DB_DATABASE, Settings.DB_LAUNCH_OPTIONS,
+                Settings.FORMAT_DECIMALS, Settings.FORMAT_SECONDS,
                 Settings.FORMAT_DAY, Settings.FORMAT_DAYS, Settings.FORMAT_HOURS,
                 Settings.FORMAT_MINUTES, Settings.FORMAT_MONTHS, Settings.FORMAT_MONTH,
-                Settings.FORMAT_YEAR, Settings.FORMAT_YEARS, Settings.FORMAT_ZERO_SECONDS
+                Settings.FORMAT_YEAR, Settings.FORMAT_YEARS, Settings.FORMAT_ZERO_SECONDS,
+                Settings.USE_SERVER_TIME, Settings.DISPLAY_SESSIONS_AS_TABLE, Settings.APPEND_WORLD_PERC,
+                Settings.ORDER_WORLD_PIE_BY_PERC, Settings.MAX_SESSIONS, Settings.MAX_PLAYERS,
+                Settings.MAX_PLAYERS_PLAYERS_PAGE, Settings.PLAYERTABLE_FOOTER, Settings.FORMAT_DATE_RECENT_DAYS,
+                Settings.FORMAT_DATE_RECENT_DAYS_PATTERN, Settings.FORMAT_DATE_CLOCK, Settings.FORMAT_DATE_NO_SECONDS,
+                Settings.FORMAT_DATE_FULL, Settings.DISPLAY_PLAYER_IPS, Settings.ACTIVE_LOGIN_THRESHOLD,
+                Settings.ACTIVE_PLAY_THRESHOLD
         };
         Log.debug("NetworkSettings: Adding Config Values..");
         for (Settings setting : sameStrings) {
