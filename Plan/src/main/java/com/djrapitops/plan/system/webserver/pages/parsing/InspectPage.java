@@ -28,7 +28,7 @@ import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
-import com.djrapitops.plan.utilities.html.structure.ServerAccordionCreator;
+import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.tables.ActionsTable;
 import com.djrapitops.plan.utilities.html.tables.GeoInfoTable;
 import com.djrapitops.plan.utilities.html.tables.NicknameTable;
@@ -123,10 +123,12 @@ public class InspectPage extends Page {
                 .collect(Collectors.toList());
 
         String[] sessionsAccordion = HtmlStructure.createSessionsTabContentInspectPage(sessionsByServerName, allSessions, uuid);
-        String[] serverAccordion = ServerAccordionCreator.createAccordion(profile, serverNames);
+
+        ServerAccordion serverAccordion = new ServerAccordion(profile, serverNames);
+
         addValue("accordionSessions", sessionsAccordion[0]);
-        addValue("accordionServers", serverAccordion[0]);
-        addValue("sessionTabGraphViewFunctions", sessionsAccordion[1] + serverAccordion[1]);
+        addValue("accordionServers", serverAccordion.toHtml());
+        addValue("sessionTabGraphViewFunctions", sessionsAccordion[1] + serverAccordion.toViewScript());
 
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();
