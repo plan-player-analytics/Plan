@@ -86,8 +86,8 @@ public class NetworkSettings {
         String[] settings = configSettings.split(SPLIT);
         UUID thisServerUUID = ServerInfo.getServerUUID();
         for (String settingAndVal : settings) {
-            String[] split = settingAndVal.split(VAL_SPLIT);
-            String setting = split[0];
+            String[] settingValSplit = settingAndVal.split(VAL_SPLIT);
+            String setting = settingValSplit[0];
             String[] pathSplit = setting.split(":");
             String path;
             if (pathSplit.length == 2) {
@@ -100,7 +100,7 @@ public class NetworkSettings {
                 path = setting;
             }
 
-            String value = split[1];
+            String value = settingValSplit.length == 2 ? settingValSplit[1] : "";
             pathValueMap.put(path, value);
         }
         return pathValueMap;
