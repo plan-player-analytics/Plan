@@ -8,6 +8,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.request.CacheAnalysisPageRequest;
@@ -15,16 +16,14 @@ import com.djrapitops.plan.system.info.request.CacheInspectPageRequest;
 import com.djrapitops.plan.system.info.request.CacheInspectPluginsTabRequest;
 import com.djrapitops.plan.system.info.request.CacheNetworkPageContentRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Table that represents plan_transfer in SQL database.
@@ -33,54 +32,65 @@ import java.util.UUID;
  */
 public class TransferTable extends Table {
 
-    private static final String columnSenderID = "sender_server_id";
-    private static final String columnExpiry = "expiry_date";
-    private static final String columnInfoType = "type";
-    private static final String columnContent = "content_64";
-    private static final String columnExtraVariables = "extra_variables";
+    private final String insertStatementNoParts;
 
     private final ServerTable serverTable;
-
-    private final String insertStatement;
+    private final String insertStatementParts;
     private final String selectStatement;
 
     public TransferTable(SQLDB db) {
         super("plan_transfer", db);
 
         serverTable = db.getServerTable();
-        insertStatement = "INSERT INTO " + tableName + " (" +
-                columnSenderID + ", " +
-                columnExpiry + ", " +
-                columnInfoType + ", " +
-                columnExtraVariables + ", " +
-                columnContent +
+        insertStatementParts = "REPLACE INTO " + tableName + " (" +
+                Col.SENDER_ID + ", " +
+                Col.EXPIRY + ", " +
+                Col.INFO_TYPE + ", " +
+                Col.EXTRA_VARIABLES + ", " +
+                Col.CONTENT + ", " +
+                Col.PART +
+                ") VALUES (" +
+                serverTable.statementSelectServerID + ", " +
+                "?, ?, ?, ?, ?)";
+        insertStatementNoParts = "REPLACE INTO " + tableName + " (" +
+                Col.SENDER_ID + ", " +
+                Col.EXPIRY + ", " +
+                Col.INFO_TYPE + ", " +
+                Col.EXTRA_VARIABLES + ", " +
+                Col.CONTENT +
                 ") VALUES (" +
                 serverTable.statementSelectServerID + ", " +
                 "?, ?, ?, ?)";
 
         selectStatement = "SELECT * FROM " + tableName +
-                " WHERE " + columnInfoType + "= ?" +
-                " AND " + columnExpiry + "> ?" +
-                " ORDER BY " + columnExpiry + " DESC";
+                " WHERE " + Col.INFO_TYPE + "= ?" +
+                " AND " + Col.EXPIRY + "> ?" +
+                " ORDER BY " + Col.EXPIRY + " DESC, "
+                + Col.PART + " ASC";
     }
 
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .column(columnSenderID, Sql.INT).notNull()
-                .column(columnExpiry, Sql.LONG).notNull().defaultValue("0")
-                .column(columnInfoType, Sql.varchar(100)).notNull()
-                .column(columnExtraVariables, Sql.varchar(255)).defaultValue("''")
-                .column(columnContent, usingMySQL ? "MEDIUMTEXT" : Sql.varchar(1)) // SQLite does not enforce varchar limits.
-                .foreignKey(columnSenderID, serverTable.toString(), serverTable.getColumnID())
+                .column(Col.SENDER_ID, Sql.INT).notNull()
+                .column(Col.EXPIRY, Sql.LONG).notNull().defaultValue("0")
+                .column(Col.INFO_TYPE, Sql.varchar(100)).notNull()
+                .column(Col.EXTRA_VARIABLES, Sql.varchar(255)).defaultValue("''")
+                .column(Col.CONTENT, usingMySQL ? "MEDIUMTEXT" : Sql.varchar(1)) // SQLite does not enforce varchar limits.
+                .column(Col.PART, Sql.LONG).notNull().defaultValue("0")
+                .foreignKey(Col.SENDER_ID, serverTable.toString(), ServerTable.Col.SERVER_ID)
                 .toString()
         );
     }
 
+    public void alterTableV14() {
+        addColumns(Col.PART + " bigint NOT NULL DEFAULT 0");
+    }
+
     public void clean() throws SQLException {
         String sql = "DELETE FROM " + tableName +
-                " WHERE " + columnExpiry + " < ?" +
-                " AND " + columnInfoType + " != ?";
+                " WHERE " + Col.EXPIRY + " < ?" +
+                " AND " + Col.INFO_TYPE + " != ?";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -90,8 +100,8 @@ public class TransferTable extends Table {
             }
         });
         sql = "DELETE FROM " + tableName +
-                " WHERE " + columnSenderID + " = " + serverTable.statementSelectServerID +
-                " AND " + columnInfoType + " = ?";
+                " WHERE " + Col.SENDER_ID + " = " + serverTable.statementSelectServerID +
+                " AND " + Col.INFO_TYPE + " = ?";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -103,7 +113,7 @@ public class TransferTable extends Table {
     }
 
     public void storePlayerHtml(UUID player, String encodedHtml) throws SQLException {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, ServerInfo.getServerUUID().toString());
@@ -116,20 +126,28 @@ public class TransferTable extends Table {
     }
 
     public void storeServerHtml(UUID serverUUID, String encodedHtml) throws SQLException {
-        execute(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID().toString());
-                statement.setLong(2, MiscUtils.getTime() + TimeAmount.MINUTE.ms());
-                statement.setString(3, CacheAnalysisPageRequest.class.getSimpleName().toLowerCase());
-                statement.setString(4, serverUUID.toString());
-                statement.setString(5, encodedHtml);
-            }
-        });
+        List<String> split = Base64Util.split(encodedHtml, 500000L);
+
+        int i = 0;
+        for (String part : split) {
+            final int partNumber = i;
+            execute(new ExecStatement(insertStatementParts) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, ServerInfo.getServerUUID().toString());
+                    statement.setLong(2, MiscUtils.getTime() + TimeAmount.MINUTE.ms());
+                    statement.setString(3, CacheAnalysisPageRequest.class.getSimpleName().toLowerCase());
+                    statement.setString(4, serverUUID.toString());
+                    statement.setString(5, part);
+                    statement.setInt(6, partNumber);
+                }
+            });
+            i++;
+        }
     }
 
     public void storeNetworkPageContent(UUID serverUUID, String encodedHtml) throws SQLException {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, ServerInfo.getServerUUID().toString());
@@ -153,14 +171,25 @@ public class TransferTable extends Table {
             public Map<UUID, String> processResults(ResultSet set) throws SQLException {
                 Map<UUID, String> htmlPerUUID = new HashMap<>();
                 while (set.next()) {
-                    String uuidString = set.getString(columnExtraVariables);
+                    String uuidString = set.getString(Col.EXTRA_VARIABLES.get());
                     UUID uuid = UUID.fromString(uuidString);
 
-                    if (!htmlPerUUID.containsKey(uuid)) {
-                        htmlPerUUID.put(uuid, set.getString(columnContent));
-                    }
+                    htmlPerUUID.put(uuid, htmlPerUUID.getOrDefault(uuid, "") + set.getString(Col.CONTENT.get()));
                 }
                 return htmlPerUUID;
+            }
+        });
+    }
+
+    public void storePlayerPluginsTab(UUID player, String encodedHtml) throws SQLException {
+        execute(new ExecStatement(insertStatementNoParts) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setLong(2, MiscUtils.getTime() + TimeAmount.MINUTE.ms());
+                statement.setString(3, CacheInspectPluginsTabRequest.class.getSimpleName().toLowerCase());
+                statement.setString(4, player.toString());
+                statement.setString(5, encodedHtml);
             }
         });
     }
@@ -177,30 +206,17 @@ public class TransferTable extends Table {
         return getHtmlPerUUIDForCacheRequest(CacheAnalysisPageRequest.class);
     }
 
-    public void storePlayerPluginsTab(UUID player, String encodedHtml) throws SQLException {
-        execute(new ExecStatement(insertStatement) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID().toString());
-                statement.setLong(2, MiscUtils.getTime() + TimeAmount.MINUTE.ms());
-                statement.setString(3, CacheInspectPluginsTabRequest.class.getSimpleName().toLowerCase());
-                statement.setString(4, player.toString());
-                statement.setString(5, encodedHtml);
-            }
-        });
-    }
-
     public Map<UUID, String> getPlayerPluginsTabs(UUID playerUUID) throws SQLException {
         String serverIDColumn = serverTable + "." + serverTable.getColumnID();
         String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
         String sql = "SELECT " +
-                columnContent + ", " +
+                Col.CONTENT + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnSenderID +
-                " WHERE " + columnInfoType + "= ?" +
-                " AND " + columnExpiry + "> ?" +
-                " AND " + columnExtraVariables + "=?";
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SENDER_ID +
+                " WHERE " + Col.INFO_TYPE + "= ?" +
+                " AND " + Col.EXPIRY + "> ?" +
+                " AND " + Col.EXTRA_VARIABLES + "=?";
 
         return query(new QueryStatement<Map<UUID, String>>(sql, 250) {
             @Override
@@ -215,7 +231,7 @@ public class TransferTable extends Table {
                 Map<UUID, String> htmlPerUUID = new HashMap<>();
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-                    String html64 = set.getString(columnContent);
+                    String html64 = set.getString(Col.CONTENT.get());
 
                     htmlPerUUID.put(serverUUID, html64);
                 }
@@ -231,9 +247,9 @@ public class TransferTable extends Table {
         String sql = "SELECT " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnSenderID +
-                " WHERE " + columnExtraVariables + "=?" +
-                " ORDER BY " + columnExpiry + " LIMIT 1";
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SENDER_ID +
+                " WHERE " + Col.EXTRA_VARIABLES + "=?" +
+                " ORDER BY " + Col.EXPIRY + " LIMIT 1";
 
         return query(new QueryStatement<Optional<UUID>>(sql, 1) {
             @Override
@@ -253,7 +269,7 @@ public class TransferTable extends Table {
 
     @Deprecated
     public void storePlayerOnlineOnThisServer(UUID playerUUID) throws SQLException {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, ServerInfo.getServerUUID().toString());
@@ -266,7 +282,7 @@ public class TransferTable extends Table {
     }
 
     public void storeConfigSettings(String encodedSettingString) throws SQLException {
-        execute(new ExecStatement(insertStatement) {
+        execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, ServerInfo.getServerUUID().toString());
@@ -289,10 +305,34 @@ public class TransferTable extends Table {
             @Override
             public Optional<String> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.ofNullable(set.getString(columnContent));
+                    return Optional.ofNullable(set.getString(Col.CONTENT.get()));
                 }
                 return Optional.empty();
             }
         });
+    }
+
+    public enum Col implements Column {
+        SENDER_ID("sender_server_id"),
+        EXPIRY("expiry_date"),
+        INFO_TYPE("type"),
+        CONTENT("content_64"),
+        EXTRA_VARIABLES("extra_variables"),
+        PART("part");
+
+        private final String column;
+
+        Col(String column) {
+            this.column = column;
+        }
+
+        public String get() {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return column;
+        }
     }
 }

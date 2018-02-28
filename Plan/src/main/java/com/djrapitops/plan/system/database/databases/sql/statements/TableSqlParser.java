@@ -32,6 +32,10 @@ public class TableSqlParser extends SqlParser {
         return new TableSqlParser("").column(column, type);
     }
 
+    public TableSqlParser column(Column column, String type) {
+        return column(column.get(), type);
+    }
+
     public TableSqlParser column(String column, String type) {
         if (columns > 0) {
             append(", ");
@@ -41,6 +45,10 @@ public class TableSqlParser extends SqlParser {
 
         columns++;
         return this;
+    }
+
+    public TableSqlParser foreignKey(Column column, String refrencedTable, Column referencedColumn) {
+        return foreignKey(column.get(), refrencedTable, referencedColumn.get());
     }
 
     public TableSqlParser foreignKey(String column, String refrencedTable, String referencedColumn) {

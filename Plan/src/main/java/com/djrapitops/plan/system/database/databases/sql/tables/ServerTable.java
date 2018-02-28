@@ -35,6 +35,11 @@ import java.util.*;
  */
 public class ServerTable extends Table {
 
+    @Deprecated
+    public String getColumnID() {
+        return Col.SERVER_ID.get();
+    }
+
     public final String statementSelectServerID;
     public final String statementSelectServerNameID;
     private static final String columnServerID = "id";
@@ -308,12 +313,33 @@ public class ServerTable extends Table {
         });
     }
 
-    public String getColumnID() {
-        return columnServerID;
+    @Deprecated
+    public String getColumnUUID() {
+        return Col.SERVER_UUID.get();
     }
 
-    public String getColumnUUID() {
-        return columnServerUUID;
+    public enum Col implements Column {
+        SERVER_ID("id"),
+        SERVER_UUID("uuid"),
+        NAME("name"),
+        WEBSERVER_ADDRESS("web_address"),
+        INSTALLED("is_installed"),
+        MAX_PLAYERS("max_players");
+
+        private final String column;
+
+        Col(String column) {
+            this.column = column;
+        }
+
+        public String get() {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return column;
+        }
     }
 
     public void insertAllServers(List<Server> allServer) throws SQLException {
