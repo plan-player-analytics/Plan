@@ -129,13 +129,14 @@ public class TransferTable extends Table {
         List<String> split = Base64Util.split(encodedHtml, 500000L);
 
         int i = 0;
+        long expires = MiscUtils.getTime() + TimeAmount.MINUTE.ms();
         for (String part : split) {
             final int partNumber = i;
             execute(new ExecStatement(insertStatementParts) {
                 @Override
                 public void prepare(PreparedStatement statement) throws SQLException {
                     statement.setString(1, ServerInfo.getServerUUID().toString());
-                    statement.setLong(2, MiscUtils.getTime() + TimeAmount.MINUTE.ms());
+                    statement.setLong(2, expires);
                     statement.setString(3, CacheAnalysisPageRequest.class.getSimpleName().toLowerCase());
                     statement.setString(4, serverUUID.toString());
                     statement.setString(5, part);
@@ -170,11 +171,18 @@ public class TransferTable extends Table {
             @Override
             public Map<UUID, String> processResults(ResultSet set) throws SQLException {
                 Map<UUID, String> htmlPerUUID = new HashMap<>();
+                Map<UUID, Long> expiry = new HashMap<>();
                 while (set.next()) {
                     String uuidString = set.getString(Col.EXTRA_VARIABLES.get());
                     UUID uuid = UUID.fromString(uuidString);
 
-                    htmlPerUUID.put(uuid, htmlPerUUID.getOrDefault(uuid, "") + set.getString(Col.CONTENT.get()));
+                    long expires = set.getLong(Col.EXPIRY.get());
+
+                    long correctExpiry = expiry.getOrDefault(uuid, expires);
+                    if (expires == correctExpiry) {
+                        htmlPerUUID.put(uuid, htmlPerUUID.getOrDefault(uuid, "") + set.getString(Col.CONTENT.get()));
+                        expiry.put(uuid, correctExpiry);
+                    }
                 }
                 return htmlPerUUID;
             }

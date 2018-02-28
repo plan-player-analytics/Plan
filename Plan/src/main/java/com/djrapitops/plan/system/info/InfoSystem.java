@@ -18,7 +18,6 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SendDBSettingsRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -122,16 +121,6 @@ public abstract class InfoSystem implements SubSystem {
     @Override
     public void enable() throws EnableException {
         connectionSystem.enable();
-        Processor.queue(() -> {
-            try {
-                updateNetworkPage();
-            } catch (NoServersException e) {
-                /* Ignored */
-            } catch (WebException e) {
-                // TODO Exception handling
-                Log.toLog(this.getClass(), e);
-            }
-        });
     }
 
     @Override
