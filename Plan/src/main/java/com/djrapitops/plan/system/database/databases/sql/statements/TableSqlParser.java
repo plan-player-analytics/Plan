@@ -88,6 +88,10 @@ public class TableSqlParser extends SqlParser {
         return this;
     }
 
+    public TableSqlParser primaryKeyIDColumn(boolean mySQL, Column column) {
+        return primaryKeyIDColumn(mySQL, column.get());
+    }
+
     public TableSqlParser primaryKeyIDColumn(boolean mySQL, String column) {
         if (columns > 0) {
             append(", ");
@@ -97,6 +101,10 @@ public class TableSqlParser extends SqlParser {
         append((mySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY");
         columns++;
         return this;
+    }
+
+    public TableSqlParser primaryKey(boolean mySQL, Column column) {
+        return primaryKey(mySQL, column.get());
     }
 
     public TableSqlParser primaryKey(boolean mySQL, String column) {

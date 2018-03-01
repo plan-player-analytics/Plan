@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
@@ -22,68 +23,55 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Class representing database table plan_tps
+ * Table that is in charge of storing TPS, Players Online & Performance data.
+ * <p>
+ * Table Name: plan_tps
+ * <p>
+ * For contained columns {@see Col}
  *
  * @author Rsl1122
- * @since 3.5.0
  */
 public class TPSTable extends Table {
-
-    private static final String columnServerID = "server_id";
-    private static final String columnDate = "date";
-    private static final String columnTPS = "tps";
-    private static final String columnPlayers = "players_online";
-    private static final String columnCPUUsage = "cpu_usage";
-    private static final String columnRAMUsage = "ram_usage";
-    private static final String columnEntities = "entities";
-    private static final String columnChunksLoaded = "chunks_loaded";
-
-    private final ServerTable serverTable;
-    private String insertStatement;
 
     public TPSTable(SQLDB db) {
         super("plan_tps", db);
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " ("
-                + columnServerID + ", "
-                + columnDate + ", "
-                + columnTPS + ", "
-                + columnPlayers + ", "
-                + columnCPUUsage + ", "
-                + columnRAMUsage + ", "
-                + columnEntities + ", "
-                + columnChunksLoaded
+                + Col.SERVER_ID + ", "
+                + Col.DATE + ", "
+                + Col.TPS + ", "
+                + Col.PLAYERS_ONLINE + ", "
+                + Col.CPU_USAGE + ", "
+                + Col.RAM_USAGE + ", "
+                + Col.ENTITIES + ", "
+                + Col.CHUNKS
                 + ") VALUES ("
                 + serverTable.statementSelectServerID + ", "
                 + "?, ?, ?, ?, ?, ?, ?)";
     }
 
+    private final ServerTable serverTable;
+    private String insertStatement;
+
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .column(columnServerID, Sql.INT).notNull()
-                .column(columnDate, Sql.LONG).notNull()
-                .column(columnTPS, Sql.DOUBLE).notNull()
-                .column(columnPlayers, Sql.INT).notNull()
-                .column(columnCPUUsage, Sql.DOUBLE).notNull()
-                .column(columnRAMUsage, Sql.LONG).notNull()
-                .column(columnEntities, Sql.INT).notNull()
-                .column(columnChunksLoaded, Sql.INT).notNull()
-                .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
+                .column(Col.SERVER_ID, Sql.INT).notNull()
+                .column(Col.DATE, Sql.LONG).notNull()
+                .column(Col.TPS, Sql.DOUBLE).notNull()
+                .column(Col.PLAYERS_ONLINE, Sql.INT).notNull()
+                .column(Col.CPU_USAGE, Sql.DOUBLE).notNull()
+                .column(Col.RAM_USAGE, Sql.LONG).notNull()
+                .column(Col.ENTITIES, Sql.INT).notNull()
+                .column(Col.CHUNKS, Sql.INT).notNull()
+                .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
                 .toString()
         );
     }
 
-    /**
-     * @return @throws SQLException
-     */
-    public List<TPS> getTPSData() throws SQLException {
-        return getTPSData(ServerInfo.getServerUUID());
-    }
-
     public List<TPS> getTPSData(UUID serverUUID) throws SQLException {
         String sql = Select.all(tableName)
-                .where(columnServerID + "=" + serverTable.statementSelectServerID)
+                .where(Col.SERVER_ID + "=" + serverTable.statementSelectServerID)
                 .toString();
 
         return query(new QueryStatement<List<TPS>>(sql, 50000) {
@@ -98,18 +86,54 @@ public class TPSTable extends Table {
                 while (set.next()) {
 
                     TPS tps = TPSBuilder.get()
-                            .date(set.getLong(columnDate))
-                            .tps(set.getDouble(columnTPS))
-                            .playersOnline(set.getInt(columnPlayers))
-                            .usedCPU(set.getDouble(columnCPUUsage))
-                            .usedMemory(set.getLong(columnRAMUsage))
-                            .entities(set.getInt(columnEntities))
-                            .chunksLoaded(set.getInt(columnChunksLoaded))
+                            .date(set.getLong(Col.DATE.get()))
+                            .tps(set.getDouble(Col.TPS.get()))
+                            .playersOnline(set.getInt(Col.PLAYERS_ONLINE.get()))
+                            .usedCPU(set.getDouble(Col.CPU_USAGE.get()))
+                            .usedMemory(set.getLong(Col.RAM_USAGE.get()))
+                            .entities(set.getInt(Col.ENTITIES.get()))
+                            .chunksLoaded(set.getInt(Col.CHUNKS.get()))
                             .toTPS();
 
                     data.add(tps);
                 }
                 return data;
+            }
+        });
+    }
+
+    /**
+     * @return @throws SQLException
+     */
+    public List<TPS> getTPSData() throws SQLException {
+        return getTPSData(ServerInfo.getServerUUID());
+    }
+
+    /**
+     * Clean the TPS Table of old data.
+     *
+     * @throws SQLException DB Error
+     */
+    public void clean() throws SQLException {
+        Optional<TPS> allTimePeak = getAllTimePeak();
+        int p = -1;
+        if (allTimePeak.isPresent()) {
+            p = allTimePeak.get().getPlayers();
+        }
+        final int pValue = p;
+
+        String sql = "DELETE FROM " + tableName +
+                " WHERE (" + Col.DATE + "<?)" +
+                " AND (" + Col.PLAYERS_ONLINE + "" +
+                " != ?)";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, pValue);
+                // More than 2 Months ago.
+                long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
+                statement.setLong(2, MiscUtils.getTime() - fiveWeeks);
             }
         });
     }
@@ -130,31 +154,37 @@ public class TPSTable extends Table {
         });
     }
 
-    /**
-     * Clean the TPS Table of old data.
-     *
-     * @throws SQLException DB Error
-     */
-    public void clean() throws SQLException {
-        Optional<TPS> allTimePeak = getAllTimePeak();
-        int p = -1;
-        if (allTimePeak.isPresent()) {
-            p = allTimePeak.get().getPlayers();
-        }
-        final int pValue = p;
+    public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws SQLException {
+        String sql = Select.all(tableName)
+                .where(Col.SERVER_ID + "=" + serverTable.statementSelectServerID)
+                .and(Col.PLAYERS_ONLINE + "= (SELECT MAX(" + Col.PLAYERS_ONLINE + ") FROM " + tableName + ")")
+                .and(Col.DATE + ">= ?")
+                .toString();
 
-        String sql = "DELETE FROM " + tableName +
-                " WHERE (" + columnDate + "<?)" +
-                " AND (" + columnPlayers + "" +
-                " != ?)";
-
-        execute(new ExecStatement(sql) {
+        return query(new QueryStatement<Optional<TPS>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, pValue);
-                // More than 2 Months ago.
-                long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
-                statement.setLong(2, MiscUtils.getTime() - fiveWeeks);
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, afterDate);
+            }
+
+            @Override
+            public Optional<TPS> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+
+                    TPS tps = TPSBuilder.get()
+                            .date(set.getLong(Col.DATE.get()))
+                            .tps(set.getDouble(Col.TPS.get()))
+                            .playersOnline(set.getInt(Col.PLAYERS_ONLINE.get()))
+                            .usedCPU(set.getDouble(Col.CPU_USAGE.get()))
+                            .usedMemory(set.getLong(Col.RAM_USAGE.get()))
+                            .entities(set.getInt(Col.ENTITIES.get()))
+                            .chunksLoaded(set.getInt(Col.CHUNKS.get()))
+                            .toTPS();
+
+                    return Optional.of(tps);
+                }
+                return Optional.empty();
             }
         });
     }
@@ -171,55 +201,20 @@ public class TPSTable extends Table {
         return getPeakPlayerCount(ServerInfo.getServerUUID(), afterDate);
     }
 
-    public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws SQLException {
-        String sql = Select.all(tableName)
-                .where(columnServerID + "=" + serverTable.statementSelectServerID)
-                .and(columnPlayers + "= (SELECT MAX(" + columnPlayers + ") FROM " + tableName + ")")
-                .and(columnDate + ">= ?")
-                .toString();
-
-        return query(new QueryStatement<Optional<TPS>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, afterDate);
-            }
-
-            @Override
-            public Optional<TPS> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-
-                    TPS tps = TPSBuilder.get()
-                            .date(set.getLong(columnDate))
-                            .tps(set.getDouble(columnTPS))
-                            .playersOnline(set.getInt(columnPlayers))
-                            .usedCPU(set.getDouble(columnCPUUsage))
-                            .usedMemory(set.getLong(columnRAMUsage))
-                            .entities(set.getInt(columnEntities))
-                            .chunksLoaded(set.getInt(columnChunksLoaded))
-                            .toTPS();
-
-                    return Optional.of(tps);
-                }
-                return Optional.empty();
-            }
-        });
-    }
-
     public Map<UUID, List<TPS>> getAllTPS() throws SQLException {
-        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
-                columnDate + ", " +
-                columnTPS + ", " +
-                columnPlayers + ", " +
-                columnCPUUsage + ", " +
-                columnRAMUsage + ", " +
-                columnEntities + ", " +
-                columnChunksLoaded + ", " +
+                Col.DATE + ", " +
+                Col.TPS + ", " +
+                Col.PLAYERS_ONLINE + ", " +
+                Col.CPU_USAGE + ", " +
+                Col.RAM_USAGE + ", " +
+                Col.ENTITIES + ", " +
+                Col.CHUNKS + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
 
         return query(new QueryAllStatement<Map<UUID, List<TPS>>>(sql, 50000) {
             @Override
@@ -231,19 +226,56 @@ public class TPSTable extends Table {
                     List<TPS> tpsList = serverMap.getOrDefault(serverUUID, new ArrayList<>());
 
                     TPS tps = TPSBuilder.get()
-                            .date(set.getLong(columnDate))
-                            .tps(set.getDouble(columnTPS))
-                            .playersOnline(set.getInt(columnPlayers))
-                            .usedCPU(set.getDouble(columnCPUUsage))
-                            .usedMemory(set.getLong(columnRAMUsage))
-                            .entities(set.getInt(columnEntities))
-                            .chunksLoaded(set.getInt(columnChunksLoaded))
+                            .date(set.getLong(Col.DATE.get()))
+                            .tps(set.getDouble(Col.TPS.get()))
+                            .playersOnline(set.getInt(Col.PLAYERS_ONLINE.get()))
+                            .usedCPU(set.getDouble(Col.CPU_USAGE.get()))
+                            .usedMemory(set.getLong(Col.RAM_USAGE.get()))
+                            .entities(set.getInt(Col.ENTITIES.get()))
+                            .chunksLoaded(set.getInt(Col.CHUNKS.get()))
                             .toTPS();
 
                     tpsList.add(tps);
                     serverMap.put(serverUUID, tpsList);
                 }
                 return serverMap;
+            }
+        });
+    }
+
+    public List<TPS> getNetworkOnlineData() throws SQLException {
+        Optional<Server> bungeeInfo = serverTable.getBungeeInfo();
+        if (!bungeeInfo.isPresent()) {
+            return new ArrayList<>();
+        }
+        UUID bungeeUUID = bungeeInfo.get().getUuid();
+
+        String sql = "SELECT " +
+                Col.DATE + ", " +
+                Col.PLAYERS_ONLINE +
+                " FROM " + tableName +
+                " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
+
+        return query(new QueryStatement<List<TPS>>(sql, 50000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, bungeeUUID.toString());
+            }
+
+            @Override
+            public List<TPS> processResults(ResultSet set) throws SQLException {
+                List<TPS> tpsList = new ArrayList<>();
+                while (set.next()) {
+
+                    TPS tps = TPSBuilder.get()
+                            .date(set.getLong(Col.DATE.get()))
+                            .skipTPS()
+                            .playersOnline(set.getInt(Col.PLAYERS_ONLINE.get()))
+                            .toTPS();
+
+                    tpsList.add(tps);
+                }
+                return tpsList;
             }
         });
     }
@@ -277,40 +309,29 @@ public class TPSTable extends Table {
         });
     }
 
-    public List<TPS> getNetworkOnlineData() throws SQLException {
-        Optional<Server> bungeeInfo = serverTable.getBungeeInfo();
-        if (!bungeeInfo.isPresent()) {
-            return new ArrayList<>();
+    public enum Col implements Column {
+        SERVER_ID("server_id"),
+        DATE("date"),
+        TPS("tps"),
+        PLAYERS_ONLINE("players_online"),
+        CPU_USAGE("cpu_usage"),
+        RAM_USAGE("ram_usage"),
+        ENTITIES("entities"),
+        CHUNKS("chunks_loaded");
+
+        private final String column;
+
+        Col(String column) {
+            this.column = column;
         }
-        UUID bungeeUUID = bungeeInfo.get().getUuid();
 
-        String sql = "SELECT " +
-                columnDate + ", " +
-                columnPlayers +
-                " FROM " + tableName +
-                " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
+        public String get() {
+            return toString();
+        }
 
-        return query(new QueryStatement<List<TPS>>(sql, 50000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, bungeeUUID.toString());
-            }
-
-            @Override
-            public List<TPS> processResults(ResultSet set) throws SQLException {
-                List<TPS> tpsList = new ArrayList<>();
-                while (set.next()) {
-
-                    TPS tps = TPSBuilder.get()
-                            .date(set.getLong(columnDate))
-                            .skipTPS()
-                            .playersOnline(set.getInt(columnPlayers))
-                            .toTPS();
-
-                    tpsList.add(tps);
-                }
-                return tpsList;
-            }
-        });
+        @Override
+        public String toString() {
+            return column;
+        }
     }
 }

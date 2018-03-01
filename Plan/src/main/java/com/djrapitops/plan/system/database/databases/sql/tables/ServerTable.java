@@ -21,20 +21,27 @@ import java.util.*;
 /**
  * Table for managing multiple server's data in the database.
  * <p>
- * plan_servers contains columns:
- * <ul>
- * <li>id</li>
- * <li>uuid</li>
- * <li>name</li>
- * <li>web_address</li>
- * <li>is_installed</li>
- * </ul>
- * Columns refer to Server Information.
+ * Table Name: plan_servers
+ * <p>
+ * For contained columns {@see Col}
  *
  * @author Rsl1122
+ * @see Server
  */
 public class ServerTable extends Table {
 
+    public ServerTable(SQLDB db) {
+        super("plan_servers", db);
+        statementSelectServerID = "(" + Select.from(tableName, tableName + "." + Col.SERVER_ID).where(tableName + "." + Col.SERVER_UUID + "=?").toString() + " LIMIT 1)";
+        statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + Col.NAME).where(tableName + "." + Col.SERVER_ID + "=?").toString() + " LIMIT 1)";
+        insertStatement = Insert.values(tableName,
+                Col.SERVER_UUID,
+                Col.NAME,
+                Col.WEBSERVER_ADDRESS,
+                Col.INSTALLED,
+                Col.MAX_PLAYERS);
+    }
+    
     @Deprecated
     public String getColumnID() {
         return Col.SERVER_ID.get();
@@ -42,62 +49,36 @@ public class ServerTable extends Table {
 
     public final String statementSelectServerID;
     public final String statementSelectServerNameID;
-    private static final String columnServerID = "id";
-    private static final String columnServerUUID = "uuid";
-    private static final String columnServerName = "name";
-    private static final String columnWebserverAddress = "web_address";
-    private static final String columnInstalled = "is_installed";
-    private static final String columnMaxPlayers = "max_players";
     private String insertStatement;
-
-    public ServerTable(SQLDB db) {
-        super("plan_servers", db);
-        statementSelectServerID = "(" + Select.from(tableName, tableName + "." + columnServerID).where(tableName + "." + columnServerUUID + "=?").toString() + " LIMIT 1)";
-        statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + columnServerName).where(tableName + "." + columnServerID + "=?").toString() + " LIMIT 1)";
-        insertStatement = Insert.values(tableName,
-                columnServerUUID,
-                columnServerName,
-                columnWebserverAddress,
-                columnInstalled,
-                columnMaxPlayers);
-    }
 
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, columnServerID)
-                .column(columnServerUUID, Sql.varchar(36)).notNull().unique()
-                .column(columnServerName, Sql.varchar(100))
-                .column(columnWebserverAddress, Sql.varchar(100))
-                .column(columnInstalled, Sql.BOOL).notNull().defaultValue(false)
-                .column(columnMaxPlayers, Sql.INT).notNull().defaultValue("-1")
-                .primaryKey(usingMySQL, columnServerID)
+                .primaryKeyIDColumn(usingMySQL, Col.SERVER_ID)
+                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull().unique()
+                .column(Col.NAME, Sql.varchar(100))
+                .column(Col.WEBSERVER_ADDRESS, Sql.varchar(100))
+                .column(Col.INSTALLED, Sql.BOOL).notNull().defaultValue(false)
+                .column(Col.MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
+                .primaryKey(usingMySQL, Col.SERVER_ID)
                 .toString()
         );
     }
 
     public void alterTableV11() {
         if (usingMySQL) {
-            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + columnMaxPlayers + " INTEGER NOT NULL DEFAULT -1");
-        }
-    }
-
-    public void saveCurrentServerInfo(Server info) throws SQLException {
-        if (getServerID(info.getUuid()).isPresent()) {
-            updateServerInfo(info);
-        } else {
-            saveNewServerInfo(info);
+            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + Col.MAX_PLAYERS + " INTEGER NOT NULL DEFAULT -1");
         }
     }
 
     private void updateServerInfo(Server info) throws SQLException {
         String sql = Update.values(tableName,
-                columnServerUUID,
-                columnServerName,
-                columnWebserverAddress,
-                columnInstalled,
-                columnMaxPlayers)
-                .where(columnServerID + "=?")
+                Col.SERVER_UUID,
+                Col.NAME,
+                Col.WEBSERVER_ADDRESS,
+                Col.INSTALLED,
+                Col.MAX_PLAYERS)
+                .where(Col.SERVER_ID + "=?")
                 .toString();
 
         execute(new ExecStatement(sql) {
@@ -109,6 +90,44 @@ public class ServerTable extends Table {
                 statement.setBoolean(4, true);
                 statement.setInt(5, info.getMaxPlayers());
                 statement.setInt(6, info.getId());
+            }
+        });
+    }
+
+    public void saveCurrentServerInfo(Server info) throws SQLException {
+        if (getServerID(info.getUuid()).isPresent()) {
+            updateServerInfo(info);
+        } else {
+            saveNewServerInfo(info);
+        }
+    }
+
+    /**
+     * Returns server ID for a matching UUID
+     *
+     * @param serverUUID UUID of the server.
+     * @return ID or or empty optional.
+     * @throws SQLException DB Error
+     */
+    public Optional<Integer> getServerID(UUID serverUUID) throws SQLException {
+        String sql = Select.from(tableName,
+                Col.SERVER_ID)
+                .where(Col.SERVER_UUID + "=?")
+                .toString();
+
+        return query(new QueryStatement<Optional<Integer>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Optional<Integer> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getInt(Col.SERVER_ID.get()));
+                } else {
+                    return Optional.empty();
+                }
             }
         });
     }
@@ -139,36 +158,6 @@ public class ServerTable extends Table {
     }
 
     /**
-     * Returns server ID for a matching UUID
-     *
-     * @param serverUUID UUID of the server.
-     * @return ID or or empty optional.
-     * @throws SQLException DB Error
-     */
-    public Optional<Integer> getServerID(UUID serverUUID) throws SQLException {
-        String sql = Select.from(tableName,
-                columnServerID)
-                .where(columnServerUUID + "=?")
-                .toString();
-
-        return query(new QueryStatement<Optional<Integer>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Optional<Integer> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(set.getInt(columnServerID));
-                } else {
-                    return Optional.empty();
-                }
-            }
-        });
-    }
-
-    /**
      * Returns server Name for a matching UUID
      *
      * @param serverUUID UUID of the server.
@@ -177,8 +166,8 @@ public class ServerTable extends Table {
      */
     public Optional<String> getServerName(UUID serverUUID) throws SQLException {
         String sql = Select.from(tableName,
-                columnServerName)
-                .where(columnServerUUID + "=?")
+                Col.NAME)
+                .where(Col.SERVER_UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<String>>(sql) {
@@ -190,7 +179,7 @@ public class ServerTable extends Table {
             @Override
             public Optional<String> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(set.getString(columnServerName));
+                    return Optional.of(set.getString(Col.NAME.get()));
                 } else {
                     return Optional.empty();
                 }
@@ -200,7 +189,7 @@ public class ServerTable extends Table {
 
     public Map<Integer, String> getServerNamesByID() throws SQLException {
         String sql = Select.from(tableName,
-                columnServerID, columnServerName)
+                Col.SERVER_ID, Col.NAME)
                 .toString();
 
         return query(new QueryAllStatement<Map<Integer, String>>(sql) {
@@ -208,8 +197,8 @@ public class ServerTable extends Table {
             public Map<Integer, String> processResults(ResultSet set) throws SQLException {
                 Map<Integer, String> names = new HashMap<>();
                 while (set.next()) {
-                    int id = set.getInt(columnServerID);
-                    names.put(id, set.getString(columnServerName));
+                    int id = set.getInt(Col.SERVER_ID.get());
+                    names.put(id, set.getString(Col.NAME.get()));
                 }
                 return names;
             }
@@ -218,7 +207,7 @@ public class ServerTable extends Table {
 
     public Map<UUID, String> getServerNames() throws SQLException {
         String sql = Select.from(tableName,
-                columnServerUUID, columnServerName)
+                Col.SERVER_UUID, Col.NAME)
                 .toString();
 
         return query(new QueryAllStatement<Map<UUID, String>>(sql) {
@@ -226,8 +215,8 @@ public class ServerTable extends Table {
             public Map<UUID, String> processResults(ResultSet set) throws SQLException {
                 Map<UUID, String> names = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(columnServerUUID));
-                    names.put(serverUUID, set.getString(columnServerName));
+                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
+                    names.put(serverUUID, set.getString(Col.NAME.get()));
                 }
                 return names;
             }
@@ -236,7 +225,7 @@ public class ServerTable extends Table {
 
     public Map<Integer, UUID> getServerUUIDsByID() throws SQLException {
         String sql = Select.from(tableName,
-                columnServerID, columnServerUUID)
+                Col.SERVER_ID, Col.SERVER_UUID)
                 .toString();
 
         return query(new QueryAllStatement<Map<Integer, UUID>>(sql) {
@@ -244,8 +233,8 @@ public class ServerTable extends Table {
             public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
                 Map<Integer, UUID> uuids = new HashMap<>();
                 while (set.next()) {
-                    int id = set.getInt(columnServerID);
-                    uuids.put(id, UUID.fromString(set.getString(columnServerUUID)));
+                    int id = set.getInt(Col.SERVER_ID.get());
+                    uuids.put(id, UUID.fromString(set.getString(Col.SERVER_UUID.get())));
                 }
                 return uuids;
             }
@@ -260,7 +249,7 @@ public class ServerTable extends Table {
      */
     public Optional<Server> getBungeeInfo() throws SQLException {
         String sql = Select.from(tableName, "*")
-                .where(columnServerName + "=?")
+                .where(Col.NAME + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<Server>>(sql) {
@@ -273,11 +262,11 @@ public class ServerTable extends Table {
             public Optional<Server> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(new Server(
-                            set.getInt(columnServerID),
-                            UUID.fromString(set.getString(columnServerUUID)),
-                            set.getString(columnServerName),
-                            set.getString(columnWebserverAddress),
-                            set.getInt(columnMaxPlayers)));
+                            set.getInt(Col.SERVER_ID.get()),
+                            UUID.fromString(set.getString(Col.SERVER_UUID.get())),
+                            set.getString(Col.NAME.get()),
+                            set.getString(Col.WEBSERVER_ADDRESS.get()),
+                            set.getInt(Col.MAX_PLAYERS.get())));
                 } else {
                     return Optional.empty();
                 }
@@ -287,7 +276,7 @@ public class ServerTable extends Table {
 
     public Map<UUID, Server> getBukkitServers() throws SQLException {
         String sql = Select.from(tableName, "*")
-                .where(columnServerName + "!=?")
+                .where(Col.NAME + "!=?")
                 .toString();
 
         return query(new QueryStatement<Map<UUID, Server>>(sql, 100) {
@@ -300,15 +289,31 @@ public class ServerTable extends Table {
             public Map<UUID, Server> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Server> servers = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(columnServerUUID));
+                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
                     servers.put(serverUUID, new Server(
-                            set.getInt(columnServerID),
+                            set.getInt(Col.SERVER_ID.get()),
                             serverUUID,
-                            set.getString(columnServerName),
-                            set.getString(columnWebserverAddress),
-                            set.getInt(columnMaxPlayers)));
+                            set.getString(Col.NAME.get()),
+                            set.getString(Col.WEBSERVER_ADDRESS.get()),
+                            set.getInt(Col.MAX_PLAYERS.get())));
                 }
                 return servers;
+            }
+        });
+    }
+
+    public List<UUID> getServerUUIDs() throws SQLException {
+        String sql = Select.from(tableName, Col.SERVER_UUID)
+                .toString();
+
+        return query(new QueryAllStatement<List<UUID>>(sql) {
+            @Override
+            public List<UUID> processResults(ResultSet set) throws SQLException {
+                List<UUID> uuids = new ArrayList<>();
+                while (set.next()) {
+                    uuids.add(UUID.fromString(set.getString(Col.SERVER_UUID.get())));
+                }
+                return uuids;
             }
         });
     }
@@ -316,30 +321,6 @@ public class ServerTable extends Table {
     @Deprecated
     public String getColumnUUID() {
         return Col.SERVER_UUID.get();
-    }
-
-    public enum Col implements Column {
-        SERVER_ID("id"),
-        SERVER_UUID("uuid"),
-        NAME("name"),
-        WEBSERVER_ADDRESS("web_address"),
-        INSTALLED("is_installed"),
-        MAX_PLAYERS("max_players");
-
-        private final String column;
-
-        Col(String column) {
-            this.column = column;
-        }
-
-        public String get() {
-            return toString();
-        }
-
-        @Override
-        public String toString() {
-            return column;
-        }
     }
 
     public void insertAllServers(List<Server> allServer) throws SQLException {
@@ -370,26 +351,10 @@ public class ServerTable extends Table {
         });
     }
 
-    public List<UUID> getServerUUIDs() throws SQLException {
-        String sql = Select.from(tableName, columnServerUUID)
-                .toString();
-
-        return query(new QueryAllStatement<List<UUID>>(sql) {
-            @Override
-            public List<UUID> processResults(ResultSet set) throws SQLException {
-                List<UUID> uuids = new ArrayList<>();
-                while (set.next()) {
-                    uuids.add(UUID.fromString(set.getString(columnServerUUID)));
-                }
-                return uuids;
-            }
-        });
-    }
-
     public Optional<UUID> getServerUUID(String serverName) throws SQLException {
         String sql = Select.from(tableName,
-                columnServerUUID)
-                .where(columnServerName + "=?")
+                Col.SERVER_UUID)
+                .where(Col.NAME + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<UUID>>(sql) {
@@ -401,7 +366,7 @@ public class ServerTable extends Table {
             @Override
             public Optional<UUID> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(UUID.fromString(set.getString(columnServerUUID)));
+                    return Optional.of(UUID.fromString(set.getString(Col.SERVER_UUID.get())));
                 } else {
                     return Optional.empty();
                 }
@@ -411,7 +376,7 @@ public class ServerTable extends Table {
 
     public Optional<Server> getServerInfo(UUID serverUUID) throws SQLException {
         String sql = Select.from(tableName, "*")
-                .where(columnServerUUID + "=?")
+                .where(Col.SERVER_UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<Server>>(sql) {
@@ -424,11 +389,11 @@ public class ServerTable extends Table {
             public Optional<Server> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(new Server(
-                            set.getInt(columnServerID),
-                            UUID.fromString(set.getString(columnServerUUID)),
-                            set.getString(columnServerName),
-                            set.getString(columnWebserverAddress),
-                            set.getInt(columnMaxPlayers)));
+                            set.getInt(Col.SERVER_ID.get()),
+                            UUID.fromString(set.getString(Col.SERVER_UUID.get())),
+                            set.getString(Col.NAME.get()),
+                            set.getString(Col.WEBSERVER_ADDRESS.get()),
+                            set.getInt(Col.MAX_PLAYERS.get())));
                 }
                 return Optional.empty();
             }
@@ -436,7 +401,7 @@ public class ServerTable extends Table {
     }
 
     public int getMaxPlayers() throws SQLException {
-        String sql = "SELECT SUM(" + columnMaxPlayers + ") AS max FROM " + tableName;
+        String sql = "SELECT SUM(" + Col.MAX_PLAYERS + ") AS max FROM " + tableName;
 
         return query(new QueryAllStatement<Integer>(sql) {
             @Override
@@ -447,5 +412,29 @@ public class ServerTable extends Table {
                 return 0;
             }
         });
+    }
+
+    public enum Col implements Column {
+        SERVER_ID("id"),
+        SERVER_UUID("uuid"),
+        NAME("name"),
+        WEBSERVER_ADDRESS("web_address"),
+        INSTALLED("is_installed"),
+        MAX_PLAYERS("max_players");
+
+        private final String column;
+
+        Col(String column) {
+            this.column = column;
+        }
+
+        public String get() {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return column;
+        }
     }
 }

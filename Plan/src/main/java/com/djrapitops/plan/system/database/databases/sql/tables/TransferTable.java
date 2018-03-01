@@ -26,7 +26,11 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Table that represents plan_transfer in SQL database.
+ * Table that is in charge of transferring data between network servers.
+ * <p>
+ * Table Name: plan_transfer
+ * <p>
+ * For contained columns {@see Col}
  *
  * @author Rsl1122
  */
@@ -215,8 +219,8 @@ public class TransferTable extends Table {
     }
 
     public Map<UUID, String> getPlayerPluginsTabs(UUID playerUUID) throws SQLException {
-        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
                 Col.CONTENT + ", " +
                 serverUUIDColumn +
@@ -250,8 +254,8 @@ public class TransferTable extends Table {
 
     @Deprecated
     public Optional<UUID> getServerPlayerIsOnline(UUID playerUUID) throws SQLException {
-        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
                 serverUUIDColumn +
                 " FROM " + tableName +

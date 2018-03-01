@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
@@ -17,52 +18,55 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
+ * Table that is in charge of storing common IP and Geolocation data for users.
+ * <p>
+ * Table Name: plan_ips
+ * <p>
+ * For contained columns {@see Col}
+ *
  * @author Rsl1122
  */
 public class GeoInfoTable extends UserIDTable {
 
-    private static final String columnIP = "ip";
-    private static final String columnGeolocation = "geolocation";
-    private static final String columnLastUsed = "last_used";
-    private String insertStatement;
-
     public GeoInfoTable(SQLDB db) {
         super("plan_ips", db);
         insertStatement = "INSERT INTO " + tableName + " ("
-                + columnUserID + ", "
-                + columnIP + ", "
-                + columnGeolocation + ", "
-                + columnLastUsed
+                + Col.USER_ID + ", "
+                + Col.IP + ", "
+                + Col.GEOLOCATION + ", "
+                + Col.LAST_USED
                 + ") VALUES ("
                 + usersTable.statementSelectID + ", "
                 + "?, ?, ?)";
     }
 
+    private String insertStatement;
+
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .column(columnUserID, Sql.INT).notNull()
-                .column(columnIP, Sql.varchar(39)).notNull()
-                .column(columnGeolocation, Sql.varchar(50)).notNull()
-                .column(columnLastUsed, Sql.LONG).notNull().defaultValue("0")
-                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .column(Col.USER_ID, Sql.INT).notNull()
+                .column(Col.IP, Sql.varchar(39)).notNull()
+                .column(Col.GEOLOCATION, Sql.varchar(50)).notNull()
+                .column(Col.LAST_USED, Sql.LONG).notNull().defaultValue("0")
+                .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
                 .toString()
         );
     }
 
     public void alterTableV12() {
         if (usingMySQL) {
-            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + columnIP + " VARCHAR(39) NOT NULL");
+            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + Col.IP + " VARCHAR(39) NOT NULL");
         }
     }
 
     public void alterTableV13() {
-        addColumns(columnLastUsed + " bigint NOT NULL DEFAULT 0");
+        addColumns(Col.LAST_USED + " bigint NOT NULL DEFAULT 0");
     }
 
     public List<GeoInfo> getGeoInfo(UUID uuid) throws SQLException {
         String sql = "SELECT DISTINCT * FROM " + tableName +
-                " WHERE " + columnUserID + "=" + usersTable.statementSelectID;
+                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID;
 
         return query(new QueryStatement<List<GeoInfo>>(sql, 100) {
             @Override
@@ -74,12 +78,30 @@ public class GeoInfoTable extends UserIDTable {
             public List<GeoInfo> processResults(ResultSet set) throws SQLException {
                 List<GeoInfo> geoInfo = new ArrayList<>();
                 while (set.next()) {
-                    String ip = set.getString(columnIP);
-                    String geolocation = set.getString(columnGeolocation);
-                    long lastUsed = set.getLong(columnLastUsed);
+                    String ip = set.getString(Col.IP.get());
+                    String geolocation = set.getString(Col.GEOLOCATION.get());
+                    long lastUsed = set.getLong(Col.LAST_USED.get());
                     geoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
                 }
                 return geoInfo;
+            }
+        });
+    }
+
+    private void updateGeoInfo(UUID uuid, GeoInfo info) throws SQLException {
+        String sql = "UPDATE " + tableName + " SET "
+                + Col.LAST_USED + "=?" +
+                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID +
+                " AND " + Col.IP + "=?" +
+                " AND " + Col.GEOLOCATION + "=?";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, info.getLastUsed());
+                statement.setString(2, uuid.toString());
+                statement.setString(3, info.getIp());
+                statement.setString(4, info.getGeolocation());
             }
         });
     }
@@ -104,27 +126,9 @@ public class GeoInfoTable extends UserIDTable {
         });
     }
 
-    private void updateGeoInfo(UUID uuid, GeoInfo info) throws SQLException {
-        String sql = "UPDATE " + tableName + " SET "
-                + columnLastUsed + "=?" +
-                " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
-                " AND " + columnIP + "=?" +
-                " AND " + columnGeolocation + "=?";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, info.getLastUsed());
-                statement.setString(2, uuid.toString());
-                statement.setString(3, info.getIp());
-                statement.setString(4, info.getGeolocation());
-            }
-        });
-    }
-
     public Optional<String> getGeolocation(String ip) throws SQLException {
-        String sql = Select.from(tableName, columnGeolocation)
-                .where(columnIP + "=?")
+        String sql = Select.from(tableName, Col.GEOLOCATION)
+                .where(Col.IP + "=?")
                 .toString();
 
         return query(new QueryStatement<Optional<String>>(sql) {
@@ -136,7 +140,7 @@ public class GeoInfoTable extends UserIDTable {
             @Override
             public Optional<String> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(set.getString(columnGeolocation));
+                    return Optional.of(set.getString(Col.GEOLOCATION.get()));
                 }
                 return Optional.empty();
             }
@@ -144,15 +148,15 @@ public class GeoInfoTable extends UserIDTable {
     }
 
     public Map<UUID, List<GeoInfo>> getAllGeoInfo() throws SQLException {
-        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
+        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String sql = "SELECT " +
-                columnIP + ", " +
-                columnGeolocation + ", " +
-                columnLastUsed + ", " +
+                Col.IP + ", " +
+                Col.GEOLOCATION + ", " +
+                Col.LAST_USED + ", " +
                 usersUUIDColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID;
 
         return query(new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 50000) {
             @Override
@@ -163,9 +167,9 @@ public class GeoInfoTable extends UserIDTable {
 
                     List<GeoInfo> userGeoInfo = geoLocations.getOrDefault(uuid, new ArrayList<>());
 
-                    String ip = set.getString(columnIP);
-                    String geolocation = set.getString(columnGeolocation);
-                    long lastUsed = set.getLong(columnLastUsed);
+                    String ip = set.getString(Col.IP.get());
+                    String geolocation = set.getString(Col.GEOLOCATION.get());
+                    long lastUsed = set.getLong(Col.LAST_USED.get());
                     userGeoInfo.add(new GeoInfo(ip, geolocation, lastUsed));
 
                     geoLocations.put(uuid, userGeoInfo);
@@ -173,6 +177,28 @@ public class GeoInfoTable extends UserIDTable {
                 return geoLocations;
             }
         });
+    }
+
+    public enum Col implements Column {
+        USER_ID(UserIDTable.Col.USER_ID.get()),
+        IP("ip"),
+        GEOLOCATION("geolocation"),
+        LAST_USED("last_used");
+
+        private final String column;
+
+        Col(String column) {
+            this.column = column;
+        }
+
+        public String get() {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return column;
+        }
     }
 
     public void insertAllGeoInfo(Map<UUID, List<GeoInfo>> allIPsAndGeolocations) throws SQLException {

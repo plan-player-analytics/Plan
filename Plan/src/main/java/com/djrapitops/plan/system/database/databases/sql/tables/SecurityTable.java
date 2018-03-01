@@ -11,10 +11,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.Insert;
-import com.djrapitops.plan.system.database.databases.sql.statements.Select;
-import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
-import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.database.databases.sql.statements.*;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -24,40 +21,65 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Table that is in charge of storing WebUser data.
+ * <p>
+ * Table Name: plan_security
+ * <p>
+ * For contained columns {@see Col}
+ *
  * @author Rsl1122
+ * @see WebUser
  */
 public class SecurityTable extends Table {
-
-    private static final String columnUser = "username";
-    private static final String columnSaltedHash = "salted_pass_hash";
-    private static final String columnPermLevel = "permission_level";
-    private String insertStatement;
 
     public SecurityTable(SQLDB db) {
         super("plan_security", db);
         insertStatement = Insert.values(tableName,
-                columnUser,
-                columnSaltedHash,
-                columnPermLevel);
+                Col.USERNAME,
+                Col.SALT_PASSWORD_HASH,
+                Col.PERMISSION_LEVEL);
     }
+
+    private String insertStatement;
 
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .column(columnUser, Sql.varchar(100)).notNull().unique()
-                .column(columnSaltedHash, Sql.varchar(100)).notNull().unique()
-                .column(columnPermLevel, Sql.INT).notNull()
+                .column(Col.USERNAME, Sql.varchar(100)).notNull().unique()
+                .column(Col.SALT_PASSWORD_HASH, Sql.varchar(100)).notNull().unique()
+                .column(Col.PERMISSION_LEVEL, Sql.INT).notNull()
                 .toString()
         );
     }
 
     public void removeUser(String user) throws SQLException {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + columnUser + "=?)";
+        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.USERNAME + "=?)";
 
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, user);
+            }
+        });
+    }
+
+    public WebUser getWebUser(String user) throws SQLException {
+        String sql = Select.all(tableName).where(Col.USERNAME + "=?").toString();
+
+        return query(new QueryStatement<WebUser>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, user);
+            }
+
+            @Override
+            public WebUser processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    String saltedPassHash = set.getString(Col.SALT_PASSWORD_HASH.get());
+                    int permissionLevel = set.getInt(Col.PERMISSION_LEVEL.get());
+                    return new WebUser(user, saltedPassHash, permissionLevel);
+                }
+                return null;
             }
         });
     }
@@ -81,27 +103,6 @@ public class SecurityTable extends Table {
         return getWebUser(user) != null;
     }
 
-    public WebUser getWebUser(String user) throws SQLException {
-        String sql = Select.all(tableName).where(columnUser + "=?").toString();
-
-        return query(new QueryStatement<WebUser>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, user);
-            }
-
-            @Override
-            public WebUser processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    String saltedPassHash = set.getString(columnSaltedHash);
-                    int permissionLevel = set.getInt(columnPermLevel);
-                    return new WebUser(user, saltedPassHash, permissionLevel);
-                }
-                return null;
-            }
-        });
-    }
-
     public List<WebUser> getUsers() throws SQLException {
         String sql = Select.all(tableName).toString();
 
@@ -110,15 +111,36 @@ public class SecurityTable extends Table {
             public List<WebUser> processResults(ResultSet set) throws SQLException {
                 List<WebUser> list = new ArrayList<>();
                 while (set.next()) {
-                    String user = set.getString(columnUser);
-                    String saltedPassHash = set.getString(columnSaltedHash);
-                    int permissionLevel = set.getInt(columnPermLevel);
+                    String user = set.getString(Col.USERNAME.get());
+                    String saltedPassHash = set.getString(Col.SALT_PASSWORD_HASH.get());
+                    int permissionLevel = set.getInt(Col.PERMISSION_LEVEL.get());
                     WebUser info = new WebUser(user, saltedPassHash, permissionLevel);
                     list.add(info);
                 }
                 return list;
             }
         });
+    }
+
+    public enum Col implements Column {
+        USERNAME("username"),
+        SALT_PASSWORD_HASH("salted_pass_hash"),
+        PERMISSION_LEVEL("permission_level");
+
+        private final String column;
+
+        Col(String column) {
+            this.column = column;
+        }
+
+        public String get() {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return column;
+        }
     }
 
     public void addUsers(List<WebUser> users) throws SQLException {
