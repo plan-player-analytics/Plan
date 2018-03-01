@@ -191,6 +191,7 @@ public class GeoInfoTable extends UserIDTable {
             this.column = column;
         }
 
+        @Override
         public String get() {
             return toString();
         }
