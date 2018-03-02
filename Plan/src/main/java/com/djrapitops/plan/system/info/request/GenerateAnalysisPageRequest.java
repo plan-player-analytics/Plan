@@ -66,7 +66,6 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
 
     private void generateAndCache(UUID serverUUID) throws WebException {
         InfoSystem infoSystem = InfoSystem.getInstance();
-        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, AnalysisPage.getRefreshingHtml()));
         infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, analyseAndGetHtml()));
         infoSystem.updateNetworkPage();
     }

@@ -87,6 +87,7 @@ Customization:
     MaxPlayers: 2500
     MaxPlayersPlayersPage: 25000
     PlayerTableFooter: true
+    PlayerIPs: true
   Formatting:
     DecimalPoints: '#.##'
     # Dates settings use Java SimpleDateFormat.

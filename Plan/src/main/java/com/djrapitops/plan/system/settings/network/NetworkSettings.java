@@ -86,8 +86,8 @@ public class NetworkSettings {
         String[] settings = configSettings.split(SPLIT);
         UUID thisServerUUID = ServerInfo.getServerUUID();
         for (String settingAndVal : settings) {
-            String[] split = settingAndVal.split(VAL_SPLIT);
-            String setting = split[0];
+            String[] settingValSplit = settingAndVal.split(VAL_SPLIT);
+            String setting = settingValSplit[0];
             String[] pathSplit = setting.split(":");
             String path;
             if (pathSplit.length == 2) {
@@ -100,7 +100,7 @@ public class NetworkSettings {
                 path = setting;
             }
 
-            String value = split[1];
+            String value = settingValSplit.length == 2 ? settingValSplit[1] : "";
             pathValueMap.put(path, value);
         }
         return pathValueMap;
@@ -137,10 +137,17 @@ public class NetworkSettings {
         addConfigValue(configValues, Settings.DB_TYPE, "mysql");
         Settings[] sameStrings = new Settings[]{
                 Settings.DB_HOST, Settings.DB_USER, Settings.DB_PASS,
-                Settings.DB_DATABASE, Settings.FORMAT_DECIMALS, Settings.FORMAT_SECONDS,
+                Settings.DB_DATABASE, Settings.DB_LAUNCH_OPTIONS,
+                Settings.FORMAT_DECIMALS, Settings.FORMAT_SECONDS,
                 Settings.FORMAT_DAY, Settings.FORMAT_DAYS, Settings.FORMAT_HOURS,
                 Settings.FORMAT_MINUTES, Settings.FORMAT_MONTHS, Settings.FORMAT_MONTH,
-                Settings.FORMAT_YEAR, Settings.FORMAT_YEARS, Settings.FORMAT_ZERO_SECONDS
+                Settings.FORMAT_YEAR, Settings.FORMAT_YEARS, Settings.FORMAT_ZERO_SECONDS,
+                Settings.USE_SERVER_TIME, Settings.DISPLAY_SESSIONS_AS_TABLE, Settings.APPEND_WORLD_PERC,
+                Settings.ORDER_WORLD_PIE_BY_PERC, Settings.MAX_SESSIONS, Settings.MAX_PLAYERS,
+                Settings.MAX_PLAYERS_PLAYERS_PAGE, Settings.PLAYERTABLE_FOOTER, Settings.FORMAT_DATE_RECENT_DAYS,
+                Settings.FORMAT_DATE_RECENT_DAYS_PATTERN, Settings.FORMAT_DATE_CLOCK, Settings.FORMAT_DATE_NO_SECONDS,
+                Settings.FORMAT_DATE_FULL, Settings.DISPLAY_PLAYER_IPS, Settings.ACTIVE_LOGIN_THRESHOLD,
+                Settings.ACTIVE_PLAY_THRESHOLD
         };
         Log.debug("NetworkSettings: Adding Config Values..");
         for (Settings setting : sameStrings) {

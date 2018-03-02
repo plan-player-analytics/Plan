@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info.connection;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,11 +35,15 @@ public class ConnectionLog {
     }
 
     public static void logConnectionTo(Server server, InfoRequest request, int responseCode) {
-        logConnection(server.getWebAddress(), "Out: " + request.getClass().getSimpleName(), responseCode);
+        String requestName = request.getClass().getSimpleName();
+        String address = server.getWebAddress();
+        logConnection(address, "Out: " + requestName, responseCode);
+        Log.debug("ConnectionOut: " + requestName + " to " + address);
     }
 
     public static void logConnectionFrom(String server, String requestTarget, int responseCode) {
         logConnection(server, "In:  " + requestTarget, responseCode);
+        Log.debug("ConnectionIn: " + requestTarget + " from " + server);
     }
 
     private static void logConnection(String address, String infoRequestName, int responseCode) {

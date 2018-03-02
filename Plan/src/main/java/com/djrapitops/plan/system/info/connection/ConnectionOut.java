@@ -113,7 +113,6 @@ public class ConnectionOut {
             byte[] toSend = parameters.getBytes();
 
             connection.setUseCaches(false);
-            Log.debug("ConnectionOut: " + infoRequest.getClass().getSimpleName() + " to " + address);
             try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
                 out.write(toSend);
             }

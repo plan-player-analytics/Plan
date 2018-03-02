@@ -6,6 +6,7 @@ package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 
 import java.util.List;
@@ -28,10 +29,11 @@ public class GeoInfoTable extends TableContainer {
     }
 
     private void addValues(List<GeoInfo> geoInfo) {
+        boolean displayIP = Settings.DISPLAY_PLAYER_IPS.isTrue();
         for (GeoInfo info : geoInfo) {
             long date = info.getLastUsed();
             addRow(
-                    FormatUtils.formatIP(info.getIp()),
+                    displayIP ? FormatUtils.formatIP(info.getIp()) : "Hidden (Config)",
                     info.getGeolocation(),
                     date != 0 ? FormatUtils.formatTimeStampYear(date) : "-"
             );

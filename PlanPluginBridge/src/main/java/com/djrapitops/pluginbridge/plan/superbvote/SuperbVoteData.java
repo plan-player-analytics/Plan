@@ -32,7 +32,7 @@ public class SuperbVoteData extends PluginData {
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
-        int votes = store.getVotes(uuid);
+        int votes = store.getVotes(uuid).getVotes();
 
         inspectContainer.addValue(getWithIcon("Votes", "check", "teal"), votes);
 
@@ -44,7 +44,7 @@ public class SuperbVoteData extends PluginData {
         Map<UUID, Integer> votes = new HashMap<>();
         long total = 0;
         for (UUID uuid : uuids) {
-            int votesCount = store.getVotes(uuid);
+            int votesCount = store.getVotes(uuid).getVotes();
             votes.put(uuid, votesCount);
             total += votesCount;
         }
