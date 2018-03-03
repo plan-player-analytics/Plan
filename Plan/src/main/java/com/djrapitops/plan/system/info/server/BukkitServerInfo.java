@@ -51,7 +51,8 @@ public class BukkitServerInfo extends ServerInfo {
         try {
             return serverUUID.isPresent() ? updateDbInfo(serverUUID.get()) : registerServer();
         } catch (DBException e) {
-            throw new EnableException("Failed to read Server information from Database", e);
+            String causeMsg = e.getCause().getMessage();
+            throw new EnableException("Failed to read Server information from Database: " + causeMsg, e);
         } catch (IOException e) {
             throw new EnableException("Failed to read ServerInfoFile.yml", e);
         }

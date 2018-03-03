@@ -49,7 +49,8 @@ public abstract class DBSystem implements SubSystem {
             Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
             Benchmark.stop("Enable", "Init Database");
         } catch (DBInitException e) {
-            throw new EnableException("Database failed to initialize", e);
+            Throwable cause = e.getCause();
+            throw new EnableException(db.getName() + " init failure: " + cause.getMessage(), cause);
         }
     }
 

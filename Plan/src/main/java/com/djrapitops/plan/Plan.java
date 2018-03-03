@@ -19,6 +19,7 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.system.BukkitSystem;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
@@ -34,6 +35,9 @@ import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main class for Bukkit that manages the plugin.
@@ -76,9 +80,18 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             Benchmark.stop("Enable", "Enable");
             Log.logDebug("Enable");
             Log.info(Locale.get(Msg.ENABLED).toString());
+        } catch (AbstractMethodError e) {
+            Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+        } catch (EnableException e) {
+            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            Log.error("----------------------------------------");
+            Log.error("Error: " + e.getMessage());
+            Log.error("----------------------------------------");
+            onDisable();
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            Log.toLog(this.getClass(), e);
+            Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
             onDisable();
         }
         registerCommand("plan", new PlanCommand(this));

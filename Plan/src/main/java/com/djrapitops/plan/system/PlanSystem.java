@@ -136,7 +136,7 @@ public abstract class PlanSystem implements SubSystem {
             Verify.nullCheck(hookHandler, () -> new IllegalStateException("Plugin Hooks were not initialized."));
             Verify.nullCheck(planAPI, () -> new IllegalStateException("Plan API was not initialized."));
         } catch (Exception e) {
-            throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ".", e);
+            throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
 
