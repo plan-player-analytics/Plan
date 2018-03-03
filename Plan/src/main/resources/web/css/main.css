@@ -150,6 +150,11 @@
     margin: 0;
 }
 
+.help {
+    text-decoration: none;
+!important;
+}
+
 @media only screen and (max-width: 1680px) {
     .nav-button {
         font-size: 19px;
