@@ -4,6 +4,8 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.statements;
 
+import java.util.Arrays;
+
 /**
  * @author Fuzzlemann
  */
@@ -14,6 +16,10 @@ public class Update extends WhereParser {
         addSpace();
     }
 
+    public static Update values(String table, Column... values) {
+        String[] cols = Arrays.stream(values).map(Column::get).toArray(String[]::new);
+        return values(table, cols);
+    }
     public static Update values(String table, String... values) {
         Update parser = new Update(table);
 

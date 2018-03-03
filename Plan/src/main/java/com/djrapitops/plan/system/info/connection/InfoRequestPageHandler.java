@@ -64,6 +64,8 @@ public class InfoRequestPageHandler extends PageHandler {
             return 412;
         } else if (e instanceof InternalErrorException) {
             return 500;
+        } else if (e instanceof GatewayException) {
+            return 504;
         } else if (e instanceof ConnectionFailException) {
             return -1;
         } else {

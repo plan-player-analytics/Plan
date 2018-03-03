@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
+import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,7 +16,28 @@ import java.util.UUID;
  */
 public abstract class UserIDTable extends Table {
 
+    @Deprecated
     protected final String columnUserID = "user_id";
+
+    public enum Col implements Column {
+        USER_ID("user_id");
+
+        private final String column;
+
+        Col(String column) {
+            this.column = column;
+        }
+
+        @Override
+        public String get() {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return column;
+        }
+    }
     protected final UsersTable usersTable;
 
     public UserIDTable(String name, SQLDB db) {

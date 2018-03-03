@@ -5,6 +5,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -16,37 +17,40 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
+ * Table that is in charge of storing nickname data.
+ * <p>
+ * Table Name: plan_nicknames
+ * <p>
+ * For contained columns {@see Col}
+ *
  * @author Rsl1122
  */
 public class NicknamesTable extends UserIDTable {
-
-    private static final String columnNick = "nickname";
-    private static final String columnServerID = "server_id";
-
-    private final ServerTable serverTable;
-    private String insertStatement;
 
     public NicknamesTable(SQLDB db) {
         super("plan_nicknames", db);
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
-                columnUserID + ", " +
-                columnServerID + ", " +
-                columnNick +
+                Col.USER_ID + ", " +
+                Col.SERVER_ID + ", " +
+                Col.NICKNAME +
                 ") VALUES (" +
                 usersTable.statementSelectID + ", " +
                 serverTable.statementSelectServerID + ", " +
                 "?)";
     }
 
+    private final ServerTable serverTable;
+    private String insertStatement;
+
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .column(columnUserID, Sql.INT).notNull()
-                .column(columnNick, Sql.varchar(75)).notNull()
-                .column(columnServerID, Sql.INT).notNull()
-                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
-                .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
+                .column(Col.USER_ID, Sql.INT).notNull()
+                .column(Col.NICKNAME, Sql.varchar(75)).notNull()
+                .column(Col.SERVER_ID, Sql.INT).notNull()
+                .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
+                .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
                 .toString()
         );
     }
@@ -61,14 +65,14 @@ public class NicknamesTable extends UserIDTable {
      * @throws SQLException when an error at retrieval happens
      */
     public Map<UUID, List<String>> getAllNicknames(UUID uuid) throws SQLException {
-        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
-                columnNick + ", " +
+                Col.NICKNAME + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID +
-                " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")";
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID +
+                " WHERE (" + Col.USER_ID + "=" + usersTable.statementSelectID + ")";
 
         return query(new QueryStatement<Map<UUID, List<String>>>(sql, 5000) {
 
@@ -85,11 +89,50 @@ public class NicknamesTable extends UserIDTable {
 
                     List<String> nicknames = map.getOrDefault(serverUUID, new ArrayList<>());
 
-                    nicknames.add(set.getString(columnNick));
+                    nicknames.add(set.getString(Col.NICKNAME.get()));
 
                     map.put(serverUUID, nicknames);
                 }
                 return map;
+            }
+        });
+    }
+
+    /**
+     * Get nicknames of the user on a server.
+     * <p>
+     * Get's nicknames from other servers as well.
+     *
+     * @param uuid       UUID of the Player
+     * @param serverUUID UUID of the server
+     * @return The nicknames of the User
+     * @throws SQLException when an error at retrieval happens
+     */
+    public List<String> getNicknames(UUID uuid, UUID serverUUID) throws SQLException {
+        String sql = "SELECT " + Col.NICKNAME + " FROM " + tableName +
+                " WHERE (" + Col.USER_ID + "=" + usersTable.statementSelectID + ")" +
+                " AND " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
+
+        return query(new QueryStatement<List<String>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+                statement.setString(2, serverUUID.toString());
+            }
+
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> nicknames = new ArrayList<>();
+                while (set.next()) {
+                    String nickname = set.getString(Col.NICKNAME.get());
+                    if (nickname.isEmpty()) {
+                        continue;
+                    }
+                    if (!nicknames.contains(nickname)) {
+                        nicknames.add(nickname);
+                    }
+                }
+                return nicknames;
             }
         });
     }
@@ -107,41 +150,36 @@ public class NicknamesTable extends UserIDTable {
         return getNicknames(uuid, ServerInfo.getServerUUID());
     }
 
-    /**
-     * Get nicknames of the user on a server.
-     * <p>
-     * Get's nicknames from other servers as well.
-     *
-     * @param uuid       UUID of the Player
-     * @param serverUUID UUID of the server
-     * @return The nicknames of the User
-     * @throws SQLException when an error at retrieval happens
-     */
-    public List<String> getNicknames(UUID uuid, UUID serverUUID) throws SQLException {
-        String sql = "SELECT " + columnNick + " FROM " + tableName +
-                " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")" +
-                " AND " + columnServerID + "=" + serverTable.statementSelectServerID;
+    public Map<UUID, Map<UUID, List<String>>> getAllNicknames() throws SQLException {
+        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
+        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
+        String sql = "SELECT " +
+                Col.NICKNAME + ", " +
+                usersUUIDColumn + ", " +
+                serverUUIDColumn +
+                " FROM " + tableName +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
 
-        return query(new QueryStatement<List<String>>(sql, 1000) {
+        return query(new QueryAllStatement<Map<UUID, Map<UUID, List<String>>>>(sql, 5000) {
             @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-                statement.setString(2, serverUUID.toString());
-            }
-
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> nicknames = new ArrayList<>();
+            public Map<UUID, Map<UUID, List<String>>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Map<UUID, List<String>>> map = new HashMap<>();
                 while (set.next()) {
-                    String nickname = set.getString(columnNick);
-                    if (nickname.isEmpty()) {
-                        continue;
-                    }
-                    if (!nicknames.contains(nickname)) {
-                        nicknames.add(nickname);
-                    }
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
+
+                    Map<UUID, List<String>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
+                    List<String> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
+
+                    nicknames.add(set.getString(Col.NICKNAME.get()));
+
+                    serverMap.put(uuid, nicknames);
+                    map.put(serverUUID, serverMap);
                 }
-                return nicknames;
+                return map;
             }
         });
     }
@@ -162,38 +200,26 @@ public class NicknamesTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, Map<UUID, List<String>>> getAllNicknames() throws SQLException {
-        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
-        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
-        String sql = "SELECT " +
-                columnNick + ", " +
-                usersUUIDColumn + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+    public enum Col implements Column {
+        USER_ID(UserIDTable.Col.USER_ID.get()),
+        SERVER_ID("server_id"),
+        NICKNAME("nickname");
 
-        return query(new QueryAllStatement<Map<UUID, Map<UUID, List<String>>>>(sql, 5000) {
-            @Override
-            public Map<UUID, Map<UUID, List<String>>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Map<UUID, List<String>>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-                    UUID uuid = UUID.fromString(set.getString("uuid"));
+        private final String column;
 
-                    Map<UUID, List<String>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
-                    List<String> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
+        Col(String column) {
+            this.column = column;
+        }
 
-                    nicknames.add(set.getString(columnNick));
+        @Override
+        public String get() {
+            return toString();
+        }
 
-                    serverMap.put(uuid, nicknames);
-                    map.put(serverUUID, serverMap);
-                }
-                return map;
-            }
-        });
+        @Override
+        public String toString() {
+            return column;
+        }
     }
 
     public void insertNicknames(Map<UUID, Map<UUID, List<String>>> allNicknames) throws SQLException {
@@ -222,13 +248,4 @@ public class NicknamesTable extends UserIDTable {
             }
         });
     }
-
-    public String getColumnNick() {
-        return columnNick;
-    }
-
-    public String getColumnUserID() {
-        return columnUserID;
-    }
-
 }

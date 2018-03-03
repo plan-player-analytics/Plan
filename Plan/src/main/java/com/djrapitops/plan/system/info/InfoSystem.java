@@ -18,7 +18,6 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SendDBSettingsRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -30,7 +29,7 @@ import java.util.UUID;
  * Information management system.
  * <p>
  * Subclasses should decide how InfoRequests are run locally if necessary.
- *
+ * <p>
  * Everything should be called from an Async thread.
  *
  * @author Rsl1122
@@ -68,7 +67,7 @@ public abstract class InfoSystem implements SubSystem {
 
     /**
      * Refreshes Analysis page.
-     *
+     * <p>
      * No calls from non-async thread found on 09.02.2018
      *
      * @param serverUUID UUID of the server to analyze
@@ -85,7 +84,7 @@ public abstract class InfoSystem implements SubSystem {
 
     /**
      * Send an InfoRequest to another server or run locally if necessary.
-     *
+     * <p>
      * No calls from non-async thread found on 09.02.2018
      *
      * @param infoRequest InfoRequest to send or run.
@@ -94,13 +93,14 @@ public abstract class InfoSystem implements SubSystem {
     public void sendRequest(InfoRequest infoRequest) throws WebException {
         try {
             if (!connectionSystem.isServerAvailable()) {
+                Log.debug("Main server unavailable, running locally.");
                 runLocally(infoRequest);
                 return;
             }
             connectionSystem.sendInfoRequest(infoRequest);
         } catch (WebException original) {
             try {
-                // Attempt to run locally.
+                Log.debug("Exception during request: " + original.toString() + ", running locally.");
                 runLocally(infoRequest);
             } catch (NoServersException e2) {
                 throw original;
@@ -110,7 +110,7 @@ public abstract class InfoSystem implements SubSystem {
 
     /**
      * Run the InfoRequest locally.
-     *
+     * <p>
      * No calls from non-async thread found on 09.02.2018
      *
      * @param infoRequest InfoRequest to run.
@@ -121,16 +121,6 @@ public abstract class InfoSystem implements SubSystem {
     @Override
     public void enable() throws EnableException {
         connectionSystem.enable();
-        Processor.queue(() -> {
-            try {
-                updateNetworkPage();
-            } catch (NoServersException e) {
-                /* Ignored */
-            } catch (WebException e) {
-                // TODO Exception handling
-                Log.toLog(this.getClass(), e);
-            }
-        });
     }
 
     @Override
@@ -144,7 +134,7 @@ public abstract class InfoSystem implements SubSystem {
 
     /**
      * Updates Network page.
-     *
+     * <p>
      * No calls from non-async thread found on 09.02.2018
      *
      * @throws WebException If fails.
@@ -153,7 +143,7 @@ public abstract class InfoSystem implements SubSystem {
 
     /**
      * Requests Set up from Bungee.
-     *
+     * <p>
      * No calls from non-async thread found on 09.02.2018
      *
      * @param addressToRequestServer Address of Bungee server.

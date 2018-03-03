@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
+import com.djrapitops.plan.api.exceptions.connection.GatewayException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -81,7 +82,7 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
         } catch (ConnectionFailException e) {
             Throwable cause = e.getCause();
             if (!(cause instanceof SocketException) || !cause.getMessage().contains("Unexpected end of file from server")) {
-                throw e;
+                throw new GatewayException(e.getMessage());
             }
         }
 

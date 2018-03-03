@@ -896,4 +896,27 @@ public class SQLiteTest {
         assertTrue(configSettings.isPresent());
         assertEquals(testString, Base64Util.decode(configSettings.get()));
     }
+
+    @Test
+    public void testTransferSplitAndRearrange() throws SQLException {
+        StringBuilder testData = new StringBuilder();
+        for (int i = 0; i < 900000; i++) {
+            testData.append("a");
+        }
+
+        String testString = Base64Util.encode(testData.toString());
+
+        int length = testString.length();
+        System.out.println("Test String Length: " + length);
+        assertTrue(length > 500000);
+
+        System.out.println("Test Parts: " + (int) Math.ceil(length / 500000.0));
+
+        TransferTable transferTable = db.getTransferTable();
+        transferTable.storeServerHtml(TestConstants.SERVER_UUID, testString);
+
+        String result = transferTable.getServerHtml().get(TestConstants.SERVER_UUID);
+        assertNotNull(result);
+        assertEquals(testString, result);
+    }
 }

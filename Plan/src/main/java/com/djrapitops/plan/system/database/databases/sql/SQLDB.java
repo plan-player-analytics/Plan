@@ -115,7 +115,7 @@ public abstract class SQLDB extends Database {
                     cancel();
                 }
             }
-        }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay);
+        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay, TimeAmount.MINUTE.ticks() * 5L);
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class SQLDB extends Database {
 
             if (newDatabase) {
                 Log.info("New Database created.");
-                versionTable.setVersion(13);
+                versionTable.setVersion(14);
             }
 
             int version = versionTable.getVersion();
@@ -164,6 +164,10 @@ public abstract class SQLDB extends Database {
             if (version < 13) {
                 geoInfoTable.alterTableV13();
                 versionTable.setVersion(13);
+            }
+            if (version < 14) {
+                transferTable.alterTableV14();
+                versionTable.setVersion(14);
             }
         } catch (SQLException e) {
             throw new DBInitException("Failed to set-up Database", e);
@@ -232,10 +236,8 @@ public abstract class SQLDB extends Database {
     }
 
     private void clean() throws SQLException {
-        Log.info("Cleaning the database.");
         tpsTable.clean();
         transferTable.clean();
-        Log.info("Clean complete.");
     }
 
     public abstract Connection getConnection() throws SQLException;

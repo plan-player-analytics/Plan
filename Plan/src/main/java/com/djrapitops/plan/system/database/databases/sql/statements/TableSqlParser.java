@@ -32,6 +32,10 @@ public class TableSqlParser extends SqlParser {
         return new TableSqlParser("").column(column, type);
     }
 
+    public TableSqlParser column(Column column, String type) {
+        return column(column.get(), type);
+    }
+
     public TableSqlParser column(String column, String type) {
         if (columns > 0) {
             append(", ");
@@ -41,6 +45,10 @@ public class TableSqlParser extends SqlParser {
 
         columns++;
         return this;
+    }
+
+    public TableSqlParser foreignKey(Column column, String refrencedTable, Column referencedColumn) {
+        return foreignKey(column.get(), refrencedTable, referencedColumn.get());
     }
 
     public TableSqlParser foreignKey(String column, String refrencedTable, String referencedColumn) {
@@ -80,6 +88,10 @@ public class TableSqlParser extends SqlParser {
         return this;
     }
 
+    public TableSqlParser primaryKeyIDColumn(boolean mySQL, Column column) {
+        return primaryKeyIDColumn(mySQL, column.get());
+    }
+
     public TableSqlParser primaryKeyIDColumn(boolean mySQL, String column) {
         if (columns > 0) {
             append(", ");
@@ -89,6 +101,10 @@ public class TableSqlParser extends SqlParser {
         append((mySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY");
         columns++;
         return this;
+    }
+
+    public TableSqlParser primaryKey(boolean mySQL, Column column) {
+        return primaryKey(mySQL, column.get());
     }
 
     public TableSqlParser primaryKey(boolean mySQL, String column) {

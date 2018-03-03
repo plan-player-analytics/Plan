@@ -187,7 +187,7 @@ public class HtmlExport extends SpecificExport {
         to.getParentFile().mkdirs();
         if (to.exists()) {
             Files.delete(to.toPath());
-            if (to.createNewFile()) {
+            if (!to.createNewFile()) {
                 return;
             }
         }

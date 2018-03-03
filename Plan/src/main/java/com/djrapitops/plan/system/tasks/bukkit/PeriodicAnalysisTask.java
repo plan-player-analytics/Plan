@@ -27,7 +27,9 @@ public class PeriodicAnalysisTask extends AbsRunnable {
             if (!PlanPlugin.getInstance().isReloading()) {
                 Log.toLog(this.getClass(), e);
             }
-        } finally {
+        } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
+            Log.error("Periodic Analysis Task Disabled due to error, reload Plan to re-enable.");
+            Log.toLog(this.getClass(), e);
             cancel();
         }
     }

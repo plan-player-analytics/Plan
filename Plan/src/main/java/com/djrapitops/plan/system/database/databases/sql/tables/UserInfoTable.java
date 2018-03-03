@@ -10,10 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.Select;
-import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
-import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.database.databases.sql.statements.Update;
+import com.djrapitops.plan.system.database.databases.sql.statements.*;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -23,18 +20,28 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Server Specific user information table.
+ * Table that is in charge of storing server specific player data.
  * <p>
- * Represents plan_user_info.
+ * Table Name: plan_user_info
+ * <p>
+ * For contained columns {@see Col}
  *
  * @author Rsl1122
  */
 public class UserInfoTable extends UserIDTable {
 
-    private static final String columnRegistered = "registered";
-    private static final String columnOP = "opped";
-    private static final String columnBanned = "banned";
-    private static final String columnServerID = "server_id";
+    @Override
+    public void createTable() throws DBInitException {
+        createTable(TableSqlParser.createTable(tableName)
+                .column(Col.USER_ID, Sql.INT).notNull()
+                .column(Col.REGISTERED, Sql.LONG).notNull()
+                .column(Col.OP, Sql.BOOL).notNull().defaultValue(false)
+                .column(Col.BANNED, Sql.BOOL).notNull().defaultValue(false)
+                .column(Col.SERVER_ID, Sql.INT).notNull()
+                .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
+                .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
+                .toString());
+    }
 
     private final ServerTable serverTable;
 
@@ -43,28 +50,15 @@ public class UserInfoTable extends UserIDTable {
         serverTable = db.getServerTable();
     }
 
-    @Override
-    public void createTable() throws DBInitException {
-        createTable(TableSqlParser.createTable(tableName)
-                .column(columnUserID, Sql.INT).notNull()
-                .column(columnRegistered, Sql.LONG).notNull()
-                .column(columnOP, Sql.BOOL).notNull().defaultValue(false)
-                .column(columnBanned, Sql.BOOL).notNull().defaultValue(false)
-                .column(columnServerID, Sql.INT).notNull()
-                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
-                .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
-                .toString());
-    }
-
     public void registerUserInfo(UUID uuid, long registered) throws SQLException {
         if (!usersTable.isRegistered(uuid)) {
             usersTable.registerUser(uuid, registered, "Waiting for Update..");
         }
 
         String sql = "INSERT INTO " + tableName + " (" +
-                columnUserID + ", " +
-                columnRegistered + ", " +
-                columnServerID +
+                Col.USER_ID + ", " +
+                Col.REGISTERED + ", " +
+                Col.SERVER_ID +
                 ") VALUES (" +
                 usersTable.statementSelectID + ", " +
                 "?, " +
@@ -80,14 +74,10 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public boolean isRegistered(UUID uuid) throws SQLException {
-        return isRegistered(uuid, ServerInfo.getServerUUID());
-    }
-
     public boolean isRegistered(UUID uuid, UUID serverUUID) throws SQLException {
-        String sql = Select.from(tableName, "COUNT(" + columnUserID + ") as c")
-                .where(columnUserID + "=" + usersTable.statementSelectID)
-                .and(columnServerID + "=" + serverTable.statementSelectServerID)
+        String sql = Select.from(tableName, "COUNT(" + Col.USER_ID + ") as c")
+                .where(Col.USER_ID + "=" + usersTable.statementSelectID)
+                .and(Col.SERVER_ID + "=" + serverTable.statementSelectServerID)
                 .toString();
 
         return query(new QueryStatement<Boolean>(sql) {
@@ -104,9 +94,13 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
+    public boolean isRegistered(UUID uuid) throws SQLException {
+        return isRegistered(uuid, ServerInfo.getServerUUID());
+    }
+
     public void updateOpStatus(UUID uuid, boolean op) throws SQLException {
-        String sql = Update.values(tableName, columnOP)
-                .where(columnUserID + "=" + usersTable.statementSelectID)
+        String sql = Update.values(tableName, Col.OP)
+                .where(Col.USER_ID + "=" + usersTable.statementSelectID)
                 .toString();
 
         execute(new ExecStatement(sql) {
@@ -119,8 +113,8 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public void updateBanStatus(UUID uuid, boolean banned) throws SQLException {
-        String sql = Update.values(tableName, columnBanned)
-                .where(columnUserID + "=" + usersTable.statementSelectID)
+        String sql = Update.values(tableName, Col.BANNED)
+                .where(Col.USER_ID + "=" + usersTable.statementSelectID)
                 .toString();
 
         execute(new ExecStatement(sql) {
@@ -132,25 +126,21 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public UserInfo getUserInfo(UUID uuid) throws SQLException {
-        return getAllUserInfo(uuid).get(ServerInfo.getServerUUID());
-    }
-
     public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) throws SQLException {
-        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-        String usersNameColumn = usersTable + "." + usersTable.getColumnName() + " as name";
-        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String usersNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as name";
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
-                tableName + "." + columnRegistered + ", " +
-                columnBanned + ", " +
-                columnOP + ", " +
+                tableName + "." + Col.REGISTERED + ", " +
+                Col.BANNED + ", " +
+                Col.OP + ", " +
                 usersNameColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID +
-                " WHERE " + columnUserID + "=" + usersTable.statementSelectID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID +
+                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID;
 
         return query(new QueryStatement<Map<UUID, UserInfo>>(sql) {
             @Override
@@ -162,15 +152,52 @@ public class UserInfoTable extends UserIDTable {
             public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
                 Map<UUID, UserInfo> map = new HashMap<>();
                 while (set.next()) {
-                    long registered = set.getLong(columnRegistered);
-                    boolean opped = set.getBoolean(columnOP);
-                    boolean banned = set.getBoolean(columnBanned);
+                    long registered = set.getLong(Col.REGISTERED.get());
+                    boolean op = set.getBoolean(Col.OP.get());
+                    boolean banned = set.getBoolean(Col.BANNED.get());
                     String name = set.getString("name");
 
                     UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-                    map.put(serverUUID, new UserInfo(uuid, name, registered, opped, banned));
+                    map.put(serverUUID, new UserInfo(uuid, name, registered, op, banned));
                 }
                 return map;
+            }
+        });
+    }
+
+    public UserInfo getUserInfo(UUID uuid) throws SQLException {
+        return getAllUserInfo(uuid).get(ServerInfo.getServerUUID());
+    }
+
+    public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {
+        Map<UUID, String> playerNames = usersTable.getPlayerNames();
+        Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
+
+        String sql = "SELECT * FROM " + tableName +
+                " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
+
+        return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public List<UserInfo> processResults(ResultSet set) throws SQLException {
+                List<UserInfo> userInfo = new ArrayList<>();
+                while (set.next()) {
+                    long registered = set.getLong(Col.REGISTERED.get());
+                    boolean op = set.getBoolean(Col.OP.get());
+                    boolean banned = set.getBoolean(Col.BANNED.get());
+                    int userId = set.getInt(Col.USER_ID.get());
+                    UUID uuid = uuidsByID.get(userId);
+                    String name = playerNames.getOrDefault(uuid, "Unknown");
+                    UserInfo info = new UserInfo(uuid, name, registered, op, banned);
+                    if (!userInfo.contains(info)) {
+                        userInfo.add(info);
+                    }
+                }
+                return userInfo;
             }
         });
     }
@@ -184,53 +211,20 @@ public class UserInfoTable extends UserIDTable {
         return getServerUserInfo(ServerInfo.getServerUUID());
     }
 
-    public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {
-        Map<UUID, String> playerNames = usersTable.getPlayerNames();
-        Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
-
-        String sql = "SELECT * FROM " + tableName +
-                " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
-
-        return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public List<UserInfo> processResults(ResultSet set) throws SQLException {
-                List<UserInfo> userInfo = new ArrayList<>();
-                while (set.next()) {
-                    long registered = set.getLong(columnRegistered);
-                    boolean opped = set.getBoolean(columnOP);
-                    boolean banned = set.getBoolean(columnBanned);
-                    int userId = set.getInt(columnUserID);
-                    UUID uuid = uuidsByID.get(userId);
-                    String name = playerNames.getOrDefault(uuid, "Unknown");
-                    UserInfo info = new UserInfo(uuid, name, registered, opped, banned);
-                    if (!userInfo.contains(info)) {
-                        userInfo.add(info);
-                    }
-                }
-                return userInfo;
-            }
-        });
-    }
-
     public Map<UUID, List<UserInfo>> getAllUserInfo() throws SQLException {
-        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
-        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
+        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
-                tableName + "." + columnRegistered + ", " +
-                columnBanned + ", " +
-                columnOP + ", " +
+                tableName + "." + Col.REGISTERED + ", " +
+                Col.BANNED + ", " +
+                Col.OP + ", " +
                 usersUUIDColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
 
         return query(new QueryAllStatement<Map<UUID, List<UserInfo>>>(sql, 50000) {
             @Override
@@ -242,9 +236,9 @@ public class UserInfoTable extends UserIDTable {
 
                     List<UserInfo> userInfos = serverMap.getOrDefault(serverUUID, new ArrayList<>());
 
-                    long registered = set.getLong(columnRegistered);
-                    boolean banned = set.getBoolean(columnBanned);
-                    boolean op = set.getBoolean(columnOP);
+                    long registered = set.getLong(Col.REGISTERED.get());
+                    boolean banned = set.getBoolean(Col.BANNED.get());
+                    boolean op = set.getBoolean(Col.OP.get());
 
                     userInfos.add(new UserInfo(uuid, "", registered, op, banned));
 
@@ -261,11 +255,11 @@ public class UserInfoTable extends UserIDTable {
         }
 
         String sql = "INSERT INTO " + tableName + " (" +
-                columnUserID + ", " +
-                columnRegistered + ", " +
-                columnServerID + ", " +
-                columnBanned + ", " +
-                columnOP +
+                Col.USER_ID + ", " +
+                Col.REGISTERED + ", " +
+                Col.SERVER_ID + ", " +
+                Col.BANNED + ", " +
+                Col.OP +
                 ") VALUES (" +
                 usersTable.statementSelectID + ", " +
                 "?, " +
@@ -292,16 +286,16 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public Map<UUID, Set<UUID>> getSavedUUIDs() throws SQLException {
-        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
-        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
+        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
                 usersUUIDColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
 
         return query(new QueryAllStatement<Map<UUID, Set<UUID>>>(sql, 50000) {
             @Override
@@ -323,9 +317,9 @@ public class UserInfoTable extends UserIDTable {
 
     public int getServerUserCount(UUID serverUUID) throws SQLException {
         String sql = "SELECT " +
-                " COUNT(" + columnRegistered + ") as c" +
+                " COUNT(" + Col.REGISTERED + ") as c" +
                 " FROM " + tableName +
-                " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
+                " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
 
         return query(new QueryAllStatement<Integer>(sql, 20000) {
             @Override
@@ -341,6 +335,30 @@ public class UserInfoTable extends UserIDTable {
                 return 0;
             }
         });
+    }
+
+    public enum Col implements Column {
+        USER_ID(UserIDTable.Col.USER_ID.get()),
+        SERVER_ID("server_id"),
+        REGISTERED("registered"),
+        OP("opped"),
+        BANNED("banned");
+
+        private final String column;
+
+        Col(String column) {
+            this.column = column;
+        }
+
+        @Override
+        public String get() {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return column;
+        }
     }
 
     // TODO improve performance of this method.

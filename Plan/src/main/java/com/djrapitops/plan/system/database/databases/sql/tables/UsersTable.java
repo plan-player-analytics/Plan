@@ -15,36 +15,37 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
+ * Table that is in charge of storing common player data for all servers.
+ * <p>
+ * Table Name: plan_users
+ * <p>
+ * For contained columns {@see Col}
+ *
  * @author Rsl1122
  */
 public class UsersTable extends UserIDTable {
 
-    public final String statementSelectID;
-    private static final String columnID = "id";
-    private static final String columnUUID = "uuid";
-    private static final String columnRegistered = "registered";
-    private static final String columnName = "name";
-    private static final String columnTimesKicked = "times_kicked";
-    private String insertStatement;
-
     public UsersTable(SQLDB db) {
         super("plan_users", db);
-        statementSelectID = "(" + Select.from(tableName, tableName + "." + columnID).where(columnUUID + "=?").toString() + " LIMIT 1)";
+        statementSelectID = "(" + Select.from(tableName, tableName + "." + Col.ID).where(Col.UUID + "=?").toString() + " LIMIT 1)";
         insertStatement = Insert.values(tableName,
-                columnUUID,
-                columnRegistered,
-                columnName);
+                Col.UUID,
+                Col.REGISTERED,
+                Col.USER_NAME);
     }
+
+    public final String statementSelectID;
+    private String insertStatement;
 
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, columnID)
-                .column(columnUUID, Sql.varchar(36)).notNull().unique()
-                .column(columnRegistered, Sql.LONG).notNull()
-                .column(columnName, Sql.varchar(16)).notNull()
-                .column(columnTimesKicked, Sql.INT).notNull().defaultValue("0")
-                .primaryKey(usingMySQL, columnID)
+                .primaryKeyIDColumn(usingMySQL, Col.ID)
+                .column(Col.UUID, Sql.varchar(36)).notNull().unique()
+                .column(Col.REGISTERED, Sql.LONG).notNull()
+                .column(Col.USER_NAME, Sql.varchar(16)).notNull()
+                .column(Col.TIMES_KICKED, Sql.INT).notNull().defaultValue("0")
+                .primaryKey(usingMySQL, Col.ID)
                 .toString()
         );
     }
@@ -54,14 +55,14 @@ public class UsersTable extends UserIDTable {
      * @throws SQLException when an error at retrieving the UUIDs happens
      */
     public Set<UUID> getSavedUUIDs() throws SQLException {
-        String sql = Select.from(tableName, columnUUID).toString();
+        String sql = Select.from(tableName, Col.UUID).toString();
 
         return query(new QueryAllStatement<Set<UUID>>(sql, 50000) {
             @Override
             public Set<UUID> processResults(ResultSet set) throws SQLException {
                 Set<UUID> uuids = new HashSet<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(columnUUID));
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
                     uuids.add(uuid);
                 }
                 return uuids;
@@ -77,7 +78,7 @@ public class UsersTable extends UserIDTable {
      */
     @Override
     public void removeUser(UUID uuid) throws SQLException {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + columnUUID + "=?)";
+        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.UUID + "=?)";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -90,15 +91,17 @@ public class UsersTable extends UserIDTable {
     /**
      * @return the name of the column that inherits the ID.
      */
+    @Deprecated
     public String getColumnID() {
-        return columnID;
+        return Col.ID.get();
     }
 
     /**
      * @return the name of the column that inherits the UUID.
      */
+    @Deprecated
     public String getColumnUUID() {
-        return columnUUID;
+        return Col.UUID.get();
     }
 
     /**
@@ -109,8 +112,8 @@ public class UsersTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public UUID getUuidOf(String playerName) throws SQLException {
-        String sql = Select.from(tableName, columnUUID)
-                .where("UPPER(" + columnName + ")=UPPER(?)")
+        String sql = Select.from(tableName, Col.UUID)
+                .where("UPPER(" + Col.USER_NAME + ")=UPPER(?)")
                 .toString();
 
         return query(new QueryStatement<UUID>(sql) {
@@ -122,7 +125,7 @@ public class UsersTable extends UserIDTable {
             @Override
             public UUID processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    String uuidS = set.getString(columnUUID);
+                    String uuidS = set.getString(Col.UUID.get());
                     return UUID.fromString(uuidS);
                 }
                 return null;
@@ -131,16 +134,34 @@ public class UsersTable extends UserIDTable {
     }
 
     public List<Long> getRegisterDates() throws SQLException {
-        String sql = Select.from(tableName, columnRegistered).toString();
+        String sql = Select.from(tableName, Col.REGISTERED).toString();
 
         return query(new QueryAllStatement<List<Long>>(sql, 50000) {
             @Override
             public List<Long> processResults(ResultSet set) throws SQLException {
                 List<Long> registerDates = new ArrayList<>();
                 while (set.next()) {
-                    registerDates.add(set.getLong(columnRegistered));
+                    registerDates.add(set.getLong(Col.REGISTERED.get()));
                 }
                 return registerDates;
+            }
+        });
+    }
+
+    public boolean isRegistered(UUID uuid) throws SQLException {
+        String sql = Select.from(tableName, "COUNT(" + Col.ID + ") as c")
+                .where(Col.UUID + "=?")
+                .toString();
+
+        return query(new QueryStatement<Boolean>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                return set.next() && set.getInt("c") >= 1;
             }
         });
     }
@@ -167,27 +188,9 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public boolean isRegistered(UUID uuid) throws SQLException {
-        String sql = Select.from(tableName, "COUNT(" + columnID + ") as c")
-                .where(columnUUID + "=?")
-                .toString();
-
-        return query(new QueryStatement<Boolean>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Boolean processResults(ResultSet set) throws SQLException {
-                return set.next() && set.getInt("c") >= 1;
-            }
-        });
-    }
-
     public void updateName(UUID uuid, String name) throws SQLException {
-        String sql = Update.values(tableName, columnName)
-                .where(columnUUID + "=?")
+        String sql = Update.values(tableName, Col.USER_NAME.get())
+                .where(Col.UUID + "=?")
                 .toString();
 
         execute(new ExecStatement(sql) {
@@ -200,8 +203,8 @@ public class UsersTable extends UserIDTable {
     }
 
     public int getTimesKicked(UUID uuid) throws SQLException {
-        String sql = Select.from(tableName, columnTimesKicked)
-                .where(columnUUID + "=?")
+        String sql = Select.from(tableName, Col.TIMES_KICKED)
+                .where(Col.UUID + "=?")
                 .toString();
 
         return query(new QueryStatement<Integer>(sql) {
@@ -213,7 +216,7 @@ public class UsersTable extends UserIDTable {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return set.getInt(columnTimesKicked);
+                    return set.getInt(Col.TIMES_KICKED.get());
                 }
                 return 0;
             }
@@ -222,8 +225,8 @@ public class UsersTable extends UserIDTable {
 
     public void kicked(UUID uuid) throws SQLException {
         String sql = "UPDATE " + tableName + " SET "
-                + columnTimesKicked + "=" + columnTimesKicked + "+ 1" +
-                " WHERE " + columnUUID + "=?";
+                + Col.TIMES_KICKED + "=" + Col.TIMES_KICKED + "+ 1" +
+                " WHERE " + Col.UUID + "=?";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -234,7 +237,7 @@ public class UsersTable extends UserIDTable {
     }
 
     public String getPlayerName(UUID uuid) throws SQLException {
-        String sql = Select.from(tableName, columnName).where(columnUUID + "=?").toString();
+        String sql = Select.from(tableName, Col.USER_NAME).where(Col.UUID + "=?").toString();
 
         return query(new QueryStatement<String>(sql) {
             @Override
@@ -245,7 +248,7 @@ public class UsersTable extends UserIDTable {
             @Override
             public String processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return set.getString(columnName);
+                    return set.getString(Col.USER_NAME.get());
                 }
                 return null;
             }
@@ -262,11 +265,11 @@ public class UsersTable extends UserIDTable {
     public List<String> getMatchingNames(String name) throws SQLException {
         String searchString = "%" + name.toLowerCase() + "%";
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        String sql = "SELECT DISTINCT " + columnName + " FROM " + tableName +
-                " WHERE " + columnName + " LIKE ?" +
-                " UNION SELECT DISTINCT " + columnName + " FROM " + tableName +
-                " INNER JOIN " + nicknamesTable + " on " + columnID + "=" + nicknamesTable + "." + nicknamesTable.getColumnUserID() +
-                " WHERE " + nicknamesTable.getColumnNick() + " LIKE ?";
+        String sql = "SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
+                " WHERE " + Col.USER_NAME + " LIKE ?" +
+                " UNION SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
+                " INNER JOIN " + nicknamesTable + " on " + Col.ID + "=" + nicknamesTable + "." + NicknamesTable.Col.USER_ID +
+                " WHERE " + NicknamesTable.Col.NICKNAME + " LIKE ?";
 
         return query(new QueryStatement<List<String>>(sql, 5000) {
             @Override
@@ -289,8 +292,28 @@ public class UsersTable extends UserIDTable {
         });
     }
 
+    @Deprecated
     public String getColumnName() {
-        return columnName;
+        return Col.USER_NAME.get();
+    }
+
+    public Map<UUID, UserInfo> getUsers() throws SQLException {
+        String sql = Select.all(tableName).toString();
+
+        return query(new QueryAllStatement<Map<UUID, UserInfo>>(sql, 20000) {
+            @Override
+            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
+                Map<UUID, UserInfo> users = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    String name = set.getString(Col.USER_NAME.get());
+                    long registered = set.getLong(Col.REGISTERED.get());
+
+                    users.put(uuid, new UserInfo(uuid, name, registered, false, false));
+                }
+                return users;
+            }
+        });
     }
 
     /**
@@ -325,31 +348,12 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, UserInfo> getUsers() throws SQLException {
-        String sql = Select.all(tableName).toString();
-
-        return query(new QueryAllStatement<Map<UUID, UserInfo>>(sql, 20000) {
-            @Override
-            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
-                Map<UUID, UserInfo> users = new HashMap<>();
-                while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(columnUUID));
-                    String name = set.getString(columnName);
-                    long registered = set.getLong(columnRegistered);
-
-                    users.put(uuid, new UserInfo(uuid, name, registered, false, false));
-                }
-                return users;
-            }
-        });
-    }
-
     public void updateKicked(Map<UUID, Integer> timesKicked) throws SQLException {
         if (Verify.isEmpty(timesKicked)) {
             return;
         }
 
-        String sql = "UPDATE " + tableName + " SET " + columnTimesKicked + "=? WHERE " + columnUUID + "=?";
+        String sql = "UPDATE " + tableName + " SET " + Col.TIMES_KICKED + "=? WHERE " + Col.UUID + "=?";
 
         executeBatch(new ExecStatement(sql) {
             @Override
@@ -366,15 +370,15 @@ public class UsersTable extends UserIDTable {
     }
 
     public Map<UUID, Integer> getAllTimesKicked() throws SQLException {
-        String sql = Select.from(tableName, columnUUID, columnTimesKicked).toString();
+        String sql = Select.from(tableName, Col.UUID, Col.TIMES_KICKED).toString();
 
         return query(new QueryAllStatement<Map<UUID, Integer>>(sql, 20000) {
             @Override
             public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Integer> timesKicked = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(columnUUID));
-                    int kickCount = set.getInt(columnTimesKicked);
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    int kickCount = set.getInt(Col.TIMES_KICKED.get());
 
                     timesKicked.put(uuid, kickCount);
                 }
@@ -384,19 +388,38 @@ public class UsersTable extends UserIDTable {
     }
 
     public Map<UUID, String> getPlayerNames() throws SQLException {
-        String sql = Select.from(tableName, columnUUID, columnName).toString();
+        String sql = Select.from(tableName, Col.UUID, Col.USER_NAME).toString();
 
         return query(new QueryAllStatement<Map<UUID, String>>(sql, 20000) {
             @Override
             public Map<UUID, String> processResults(ResultSet set) throws SQLException {
                 Map<UUID, String> names = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(columnUUID));
-                    String name = set.getString(columnName);
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    String name = set.getString(Col.USER_NAME.get());
 
                     names.put(uuid, name);
                 }
                 return names;
+            }
+        });
+    }
+
+    public Optional<Long> getRegisterDate(UUID uuid) throws SQLException {
+        String sql = Select.from(tableName, Col.REGISTERED).where(Col.UUID + "=?").toString();
+
+        return query(new QueryStatement<Optional<Long>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+
+            @Override
+            public Optional<Long> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getLong(Col.REGISTERED.get()));
+                }
+                return Optional.empty();
             }
         });
     }
@@ -415,27 +438,8 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public Optional<Long> getRegisterDate(UUID uuid) throws SQLException {
-        String sql = Select.from(tableName, columnRegistered).where(columnUUID + "=?").toString();
-
-        return query(new QueryStatement<Optional<Long>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Optional<Long> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(set.getLong(columnRegistered));
-                }
-                return Optional.empty();
-            }
-        });
-    }
-
     public Map<Integer, UUID> getUUIDsByID() throws SQLException {
-        String sql = Select.from(tableName, columnID, columnUUID).toString();
+        String sql = Select.from(tableName, Col.ID, Col.UUID).toString();
 
         return query(new QueryAllStatement<Map<Integer, UUID>>(sql, 20000) {
             @Override
@@ -443,13 +447,37 @@ public class UsersTable extends UserIDTable {
                 Map<Integer, UUID> uuidsByID = new TreeMap<>();
 
                 while (set.next()) {
-                    int id = set.getInt(columnID);
-                    UUID uuid = UUID.fromString(set.getString(columnUUID));
+                    int id = set.getInt(Col.ID.get());
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
                     uuidsByID.put(id, uuid);
                 }
 
                 return uuidsByID;
             }
         });
+    }
+
+    public enum Col implements Column {
+        ID("id"),
+        UUID("uuid"),
+        REGISTERED("registered"),
+        USER_NAME("name"),
+        TIMES_KICKED("times_kicked");
+
+        private final String column;
+
+        Col(String column) {
+            this.column = column;
+        }
+
+        @Override
+        public String get() {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return column;
+        }
     }
 }
