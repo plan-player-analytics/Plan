@@ -234,7 +234,19 @@
                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                     <div class="card">
                         <div class="header">
-                            <h2><i class="col-blue fa fa-area-chart"></i> Network Online Activity</h2>
+                            <div class="col-xs-6 col-sm-6 col-lg-6">
+                                <h2><i class="col-blue fa fa-area-chart"></i> Network Online Activity</h2>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-lg-6">
+                                <a href="javascript:void(0)" class="help material-icons pull-right"
+                                   data-trigger="focus" data-toggle="popover" data-placement="left"
+                                   data-container="body" data-html="true"
+                                   data-original-title="Player Online Activity"
+                                   data-content="Chart of Player Counts, recorded by Bungee TPS task.
+                                               <br><br>TPS task starts 50 seconds after Plan enables and records Maximum player count for each minute.
+                                               <br><br>Despite its name, on Bungee only Player count is recorded."
+                                >help_outline</a>
+                            </div>
                         </div>
                         <div class="body">
                             <div id="playerChartDay" class="dashboard-flot-chart"></div>
