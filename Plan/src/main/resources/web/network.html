@@ -113,8 +113,23 @@
         <!-- #Menu -->
         <!-- Footer -->
         <div class="legal">
-            <div class="version">
-                <b>Player Analytics: </b> v${version}
+            <div class="row clearfix">
+                <div class="col-xs-10 col-sm-10 col-lg-10">
+                    <div class="version">
+                        <b>Player Analytics: </b> v${version}
+                    </div>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-lg-2">
+                    <a href="javascript:void(0)" class="help material-icons pull-right"
+                       data-trigger="focus" data-toggle="popover" data-placement="top"
+                       data-container="body" data-html="true"
+                       data-original-title="Player Analytics"
+                       data-content="Author: Rsl1122
+                       <br><br>Tutorials: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki&quot;>Link</a>
+                       <br>Issues: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/issues&quot;>Link</a>
+                       <br><br>Discord: <a target=&quot;_blank&quot; href=&quot;https://discord.gg/yXKmjzT&quot;>Link</a>"
+                    >help_outline</a>
+                </div>
             </div>
         </div>
         <!-- #Footer -->
@@ -260,6 +275,9 @@
                                     <i class="col-light-green fa fa-user-plus"></i> New | 24h
                                     <span class="pull-right"><b>${playersNewDay}</b></span>
                                 </li>
+                            </ul>
+                            <hr>
+                            <ul class="dashboard-stat-list">
                                 <li>
                                     <i class="col-blue fa fa-users"></i> Unique | 7d
                                     <span class="pull-right"><b>${playersUniqueWeek}</b></span>
@@ -268,6 +286,9 @@
                                     <i class="col-light-green fa fa-user-plus"></i> New | 7d
                                     <span class="pull-right"><b>${playersNewWeek}</b></span>
                                 </li>
+                            </ul>
+                            <hr>
+                            <ul class="dashboard-stat-list">
                                 <li>
                                     <i class="col-blue fa fa-users"></i> Unique | 30d
                                     <span class="pull-right"><b>${playersUniqueMonth}</b></span>
@@ -320,7 +341,7 @@
         time: {
             timezoneOffset: ${timeZone} * 60
         }
-    });
+    })
     // Data Variables
     var playersOnlineSeries = {
         name: 'Players Online',
