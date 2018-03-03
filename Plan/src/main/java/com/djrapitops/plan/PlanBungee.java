@@ -45,15 +45,15 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         } catch (AbstractMethodError e) {
             Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
             Log.error("----------------------------------------");
             Log.error("Error: " + e.getMessage());
             Log.error("----------------------------------------");
+            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
             onDisable();
         } catch (Exception e) {
+            Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
             Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
             Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
-            Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
             onDisable();
         }
         registerCommand("planbungee", new PlanBungeeCommand(this));
