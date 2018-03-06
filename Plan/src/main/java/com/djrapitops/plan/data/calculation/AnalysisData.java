@@ -23,6 +23,7 @@ import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
 import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
 import com.djrapitops.plan.utilities.html.graphs.WorldMap;
+import com.djrapitops.plan.utilities.html.graphs.calendar.ServerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.line.*;
 import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
@@ -127,6 +128,11 @@ public class AnalysisData extends RawData {
         onlineActivityNumbers(profile, sessions, players);
         geolocationsTab(geoLocations);
         commandUsage(commandUsage);
+
+        List<Long> registered = profile.getPlayers().stream().map(PlayerProfile::getRegistered).collect(Collectors.toList());
+        ServerCalendar serverCalendar = new ServerCalendar(registered, sessions);
+        addValue("calendarSeries", serverCalendar.toCalendarSeries());
+        addValue("firstDay", 1);
 
         addValue("ops", ops.size());
         addValue("playersTotal", playersTotal);

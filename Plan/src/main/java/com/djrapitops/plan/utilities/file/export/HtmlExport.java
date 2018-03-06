@@ -138,7 +138,8 @@ public class HtmlExport extends SpecificExport {
                 "web/js/charts/serverPie.js",
                 "web/js/charts/worldPie.js",
                 "web/js/charts/healthGauge.js",
-                "web/js/charts/sessionCalendar.js"
+                "web/js/charts/sessionCalendar.js",
+                "web/js/charts/onlineActivityCalendar.js"
         };
         copyFromJar(resources);
 

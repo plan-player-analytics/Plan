@@ -1,7 +1,6 @@
-function sessionCalendar(id, events, firstDay) {
+function onlineActivityCalendar(id, events, firstDay) {
     $(id).fullCalendar({
-        eventColor: '#009688',
-        eventLimit: 4,
+        eventColor: '#2196F3',
         firstDay: firstDay,
 
         eventRender: function (eventObj, $el) {
@@ -15,12 +14,11 @@ function sessionCalendar(id, events, firstDay) {
 
         events: events,
 
-        navLinks: true,
         height: 'parent',
         header: {
             left: 'title',
             center: '',
-            right: 'month agendaWeek agendaDay today prev,next'
+            right: 'month prev,next'
         }
     });
 
