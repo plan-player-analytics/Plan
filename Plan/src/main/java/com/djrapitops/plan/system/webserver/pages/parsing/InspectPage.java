@@ -25,6 +25,7 @@ import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
+import com.djrapitops.plan.utilities.html.graphs.PlayerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
@@ -125,6 +126,11 @@ public class InspectPage extends Page {
         String[] sessionsAccordion = HtmlStructure.createSessionsTabContentInspectPage(sessionsByServerName, allSessions, uuid);
 
         ServerAccordion serverAccordion = new ServerAccordion(profile, serverNames);
+
+        PlayerCalendar playerCalendar = new PlayerCalendar(allSessions, registered);
+
+        addValue("calendarSeries", playerCalendar.toCalendarSeries());
+        addValue("firstDay", 1);
 
         addValue("accordionSessions", sessionsAccordion[0]);
         addValue("accordionServers", serverAccordion.toHtml());

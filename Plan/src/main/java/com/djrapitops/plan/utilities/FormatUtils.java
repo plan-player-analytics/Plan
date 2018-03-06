@@ -47,6 +47,12 @@ public class FormatUtils {
         return formatMilliseconds(Math.abs(after - before));
     }
 
+    public static String formatTimeStampISO8601NoClock(long epochMs) {
+        String format = "yyyy-MM-dd";
+
+        return format(epochMs, format);
+    }
+
     public static String formatTimeStampDay(long epochMs) {
         String format = "MMMMM d";
 

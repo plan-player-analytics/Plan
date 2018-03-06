@@ -454,6 +454,26 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <h2><i class="col-teal fa fa-calendar-o"></i> Session Calendar</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Session Calendar"
+                                           data-content="Calendar that contains information about sessions for each day.<br><br>Day numbers can be clicked to inspect a particular day in higher detail.<br><br>If a title is not visible you can hover over the box to see the title."
+                                        >help_outline</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="body">
+                                <div id="sessionCalendar" style="height: 500px;" class="dashboard-flot-chart"></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-teal fa fa-calendar"></i> Most Recent Sessions</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
@@ -646,6 +666,11 @@
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
 <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 
+<!-- FullCalendar -->
+<link rel='stylesheet' href='../plugins/fullcalendar/fullcalendar.min.css'/>
+<script src='../plugins/momentjs/moment.js'></script>
+<script src='../plugins/fullcalendar/fullcalendar.min.js'></script>
+
 <!-- Font Awesome -->
 <script src="../plugins/font-awesome/fa-script.js"></script>
 
@@ -656,13 +681,14 @@
 <script src="../js/charts/punchCard.js"></script>
 <script src="../js/charts/serverPie.js"></script>
 <script src="../js/charts/worldPie.js"></script>
+<script src="../js/charts/sessionCalendar.js"></script>
 
 <!-- Chart Data -->
 <script>
     Highcharts.setOptions({
         time: {
             timezoneOffset: ${timeZone} * 60
-        }
+    }
     })
     var serverSeries = {
         name: 'Server Playtime',
@@ -682,12 +708,15 @@
         color: '#222',
         data: ${punchCardSeries}
     };
+    var calendarSeries =;
+    ${calendarSeries}
+    var firstDay =
+    ${firstDay}
 </script>
 
 <!-- Plan laod script -->
 <script>
     $(function () {
-
         $('.player-table').DataTable({
             responsive: true
         });
@@ -712,6 +741,7 @@
         worldPie('worldPie', worldSeries, gmSeries);
         serverPie('serverPie', serverSeries);
         punchCard('punchCard', punchcardSeries);
+        sessionCalendar('#sessionCalendar', calendarSeries, firstDay);
         ${sessionTabGraphViewFunctions}
 
         /**/
