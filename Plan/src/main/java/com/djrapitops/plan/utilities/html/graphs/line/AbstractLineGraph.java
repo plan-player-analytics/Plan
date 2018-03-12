@@ -5,9 +5,11 @@
  */
 package com.djrapitops.plan.utilities.html.graphs.line;
 
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.graphs.HighChart;
 import com.djrapitops.plan.utilities.html.graphs.line.alg.DouglasPeuckerAlgorithm;
 import com.djrapitops.plan.utilities.html.graphs.line.alg.ReduceGapTriangles;
+import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,10 +47,16 @@ public class AbstractLineGraph implements HighChart {
         }
 
         int size = points.size();
+        Long lastX = null;
+        boolean addMissingPoints = Settings.DISPLAY_GAPS_IN_GRAPH_DATA.isTrue();
         for (int i = 0; i < size; i++) {
             Point point = points.get(i);
             Double y = point.getY();
             long date = (long) point.getX();
+            if (addMissingPoints && lastX != null && date - lastX > TimeAmount.MINUTE.ms() * 3L) {
+                addMissingPoints(arrayBuilder, lastX, date);
+            }
+            lastX = date;
             arrayBuilder.append("[").append(date).append(",").append(y).append("]");
             if (i < size - 1) {
                 arrayBuilder.append(",");
@@ -57,6 +65,14 @@ public class AbstractLineGraph implements HighChart {
 
         arrayBuilder.append("]");
         return arrayBuilder.toString();
+    }
+
+    private void addMissingPoints(StringBuilder arrayBuilder, Long lastX, long date) {
+        long iterate = lastX + TimeAmount.MINUTE.ms();
+        while (iterate < date) {
+            arrayBuilder.append("[").append(iterate).append(",null],");
+            iterate += TimeAmount.MINUTE.ms() * 30L;
+        }
     }
 
     public void reduceGapTriangles() {

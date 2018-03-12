@@ -15,6 +15,10 @@ public class Point {
         this.y = y;
     }
 
+    public Point(double x, double y) {
+        this(x, (Double) y);
+    }
+
     public double getX() {
         return x;
     }

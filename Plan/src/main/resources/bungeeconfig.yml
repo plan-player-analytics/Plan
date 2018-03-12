@@ -74,6 +74,7 @@ Customization:
     MaxPlayersPlayersPage: 25000
     PlayerTableFooter: true
     PlayerIPs: true
+    GapsInGraphData: false
   Formatting:
     DecimalPoints: '#.##'
     Dates:

@@ -147,7 +147,7 @@ public class NetworkSettings {
                 Settings.MAX_PLAYERS_PLAYERS_PAGE, Settings.PLAYERTABLE_FOOTER, Settings.FORMAT_DATE_RECENT_DAYS,
                 Settings.FORMAT_DATE_RECENT_DAYS_PATTERN, Settings.FORMAT_DATE_CLOCK, Settings.FORMAT_DATE_NO_SECONDS,
                 Settings.FORMAT_DATE_FULL, Settings.DISPLAY_PLAYER_IPS, Settings.ACTIVE_LOGIN_THRESHOLD,
-                Settings.ACTIVE_PLAY_THRESHOLD
+                Settings.ACTIVE_PLAY_THRESHOLD, Settings.DISPLAY_GAPS_IN_GRAPH_DATA
         };
         Log.debug("NetworkSettings: Adding Config Values..");
         for (Settings setting : sameStrings) {

@@ -23,6 +23,10 @@ function playersChart(id, playersOnlineSeries, sel) {
 				text: 'All'
 			}]
 		},
+        yAxis: {
+            softMax: 2,
+            softMin: 0
+        },
 		title: {text: ''},
 		plotOptions: {
 			areaspline: {
