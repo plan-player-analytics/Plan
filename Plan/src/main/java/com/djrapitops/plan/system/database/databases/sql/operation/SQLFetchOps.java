@@ -416,4 +416,13 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             throw SQLErrorUtil.getExceptionFor(e);
         }
     }
+
+    @Override
+    public List<String> getNetworkGeolocations() throws DBException {
+        try {
+            return geoInfoTable.getNetworkGeolocations();
+        } catch (SQLException e) {
+            throw SQLErrorUtil.getExceptionFor(e);
+        }
+    }
 }

@@ -23,8 +23,7 @@ import utilities.mocks.objects.TestLogger;
 import java.io.File;
 import java.util.HashSet;
 
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Mocking Utility for Bungee version of Plan (PlanBungee).
@@ -53,8 +52,10 @@ public class BungeeMockUtil extends MockUtil {
         StaticHolder.saveInstance(MockitoJUnitRunner.class, PlanBungee.class);
         StaticHolder.saveInstance(ThreadRunnable.class, PlanBungee.class);
 
-        doCallRealMethod().when(planMock).getVersion();
-        doCallRealMethod().when(planMock).getColorScheme();
+        when(planMock.getVersion()).thenCallRealMethod();
+        when(planMock.getColorScheme()).thenCallRealMethod();
+//        doCallRealMethod().when(planMock).getVersion();
+//        doCallRealMethod().when(planMock).getColorScheme();
         return this;
     }
 
@@ -71,7 +72,7 @@ public class BungeeMockUtil extends MockUtil {
     public BungeeMockUtil withLogging() {
         doCallRealMethod().when(planMock).log(Mockito.anyString(), Mockito.anyString());
         TestLogger testLogger = new TestLogger();
-        when(planMock.getLogger()).thenReturn(testLogger);
+        doReturn(testLogger).when(planMock).getLogger();
         return this;
     }
 

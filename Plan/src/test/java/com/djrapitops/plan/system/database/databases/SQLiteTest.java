@@ -919,4 +919,31 @@ public class SQLiteTest {
         assertNotNull(result);
         assertEquals(testString, result);
     }
+
+    @Test
+    public void testGetNetworkGeolocations() throws SQLException {
+        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
+        UUID firstUuid = UUID.randomUUID();
+        UUID secondUuid = UUID.randomUUID();
+        UUID thirdUuid = UUID.randomUUID();
+
+        UsersTable usersTable = db.getUsersTable();
+        usersTable.registerUser(firstUuid, 0, "");
+        usersTable.registerUser(secondUuid, 0, "");
+        usersTable.registerUser(thirdUuid, 0, "");
+
+        geoInfoTable.saveGeoInfo(firstUuid, new GeoInfo("-", "Test1", 0));
+        GeoInfo secondInfo = new GeoInfo("-", "Test2", 5);
+        geoInfoTable.saveGeoInfo(firstUuid, secondInfo);
+        geoInfoTable.saveGeoInfo(secondUuid, new GeoInfo("-", "Test3", 0));
+        geoInfoTable.saveGeoInfo(thirdUuid, new GeoInfo("-", "Test4", 0));
+
+        List<String> geolocations = geoInfoTable.getNetworkGeolocations();
+        System.out.println(geolocations);
+
+        assertNotNull(geolocations);
+        assertFalse(geolocations.isEmpty());
+        assertEquals(3, geolocations.size());
+        assertTrue(geolocations.contains(secondInfo.getGeolocation()));
+    }
 }
