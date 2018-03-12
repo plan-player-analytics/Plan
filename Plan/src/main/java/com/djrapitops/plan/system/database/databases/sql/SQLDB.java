@@ -111,7 +111,6 @@ public abstract class SQLDB extends Database {
                     }
                 } catch (SQLException e) {
                     Log.toLog(this.getClass(), e);
-                } finally {
                     cancel();
                 }
             }
