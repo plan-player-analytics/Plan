@@ -5,8 +5,10 @@
 package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
@@ -14,6 +16,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.List;
@@ -31,9 +34,18 @@ public class ServerPageHandler extends PageHandler {
     public Response getResponse(Request request, List<String> target) {
         UUID serverUUID = getServerUUID(target);
         Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
+
         if (response != null) {
             return response;
         } else {
+            if (Check.isBungeeAvailable() && ServerInfo.getServerUUID().equals(serverUUID)) {
+                try {
+                    InfoSystem.getInstance().updateNetworkPage();
+                } catch (WebException e) {
+                    /*Ignore, should not occur*/
+                }
+                return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
+            }
             return AnalysisPageResponse.refreshNow(serverUUID);
         }
     }
