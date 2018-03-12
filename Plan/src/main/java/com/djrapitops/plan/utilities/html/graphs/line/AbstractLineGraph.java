@@ -47,7 +47,7 @@ public class AbstractLineGraph implements HighChart {
         int size = points.size();
         for (int i = 0; i < size; i++) {
             Point point = points.get(i);
-            double y = point.getY();
+            Double y = point.getY();
             long date = (long) point.getX();
             arrayBuilder.append("[").append(date).append(",").append(y).append("]");
             if (i < size - 1) {
