@@ -182,7 +182,6 @@ public class GeoInfoTable extends UserIDTable {
     public List<String> getNetworkGeolocations() throws SQLException {
         String subQuery = "SELECT " +
                 Col.USER_ID + ", " +
-                Col.GEOLOCATION + ", " +
                 "MAX(" + Col.LAST_USED + ") as max" +
                 " FROM " + tableName +
                 " GROUP BY " + Col.USER_ID;

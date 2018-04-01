@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.CommandProcessor;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
@@ -57,7 +58,7 @@ public class CommandPreprocessListener implements Listener {
                     commandName = command.getName();
                 }
             }
-            new CommandProcessor(commandName).queue();
+            Processing.submit(new CommandProcessor(commandName));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

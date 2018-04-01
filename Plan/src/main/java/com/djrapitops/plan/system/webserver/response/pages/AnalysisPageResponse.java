@@ -4,7 +4,7 @@ import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class AnalysisPageResponse extends Response {
 
     public static AnalysisPageResponse refreshNow(UUID serverUUID) {
-        Processor.queue(() -> {
+        Processing.submitNonCritical(() -> {
             try {
                 InfoSystem.getInstance().generateAnalysisPage(serverUUID);
             } catch (NoServersException | ConnectionFailException e) {

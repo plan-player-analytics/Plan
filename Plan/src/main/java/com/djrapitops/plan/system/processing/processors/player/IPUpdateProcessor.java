@@ -8,6 +8,7 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
@@ -17,20 +18,20 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class IPUpdateProcessor extends PlayerProcessor {
+public class IPUpdateProcessor implements CriticalRunnable {
 
+    private final UUID uuid;
     private final String ip;
     private final long time;
 
     public IPUpdateProcessor(UUID uuid, String ip, long time) {
-        super(uuid);
+        this.uuid = uuid;
         this.ip = ip;
         this.time = time;
     }
 
     @Override
-    public void process() {
-        UUID uuid = getUUID();
+    public void run() {
         String country = GeolocationCache.getCountry(ip);
         try {
             Database.getActive().save().geoInfo(uuid, new GeoInfo(ip, country, time));

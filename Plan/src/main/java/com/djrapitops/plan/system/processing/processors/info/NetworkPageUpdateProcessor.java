@@ -6,7 +6,6 @@ package com.djrapitops.plan.system.processing.processors.info;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.processing.Processor;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 /**
@@ -14,10 +13,10 @@ import com.djrapitops.plugin.api.utility.log.Log;
  *
  * @author Rsl1122
  */
-public class NetworkPageUpdateProcessor implements Processor {
+public class NetworkPageUpdateProcessor implements Runnable {
 
     @Override
-    public void process() {
+    public void run() {
         try {
             InfoSystem.getInstance().updateNetworkPage();
         } catch (WebException e) {

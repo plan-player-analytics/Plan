@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.processing.processors;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 /**
@@ -13,16 +14,18 @@ import com.djrapitops.plugin.api.utility.log.Log;
  *
  * @author Rsl1122
  */
-public class CommandProcessor extends ObjectProcessor<String> {
+public class CommandProcessor implements CriticalRunnable {
 
-    public CommandProcessor(String object) {
-        super(object);
+    private final String command;
+
+    public CommandProcessor(String command) {
+        this.command = command;
     }
 
     @Override
-    public void process() {
+    public void run() {
         try {
-            Database.getActive().save().commandUsed(object);
+            Database.getActive().save().commandUsed(command);
         } catch (DBException e) {
             Log.toLog(this.getClass(), e);
         }

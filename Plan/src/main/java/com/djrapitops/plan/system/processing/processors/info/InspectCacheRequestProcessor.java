@@ -8,7 +8,6 @@ import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.processing.processors.player.PlayerProcessor;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -22,26 +21,26 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class InspectCacheRequestProcessor extends PlayerProcessor {
+public class InspectCacheRequestProcessor implements Runnable {
 
+    private final UUID uuid;
     private final ISender sender;
     private final String playerName;
 
     public InspectCacheRequestProcessor(UUID uuid, ISender sender, String playerName) {
-        super(uuid);
-        this.playerName = playerName;
+        this.uuid = uuid;
         this.sender = sender;
+        this.playerName = playerName;
     }
 
     @Override
-    public void process() {
+    public void run() {
         SessionCache.refreshActiveSessionsState();
         try {
-            InfoSystem.getInstance().generateAndCachePlayerPage(getUUID());
+            InfoSystem.getInstance().generateAndCachePlayerPage(uuid);
             sendInspectMsg(sender, playerName);
         } catch (ConnectionFailException | UnsupportedTransferDatabaseException | UnauthorizedServerException
                 | NotFoundException | NoServersException e) {
-            // TODO Test if this is appropriate
             sender.sendMessage("§c" + e.getMessage());
         } catch (WebException e) {
             Log.toLog(this.getClass(), e);

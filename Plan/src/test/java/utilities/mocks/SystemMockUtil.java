@@ -51,8 +51,8 @@ public class SystemMockUtil {
         return this;
     }
 
-    public SystemMockUtil enableProcessingQueue() {
-        bukkitSystem.getProcessingQueue().enable();
+    public SystemMockUtil enableProcessing() throws EnableException {
+        bukkitSystem.getProcessing().enable();
         return this;
     }
 

@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
 import com.djrapitops.plan.system.tasks.TaskSystem;
@@ -41,7 +41,7 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             boolean op = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
-            new BanAndOpProcessor(uuid, banned, op).queue();
+            Processing.submit(new BanAndOpProcessor(uuid, banned, op));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -62,7 +62,7 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
             UUID uuid = event.getPlayer().getUniqueId();
-            new KickProcessor(uuid).queue();
+            Processing.submit(new KickProcessor(uuid));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -96,13 +96,13 @@ public class PlayerOnlineListener implements Listener {
 
             SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
 
-            Processor.queueMany(
+            Processing.submit(
                     new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
                             new IPUpdateProcessor(uuid, ip, time),
                             new NameProcessor(uuid, playerName, displayName)
-                    ),
-                    new NetworkPageUpdateProcessor()
+                    )
             );
+            Processing.submit(new NetworkPageUpdateProcessor());
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -122,16 +122,14 @@ public class PlayerOnlineListener implements Listener {
             Player player = event.getPlayer();
             UUID uuid = player.getUniqueId();
 
-            Processor.queueMany(
-                    new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()),
-                    new EndSessionProcessor(uuid, time),
-                    new NetworkPageUpdateProcessor()
-            );
+            Processing.submit(new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()));
+            Processing.submit(new EndSessionProcessor(uuid, time));
+            Processing.submit(new NetworkPageUpdateProcessor());
 
             SessionCache sessionCache = SessionCache.getInstance();
             if (sessionCache.isFirstSession(uuid)) {
                 int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
-                new FirstLeaveProcessor(uuid, time, messagesSent).queue();
+                Processing.submit(new FirstLeaveProcessor(uuid, time, messagesSent));
             }
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);

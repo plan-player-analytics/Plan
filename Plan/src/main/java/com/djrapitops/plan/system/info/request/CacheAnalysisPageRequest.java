@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -82,7 +82,7 @@ public class CacheAnalysisPageRequest implements CacheRequest {
     private void cache(boolean export, UUID serverUUID, String html) {
         ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
         if (export) {
-            Processor.queue(() -> HtmlExport.exportServer(serverUUID));
+            Processing.submitNonCritical(() -> HtmlExport.exportServer(serverUUID));
         }
     }
 

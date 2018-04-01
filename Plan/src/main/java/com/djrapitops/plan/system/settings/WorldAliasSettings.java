@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.settings;
 
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.config.ConfigNode;
@@ -55,7 +55,7 @@ public class WorldAliasSettings {
         String previousValue = aliasSect.getConfigNode(world).getValue();
         if (Verify.isEmpty(previousValue)) {
             aliasSect.set(world, world);
-            Processor.queue(() -> {
+            Processing.submitNonCritical(() -> {
                 try {
                     aliasSect.save();
                 } catch (IOException e) {

@@ -59,7 +59,9 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
             throw new BadRequestException("Requested Analysis page from wrong server.");
         }
 
-        generateAndCache(serverUUID);
+        if (!Analysis.isAnalysisBeingRun()) {
+            generateAndCache(serverUUID);
+        }
 
         return DefaultResponses.SUCCESS.get();
     }

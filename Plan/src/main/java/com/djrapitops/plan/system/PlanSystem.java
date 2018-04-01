@@ -13,7 +13,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.processing.ProcessingQueue;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -34,7 +34,7 @@ public abstract class PlanSystem implements SubSystem {
     protected static PlanSystem testSystem;
 
     // Initialized in this class
-    protected final ProcessingQueue processingQueue;
+    private Processing processing;
     protected final WebServerSystem webServerSystem;
     protected final CacheSystem cacheSystem;
 
@@ -55,7 +55,7 @@ public abstract class PlanSystem implements SubSystem {
     protected PlanAPI planAPI;
 
     public PlanSystem() {
-        processingQueue = new ProcessingQueue();
+        processing = new Processing();
         webServerSystem = new WebServerSystem();
         cacheSystem = new CacheSystem(this);
     }
@@ -83,7 +83,7 @@ public abstract class PlanSystem implements SubSystem {
                 configSystem,
                 databaseSystem,
                 webServerSystem,
-                processingQueue,
+                processing,
                 serverInfo,
                 infoSystem,
                 cacheSystem,
@@ -103,7 +103,7 @@ public abstract class PlanSystem implements SubSystem {
                 hookHandler,
                 cacheSystem,
                 listenerSystem,
-                processingQueue,
+                processing,
                 databaseSystem,
                 webServerSystem,
                 infoSystem,
@@ -141,10 +141,6 @@ public abstract class PlanSystem implements SubSystem {
     }
 
     // Accessor methods.
-
-    public ProcessingQueue getProcessingQueue() {
-        return processingQueue;
-    }
 
     public VersionCheckSystem getVersionCheckSystem() {
         return versionCheckSystem;
@@ -192,5 +188,9 @@ public abstract class PlanSystem implements SubSystem {
 
     public PlanAPI getPlanAPI() {
         return planAPI;
+    }
+
+    public Processing getProcessing() {
+        return processing;
     }
 }

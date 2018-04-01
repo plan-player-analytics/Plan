@@ -64,10 +64,16 @@ public class HTTPSWebServerAuthTest {
 
     @After
     public void tearDown() {
+        Teardown.resetSettingsTempValues();
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
         if (bukkitSystem != null) {
             bukkitSystem.disable();
         }
-        Teardown.resetSettingsTempValues();
+        bukkitSystem.disable();
+
     }
 
     private static final TrustManager[] trustAllCerts = new TrustManager[]{

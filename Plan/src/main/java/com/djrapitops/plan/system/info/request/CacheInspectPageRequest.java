@@ -9,7 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -87,7 +87,7 @@ public class CacheInspectPageRequest implements CacheRequest {
     private void cache(boolean export, UUID uuid, String html) {
         ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
         if (export) {
-            Processor.queue(() -> HtmlExport.exportPlayer(uuid));
+            Processing.submitNonCritical(() -> HtmlExport.exportPlayer(uuid));
         }
     }
 

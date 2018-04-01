@@ -863,7 +863,7 @@ public class SQLiteTest {
             processors.add(new RegisterProcessor(playerUUID, 500L, 1000L, "name", 4));
         }
         for (RegisterProcessor processor : processors) {
-            processor.process();
+            processor.run();
         }
         System.out.println("- RegisterProcessors Run -\n");
         assertTrue(db.getUsersTable().isRegistered(playerUUID));

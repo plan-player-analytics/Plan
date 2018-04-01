@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabase
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.ServerSpecificSettings;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.Base64Util;
@@ -40,7 +40,7 @@ public class NetworkSettings {
             return;
         }
 
-        Processor.queue(() -> {
+        Processing.submitNonCritical(() -> {
             try {
                 new NetworkSettings().loadFromDatabase();
             } catch (DBException | UnsupportedTransferDatabaseException e) {
@@ -54,7 +54,7 @@ public class NetworkSettings {
             return;
         }
 
-        Processor.queue(() -> {
+        Processing.submitCritical(() -> {
             try {
                 new NetworkSettings().placeToDatabase();
             } catch (DBException | UnsupportedTransferDatabaseException e) {

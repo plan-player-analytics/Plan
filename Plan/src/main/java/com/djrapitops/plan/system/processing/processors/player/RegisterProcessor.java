@@ -9,8 +9,8 @@ import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.processing.Processor;
-import com.djrapitops.plan.system.processing.processors.ObjectProcessor;
+import com.djrapitops.plan.system.processing.CriticalRunnable;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -21,16 +21,17 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class RegisterProcessor extends PlayerProcessor {
+public class RegisterProcessor implements CriticalRunnable {
 
+    private final UUID uuid;
     private final long registered;
     private final long time;
     private final int playersOnline;
     private final String name;
-    private final ObjectProcessor[] afterProcess;
+    private final Runnable[] afterProcess;
 
-    public RegisterProcessor(UUID uuid, long registered, long time, String name, int playersOnline, ObjectProcessor... afterProcess) {
-        super(uuid);
+    public RegisterProcessor(UUID uuid, long registered, long time, String name, int playersOnline, Runnable... afterProcess) {
+        this.uuid = uuid;
         this.registered = registered;
         this.time = time;
         this.playersOnline = playersOnline;
@@ -39,8 +40,7 @@ public class RegisterProcessor extends PlayerProcessor {
     }
 
     @Override
-    public void process() {
-        UUID uuid = getUUID();
+    public void run() {
         Database db = Database.getActive();
         Verify.nullCheck(uuid, () -> new IllegalStateException("UUID was null"));
         try {
@@ -58,7 +58,9 @@ public class RegisterProcessor extends PlayerProcessor {
         } catch (DBException e) {
             Log.toLog(this.getClass(), e);
         } finally {
-            Processor.queueMany(afterProcess);
+            for (Runnable runnable : afterProcess) {
+                Processing.submit(runnable);
+            }
         }
     }
 }

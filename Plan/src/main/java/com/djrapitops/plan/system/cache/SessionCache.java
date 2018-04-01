@@ -5,7 +5,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -54,7 +54,7 @@ public class SessionCache {
 
     public void cacheSession(UUID uuid, Session session) {
         activeSessions.put(uuid, session);
-        Processor.queue(() -> WebExceptionLogger.logIfOccurs(this.getClass(), () ->
+        Processing.submitNonCritical(() -> WebExceptionLogger.logIfOccurs(this.getClass(), () ->
                 system.getInfoSystem().generateAndCachePlayerPage(uuid))
         );
     }

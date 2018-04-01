@@ -10,7 +10,8 @@ import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.CriticalRunnable;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -24,20 +25,20 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 4.0.0
  */
-public class NameProcessor extends PlayerProcessor {
+public class NameProcessor implements CriticalRunnable {
 
+    private final UUID uuid;
     private final String playerName;
     private final String displayName;
 
     public NameProcessor(UUID uuid, String playerName, String displayName) {
-        super(uuid);
+        this.uuid = uuid;
         this.playerName = playerName;
         this.displayName = displayName;
     }
 
     @Override
-    public void process() {
-        UUID uuid = getUUID();
+    public void run() {
         DataCache dataCache = DataCache.getInstance();
         String cachedName = dataCache.getName(uuid);
         String cachedDisplayName = dataCache.getDisplayName(uuid);
@@ -68,7 +69,7 @@ public class NameProcessor extends PlayerProcessor {
 
         long time = MiscUtils.getTime();
 
-        Processor.queue(() -> {
+        Processing.submitCritical(() -> {
             String info = HtmlUtils.removeXSS(displayName);
 
             Action action = new Action(time, Actions.NEW_NICKNAME, info);
