@@ -21,31 +21,30 @@ public interface TransferOperations {
 
     // Save
 
+    @Deprecated
     void storePlayerHtml(UUID player, String encodedHtml) throws DBException;
 
+    @Deprecated
     void storeServerHtml(UUID serverUUID, String encodedHtml) throws DBException;
 
+    @Deprecated
     void storeNetworkPageContent(UUID serverUUID, String encodedHtml) throws DBException;
-
-    void storePlayerPluginsTab(UUID player, String encodedHtml) throws DBException;
 
     void storeConfigSettings(String encodedSettingString) throws DBException;
 
-    @Deprecated
-    void playerOnline(UUID playerUUID) throws DBException;
-
     // Get
 
+    @Deprecated
     Map<UUID, String> getEncodedPlayerHtml() throws DBException;
 
+    @Deprecated
     Map<UUID, String> getEncodedNetworkPageContent() throws DBException;
 
+    @Deprecated
     Map<UUID, String> getEncodedServerHtml() throws DBException;
 
     @Deprecated
     Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) throws DBException;
-
-    Map<UUID, String> getEncodedPlayerPluginsTabs(UUID playerUUID) throws DBException;
 
     Optional<String> getEncodedConfigSettings() throws DBException;
 }

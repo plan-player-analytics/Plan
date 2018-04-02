@@ -5,17 +5,13 @@
 package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
-import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
-import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -28,24 +24,18 @@ import java.util.UUID;
  */
 public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables implements CacheRequest {
 
-    private static final String SPLIT = "AASPLITAA";
-
     private final UUID player;
-    private final String nav;
-    private final String html;
 
     private CacheInspectPluginsTabRequest() {
         player = null;
-        nav = null;
-        html = null;
     }
 
     public CacheInspectPluginsTabRequest(UUID player, String nav, String html) {
         Verify.nullCheck(player, nav);
         variables.put("player", player.toString());
+        variables.put("nav", nav);
+        variables.put("html", html);
         this.player = player;
-        this.nav = nav;
-        this.html = html;
     }
 
     public static CacheInspectPluginsTabRequest createHandler() {
@@ -53,43 +43,27 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
     }
 
     @Override
-    public void placeDataToDatabase() throws WebException {
-        Verify.nullCheck(player, nav);
-
-        String encodedHtml = Base64Util.encode(nav + SPLIT + html);
-        try {
-            Database.getActive().transfer().storePlayerPluginsTab(player, encodedHtml);
-        } catch (DBException e) {
-            throw new TransferDatabaseException(e);
-        }
+    public void placeDataToDatabase() {
+        /* Transferred over HTTP */
     }
 
     @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
-        // Available variables: sender, player
+        // Available variables: sender, player, nav, html
 
         String player = variables.get("player");
         Verify.nullCheck(player, () -> new BadRequestException("Player UUID 'player' variable not supplied in the request."));
-
         UUID uuid = UUID.fromString(player);
+        UUID serverUUID = UUID.fromString(variables.get("sender"));
 
-        try {
-            InspectPagePluginsContent pluginsTab = getPluginsTab(uuid);
+        String nav = variables.get("nav");
+        String html = variables.get("html");
+        Verify.nullCheck(nav, () -> new BadRequestException("Nav HTML 'nav' variable not supplied in the request"));
+        Verify.nullCheck(html, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
-            Map<UUID, String> pages = Database.getActive().transfer().getEncodedPlayerPluginsTabs(uuid);
+        InspectPagePluginsContent pluginsTab = getPluginsTab(uuid);
 
-            for (Map.Entry<UUID, String> entry : pages.entrySet()) {
-                UUID serverUUID = entry.getKey();
-                String[] navAndHtml = Base64Util.decode(entry.getValue()).split(SPLIT);
-
-                if (navAndHtml.length <= 1) {
-                    continue;
-                }
-                pluginsTab.addTab(serverUUID, navAndHtml[0], navAndHtml[1]);
-            }
-        } catch (DBException e) {
-            throw new TransferDatabaseException(e);
-        }
+        pluginsTab.addTab(serverUUID, nav, html);
         return DefaultResponses.SUCCESS.get();
     }
 
@@ -99,6 +73,6 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
 
     @Override
     public void runLocally() {
-        getPluginsTab(player).addTab(ServerInfo.getServerUUID(), nav, html);
+        getPluginsTab(player).addTab(ServerInfo.getServerUUID(), variables.get("nav"), variables.get("html"));
     }
 }
