@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.NetworkPageContent;
+import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -32,7 +33,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
     public CacheNetworkPageContentRequest(UUID serverUUID, String html) {
         Verify.nullCheck(serverUUID, html);
         variables.put("serverName", ServerInfo.getServerName());
-        variables.put("html", html);
+        variables.put("html", Base64Util.encode(html));
         this.html = html;
     }
 
@@ -47,7 +48,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
 
     @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
-        // Available variables: sender, serverName, html
+        // Available variables: sender, serverName, html (Base64)
 
         String serverName = variables.get("serverName");
         Verify.nullCheck(serverName, () -> new BadRequestException("Server name 'serverName' variable not supplied in the request"));
@@ -55,7 +56,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
         Verify.nullCheck(html, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
         NetworkPageContent serversTab = getNetworkPageContent();
-        serversTab.addElement(serverName, html);
+        serversTab.addElement(serverName, Base64Util.decode(html));
         
         InfoSystem.getInstance().updateNetworkPage();
 
@@ -68,7 +69,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
 
     @Override
     public void runLocally() {
-        getNetworkPageContent().addElement(ServerInfo.getServerName(), html);
+        getNetworkPageContent().addElement(ServerInfo.getServerName(), variables.get("html"));
     }
 
     public static CacheNetworkPageContentRequest createHandler() {

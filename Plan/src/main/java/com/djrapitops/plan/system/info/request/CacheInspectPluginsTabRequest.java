@@ -12,6 +12,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
+import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -25,17 +26,20 @@ import java.util.UUID;
 public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables implements CacheRequest {
 
     private final UUID player;
+    private final String html;
 
     private CacheInspectPluginsTabRequest() {
         player = null;
+        html = null;
     }
 
     public CacheInspectPluginsTabRequest(UUID player, String nav, String html) {
         Verify.nullCheck(player, nav);
         variables.put("player", player.toString());
         variables.put("nav", nav);
-        variables.put("html", html);
+        variables.put("html", Base64Util.encode(html));
         this.player = player;
+        this.html = html;
     }
 
     public static CacheInspectPluginsTabRequest createHandler() {
@@ -63,7 +67,7 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
 
         InspectPagePluginsContent pluginsTab = getPluginsTab(uuid);
 
-        pluginsTab.addTab(serverUUID, nav, html);
+        pluginsTab.addTab(serverUUID, nav, Base64Util.decode(html));
         return DefaultResponses.SUCCESS.get();
     }
 
@@ -73,6 +77,6 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
 
     @Override
     public void runLocally() {
-        getPluginsTab(player).addTab(ServerInfo.getServerUUID(), variables.get("nav"), variables.get("html"));
+        getPluginsTab(player).addTab(ServerInfo.getServerUUID(), variables.get("nav"), html);
     }
 }
