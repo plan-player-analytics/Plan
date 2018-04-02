@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.api.ServerAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
@@ -12,24 +12,24 @@ import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.BukkitInfoSystem;
-import com.djrapitops.plan.system.info.server.BukkitServerInfo;
-import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
+import com.djrapitops.plan.system.info.server.SpongeServerInfo;
+import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
-import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
+import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 /**
- * Represents PlanSystem for Plan.
+ * Represents PlanSystem for PlanSponge.
  *
  * @author Rsl1122
  */
-public class BukkitSystem extends PlanSystem implements ServerSystem {
+public class SpongeSystem extends PlanSystem implements ServerSystem {
 
-    public BukkitSystem(Plan plugin) {
+    public SpongeSystem(PlanSponge plugin) {
         testSystem = this;
 
         Log.setErrorManager(new PlanErrorManager());
@@ -38,11 +38,11 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
         fileSystem = new FileSystem(plugin);
         configSystem = new BukkitConfigSystem();
         databaseSystem = new BukkitDBSystem();
-        listenerSystem = new BukkitListenerSystem(plugin);
-        taskSystem = new BukkitTaskSystem(plugin);
+        listenerSystem = new SpongeListenerSystem();
+        taskSystem = new SpongeTaskSystem();
 
         infoSystem = new BukkitInfoSystem();
-        serverInfo = new BukkitServerInfo(plugin);
+        serverInfo = new SpongeServerInfo();
 
         hookHandler = new HookHandler();
         planAPI = new ServerAPI(this);
@@ -51,8 +51,8 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
         new ShutdownHook().register();
     }
 
-    public static BukkitSystem getInstance() {
-        return Plan.getInstance().getSystem();
+    public static SpongeSystem getInstance() {
+        return PlanSponge.getInstance().getSystem();
     }
 
     @Override

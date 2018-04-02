@@ -14,7 +14,6 @@ import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.Map;
@@ -70,7 +69,6 @@ public class ShutdownHook extends Thread {
                     Log.toLog(this.getClass(), e);
                 }
             }
-            StaticHolder.unRegister(Plan.class);
         }
     }
 

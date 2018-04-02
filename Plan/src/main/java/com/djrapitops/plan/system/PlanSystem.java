@@ -63,12 +63,15 @@ public abstract class PlanSystem implements SubSystem {
     public static PlanSystem getInstance() {
         boolean bukkitAvailable = Check.isBukkitAvailable();
         boolean bungeeAvailable = Check.isBungeeAvailable();
+        boolean spongeAvailable = Check.isSpongeAvailable();
         if (bukkitAvailable && bungeeAvailable) {
             return testSystem;
         } else if (bungeeAvailable) {
             return BungeeSystem.getInstance();
         } else if (bukkitAvailable) {
             return BukkitSystem.getInstance();
+        } else if (spongeAvailable) {
+            return SpongeSystem.getInstance();
         }
         throw new IllegalAccessError("PlanSystem is not available on this platform.");
     }

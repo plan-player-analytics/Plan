@@ -29,6 +29,9 @@ public class BukkitServerInfo extends ServerInfo {
     private ServerInfoFile serverInfoFile;
     private Database database;
 
+    BukkitServerInfo() {
+    }
+
     public BukkitServerInfo(Plan plugin) {
         serverProperties = new ServerProperties(plugin.getServer());
     }

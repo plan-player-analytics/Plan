@@ -27,7 +27,6 @@ public class AnalysisPageResponse extends Response {
             } catch (NoServersException | ConnectionFailException e) {
                 ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new NotFoundResponse(e.getMessage()));
             } catch (WebException e) {
-                // TODO Exception handling
                 Log.toLog(AnalysisPageResponse.class.getName(), e);
             }
         });
