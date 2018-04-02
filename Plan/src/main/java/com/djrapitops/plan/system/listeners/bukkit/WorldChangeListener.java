@@ -19,19 +19,24 @@ public class WorldChangeListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(PlayerChangedWorldEvent event) {
         try {
-            Player p = event.getPlayer();
-            String worldName = p.getWorld().getName();
-
-            UUID uuid = p.getUniqueId();
-            String gameMode = p.getGameMode().name();
-            long time = MiscUtils.getTime();
-
-            new WorldAliasSettings().addWorld(worldName);
-
-            Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
-            cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
+            actOnEvent(event);
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
+    }
+
+    private void actOnEvent(PlayerChangedWorldEvent event) {
+        long time = MiscUtils.getTime();
+
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        String worldName = player.getWorld().getName();
+        String gameMode = player.getGameMode().name();
+
+        WorldAliasSettings.addWorld(worldName);
+
+        Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
+        cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
     }
 }
