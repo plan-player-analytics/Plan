@@ -40,7 +40,9 @@ public class KingdomAccordionCreator {
             List<UUID> members = kingdom.getMembersList();
             int residentsNum = members.size();
 
-            List<PlayerProfile> memberProfiles = players.stream().filter(p -> members.contains(p.getUniqueId())).collect(Collectors.toList());
+            List<PlayerProfile> memberProfiles = players.stream()
+                    .filter(p -> members.contains(p.getUniqueId()))
+                    .collect(Collectors.toList());
 
             List<Session> sessions = memberProfiles.stream()
                     .map(PlayerProfile::getSessions)

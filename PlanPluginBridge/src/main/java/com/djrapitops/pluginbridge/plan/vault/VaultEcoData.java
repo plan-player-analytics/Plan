@@ -4,7 +4,6 @@
  */
 package com.djrapitops.pluginbridge.plan.vault;
 
-import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
@@ -53,17 +52,18 @@ public class VaultEcoData extends PluginData {
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         ServerProfile serverProfile = Analysis.getServerProfile();
 
-        List<PlayerProfile> profiles = collection.stream()
+        List<FakeOfflinePlayer> profiles = collection.stream()
                 .map(serverProfile::getPlayer)
                 .filter(Verify::notNull)
+                .map(profile -> new FakeOfflinePlayer(profile.getUuid(), profile.getName()))
                 .collect(Collectors.toList());
 
         Map<UUID, String> balances = new HashMap<>();
         double totalBalance = 0.0;
-        for (PlayerProfile profile : profiles) {
-            double bal = econ.getBalance(profile);
+        for (FakeOfflinePlayer p : profiles) {
+            double bal = econ.getBalance(p);
             totalBalance += bal;
-            balances.put(profile.getUuid(), econ.format(bal));
+            balances.put(p.getUniqueId(), econ.format(bal));
         }
         analysisContainer.addValue(getWithIcon("Server Balance", "money", "green"), FormatUtils.cutDecimals(totalBalance));
         analysisContainer.addPlayerTableValues(getWithIcon("Balance", "money"), balances);
