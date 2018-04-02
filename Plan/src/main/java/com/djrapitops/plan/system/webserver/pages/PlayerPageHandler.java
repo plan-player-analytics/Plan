@@ -53,7 +53,7 @@ public class PlayerPageHandler extends PageHandler {
                     InfoSystem.getInstance().generateAndCachePlayerPage(uuid);
                     response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
                 }
-                return response;
+                return response != null ? response : notFound("No Bukkit servers online to perform the request.");
             } else {
                 return notFound("Player has not played on this server.");
             }
