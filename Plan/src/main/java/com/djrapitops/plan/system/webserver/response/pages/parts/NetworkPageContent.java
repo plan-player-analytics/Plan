@@ -48,8 +48,7 @@ public class NetworkPageContent extends Response {
                     "data-container=\"body\" data-html=\"true\" " +
                     "data-original-title=\"No Servers\" " +
                     "data-content=\"This is displayed when no servers have sent server information to Bungee." +
-                    "<br><br>You can try debugging the cause by using /planbungee con & /plan m con" +
-                    "<br><br>If MySQL max_packet_size is too small that may cause page transfer to fail.\"" +
+                    "<br><br>You can try debugging the cause by using /planbungee con & /plan m con\"" +
                     ">help_outline</a></div></div></div>" +
                     "<div class=\"body\">" +
                     "<p>No Servers have sent information to Bungee.</p>" +
