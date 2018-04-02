@@ -4,10 +4,8 @@
  */
 package com.djrapitops.plan.system.info.request;
 
-import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
+import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
@@ -23,58 +21,42 @@ import java.util.UUID;
 /**
  * InfoRequest for caching Network page parts to ResponseCache of receiving server.
  * <p>
- * SHOULD NOT BE SENT TO BUKKIT
+ * SHOULD NOT BE SENT TO BUKKIT.
  *
  * @author Rsl1122
  */
-public class CacheNetworkPageContentRequest implements CacheRequest {
+public class CacheNetworkPageContentRequest extends InfoRequestWithVariables implements CacheRequest {
 
-    private final UUID serverUUID;
     private final String html;
 
     public CacheNetworkPageContentRequest(UUID serverUUID, String html) {
         Verify.nullCheck(serverUUID, html);
-        this.serverUUID = serverUUID;
+        variables.put("serverName", ServerInfo.getServerName());
+        variables.put("html", html);
         this.html = html;
     }
 
     private CacheNetworkPageContentRequest() {
-        serverUUID = null;
         html = null;
     }
 
     @Override
-    public void placeDataToDatabase() throws WebException {
-        try {
-            Database.getActive().transfer().storeNetworkPageContent(serverUUID, html);
-        } catch (DBException e) {
-            throw new TransferDatabaseException(e);
-        }
+    public void placeDataToDatabase() {
+        /* Transferred over HTTP */
     }
 
     @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
-        // Available variables: sender
+        // Available variables: sender, serverName, html
 
-        Map<UUID, String> networkPageHtml;
-        Map<UUID, String> serverNames;
-        try {
-            Database database = Database.getActive();
-            networkPageHtml = database.transfer().getEncodedNetworkPageContent();
-            serverNames = database.fetch().getServerNames();
-        } catch (DBException e) {
-            throw new TransferDatabaseException(e);
-        }
+        String serverName = variables.get("serverName");
+        Verify.nullCheck(serverName, () -> new BadRequestException("Server name 'serverName' variable not supplied in the request"));
+        String html = variables.get("html");
+        Verify.nullCheck(html, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
-        for (Map.Entry<UUID, String> entry : networkPageHtml.entrySet()) {
-            UUID serverUUID = entry.getKey();
-            String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
-            String html = entry.getValue();
-
-            NetworkPageContent networkPage = getNetworkPageContent();
-            networkPage.addElement(serverName, html);
-        }
-
+        NetworkPageContent serversTab = getNetworkPageContent();
+        serversTab.addElement(serverName, html);
+        
         InfoSystem.getInstance().updateNetworkPage();
 
         return DefaultResponses.SUCCESS.get();
