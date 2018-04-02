@@ -1,6 +1,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
+import com.djrapitops.plan.system.processing.importing.importers.Importer;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -38,20 +39,33 @@ public class ManageImportCommand extends SubCommand {
             return true;
         }
 
-        runImport("offlineimporter");
-        return true;
-    }
+        String importArg = args[0];
 
-    private void runImport(String importer) {
-        RunnableFactory.createNew("Import", new AbsRunnable() {
+        if (importArg.equals("list")) {
+            sender.sendMessage("Importers: ");
+            ImporterManager.getImporters().stream()
+                    .map(Importer::getNames)
+                    .map(list -> list.get(0))
+                    .forEach(name -> sender.sendMessage("- " + name));
+            return true;
+        }
+
+        Importer importer = ImporterManager.getImporter(importArg);
+        if (importer == null) {
+            sender.sendMessage("§eImporter '" + importArg + "' doesn't exist");
+            return true;
+        }
+
+        RunnableFactory.createNew("Import:" + importArg, new AbsRunnable() {
             @Override
             public void run() {
                 try {
-                    ImporterManager.getImporter(importer).processImport();
+                    importer.processImport();
                 } finally {
-                    this.cancel();
+                    cancel();
                 }
             }
         }).runTaskAsynchronously();
+        return true;
     }
 }
