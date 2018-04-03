@@ -39,7 +39,7 @@ public class InspectPageResponse extends Response {
     }
 
     private String[] getCalculating() {
-        return new String[]{"<meta http-equiv=\"refresh\" content=\"5\" /><li><a><i class=\"fa fa-spin fa-refresh\"></i> Calculating...</a></li>", ""};
+        return new String[]{"<li><i class=\"fa fa-spin fa-refresh\"></i><a> Calculating...</a></li>", ""};
     }
 
     public static InspectPageResponse getRefreshing() {

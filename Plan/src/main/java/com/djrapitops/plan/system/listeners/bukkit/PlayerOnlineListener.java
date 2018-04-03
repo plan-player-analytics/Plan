@@ -4,6 +4,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
+import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -99,7 +100,8 @@ public class PlayerOnlineListener implements Listener {
             Processing.submit(
                     new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
                             new IPUpdateProcessor(uuid, ip, time),
-                            new NameProcessor(uuid, playerName, displayName)
+                            new NameProcessor(uuid, playerName, displayName),
+                            new PlayerPageUpdateProcessor(uuid)
                     )
             );
             Processing.submit(new NetworkPageUpdateProcessor());
@@ -131,6 +133,8 @@ public class PlayerOnlineListener implements Listener {
                 int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
                 Processing.submit(new FirstLeaveProcessor(uuid, time, messagesSent));
             }
+
+            Processing.submit(new PlayerPageUpdateProcessor(uuid));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
