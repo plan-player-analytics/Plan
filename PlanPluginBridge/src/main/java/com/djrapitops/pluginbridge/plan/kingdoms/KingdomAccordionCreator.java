@@ -41,7 +41,7 @@ public class KingdomAccordionCreator {
             int residentsNum = members.size();
 
             List<PlayerProfile> memberProfiles = players.stream()
-                    .filter(p -> members.contains(p.getUniqueId()))
+                    .filter(p -> members.contains(p.getUuid()))
                     .collect(Collectors.toList());
 
             List<Session> sessions = memberProfiles.stream()
