@@ -198,6 +198,7 @@ public class Analysis implements Callable<AnalysisData> {
             Log.logDebug("Analysis");
             Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(time, ""));
             Analysis.setServerProfile(null);
+            future = null;
         }
     }
 }
