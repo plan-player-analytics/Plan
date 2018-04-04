@@ -162,8 +162,23 @@
         <!-- #Menu -->
         <!-- Footer -->
         <div class="legal">
-            <div class="version">
-                <b>Player Analytics: </b> v${version}
+            <div class="row clearfix">
+                <div class="col-xs-10 col-sm-10 col-lg-10">
+                    <div class="version">
+                        <b>Player Analytics: </b> v${version}
+                    </div>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-lg-2">
+                    <a href="javascript:void(0)" class="help material-icons pull-right"
+                       data-trigger="focus" data-toggle="popover" data-placement="top"
+                       data-container="body" data-html="true"
+                       data-original-title="Player Analytics"
+                       data-content="Author: Rsl1122
+                       <br><br>Tutorials: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki&quot;>Link</a>
+                       <br>Issues: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/issues&quot;>Link</a>
+                       <br><br>Discord: <a target=&quot;_blank&quot; href=&quot;https://discord.gg/yXKmjzT&quot;>Link</a>"
+                    >help_outline</a>
+                </div>
             </div>
         </div>
         <!-- #Footer -->
@@ -319,8 +334,17 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-blue fa fa-area-chart"></i> Online Activity</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Player Online Activity"
+                                           data-content="Chart of Player Counts, recorded by TPS task.
+                                               <br><br>TPS task starts 50 seconds after Plan enables and records Maximum player count for each minute."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -407,6 +431,13 @@
                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                         <div class="card scrollbar">
                             <div class="body bg-white">
+                                <a href="javascript:void(0)" class="help material-icons pull-right"
+                                   data-trigger="focus" data-toggle="popover" data-placement="left"
+                                   data-container="body" data-html="true"
+                                   data-original-title="Recent Logins"
+                                   data-content="Names of the most recently logged in users.
+                                       <br><br>If the login was player's first session the name is green."
+                                >help_outline</a>
                                 <div class="font-bold m-b--35">RECENT LOGINS</div>
                                 <ul class="dashboard-stat-list">
                                     ${listRecentLogins}
@@ -423,29 +454,77 @@
                 <div class="row clearfix">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="card">
-                            <div class="header">
+                            <div class="body">
+                                <!-- Nav tabs -->
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
-                                        <h2><i class="col-blue fa fa-area-chart"></i> Online Activity</h2>
+                                    <div class="col-xs-12 col-sm-12 col-lg-12">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Player Online Activity"
+                                           data-content="Chart of Player Counts, recorded by TPS task.
+                                               <br><br>TPS task starts 50 seconds after Plan enables and records Maximum player count for each minute."
+                                        >help_outline</a>
+                                        <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                                            <li role="presentation" class="active"><a href="#playersOnline"
+                                                                                      data-toggle="tab"><i
+                                                    class="fa fa-area-chart"></i> ONLINE ACTIVITY</a></li>
+                                            <li role="presentation"><a href="#uniqueAndNew" data-toggle="tab"><i
+                                                    class="fa fa-area-chart"></i> UNIQUE PLAYERS</a></li>
+                                        </ul>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="body">
-                                <div id="playerChartMonth" class="dashboard-flot-chart"></div>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="playersOnline">
+                                        <div id="playerChartMonth" style="height: 500px;"
+                                             class="dashboard-flot-chart"></div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="uniqueAndNew">
+                                        <div id="uniqueChart" style="height: 500px;" class="dashboard-flot-chart"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="card">
-                            <div class="header">
+                            <div class="body">
+                                <!-- Nav tabs -->
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
-                                        <h2><i class="col-black fa fa-braille"></i> Punchcard</h2>
+                                    <div class="col-xs-12 col-sm-12 col-lg-12">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Calendar and Punchcard"
+                                           data-content="<b>Calendar</b>
+                                           <br>Calendar that contains information about each day.
+                                           <br><br>Playtime, Session Count, Unique & New Player Counts are available.
+                                           <br><br><b>PunchCard</b><br>
+                                           Chart displays the time and days players usually join the server.
+                                           <br><br>Unlike Player page punchcard, only the last 30 days are included.
+                                           <br><br><b>Relative Activity:</b> Size of a dot is relative to amount of sessions started in that hour."
+                                        >help_outline</a>
+                                        <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                                            <li role="presentation" class="active"><a href="#calendarTab"
+                                                                                      data-toggle="tab"><i
+                                                    class="fa fa-calendar"></i> CALENDAR</a></li>
+                                            <li role="presentation"><a href="#punchCardTab" data-toggle="tab"><i
+                                                    class="fa fa-braille"></i> PUNCHCARD</a></li>
+                                        </ul>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="body">
-                                <div id="punchCard" class="dashboard-flot-chart"></div>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="calendarTab">
+                                        <div id="calendar" style="height: 500px;" class="dashboard-flot-chart"></div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="punchCardTab">
+                                        <div id="punchCard" style="height: 500px;" class="dashboard-flot-chart"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -567,8 +646,17 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-12">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-red fa fa-heartbeat"></i> Server Health Estimate</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Server Health Estimate"
+                                           data-content="Quick Measure of the server health.
+                                               <br><br>The health is calculated using different measures, all of which can be seen in the notes section."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -583,8 +671,20 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-red fa fa-life-ring"></i> Last 30 Days</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Notes (30 Days)"
+                                           data-content="Measures the server health is based on
+                                               <br><br>Each measure has 3 possible outcomes:
+                                               <br>Thumbs up: All good
+                                               <br>Flag: Something might require action
+                                               <br>Warning: Measure is reducing the server health"
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -600,8 +700,20 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-amber fa fa-line-chart"></i> Playerbase Development</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Playerbase Development"
+                                           data-content="Chart that displays development of the playerbase
+                                               <br><br>Groups are based on Activity Index. <br><br><b>Activity Index:</b> Calculated using the sessions in the last 3 weeks (At that point in time). From 0 to 5.
+                                               <br><br>Points are calculated every 7 days for last 9 weeks, using the activity index at that point for each player.
+                                               <br><br><b>Groups:</b> Very Active(>&nbsp;3,5) Active(>&nbsp;1.75) Regular(>&nbsp;1.0) Irregular(>&nbsp;0.5) Inactive(<&nbsp;0.5)
+                                               <br><br>Groups can be hidden by clicking the group name in the legend."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -614,8 +726,19 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-amber fa fa-users"></i> Current Playerbase</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Current Playerbase Distribution"
+                                           data-content="Pie of the Activity Index distribution at the time of Analysis, last point in the Playerbase Development graph.
+                                               <br><br><b>Activity Index:</b> Calculated using the sessions in the last 3 weeks. From 0 to 5.
+                                               <br><br><b>Groups:</b> Very Active(>&nbsp;3,5) Active(>&nbsp;1.75) Regular(>&nbsp;1.0) Irregular(>&nbsp;0.5) Inactive(<&nbsp;0.5)
+                                               <br><br>Groups can be hidden by clicking the group name in the legend."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -634,8 +757,16 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-teal fa fa-calendar"></i> Most Recent Sessions</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Sessions Accordion"
+                                           data-content="Latest sessions.<br><br>Each header can be clicked to open a detailed overview of the session.<br><br>World & GameMode playtime is available for each Session."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -648,8 +779,16 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-12">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-teal fa fa-clock-o"></i> World Playtime</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Total World Playtime"
+                                           data-content="Total Playtime & GameMode split for each world.<br><br>Slices can be hidden by clicking a world name in the legend.<br><br>World Aliases (config) can be used to group multiple worlds together."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -669,16 +808,31 @@
                         <div class="card">
                             <div class="body">
                                 <!-- Nav tabs -->
-                                <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                                    <li role="presentation" class="active"><a href="#performance" data-toggle="tab"><i
-                                            class="fa fa-cogs"></i> ALL</a></li>
-                                    <li role="presentation"><a href="#tps" data-toggle="tab"><i
-                                            class="fa fa-dashboard"></i> TPS</a></li>
-                                    <li role="presentation"><a href="#resource" data-toggle="tab"><i
-                                            class="fa fa-microchip"></i> CPU & RAM</a></li>
-                                    <li role="presentation"><a href="#world" data-toggle="tab"><i class="fa fa-map"></i>
-                                        WORLD LOAD</a></li>
-                                </ul>
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-12 col-lg-12">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Performance Charts"
+                                           data-content="Charts of different performance metrics, recorded by TPS task.
+                                                   <br><br>TPS task starts 50 seconds after Plan enables and records Maximum player count & Average of other metrics for each minute.
+                                                   <br><br>Any dataset can be hidden by clicking the name in the legend.
+                                                   <br><br>Note: Due to JVM performance restraints CPU usage may be unavailable on some Machines."
+                                        >help_outline</a>
+                                        <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                                            <li role="presentation" class="active"><a href="#performance"
+                                                                                      data-toggle="tab"><i
+                                                    class="fa fa-cogs"></i> ALL</a></li>
+                                            <li role="presentation"><a href="#tps" data-toggle="tab"><i
+                                                    class="fa fa-dashboard"></i> TPS</a></li>
+                                            <li role="presentation"><a href="#resource" data-toggle="tab"><i
+                                                    class="fa fa-microchip"></i> CPU & RAM</a></li>
+                                            <li role="presentation"><a href="#world" data-toggle="tab"><i
+                                                    class="fa fa-map"></i>
+                                                WORLD LOAD</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
 
                                 <!-- Tab panes -->
                                 <div class="tab-content">
@@ -832,9 +986,24 @@
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card">
                             <div class="header">
-                                <h2>
-                                    <i class="fa fa-users"></i> Player List
-                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <h2>
+                                            <i class="fa fa-users"></i> Player List
+                                        </h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Playerlist"
+                                           data-content="Most Recent Players. Amount of players is limited to improve performance, but it can be changed in the config.
+                                           <br><br>Search can be used to limit the activity group (eg. search for '(Active)'), Geolocation or for finding players.
+                                           <br><br>By clicking a column the table is sorted by that column desc/asc.
+                                           <br><br>Similar but larger table is available on /players-page."
+                                        >help_outline</a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="body">
                                 <div class="table-responsive">
@@ -854,8 +1023,18 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-green fa fa-globe"></i> Geolocations</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Player Locations"
+                                           data-content="Each player's most recent login IP is used to get a Geolocation, which is displayed here.
+                                           <br><br>'Local Machine' connections are not displayed
+                                           <br><br>Map can be zoomed using the mouse wheel or by pinching."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -938,6 +1117,11 @@
 <!-- Header, Sidenav & Skin changer -->
 <script src="js/admin.js"></script>
 
+<!-- FullCalendar -->
+<link rel='stylesheet' href='../plugins/fullcalendar/fullcalendar.min.css'/>
+<script src='../plugins/momentjs/moment.js'></script>
+<script src='../plugins/fullcalendar/fullcalendar.min.js'></script>
+
 <!-- Plan Charts -->
 <script src="js/charts/playerGraph.js"></script>
 <script src="js/charts/punchCard.js"></script>
@@ -950,6 +1134,7 @@
 <script src="js/charts/resourceGraph.js"></script>
 <script src="js/charts/worldGraph.js"></script>
 <script src="js/charts/worldMap.js"></script>
+<script src="js/charts/onlineActivityCalendar.js"></script>
 
 <!-- Chart Data -->
 <script>
@@ -977,7 +1162,8 @@
         },
         values: {
             tpsMed: ${tpsMedium},
-            tpsHigh: ${tpsHigh}
+            tpsHigh: ${tpsHigh},
+            firstDay: ${firstDay}
         },
         data: {
             playersOnline: ${playersOnlineSeries},
@@ -993,7 +1179,8 @@
             punchCard: ${punchCardSeries},
             activityStack: ${activityStackSeries},
             activityStackCategories: ${activityStackCategories},
-            healthIndex: ${healthIndex}
+            healthIndex: ${healthIndex},
+            calendar: ${calendarSeries}
         }
     };
 
@@ -1178,6 +1365,7 @@
         worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, series.geolocations);
         punchCard('punchCard', series.punchCard);
         healthGauge('healthGauge', [v.data.healthIndex]);
+        onlineActivityCalendar('#calendar', v.data.calendar, v.values.firstDay);
         ${sessionTabGraphViewFunctions}
 
         /**/

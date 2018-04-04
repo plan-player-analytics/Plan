@@ -26,6 +26,10 @@ function playersChartNoNav(id, playersOnlineSeries) {
         navigator: {
             enabled: false
         },
+        yAxis: {
+            softMax: 2,
+            softMin: 0
+        },
         title: {text: ''},
         plotOptions: {
             areaspline: {
