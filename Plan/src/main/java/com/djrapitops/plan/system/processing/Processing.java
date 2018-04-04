@@ -27,6 +27,7 @@ public class Processing implements SubSystem {
     public static void submit(Runnable runnable) {
         if (runnable instanceof CriticalRunnable) {
             submitCritical(runnable);
+            return;
         }
         submitNonCritical(runnable);
     }
