@@ -5,6 +5,8 @@ import net.md_5.bungee.api.ProxyServer;
 import org.bukkit.Server;
 import org.spongepowered.api.Game;
 
+import java.net.InetSocketAddress;
+
 /**
  * Class responsible for holding server variable values that do not change
  * without a reload.
@@ -55,9 +57,11 @@ public class ServerProperties {
             throw new IllegalStateException("Game did not inject.");
         }
         version = game.getPlatform().getMinecraftVersion().getName();
-        ip = () -> game.getServer().getBoundAddress().get().getAddress().getHostAddress();
+        ip = () -> game.getServer().getBoundAddress()
+                .orElseGet(() -> new InetSocketAddress(25565))
+                .getAddress().getHostAddress();
         name = "Sponge";
-        port = game.getServer().getBoundAddress().get().getPort();
+        port = game.getServer().getBoundAddress().orElseGet(() -> new InetSocketAddress(25565)).getPort();
         implVersion = version;
 
         id = game.getServer().getMotd().toPlain();
