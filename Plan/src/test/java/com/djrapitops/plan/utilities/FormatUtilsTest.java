@@ -141,21 +141,19 @@ public class FormatUtilsTest {
     @Test
     public void testCutDecimalsWhichIsRoundedDown() {
         double d = 0.05234;
-        String expResult = "0,05";
 
         String result = FormatUtils.cutDecimals(d);
 
-        assertEquals(expResult, result);
+        assertTrue("0.05".equals(result) || "0,05".equals(result));
     }
 
     @Test
     public void testCutDecimalsWhichIsRoundedUp() {
         double d = 0.05634;
-        String expResult = "0,06";
 
         String result = FormatUtils.cutDecimals(d);
 
-        assertEquals(expResult, result);
+        assertTrue("0.06".equals(result) || "0,06".equals(result));
     }
 
     @Test
