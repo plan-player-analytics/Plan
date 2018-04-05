@@ -22,6 +22,7 @@ import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * InfoRequest to generate Analysis page HTML at the receiving end.
@@ -90,6 +91,9 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
                 Log.toLog(this.getClass(), e);
             }
             throw new InternalErrorException("Analysis failed due to exception", e);
+        } catch (InterruptedException | ExecutionException e) {
+            /* Plugin is shutting down, exceptions ignored */
+            return "<p>Plugin is shutting down..</p>";
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
             throw new InternalErrorException("Analysis failed due to exception", e);
