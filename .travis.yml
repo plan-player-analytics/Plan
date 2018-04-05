@@ -3,8 +3,11 @@ sudo: false
 install: true
 before_install:
   - pwd
-  - mvn install:install-file -Dfile=/home/travis/build/Rsl1122/Plan-PlayerAnalytics/PlanPluginBridge/PlanPluginBridge-4.2.0.jar
-  - cd Plan
+  - cd PlanPluginBridge
+  - ls
+  - mvn install:install-file -Dfile=/home/travis/build/Rsl1122/Plan-PlayerAnalytics/PlanPluginBridge/PlanPluginBridge-4.2.0.jar -DpomFile=/home/travis/build/Rsl1122/Plan-PlayerAnalytics/PlanPluginBridge/pom.xml
+  - cd ../Plan
+  - ls
 install:
   - mvn install -DskipTests
 addons:
