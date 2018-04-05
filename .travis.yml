@@ -1,10 +1,12 @@
 language: java
 sudo: false
 install: true
-before_script:
+before_install:
   - pwd
   - mvn install:install-file -Dfile=/home/travis/build/Rsl1122/Plan-PlayerAnalytics/PlanPluginBridge/PlanPluginBridge-4.2.0.jar
   - cd Plan
+install:
+  - mvn install -DskipTests
 addons:
   sonarcloud:
     organization: "player-analytics-plan"
@@ -13,6 +15,7 @@ addons:
 jdk:
   - oraclejdk8
 script:
+  - pwd
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 cache:
   directories:
