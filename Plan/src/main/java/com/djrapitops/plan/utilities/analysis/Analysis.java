@@ -41,7 +41,7 @@ public class Analysis implements Callable<AnalysisData> {
     private final DataCache dataCache;
 
     private static Future<AnalysisData> future;
-    
+
     private boolean analysingThisServer;
 
     private Analysis(UUID serverUUID, Database database, DataCache dataCache) {
@@ -56,8 +56,12 @@ public class Analysis implements Callable<AnalysisData> {
     }
 
     public static AnalysisData runAnalysisFor(UUID serverUUID, Database database, DataCache dataCache) throws Exception {
-        future = future != null ? future : Processing.submit(new Analysis(serverUUID, database, dataCache));
-        return future.get();
+        try {
+            future = future != null ? future : Processing.submit(new Analysis(serverUUID, database, dataCache));
+            return future.get();
+        } finally {
+            future = null;
+        }
     }
 
     /**
@@ -198,7 +202,6 @@ public class Analysis implements Callable<AnalysisData> {
             Log.logDebug("Analysis");
             Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(time, ""));
             Analysis.setServerProfile(null);
-            future = null;
         }
     }
 }
