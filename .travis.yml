@@ -1,7 +1,9 @@
 language: java
 sudo: false
 install: true
-before_script: mvn install:install-file -Dfile=$HOME/PlanPluginBridge/PlanPluginBridge-4.2.0.jar && cd Plan
+before_script:
+  - mvn install:install-file -Dfile=$HOME/Rsl1122/Plan-PlayerAnalytics/PlanPluginBridge/PlanPluginBridge-4.2.0.jar
+  - cd Plan
 addons:
   sonarcloud:
     organization: "player-analytics-plan"
