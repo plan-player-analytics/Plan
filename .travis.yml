@@ -3,7 +3,7 @@ sudo: false
 install: true
 before_script:
   - pwd
-  - mvn install:install-file -Dfile=$HOME/Rsl1122/Plan-PlayerAnalytics/PlanPluginBridge/PlanPluginBridge-4.2.0.jar
+  - mvn install:install-file -Dfile=/home/travis/build/Rsl1122/Plan-PlayerAnalytics/PlanPluginBridge/PlanPluginBridge-4.2.0.jar
   - cd Plan
 addons:
   sonarcloud:
