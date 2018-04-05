@@ -89,20 +89,21 @@ public class BukkitMockUtil extends MockUtil {
 
     public BukkitMockUtil withServer() {
         Server serverMock = Mockito.mock(Server.class);
-        when(serverMock.getIp()).thenReturn("");
-        when(serverMock.getName()).thenReturn("Bukkit");
-        when(serverMock.getServerName()).thenReturn("Bukkit");
-        when(serverMock.getPort()).thenReturn(25565);
-        when(serverMock.getVersion()).thenReturn("1.12.2");
-        when(serverMock.getBukkitVersion()).thenReturn("32423");
-        when(serverMock.getMaxPlayers()).thenReturn(TestConstants.BUKKIT_MAX_PLAYERS);
+        doReturn("").when(serverMock).getIp();
+        doReturn("Bukkit").when(serverMock).getName();
+        doReturn("Bukkit").when(serverMock).getServerName();
+        doReturn(25565).when(serverMock).getPort();
+        doReturn("1.12.2").when(serverMock).getVersion();
+        doReturn("32423").when(serverMock).getBukkitVersion();
+        doReturn(TestConstants.BUKKIT_MAX_PLAYERS).when(serverMock).getMaxPlayers();
         FakeConsoleCmdSender sender = new FakeConsoleCmdSender();
+        doReturn(sender).when(serverMock).getConsoleSender();
         when(serverMock.getConsoleSender()).thenReturn(sender);
 
         BukkitScheduler bukkitScheduler = Mockito.mock(BukkitScheduler.class);
         doReturn(bukkitScheduler).when(serverMock).getScheduler();
 
-        when(planMock.getServer()).thenReturn(serverMock);
+        doReturn(serverMock).when(planMock).getServer();
         return this;
     }
 

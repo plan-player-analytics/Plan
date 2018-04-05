@@ -78,19 +78,19 @@ public class BungeeMockUtil extends MockUtil {
 
     public BungeeMockUtil withProxy() {
         ProxyServer proxyMock = Mockito.mock(ProxyServer.class);
-        when(proxyMock.getVersion()).thenReturn("1.12.2");
+        doReturn("1.12.2").when(proxyMock).getVersion();
 
         CommandSender console = new FakeBungeeConsole();
-        when(proxyMock.getConsole()).thenReturn(console);
+        doReturn(console).when(proxyMock).getConsole();
 
         ProxyConfig proxyConfig = Mockito.mock(ProxyConfig.class);
-        when(proxyConfig.getPlayerLimit()).thenReturn(TestConstants.BUNGEE_MAX_PLAYERS);
-        when(proxyMock.getConfig()).thenReturn(proxyConfig);
+        doReturn(TestConstants.BUNGEE_MAX_PLAYERS).when(proxyConfig).getPlayerLimit();
+        doReturn(proxyConfig).when(proxyMock).getConfig();
 
         PluginManager pm = Mockito.mock(PluginManager.class);
-        when(proxyMock.getPluginManager()).thenReturn(pm);
+        doReturn(pm).when(proxyMock).getPluginManager();
 
-        when(planMock.getProxy()).thenReturn(proxyMock);
+        doReturn(proxyMock).when(planMock).getProxy();
         return this;
     }
 
