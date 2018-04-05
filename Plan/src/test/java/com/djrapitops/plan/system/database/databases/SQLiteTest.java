@@ -19,7 +19,6 @@ import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -71,8 +70,8 @@ public class SQLiteTest {
         StaticHolder.saveInstance(SQLiteTest.class, Plan.class);
 
         Log.setErrorManager(new TestErrorManager());
-        Log.setDebugMode("console");
-        Settings.DEV_MODE.setTemporaryValue(true);
+//        Log.setDebugMode("console");
+//        Settings.DEV_MODE.setTemporaryValue(true);
 
         db.init();
         System.out.println("--- Class Setup Complete ---\n");
