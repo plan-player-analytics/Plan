@@ -149,6 +149,11 @@ public class InspectPage extends Page {
         long playtimeWeek = PlayerProfile.getPlaytime(sessionsWeek.stream());
         long playtimeMonth = PlayerProfile.getPlaytime(sessionsMonth.stream());
 
+        long afk = PlayerProfile.getAFKTime(allSessions.stream());
+        long afkDay = PlayerProfile.getAFKTime(sessionsDay.stream());
+        long afkWeek = PlayerProfile.getAFKTime(sessionsWeek.stream());
+        long afkMonth = PlayerProfile.getAFKTime(sessionsMonth.stream());
+
         long longestSession = PlayerProfile.getLongestSession(allSessions.stream());
         long longestSessionDay = PlayerProfile.getLongestSession(sessionsDay.stream());
         long longestSessionWeek = PlayerProfile.getLongestSession(sessionsWeek.stream());
@@ -173,6 +178,11 @@ public class InspectPage extends Page {
         addValue("playtimeDay", playtimeDay > 0L ? FormatUtils.formatTimeAmount(playtimeDay) : "-");
         addValue("playtimeWeek", playtimeWeek > 0L ? FormatUtils.formatTimeAmount(playtimeWeek) : "-");
         addValue("playtimeMonth", playtimeMonth > 0L ? FormatUtils.formatTimeAmount(playtimeMonth) : "-");
+
+        addValue("afkTotal", afk > 0L ? FormatUtils.formatTimeAmount(afk) : "-");
+        addValue("afkDay", afkDay > 0L ? FormatUtils.formatTimeAmount(afkDay) : "-");
+        addValue("afkWeek", afkWeek > 0L ? FormatUtils.formatTimeAmount(afkWeek) : "-");
+        addValue("afkMonth", afkMonth > 0L ? FormatUtils.formatTimeAmount(afkMonth) : "-");
 
         addValue("sessionLengthLongest", longestSession > 0L ? FormatUtils.formatTimeAmount(longestSession) : "-");
         addValue("sessionLongestDay", longestSessionDay > 0L ? FormatUtils.formatTimeAmount(longestSessionDay) : "-");

@@ -65,6 +65,7 @@ public class SessionTabStructureCreator {
             String sessionStart = FormatUtils.formatTimeStampYear(session.getSessionStart());
             long endOfSession = session.getSessionEnd();
             String sessionLength = endOfSession == -1 ? "Online" : FormatUtils.formatTimeAmount(session.getLength());
+            String afk = (endOfSession == -1 ? "(Inaccurate) " : "") + FormatUtils.formatTimeAmount(session.getAfkLength());
             String sessionEnd = endOfSession == -1 ? "Online" : FormatUtils.formatTimeStampYear(endOfSession);
 
             int playerKillCount = session.getPlayerKills().size();
@@ -116,6 +117,8 @@ public class SessionTabStructureCreator {
                     .append("<li><i class=\"col-teal fa fa-clock-o\"></i> Session Ended<span class=\"pull-right\"><b>").append(sessionEnd).append("</b></span></li>")
                     // Length
                     .append("<li><i class=\"col-teal fa fa-clock-o\"></i> Session Length<span class=\"pull-right\"><b>").append(sessionLength).append("</b></span></li>")
+                    // AFK
+                    .append("<li><i class=\"col-grey fa fa-clock-o\"></i> AFK<span class=\"pull-right\"><b>").append(afk).append("</b></span></li>")
                     // Server
                     .append("<li><i class=\"col-light-green fa fa-server\"></i> Server<span class=\"pull-right\"><b>").append(serverName).append("</b></span></li>")
                     .append("<li></li>")

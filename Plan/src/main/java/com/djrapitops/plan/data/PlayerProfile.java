@@ -434,6 +434,10 @@ public class PlayerProfile {
         return oppedOnServers.contains(ServerInfo.getServerUUID());
     }
 
+    public static long getAFKTime(Stream<Session> sessions) {
+        return sessions.mapToLong(Session::getAfkLength).sum();
+    }
+
     public void calculateWorldTimesPerServer() {
         if (worldTimesMap.containsKey(ServerInfo.getServerUUID())) {
             return;
