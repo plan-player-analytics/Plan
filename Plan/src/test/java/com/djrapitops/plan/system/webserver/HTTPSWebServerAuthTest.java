@@ -48,7 +48,7 @@ public class HTTPSWebServerAuthTest {
         Settings.WEBSERVER_CERTIFICATE_STOREPASS.setTemporaryValue("wDwwf663NLTm73gL");
         Settings.WEBSERVER_CERTIFICATE_ALIAS.setTemporaryValue("DefaultPlanCert");
 
-        Settings.WEBSERVER_PORT.setTemporaryValue(9000);
+        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
         bukkitSystem = new BukkitSystem(planMock);
         bukkitSystem.enable();

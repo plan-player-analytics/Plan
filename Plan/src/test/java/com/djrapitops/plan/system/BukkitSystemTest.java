@@ -53,7 +53,7 @@ public class BukkitSystemTest {
 
     @Test
     public void testEnable() throws EnableException {
-        Settings.WEBSERVER_PORT.setTemporaryValue(9000);
+        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
         bukkitSystem = new BukkitSystem(planMock);
         bukkitSystem.enable();

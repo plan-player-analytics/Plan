@@ -52,7 +52,7 @@ public class SpongeSystemTest {
     @Test
     @Ignore("Sponge mock required")
     public void testEnable() throws EnableException {
-        Settings.WEBSERVER_PORT.setTemporaryValue(9000);
+        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
         spongeSystem = new SpongeSystem(planMock);
         spongeSystem.enable();
