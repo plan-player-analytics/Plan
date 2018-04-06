@@ -27,7 +27,7 @@ public class AFKTracker {
 
     public void performedAction(UUID uuid, long time) {
         Long lastMoved = lastMovement.getOrDefault(uuid, time);
-        lastMovement.put(uuid, lastMoved);
+        lastMovement.put(uuid, time);
 
         if (time - lastMoved < afkThresholdMs) {
             // Threshold not crossed, no action required.
