@@ -797,7 +797,7 @@ public class SQLiteTest {
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
         worldTimesTable.saveWorldTimes(playerUUID, 1, worldTimes);
 
-        Session session = new Session(1, 12345L, 23456L, 0, 0);
+        Session session = new Session(1, 12345L, 23456L, 0, 0, 0);
         Map<Integer, Session> sessions = new HashMap<>();
         sessions.put(1, session);
         worldTimesTable.addWorldTimesToSessions(playerUUID, sessions);
@@ -811,7 +811,7 @@ public class SQLiteTest {
         WorldTimes worldTimes = createWorldTimes();
         System.out.println(worldTimes);
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        Session session = new Session(1, 12345L, 23456L, 0, 0);
+        Session session = new Session(1, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -834,7 +834,7 @@ public class SQLiteTest {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
         System.out.println(worldTimes);
-        Session session = new Session(1, 12345L, 23456L, 0, 0);
+        Session session = new Session(1, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();

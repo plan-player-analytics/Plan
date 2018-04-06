@@ -44,9 +44,9 @@ public class PlayerProfileTest {
         int requiredLogins = Settings.ACTIVE_LOGIN_THRESHOLD.getNumber();
 
         for (int i = 0; i < requiredLogins; i++) {
-            sessions.add(new Session(0, weekAgo, weekAgo + requiredPlaytime * 4L, 0, 0));
-            sessions.add(new Session(0, twoWeeksAgo, twoWeeksAgo + requiredPlaytime * 4L, 0, 0));
-            sessions.add(new Session(0, threeWeeksAgo, threeWeeksAgo + requiredPlaytime * 4L, 0, 0));
+            sessions.add(new Session(0, weekAgo, weekAgo + requiredPlaytime * 4L, 0, 0, 0));
+            sessions.add(new Session(0, twoWeeksAgo, twoWeeksAgo + requiredPlaytime * 4L, 0, 0, 0));
+            sessions.add(new Session(0, threeWeeksAgo, threeWeeksAgo + requiredPlaytime * 4L, 0, 0, 0));
         }
         p.setSessions(null, sessions);
 
@@ -68,9 +68,9 @@ public class PlayerProfileTest {
         int requiredLogins = Settings.ACTIVE_LOGIN_THRESHOLD.getNumber();
 
         for (int i = 0; i < requiredLogins * 2; i++) {
-            sessions.add(new Session(0, weekAgo, weekAgo + requiredPlaytime * 3L, 0, 0));
-            sessions.add(new Session(0, twoWeeksAgo, twoWeeksAgo + requiredPlaytime * 3L, 0, 0));
-            sessions.add(new Session(0, threeWeeksAgo, threeWeeksAgo + requiredPlaytime * 3L, 0, 0));
+            sessions.add(new Session(0, weekAgo, weekAgo + requiredPlaytime * 3L, 0, 0, 0));
+            sessions.add(new Session(0, twoWeeksAgo, twoWeeksAgo + requiredPlaytime * 3L, 0, 0, 0));
+            sessions.add(new Session(0, threeWeeksAgo, threeWeeksAgo + requiredPlaytime * 3L, 0, 0, 0));
         }
         p.setSessions(null, sessions);
 
@@ -92,9 +92,9 @@ public class PlayerProfileTest {
         long requiredPlaytime = Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms() / requiredLogins;
 
         for (int i = 0; i < requiredLogins; i++) {
-            sessions.add(new Session(i, weekAgo, weekAgo + requiredPlaytime, 0, 0));
-            sessions.add(new Session(i * 2, twoWeeksAgo, twoWeeksAgo + requiredPlaytime, 0, 0));
-            sessions.add(new Session(i * 3, threeWeeksAgo, threeWeeksAgo + requiredPlaytime, 0, 0));
+            sessions.add(new Session(i, weekAgo, weekAgo + requiredPlaytime, 0, 0, 0));
+            sessions.add(new Session(i * 2, twoWeeksAgo, twoWeeksAgo + requiredPlaytime, 0, 0, 0));
+            sessions.add(new Session(i * 3, threeWeeksAgo, threeWeeksAgo + requiredPlaytime, 0, 0, 0));
         }
         p.setSessions(null, sessions);
 
@@ -108,7 +108,7 @@ public class PlayerProfileTest {
         long date = 0;
 
         for (int i = 0; i < 5000; i++) {
-            sessions.add(new Session(0, 0, 0, 0, 0));
+            sessions.add(new Session(0, 0, 0, 0, 0, 0));
         }
         p.setSessions(null, sessions);
         p.getActivityIndex(0);

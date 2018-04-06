@@ -214,7 +214,7 @@ public abstract class Importer {
         int mobKills = userImportData.getMobKills();
         int deaths = userImportData.getDeaths();
 
-        Session session = new Session(0, 0L, 0L, mobKills, deaths);
+        Session session = new Session(0, 0L, 0L, mobKills, deaths, 0);
 
         session.setPlayerKills(userImportData.getKills());
         session.setWorldTimes(new WorldTimes(userImportData.getWorldTimes()));
