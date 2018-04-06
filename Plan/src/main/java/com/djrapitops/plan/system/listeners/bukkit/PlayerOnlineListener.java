@@ -69,13 +69,6 @@ public class PlayerOnlineListener implements Listener {
         }
     }
 
-    /**
-     * PlayerJoinEvent Listener.
-     * <p>
-     * Adds processing information to the ProcessingQueue.
-     *
-     * @param event The Fired event.
-     */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         try {
@@ -84,6 +77,8 @@ public class PlayerOnlineListener implements Listener {
 
             UUID uuid = player.getUniqueId();
             long time = MiscUtils.getTime();
+
+            AFKListener.AFK_TRACKER.performedAction(uuid, time);
 
             String world = player.getWorld().getName();
             String gm = player.getGameMode().name();
@@ -110,19 +105,14 @@ public class PlayerOnlineListener implements Listener {
         }
     }
 
-    /**
-     * PlayerQuitEvent Listener.
-     * <p>
-     * Adds processing information to the ProcessingQueue.
-     *
-     * @param event Fired event
-     */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         try {
             long time = MiscUtils.getTime();
             Player player = event.getPlayer();
             UUID uuid = player.getUniqueId();
+
+            AFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
             Processing.submit(new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()));
             Processing.submit(new EndSessionProcessor(uuid, time));
