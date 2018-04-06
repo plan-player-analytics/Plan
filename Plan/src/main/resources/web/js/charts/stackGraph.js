@@ -21,7 +21,9 @@ function stackChart(id, categories, series, label) {
                 formatter: function () {
                     return this.value;
                 }
-            }
+            },
+            softMax: 2,
+            softMin: 0
         },
         tooltip: {
             split: true,
