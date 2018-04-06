@@ -53,11 +53,6 @@ public class Session {
         afkTime = 0;
     }
 
-    @Deprecated
-    public Session(int id, long sessionStart, long sessionEnd, int mobKills, int deaths) {
-        this(id, sessionStart, sessionEnd, mobKills, deaths, 0);
-    }
-
     public Session(int id, long sessionStart, long sessionEnd, int mobKills, int deaths, long afkTime) {
         this.sessionID = id;
         this.sessionStart = sessionStart;
