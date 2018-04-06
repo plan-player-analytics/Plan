@@ -46,6 +46,7 @@ public enum Settings {
     MAX_SESSIONS("Customization.Display.MaxSessions"),
     MAX_PLAYERS("Customization.Display.MaxPlayers"),
     MAX_PLAYERS_PLAYERS_PAGE("Customization.Display.MaxPlayersPlayersPage"),
+    AFK_THRESHOLD_MINUTES("Data.AFKThresholdMinutes"),
 
     // String
     DEBUG("Plugin.Debug"),
