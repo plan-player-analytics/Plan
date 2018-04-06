@@ -45,17 +45,17 @@ public class ActivityIndex {
         // Playtime per week multipliers, max out to avoid too high values.
         double max = 4.0;
 
-        long playtimeWeek = PlayerProfile.getPlaytime(sessionsWeek.stream());
+        long playtimeWeek = PlayerProfile.getActivePlaytime(sessionsWeek.stream());
         double weekPlay = (playtimeWeek * 1.0 / activePlayThreshold);
         if (weekPlay > max) {
             weekPlay = max;
         }
-        long playtimeWeek2 = PlayerProfile.getPlaytime(sessionsWeek2.stream());
+        long playtimeWeek2 = PlayerProfile.getActivePlaytime(sessionsWeek2.stream());
         double week2Play = (playtimeWeek2 * 1.0 / activePlayThreshold);
         if (week2Play > max) {
             week2Play = max;
         }
-        long playtimeWeek3 = PlayerProfile.getPlaytime(sessionsWeek3.stream());
+        long playtimeWeek3 = PlayerProfile.getActivePlaytime(sessionsWeek3.stream());
         double week3Play = (playtimeWeek3 * 1.0 / activePlayThreshold);
         if (week3Play > max) {
             week3Play = max;

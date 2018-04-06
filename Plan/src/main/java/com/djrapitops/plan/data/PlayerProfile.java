@@ -438,6 +438,10 @@ public class PlayerProfile {
         return sessions.mapToLong(Session::getAfkLength).sum();
     }
 
+    public static long getActivePlaytime(Stream<Session> sessions) {
+        return sessions.mapToLong(Session::getActiveLength).sum();
+    }
+
     public void calculateWorldTimesPerServer() {
         if (worldTimesMap.containsKey(ServerInfo.getServerUUID())) {
             return;
