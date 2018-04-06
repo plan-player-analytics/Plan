@@ -106,7 +106,7 @@ public class HTTPSWebServerAuthTest {
      */
     @Test
     public void testHTTPSAuthForPages() throws IOException, WebException, KeyManagementException, NoSuchAlgorithmException {
-        String address = "https://localhost:9000";
+        String address = "https://localhost:9005";
         URL url = new URL(address);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         if (address.startsWith("https")) {
