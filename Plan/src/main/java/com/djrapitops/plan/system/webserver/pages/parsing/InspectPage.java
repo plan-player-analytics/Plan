@@ -154,6 +154,8 @@ public class InspectPage extends Page {
         long afkWeek = PlayerProfile.getAFKTime(sessionsWeek.stream());
         long afkMonth = PlayerProfile.getAFKTime(sessionsMonth.stream());
 
+        long activeTotal = playtime - afk;
+
         long longestSession = PlayerProfile.getLongestSession(allSessions.stream());
         long longestSessionDay = PlayerProfile.getLongestSession(sessionsDay.stream());
         long longestSessionWeek = PlayerProfile.getLongestSession(sessionsWeek.stream());
@@ -178,6 +180,8 @@ public class InspectPage extends Page {
         addValue("playtimeDay", playtimeDay > 0L ? FormatUtils.formatTimeAmount(playtimeDay) : "-");
         addValue("playtimeWeek", playtimeWeek > 0L ? FormatUtils.formatTimeAmount(playtimeWeek) : "-");
         addValue("playtimeMonth", playtimeMonth > 0L ? FormatUtils.formatTimeAmount(playtimeMonth) : "-");
+
+        addValue("activeTotal", activeTotal > 0L ? FormatUtils.formatTimeAmount(activeTotal) : "-");
 
         addValue("afkTotal", afk > 0L ? FormatUtils.formatTimeAmount(afk) : "-");
         addValue("afkDay", afkDay > 0L ? FormatUtils.formatTimeAmount(afkDay) : "-");
