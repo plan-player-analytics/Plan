@@ -895,7 +895,9 @@ public class SQLiteTest {
 
     @Test
     public void testWorldTableGetWorldNamesNoException() throws SQLException {
+        saveAllData(db);
         Set<String> worldNames = db.getWorldTable().getWorldNames(TestConstants.SERVER_UUID);
+        assertEquals(new HashSet<>(worlds), worldNames);
     }
 
     @Test

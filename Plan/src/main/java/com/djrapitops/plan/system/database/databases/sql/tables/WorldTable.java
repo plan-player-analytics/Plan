@@ -247,23 +247,6 @@ public class WorldTable extends Table {
         });
     }
 
-    private Map<Integer, Integer> getWorldIDServerIDRelation() throws SQLException {
-        String sql = "SELECT " +
-                Col.ID + ", " +
-                Col.SERVER_ID +
-                " FROM " + tableName;
-        return query(new QueryAllStatement<Map<Integer, Integer>>(sql, 100) {
-            @Override
-            public Map<Integer, Integer> processResults(ResultSet set) throws SQLException {
-                HashMap<Integer, Integer> idServerIdMap = new HashMap<>();
-                while (set.next()) {
-                    idServerIdMap.put(set.getInt(Col.ID.get()), set.getInt(Col.SERVER_ID.get()));
-                }
-                return idServerIdMap;
-            }
-        });
-    }
-
     public void alterTableV16() throws SQLException {
         addColumns(Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
 
