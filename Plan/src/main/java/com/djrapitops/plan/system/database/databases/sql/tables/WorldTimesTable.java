@@ -12,6 +12,10 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -31,13 +35,21 @@ import java.util.stream.Collectors;
  */
 public class WorldTimesTable extends UserIDTable {
 
+    public static final String TABLE_NAME = "plan_world_times";
+    private final ServerTable serverTable;
+    private final WorldTable worldTable;
+    private final SessionsTable sessionsTable;
+    private String insertStatement;
+
     public WorldTimesTable(SQLDB db) {
-        super("plan_world_times", db);
+        super(TABLE_NAME, db);
         worldTable = db.getWorldTable();
         sessionsTable = db.getSessionsTable();
+        serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
                 Col.USER_ID + ", " +
                 Col.WORLD_ID + ", " +
+                Col.SERVER_ID + ", " +
                 Col.SESSION_ID + ", " +
                 Col.SURVIVAL + ", " +
                 Col.CREATIVE + ", " +
@@ -46,18 +58,16 @@ public class WorldTimesTable extends UserIDTable {
                 ") VALUES (" +
                 usersTable.statementSelectID + ", " +
                 worldTable.statementSelectID + ", " +
+                serverTable.statementSelectServerID + ", " +
                 "?, ?, ?, ?, ?)";
     }
-
-    private final WorldTable worldTable;
-    private final SessionsTable sessionsTable;
-    private String insertStatement;
 
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(Col.USER_ID, Sql.INT).notNull()
                 .column(Col.WORLD_ID, Sql.INT).notNull()
+                .column(Col.SERVER_ID, Sql.INT).notNull()
                 .column(Col.SESSION_ID, Sql.INT).notNull()
                 .column(Col.SURVIVAL, Sql.LONG).notNull().defaultValue("0")
                 .column(Col.CREATIVE, Sql.LONG).notNull().defaultValue("0")
@@ -65,6 +75,7 @@ public class WorldTimesTable extends UserIDTable {
                 .column(Col.SPECTATOR, Sql.LONG).notNull().defaultValue("0")
                 .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
                 .foreignKey(Col.WORLD_ID, worldTable.getTableName(), WorldTable.Col.ID)
+                .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
                 .foreignKey(Col.SESSION_ID, sessionsTable.getTableName(), SessionsTable.Col.ID)
                 .toString()
         );
@@ -135,13 +146,16 @@ public class WorldTimesTable extends UserIDTable {
                     GMTimes gmTimes = entry.getValue();
                     statement.setString(1, uuid.toString());
                     statement.setString(2, worldName);
-                    statement.setInt(3, sessionID);
+                    String serverUUID = ServerInfo.getServerUUID().toString();
+                    statement.setString(3, serverUUID);
+                    statement.setString(4, serverUUID);
+                    statement.setInt(5, sessionID);
 
                     String[] gms = GMTimes.getGMKeyArray();
-                    statement.setLong(4, gmTimes.getTime(gms[0]));
-                    statement.setLong(5, gmTimes.getTime(gms[1]));
-                    statement.setLong(6, gmTimes.getTime(gms[2]));
-                    statement.setLong(7, gmTimes.getTime(gms[3]));
+                    statement.setLong(6, gmTimes.getTime(gms[0]));
+                    statement.setLong(7, gmTimes.getTime(gms[1]));
+                    statement.setLong(8, gmTimes.getTime(gms[2]));
+                    statement.setLong(9, gmTimes.getTime(gms[3]));
                     statement.addBatch();
                 }
             }
@@ -151,8 +165,6 @@ public class WorldTimesTable extends UserIDTable {
     public WorldTimes getWorldTimesOfServer(UUID serverUUID) throws SQLException {
         String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
         String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";
-        String sessionIDColumn = sessionsTable + "." + SessionsTable.Col.ID;
-        String sessionServerIDColumn = sessionsTable + ".server_id";
         String sql = "SELECT " +
                 "SUM(" + Col.SURVIVAL + ") as survival, " +
                 "SUM(" + Col.CREATIVE + ") as creative, " +
@@ -161,8 +173,7 @@ public class WorldTimesTable extends UserIDTable {
                 worldNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " INNER JOIN " + sessionsTable + " on " + sessionIDColumn + "=" + Col.SESSION_ID +
-                " WHERE " + sessionServerIDColumn + "=" + db.getServerTable().statementSelectServerID +
+                " WHERE " + tableName + "." + Col.SERVER_ID + "=" + db.getServerTable().statementSelectServerID +
                 " GROUP BY " + Col.WORLD_ID;
 
         return query(new QueryStatement<WorldTimes>(sql, 1000) {
@@ -191,10 +202,6 @@ public class WorldTimesTable extends UserIDTable {
                 return worldTimes;
             }
         });
-    }
-
-    public WorldTimes getWorldTimesOfServer() throws SQLException {
-        return getWorldTimesOfServer(ServerInfo.getServerUUID());
     }
 
     public WorldTimes getWorldTimesOfUser(UUID uuid) throws SQLException {
@@ -315,9 +322,10 @@ public class WorldTimesTable extends UserIDTable {
             public void prepare(PreparedStatement statement) throws SQLException {
                 String[] gms = GMTimes.getGMKeyArray();
                 // Every Server
-                for (Map<UUID, List<Session>> serverSessions : allSessions.values()) {
+                for (Map.Entry<UUID, Map<UUID, List<Session>>> serverSessions : allSessions.entrySet()) {
+                    UUID serverUUID = serverSessions.getKey();
                     // Every User
-                    for (Map.Entry<UUID, List<Session>> entry : serverSessions.entrySet()) {
+                    for (Map.Entry<UUID, List<Session>> entry : serverSessions.getValue().entrySet()) {
                         UUID uuid = entry.getKey();
                         List<Session> sessions = entry.getValue();
                         // Every Session
@@ -329,11 +337,13 @@ public class WorldTimesTable extends UserIDTable {
                                 GMTimes gmTimes = worldTimesEntry.getValue();
                                 statement.setString(1, uuid.toString());
                                 statement.setString(2, worldName);
-                                statement.setInt(3, sessionID);
-                                statement.setLong(4, gmTimes.getTime(gms[0]));
-                                statement.setLong(5, gmTimes.getTime(gms[1]));
-                                statement.setLong(6, gmTimes.getTime(gms[2]));
-                                statement.setLong(7, gmTimes.getTime(gms[3]));
+                                statement.setString(3, serverUUID.toString());
+                                statement.setString(4, serverUUID.toString());
+                                statement.setInt(5, sessionID);
+                                statement.setLong(6, gmTimes.getTime(gms[0]));
+                                statement.setLong(7, gmTimes.getTime(gms[1]));
+                                statement.setLong(8, gmTimes.getTime(gms[2]));
+                                statement.setLong(9, gmTimes.getTime(gms[3]));
                                 statement.addBatch();
                             }
                         }
@@ -343,8 +353,45 @@ public class WorldTimesTable extends UserIDTable {
         });
     }
 
+    public void alterTableV16() {
+        addColumns(Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
+
+        RunnableFactory.createNew("DB version -> 16", new AbsRunnable() {
+            @Override
+            public void run() {
+                try {
+                    Map<Integer, Integer> sessionIDServerIDRelation = sessionsTable.getIDServerIDRelation();
+
+                    String sql = "UPDATE " + tableName + " SET " +
+                            Col.SERVER_ID + "=?" +
+                            " WHERE " + Col.SESSION_ID + "=?";
+
+                    executeBatch(new ExecStatement(sql) {
+                        @Override
+                        public void prepare(PreparedStatement statement) throws SQLException {
+                            for (Map.Entry<Integer, Integer> entry : sessionIDServerIDRelation.entrySet()) {
+                                Integer sessionID = entry.getKey();
+                                Integer serverID = entry.getValue();
+                                statement.setInt(1, serverID);
+                                statement.setInt(2, sessionID);
+                                statement.addBatch();
+                            }
+                        }
+                    });
+
+                    worldTable.alterTableV16();
+                } catch (SQLException e) {
+                    Log.toLog(this.getClass().getName(), e);
+                } finally {
+                    cancel();
+                }
+            }
+        }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 2);
+    }
+
     public enum Col implements Column {
         USER_ID(UserIDTable.Col.USER_ID.get()),
+        SERVER_ID("server_id"),
         SESSION_ID("session_id"),
         WORLD_ID("world_id"),
         SURVIVAL("survival_time"),

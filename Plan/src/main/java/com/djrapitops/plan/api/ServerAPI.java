@@ -5,7 +5,7 @@
 package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.BukkitSystem;
+import com.djrapitops.plan.system.ServerSystem;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 
 import java.util.UUID;
@@ -15,26 +15,26 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BukkitAPI extends CommonAPI {
+public class ServerAPI extends CommonAPI {
 
-    private final BukkitSystem bukkitSystem;
+    private final ServerSystem serverSystem;
 
-    public BukkitAPI(BukkitSystem bukkitSystem) {
-        this.bukkitSystem = bukkitSystem;
+    public ServerAPI(ServerSystem serverSystem) {
+        this.serverSystem = serverSystem;
     }
 
     @Override
     public void addPluginDataSource(PluginData pluginData) {
-        bukkitSystem.getHookHandler().addPluginDataSource(pluginData);
+        serverSystem.getHookHandler().addPluginDataSource(pluginData);
     }
 
     @Override
     public String getPlayerName(UUID uuid) {
-        return bukkitSystem.getCacheSystem().getDataCache().getName(uuid);
+        return serverSystem.getCacheSystem().getDataCache().getName(uuid);
     }
 
     @Override
     public FetchOperations fetchFromPlanDB() {
-        return bukkitSystem.getDatabaseSystem().getActiveDatabase().fetch();
+        return serverSystem.getDatabaseSystem().getActiveDatabase().fetch();
     }
 }

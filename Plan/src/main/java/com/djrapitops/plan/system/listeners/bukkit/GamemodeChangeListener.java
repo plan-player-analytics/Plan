@@ -27,23 +27,27 @@ public class GamemodeChangeListener implements Listener {
      * @param event Fired Event.
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onGamemodeChange(PlayerGameModeChangeEvent event) {
+    public void onGameModeChange(PlayerGameModeChangeEvent event) {
         if (event.isCancelled()) {
             return;
         }
         try {
-            Player p = event.getPlayer();
-            UUID uuid = p.getUniqueId();
-            long time = MiscUtils.getTime();
-            String gameMode = event.getNewGameMode().name();
-            String worldName = p.getWorld().getName();
-
-            new WorldAliasSettings().addWorld(worldName);
-
-            Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
-            cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
+            actOnEvent(event);
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
+    }
+
+    private void actOnEvent(PlayerGameModeChangeEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        long time = MiscUtils.getTime();
+        String gameMode = event.getNewGameMode().name();
+        String worldName = player.getWorld().getName();
+
+        WorldAliasSettings.addWorld(worldName);
+
+        Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
+        cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
     }
 }

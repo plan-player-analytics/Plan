@@ -11,7 +11,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -39,7 +39,7 @@ public class BukkitConnectionSystem extends ConnectionSystem {
     }
 
     private void refreshServerMap() {
-        Processor.queue(() -> {
+        Processing.submitNonCritical(() -> {
             if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.SECOND.ms() * 15L) {
                 try {
                     Database database = Database.getActive();

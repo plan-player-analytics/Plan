@@ -26,6 +26,7 @@ import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
+import com.djrapitops.plan.utilities.html.graphs.calendar.PlayerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
@@ -126,6 +127,11 @@ public class InspectPage extends Page {
 
         ServerAccordion serverAccordion = new ServerAccordion(profile, serverNames);
 
+        PlayerCalendar playerCalendar = new PlayerCalendar(allSessions, registered);
+
+        addValue("calendarSeries", playerCalendar.toCalendarSeries());
+        addValue("firstDay", 1);
+
         addValue("accordionSessions", sessionsAccordion[0]);
         addValue("accordionServers", serverAccordion.toHtml());
         addValue("sessionTabGraphViewFunctions", sessionsAccordion[1] + serverAccordion.toViewScript());
@@ -142,6 +148,13 @@ public class InspectPage extends Page {
         long playtimeDay = PlayerProfile.getPlaytime(sessionsDay.stream());
         long playtimeWeek = PlayerProfile.getPlaytime(sessionsWeek.stream());
         long playtimeMonth = PlayerProfile.getPlaytime(sessionsMonth.stream());
+
+        long afk = PlayerProfile.getAFKTime(allSessions.stream());
+        long afkDay = PlayerProfile.getAFKTime(sessionsDay.stream());
+        long afkWeek = PlayerProfile.getAFKTime(sessionsWeek.stream());
+        long afkMonth = PlayerProfile.getAFKTime(sessionsMonth.stream());
+
+        long activeTotal = playtime - afk;
 
         long longestSession = PlayerProfile.getLongestSession(allSessions.stream());
         long longestSessionDay = PlayerProfile.getLongestSession(sessionsDay.stream());
@@ -167,6 +180,13 @@ public class InspectPage extends Page {
         addValue("playtimeDay", playtimeDay > 0L ? FormatUtils.formatTimeAmount(playtimeDay) : "-");
         addValue("playtimeWeek", playtimeWeek > 0L ? FormatUtils.formatTimeAmount(playtimeWeek) : "-");
         addValue("playtimeMonth", playtimeMonth > 0L ? FormatUtils.formatTimeAmount(playtimeMonth) : "-");
+
+        addValue("activeTotal", activeTotal > 0L ? FormatUtils.formatTimeAmount(activeTotal) : "-");
+
+        addValue("afkTotal", afk > 0L ? FormatUtils.formatTimeAmount(afk) : "-");
+        addValue("afkDay", afkDay > 0L ? FormatUtils.formatTimeAmount(afkDay) : "-");
+        addValue("afkWeek", afkWeek > 0L ? FormatUtils.formatTimeAmount(afkWeek) : "-");
+        addValue("afkMonth", afkMonth > 0L ? FormatUtils.formatTimeAmount(afkMonth) : "-");
 
         addValue("sessionLengthLongest", longestSession > 0L ? FormatUtils.formatTimeAmount(longestSession) : "-");
         addValue("sessionLongestDay", longestSessionDay > 0L ? FormatUtils.formatTimeAmount(longestSessionDay) : "-");

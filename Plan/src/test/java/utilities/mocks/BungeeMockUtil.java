@@ -23,8 +23,7 @@ import utilities.mocks.objects.TestLogger;
 import java.io.File;
 import java.util.HashSet;
 
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Mocking Utility for Bungee version of Plan (PlanBungee).
@@ -53,8 +52,10 @@ public class BungeeMockUtil extends MockUtil {
         StaticHolder.saveInstance(MockitoJUnitRunner.class, PlanBungee.class);
         StaticHolder.saveInstance(ThreadRunnable.class, PlanBungee.class);
 
-        doCallRealMethod().when(planMock).getVersion();
-        doCallRealMethod().when(planMock).getColorScheme();
+        when(planMock.getVersion()).thenCallRealMethod();
+        when(planMock.getColorScheme()).thenCallRealMethod();
+//        doCallRealMethod().when(planMock).getVersion();
+//        doCallRealMethod().when(planMock).getColorScheme();
         return this;
     }
 
@@ -71,25 +72,25 @@ public class BungeeMockUtil extends MockUtil {
     public BungeeMockUtil withLogging() {
         doCallRealMethod().when(planMock).log(Mockito.anyString(), Mockito.anyString());
         TestLogger testLogger = new TestLogger();
-        when(planMock.getLogger()).thenReturn(testLogger);
+        doReturn(testLogger).when(planMock).getLogger();
         return this;
     }
 
     public BungeeMockUtil withProxy() {
         ProxyServer proxyMock = Mockito.mock(ProxyServer.class);
-        when(proxyMock.getVersion()).thenReturn("1.12.2");
+        doReturn("1.12.2").when(proxyMock).getVersion();
 
         CommandSender console = new FakeBungeeConsole();
-        when(proxyMock.getConsole()).thenReturn(console);
+        doReturn(console).when(proxyMock).getConsole();
 
         ProxyConfig proxyConfig = Mockito.mock(ProxyConfig.class);
-        when(proxyConfig.getPlayerLimit()).thenReturn(TestConstants.BUNGEE_MAX_PLAYERS);
-        when(proxyMock.getConfig()).thenReturn(proxyConfig);
+        doReturn(TestConstants.BUNGEE_MAX_PLAYERS).when(proxyConfig).getPlayerLimit();
+        doReturn(proxyConfig).when(proxyMock).getConfig();
 
         PluginManager pm = Mockito.mock(PluginManager.class);
-        when(proxyMock.getPluginManager()).thenReturn(pm);
+        doReturn(pm).when(proxyMock).getPluginManager();
 
-        when(planMock.getProxy()).thenReturn(proxyMock);
+        doReturn(proxyMock).when(planMock).getProxy();
         return this;
     }
 

@@ -35,6 +35,7 @@ public enum Settings {
     WEBSERVER_DISABLED("WebServer.DisableWebServer"),
     FORMAT_DATE_RECENT_DAYS("Customization.Formatting.Dates.RecentDays"),
     DISPLAY_PLAYER_IPS("Customization.Display.PlayerIPs"),
+    DISPLAY_GAPS_IN_GRAPH_DATA("Customization.Display.GapsInGraphData"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),
@@ -45,6 +46,7 @@ public enum Settings {
     MAX_SESSIONS("Customization.Display.MaxSessions"),
     MAX_PLAYERS("Customization.Display.MaxPlayers"),
     MAX_PLAYERS_PLAYERS_PAGE("Customization.Display.MaxPlayersPlayersPage"),
+    AFK_THRESHOLD_MINUTES("Data.AFKThresholdMinutes"),
 
     // String
     DEBUG("Plugin.Debug"),

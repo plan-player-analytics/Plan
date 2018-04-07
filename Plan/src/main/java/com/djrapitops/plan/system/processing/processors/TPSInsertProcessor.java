@@ -8,6 +8,7 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -18,15 +19,17 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class TPSInsertProcessor extends ObjectProcessor<List<TPS>> {
+public class TPSInsertProcessor implements CriticalRunnable {
 
-    public TPSInsertProcessor(List<TPS> object) {
-        super(object);
+    private final List<TPS> tpsList;
+
+    public TPSInsertProcessor(List<TPS> tpsList) {
+        this.tpsList = tpsList;
     }
 
     @Override
-    public void process() {
-        List<TPS> history = object;
+    public void run() {
+        List<TPS> history = tpsList;
         final long lastDate = history.get(history.size() - 1).getDate();
         final double averageTPS = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getTicksPerSecond)));
         final int peakPlayersOnline = history.stream().mapToInt(TPS::getPlayers).max().orElse(0);

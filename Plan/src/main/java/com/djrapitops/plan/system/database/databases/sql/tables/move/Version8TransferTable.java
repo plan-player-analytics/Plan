@@ -38,14 +38,16 @@ public class Version8TransferTable extends Table {
         throw new IllegalStateException("Method not supposed to be used on this table.");
     }
 
-    private String tableRenameSql(String from, String to) {
-        return usingMySQL ?
+    private void renameTable(String from, String to) throws SQLException {
+        String sql = usingMySQL ?
                 "RENAME TABLE " + from + " TO " + to :
                 "ALTER TABLE " + from + " RENAME TO " + to;
+        execute(sql);
     }
 
-    private String dropTableSql(String name) {
-        return "DROP TABLE " + name;
+    private void dropTable(String name) throws SQLException {
+        String sql = "DROP TABLE " + name;
+        execute(sql);
     }
 
     public void alterTablesToV10() throws SQLException, DBInitException {
@@ -54,23 +56,23 @@ public class Version8TransferTable extends Table {
 
         copyTPS();
 
-        execute(dropTableSql("plan_user_info"));
+        dropTable("plan_user_info");
         copyUsers();
 
-        execute(dropTableSql("plan_ips"));
+        dropTable("plan_ips");
         db.getGeoInfoTable().createTable();
-        execute(dropTableSql("plan_world_times"));
-        execute(dropTableSql("plan_worlds"));
+        dropTable("plan_world_times");
+        dropTable("plan_worlds");
         db.getWorldTable().createTable();
         db.getWorldTimesTable().createTable();
 
-        execute(dropTableSql("plan_actions"));
+        dropTable("plan_actions");
         db.getActionsTable().createTable();
 
-        execute(dropTableSql("plan_gamemodetimes"));
-        execute(dropTableSql("temp_nicks"));
-        execute(dropTableSql("temp_kills"));
-        execute(dropTableSql("temp_users"));
+        dropTable("plan_gamemodetimes");
+        dropTable("temp_nicks");
+        dropTable("temp_kills");
+        dropTable("temp_users");
 
         db.setVersion(10);
         Benchmark.stop("Schema copy from 8 to 10");
@@ -79,19 +81,19 @@ public class Version8TransferTable extends Table {
     private void copyUsers() throws SQLException, DBInitException {
         String tempTableName = "temp_users";
         UsersTable usersTable = db.getUsersTable();
-        execute(tableRenameSql("plan_users", tempTableName));
+        renameTable("plan_users", tempTableName);
 
         String tempNickTableName = "temp_nicks";
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        execute(tableRenameSql(nicknamesTable.toString(), tempNickTableName));
+        renameTable(nicknamesTable.toString(), tempNickTableName);
 
         String tempKillsTableName = "temp_kills";
         KillsTable killsTable = db.getKillsTable();
-        execute(tableRenameSql(killsTable.toString(), tempKillsTableName));
+        renameTable(killsTable.toString(), tempKillsTableName);
 
         usersTable.createTable();
         nicknamesTable.createTable();
-        execute(dropTableSql("plan_sessions"));
+        dropTable("plan_sessions");
         db.getSessionsTable().createTable();
         killsTable.createTable();
 
@@ -141,7 +143,7 @@ public class Version8TransferTable extends Table {
         String tempTableName = "temp_cmdusg";
         CommandUseTable commandUseTable = db.getCommandUseTable();
 
-        execute(tableRenameSql("plan_commandusages", tempTableName));
+        renameTable("plan_commandusages", tempTableName);
 
         commandUseTable.createTable();
 
@@ -153,14 +155,14 @@ public class Version8TransferTable extends Table {
                 " FROM " + tempTableName;
         execute(statement);
 
-        execute(dropTableSql(tempTableName));
+        dropTable(tempTableName);
     }
 
     private void copyTPS() throws SQLException, DBInitException {
         String tempTableName = "temp_tps";
         TPSTable tpsTable = db.getTpsTable();
 
-        execute(tableRenameSql(tpsTable.toString(), tempTableName));
+        renameTable(tpsTable.toString(), tempTableName);
 
         tpsTable.createTable();
 
@@ -172,6 +174,6 @@ public class Version8TransferTable extends Table {
                 " FROM " + tempTableName;
         execute(statement);
 
-        execute(dropTableSql(tempTableName));
+        dropTable(tempTableName);
     }
 }

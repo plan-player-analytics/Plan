@@ -12,6 +12,7 @@ import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -23,12 +24,14 @@ import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
  */
-public class Analysis {
+public class Analysis implements Callable<AnalysisData> {
 
     private static Long refreshDate;
     private final UUID serverUUID;
@@ -36,6 +39,9 @@ public class Analysis {
 
     private static ServerProfile serverProfile;
     private final DataCache dataCache;
+
+    private static Future<AnalysisData> future;
+
     private boolean analysingThisServer;
 
     private Analysis(UUID serverUUID, Database database, DataCache dataCache) {
@@ -50,7 +56,12 @@ public class Analysis {
     }
 
     public static AnalysisData runAnalysisFor(UUID serverUUID, Database database, DataCache dataCache) throws Exception {
-        return new Analysis(serverUUID, database, dataCache).runAnalysis();
+        try {
+            future = future != null ? future : Processing.submit(new Analysis(serverUUID, database, dataCache));
+            return future.get();
+        } finally {
+            future = null;
+        }
     }
 
     /**
@@ -60,6 +71,11 @@ public class Analysis {
      */
     public static ServerProfile getServerProfile() {
         return serverProfile;
+    }
+
+    @Override
+    public AnalysisData call() throws Exception {
+        return runAnalysis();
     }
 
     private AnalysisData runAnalysis() throws Exception {

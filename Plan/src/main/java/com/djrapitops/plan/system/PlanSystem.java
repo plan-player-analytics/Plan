@@ -13,7 +13,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.processing.ProcessingQueue;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -34,7 +34,7 @@ public abstract class PlanSystem implements SubSystem {
     protected static PlanSystem testSystem;
 
     // Initialized in this class
-    protected final ProcessingQueue processingQueue;
+    private Processing processing;
     protected final WebServerSystem webServerSystem;
     protected final CacheSystem cacheSystem;
 
@@ -55,7 +55,7 @@ public abstract class PlanSystem implements SubSystem {
     protected PlanAPI planAPI;
 
     public PlanSystem() {
-        processingQueue = new ProcessingQueue();
+        processing = new Processing();
         webServerSystem = new WebServerSystem();
         cacheSystem = new CacheSystem(this);
     }
@@ -63,12 +63,15 @@ public abstract class PlanSystem implements SubSystem {
     public static PlanSystem getInstance() {
         boolean bukkitAvailable = Check.isBukkitAvailable();
         boolean bungeeAvailable = Check.isBungeeAvailable();
+        boolean spongeAvailable = Check.isSpongeAvailable();
         if (bukkitAvailable && bungeeAvailable) {
             return testSystem;
         } else if (bungeeAvailable) {
             return BungeeSystem.getInstance();
         } else if (bukkitAvailable) {
             return BukkitSystem.getInstance();
+        } else if (spongeAvailable) {
+            return SpongeSystem.getInstance();
         }
         throw new IllegalAccessError("PlanSystem is not available on this platform.");
     }
@@ -83,7 +86,7 @@ public abstract class PlanSystem implements SubSystem {
                 configSystem,
                 databaseSystem,
                 webServerSystem,
-                processingQueue,
+                processing,
                 serverInfo,
                 infoSystem,
                 cacheSystem,
@@ -103,7 +106,7 @@ public abstract class PlanSystem implements SubSystem {
                 hookHandler,
                 cacheSystem,
                 listenerSystem,
-                processingQueue,
+                processing,
                 databaseSystem,
                 webServerSystem,
                 infoSystem,
@@ -136,15 +139,11 @@ public abstract class PlanSystem implements SubSystem {
             Verify.nullCheck(hookHandler, () -> new IllegalStateException("Plugin Hooks were not initialized."));
             Verify.nullCheck(planAPI, () -> new IllegalStateException("Plan API was not initialized."));
         } catch (Exception e) {
-            throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ".", e);
+            throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
 
     // Accessor methods.
-
-    public ProcessingQueue getProcessingQueue() {
-        return processingQueue;
-    }
 
     public VersionCheckSystem getVersionCheckSystem() {
         return versionCheckSystem;
@@ -192,5 +191,9 @@ public abstract class PlanSystem implements SubSystem {
 
     public PlanAPI getPlanAPI() {
         return planAPI;
+    }
+
+    public Processing getProcessing() {
+        return processing;
     }
 }

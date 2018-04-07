@@ -26,6 +26,8 @@ public abstract class PluginData {
     private String pluginIcon;
     private String iconColor;
 
+    private String helpText;
+
     public PluginData(ContainerSize size, String sourcePlugin) {
         this.size = size;
         this.sourcePlugin = sourcePlugin;
@@ -43,6 +45,10 @@ public abstract class PluginData {
         this.iconColor = iconColor;
     }
 
+    public final String getHelpText() {
+        return helpText;
+    }
+
     public final String parsePluginIcon() {
         return pluginIcon != null ? Html.FA_COLORED_ICON.parse((iconColor != null ? iconColor : "black"), pluginIcon) : Html.FONT_AWESOME_ICON.parse("cube");
     }
@@ -53,6 +59,10 @@ public abstract class PluginData {
 
     public final String getSourcePlugin() {
         return sourcePlugin;
+    }
+
+    protected final void setHelpText(String html) {
+        helpText = Html.HELP_BUBBLE.parse(sourcePlugin, html);
     }
 
     @Override

@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
@@ -15,20 +16,20 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BungeePlayerRegisterProcessor extends PlayerProcessor {
+public class BungeePlayerRegisterProcessor implements CriticalRunnable {
 
+    private final UUID uuid;
     private final String name;
     private final long registered;
 
     public BungeePlayerRegisterProcessor(UUID uuid, String name, long registered) {
-        super(uuid);
+        this.uuid = uuid;
         this.name = name;
         this.registered = registered;
     }
 
     @Override
-    public void process() {
-        UUID uuid = getUUID();
+    public void run() {
         Database database = Database.getActive();
         try {
             if (database.check().isPlayerRegistered(uuid)) {

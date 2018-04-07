@@ -8,18 +8,22 @@ import java.util.Objects;
  */
 public class Point {
     private final double x;
-    private final double y;
+    private final Double y;
 
-    public Point(double x, double y) {
+    public Point(double x, Double y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Point(double x, double y) {
+        this(x, (Double) y);
     }
 
     public double getX() {
         return x;
     }
 
-    public double getY() {
+    public Double getY() {
         return y;
     }
 

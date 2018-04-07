@@ -129,8 +129,23 @@
         <!-- #Menu -->
         <!-- Footer -->
         <div class="legal">
-            <div class="version">
-                <b>Player Analytics: </b> v${version}
+            <div class="row clearfix">
+                <div class="col-xs-10 col-sm-10 col-lg-10">
+                    <div class="version">
+                        <b>Player Analytics: </b> v${version}
+                    </div>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-lg-2">
+                    <a href="javascript:void(0)" class="help material-icons pull-right"
+                       tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="top"
+                       data-container="body" data-html="true"
+                       data-original-title="Player Analytics"
+                       data-content="Author: Rsl1122
+                       <br><br>Tutorials: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki&quot;>Link</a>
+                       <br>Issues: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/issues&quot;>Link</a>
+                       <br><br>Discord: <a target=&quot;_blank&quot; href=&quot;https://discord.gg/yXKmjzT&quot;>Link</a>"
+                    >help_outline</a>
+                </div>
             </div>
         </div>
         <!-- #Footer -->
@@ -237,8 +252,17 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="fa fa-drivers-license"></i> ${playerName}</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Overview"
+                                           data-content="Quick overview of the Player.
+                                               <br><br><b>Activity Index:</b> Calculated using the sessions in the last 3 weeks. From 0 to 5."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -268,6 +292,10 @@
                                                     class="pull-right"><b>${sessionCount}</b></span></p>
                                             <p><i class="col-green fa fa-clock-o"></i> Total Playtime <span
                                                     class="pull-right">${playtimeTotal}</span></p>
+                                            <p><i class="col-green fa fa-clock-o"></i> Total Active <span
+                                                    class="pull-right">${activeTotal}</span></p>
+                                            <p><i class="col-grey fa fa-clock-o"></i> Total AFK <span
+                                                    class="pull-right">${afkTotal}</span></p>
                                             <p><i class="col-teal fa fa-clock-o"></i> Longest Session <span
                                                     class="pull-right">${sessionLengthLongest}</span>
                                             </p>
@@ -335,8 +363,16 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="fa fa-braille"></i> Punchcard</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Player Join PunchCard"
+                                           data-content="Chart displays the time and days the player usually joins.<br>It includes all sessions.<br><br><b>Relative Activity:</b> Size of a dot is relative to amount of sessions started in that hour."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -380,8 +416,16 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div class="col-xs-8 col-sm-8 col-lg-8">
                                         <h2><i class="fa fa-wifi"></i> Connection Information</h2>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-lg-4">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Connection Information"
+                                           data-content="IP-addresses and Geolocations linked to the addresses<br><br>Last two digits of the IP are hidden by default. If IP displays 'Hidden' the display has been disabled in the config.<br><br>Any connections from the server machine are labeled 'Local Machine'"
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -413,8 +457,36 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-6">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <h2><i class="col-teal fa fa-calendar-o"></i> Session Calendar</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Session Calendar"
+                                           data-content="Calendar that contains information about sessions for each day.<br><br>Day numbers can be clicked to inspect a particular day in higher detail.<br><br>If a title is not visible you can hover over the box to see the title."
+                                        >help_outline</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="body">
+                                <div id="sessionCalendar" style="height: 500px;" class="dashboard-flot-chart"></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-teal fa fa-calendar"></i> Most Recent Sessions</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Sessions Accordion"
+                                           data-content="Latest sessions.<br><br>Each header can be clicked to open a detailed overview of the session.<br><br>World & GameMode playtime is available for each Session."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -427,8 +499,16 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-12">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-teal fa fa-clock-o"></i> World Playtime</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Total World Playtime"
+                                           data-content="Total Playtime & GameMode split for each world.<br><br>Slices can be hidden by clicking a world name in the legend.<br><br>World Aliases (config) can be used to group multiple worlds together."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -441,8 +521,16 @@
                         <div class="card">
                             <div class="header">
                                 <div class="row clearfix">
-                                    <div class="col-xs-12 col-sm-12">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <h2><i class="col-light-green fa fa-server"></i> Server Preference</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Server Playtime"
+                                           data-content="Total Playtime for each server in the network.<br><br>Slices can be hidden by clicking a server name in the legend.<br><br>Displays server preference in terms of Playtime."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -468,6 +556,8 @@
                                             class="pull-right"><b>${sessionCountMonth}</b></span></li>
                                     <li><i class="col-green fa fa-clock-o"></i> Total Playtime <span
                                             class="pull-right">${playtimeMonth}</span></li>
+                                    <li><i class="col-grey fa fa-clock-o"></i> AFK <span
+                                            class="pull-right">${afkMonth}</span></li>
                                     <li><i class="col-teal fa fa-clock-o"></i> Longest Session <span
                                             class="pull-right">${sessionLongestMonth}</span>
                                     </li>
@@ -489,6 +579,8 @@
                                             class="pull-right"><b>${sessionCountWeek}</b></span></li>
                                     <li><i class="col-green fa fa-clock-o"></i> Total Playtime <span
                                             class="pull-right">${playtimeWeek}</span></li>
+                                    <li><i class="col-grey fa fa-clock-o"></i> AFK <span
+                                            class="pull-right">${afkWeek}</span></li>
                                     <li><i class="col-teal fa fa-clock-o"></i> Longest Session <span
                                             class="pull-right">${sessionLongestWeek}</span>
                                     </li>
@@ -510,6 +602,8 @@
                                             class="pull-right"><b>${sessionCountDay}</b></span></li>
                                     <li><i class="col-green fa fa-clock-o"></i> Total Playtime <span
                                             class="pull-right">${playtimeDay}</span></li>
+                                    <li><i class="col-grey fa fa-clock-o"></i> AFK <span
+                                            class="pull-right">${afkDay}</span></li>
                                     <li><i class="col-teal fa fa-clock-o"></i> Longest Session <span
                                             class="pull-right">${sessionLongestDay}</span>
                                     </li>
@@ -531,6 +625,14 @@
                                 <div class="row clearfix">
                                     <div class="col-xs-12 col-sm-6">
                                         <h2><i class="col-light-green fa fa-server"></i> Servers</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Server Accordion"
+                                           data-content="In depth detail about sessions on each server in the network.<br><br>Each header can be clicked to open a detailed overview of the sessions on the server.<br><br>World & GameMode playtime is available for each server."
+                                        >help_outline</a>
                                     </div>
                                 </div>
                             </div>
@@ -574,6 +676,11 @@
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
 <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 
+<!-- FullCalendar -->
+<link rel='stylesheet' href='../plugins/fullcalendar/fullcalendar.min.css'/>
+<script src='../plugins/momentjs/moment.js'></script>
+<script src='../plugins/fullcalendar/fullcalendar.min.js'></script>
+
 <!-- Font Awesome -->
 <script src="../plugins/font-awesome/fa-script.js"></script>
 
@@ -584,20 +691,21 @@
 <script src="../js/charts/punchCard.js"></script>
 <script src="../js/charts/serverPie.js"></script>
 <script src="../js/charts/worldPie.js"></script>
+<script src="../js/charts/sessionCalendar.js"></script>
 
 <!-- Chart Data -->
 <script>
     Highcharts.setOptions({
         time: {
             timezoneOffset: ${timeZone} * 60
-        }
-    });
+    }
+    })
     var serverSeries = {
         name: 'Server Playtime',
         colorByPoint: true,
         colors: [${serverPieColors}],
         data: ${serverPieSeries}
-    }
+    };
     var worldSeries = {
         name: 'World Playtime',
         colorByPoint: true,
@@ -610,12 +718,13 @@
         color: '#222',
         data: ${punchCardSeries}
     };
+    var calendarSeries = ${calendarSeries};
+    var firstDay = ${firstDay};
 </script>
 
 <!-- Plan laod script -->
 <script>
     $(function () {
-
         $('.player-table').DataTable({
             responsive: true
         });
@@ -640,6 +749,7 @@
         worldPie('worldPie', worldSeries, gmSeries);
         serverPie('serverPie', serverSeries);
         punchCard('punchCard', punchcardSeries);
+        sessionCalendar('#sessionCalendar', calendarSeries, firstDay);
         ${sessionTabGraphViewFunctions}
 
         /**/

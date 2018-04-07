@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -28,18 +29,23 @@ import java.util.*;
  */
 public class KillsTable extends UserIDTable {
 
+    private final ServerTable serverTable;
+
     public KillsTable(SQLDB db) {
         super("plan_kills", db);
         sessionsTable = db.getSessionsTable();
+        serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " ("
                 + Col.KILLER_ID + ", "
                 + Col.VICTIM_ID + ", "
+                + Col.SERVER_ID + ", "
                 + Col.SESSION_ID + ", "
                 + Col.DATE + ", "
                 + Col.WEAPON
                 + ") VALUES ("
                 + usersTable.statementSelectID + ", "
                 + usersTable.statementSelectID + ", "
+                + serverTable.statementSelectServerID + ", "
                 + "?, ?, ?)";
     }
 
@@ -51,12 +57,14 @@ public class KillsTable extends UserIDTable {
         createTable(TableSqlParser.createTable(tableName)
                 .column(Col.KILLER_ID, Sql.INT).notNull()
                 .column(Col.VICTIM_ID, Sql.INT).notNull()
+                .column(Col.SERVER_ID, Sql.INT).notNull()
                 .column(Col.WEAPON, Sql.varchar(30)).notNull()
                 .column(Col.DATE, Sql.LONG).notNull()
                 .column(Col.SESSION_ID, Sql.INT).notNull()
                 .foreignKey(Col.KILLER_ID, usersTable.getTableName(), UsersTable.Col.ID)
                 .foreignKey(Col.VICTIM_ID, usersTable.getTableName(), UsersTable.Col.ID)
                 .foreignKey(Col.SESSION_ID, sessionsTable.getTableName(), SessionsTable.Col.ID)
+                .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
                 .toString()
         );
     }
@@ -131,9 +139,10 @@ public class KillsTable extends UserIDTable {
 
                     statement.setString(1, uuid.toString());
                     statement.setString(2, victim.toString());
-                    statement.setInt(3, sessionID);
-                    statement.setLong(4, date);
-                    statement.setString(5, weapon);
+                    statement.setString(3, ServerInfo.getServerUUID().toString());
+                    statement.setInt(4, sessionID);
+                    statement.setLong(5, date);
+                    statement.setString(6, weapon);
                     statement.addBatch();
                 }
             }
@@ -243,9 +252,10 @@ public class KillsTable extends UserIDTable {
                                 String weapon = kill.getWeapon();
                                 statement.setString(1, killer.toString());
                                 statement.setString(2, victim.toString());
-                                statement.setInt(3, sessionID);
-                                statement.setLong(4, date);
-                                statement.setString(5, weapon);
+                                statement.setString(3, serverUUID.toString());
+                                statement.setInt(4, sessionID);
+                                statement.setLong(5, date);
+                                statement.setString(6, weapon);
                                 statement.addBatch();
                             }
                         }
@@ -255,9 +265,33 @@ public class KillsTable extends UserIDTable {
         });
     }
 
+    public void alterTableV16() throws SQLException {
+        addColumns(Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
+
+        Map<Integer, Integer> sessionIDServerIDRelation = sessionsTable.getIDServerIDRelation();
+
+        String sql = "UPDATE " + tableName + " SET " +
+                Col.SERVER_ID + "=?" +
+                " WHERE " + Col.SESSION_ID + "=?";
+
+        executeBatch(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Map.Entry<Integer, Integer> entry : sessionIDServerIDRelation.entrySet()) {
+                    Integer sessionID = entry.getKey();
+                    Integer serverID = entry.getValue();
+                    statement.setInt(1, serverID);
+                    statement.setInt(2, sessionID);
+                    statement.addBatch();
+                }
+            }
+        });
+    }
+
     public enum Col implements Column {
         KILLER_ID("killer_id"),
         VICTIM_ID("victim_id"),
+        SERVER_ID("server_id"),
         SESSION_ID("session_id"),
         WEAPON("weapon"),
         DATE("date");

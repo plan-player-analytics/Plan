@@ -137,7 +137,9 @@ public class HtmlExport extends SpecificExport {
                 "web/js/charts/punchCard.js",
                 "web/js/charts/serverPie.js",
                 "web/js/charts/worldPie.js",
-                "web/js/charts/healthGauge.js"
+                "web/js/charts/healthGauge.js",
+                "web/js/charts/sessionCalendar.js",
+                "web/js/charts/onlineActivityCalendar.js"
         };
         copyFromJar(resources);
 
@@ -164,7 +166,10 @@ public class HtmlExport extends SpecificExport {
                 "web/plugins/jquery/jquery.min.js",
                 "web/plugins/bootstrap/js/bootstrap.js",
                 "web/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js",
-                "web/plugins/jquery-datatable/jquery.dataTables.js"
+                "web/plugins/jquery-datatable/jquery.dataTables.js",
+                "web/plugins/fullcalendar/fullcalendar.min.js",
+                "web/plugins/fullcalendar/fullcalendar.min.css",
+                "web/plugins/momentjs/moment.js",
         };
         copyFromJar(resources);
     }

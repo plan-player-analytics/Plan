@@ -20,7 +20,8 @@ public class BukkitListenerSystem extends ListenerSystem {
                 new GamemodeChangeListener(),
                 new WorldChangeListener(),
                 new CommandPreprocessListener(plugin),
-                new DeathEventListener()
+                new DeathEventListener(),
+                new AFKListener()
         );
         PlayerOnlineListener.setCountKicks(true);
     }

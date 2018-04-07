@@ -88,4 +88,6 @@ public interface FetchOperations {
     List<Server> getServers() throws DBException;
 
     List<UUID> getServerUUIDs() throws DBException;
+
+    List<String> getNetworkGeolocations() throws DBException;
 }

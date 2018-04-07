@@ -8,7 +8,7 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.CheckConnectionRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -54,9 +54,7 @@ public class ManageConDebugCommand extends SubCommand {
             return true;
         }
 
-        Processor.queue(() -> {
-            testServers(sender);
-        });
+        Processing.submitNonCritical(() -> testServers(sender));
 
         return true;
     }

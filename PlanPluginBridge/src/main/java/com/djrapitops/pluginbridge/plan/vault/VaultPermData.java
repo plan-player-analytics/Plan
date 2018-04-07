@@ -4,7 +4,6 @@
  */
 package com.djrapitops.pluginbridge.plan.vault;
 
-import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
@@ -53,15 +52,16 @@ public class VaultPermData extends PluginData {
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         ServerProfile serverProfile = Analysis.getServerProfile();
 
-        List<PlayerProfile> profiles = collection.stream()
+        List<FakeOfflinePlayer> profiles = collection.stream()
                 .map(serverProfile::getPlayer)
                 .filter(Verify::notNull)
+                .map(profile -> new FakeOfflinePlayer(profile.getUuid(), profile.getName()))
                 .collect(Collectors.toList());
 
         Map<UUID, String> groups = new HashMap<>();
-        for (PlayerProfile profile : profiles) {
-            String group = StringUtils.capitalize(permSys.getPrimaryGroup(null, profile));
-            groups.put(profile.getUuid(), group);
+        for (FakeOfflinePlayer p : profiles) {
+            String group = StringUtils.capitalize(permSys.getPrimaryGroup(null, p));
+            groups.put(p.getUniqueId(), group);
         }
         analysisContainer.addPlayerTableValues(getWithIcon("Balance", "money"), groups);
 

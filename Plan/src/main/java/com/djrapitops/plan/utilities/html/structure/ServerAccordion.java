@@ -53,6 +53,7 @@ public class ServerAccordion extends AbstractAccordion {
 
             List<Session> sessions = profile.getSessions(serverUUID);
             long playtime = PlayerProfile.getPlaytime(sessions.stream());
+            long afk = PlayerProfile.getAFKTime(sessions.stream());
             int sessionCount = sessions.size();
             long avgSession = MathUtils.averageLong(playtime, sessionCount);
             long sessionMedian = PlayerProfile.getSessionMedian(sessions.stream());
@@ -81,6 +82,7 @@ public class ServerAccordion extends AbstractAccordion {
             String leftSide = new AccordionElementContentBuilder()
                     .addRowBold("teal", "calendar-check-o", "Sessions", sessionCount)
                     .addRowBold("green", "clock-o", "Server Playtime", play)
+                    .addRowBold("grey", "clock-o", "Time AFK", afk)
                     .addRowBold("teal", "clock-o", "Longest Session", longest)
                     .addRowBold("teal", "clock-o", "Session Median", median)
                     .addBreak()

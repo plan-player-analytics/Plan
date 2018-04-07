@@ -39,7 +39,7 @@ public class BungeeServerInfo extends ServerInfo {
                 server = registerBungeeInfo(db);
             }
         } catch (DBException e) {
-            throw new EnableException("Failed to read Database for Server");
+            throw new EnableException("Failed to read Server information from Database.");
         }
         return server;
     }

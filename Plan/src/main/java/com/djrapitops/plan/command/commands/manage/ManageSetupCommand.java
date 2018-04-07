@@ -2,7 +2,7 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -59,7 +59,7 @@ public class ManageSetupCommand extends SubCommand {
     }
 
     private void requestSetup(ISender sender, String address) {
-        Processor.queue(() -> {
+        Processing.submitNonCritical(() -> {
             try {
                 Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.set(false);
                 Settings.BUNGEE_COPY_CONFIG.set(true);

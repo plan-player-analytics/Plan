@@ -7,7 +7,7 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -49,7 +49,7 @@ public class AnalyzeCommand extends SubCommand {
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
 
-        Processor.queue(() -> {
+        Processing.submitNonCritical(() -> {
             try {
                 Server server = getServer(args).orElseGet(ServerInfo::getServer);
                 UUID serverUUID = server.getUuid();
@@ -59,7 +59,6 @@ public class AnalyzeCommand extends SubCommand {
                 sendWebUserNotificationIfNecessary(sender);
                 sendLink(server, sender);
             } catch (DBException | WebException e) {
-                // TODO Exception handling
                 sender.sendMessage(ChatColor.RED + " Error occurred: " + e.toString());
                 Log.toLog(this.getClass(), e);
             }

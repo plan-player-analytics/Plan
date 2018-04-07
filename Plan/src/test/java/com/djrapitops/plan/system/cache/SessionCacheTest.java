@@ -26,7 +26,7 @@ public class SessionCacheTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         SystemMockUtil.setUp(temporaryFolder.getRoot())
-                .enableProcessingQueue();
+                .enableProcessing();
     }
 
     @Before

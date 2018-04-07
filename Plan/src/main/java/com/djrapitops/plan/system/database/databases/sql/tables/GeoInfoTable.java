@@ -179,6 +179,30 @@ public class GeoInfoTable extends UserIDTable {
         });
     }
 
+    public List<String> getNetworkGeolocations() throws SQLException {
+        String subQuery = "SELECT " +
+                Col.USER_ID + ", " +
+                "MAX(" + Col.LAST_USED + ") as max" +
+                " FROM " + tableName +
+                " GROUP BY " + Col.USER_ID;
+        String sql = "SELECT " +
+                "f." + Col.GEOLOCATION +
+                " FROM (" + subQuery + ") as x" +
+                " INNER JOIN " + tableName + " AS f ON f." + Col.USER_ID + "=x." + Col.USER_ID +
+                " AND f." + Col.LAST_USED + "=x.max";
+
+        return query(new QueryAllStatement<List<String>>(sql) {
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> geolocations = new ArrayList<>();
+                while (set.next()) {
+                    geolocations.add(set.getString(Col.GEOLOCATION.get()));
+                }
+                return geolocations;
+            }
+        });
+    }
+
     public enum Col implements Column {
         USER_ID(UserIDTable.Col.USER_ID.get()),
         IP("ip"),

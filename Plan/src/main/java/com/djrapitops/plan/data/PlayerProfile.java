@@ -14,10 +14,6 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.comparators.ActionComparator;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.io.Serializable;
 import java.util.*;
@@ -31,7 +27,7 @@ import java.util.stream.Stream;
  *
  * @author Rsl1122
  */
-public class PlayerProfile implements OfflinePlayer {
+public class PlayerProfile {
 
     // Identification
     private final UUID uuid;
@@ -170,10 +166,6 @@ public class PlayerProfile implements OfflinePlayer {
 
     public long getLastSeen() {
         return getLastSeen(getAllSessions());
-    }
-
-    public long getLastSeen(UUID serverUUID) {
-        return getLastSeen(getSessions(serverUUID).stream());
     }
 
     public long getLastSeen(Stream<Session> s) {
@@ -387,7 +379,6 @@ public class PlayerProfile implements OfflinePlayer {
         return uuid;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -435,70 +426,20 @@ public class PlayerProfile implements OfflinePlayer {
 
     // OfflinePlayer methods for possible PluginData analysis
 
-    @Override
-    public boolean isOnline() {
-        Player p = getPlayer();
-        return p != null && p.isOnline();
-    }
-
-    @Override
-    public UUID getUniqueId() {
-        return uuid;
-    }
-
-    @Override
     public boolean isBanned() {
         return bannedOnServers.size() != 0;
     }
 
-    @Override
-    public boolean isWhitelisted() {
-        return true;
-    }
-
-    @Override
-    public void setWhitelisted(boolean b) {
-        /* Do nothing */
-    }
-
-    @Override
-    public Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
-    }
-
-    @Override
-    public long getFirstPlayed() {
-        return registered;
-    }
-
-    @Override
-    public long getLastPlayed() {
-        return getLastSeen(ServerInfo.getServerUUID());
-    }
-
-    @Override
-    public boolean hasPlayedBefore() {
-        return true;
-    }
-
-    @Override
-    public Location getBedSpawnLocation() {
-        return null;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        return new HashMap<>();
-    }
-
-    @Override
     public boolean isOp() {
         return oppedOnServers.contains(ServerInfo.getServerUUID());
     }
 
-    @Override
-    public void setOp(boolean b) {
-        /* Do nothing */
+    public static long getAFKTime(Stream<Session> sessions) {
+        return sessions.mapToLong(Session::getAfkLength).sum();
+    }
+
+    public static long getActivePlaytime(Stream<Session> sessions) {
+        return sessions.mapToLong(Session::getActiveLength).sum();
     }
 
     public void calculateWorldTimesPerServer() {

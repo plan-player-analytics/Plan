@@ -48,7 +48,7 @@ public class HTTPSWebServerAuthTest {
         Settings.WEBSERVER_CERTIFICATE_STOREPASS.setTemporaryValue("wDwwf663NLTm73gL");
         Settings.WEBSERVER_CERTIFICATE_ALIAS.setTemporaryValue("DefaultPlanCert");
 
-        Settings.WEBSERVER_PORT.setTemporaryValue(9000);
+        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
         bukkitSystem = new BukkitSystem(planMock);
         bukkitSystem.enable();
@@ -64,10 +64,16 @@ public class HTTPSWebServerAuthTest {
 
     @After
     public void tearDown() {
+        Teardown.resetSettingsTempValues();
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
         if (bukkitSystem != null) {
             bukkitSystem.disable();
         }
-        Teardown.resetSettingsTempValues();
+        bukkitSystem.disable();
+
     }
 
     private static final TrustManager[] trustAllCerts = new TrustManager[]{
@@ -100,7 +106,7 @@ public class HTTPSWebServerAuthTest {
      */
     @Test
     public void testHTTPSAuthForPages() throws IOException, WebException, KeyManagementException, NoSuchAlgorithmException {
-        String address = "https://localhost:9000";
+        String address = "https://localhost:9005";
         URL url = new URL(address);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         if (address.startsWith("https")) {

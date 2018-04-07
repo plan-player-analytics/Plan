@@ -58,6 +58,8 @@ Analysis:
     DestinationFolder: 'Analysis Results'
 
 Data:
+  # How many minutes player has to stay still to be considered AFK
+  AFKThresholdMinutes: 3
   Commands:
     LogUnknownCommands: false
     CombineCommandAliases: true
@@ -74,6 +76,7 @@ Customization:
     MaxPlayersPlayersPage: 25000
     PlayerTableFooter: true
     PlayerIPs: true
+    GapsInGraphData: false
   Formatting:
     DecimalPoints: '#.##'
     Dates:

@@ -2,8 +2,9 @@ package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
+import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -41,7 +42,7 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             boolean op = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
-            new BanAndOpProcessor(uuid, banned, op).queue();
+            Processing.submit(new BanAndOpProcessor(uuid, banned, op));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -62,19 +63,12 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
             UUID uuid = event.getPlayer().getUniqueId();
-            new KickProcessor(uuid).queue();
+            Processing.submit(new KickProcessor(uuid));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
     }
 
-    /**
-     * PlayerJoinEvent Listener.
-     * <p>
-     * Adds processing information to the ProcessingQueue.
-     *
-     * @param event The Fired event.
-     */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         try {
@@ -83,6 +77,8 @@ public class PlayerOnlineListener implements Listener {
 
             UUID uuid = player.getUniqueId();
             long time = MiscUtils.getTime();
+
+            AFKListener.AFK_TRACKER.performedAction(uuid, time);
 
             String world = player.getWorld().getName();
             String gm = player.getGameMode().name();
@@ -96,25 +92,19 @@ public class PlayerOnlineListener implements Listener {
 
             SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
 
-            Processor.queueMany(
+            Processing.submit(
                     new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
                             new IPUpdateProcessor(uuid, ip, time),
-                            new NameProcessor(uuid, playerName, displayName)
-                    ),
-                    new NetworkPageUpdateProcessor()
+                            new NameProcessor(uuid, playerName, displayName),
+                            new PlayerPageUpdateProcessor(uuid)
+                    )
             );
+            Processing.submit(new NetworkPageUpdateProcessor());
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
     }
 
-    /**
-     * PlayerQuitEvent Listener.
-     * <p>
-     * Adds processing information to the ProcessingQueue.
-     *
-     * @param event Fired event
-     */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         try {
@@ -122,17 +112,19 @@ public class PlayerOnlineListener implements Listener {
             Player player = event.getPlayer();
             UUID uuid = player.getUniqueId();
 
-            Processor.queueMany(
-                    new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()),
-                    new EndSessionProcessor(uuid, time),
-                    new NetworkPageUpdateProcessor()
-            );
+            AFKListener.AFK_TRACKER.loggedOut(uuid, time);
+
+            Processing.submit(new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()));
+            Processing.submit(new EndSessionProcessor(uuid, time));
+            Processing.submit(new NetworkPageUpdateProcessor());
 
             SessionCache sessionCache = SessionCache.getInstance();
             if (sessionCache.isFirstSession(uuid)) {
                 int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
-                new FirstLeaveProcessor(uuid, time, messagesSent).queue();
+                Processing.submit(new FirstLeaveProcessor(uuid, time, messagesSent));
             }
+
+            Processing.submit(new PlayerPageUpdateProcessor(uuid));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

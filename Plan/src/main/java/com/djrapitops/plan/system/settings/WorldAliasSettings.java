@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.settings;
 
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.config.ConfigNode;
@@ -22,12 +22,16 @@ import java.util.Map;
  */
 public class WorldAliasSettings {
 
+    private WorldAliasSettings() {
+        /* Hide Constructor */
+    }
+    
     /**
      * Used to get all World aliases in the config
      *
      * @return Map: Original name, Alias
      */
-    public Map<String, String> getAliases() {
+    public static Map<String, String> getAliases() {
         ConfigNode aliasSect = getAliasSection();
 
         Map<String, String> aliasMap = new HashMap<>();
@@ -37,7 +41,7 @@ public class WorldAliasSettings {
         return aliasMap;
     }
 
-    private ConfigNode getAliasSection() {
+    private static ConfigNode getAliasSection() {
         Config config = ConfigSystem.getConfig();
         return config.getConfigNode(Settings.WORLD_ALIASES.getPath());
     }
@@ -49,29 +53,19 @@ public class WorldAliasSettings {
      *
      * @param world World name
      */
-    public void addWorld(String world) {
+    public static void addWorld(String world) {
         ConfigNode aliasSect = getAliasSection();
 
         String previousValue = aliasSect.getConfigNode(world).getValue();
         if (Verify.isEmpty(previousValue)) {
             aliasSect.set(world, world);
-            Processor.queue(() -> {
+            Processing.submitNonCritical(() -> {
                 try {
                     aliasSect.save();
                 } catch (IOException e) {
-                    Log.toLog(this.getClass(), e);
+                    Log.toLog(WorldAliasSettings.class, e);
                 }
             });
         }
-    }
-
-    /**
-     * Used to get alias of a single world.
-     *
-     * @param world World name.
-     * @return Alias.
-     */
-    public String getAlias(String world) {
-        return getAliasSection().getString(world);
     }
 }

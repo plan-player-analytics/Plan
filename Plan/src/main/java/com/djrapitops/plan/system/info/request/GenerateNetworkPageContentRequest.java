@@ -23,11 +23,6 @@ public class GenerateNetworkPageContentRequest implements WideRequest, GenerateR
     }
 
     @Override
-    public void placeDataToDatabase() {
-        /* No Data needed on a GenerateRequest.*/
-    }
-
-    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         InfoSystem.getInstance().updateNetworkPage();
         return DefaultResponses.SUCCESS.get();

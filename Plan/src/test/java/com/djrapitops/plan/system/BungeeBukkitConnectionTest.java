@@ -85,7 +85,7 @@ public class BungeeBukkitConnectionTest {
     }
 
     public void enable() throws EnableException {
-        Settings.WEBSERVER_PORT.setTemporaryValue(9000);
+        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
         bukkitSystem = new BukkitSystem(bukkitMock);
         bukkitSystem.enable();

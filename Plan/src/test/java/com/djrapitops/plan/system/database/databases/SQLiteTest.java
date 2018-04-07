@@ -19,7 +19,6 @@ import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -72,7 +71,7 @@ public class SQLiteTest {
 
         Log.setErrorManager(new TestErrorManager());
         Log.setDebugMode("console");
-        Settings.DEV_MODE.setTemporaryValue(true);
+//        Settings.DEV_MODE.setTemporaryValue(true);
 
         db.init();
         System.out.println("--- Class Setup Complete ---\n");
@@ -324,7 +323,7 @@ public class SQLiteTest {
 
         commitTest();
 
-        List<String> saved = worldTable.getWorlds();
+        List<String> saved = worldTable.getAllWorlds();
         assertEquals(new HashSet<>(worlds), new HashSet<>(saved));
     }
 
@@ -603,7 +602,7 @@ public class SQLiteTest {
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
         assertTrue(actionsTable.getActions(playerUUID).isEmpty());
         assertTrue(db.getCommandUseTable().getCommandUse().isEmpty());
-        assertTrue(db.getWorldTable().getWorlds().isEmpty());
+        assertTrue(db.getWorldTable().getAllWorlds().isEmpty());
         assertTrue(tpsTable.getTPSData().isEmpty());
         assertTrue(db.getServerTable().getBukkitServers().isEmpty());
         assertTrue(securityTable.getUsers().isEmpty());
@@ -785,7 +784,7 @@ public class SQLiteTest {
         assertFalse(sessionsTable.getSessions(playerUUID).isEmpty());
         assertFalse(actionsTable.getActions(playerUUID).isEmpty());
         assertFalse(backup.getCommandUseTable().getCommandUse().isEmpty());
-        assertFalse(backup.getWorldTable().getWorlds().isEmpty());
+        assertFalse(backup.getWorldTable().getAllWorlds().isEmpty());
         assertFalse(tpsTable.getTPSData().isEmpty());
         assertFalse(backup.getServerTable().getBukkitServers().isEmpty());
         assertFalse(securityTable.getUsers().isEmpty());
@@ -798,7 +797,7 @@ public class SQLiteTest {
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
         worldTimesTable.saveWorldTimes(playerUUID, 1, worldTimes);
 
-        Session session = new Session(1, 12345L, 23456L, 0, 0);
+        Session session = new Session(1, 12345L, 23456L, 0, 0, 0);
         Map<Integer, Session> sessions = new HashMap<>();
         sessions.put(1, session);
         worldTimesTable.addWorldTimesToSessions(playerUUID, sessions);
@@ -812,7 +811,7 @@ public class SQLiteTest {
         WorldTimes worldTimes = createWorldTimes();
         System.out.println(worldTimes);
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        Session session = new Session(1, 12345L, 23456L, 0, 0);
+        Session session = new Session(1, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -835,7 +834,7 @@ public class SQLiteTest {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
         System.out.println(worldTimes);
-        Session session = new Session(1, 12345L, 23456L, 0, 0);
+        Session session = new Session(1, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -854,6 +853,20 @@ public class SQLiteTest {
     }
 
     @Test
+    public void testGetUserWorldTimes() throws SQLException {
+        testSaveSessionsWorldTimes();
+        WorldTimes worldTimesOfUser = db.getWorldTimesTable().getWorldTimesOfUser(playerUUID);
+        assertEquals(createWorldTimes(), worldTimesOfUser);
+    }
+
+    @Test
+    public void testGetServerWorldTimes() throws SQLException {
+        testSaveSessionsWorldTimes();
+        WorldTimes worldTimesOfServer = db.getWorldTimesTable().getWorldTimesOfServer(TestConstants.SERVER_UUID);
+        assertEquals(createWorldTimes(), worldTimesOfServer);
+    }
+
+    @Test
     public void testRegisterProcessorRegisterException() throws SQLException {
         assertFalse(db.getUsersTable().isRegistered(playerUUID));
         assertFalse(db.getUserInfoTable().isRegistered(playerUUID));
@@ -863,7 +876,7 @@ public class SQLiteTest {
             processors.add(new RegisterProcessor(playerUUID, 500L, 1000L, "name", 4));
         }
         for (RegisterProcessor processor : processors) {
-            processor.process();
+            processor.run();
         }
         System.out.println("- RegisterProcessors Run -\n");
         assertTrue(db.getUsersTable().isRegistered(playerUUID));
@@ -882,7 +895,9 @@ public class SQLiteTest {
 
     @Test
     public void testWorldTableGetWorldNamesNoException() throws SQLException {
-        Set<String> worldNames = db.getWorldTable().getWorldNames();
+        saveAllData(db);
+        Set<String> worldNames = db.getWorldTable().getWorldNames(TestConstants.SERVER_UUID);
+        assertEquals(new HashSet<>(worlds), worldNames);
     }
 
     @Test
@@ -898,25 +913,121 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testTransferSplitAndRearrange() throws SQLException {
-        StringBuilder testData = new StringBuilder();
-        for (int i = 0; i < 900000; i++) {
-            testData.append("a");
-        }
+    public void testGetNetworkGeolocations() throws SQLException {
+        GeoInfoTable geoInfoTable = db.getGeoInfoTable();
+        UUID firstUuid = UUID.randomUUID();
+        UUID secondUuid = UUID.randomUUID();
+        UUID thirdUuid = UUID.randomUUID();
 
-        String testString = Base64Util.encode(testData.toString());
+        UsersTable usersTable = db.getUsersTable();
+        usersTable.registerUser(firstUuid, 0, "");
+        usersTable.registerUser(secondUuid, 0, "");
+        usersTable.registerUser(thirdUuid, 0, "");
 
-        int length = testString.length();
-        System.out.println("Test String Length: " + length);
-        assertTrue(length > 500000);
+        geoInfoTable.saveGeoInfo(firstUuid, new GeoInfo("-", "Test1", 0));
+        GeoInfo secondInfo = new GeoInfo("-", "Test2", 5);
+        geoInfoTable.saveGeoInfo(firstUuid, secondInfo);
+        geoInfoTable.saveGeoInfo(secondUuid, new GeoInfo("-", "Test3", 0));
+        geoInfoTable.saveGeoInfo(thirdUuid, new GeoInfo("-", "Test4", 0));
 
-        System.out.println("Test Parts: " + (int) Math.ceil(length / 500000.0));
+        List<String> geolocations = geoInfoTable.getNetworkGeolocations();
+        System.out.println(geolocations);
 
-        TransferTable transferTable = db.getTransferTable();
-        transferTable.storeServerHtml(TestConstants.SERVER_UUID, testString);
+        assertNotNull(geolocations);
+        assertFalse(geolocations.isEmpty());
+        assertEquals(3, geolocations.size());
+        assertTrue(geolocations.contains(secondInfo.getGeolocation()));
+    }
 
-        String result = transferTable.getServerHtml().get(TestConstants.SERVER_UUID);
-        assertNotNull(result);
-        assertEquals(testString, result);
+    @Test
+    public void testWorldTableAlterV16() throws SQLException {
+        saveUserOne();
+        new Table("test", db) {
+            @Override
+            public void createTable() {
+                try {
+                    execute(
+                            "INSERT INTO " + WorldTable.TABLE_NAME + " (" +
+                                    WorldTable.Col.NAME + ", " +
+                                    WorldTable.Col.SERVER_ID +
+                                    ") VALUES ('Test', '0')"
+                    );
+                    execute(
+                            "INSERT INTO " + SessionsTable.TABLE_NAME + " (" +
+                                    SessionsTable.Col.SESSION_START + ", " +
+                                    SessionsTable.Col.SESSION_END + ", " +
+                                    SessionsTable.Col.AFK_TIME + ", " +
+                                    SessionsTable.Col.DEATHS + ", " +
+                                    SessionsTable.Col.MOB_KILLS + ", " +
+                                    SessionsTable.Col.SERVER_ID + ", " +
+                                    SessionsTable.Col.USER_ID +
+                                    ") VALUES ('0', '0', '0', '0', '0', '1', '1')"
+                    );
+                    execute(
+                            "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
+                                    WorldTimesTable.Col.SERVER_ID + ", " +
+                                    WorldTimesTable.Col.SESSION_ID + ", " +
+                                    WorldTimesTable.Col.USER_ID + ", " +
+                                    WorldTimesTable.Col.WORLD_ID + ", " +
+                                    WorldTimesTable.Col.SURVIVAL + ", " +
+                                    WorldTimesTable.Col.CREATIVE + ", " +
+                                    WorldTimesTable.Col.SPECTATOR + ", " +
+                                    WorldTimesTable.Col.ADVENTURE +
+                                    ") VALUES ('1', '1', '1', '1', '0','0','0','0')"
+                    );
+                    execute(
+                            "INSERT INTO " + ServerTable.TABLE_NAME + " (" +
+                                    ServerTable.Col.SERVER_UUID + ", " +
+                                    ServerTable.Col.SERVER_ID + ", " +
+                                    ServerTable.Col.MAX_PLAYERS + ", " +
+                                    ServerTable.Col.WEBSERVER_ADDRESS + ", " +
+                                    ServerTable.Col.INSTALLED + ", " +
+                                    ServerTable.Col.NAME +
+                                    ") VALUES ('" + UUID.randomUUID() + "', '2', '0', '0', '1', '2')"
+                    );
+                    execute(
+                            "INSERT INTO " + SessionsTable.TABLE_NAME + " (" +
+                                    SessionsTable.Col.SESSION_START + ", " +
+                                    SessionsTable.Col.SESSION_END + ", " +
+                                    SessionsTable.Col.AFK_TIME + ", " +
+                                    SessionsTable.Col.DEATHS + ", " +
+                                    SessionsTable.Col.MOB_KILLS + ", " +
+                                    SessionsTable.Col.SERVER_ID + ", " +
+                                    SessionsTable.Col.USER_ID +
+                                    ") VALUES ('0', '0', '0', '0', '0', '2', '1')"
+                    );
+                    execute(
+                            "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
+                                    WorldTimesTable.Col.SERVER_ID + ", " +
+                                    WorldTimesTable.Col.SESSION_ID + ", " +
+                                    WorldTimesTable.Col.USER_ID + ", " +
+                                    WorldTimesTable.Col.WORLD_ID + ", " +
+                                    WorldTimesTable.Col.SURVIVAL + ", " +
+                                    WorldTimesTable.Col.CREATIVE + ", " +
+                                    WorldTimesTable.Col.SPECTATOR + ", " +
+                                    WorldTimesTable.Col.ADVENTURE +
+                                    ") VALUES ('2', '2', '1', '1', '0','0','0','0')"
+                    );
+                } catch (SQLException e) {
+                    Log.toLog(this.getClass().getName(), e);
+                }
+            }
+        }.createTable();
+
+        WorldTable worldTable = db.getWorldTable();
+        Map<Integer, List<Integer>> before = worldTable.getWorldIDsByServerIDs();
+        System.out.println("\nBefore: " + before);
+        System.out.println("Before: " + worldTable.getWorldObjects() + "\n");
+
+        worldTable.alterTableV16();
+
+        Map<Integer, List<Integer>> after = worldTable.getWorldIDsByServerIDs();
+        System.out.println("\nAfter: " + after);
+        System.out.println("After: " + worldTable.getWorldObjects() + "\n");
+        assertNull(after.get(0));
+        assertNotNull(after.get(1));
+        assertEquals(1, after.get(1).size());
+        assertNotNull(after.get(2));
+        assertEquals(1, after.get(2).size());
     }
 }

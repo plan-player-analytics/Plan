@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * @author Rsl1122
@@ -47,6 +48,12 @@ public class FormatUtils {
         return formatMilliseconds(Math.abs(after - before));
     }
 
+    public static String formatTimeStampISO8601NoClock(long epochMs) {
+        String format = "yyyy-MM-dd";
+
+        return format(epochMs, format);
+    }
+
     public static String formatTimeStampDay(long epochMs) {
         String format = "MMMMM d";
 
@@ -64,9 +71,12 @@ public class FormatUtils {
     }
 
     private static String format(long epochMs, String format) {
+        boolean useServerTime = Settings.USE_SERVER_TIME.isTrue();
         String locale = Settings.LOCALE.toString();
         Locale usedLocale = locale.equalsIgnoreCase("default") ? Locale.ENGLISH : Locale.forLanguageTag(locale);
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, usedLocale);
+        TimeZone timeZone = useServerTime ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
+        dateFormat.setTimeZone(timeZone);
         return dateFormat.format(epochMs);
     }
 

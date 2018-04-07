@@ -34,7 +34,25 @@ public class NetworkPageContent extends Response {
 
     public String getContents() {
         if (content.isEmpty()) {
-            return ""; // TODO "No Servers"
+            return "<div class=\"row clearfix\">" +
+                    "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">" +
+                    "<div class=\"card\">" +
+                    "<div class=\"header\">" +
+                    "<div class=\"row clearfix\">" +
+                    "<div class=\"col-xs-6 col-sm-6 col-lg-6\">" +
+                    "<h2><i class=\"col-light-green fa fa-servers\"></i> No Servers</h2>" +
+                    "</div>" +
+                    "<div class=\"col-xs-6 col-sm-6 col-lg-6\">" +
+                    "<a href=\"javascript:void(0)\" class=\"help material-icons pull-right\" " +
+                    "data-trigger=\"focus\" data-toggle=\"popover\" data-placement=\"left\" " +
+                    "data-container=\"body\" data-html=\"true\" " +
+                    "data-original-title=\"No Servers\" " +
+                    "data-content=\"This is displayed when no servers have sent server information to Bungee." +
+                    "<br><br>You can try debugging the cause by using /planbungee con & /plan m con\"" +
+                    ">help_outline</a></div></div></div>" +
+                    "<div class=\"body\">" +
+                    "<p>No Servers have sent information to Bungee.</p>" +
+                    "</div></div></div></div>";
         }
 
         List<String> serverNames = new ArrayList<>(content.keySet());

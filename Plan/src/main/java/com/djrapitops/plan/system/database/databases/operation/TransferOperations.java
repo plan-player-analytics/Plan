@@ -6,7 +6,6 @@ package com.djrapitops.plan.system.database.databases.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,31 +20,12 @@ public interface TransferOperations {
 
     // Save
 
-    void storePlayerHtml(UUID player, String encodedHtml) throws DBException;
-
-    void storeServerHtml(UUID serverUUID, String encodedHtml) throws DBException;
-
-    void storeNetworkPageContent(UUID serverUUID, String encodedHtml) throws DBException;
-
-    void storePlayerPluginsTab(UUID player, String encodedHtml) throws DBException;
-
     void storeConfigSettings(String encodedSettingString) throws DBException;
-
-    @Deprecated
-    void playerOnline(UUID playerUUID) throws DBException;
 
     // Get
 
-    Map<UUID, String> getEncodedPlayerHtml() throws DBException;
-
-    Map<UUID, String> getEncodedNetworkPageContent() throws DBException;
-
-    Map<UUID, String> getEncodedServerHtml() throws DBException;
-
     @Deprecated
     Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) throws DBException;
-
-    Map<UUID, String> getEncodedPlayerPluginsTabs(UUID playerUUID) throws DBException;
 
     Optional<String> getEncodedConfigSettings() throws DBException;
 }

@@ -16,24 +16,24 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BanAndOpProcessor extends PlayerProcessor {
+public class BanAndOpProcessor implements Runnable {
 
+    private final UUID uuid;
     private final boolean banned;
-    private final boolean opped;
+    private final boolean op;
 
     public BanAndOpProcessor(UUID uuid, boolean banned, boolean op) {
-        super(uuid);
+        this.uuid = uuid;
         this.banned = banned;
-        opped = op;
+        this.op = op;
     }
 
     @Override
-    public void process() {
-        UUID uuid = getUUID();
+    public void run() {
         try {
             SaveOperations save = Database.getActive().save();
             save.banStatus(uuid, banned);
-            save.opStatus(uuid, opped);
+            save.opStatus(uuid, op);
         } catch (DBException e) {
             Log.toLog(this.getClass(), e);
         }

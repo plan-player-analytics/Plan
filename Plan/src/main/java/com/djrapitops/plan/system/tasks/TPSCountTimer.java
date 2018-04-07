@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.TPSInsertProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -38,7 +38,7 @@ public abstract class TPSCountTimer<T extends PlanPlugin> extends AbsRunnable {
             addNewTPSEntry(nanoTime, now);
 
             if (history.size() >= 60) {
-                Processor.queue(new TPSInsertProcessor(new ArrayList<>(history)));
+                Processing.submit(new TPSInsertProcessor(new ArrayList<>(history)));
                 history.clear();
             }
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {

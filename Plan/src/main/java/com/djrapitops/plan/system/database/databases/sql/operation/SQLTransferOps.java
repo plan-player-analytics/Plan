@@ -9,7 +9,6 @@ import com.djrapitops.plan.system.database.databases.operation.TransferOperation
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,81 +24,9 @@ public class SQLTransferOps extends SQLOps implements TransferOperations {
     }
 
     @Override
-    public void storePlayerHtml(UUID player, String encodedHtml) throws DBException {
-        try {
-            transferTable.storePlayerHtml(player, encodedHtml);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
-    }
-
-    @Override
-    public void storeServerHtml(UUID serverUUID, String encodedHtml) throws DBException {
-        try {
-            transferTable.storeServerHtml(serverUUID, encodedHtml);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
-    }
-
-    @Override
-    public void storeNetworkPageContent(UUID serverUUID, String encodedHtml) throws DBException {
-        try {
-            transferTable.storeNetworkPageContent(serverUUID, encodedHtml);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
-    }
-
-    @Override
-    public Map<UUID, String> getEncodedPlayerHtml() throws DBException {
-        try {
-            return transferTable.getPlayerHtml();
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
-    }
-
-    @Override
-    public Map<UUID, String> getEncodedNetworkPageContent() throws DBException {
-        try {
-            return transferTable.getNetworkPageContent();
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
-    }
-
-    @Override
-    public Map<UUID, String> getEncodedServerHtml() throws DBException {
-        try {
-            return transferTable.getServerHtml();
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
-    }
-
-    @Override
-    public void storePlayerPluginsTab(UUID player, String encodedHtml) throws DBException {
-        try {
-            transferTable.storePlayerPluginsTab(player, encodedHtml);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
-    }
-
-    @Override
     public Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) throws DBException {
         try {
             return transferTable.getServerPlayerIsOnline(playerUUID);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
-    }
-
-    @Override
-    public Map<UUID, String> getEncodedPlayerPluginsTabs(UUID playerUUID) throws DBException {
-        try {
-            return transferTable.getPlayerPluginsTabs(playerUUID);
         } catch (SQLException e) {
             throw SQLErrorUtil.getExceptionFor(e);
         }
@@ -123,12 +50,4 @@ public class SQLTransferOps extends SQLOps implements TransferOperations {
         }
     }
 
-    @Override
-    public void playerOnline(UUID playerUUID) throws DBException {
-        try {
-            transferTable.storePlayerOnlineOnThisServer(playerUUID);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
-    }
 }

@@ -36,6 +36,8 @@ public class Session {
     private int mobKills;
     private int deaths;
 
+    private long afkTime;
+
     /**
      * Creates a new session with given start and end of -1.
      *
@@ -48,15 +50,10 @@ public class Session {
         playerKills = new ArrayList<>();
         mobKills = 0;
         deaths = 0;
+        afkTime = 0;
     }
 
-    /**
-     * Re-Creates a session data object for viewing.
-     *
-     * @param sessionStart Epoch millisecond the session was started.
-     * @param sessionEnd   Epoch millisecond the session ended.
-     */
-    public Session(int id, long sessionStart, long sessionEnd, int mobKills, int deaths) {
+    public Session(int id, long sessionStart, long sessionEnd, int mobKills, int deaths, long afkTime) {
         this.sessionID = id;
         this.sessionStart = sessionStart;
         this.sessionEnd = sessionEnd;
@@ -64,6 +61,7 @@ public class Session {
         this.playerKills = new ArrayList<>();
         this.mobKills = mobKills;
         this.deaths = deaths;
+        this.afkTime = afkTime;
     }
 
     /**
@@ -157,6 +155,18 @@ public class Session {
 
     public boolean isFetchedFromDB() {
         return sessionID != null;
+    }
+
+    public void addAFKTime(long timeAFK) {
+        afkTime += timeAFK;
+    }
+
+    public long getAfkLength() {
+        return afkTime;
+    }
+
+    public long getActiveLength() {
+        return getLength() - getAfkLength();
     }
 
     /**

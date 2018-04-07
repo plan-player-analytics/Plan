@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -17,6 +18,8 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Bungee Main class.
@@ -39,9 +42,19 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             system.enable();
 
             Log.info(Locale.get(Msg.ENABLED).toString());
+        } catch (AbstractMethodError e) {
+            Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+        } catch (EnableException e) {
+            Log.error("----------------------------------------");
+            Log.error("Error: " + e.getMessage());
+            Log.error("----------------------------------------");
+            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+            onDisable();
         } catch (Exception e) {
-            Log.error("Plugin Failed to Initialize Correctly:");
-            Log.toLog(this.getClass(), e);
+            Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
+            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+            Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            onDisable();
         }
         registerCommand("planbungee", new PlanBungeeCommand(this));
     }

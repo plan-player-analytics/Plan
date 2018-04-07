@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.listeners.bungee;
 
-import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.BungeePlayerRegisterProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -22,12 +22,6 @@ import java.util.UUID;
  */
 public class PlayerOnlineListener implements Listener {
 
-    private final PlanBungee plugin;
-
-    public PlayerOnlineListener(PlanBungee plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onPostLogin(PostLoginEvent event) {
         try {
@@ -36,7 +30,7 @@ public class PlayerOnlineListener implements Listener {
             String name = player.getName();
             long now = MiscUtils.getTime();
 
-            plugin.getSystem().getProcessingQueue().queue(new BungeePlayerRegisterProcessor(uuid, name, now));
+            Processing.submit(new BungeePlayerRegisterProcessor(uuid, name, now));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

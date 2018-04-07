@@ -3,6 +3,9 @@ package com.djrapitops.plan.system.info.server;
 import com.djrapitops.plan.system.settings.Settings;
 import net.md_5.bungee.api.ProxyServer;
 import org.bukkit.Server;
+import org.spongepowered.api.Game;
+
+import java.net.InetSocketAddress;
 
 /**
  * Class responsible for holding server variable values that do not change
@@ -47,6 +50,24 @@ public class ServerProperties {
         maxPlayers = server.getConfig().getPlayerLimit();
 
         onlinePlayers = server::getOnlineCount;
+    }
+
+    public ServerProperties(Game game) {
+        if (game == null) {
+            throw new IllegalStateException("Game did not inject.");
+        }
+        version = game.getPlatform().getMinecraftVersion().getName();
+        ip = () -> game.getServer().getBoundAddress()
+                .orElseGet(() -> new InetSocketAddress(25565))
+                .getAddress().getHostAddress();
+        name = "Sponge";
+        port = game.getServer().getBoundAddress().orElseGet(() -> new InetSocketAddress(25565)).getPort();
+        implVersion = version;
+
+        id = game.getServer().getMotd().toPlain();
+
+        maxPlayers = game.getServer().getMaxPlayers();
+        onlinePlayers = () -> game.getServer().getOnlinePlayers().size();
     }
 
     /**

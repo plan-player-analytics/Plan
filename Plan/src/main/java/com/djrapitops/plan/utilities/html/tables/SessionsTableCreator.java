@@ -12,12 +12,11 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.html.Html;
-import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Utility for creating HTML {@code <table>}-element with Sessions inside it.
@@ -53,7 +52,6 @@ public class SessionsTableCreator {
 
 
         Set<String> recentLoginsNames = new HashSet<>();
-
 
 
         Map<Long, UUID> uuidBySessionStart = new HashMap<>();
@@ -108,18 +106,15 @@ public class SessionsTableCreator {
     }
 
     public static String getLongestWorldPlayed(Session session) {
-        WorldAliasSettings aliasSettings = new WorldAliasSettings();
-        Map<String, String> aliases = aliasSettings.getAliases();
+        Map<String, String> aliases = WorldAliasSettings.getAliases();
         if (session.getSessionEnd() == -1) {
             return "Current: " + aliases.get(session.getWorldTimes().getCurrentWorld());
         }
 
-        Map<String, Long> playtimePerWorld = session.getWorldTimes().getWorldTimes().entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getTotal()));
-        Map<String, Long> playtimePerAlias = WorldPie.transformToAliases(playtimePerWorld, aliases);
-
         WorldTimes worldTimes = session.getWorldTimes();
+        Map<String, Long> playtimePerAlias = AnalysisUtils.getPlaytimePerAlias(worldTimes);
         long total = worldTimes.getTotal();
+
         long longest = 0;
         String theWorld = "-";
         for (Map.Entry<String, Long> entry : playtimePerAlias.entrySet()) {

@@ -22,6 +22,7 @@ import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
+import com.djrapitops.plan.utilities.html.graphs.WorldMap;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -44,6 +45,7 @@ public class NetworkPage extends Page {
             long now = MiscUtils.getTime();
             Database database = Database.getActive();
             List<TPS> networkOnlineData = database.fetch().getNetworkOnlineData();
+            List<String> geolocations = database.fetch().getNetworkGeolocations();
 
             peakTimes(serverUUID, now, database);
 
@@ -54,9 +56,13 @@ public class NetworkPage extends Page {
             addValue("version", VersionCheckSystem.getCurrentVersion());
             addValue("playersOnlineSeries", new OnlineActivityGraph(networkOnlineData).toHighChartsSeries());
             addValue("playersGraphColor", Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+            addValue("worldMapColLow", Theme.getValue(ThemeVal.WORLD_MAP_LOW));
+            addValue("worldMapColHigh", Theme.getValue(ThemeVal.WORLD_MAP_HIGH));
             addValue("playersOnline", ServerInfo.getServerProperties().getOnlinePlayers());
 
             addValue("playersTotal", database.count().getNetworkPlayerCount());
+
+            addValue("geoMapSeries", new WorldMap(geolocations).toHighChartsSeries());
 
             List<Long> registerDates = database.fetch().getRegisterDates();
             addValue("playersNewDay", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.DAY.ms(), now));

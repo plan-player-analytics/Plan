@@ -14,7 +14,6 @@ import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.Map;
@@ -56,10 +55,6 @@ public class ShutdownHook extends Thread {
             Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
             long now = MiscUtils.getTime();
             db = Database.getActive();
-            if (!db.isOpen()) {
-                db.init();
-            }
-
             saveFirstSessionInformation(db, now);
             saveActiveSessions(db, activeSessions, now);
         } catch (IllegalStateException ignored) {
@@ -74,13 +69,15 @@ public class ShutdownHook extends Thread {
                     Log.toLog(this.getClass(), e);
                 }
             }
-            StaticHolder.unRegister(Plan.class);
         }
     }
 
-    private void saveFirstSessionInformation(Database db, long now) {
+    private void saveFirstSessionInformation(Database db, long now) throws DBInitException {
         DataCache dataCache = CacheSystem.getInstance().getDataCache();
         for (Map.Entry<UUID, Integer> entry : dataCache.getFirstSessionMsgCounts().entrySet()) {
+            if (!db.isOpen()) {
+                db.init();
+            }
             try {
                 UUID uuid = entry.getKey();
                 int messagesSent = entry.getValue();
@@ -91,13 +88,16 @@ public class ShutdownHook extends Thread {
         }
     }
 
-    private void saveActiveSessions(Database db, Map<UUID, Session> activeSessions, long now) {
+    private void saveActiveSessions(Database db, Map<UUID, Session> activeSessions, long now) throws DBInitException {
         for (Map.Entry<UUID, Session> entry : activeSessions.entrySet()) {
             UUID uuid = entry.getKey();
             Session session = entry.getValue();
             long sessionEnd = session.getSessionEnd();
             if (sessionEnd == -1) {
                 session.endSession(now);
+            }
+            if (!db.isOpen()) {
+                db.init();
             }
             try {
                 Log.debug("Shutdown: Saving a session: " + session.getSessionStart());

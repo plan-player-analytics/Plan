@@ -108,13 +108,34 @@
                         <span>Servers</span>
                     </a>
                 </li>
+                <li>
+                    <a class="nav-button" href="javascript:void(0)">
+                        <i class="material-icons">language</i>
+                        <span>Geolocations</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- #Menu -->
         <!-- Footer -->
         <div class="legal">
-            <div class="version">
-                <b>Player Analytics: </b> v${version}
+            <div class="row clearfix">
+                <div class="col-xs-10 col-sm-10 col-lg-10">
+                    <div class="version">
+                        <b>Player Analytics: </b> v${version}
+                    </div>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-lg-2">
+                    <a href="javascript:void(0)" class="help material-icons pull-right"
+                       tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="top"
+                       data-container="body" data-html="true"
+                       data-original-title="Player Analytics"
+                       data-content="Author: Rsl1122
+                       <br><br>Tutorials: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki&quot;>Link</a>
+                       <br>Issues: <a target=&quot;_blank&quot; href=&quot;https://github.com/Rsl1122/Plan-PlayerAnalytics/issues&quot;>Link</a>
+                       <br><br>Discord: <a target=&quot;_blank&quot; href=&quot;https://discord.gg/yXKmjzT&quot;>Link</a>"
+                    >help_outline</a>
+                </div>
             </div>
         </div>
         <!-- #Footer -->
@@ -219,7 +240,19 @@
                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                     <div class="card">
                         <div class="header">
-                            <h2><i class="col-blue fa fa-area-chart"></i> Network Online Activity</h2>
+                            <div class="col-xs-6 col-sm-6 col-lg-6">
+                                <h2><i class="col-blue fa fa-area-chart"></i> Network Online Activity</h2>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-lg-6">
+                                <a href="javascript:void(0)" class="help material-icons pull-right"
+                                   tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                   data-container="body" data-html="true"
+                                   data-original-title="Player Online Activity"
+                                   data-content="Chart of Player Counts, recorded by Bungee TPS task.
+                                               <br><br>TPS task starts 50 seconds after Plan enables and records Maximum player count for each minute.
+                                               <br><br>Despite its name, on Bungee only Player count is recorded."
+                                >help_outline</a>
+                            </div>
                         </div>
                         <div class="body">
                             <div id="playerChartDay" class="dashboard-flot-chart"></div>
@@ -260,6 +293,7 @@
                                     <i class="col-light-green fa fa-user-plus"></i> New | 24h
                                     <span class="pull-right"><b>${playersNewDay}</b></span>
                                 </li>
+                                <li></li>
                                 <li>
                                     <i class="col-blue fa fa-users"></i> Unique | 7d
                                     <span class="pull-right"><b>${playersUniqueWeek}</b></span>
@@ -268,6 +302,7 @@
                                     <i class="col-light-green fa fa-user-plus"></i> New | 7d
                                     <span class="pull-right"><b>${playersNewWeek}</b></span>
                                 </li>
+                                <li></li>
                                 <li>
                                     <i class="col-blue fa fa-users"></i> Unique | 30d
                                     <span class="pull-right"><b>${playersUniqueMonth}</b></span>
@@ -287,6 +322,37 @@
                 ${tabContentServers}
             </div>
             <!-- #END# Tab Servers -->
+            <div id="tab-geolocations" class="tab">
+                <!-- Geolocations -->
+                <div class="row clearfix">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <h2><i class="col-green fa fa-globe"></i> Geolocations</h2>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Player Locations"
+                                           data-content="Each player's most recent login IP is used to get a Geolocation, which is displayed here.
+                                           <br><br>'Local Machine' connections are not displayed
+                                           <br><br>Map can be zoomed using the mouse wheel or by pinching."
+                                        >help_outline</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="body">
+                                <div id="worldMap" class="dashboard-flot-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Geolocations -->
+            </div>
+            <!-- #END# Tab Geolocations -->
         </div>
     </div>
 </section>
@@ -302,6 +368,8 @@
 
 <!-- HighCharts -->
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/maps/modules/map.js"></script>
+<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
 <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 
 <!-- Font Awesome -->
@@ -312,6 +380,7 @@
 
 <!-- Plan Charts -->
 <script src="../js/charts/playerGraph.js"></script>
+<script src="js/charts/worldMap.js"></script>
 
 <!-- Chart Data -->
 <script>
@@ -319,8 +388,10 @@
         lang: {noData: "No Data to Display"},
         time: {
             timezoneOffset: ${timeZone} * 60
-        }
-    });
+    }
+    })
+    var geolocationsLow = '${worldMapColLow}';
+    var geolocationsHigh = '${worldMapColHigh}';
     // Data Variables
     var playersOnlineSeries = {
         name: 'Players Online',
@@ -330,6 +401,13 @@
         tooltip: {
             valueDecimals: 0
         }
+    };
+    var geolocationsSeries = {
+        name: 'Players',
+        type: 'map',
+        mapData: Highcharts.maps['custom/world'],
+        data: ${geoMapSeries},
+        joinBy: ['iso-a3', 'code']
     };
 </script>
 
@@ -355,6 +433,7 @@
 
         // Chart draw scripts
         playersChart('playerChartDay', playersOnlineSeries, 2);
+        worldMap('worldMap', geolocationsLow, geolocationsHigh, geolocationsSeries);
 
         function openFunc(i) {
             return function () {

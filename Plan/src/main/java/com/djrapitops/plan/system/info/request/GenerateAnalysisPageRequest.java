@@ -16,12 +16,14 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * InfoRequest to generate Analysis page HTML at the receiving end.
@@ -43,11 +45,6 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
     }
 
     @Override
-    public void placeDataToDatabase() {
-        // No data required in a Generate request
-    }
-
-    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Variables available: sender, server
 
@@ -59,7 +56,9 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
             throw new BadRequestException("Requested Analysis page from wrong server.");
         }
 
-        generateAndCache(serverUUID);
+        if (!Analysis.isAnalysisBeingRun()) {
+            generateAndCache(serverUUID);
+        }
 
         return DefaultResponses.SUCCESS.get();
     }
@@ -88,6 +87,9 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
                 Log.toLog(this.getClass(), e);
             }
             throw new InternalErrorException("Analysis failed due to exception", e);
+        } catch (InterruptedException | ExecutionException e) {
+            /* Plugin is shutting down, exceptions ignored */
+            return new InternalErrorResponse("Plugin may be shutting down", e).getContent();
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
             throw new InternalErrorException("Analysis failed due to exception", e);

@@ -46,11 +46,6 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
     }
 
     @Override
-    public void placeDataToDatabase() {
-        /* Not necessary */
-    }
-
-    @Override
     public void runLocally() {
         /* Won't be run */
     }

@@ -4,6 +4,9 @@ import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.StickyData;
+import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
@@ -225,5 +228,60 @@ public class AnalysisUtils {
             }
         }
         return activityData;
+    }
+
+    public static Map<String, Long> getPlaytimePerAlias(WorldTimes worldTimes) {
+        // WorldTimes Map<String, GMTimes>
+        Map<String, Long> playtimePerWorld = worldTimes.getWorldTimes()
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().getTotal() // GMTimes.getTotal
+                ));
+
+        Map<String, String> aliases = WorldAliasSettings.getAliases();
+
+        Map<String, Long> playtimePerAlias = new HashMap<>();
+        for (Map.Entry<String, Long> entry : playtimePerWorld.entrySet()) {
+            String worldName = entry.getKey();
+            long playtime = entry.getValue();
+
+            if (!aliases.containsKey(worldName)) {
+                aliases.put(worldName, worldName);
+                WorldAliasSettings.addWorld(worldName);
+            }
+
+            String alias = aliases.get(worldName);
+
+            playtimePerAlias.put(alias, playtimePerAlias.getOrDefault(alias, 0L) + playtime);
+        }
+        return playtimePerAlias;
+    }
+
+    public static Map<String, GMTimes> getGMTimesPerAlias(WorldTimes worldTimes) {
+        Map<String, String> aliases = WorldAliasSettings.getAliases();
+
+        Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();
+
+        String[] gms = GMTimes.getGMKeyArray();
+
+        for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
+            String worldName = entry.getKey();
+            GMTimes gmTimes = entry.getValue();
+
+            if (!aliases.containsKey(worldName)) {
+                aliases.put(worldName, worldName);
+                WorldAliasSettings.addWorld(worldName);
+            }
+
+            String alias = aliases.get(worldName);
+
+            GMTimes aliasGMTimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
+            for (String gm : gms) {
+                aliasGMTimes.addTime(gm, gmTimes.getTime(gm));
+            }
+            gmTimesPerAlias.put(alias, aliasGMTimes);
+        }
+        return gmTimesPerAlias;
     }
 }

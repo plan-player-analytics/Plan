@@ -4,12 +4,10 @@
  */
 package com.djrapitops.plan.system.info.request;
 
-import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
+import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -30,7 +28,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class CacheInspectPageRequest implements CacheRequest {
+public class CacheInspectPageRequest extends InfoRequestWithVariables implements CacheRequest {
 
     private final UUID player;
     private final String html;
@@ -42,6 +40,8 @@ public class CacheInspectPageRequest implements CacheRequest {
 
     public CacheInspectPageRequest(UUID player, String html) {
         Verify.nullCheck(player, html);
+        variables.put("player", player.toString());
+        variables.put("html", Base64Util.encode(html));
         this.player = player;
         this.html = html;
     }
@@ -51,43 +51,27 @@ public class CacheInspectPageRequest implements CacheRequest {
     }
 
     @Override
-    public void placeDataToDatabase() throws WebException {
-        Verify.nullCheck(player, html);
-
-        String encodedHtml = Base64Util.encode(html);
-        try {
-            Database.getActive().transfer().storePlayerHtml(player, encodedHtml);
-        } catch (DBException e) {
-            throw new TransferDatabaseException(e);
-        }
-    }
-
-    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
-        // Available variables: sender
+        // Available variables: sender, player, html (Base64)
 
-        try {
-            Map<UUID, String> pages = Database.getActive().transfer().getEncodedPlayerHtml();
+        String player = variables.get("player");
+        Verify.nullCheck(player, () -> new BadRequestException("Player UUID 'player' variable not supplied in the request."));
+        UUID uuid = UUID.fromString(player);
 
-            boolean export = Settings.ANALYSIS_EXPORT.isTrue();
-            for (Map.Entry<UUID, String> entry : pages.entrySet()) {
-                UUID uuid = entry.getKey();
-                String html = Base64Util.decode(entry.getValue());
+        String html = variables.get("html");
+        Verify.nullCheck(html, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
-                Map<String, String> replace = Collections.singletonMap("networkName", ServerInfo.getServerName());
+        Map<String, String> replace = Collections.singletonMap("networkName", ServerInfo.getServerName());
+        boolean export = Settings.ANALYSIS_EXPORT.isTrue();
+        cache(export, uuid, StrSubstitutor.replace(Base64Util.decode(html), replace));
 
-                cache(export, uuid, StrSubstitutor.replace(html, replace));
-            }
-        } catch (DBException e) {
-            throw new TransferDatabaseException(e);
-        }
         return DefaultResponses.SUCCESS.get();
     }
 
     private void cache(boolean export, UUID uuid, String html) {
         ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
         if (export) {
-            Processor.queue(() -> HtmlExport.exportPlayer(uuid));
+            Processing.submitNonCritical(() -> HtmlExport.exportPlayer(uuid));
         }
     }
 

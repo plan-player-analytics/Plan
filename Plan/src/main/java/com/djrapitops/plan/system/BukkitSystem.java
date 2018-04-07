@@ -6,7 +6,7 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ShutdownHook;
-import com.djrapitops.plan.api.BukkitAPI;
+import com.djrapitops.plan.api.ServerAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.BukkitDBSystem;
@@ -27,9 +27,10 @@ import com.djrapitops.plugin.api.utility.log.Log;
  *
  * @author Rsl1122
  */
-public class BukkitSystem extends PlanSystem {
+public class BukkitSystem extends PlanSystem implements ServerSystem {
 
     public BukkitSystem(Plan plugin) {
+
         testSystem = this;
 
         Log.setErrorManager(new PlanErrorManager());
@@ -45,7 +46,7 @@ public class BukkitSystem extends PlanSystem {
         serverInfo = new BukkitServerInfo(plugin);
 
         hookHandler = new HookHandler();
-        planAPI = new BukkitAPI(this);
+        planAPI = new ServerAPI(this);
 
         StaticHolder.saveInstance(ShutdownHook.class, plugin.getClass());
         new ShutdownHook().register();

@@ -19,6 +19,10 @@
             <id>paper-repo</id>
             <url>https://repo.destroystokyo.com/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>sponge-repo</id>
+            <url>https://repo.spongepowered.org/maven</url>
+        </repository>
     </repositories>
     <dependencies>
         <!--        Framework for easier plugin development -->
@@ -59,6 +63,14 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.12-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <!--        SpongePowered -->
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongeapi</artifactId>
+            <version>7.0.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>

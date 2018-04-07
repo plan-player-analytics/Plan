@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.KillProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -37,7 +37,7 @@ public class DeathEventListener implements Listener {
 
         if (dead instanceof Player) {
             // Process Death
-            Processor.queue(() -> SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(Session::died));
+            Processing.submitCritical(() -> SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(Session::died));
         }
 
         try {
@@ -65,7 +65,7 @@ public class DeathEventListener implements Listener {
             processor = handleArrowKill(time, dead, (Arrow) killerEntity);
         }
         if (processor != null) {
-            processor.queue();
+            Processing.submit(processor);
         }
     }
 

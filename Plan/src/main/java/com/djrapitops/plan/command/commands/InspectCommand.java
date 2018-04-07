@@ -3,6 +3,7 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.InspectCacheRequestProcessor;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -72,7 +73,7 @@ public class InspectCommand extends SubCommand {
                             sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                         }
                     }
-                    new InspectCacheRequestProcessor(uuid, sender, playerName).queue();
+                    Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName));
                 } catch (FatalDBException ex) {
                     Log.toLog(this.getClass(), ex);
                     sender.sendMessage(ChatColor.RED + "Fatal database exception occurred: " + ex.getMessage());

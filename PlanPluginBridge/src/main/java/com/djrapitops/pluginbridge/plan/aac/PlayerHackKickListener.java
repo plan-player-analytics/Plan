@@ -7,7 +7,7 @@ package com.djrapitops.pluginbridge.plan.aac;
 
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import me.konsolas.aac.api.AACAPIProvider;
@@ -43,7 +43,7 @@ public class PlayerHackKickListener implements Listener {
 
         HackObject hackObject = new HackObject(uuid, time, hackType, violations);
 
-        Processor.queue(() -> {
+        Processing.submitNonCritical(() -> {
             try {
                 new HackerTable((SQLDB) Database.getActive()).insertHackRow(hackObject);
             } catch (SQLException e) {

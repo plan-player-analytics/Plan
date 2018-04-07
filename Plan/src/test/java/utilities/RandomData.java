@@ -47,7 +47,7 @@ public class RandomData {
     public static List<Session> randomSessions() {
         List<Session> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            test.add(new Session(1, r.nextLong(), r.nextLong(), 0, 0));
+            test.add(new Session(1, r.nextLong(), r.nextLong(), 0, 0, 0));
         }
         return test;
     }

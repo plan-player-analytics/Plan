@@ -20,6 +20,7 @@ public interface PlanPlugin extends IPlugin {
     static PlanPlugin getInstance() {
         boolean bukkitAvailable = Check.isBukkitAvailable();
         boolean bungeeAvailable = Check.isBungeeAvailable();
+        boolean spongeAvailable = Check.isSpongeAvailable();
         if (bukkitAvailable) {
             try {
                 Plan instance = Plan.getInstance();
@@ -32,6 +33,15 @@ public interface PlanPlugin extends IPlugin {
         if (bungeeAvailable) {
             try {
                 PlanBungee instance = PlanBungee.getInstance();
+                if (instance != null) {
+                    return instance;
+                }
+            } catch (IllegalStateException ignored) {
+            }
+        }
+        if (spongeAvailable) {
+            try {
+                PlanSponge instance = PlanSponge.getInstance();
                 if (instance != null) {
                     return instance;
                 }

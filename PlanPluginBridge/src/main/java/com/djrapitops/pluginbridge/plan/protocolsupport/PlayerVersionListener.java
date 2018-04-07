@@ -8,7 +8,7 @@ package com.djrapitops.pluginbridge.plan.protocolsupport;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
 import org.bukkit.entity.Player;
@@ -40,7 +40,7 @@ public class PlayerVersionListener implements Listener {
         ProtocolVersion protocolVersion = ProtocolSupportAPI.getProtocolVersion(player);
         int playerVersion = protocolVersion.getId();
         Plan plan = Plan.getInstance();
-        Processor.queue(() -> {
+        Processing.submitNonCritical(() -> {
             try {
                 new ProtocolTable((SQLDB) Database.getActive()).saveProtocolVersion(uuid, playerVersion);
             } catch (SQLException e) {

@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
@@ -19,18 +20,18 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 4.0.0
  */
-public class FirstLeaveProcessor extends PlayerProcessor {
+public class FirstLeaveProcessor implements CriticalRunnable {
 
+    private final UUID uuid;
     private final Action leaveAction;
 
     public FirstLeaveProcessor(UUID uuid, long time, int messagesSent) {
-        super(uuid);
+        this.uuid = uuid;
         leaveAction = new Action(time, Actions.FIRST_LOGOUT, "Messages sent: " + messagesSent);
     }
 
     @Override
-    public void process() {
-        UUID uuid = getUUID();
+    public void run() {
         try {
             Database.getActive().save().action(uuid, leaveAction);
         } catch (DBException e) {

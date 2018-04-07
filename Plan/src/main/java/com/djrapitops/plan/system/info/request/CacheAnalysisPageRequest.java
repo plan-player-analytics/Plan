@@ -4,11 +4,9 @@
  */
 package com.djrapitops.plan.system.info.request;
 
-import com.djrapitops.plan.api.exceptions.connection.TransferDatabaseException;
+import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.processing.Processor;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -27,7 +25,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class CacheAnalysisPageRequest implements CacheRequest {
+public class CacheAnalysisPageRequest extends InfoRequestWithVariables implements CacheRequest {
 
     private final UUID serverUUID;
     private final String html;
@@ -40,6 +38,7 @@ public class CacheAnalysisPageRequest implements CacheRequest {
     public CacheAnalysisPageRequest(UUID serverUUID, String html) {
         Verify.nullCheck(serverUUID, html);
         this.serverUUID = serverUUID;
+        variables.put("html", Base64Util.encode(html));
         this.html = html;
     }
 
@@ -48,41 +47,23 @@ public class CacheAnalysisPageRequest implements CacheRequest {
     }
 
     @Override
-    public void placeDataToDatabase() throws WebException {
-        Verify.nullCheck(serverUUID, html);
-
-        String encodedHtml = Base64Util.encode(html);
-        try {
-            Database.getActive().transfer().storeServerHtml(serverUUID, encodedHtml);
-        } catch (DBException e) {
-            throw new TransferDatabaseException(e);
-        }
-    }
-
-    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
-        // Available variables: sender
+        // Available variables: sender, html (Base64)
 
-        try {
-            Map<UUID, String> pages = Database.getActive().transfer().getEncodedServerHtml();
+        UUID serverUUID = UUID.fromString(variables.get("sender"));
 
-            boolean export = Settings.ANALYSIS_EXPORT.isTrue();
-            for (Map.Entry<UUID, String> entry : pages.entrySet()) {
-                UUID serverUUID = entry.getKey();
-                String html = Base64Util.decode(entry.getValue());
+        String html = variables.get("html");
+        Verify.nullCheck(html, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
-                cache(export, serverUUID, html);
-            }
-        } catch (DBException e) {
-            throw new TransferDatabaseException(e);
-        }
+        boolean export = Settings.ANALYSIS_EXPORT.isTrue();
+        cache(export, serverUUID, Base64Util.decode(html));
         return DefaultResponses.SUCCESS.get();
     }
 
     private void cache(boolean export, UUID serverUUID, String html) {
         ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
         if (export) {
-            Processor.queue(() -> HtmlExport.exportServer(serverUUID));
+            Processing.submitNonCritical(() -> HtmlExport.exportServer(serverUUID));
         }
     }
 

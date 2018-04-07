@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.processing.CriticalRunnable;
 
 import java.util.UUID;
 
@@ -13,18 +14,18 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class EndSessionProcessor extends PlayerProcessor {
+public class EndSessionProcessor implements CriticalRunnable {
 
+    private final UUID uuid;
     private final long time;
 
     public EndSessionProcessor(UUID uuid, long time) {
-        super(uuid);
+        this.uuid = uuid;
         this.time = time;
     }
 
     @Override
-    public void process() {
-        UUID uuid = getUUID();
+    public void run() {
         SessionCache.getInstance().endSession(uuid, time);
     }
 }
