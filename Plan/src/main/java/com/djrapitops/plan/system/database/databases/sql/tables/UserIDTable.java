@@ -16,9 +16,6 @@ import java.util.UUID;
  */
 public abstract class UserIDTable extends Table {
 
-    @Deprecated
-    protected final String columnUserID = "user_id";
-
     public enum Col implements Column {
         USER_ID("user_id");
 
@@ -46,7 +43,7 @@ public abstract class UserIDTable extends Table {
     }
 
     public void removeUser(UUID uuid) throws SQLException {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")";
+        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.USER_ID + "=" + usersTable.statementSelectID + ")";
 
         execute(new ExecStatement(sql) {
             @Override

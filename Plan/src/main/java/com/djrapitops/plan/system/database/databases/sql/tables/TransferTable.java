@@ -35,23 +35,12 @@ public class TransferTable extends Table {
     private final String insertStatementNoParts;
 
     private final ServerTable serverTable;
-    private final String insertStatementParts;
     private final String selectStatement;
 
     public TransferTable(SQLDB db) {
         super("plan_transfer", db);
 
         serverTable = db.getServerTable();
-        insertStatementParts = "REPLACE INTO " + tableName + " (" +
-                Col.SENDER_ID + ", " +
-                Col.EXPIRY + ", " +
-                Col.INFO_TYPE + ", " +
-                Col.EXTRA_VARIABLES + ", " +
-                Col.CONTENT + ", " +
-                Col.PART +
-                ") VALUES (" +
-                serverTable.statementSelectServerID + ", " +
-                "?, ?, ?, ?, ?)";
         insertStatementNoParts = "REPLACE INTO " + tableName + " (" +
                 Col.SENDER_ID + ", " +
                 Col.EXPIRY + ", " +

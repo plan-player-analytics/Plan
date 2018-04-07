@@ -41,11 +41,6 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables impleme
     }
 
     @Override
-    public void placeDataToDatabase() {
-        // No data required in a Generate request
-    }
-
-    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, player
 

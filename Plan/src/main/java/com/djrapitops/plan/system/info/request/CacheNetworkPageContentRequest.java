@@ -42,11 +42,6 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
     }
 
     @Override
-    public void placeDataToDatabase() {
-        /* Transferred over HTTP */
-    }
-
-    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, serverName, html (Base64)
 
@@ -69,7 +64,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
 
     @Override
     public void runLocally() {
-        getNetworkPageContent().addElement(ServerInfo.getServerName(), variables.get("html"));
+        getNetworkPageContent().addElement(ServerInfo.getServerName(), html);
     }
 
     public static CacheNetworkPageContentRequest createHandler() {

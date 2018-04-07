@@ -204,10 +204,6 @@ public class WorldTimesTable extends UserIDTable {
         });
     }
 
-    public WorldTimes getWorldTimesOfServer() throws SQLException {
-        return getWorldTimesOfServer(ServerInfo.getServerUUID());
-    }
-
     public WorldTimes getWorldTimesOfUser(UUID uuid) throws SQLException {
         String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
         String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";

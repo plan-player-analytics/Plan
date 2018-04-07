@@ -13,7 +13,7 @@ public class BungeeListenerSystem extends ListenerSystem {
 
     @Override
     protected void registerListeners() {
-        plugin.registerListener(new PlayerOnlineListener(plugin));
+        plugin.registerListener(new PlayerOnlineListener());
     }
 
     @Override

@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.listeners.bungee;
 
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.BungeePlayerRegisterProcessor;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -22,12 +21,6 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class PlayerOnlineListener implements Listener {
-
-    private final PlanBungee plugin;
-
-    public PlayerOnlineListener(PlanBungee plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onPostLogin(PostLoginEvent event) {

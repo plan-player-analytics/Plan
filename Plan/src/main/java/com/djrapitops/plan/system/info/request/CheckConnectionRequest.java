@@ -40,11 +40,6 @@ public class CheckConnectionRequest extends InfoRequestWithVariables {
     }
 
     @Override
-    public void placeDataToDatabase() {
-        /* Not necessary */
-    }
-
-    @Override
     public void runLocally() {
         /* Won't be run */
     }

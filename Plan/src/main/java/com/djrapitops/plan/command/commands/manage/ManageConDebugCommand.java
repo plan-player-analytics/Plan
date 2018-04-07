@@ -54,9 +54,7 @@ public class ManageConDebugCommand extends SubCommand {
             return true;
         }
 
-        Processing.submitNonCritical(() -> {
-            testServers(sender);
-        });
+        Processing.submitNonCritical(() -> testServers(sender));
 
         return true;
     }

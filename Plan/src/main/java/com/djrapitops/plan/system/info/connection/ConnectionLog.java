@@ -82,8 +82,8 @@ public class ConnectionLog {
         /**
          * Most recent first.
          *
-         * @param o
-         * @return
+         * @param o object
+         * @return -1 or 1
          */
         @Override
         public int compareTo(Entry o) {

@@ -47,11 +47,6 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
     }
 
     @Override
-    public void placeDataToDatabase() {
-        /* Transferred over HTTP */
-    }
-
-    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, player, nav, html
 

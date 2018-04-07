@@ -51,11 +51,6 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
     }
 
     @Override
-    public void placeDataToDatabase() {
-        /* Transferred over HTTP */
-    }
-
-    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, player, html (Base64)
 

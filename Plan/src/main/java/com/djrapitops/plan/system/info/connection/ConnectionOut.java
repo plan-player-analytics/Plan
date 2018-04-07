@@ -106,7 +106,6 @@ public class ConnectionOut {
             connection.setRequestProperty("charset", "UTF-8");
 
             String parameters = parseVariables();
-            infoRequest.placeDataToDatabase();
 
             connection.setRequestProperty("Content-Length", Integer.toString(parameters.length()));
 

@@ -45,11 +45,6 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
     }
 
     @Override
-    public void placeDataToDatabase() {
-        // No data required in a Generate request
-    }
-
-    @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Variables available: sender, server
 

@@ -16,8 +16,6 @@ import java.util.Map;
  */
 public interface InfoRequest {
 
-    void placeDataToDatabase() throws WebException;
-
     Response handleRequest(Map<String, String> variables) throws WebException;
 
     void runLocally() throws WebException;
