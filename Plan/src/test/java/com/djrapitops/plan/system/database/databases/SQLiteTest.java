@@ -70,7 +70,7 @@ public class SQLiteTest {
         StaticHolder.saveInstance(SQLiteTest.class, Plan.class);
 
         Log.setErrorManager(new TestErrorManager());
-//        Log.setDebugMode("console");
+        Log.setDebugMode("console");
 //        Settings.DEV_MODE.setTemporaryValue(true);
 
         db.init();
@@ -935,5 +935,97 @@ public class SQLiteTest {
         assertFalse(geolocations.isEmpty());
         assertEquals(3, geolocations.size());
         assertTrue(geolocations.contains(secondInfo.getGeolocation()));
+    }
+
+    @Test
+    public void testWorldTableAlterV16() throws SQLException {
+        saveUserOne();
+        new Table("test", db) {
+            @Override
+            public void createTable() {
+                try {
+                    execute(
+                            "INSERT INTO " + WorldTable.TABLE_NAME + " (" +
+                                    WorldTable.Col.NAME + ", " +
+                                    WorldTable.Col.SERVER_ID +
+                                    ") VALUES ('Test', '0')"
+                    );
+                    execute(
+                            "INSERT INTO " + SessionsTable.TABLE_NAME + " (" +
+                                    SessionsTable.Col.SESSION_START + ", " +
+                                    SessionsTable.Col.SESSION_END + ", " +
+                                    SessionsTable.Col.AFK_TIME + ", " +
+                                    SessionsTable.Col.DEATHS + ", " +
+                                    SessionsTable.Col.MOB_KILLS + ", " +
+                                    SessionsTable.Col.SERVER_ID + ", " +
+                                    SessionsTable.Col.USER_ID +
+                                    ") VALUES ('0', '0', '0', '0', '0', '1', '1')"
+                    );
+                    execute(
+                            "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
+                                    WorldTimesTable.Col.SERVER_ID + ", " +
+                                    WorldTimesTable.Col.SESSION_ID + ", " +
+                                    WorldTimesTable.Col.USER_ID + ", " +
+                                    WorldTimesTable.Col.WORLD_ID + ", " +
+                                    WorldTimesTable.Col.SURVIVAL + ", " +
+                                    WorldTimesTable.Col.CREATIVE + ", " +
+                                    WorldTimesTable.Col.SPECTATOR + ", " +
+                                    WorldTimesTable.Col.ADVENTURE +
+                                    ") VALUES ('1', '1', '1', '1', '0','0','0','0')"
+                    );
+                    execute(
+                            "INSERT INTO " + ServerTable.TABLE_NAME + " (" +
+                                    ServerTable.Col.SERVER_UUID + ", " +
+                                    ServerTable.Col.SERVER_ID + ", " +
+                                    ServerTable.Col.MAX_PLAYERS + ", " +
+                                    ServerTable.Col.WEBSERVER_ADDRESS + ", " +
+                                    ServerTable.Col.INSTALLED + ", " +
+                                    ServerTable.Col.NAME +
+                                    ") VALUES ('" + UUID.randomUUID() + "', '2', '0', '0', '1', '2')"
+                    );
+                    execute(
+                            "INSERT INTO " + SessionsTable.TABLE_NAME + " (" +
+                                    SessionsTable.Col.SESSION_START + ", " +
+                                    SessionsTable.Col.SESSION_END + ", " +
+                                    SessionsTable.Col.AFK_TIME + ", " +
+                                    SessionsTable.Col.DEATHS + ", " +
+                                    SessionsTable.Col.MOB_KILLS + ", " +
+                                    SessionsTable.Col.SERVER_ID + ", " +
+                                    SessionsTable.Col.USER_ID +
+                                    ") VALUES ('0', '0', '0', '0', '0', '2', '1')"
+                    );
+                    execute(
+                            "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
+                                    WorldTimesTable.Col.SERVER_ID + ", " +
+                                    WorldTimesTable.Col.SESSION_ID + ", " +
+                                    WorldTimesTable.Col.USER_ID + ", " +
+                                    WorldTimesTable.Col.WORLD_ID + ", " +
+                                    WorldTimesTable.Col.SURVIVAL + ", " +
+                                    WorldTimesTable.Col.CREATIVE + ", " +
+                                    WorldTimesTable.Col.SPECTATOR + ", " +
+                                    WorldTimesTable.Col.ADVENTURE +
+                                    ") VALUES ('2', '2', '1', '1', '0','0','0','0')"
+                    );
+                } catch (SQLException e) {
+                    Log.toLog(this.getClass().getName(), e);
+                }
+            }
+        }.createTable();
+
+        WorldTable worldTable = db.getWorldTable();
+        Map<Integer, List<Integer>> before = worldTable.getWorldIDsByServerIDs();
+        System.out.println("\nBefore: " + before);
+        System.out.println("Before: " + worldTable.getWorldObjects() + "\n");
+
+        worldTable.alterTableV16();
+
+        Map<Integer, List<Integer>> after = worldTable.getWorldIDsByServerIDs();
+        System.out.println("\nAfter: " + after);
+        System.out.println("After: " + worldTable.getWorldObjects() + "\n");
+        assertNull(after.get(0));
+        assertNotNull(after.get(1));
+        assertEquals(1, after.get(1).size());
+        assertNotNull(after.get(2));
+        assertEquals(1, after.get(2).size());
     }
 }

@@ -35,13 +35,14 @@ import java.util.stream.Collectors;
  */
 public class WorldTimesTable extends UserIDTable {
 
+    public static final String TABLE_NAME = "plan_world_times";
     private final ServerTable serverTable;
     private final WorldTable worldTable;
     private final SessionsTable sessionsTable;
     private String insertStatement;
 
     public WorldTimesTable(SQLDB db) {
-        super("plan_world_times", db);
+        super(TABLE_NAME, db);
         worldTable = db.getWorldTable();
         sessionsTable = db.getSessionsTable();
         serverTable = db.getServerTable();

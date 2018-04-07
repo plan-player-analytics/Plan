@@ -27,8 +27,10 @@ import java.util.stream.Collectors;
  */
 public class SessionsTable extends UserIDTable {
 
+    public static final String TABLE_NAME = "plan_sessions";
+
     public SessionsTable(SQLDB db) {
-        super("plan_sessions", db);
+        super(TABLE_NAME, db);
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " ("
                 + Col.USER_ID + ", "

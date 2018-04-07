@@ -29,11 +29,12 @@ import java.util.stream.Collectors;
  */
 public class WorldTable extends Table {
 
+    public static final String TABLE_NAME = "plan_worlds";
     public final String statementSelectID;
     private final ServerTable serverTable;
 
     public WorldTable(SQLDB db) {
-        super("plan_worlds", db);
+        super(TABLE_NAME, db);
         serverTable = db.getServerTable();
         statementSelectID = "(SELECT " + Col.ID + " FROM " + tableName +
                 " WHERE (" + Col.NAME + "=?)" +
@@ -175,7 +176,7 @@ public class WorldTable extends Table {
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (String world : worldsToSave) {
                     statement.setString(1, world);
-                    statement.setString(2, ServerInfo.getServerUUID().toString());
+                    statement.setString(2, serverUUID.toString());
                     statement.addBatch();
                 }
             }
@@ -292,6 +293,7 @@ public class WorldTable extends Table {
                         .collect(Collectors.toMap(
                                 Function.identity(),
                                 oldWorld -> worldObjects.stream()
+                                        .filter(worldObj -> worldObj.serverId != 0)
                                         .filter(worldObj -> worldObj.equals(oldWorld))
                                         .collect(Collectors.toList()
                                         )));
@@ -346,7 +348,6 @@ public class WorldTable extends Table {
             public List<WorldObj> processResults(ResultSet set) throws SQLException {
                 List<WorldObj> objects = new ArrayList<>();
                 while (set.next()) {
-
                     int worldID = set.getInt(Col.ID.get());
                     int serverID = set.getInt(Col.SERVER_ID.get());
                     String worldName = set.getString(Col.NAME.get());
@@ -402,5 +403,14 @@ class WorldObj {
     @Override
     public int hashCode() {
         return Objects.hashCode(name);
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", serverId=" + serverId +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
