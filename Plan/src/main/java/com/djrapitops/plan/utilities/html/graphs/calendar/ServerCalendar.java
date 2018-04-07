@@ -5,6 +5,8 @@
 package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
 
 import java.util.*;
@@ -43,7 +45,7 @@ public class ServerCalendar {
 
             series.append(",{title: 'New: ").append(newPlayers)
                     .append("',start:'").append(day)
-                    .append("',color: '#8BC34A'")
+                    .append("',color: '").append(Theme.getValue(ThemeVal.LIGHT_GREEN)).append("'")
                     .append("}");
         }
 
@@ -62,12 +64,12 @@ public class ServerCalendar {
 
             series.append(",{title: 'Playtime: ").append(FormatUtils.formatTimeAmount(playtime))
                     .append("',start:'").append(day)
-                    .append("',color: '#4CAF50'")
+                    .append("',color: '").append(Theme.getValue(ThemeVal.GREEN)).append("'")
                     .append("}");
 
             series.append(",{title: 'Sessions: ").append(sessionCount)
                     .append("',start:'").append(day)
-                    .append("',color: '#009688'")
+                    .append("',color: '").append(Theme.getValue(ThemeVal.TEAL)).append("'")
                     .append("}");
 
             series.append(",{title: 'Unique: ").append(uniquePlayers)

@@ -6,6 +6,8 @@ package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -51,7 +53,7 @@ public class PlayerCalendar {
 
             series.append(",{title: 'Playtime: ").append(FormatUtils.formatTimeAmount(playtime))
                     .append("',start:'").append(day)
-                    .append("',color: '#4CAF50'")
+                    .append("',color: '").append(Theme.getValue(ThemeVal.GREEN)).append("'")
                     .append("}");
 
             series.append(",{title: 'Sessions: ").append(sessionCount)
@@ -88,7 +90,7 @@ public class PlayerCalendar {
                 series.append(",{title: 'Killed: ").append(kill.getVictim())
                         .append("',start:").append(time)
                         .append(",end:").append(time + fiveMinutes)
-                        .append(",color: 'red'")
+                        .append(",color: '").append(Theme.getValue(ThemeVal.RED)).append("'")
                         .append("}");
             }
         }
@@ -98,6 +100,6 @@ public class PlayerCalendar {
         String registered = FormatUtils.formatTimeStampYear(this.registered);
 
         series.append("{title: 'Registered: ").append(registered).append("'," +
-                "start: ").append(this.registered).append(",color: '#8BC34A'}");
+                "start: ").append(this.registered).append(",color: '").append(Theme.getValue(ThemeVal.LIGHT_GREEN)).append("'}");
     }
 }
