@@ -737,6 +737,24 @@ public class SessionsTable extends UserIDTable {
         addColumns(Col.AFK_TIME + " bigint NOT NULL DEFAULT 0");
     }
 
+    public Map<Integer, Integer> getIDServerIDRelation() throws SQLException {
+        String sql = "SELECT " +
+                Col.ID + ", " +
+                Col.SERVER_ID +
+                " FROM " + tableName;
+
+        return query(new QueryAllStatement<Map<Integer, Integer>>(sql, 10000) {
+            @Override
+            public Map<Integer, Integer> processResults(ResultSet set) throws SQLException {
+                HashMap<Integer, Integer> idServerIdMap = new HashMap<>();
+                while (set.next()) {
+                    idServerIdMap.put(set.getInt(Col.ID.get()), set.getInt(Col.SERVER_ID.get()));
+                }
+                return idServerIdMap;
+            }
+        });
+    }
+
     public enum Col implements Column {
         USER_ID(UserIDTable.Col.USER_ID.get()),
         ID("id"),

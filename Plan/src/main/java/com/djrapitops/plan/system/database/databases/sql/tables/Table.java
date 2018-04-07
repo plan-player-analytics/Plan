@@ -43,6 +43,13 @@ public abstract class Table {
         }
     }
 
+    protected void renameTable(String to) throws SQLException {
+        String sql = usingMySQL ?
+                "RENAME TABLE " + tableName + " TO " + to :
+                "ALTER TABLE " + tableName + " RENAME TO " + to;
+        execute(sql);
+    }
+
     /**
      * Used to get a new Connection to the Database.
      *

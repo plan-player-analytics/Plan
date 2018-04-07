@@ -30,8 +30,10 @@ import java.util.*;
  */
 public class ServerTable extends Table {
 
+    public static final String TABLE_NAME = "plan_servers";
+
     public ServerTable(SQLDB db) {
-        super("plan_servers", db);
+        super(TABLE_NAME, db);
         statementSelectServerID = "(" + Select.from(tableName, tableName + "." + Col.SERVER_ID).where(tableName + "." + Col.SERVER_UUID + "=?").toString() + " LIMIT 1)";
         statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + Col.NAME).where(tableName + "." + Col.SERVER_ID + "=?").toString() + " LIMIT 1)";
         insertStatement = Insert.values(tableName,

@@ -169,7 +169,7 @@ public class BatchOperationTable extends Table {
             return;
         }
         Log.debug("Batch Copy Worlds");
-        toDB.getDb().getWorldTable().saveWorlds(db.getWorldTable().getWorlds());
+        toDB.getDb().getWorldTable().saveWorlds(db.getWorldTable().getAllWorlds());
     }
 
     public void copyUsers(BatchOperationTable toDB) throws SQLException {

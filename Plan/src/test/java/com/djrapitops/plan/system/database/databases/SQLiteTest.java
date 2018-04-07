@@ -323,7 +323,7 @@ public class SQLiteTest {
 
         commitTest();
 
-        List<String> saved = worldTable.getWorlds();
+        List<String> saved = worldTable.getAllWorlds();
         assertEquals(new HashSet<>(worlds), new HashSet<>(saved));
     }
 
@@ -602,7 +602,7 @@ public class SQLiteTest {
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
         assertTrue(actionsTable.getActions(playerUUID).isEmpty());
         assertTrue(db.getCommandUseTable().getCommandUse().isEmpty());
-        assertTrue(db.getWorldTable().getWorlds().isEmpty());
+        assertTrue(db.getWorldTable().getAllWorlds().isEmpty());
         assertTrue(tpsTable.getTPSData().isEmpty());
         assertTrue(db.getServerTable().getBukkitServers().isEmpty());
         assertTrue(securityTable.getUsers().isEmpty());
@@ -784,7 +784,7 @@ public class SQLiteTest {
         assertFalse(sessionsTable.getSessions(playerUUID).isEmpty());
         assertFalse(actionsTable.getActions(playerUUID).isEmpty());
         assertFalse(backup.getCommandUseTable().getCommandUse().isEmpty());
-        assertFalse(backup.getWorldTable().getWorlds().isEmpty());
+        assertFalse(backup.getWorldTable().getAllWorlds().isEmpty());
         assertFalse(tpsTable.getTPSData().isEmpty());
         assertFalse(backup.getServerTable().getBukkitServers().isEmpty());
         assertFalse(securityTable.getUsers().isEmpty());
@@ -853,6 +853,20 @@ public class SQLiteTest {
     }
 
     @Test
+    public void testGetUserWorldTimes() throws SQLException {
+        testSaveSessionsWorldTimes();
+        WorldTimes worldTimesOfUser = db.getWorldTimesTable().getWorldTimesOfUser(playerUUID);
+        assertEquals(createWorldTimes(), worldTimesOfUser);
+    }
+
+    @Test
+    public void testGetServerWorldTimes() throws SQLException {
+        testSaveSessionsWorldTimes();
+        WorldTimes worldTimesOfServer = db.getWorldTimesTable().getWorldTimesOfServer(TestConstants.SERVER_UUID);
+        assertEquals(createWorldTimes(), worldTimesOfServer);
+    }
+
+    @Test
     public void testRegisterProcessorRegisterException() throws SQLException {
         assertFalse(db.getUsersTable().isRegistered(playerUUID));
         assertFalse(db.getUserInfoTable().isRegistered(playerUUID));
@@ -881,7 +895,7 @@ public class SQLiteTest {
 
     @Test
     public void testWorldTableGetWorldNamesNoException() throws SQLException {
-        Set<String> worldNames = db.getWorldTable().getWorldNames();
+        Set<String> worldNames = db.getWorldTable().getWorldNames(TestConstants.SERVER_UUID);
     }
 
     @Test
