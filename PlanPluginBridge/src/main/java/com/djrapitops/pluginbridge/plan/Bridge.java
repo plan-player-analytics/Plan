@@ -17,6 +17,7 @@ import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
 import com.djrapitops.pluginbridge.plan.kingdoms.KingdomsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansHook;
 import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
+import com.djrapitops.pluginbridge.plan.placeholderapi.PlaceholderAPIHook;
 import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
 import com.djrapitops.pluginbridge.plan.redprotect.RedProtectHook;
 import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
@@ -87,7 +88,8 @@ public class Bridge {
                 new RedProtectHook(h),
                 new TownyHook(h),
                 new VaultHook(h),
-                new ViaVersionHook(h)
+                new ViaVersionHook(h),
+                new PlaceholderAPIHook(h)
         };
     }
 }
