@@ -1,5 +1,8 @@
 # ![Player Analytics](https://puu.sh/t8vin.png)
 
+[![Build Status](https://travis-ci.org/Rsl1122/Plan-PlayerAnalytics.svg?branch=master)](https://travis-ci.org/Rsl1122/Plan-PlayerAnalytics)
+[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=com.djrapitops%3APlan)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
+
 Player Analytics is a Bukkit plugin that gathers data about player activity & displays that data on an internal webserver.
 Originally the plugin only displayed data of other plugins, but now it gathers it's own data, while displaying data from various other plugins.
 
