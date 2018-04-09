@@ -13,10 +13,10 @@ import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
@@ -30,27 +30,20 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class InspectCommand extends SubCommand {
+public class InspectCommand extends CommandNode {
 
     public InspectCommand() {
-        super("inspect",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.INSPECT.getPermission(),
-                Locale.get(Msg.CMD_USG_INSPECT).toString(),
-                "<player>");
+        super("inspect", Permissions.INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setArguments("<player>");
+        setShortHelp(Locale.get(Msg.CMD_USG_INSPECT).toString());
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_INSPECT).toArray());
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_INSPECT).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender);
 
         runInspectTask(playerName, sender);
-        return true;
     }
 
     private void runInspectTask(String playerName, ISender sender) {

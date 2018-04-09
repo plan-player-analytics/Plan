@@ -6,9 +6,9 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 
 /**
@@ -17,21 +17,18 @@ import com.djrapitops.plugin.settings.ColorScheme;
  * @author Rsl1122
  * @since 2.0.0
  */
-public class InfoCommand extends SubCommand {
+public class InfoCommand extends CommandNode {
 
     private final Plan plugin;
 
     public InfoCommand(Plan plugin) {
-        super("info",
-                CommandType.CONSOLE,
-                Permissions.INFO.getPermission(),
-                Locale.get(Msg.CMD_USG_INFO).toString());
-
+        super("info", Permissions.INFO.getPermission(), CommandType.CONSOLE);
+        setShortHelp(Locale.get(Msg.CMD_USG_INFO).toString());
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         ColorScheme cs = plugin.getColorScheme();
         String mColor = cs.getMainColor();
         String sColor = cs.getSecondaryColor();
@@ -47,7 +44,6 @@ public class InfoCommand extends SubCommand {
                 Locale.get(Msg.CMD_CONSTANT_FOOTER).toString()
         };
         sender.sendMessage(messages);
-        return true;
     }
 
 }

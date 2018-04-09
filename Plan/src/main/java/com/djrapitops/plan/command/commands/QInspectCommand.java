@@ -13,9 +13,9 @@ import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -30,7 +30,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class QInspectCommand extends SubCommand {
+public class QInspectCommand extends CommandNode {
 
     private final PlanPlugin plugin;
 
@@ -40,27 +40,19 @@ public class QInspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public QInspectCommand(PlanPlugin plugin) {
-        super("qinspect",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.QUICK_INSPECT.getPermission(),
-                Locale.get(Msg.CMD_USG_QINSPECT).toString(),
-                "<player>");
-
+        super("qinspect", Permissions.QUICK_INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setArguments("<player>");
+        setShortHelp(Locale.get(Msg.CMD_USG_QINSPECT).toString());
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_QINSPECT).toArray());
         this.plugin = plugin;
 
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_QINSPECT).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
 
         runInspectTask(playerName, sender);
-        return true;
     }
 
     private void runInspectTask(String playerName, ISender sender) {

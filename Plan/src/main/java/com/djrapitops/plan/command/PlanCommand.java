@@ -6,9 +6,10 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.TreeCommand;
-import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
+import com.djrapitops.plugin.command.TreeCmdNode;
+import com.djrapitops.plugin.command.defaultcmds.StatusCommandNode;
 
 /**
  * TreeCommand for the /plan command, and all SubCommands.
@@ -18,41 +19,35 @@ import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class PlanCommand extends TreeCommand<Plan> {
+public class PlanCommand extends TreeCmdNode {
 
     public PlanCommand(Plan plugin) {
-        super(plugin, "plan", CommandType.CONSOLE, "", "", "plan");
+        super("plan", "", CommandType.CONSOLE, null);
         super.setDefaultCommand("inspect");
         super.setColorScheme(plugin.getColorScheme());
-    }
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_PLAN).toArray());
 
-    @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_PLAN).toArray();
-    }
-
-    @Override
-    public void addCommands() {
-        add(
-                new InspectCommand(),
-                new QInspectCommand(plugin),
-                new AnalyzeCommand(),
-                new SearchCommand(),
-                new InfoCommand(plugin),
-                new ReloadCommand(plugin),
-                new ManageCommand(plugin),
-                new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
-                new ListCommand()
-        );
         RegisterCommand registerCommand = new RegisterCommand();
-        add(
-                registerCommand,
-                new WebUserCommand(plugin, registerCommand),
-                new NetworkCommand(),
-                new ListServersCommand(plugin));
-
-        if (Settings.DEV_MODE.isTrue()) {
-            add(new DevCommand());
-        }
+        setNodeGroups(
+                new CommandNode[]{
+                        new InspectCommand(),
+                        new QInspectCommand(plugin),
+                        new SearchCommand(),
+                        new ListCommand(),
+                        new AnalyzeCommand(),
+                        new NetworkCommand(),
+                },
+                new CommandNode[]{
+                        new WebUserCommand(plugin, registerCommand, this),
+                        registerCommand
+                },
+                new CommandNode[]{
+                        new InfoCommand(plugin),
+                        new ReloadCommand(plugin),
+                        new ManageCommand(plugin, this),
+                        new StatusCommandNode<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
+                        (Settings.DEV_MODE.isTrue() ? new DevCommand() : null)
+                }
+        );
     }
 }

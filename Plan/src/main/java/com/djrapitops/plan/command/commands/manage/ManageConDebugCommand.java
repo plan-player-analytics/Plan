@@ -10,13 +10,11 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 
 import java.util.List;
@@ -28,7 +26,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.3.0
  */
-public class ManageConDebugCommand extends SubCommand {
+public class ManageConDebugCommand extends CommandNode {
 
     private final ColorScheme cs;
 
@@ -38,25 +36,17 @@ public class ManageConDebugCommand extends SubCommand {
                 Permissions.MANAGE.getPermission(),
                 "Debug Bukkit-Bungee Connections",
                 "");
-
         cs = PlanPlugin.getInstance().getColorScheme();
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         if (!WebServerSystem.isWebServerEnabled()) {
             sender.sendMessage("§cWebServer is not enabled on this server.");
-            return true;
+            return;
         }
 
         Processing.submitNonCritical(() -> testServers(sender));
-
-        return true;
     }
 
     private void testServers(ISender sender) {

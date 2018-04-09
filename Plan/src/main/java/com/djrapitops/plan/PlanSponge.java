@@ -102,29 +102,8 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     }
 
     @Override
-    public void log(String level, String msg) {
-        switch (level.toUpperCase()) {
-            case "INFO_COLOR":
-            case "INFO":
-            case "I":
-                logger.info(msg);
-                break;
-            case "W":
-            case "WARN":
-            case "WARNING":
-                logger.warn(msg);
-                break;
-            case "E":
-            case "ERR":
-            case "ERROR":
-            case "SEVERE":
-                logger.error(msg);
-                break;
-            default:
-                logger.info(msg);
-                break;
-        }
-
+    public Logger getLogger() {
+        return logger;
     }
 
     @Override

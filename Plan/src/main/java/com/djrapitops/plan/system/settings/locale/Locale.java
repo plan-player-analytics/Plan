@@ -203,35 +203,33 @@ public class Locale {
         add(Msg.CMD_USG_QANALYZE, "View the Server Analysis as Text");
         add(Msg.CMD_USG_HELP, "Show command list.");
         add(Msg.CMD_USG_INFO, "Check the version of Plan");
-        add(Msg.CMD_USG_INSPECT, "Inspect Player's Data");
-        add(Msg.CMD_USG_QINSPECT, "Inspect Player's Data as Text");
+        add(Msg.CMD_USG_INSPECT, "Inspect player's data");
+        add(Msg.CMD_USG_QINSPECT, "Inspect player's data in game");
         add(Msg.CMD_USG_LIST, "List to all cached players");
         add(Msg.CMD_USG_MANAGE, "Database management command");
         add(Msg.CMD_USG_MANAGE_BACKUP, "Backup a database to .db file");
         add(Msg.CMD_USG_MANAGE_CLEAN, "Clear old data from the database");
         add(Msg.CMD_USG_MANAGE_CLEAR, "Clear ALL data from the database");
         add(Msg.CMD_USG_MANAGE_DUMP, "Create a Hastebin log for Dev for easier Issue reporting.");
-        add(Msg.CMD_USG_MANAGE_HOTSWAP, "Hotswap to another database & restart the plugin");
-        add(Msg.CMD_USG_MANAGE_IMPORT, "Import Data from supported plugins to Active Database.");
-        add(Msg.CMD_USG_MANAGE_MOVE, "Copy data from one database to another & overwrite values");
+        add(Msg.CMD_USG_MANAGE_HOTSWAP, "Hotswap database & restart the plugin");
+        add(Msg.CMD_USG_MANAGE_IMPORT, "Import Data from plugins");
+        add(Msg.CMD_USG_MANAGE_MOVE, "Move data between databases");
         add(Msg.CMD_USG_MANAGE_REMOVE, "Remove players's data from the Active Database.");
-        add(Msg.CMD_USG_MANAGE_RESTORE, "Restore a database from a backup file");
+        add(Msg.CMD_USG_MANAGE_RESTORE, "Restore a database");
         add(Msg.CMD_USG_RELOAD, "Restart the Plugin (Reloads config)");
         add(Msg.CMD_USG_SEARCH, "Search for player");
-        add(Msg.CMD_USG_WEB, "Manage Webusers");
-        add(Msg.CMD_USG_WEB_CHECK, "Check a webuser and their permission level.");
-        add(Msg.CMD_USG_WEB_DELETE, "Delete a webuser");
+        add(Msg.CMD_USG_WEB, "Manage Web users");
+        add(Msg.CMD_USG_WEB_CHECK, "Check a web user's permission level.");
+        add(Msg.CMD_USG_WEB_DELETE, "Delete a web user");
         add(Msg.CMD_USG_WEB_LEVEL, "Info about permission levels.");
-        add(Msg.CMD_USG_WEB_REGISTER, "Register a user for the webserver");
+        add(Msg.CMD_USG_WEB_REGISTER, "Register a web user");
 
         add(Msg.CMD_HELP_ANALYZE, mCol + "Analysis Command"
                 + "\\" + tCol + "  Used to Refresh analysis cache & Access the result page"
-                + "\\" + sCol + "  /plan status can be used to check status of analysis while it is running."
-                + "\\" + sCol + "  Aliases: analyze, analyse, analysis, a");
+                + "\\" + sCol + "  /plan status can be used to check status of analysis while it is running.");
         add(Msg.CMD_HELP_QANALYZE, mCol + "Quick Analysis command"
                 + "\\" + tCol + "  Used to get in game info about analysis."
-                + "\\" + sCol + "  Has less info than full Analysis web page."
-                + "\\" + sCol + "  Aliases: qanalyze, ganalyse, qanalysis, qa");
+                + "\\" + sCol + "  Has less info than full Analysis web page.");
         add(Msg.CMD_HELP_PLAN, mCol + "/plan - Main Command"
                 + "\\" + tCol + "  Used to access all SubCommands & help"
                 + "\\" + sCol + "  /plan - List subcommands"
@@ -242,21 +240,17 @@ public class Locale {
                 + "\\" + sCol + "  Alias: /plan <name>");
         add(Msg.CMD_HELP_QINSPECT, mCol + "Quick Inspect command"
                 + "\\" + tCol + "  Used to get some inspect info in game."
-                + "\\" + sCol + "  Has less info than full Inspect web page."
-                + "\\" + sCol + "  Alias: /plan qi");
+                + "\\" + sCol + "  Has less info than full Inspect web page.");
         add(Msg.CMD_HELP_LIST, mCol + "List command"
                 + "\\" + tCol + "  Used to get a link to players page."
-                + "\\" + sCol + "  Players page contains links to all cached inspect pages."
-                + "\\" + sCol + "  Alias: /plan pl");
+                + "\\" + sCol + "  Players page contains links to all cached inspect pages.");
         add(Msg.CMD_HELP_MANAGE, mCol + "Manage command\\"
                 + tCol + "  Used to Manage Database of the plugin."
-                + "\\" + sCol + "  Alias: /plan m"
                 + "\\" + sCol + "  /plan m - List subcommands"
                 + "\\" + sCol + "  /plan m <subcommand> ? - in depth help");
         add(Msg.CMD_HELP_MANAGE_CLEAR, mCol + "Manage Clear command"
                 + "\\" + tCol + "  Used to delete ALL data in the active database."
-                + "\\" + sCol + "  Plugin should be reloaded after successful clear."
-                + "\\" + sCol + "  Alias: /plan pl");
+                + "\\" + sCol + "  Plugin should be reloaded after successful clear.");
         add(Msg.CMD_HELP_MANAGE_DUMP, mCol + "Manage Dump command"
                 + "\\" + tCol + "  Used to dump important data for bug reporting to hastebin.");
         add(Msg.CMD_HELP_MANAGE_HOTSWAP, mCol + "Manage Hotswap command"
@@ -275,8 +269,7 @@ public class Locale {
                 + "\\" + sCol + "  Users have a permission level:"
                 + "\\" + tCol + "   0 - Access to all pages"
                 + "\\" + tCol + "   1 - Access to /players & all inspect pages"
-                + "\\" + tCol + "   2 - Access to own inspect page"
-                + "\\" + sCol + "  Alias: /plan web");
+                + "\\" + tCol + "   2 - Access to own inspect page");
         add(Msg.CMD_HELP_WEB_REGISTER, mCol + "Web Register command"
                 + "\\" + tCol + "  Used to register a new user for the webserver."
                 + "\\" + sCol + "  Registering a user for another player requires " + Permissions.MANAGE_WEB.getPerm() + " permission."

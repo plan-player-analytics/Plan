@@ -10,9 +10,9 @@ import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 
 /**
  * This manage SubCommand is used to request settings from Bungee so that connection can be established.
@@ -20,42 +20,36 @@ import com.djrapitops.plugin.command.SubCommand;
  * @author Rsl1122
  * @since 2.3.0
  */
-public class ManageSetupCommand extends SubCommand {
+public class ManageSetupCommand extends CommandNode {
 
     public ManageSetupCommand() {
         super("setup",
                 CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE.getPermission(),
-                "Set-Up Bungee WebServer connection",
-                "<Bungee WebServer address>");
+                "Set-Up Bungee connection",
+                "<BungeeAddress>");
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray());
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-            return true;
+            return;
         }
         if (!WebServerSystem.isWebServerEnabled()) {
             sender.sendMessage("§cWebServer is not enabled on this server! Make sure it enables on boot!");
-            return true;
+            return;
         }
         String address = args[0].toLowerCase();
         if (!address.startsWith("http") || address.endsWith("://")) {
             sender.sendMessage("§cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address.");
-            return true;
+            return;
         }
         if (address.endsWith("/")) {
             address = address.substring(0, address.length() - 1);
         }
 
         requestSetup(sender, address);
-
-        return true;
     }
 
     private void requestSetup(ISender sender, String address) {

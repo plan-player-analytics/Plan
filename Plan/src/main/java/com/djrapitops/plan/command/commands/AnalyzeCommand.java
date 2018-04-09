@@ -14,10 +14,10 @@ import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import org.bukkit.ChatColor;
 
 import java.util.Map;
@@ -30,23 +30,17 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.0.0
  */
-public class AnalyzeCommand extends SubCommand {
+public class AnalyzeCommand extends CommandNode {
 
     public AnalyzeCommand() {
-        super("analyze, analyse, analysis, a",
-                CommandType.CONSOLE,
-                Permissions.ANALYZE.getPermission(),
-                Locale.get(Msg.CMD_USG_ANALYZE).parse(),
-                "[ServerName or ID]");
+        super("analyze|analyse|analysis|a", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
+        setShortHelp(Locale.get(Msg.CMD_USG_ANALYZE).parse());
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_ANALYZE).toArray());
+        setArguments("[server/id]");
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_ANALYZE).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
 
         Processing.submitNonCritical(() -> {
@@ -63,7 +57,6 @@ public class AnalyzeCommand extends SubCommand {
                 Log.toLog(this.getClass(), e);
             }
         });
-        return true;
     }
 
     private void sendLink(Server server, ISender sender) {

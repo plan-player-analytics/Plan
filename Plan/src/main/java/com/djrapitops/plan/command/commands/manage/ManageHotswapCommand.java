@@ -9,9 +9,9 @@ import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.utilities.Verify;
 
 /**
@@ -21,7 +21,7 @@ import com.djrapitops.plugin.utilities.Verify;
  * @author Rsl1122
  * @since 2.3.0
  */
-public class ManageHotswapCommand extends SubCommand {
+public class ManageHotswapCommand extends CommandNode {
 
     private final Plan plugin;
 
@@ -31,30 +31,25 @@ public class ManageHotswapCommand extends SubCommand {
                 Permissions.MANAGE.getPermission(),
                 Locale.get(Msg.CMD_USG_MANAGE_HOTSWAP).toString(),
                 "<DB>");
-
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray());
         this.plugin = plugin;
 
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-            return true;
+            return;
         }
         String dbName = args[0].toLowerCase();
         boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
 
         if (!Condition.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName, sender)) {
-            return true;
+            return;
         }
 
         if (Condition.isTrue(dbName.equals(Database.getActive().getConfigName()), Locale.get(Msg.MANAGE_FAIL_SAME_DB).toString(), sender)) {
-            return true;
+            return;
         }
 
         try {
@@ -63,22 +58,21 @@ public class ManageHotswapCommand extends SubCommand {
             // If DB is null return
             if (!Condition.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
                 Log.error(dbName + " was null!");
-                return true;
+                return;
             }
 
             if (!database.isOpen()) {
-                return true;
+                return;
             }
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
-            return true;
+            return;
         }
 
         Settings.DB_TYPE.set(dbName);
 
         Settings.save();
         plugin.reloadPlugin(true);
-        return true;
     }
 }

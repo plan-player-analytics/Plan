@@ -7,9 +7,9 @@ import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.ChatColor;
@@ -20,20 +20,18 @@ import org.bukkit.ChatColor;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class WebCheckCommand extends SubCommand {
+public class WebCheckCommand extends CommandNode {
 
     public WebCheckCommand() {
-        super("check",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.MANAGE_WEB.getPerm(),
-                Locale.get(Msg.CMD_USG_WEB_CHECK).toString(),
-                "<username>");
+        super("check", Permissions.MANAGE_WEB.getPerm(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_WEB_CHECK).toString());
+        setArguments("<username>");
     }
 
     @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).parse() + " <username>", sender)) {
-            return true;
+            return;
         }
         Database database = Database.getActive();
         String user = args[0];
@@ -55,7 +53,6 @@ public class WebCheckCommand extends SubCommand {
                 }
             }
         }).runTaskAsynchronously();
-        return true;
     }
 
 }

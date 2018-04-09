@@ -6,9 +6,10 @@ import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.TreeCommand;
-import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
+import com.djrapitops.plugin.command.TreeCmdNode;
+import com.djrapitops.plugin.command.defaultcmds.StatusCommandNode;
 
 /**
  * TreeCommand for the /plan command, and all subcommands.
@@ -18,7 +19,7 @@ import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
+public class PlanBungeeCommand extends TreeCmdNode {
 
     /**
      * CommandExecutor class Constructor.
@@ -28,31 +29,27 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
      * @param plugin Current instance of Plan
      */
     public PlanBungeeCommand(PlanBungee plugin) {
-        super(plugin, "planbungee", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), "", "planbungee");
-        super.setDefaultCommand("help");
+        super("planbungee", Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
         super.setColorScheme(plugin.getColorScheme());
-    }
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_PLAN).toArray());
 
-    @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_PLAN).toArray();
-    }
-
-    @Override
-    public void addCommands() {
-        add(
-                new ReloadCommand(plugin),
-                new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
-                new ListCommand(),
-                new BungeeSetupToggleCommand()
-        );
         RegisterCommand registerCommand = new RegisterCommand();
-        add(
-                registerCommand,
-                new WebUserCommand(plugin, registerCommand),
-                new NetworkCommand(),
-                new ListServersCommand(plugin),
-                new ManageConDebugCommand()
+        setNodeGroups(
+                new CommandNode[]{
+                        new NetworkCommand(),
+                        new ListServersCommand(plugin),
+                        new ListCommand(),
+                },
+                new CommandNode[]{
+                        registerCommand,
+                        new WebUserCommand(plugin, registerCommand, this),
+                },
+                new CommandNode[]{
+                        new ManageConDebugCommand(),
+                        new BungeeSetupToggleCommand(),
+                        new ReloadCommand(plugin),
+                        new StatusCommandNode<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
+                }
         );
     }
 }

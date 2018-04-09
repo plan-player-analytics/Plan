@@ -8,25 +8,25 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 
 /**
  * Command used for testing functions that are too difficult to unit test.
  *
  * @author Rsl1122
  */
-public class DevCommand extends SubCommand {
+public class DevCommand extends CommandNode {
 
     public DevCommand() {
         super("dev", CommandType.PLAYER_OR_ARGS, "plan.*", "Test Plugin functions not testable with unit tests.", "<feature to test>");
     }
 
     @Override
-    public boolean onCommand(ISender sender, String cmd, String[] args) {
+    public void onCommand(ISender sender, String cmd, String[] args) {
         if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-            return true;
+            return;
         }
         String feature = args[0];
         switch (feature) {
@@ -45,6 +45,5 @@ public class DevCommand extends SubCommand {
             default:
                 break;
         }
-        return true;
     }
 }
