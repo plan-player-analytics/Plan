@@ -36,6 +36,7 @@ public enum Settings {
     FORMAT_DATE_RECENT_DAYS("Customization.Formatting.Dates.RecentDays"),
     DISPLAY_PLAYER_IPS("Customization.Display.PlayerIPs"),
     DISPLAY_GAPS_IN_GRAPH_DATA("Customization.Display.GapsInGraphData"),
+    DATA_GEOLOCATIONS("Data.Geolocations"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),

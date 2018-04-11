@@ -9,13 +9,13 @@ import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.api.ServerAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.database.BukkitDBSystem;
+import com.djrapitops.plan.system.database.ServerDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.info.BukkitInfoSystem;
+import com.djrapitops.plan.system.info.ServerInfoSystem;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
-import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
+import com.djrapitops.plan.system.settings.config.ServerConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -37,12 +37,12 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
 
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
         fileSystem = new FileSystem(plugin);
-        configSystem = new BukkitConfigSystem();
-        databaseSystem = new BukkitDBSystem();
+        configSystem = new ServerConfigSystem();
+        databaseSystem = new ServerDBSystem();
         listenerSystem = new BukkitListenerSystem(plugin);
         taskSystem = new BukkitTaskSystem(plugin);
 
-        infoSystem = new BukkitInfoSystem();
+        infoSystem = new ServerInfoSystem();
         serverInfo = new BukkitServerInfo(plugin);
 
         hookHandler = new HookHandler();

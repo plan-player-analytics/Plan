@@ -14,7 +14,7 @@ import com.djrapitops.plan.system.settings.Settings;
  *
  * @author Rsl1122
  */
-public class BukkitDBSystem extends DBSystem {
+public class ServerDBSystem extends DBSystem {
 
     @Override
     protected void initDatabase() throws DBInitException {
