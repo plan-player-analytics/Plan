@@ -31,11 +31,8 @@ public class ManageConDebugCommand extends CommandNode {
     private final ColorScheme cs;
 
     public ManageConDebugCommand() {
-        super("con",
-                CommandType.ALL,
-                Permissions.MANAGE.getPermission(),
-                "Debug Bukkit-Bungee Connections",
-                "");
+        super("con", Permissions.MANAGE.getPermission(), CommandType.ALL);
+        setShortHelp("Debug Bukkit-Bungee Connections");
         cs = PlanPlugin.getInstance().getColorScheme();
     }
 

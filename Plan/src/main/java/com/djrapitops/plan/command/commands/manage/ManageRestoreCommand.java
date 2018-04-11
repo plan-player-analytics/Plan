@@ -18,6 +18,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * This manage SubCommand is used to restore a backup.db file in the
@@ -30,18 +31,16 @@ public class ManageRestoreCommand extends CommandNode {
     private final Plan plugin;
 
     public ManageRestoreCommand(Plan plugin) {
-        super("restore",
-                CommandType.CONSOLE,
-                Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_MANAGE_RESTORE).toString(),
-                "<Filename.db> <dbTo> [-a]");
+        super("restore", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
+        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_RESTORE).toString());
+        setArguments("<Filename.db>", "<dbTo>", "[-a]");
 
         this.plugin = plugin;
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Condition.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
+        if (!Condition.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments())), sender)) {
             return;
         }
 

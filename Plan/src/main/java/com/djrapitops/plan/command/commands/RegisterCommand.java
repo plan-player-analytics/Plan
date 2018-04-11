@@ -32,11 +32,10 @@ import java.util.Arrays;
 public class RegisterCommand extends CommandNode {
 
     public RegisterCommand() {
-        super("register",
-                CommandType.PLAYER_OR_ARGS,
-                "", // No Permission Requirement
-                Locale.get(Msg.CMD_USG_WEB_REGISTER).toString(),
-                "<password> [name] [lvl]");
+        // No Permission Requirement
+        super("register", "", CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_WEB_REGISTER).toString());
+        setArguments("<password>", "[name]", "[lvl]");
         setInDepthHelp(Locale.get(Msg.CMD_HELP_WEB_REGISTER).toArray());
         if (Check.isBukkitAvailable()) {
             setupFilter();

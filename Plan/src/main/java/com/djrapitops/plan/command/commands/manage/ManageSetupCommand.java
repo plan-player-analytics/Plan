@@ -23,11 +23,9 @@ import com.djrapitops.plugin.command.ISender;
 public class ManageSetupCommand extends CommandNode {
 
     public ManageSetupCommand() {
-        super("setup",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.MANAGE.getPermission(),
-                "Set-Up Bungee connection",
-                "<BungeeAddress>");
+        super("setup", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp("Set-Up Bungee connection");
+        setArguments("<BungeeAddress>");
         setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray());
     }
 

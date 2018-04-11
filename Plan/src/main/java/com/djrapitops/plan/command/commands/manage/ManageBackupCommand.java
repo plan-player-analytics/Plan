@@ -25,11 +25,9 @@ import com.djrapitops.plugin.utilities.Verify;
 public class ManageBackupCommand extends CommandNode {
 
     public ManageBackupCommand() {
-        super("backup",
-                CommandType.CONSOLE,
-                Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_MANAGE_BACKUP).toString(),
-                "<DB>");
+        super("backup", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
+        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_BACKUP).toString());
+        setArguments("<DB>");
 
     }
 

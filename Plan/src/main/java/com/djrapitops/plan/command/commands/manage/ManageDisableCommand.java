@@ -20,11 +20,9 @@ public class ManageDisableCommand extends CommandNode {
      * Class Constructor.
      */
     public ManageDisableCommand() {
-        super("disable",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.MANAGE.getPermission(),
-                "Disable a feature temporarily",
-                "<feature>");
+        super("disable", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp("Disable a feature temporarily");
+        setArguments("<feature>");
     }
 
     @Override

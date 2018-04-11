@@ -21,16 +21,14 @@ import com.djrapitops.plugin.utilities.Verify;
  * @author Rsl1122
  * @since 2.3.0
  */
-public class ManageHotswapCommand extends CommandNode {
+public class ManageHotSwapCommand extends CommandNode {
 
     private final Plan plugin;
 
-    public ManageHotswapCommand(Plan plugin) {
-        super("hotswap",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_MANAGE_HOTSWAP).toString(),
-                "<DB>");
+    public ManageHotSwapCommand(Plan plugin) {
+        super("hotswap", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_HOTSWAP).toString());
+        setArguments("<DB>");
         setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray());
         this.plugin = plugin;
 

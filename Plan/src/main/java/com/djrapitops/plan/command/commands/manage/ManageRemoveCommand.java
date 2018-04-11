@@ -1,8 +1,6 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -11,17 +9,14 @@ import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
-
-import static org.bukkit.Bukkit.getPlayer;
 
 /**
  * This manage subcommand is used to remove a single player's data from the
@@ -29,31 +24,24 @@ import static org.bukkit.Bukkit.getPlayer;
  *
  * @author Rsl1122
  */
-public class ManageRemoveCommand extends SubCommand {
+public class ManageRemoveCommand extends CommandNode {
 
     public ManageRemoveCommand() {
-        super("remove",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_MANAGE_REMOVE).toString(),
-                "<player> [-a]");
+        super("remove|delete", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_REMOVE).toString());
+        setArguments("<player>", "[-a]");
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_REMOVE).toArray());
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_MANAGE_REMOVE).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-            return true;
+            return;
         }
 
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
 
         runRemoveTask(playerName, sender, args);
-        return true;
     }
 
     private void runRemoveTask(String playerName, ISender sender, String[] args) {
@@ -83,11 +71,6 @@ public class ManageRemoveCommand extends SubCommand {
 
                     database.remove().player(uuid);
 
-                    Player player = getPlayer(uuid);
-                    if (player != null) {
-                        SessionCache.getActiveSessions().remove(uuid);
-                        SessionCache.getInstance().cacheSession(uuid, new Session(MiscUtils.getTime(), player.getWorld().getName(), player.getGameMode().name()));
-                    }
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, Database.getActive().getConfigName()));
                 } catch (DBException e) {
                     Log.toLog(this.getClass(), e);

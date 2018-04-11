@@ -26,11 +26,9 @@ import com.djrapitops.plugin.utilities.Verify;
 public class ManageMoveCommand extends CommandNode {
 
     public ManageMoveCommand() {
-        super("move",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_MANAGE_MOVE).toString(),
-                "<fromDB> <toDB> [-a]");
+        super("move", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_MOVE).toString());
+        setArguments("<fromDB>", "<toDB>", "[-a]");
     }
 
     @Override

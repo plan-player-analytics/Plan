@@ -20,7 +20,9 @@ import com.djrapitops.plugin.command.ISender;
 public class DevCommand extends CommandNode {
 
     public DevCommand() {
-        super("dev", CommandType.PLAYER_OR_ARGS, "plan.*", "Test Plugin functions not testable with unit tests.", "<feature to test>");
+        super("dev", "plan.*", CommandType.PLAYER_OR_ARGS);
+        setShortHelp("Test Plugin functions not testable with unit tests.");
+        setArguments("<feature>");
     }
 
     @Override

@@ -32,12 +32,9 @@ public class ManageClearCommand extends CommandNode {
     private final Plan plugin;
 
     public ManageClearCommand(Plan plugin) {
-        super("clear",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_MANAGE_CLEAR).toString(),
-                "<DB> [-a]");
-
+        super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_CLEAR).toString());
+        setArguments("<DB>", "[-a]");
         setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_CLEAR).toArray());
         this.plugin = plugin;
 

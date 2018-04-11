@@ -23,11 +23,9 @@ import java.util.Arrays;
 public class ManageImportCommand extends CommandNode {
 
     public ManageImportCommand() {
-        super("import",
-                CommandType.CONSOLE,
-                Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_MANAGE_IMPORT).toString(),
-                "<plugin>/list [import args]");
+        super("import", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
+        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_IMPORT).toString());
+        setArguments("<plugin>/list", "[import args]");
         setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_IMPORT).toArray());
     }
 

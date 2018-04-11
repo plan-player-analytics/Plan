@@ -25,11 +25,9 @@ import java.util.List;
 public class SearchCommand extends CommandNode {
 
     public SearchCommand() {
-        super("search",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.SEARCH.getPermission(),
-                Locale.get(Msg.CMD_USG_SEARCH).toString(),
-                "<text>");
+        super("search", Permissions.SEARCH.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_SEARCH).toString());
+        setArguments("<text>");
         setInDepthHelp(Locale.get(Msg.CMD_HELP_SEARCH).toArray());
     }
 

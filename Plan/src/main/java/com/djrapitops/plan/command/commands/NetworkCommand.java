@@ -17,8 +17,7 @@ import com.djrapitops.plugin.command.ISender;
 public class NetworkCommand extends CommandNode {
 
     public NetworkCommand() {
-        super("network|n|netw",
-                Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
+        super("network|n|netw", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
         setShortHelp("View the network page");
     }
 

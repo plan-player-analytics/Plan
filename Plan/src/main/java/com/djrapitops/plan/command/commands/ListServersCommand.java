@@ -25,11 +25,8 @@ public class ListServersCommand extends CommandNode {
     private final PlanPlugin plugin;
 
     public ListServersCommand(PlanPlugin plugin) {
-        super("servers, serverlist, listservers, sl",
-                CommandType.CONSOLE,
-                Permissions.MANAGE.getPermission(),
-                "List servers in the network",
-                "");
+        super("servers|serverlist|listservers|sl|ls", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
+        setShortHelp("List servers in the network");
 
         this.plugin = plugin;
     }
