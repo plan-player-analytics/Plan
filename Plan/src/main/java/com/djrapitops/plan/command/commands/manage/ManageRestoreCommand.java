@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
@@ -28,9 +28,9 @@ import java.util.Arrays;
  */
 public class ManageRestoreCommand extends CommandNode {
 
-    private final Plan plugin;
+    private final PlanPlugin plugin;
 
-    public ManageRestoreCommand(Plan plugin) {
+    public ManageRestoreCommand(PlanPlugin plugin) {
         super("restore", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
         setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_RESTORE).toString());
         setArguments("<Filename.db>", "<dbTo>", "[-a]");

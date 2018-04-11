@@ -1,11 +1,9 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -29,9 +27,9 @@ import com.djrapitops.plugin.utilities.Verify;
  */
 public class ManageClearCommand extends CommandNode {
 
-    private final Plan plugin;
+    private final PlanPlugin plugin;
 
-    public ManageClearCommand(Plan plugin) {
+    public ManageClearCommand(PlanPlugin plugin) {
         super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
         setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_CLEAR).toString());
         setArguments("<DB>", "[-a]");
@@ -75,11 +73,6 @@ public class ManageClearCommand extends CommandNode {
                     database.remove().everything();
 
                     long now = MiscUtils.getTime();
-                    SessionCache.clear();
-                    plugin.getServer().getOnlinePlayers().forEach(
-                            player -> SessionCache.getInstance().cacheSession(player.getUniqueId(),
-                                    new Session(now, player.getWorld().getName(), player.getGameMode().name()))
-                    );
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
                 } catch (FatalDBException e) {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString()

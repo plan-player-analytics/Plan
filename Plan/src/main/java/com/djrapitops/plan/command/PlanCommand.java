@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
@@ -21,7 +21,7 @@ import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
  */
 public class PlanCommand extends TreeCmdNode {
 
-    public PlanCommand(Plan plugin) {
+    public PlanCommand(PlanPlugin plugin) {
         super("plan", "", CommandType.CONSOLE, null);
         super.setDefaultCommand("inspect");
         super.setColorScheme(plugin.getColorScheme());

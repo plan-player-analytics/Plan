@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -23,9 +23,9 @@ import com.djrapitops.plugin.utilities.Verify;
  */
 public class ManageHotSwapCommand extends CommandNode {
 
-    private final Plan plugin;
+    private final PlanPlugin plugin;
 
-    public ManageHotSwapCommand(Plan plugin) {
+    public ManageHotSwapCommand(PlanPlugin plugin) {
         super("hotswap", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
         setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_HOTSWAP).toString());
         setArguments("<DB>");

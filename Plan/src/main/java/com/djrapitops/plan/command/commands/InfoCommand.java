@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -19,9 +19,9 @@ import com.djrapitops.plugin.settings.ColorScheme;
  */
 public class InfoCommand extends CommandNode {
 
-    private final Plan plugin;
+    private final PlanPlugin plugin;
 
-    public InfoCommand(Plan plugin) {
+    public InfoCommand(PlanPlugin plugin) {
         super("info", Permissions.INFO.getPermission(), CommandType.CONSOLE);
         setShortHelp(Locale.get(Msg.CMD_USG_INFO).toString());
         this.plugin = plugin;
@@ -38,7 +38,7 @@ public class InfoCommand extends CommandNode {
         String upToDate = VersionCheckSystem.isNewVersionAvailable() ? "Update Available" : "Up to date";
         String[] messages = {
                 Locale.get(Msg.CMD_HEADER_INFO).toString(),
-                ball + mColor + " Version: " + sColor + plugin.getDescription().getVersion(),
+                ball + mColor + " Version: " + sColor + plugin.getVersion(),
                 ball + mColor + " Up to date: " + sColor + upToDate,
                 ball + mColor + " Active Database: " + tColor + Database.getActive().getConfigName(),
                 Locale.get(Msg.CMD_CONSTANT_FOOTER).toString()

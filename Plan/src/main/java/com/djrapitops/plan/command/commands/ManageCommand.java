@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.manage.*;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -17,7 +17,7 @@ import com.djrapitops.plugin.command.TreeCmdNode;
  */
 public class ManageCommand extends TreeCmdNode {
 
-    public ManageCommand(Plan plugin, CommandNode parent) {
+    public ManageCommand(PlanPlugin plugin, CommandNode parent) {
         super("manage|m", Permissions.MANAGE.getPermission(), CommandType.CONSOLE, parent);
         setShortHelp(Locale.get(Msg.CMD_USG_MANAGE).toString());
         setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE).toArray());
