@@ -1,6 +1,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.system.SpongeSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -67,6 +68,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
+        registerCommand("plan", new PlanCommand(this));
     }
 
     @Override
