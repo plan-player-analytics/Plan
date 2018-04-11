@@ -43,25 +43,29 @@ public class CommandPreprocessListener implements Listener {
         }
 
         try {
-            String commandName = event.getMessage().substring(1).split(" ")[0].toLowerCase();
-
-            boolean logUnknownCommands = Settings.LOG_UNKNOWN_COMMANDS.isTrue();
-            boolean combineCommandAliases = Settings.COMBINE_COMMAND_ALIASES.isTrue();
-
-            if (!logUnknownCommands || combineCommandAliases) {
-                Command command = getBukkitCommand(commandName);
-                if (command == null) {
-                    if (!logUnknownCommands) {
-                        return;
-                    }
-                } else if (combineCommandAliases) {
-                    commandName = command.getName();
-                }
-            }
-            Processing.submit(new CommandProcessor(commandName));
+            actOnCommandEvent(event);
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
+    }
+
+    private void actOnCommandEvent(PlayerCommandPreprocessEvent event) {
+        String commandName = event.getMessage().substring(1).split(" ")[0].toLowerCase();
+
+        boolean logUnknownCommands = Settings.LOG_UNKNOWN_COMMANDS.isTrue();
+        boolean combineCommandAliases = Settings.COMBINE_COMMAND_ALIASES.isTrue();
+
+        if (!logUnknownCommands || combineCommandAliases) {
+            Command command = getBukkitCommand(commandName);
+            if (command == null) {
+                if (!logUnknownCommands) {
+                    return;
+                }
+            } else if (combineCommandAliases) {
+                commandName = command.getName();
+            }
+        }
+        Processing.submit(new CommandProcessor(commandName));
     }
 
     private Command getBukkitCommand(String commandName) {

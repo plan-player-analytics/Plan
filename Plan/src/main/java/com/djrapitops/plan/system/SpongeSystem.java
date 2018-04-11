@@ -38,7 +38,7 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
         fileSystem = new FileSystem(plugin);
         configSystem = new BukkitConfigSystem();
         databaseSystem = new BukkitDBSystem();
-        listenerSystem = new SpongeListenerSystem();
+        listenerSystem = new SpongeListenerSystem(plugin);
         taskSystem = new SpongeTaskSystem();
 
         infoSystem = new BukkitInfoSystem();
