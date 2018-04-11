@@ -6,9 +6,9 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.tasks.bukkit.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bungee.EnableConnectionTask;
+import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.TimeAmount;
 

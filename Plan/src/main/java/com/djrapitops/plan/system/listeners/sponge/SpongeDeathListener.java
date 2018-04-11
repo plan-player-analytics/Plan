@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.processing.processors.player.SpongeKillProcess
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Format;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
@@ -77,9 +78,13 @@ public class SpongeDeathListener {
     }
 
     private SpongeKillProcessor handleWolfKill(long time, Living dead, Wolf wolf) {
-        Optional<UUID> creator = wolf.getCreator();
+        Optional<Optional<UUID>> owner = wolf.get(Keys.TAMED_OWNER);
 
-        return creator.map(
+        if (!owner.isPresent()) {
+            return null;
+        }
+
+        return owner.get().map(
                 uuid -> new SpongeKillProcessor(uuid, time, dead, "Wolf")
         ).orElse(null);
     }

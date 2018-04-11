@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.tasks.bukkit;
+package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
