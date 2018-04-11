@@ -62,7 +62,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
         double tps = Sponge.getGame().getServer().getTicksPerSecond();
         int playersOnline = ServerInfo.getServerProperties().getOnlinePlayers();
         latestPlayersOnline = playersOnline;
-        int loadedChunks = getLoadedChunks();
+        int loadedChunks = -1;
         int entityCount = getEntityCount();
 
         return TPSBuilder.get()
@@ -82,6 +82,8 @@ public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
      * @return amount of loaded chunks
      */
     private int getLoadedChunks() {
+        // DISABLED
+
         int loaded = 0;
         for (World world : Sponge.getGame().getServer().getWorlds()) {
             Iterator<Chunk> iterator = world.getLoadedChunks().iterator();

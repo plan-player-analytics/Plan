@@ -16,7 +16,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
+import com.djrapitops.plan.system.tasks.ServerTaskSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.StaticHolder;
@@ -79,7 +79,7 @@ public class Analysis implements Callable<AnalysisData> {
     }
 
     private AnalysisData runAnalysis() throws Exception {
-        ((BukkitTaskSystem) TaskSystem.getInstance()).cancelBootAnalysis();
+        ((ServerTaskSystem) TaskSystem.getInstance()).cancelBootAnalysis();
 
         Benchmark.start("Analysis: Total");
         log(Locale.get(Msg.ANALYSIS_START).toString());

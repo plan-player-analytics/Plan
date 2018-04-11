@@ -74,7 +74,14 @@ public class SpongeDeathListener {
         ItemStack inHand = inMainHand.orElse(killer.getItemInHand(HandTypes.OFF_HAND).orElse(ItemStack.empty()));
         ItemType type = inHand.isEmpty() ? ItemTypes.AIR : inHand.getType();
 
-        return new SpongeKillProcessor(killer.getUniqueId(), time, dead, normalizeItemName(type));
+        return new SpongeKillProcessor(killer.getUniqueId(), time, getUUID(dead), normalizeItemName(type));
+    }
+
+    private UUID getUUID(Living dead) {
+        if (dead instanceof Player) {
+            return dead.getUniqueId();
+        }
+        return null;
     }
 
     private SpongeKillProcessor handleWolfKill(long time, Living dead, Wolf wolf) {
@@ -85,7 +92,7 @@ public class SpongeDeathListener {
         }
 
         return owner.get().map(
-                uuid -> new SpongeKillProcessor(uuid, time, dead, "Wolf")
+                uuid -> new SpongeKillProcessor(uuid, time, getUUID(dead), "Wolf")
         ).orElse(null);
     }
 
@@ -97,7 +104,7 @@ public class SpongeDeathListener {
 
         Player player = (Player) source;
 
-        return new SpongeKillProcessor(player.getUniqueId(), time, dead, "Bow");
+        return new SpongeKillProcessor(player.getUniqueId(), time, getUUID(dead), "Bow");
     }
 
     /**
