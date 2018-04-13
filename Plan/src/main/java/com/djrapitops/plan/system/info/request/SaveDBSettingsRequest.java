@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.info.request;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.settings.Settings;
@@ -64,7 +64,7 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
             Log.info("----------------------------------");
             return DefaultResponses.SUCCESS.get();
         } finally {
-            Plan.getInstance().reloadPlugin(true);
+            PlanPlugin.getInstance().reloadPlugin(true);
         }
     }
 

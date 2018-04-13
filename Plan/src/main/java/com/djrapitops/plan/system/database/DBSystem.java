@@ -50,7 +50,8 @@ public abstract class DBSystem implements SubSystem {
             Benchmark.stop("Enable", "Init Database");
         } catch (DBInitException e) {
             Throwable cause = e.getCause();
-            throw new EnableException(db.getName() + " init failure: " + cause.getMessage(), cause);
+            String message = cause == null ? e.getMessage() : cause.getMessage();
+            throw new EnableException((db != null ? db.getName() : "Database") + " init failure: " + message, cause);
         }
     }
 

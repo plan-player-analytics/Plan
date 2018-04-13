@@ -50,6 +50,10 @@ public class ManageConDebugCommand extends CommandNode {
         try {
             List<Server> servers = Database.getActive().fetch().getServers();
 
+            if (servers.isEmpty()) {
+                sender.sendMessage("§cNo Servers found in the database.");
+            }
+
             String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
             UUID thisServer = ServerInfo.getServerUUID();
             for (Server server : servers) {

@@ -70,7 +70,7 @@
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>7.0.0</version>
+            <version>LATEST</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -195,6 +195,9 @@
                         <relocation>
                             <pattern>org.apache</pattern>
                             <shadedPattern>plan.org.apache</shadedPattern>
+                            <excludes>
+                                <exclude>org.apache.logging.*</exclude>
+                            </excludes>
                         </relocation>
                     </relocations>
                 </configuration>
