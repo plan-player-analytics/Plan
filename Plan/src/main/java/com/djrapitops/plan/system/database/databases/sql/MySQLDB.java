@@ -1,9 +1,11 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -12,7 +14,7 @@ import java.sql.SQLException;
  */
 public class MySQLDB extends SQLDB {
 
-    private BasicDataSource dataSource;
+    protected DataSource dataSource;
 
     public MySQLDB() {
     }
@@ -21,8 +23,9 @@ public class MySQLDB extends SQLDB {
      * Setups the {@link BasicDataSource}
      */
     @Override
-    public void setupDataSource() {
-        dataSource = new BasicDataSource();
+    public void setupDataSource() throws DBInitException {
+        BasicDataSource dataSource = new BasicDataSource();
+        this.dataSource = dataSource;
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 
         String host = Settings.DB_HOST.toString();
@@ -62,7 +65,9 @@ public class MySQLDB extends SQLDB {
     @Override
     public void close() {
         try {
-            dataSource.close();
+            if (dataSource != null && dataSource instanceof BasicDataSource) {
+                ((BasicDataSource) dataSource).close();
+            }
         } catch (SQLException e) {
             Log.toLog(this.getClass(), e);
         }

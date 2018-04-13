@@ -7,7 +7,9 @@ package com.djrapitops.plan.system.database;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
+import com.djrapitops.plan.system.database.databases.sql.SpongeMySQLDB;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plugin.api.Check;
 
 /**
  * Bukkit Database system that initializes SQLite and MySQL database objects.
@@ -18,7 +20,7 @@ public class ServerDBSystem extends DBSystem {
 
     @Override
     protected void initDatabase() throws DBInitException {
-        databases.add(new MySQLDB());
+        databases.add(Check.isSpongeAvailable() ? new SpongeMySQLDB() : new MySQLDB());
         databases.add(new SQLiteDB());
 
         String dbType = Settings.DB_TYPE.toString().toLowerCase().trim();
