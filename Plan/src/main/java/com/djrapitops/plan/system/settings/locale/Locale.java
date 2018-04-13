@@ -71,7 +71,7 @@ public class Locale {
             } else if (locale.equals("DEFAULT")) {
                 Log.info("Using Locale: Default (EN)");
             } else {
-                loadFromResource("locale_" + locale + ".txt");
+                loadFromResource("locale/locale_" + locale + ".txt");
             }
         } catch (IOException e) {
             Log.toLog(this.getClass(), e);

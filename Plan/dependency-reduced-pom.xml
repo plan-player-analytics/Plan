@@ -19,6 +19,7 @@
           <include>**/*.html</include>
           <include>**/*.js</include>
           <include>**/*.css</include>
+            <include>locale/*.txt</include>
         </includes>
         <excludes>
           <exclude>licence.yml</exclude>
