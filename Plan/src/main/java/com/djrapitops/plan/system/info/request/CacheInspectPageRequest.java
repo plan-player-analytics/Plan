@@ -17,7 +17,7 @@ import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.utilities.Verify;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 
 import java.util.Collections;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
 
         Map<String, String> replace = Collections.singletonMap("networkName", ServerInfo.getServerName());
         boolean export = Settings.ANALYSIS_EXPORT.isTrue();
-        cache(export, uuid, StrSubstitutor.replace(Base64Util.decode(html), replace));
+        cache(export, uuid, StringSubstitutor.replace(Base64Util.decode(html), replace));
 
         return DefaultResponses.SUCCESS.get();
     }

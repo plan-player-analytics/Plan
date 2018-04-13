@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.settings.locale;
 
 import com.djrapitops.plugin.utilities.Verify;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public class Message {
             replaceMap.put(String.valueOf(i), p[i].toString());
         }
 
-        StrSubstitutor sub = new StrSubstitutor(replaceMap);
+        StringSubstitutor sub = new StringSubstitutor(replaceMap);
 
         return sub.replace(content);
     }

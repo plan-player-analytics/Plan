@@ -26,7 +26,9 @@ public class SpongeConfigSystem extends ServerConfigSystem {
     protected void copyDefaults() throws IOException {
         super.copyDefaults();
         if (firstInstall) {
-            Log.info("WebServer and Geolocations disabled by default. Please enable them in the config.");
+            Log.info("§eWebServer and Geolocations disabled by default on Sponge servers. You can enable them in the config:");
+            Log.info("§e  " + Settings.WEBSERVER_DISABLED.getPath());
+            Log.info("§e  " + Settings.DATA_GEOLOCATIONS.getPath());
             Settings.WEBSERVER_DISABLED.set(true);
             Settings.DATA_GEOLOCATIONS.set(false);
             Settings.save();

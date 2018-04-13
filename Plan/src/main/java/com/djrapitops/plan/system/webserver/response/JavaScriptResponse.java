@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.webserver.response;
 
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +18,6 @@ public class JavaScriptResponse extends FileResponse {
         super.setType(ResponseType.JAVASCRIPT);
         Map<String, String> replace = new HashMap<>();
         replace.put("defaultTheme", Theme.getValue(ThemeVal.THEME_DEFAULT));
-        setContent(StrSubstitutor.replace(Theme.replaceColors(getContent()), replace));
+        setContent(StringSubstitutor.replace(Theme.replaceColors(getContent()), replace));
     }
 }

@@ -6,7 +6,7 @@ import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class InspectPageResponse extends Response {
         replaceMap.put("navPluginsTabs", inspectPagePluginsTab[0]);
         replaceMap.put("pluginsTabs", inspectPagePluginsTab[1]);
 
-        return StrSubstitutor.replace(super.getContent(), replaceMap);
+        return StringSubstitutor.replace(super.getContent(), replaceMap);
     }
 
     private String[] getCalculating() {

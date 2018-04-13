@@ -9,7 +9,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.utility.log.Log;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class ErrorResponse extends Response {
         placeHolders.put("paragraph", paragraph);
         placeHolders.put("version", MiscUtils.getPlanVersion());
 
-        setContent(StrSubstitutor.replace(getContent(), placeHolders));
+        setContent(StringSubstitutor.replace(getContent(), placeHolders));
     }
 
     public void setTitle(String title) {

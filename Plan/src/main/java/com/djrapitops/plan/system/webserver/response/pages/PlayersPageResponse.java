@@ -20,7 +20,7 @@ import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 
 import java.io.IOException;
 import java.util.*;
@@ -47,7 +47,7 @@ public class PlayersPageResponse extends Response {
             }
             replace.put("playersTable", buildPlayersTable(db));
             replace.put("version", plugin.getVersion());
-            super.setContent(Theme.replaceColors(StrSubstitutor.replace(FileUtil.getStringFromResource("web/players.html"), replace)));
+            super.setContent(Theme.replaceColors(StringSubstitutor.replace(FileUtil.getStringFromResource("web/players.html"), replace)));
         } catch (DBException | IOException e) {
             Log.toLog(this.getClass(), e);
             setContent(new InternalErrorResponse("/players", e).getContent());

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.utilities.html;
 
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -131,7 +131,7 @@ public enum Html {
             replaceMap.put(String.valueOf(i), p[i]);
         }
 
-        StrSubstitutor sub = new StrSubstitutor(replaceMap);
+        StringSubstitutor sub = new StringSubstitutor(replaceMap);
         sub.setEnableSubstitutionInVariables(false);
         return sub.replace(html);
     }
