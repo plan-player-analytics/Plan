@@ -29,7 +29,7 @@ public class SpongeKillProcessor implements CriticalRunnable {
      *
      * @param uuid       UUID of the killer.
      * @param time       Epoch ms the event occurred.
-     * @param deadUUID       Dead entity (Mob or Player)
+     * @param deadUUID   Dead entity (Mob or Player)
      * @param weaponName Weapon used.
      */
     public SpongeKillProcessor(UUID uuid, long time, UUID deadUUID, String weaponName) {
@@ -42,24 +42,15 @@ public class SpongeKillProcessor implements CriticalRunnable {
     @Override
     public void run() {
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
-        System.out.println("*");
         if (!cachedSession.isPresent()) {
-            System.out.println("No session");
             return;
         }
-        System.out.println("**");
         Session session = cachedSession.get();
-        System.out.println("***");
 
         if (deadUUID != null) {
-            System.out.println("Dead player");
-
             session.playerKilled(new PlayerKill(deadUUID, weaponName, time));
         } else {
-            System.out.println("Dead mob");
-
             session.mobKilled();
         }
-        System.out.println("****");
     }
 }
