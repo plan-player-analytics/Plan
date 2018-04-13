@@ -19,7 +19,7 @@
           <include>**/*.html</include>
           <include>**/*.js</include>
           <include>**/*.css</include>
-            <include>locale/*.txt</include>
+          <include>locale/*.txt</include>
         </includes>
         <excludes>
           <exclude>licence.yml</exclude>
@@ -63,15 +63,15 @@
               <exclude>junit:*</exclude>
             </excludes>
           </artifactSet>
-            <relocations>
-                <relocation>
-                    <pattern>org.apache</pattern>
-                    <shadedPattern>plan.org.apache</shadedPattern>
-                    <excludes>
-                        <exclude>org.apache.logging.*</exclude>
-                    </excludes>
-                </relocation>
-            </relocations>
+          <relocations>
+            <relocation>
+              <pattern>org.apache</pattern>
+              <shadedPattern>plan.org.apache</shadedPattern>
+              <excludes>
+                <exclude>org.apache.logging.*</exclude>
+              </excludes>
+            </relocation>
+          </relocations>
         </configuration>
       </plugin>
       <plugin>
@@ -270,7 +270,7 @@
     <dependency>
       <groupId>org.spongepowered</groupId>
       <artifactId>spongeapi</artifactId>
-        <version>LATEST</version>
+      <version>LATEST</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
