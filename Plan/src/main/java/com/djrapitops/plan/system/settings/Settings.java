@@ -37,6 +37,8 @@ public enum Settings {
     DISPLAY_PLAYER_IPS("Customization.Display.PlayerIPs"),
     DISPLAY_GAPS_IN_GRAPH_DATA("Customization.Display.GapsInGraphData"),
     DATA_GEOLOCATIONS("Data.Geolocations"),
+    ALLOW_UPDATE("Plugin.Allow-Update-Command"),
+    NOTIFY_ABOUT_DEV_RELEASES("Plugin.Notify-About-DEV-Releases"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),

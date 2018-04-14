@@ -28,12 +28,9 @@ import java.util.UUID;
  */
 public class ManageConDebugCommand extends CommandNode {
 
-    private final ColorScheme cs;
-
     public ManageConDebugCommand() {
         super("con", Permissions.MANAGE.getPermission(), CommandType.ALL);
         setShortHelp("Debug Bukkit-Bungee Connections");
-        cs = PlanPlugin.getInstance().getColorScheme();
     }
 
     @Override
@@ -68,18 +65,19 @@ public class ManageConDebugCommand extends CommandNode {
         }
     }
 
-    private void testServer(ISender sender, String accessAddress, Server server) {
+    public static boolean testServer(ISender sender, String accessAddress, Server server) {
         String address = server.getWebAddress().toLowerCase();
         boolean usingHttps = address.startsWith("https");
         boolean local = address.contains("localhost")
-                || address.startsWith("https://:")
-                || address.startsWith("http://:")
+                || address.startsWith("https://:") // IP empty = Localhost
+                || address.startsWith("http://:") // IP empty = Localhost
                 || address.contains("127.0.0.1");
 
         try {
 
             InfoSystem.getInstance().getConnectionSystem().sendInfoRequest(new CheckConnectionRequest(accessAddress), server);
             sender.sendMessage(getMsgFor(address, usingHttps, local, true, true));
+            return true;
 
         } catch (ForbiddenException | BadRequestException | InternalErrorException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
@@ -102,9 +100,11 @@ public class ManageConDebugCommand extends CommandNode {
             sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
             sender.sendMessage("§eOdd Exception: " + e.getClass().getSimpleName());
         }
+        return false;
     }
 
-    private String getMsgFor(String address, boolean usingHttps, boolean local, boolean successTo, boolean successFrom) {
+    private static String getMsgFor(String address, boolean usingHttps, boolean local, boolean successTo, boolean successFrom) {
+        ColorScheme cs = PlanPlugin.getInstance().getColorScheme();
         String tCol = cs.getTertiaryColor();
         String sCol = cs.getSecondaryColor();
         return tCol + address + sCol + ": "
