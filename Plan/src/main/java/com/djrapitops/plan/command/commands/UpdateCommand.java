@@ -6,17 +6,22 @@ import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.request.CheckConnectionRequest;
 import com.djrapitops.plan.system.info.request.UpdateCancelRequest;
+import com.djrapitops.plan.system.info.request.UpdateRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.update.VersionInfo;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -32,13 +37,13 @@ public class UpdateCommand extends CommandNode {
 
     public UpdateCommand() {
         super("update", Permissions.MANAGE.getPermission(), CommandType.ALL);
-        setArguments("[-update]/[cancel]");
+        setArguments("[-u]/[cancel]");
         setShortHelp("Get change log link or update plugin.");
         setInDepthHelp(
                 "/plan update",
                 "  Used to update the plugin on the next shutdown\n",
                 "  /plan update - get change log link",
-                "  /plan update -update - Schedule update to happen on all network servers that are online next time they reboot.",
+                "  /plan update -u - Schedule update to happen on all network servers that are online next time they reboot.",
                 "  /plan update cancel - Cancel scheduled update on servers that haven't rebooted yet."
         );
     }
@@ -62,24 +67,40 @@ public class UpdateCommand extends CommandNode {
         }
 
         if (args.length == 0) {
-            sender.sendLink("Change Log v" + available.getVersion().toString() + ": ", "Click me", available.getChangeLogUrl());
+            String message = "Change Log v" + available.getVersion().toString() + ": ";
+            String url = available.getChangeLogUrl();
+            if (CommandUtils.isConsole(sender)) {
+                sender.sendMessage(message + url);
+            } else {
+                sender.sendMessage(message);
+                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+            }
             return;
         }
 
         String firstArgument = args[0];
-        if ("-update".equals(firstArgument)) {
-            handleUpdate(sender, args);
-        } else if ("cancel".equals(firstArgument)) {
-            cancel(sender);
-        } else {
-            throw new IllegalArgumentException("Unknown argument, use '-update' or 'cancel'");
-        }
+        RunnableFactory.createNew("Update Command Task", new AbsRunnable() {
+            @Override
+            public void run() {
+                try {
+                    if ("-u".equals(firstArgument)) {
+                        handleUpdate(sender, args);
+                    } else if ("cancel".equals(firstArgument)) {
+                        handleCancel(sender);
+                    } else {
+                        throw new IllegalArgumentException("Unknown argument, use '-u' or 'cancel'");
+                    }
+                } finally {
+                    cancel();
+                }
+            }
+        }).runTaskAsynchronously();
     }
 
-    private void cancel(ISender sender) {
+    private void handleCancel(ISender sender) {
         try {
             cancel(sender, Database.getActive().fetch().getServers());
-            sender.sendMessage("§aUpdate has been cancelled.");
+            sender.sendMessage("§aCancel operation performed.");
         } catch (DBException e) {
             sender.sendMessage("§cDatabase error occurred, cancel could not be performed.");
             Log.toLog(this.getClass().getName(), e);
@@ -90,24 +111,28 @@ public class UpdateCommand extends CommandNode {
         sender.sendMessage("§aYou can cancel the update on servers that haven't rebooted yet with /plan update cancel.");
         sender.sendMessage("Checking that all servers are online..");
         if (!checkNetworkStatus(sender)) {
-            sender.sendMessage("§cNot all servers were online or accessible, you can still update available servers using -force as a 2nd argument.");
-            if (args.length <= 1 || !"-force".equals(args[1])) {
+            sender.sendMessage("§cNot all servers were online or accessible, you can still update available servers using /plan -update -force");
+            if (args.length > 1 && "-force".equals(args[1])) {
                 return;
             }
         }
         try {
             List<Server> servers = Database.getActive().fetch().getServers();
-            update(sender, servers);
+            update(sender, servers, args);
         } catch (DBException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }
 
-    private void update(ISender sender, List<Server> servers) {
+    private void update(ISender sender, List<Server> servers, String[] args) {
         for (Server server : servers) {
             if (update(sender, server)) {
                 sender.sendMessage("§a" + server.getName() + " scheduled for update.");
             } else {
+                if (args.length > 1 && "-force".equals(args[1])) {
+                    sender.sendMessage("§e" + server.getName() + " failed to update, -force specified, continuing update.");
+                    continue;
+                }
                 sender.sendMessage("§cUpdate failed on a server, cancelling update on all servers..");
                 cancel(sender, servers);
                 sender.sendMessage("§cUpdate cancelled.");
@@ -149,7 +174,7 @@ public class UpdateCommand extends CommandNode {
 
     private boolean update(ISender sender, Server server) {
         try {
-            InfoSystem.getInstance().getConnectionSystem().sendInfoRequest(new CheckConnectionRequest(), server);
+            InfoSystem.getInstance().getConnectionSystem().sendInfoRequest(new UpdateRequest(), server);
             return true;
         } catch (BadRequestException e) {
             sender.sendMessage("§c" + server.getName() + " has Allow-Update set to false, aborting update.");
@@ -186,6 +211,7 @@ public class UpdateCommand extends CommandNode {
             FetchOperations fetch = Database.getActive().fetch();
             Optional<Server> bungeeInformation = fetch.getBungeeInformation();
             if (!bungeeInformation.isPresent()) {
+                sender.sendMessage("Bungee address not found in the database, assuming this is not a network.");
                 return true;
             }
             Map<UUID, Server> bukkitServers = fetch.getBukkitServers();

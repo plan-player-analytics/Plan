@@ -81,9 +81,9 @@ public abstract class PlanSystem implements SubSystem {
         checkSubSystemInitialization();
 
         SubSystem[] systems = new SubSystem[]{
-                versionCheckSystem,
                 fileSystem,
                 configSystem,
+                versionCheckSystem,
                 databaseSystem,
                 webServerSystem,
                 processing,

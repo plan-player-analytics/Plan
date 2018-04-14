@@ -55,10 +55,13 @@ public class VersionCheckSystem implements SubSystem {
                 }
                 VersionInfo newestVersion = versions.get(0);
                 if (Version.isNewVersionAvailable(new Version(currentVersion), newestVersion.getVersion())) {
+                    newVersionAvailable = newestVersion;
                     String notification =
                             "New Release (" + newestVersion.getVersion().toString() + ") is available and can be updated " +
                                     "to using update subcommand." + (newestVersion.isRelease() ? "" : " This is a DEV release.");
-                    Log.info(notification);
+                    Log.infoColor("§a----------------------------------------");
+                    Log.infoColor("§a" + notification);
+                    Log.infoColor("§a----------------------------------------");
                     NotificationCenter.addNotification(newestVersion.isRelease() ? Priority.HIGH : Priority.MEDIUM, notification);
                 } else {
                     Log.info("You're using the latest version.");

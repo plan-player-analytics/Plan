@@ -36,6 +36,7 @@ public class PlanCommand extends TreeCmdNode {
                         new ListCommand(),
                         new AnalyzeCommand(),
                         new NetworkCommand(),
+                        new ListServersCommand(plugin)
                 },
                 new CommandNode[]{
                         new WebUserCommand(plugin, registerCommand, this),
