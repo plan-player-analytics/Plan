@@ -11,7 +11,7 @@ import com.djrapitops.plugin.api.utility.log.errormanager.ErrorManager;
  *
  * @author Rsl1122
  */
-public class TestErrorManager extends ErrorManager {
+public class TestErrorManager implements ErrorManager {
 
     @Override
     public void toLog(String s, Throwable throwable, Class aClass) {
