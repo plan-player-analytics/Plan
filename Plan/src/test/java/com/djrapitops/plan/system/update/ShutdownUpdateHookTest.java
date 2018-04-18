@@ -7,8 +7,8 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -34,8 +34,11 @@ public class ShutdownUpdateHookTest {
 
         assertTrue(newJar.exists());
 
-        ShutdownUpdateHook.registerOldJarForDeletion(temporaryFolder.getRoot(), new File(temporaryFolder.getRoot(), "Plan-4.2.0-b1.jar"));
+        System.out.println(Arrays.toString(temporaryFolder.getRoot().listFiles()));
+        ShutdownUpdateHook.registerOldJarForDeletion(temporaryFolder.getRoot(), new File(temporaryFolder.getRoot(), "Plan-4.2.0.jar"));
 
-        assertFalse(newJar.exists());
+        new ShutdownUpdateHook().run();
+
+        assertTrue(newJar.exists());
     }
 }
