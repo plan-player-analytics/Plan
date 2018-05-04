@@ -7,6 +7,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -76,8 +77,7 @@ public class ShutdownUpdateHook extends Thread {
         }
         for (File file : files) {
             String fileName = file.getName();
-            boolean isPlanJar = (fileName.startsWith("Plan-")
-                    && fileName.endsWith(".jar"))
+            boolean isPlanJar = (fileName.startsWith("Plan-") && fileName.endsWith(".jar"))
                     || fileName.equals("Plan.jar");
             boolean isNewJar = fileName.equals(newFileLocation.getName());
             if (isPlanJar && !isNewJar) {
@@ -88,23 +88,14 @@ public class ShutdownUpdateHook extends Thread {
 
     public static void downloadNewJar(VersionInfo available, File newFileLocation) throws IOException {
         URL downloadFrom = new URL(available.getDownloadUrl());
-        BufferedInputStream in = null;
-        FileOutputStream fout = null;
-        try {
-            in = new BufferedInputStream(downloadFrom.openStream());
-            fout = new FileOutputStream(newFileLocation);
-
+        try (
+                BufferedInputStream in = new BufferedInputStream(downloadFrom.openStream());
+                FileOutputStream fout = new FileOutputStream(newFileLocation)
+        ) {
             final byte data[] = new byte[1024];
             int count;
             while ((count = in.read(data, 0, 1024)) != -1) {
                 fout.write(data, 0, count);
-            }
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-            if (fout != null) {
-                fout.close();
             }
         }
     }
@@ -120,12 +111,27 @@ public class ShutdownUpdateHook extends Thread {
 
     @Override
     public void run() {
-        for (File f : toDelete
-                ) {
+        unloadJar();
+
+        for (File f : toDelete) {
             if (!f.delete()) {
                 f.deleteOnExit();
             }
         }
+    }
+
+    private void unloadJar() {
+        ClassLoader classLoader = PlanPlugin.class.getClassLoader();
+
+        if (classLoader instanceof URLClassLoader) {
+            try {
+                ((URLClassLoader) classLoader).close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.gc();
     }
 
 }
