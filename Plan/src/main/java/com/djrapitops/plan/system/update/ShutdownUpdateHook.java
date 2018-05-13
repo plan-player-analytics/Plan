@@ -111,7 +111,9 @@ public class ShutdownUpdateHook extends Thread {
 
     @Override
     public void run() {
-        unloadJar();
+        if (!(Check.isBukkitAvailable() && Check.isSpongeAvailable() && Check.isBungeeAvailable())) {
+            unloadJar();
+        }
 
         for (File f : toDelete) {
             if (!f.delete()) {
