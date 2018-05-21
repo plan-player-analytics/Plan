@@ -4,7 +4,12 @@
  */
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.SHA256Hash;
 import com.google.common.base.Objects;
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Data class that contains information about IP and Geolocation.
@@ -15,12 +20,19 @@ public class GeoInfo {
 
     private final String ip;
     private final String geolocation;
+    private final String ipHash;
     private final long lastUsed;
 
-    public GeoInfo(String ip, String geolocation, long lastUsed) {
+    public GeoInfo(String ip, String geolocation, long lastUsed)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        this(FormatUtils.formatIP(ip), geolocation, lastUsed, new SHA256Hash(ip).create());
+    }
+
+    public GeoInfo(String ip, String geolocation, long lastUsed, String ipHash) {
         this.ip = ip;
         this.geolocation = geolocation;
         this.lastUsed = lastUsed;
+        this.ipHash = ipHash;
     }
 
     public String getIp() {
@@ -33,6 +45,10 @@ public class GeoInfo {
 
     public long getLastUsed() {
         return lastUsed;
+    }
+
+    public String getIpHash() {
+        return ipHash;
     }
 
     @Override

@@ -276,10 +276,13 @@ public class FormatUtils {
     }
 
     public static String formatIP(String ip) {
+        if ("localhost".equals(ip)) {
+            return ip;
+        }
         StringBuilder b = new StringBuilder();
         int i = 0;
         for (String part : ip.split("\\.")) {
-            if (i >= 3) {
+            if (i >= 2) {
                 break;
             }
 
@@ -288,7 +291,7 @@ public class FormatUtils {
             i++;
         }
 
-        return b.append("xx").toString();
+        return b.append("xx.xx").toString();
     }
 
     /**

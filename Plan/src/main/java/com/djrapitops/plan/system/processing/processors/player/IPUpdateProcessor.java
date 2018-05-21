@@ -13,6 +13,8 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
@@ -38,7 +40,7 @@ public class IPUpdateProcessor implements CriticalRunnable {
             String country = GeolocationCache.getCountry(ip);
             try {
                 Database.getActive().save().geoInfo(uuid, new GeoInfo(ip, country, time));
-            } catch (DBException e) {
+            } catch (DBException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
                 Log.toLog(this.getClass(), e);
             }
         }
