@@ -48,7 +48,7 @@ public class PlanCommand extends TreeCmdNode {
                         new ManageCommand(plugin, this),
                         new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
                         (Settings.DEV_MODE.isTrue() ? new DevCommand() : null),
-                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
+//                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
                 }
         );
     }

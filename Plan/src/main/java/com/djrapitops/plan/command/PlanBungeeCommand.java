@@ -4,7 +4,6 @@ import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
@@ -50,7 +49,7 @@ public class PlanBungeeCommand extends TreeCmdNode {
                         new BungeeSetupToggleCommand(),
                         new ReloadCommand(plugin),
                         new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
-                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
+//                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
                 }
         );
     }

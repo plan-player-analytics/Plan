@@ -179,7 +179,7 @@ public class UpdateCommand extends CommandNode {
         } catch (BadRequestException e) {
             sender.sendMessage("§c" + server.getName() + " has Allow-Update set to false, aborting update.");
             return false;
-        } catch (ForbiddenException | GatewayException | InternalErrorException e) {
+        } catch (ForbiddenException | GatewayException | InternalErrorException | NoServersException e) {
             sender.sendMessage("§c" + server.getName() + ": Odd Exception: " + e.getClass().getSimpleName());
             return false;
         } catch (UnauthorizedServerException e) {
