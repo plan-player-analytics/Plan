@@ -13,7 +13,6 @@ import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.utilities.FormatUtils;
 import net.kaikk.mc.gpp.Claim;
 import net.kaikk.mc.gpp.DataStore;
-import net.kaikk.mc.gpp.PlayerData;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,13 +42,10 @@ public class GriefPreventionPlusData extends PluginData {
                         claim -> FormatUtils.formatLocation(claim.getGreaterBoundaryCorner()),
                         Claim::getArea)
                 );
-        PlayerData data = dataStore.getPlayerData(uuid);
-        int blocks = data.getAccruedClaimBlocks() + data.getBonusClaimBlocks();
         long totalArea = MathUtils.sumLong(claims.values().stream().map(i -> (long) i));
 
         inspectContainer.addValue(getWithIcon("Claims", "map-marker", "blue-grey"), claims.size());
         inspectContainer.addValue(getWithIcon("Claimed Area", "map-o", "light-green"), totalArea);
-        inspectContainer.addValue(getWithIcon("Claim Blocks Available", "map-o", "light-green"), blocks);
 
         TableContainer claimsTable = new TableContainer(getWithIcon("Claim", "map-marker"), getWithIcon("Area", "map-o"));
         claimsTable.setColor("blue-grey");

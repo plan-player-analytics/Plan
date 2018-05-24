@@ -13,7 +13,6 @@ import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.utilities.FormatUtils;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
-import me.ryanhamshire.GriefPrevention.PlayerData;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,15 +42,12 @@ public class GriefPreventionData extends PluginData {
                         claim -> FormatUtils.formatLocation(claim.getGreaterBoundaryCorner()),
                         Claim::getArea)
                 );
-        PlayerData data = dataStore.getPlayerData(uuid);
-        int blocks = data.getAccruedClaimBlocks() + data.getBonusClaimBlocks() + dataStore.getGroupBonusBlocks(uuid);
         String softMuted = dataStore.isSoftMuted(uuid) ? "Yes" : "No";
         long totalArea = MathUtils.sumLong(claims.values().stream().map(i -> (long) i));
 
         inspectContainer.addValue(getWithIcon("SoftMuted", "bell-slash-o", "deep-orange"), softMuted);
         inspectContainer.addValue(getWithIcon("Claims", "map-marker", "blue-grey"), claims.size());
         inspectContainer.addValue(getWithIcon("Claimed Area", "map-o", "light-green"), totalArea);
-        inspectContainer.addValue(getWithIcon("Claim Blocks Available", "map-o", "light-green"), blocks);
 
         TableContainer claimsTable = new TableContainer(getWithIcon("Claim", "map-marker"), getWithIcon("Area", "map-o"));
         claimsTable.setColor("blue-grey");
