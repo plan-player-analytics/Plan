@@ -5,10 +5,9 @@ import com.djrapitops.pluginbridge.plan.Hook;
 import me.clip.placeholderapi.PlaceholderAPI;
 
 /**
- * A Class responsible for hooking to MCMMO and registering data sources.
+ * A Class responsible for hooking to PlaceholderAPI.
  *
  * @author Rsl1122
- * @since 3.2.1
  */
 public class PlaceholderAPIHook extends Hook {
 

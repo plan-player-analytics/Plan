@@ -88,8 +88,8 @@ public class Bridge {
                 new RedProtectHook(h),
                 new TownyHook(h),
                 new VaultHook(h),
-                new ViaVersionHook(h),
-                new PlaceholderAPIHook(h)
+                new ViaVersionHook(h)//,
+//                new PlaceholderAPIHook(h)
         };
     }
 }
