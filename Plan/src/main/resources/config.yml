@@ -79,6 +79,7 @@ Data:
   Commands:
     LogUnknownCommands: false
     CombineCommandAliases: true
+  Geolocations: true
 # -----------------------------------------------------
 Customization:
   UseServerTime: true

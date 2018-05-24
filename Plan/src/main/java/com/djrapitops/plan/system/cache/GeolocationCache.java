@@ -4,7 +4,6 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.cache.Cache;
@@ -47,7 +46,7 @@ public class GeolocationCache implements SubSystem {
     @Override
     public void enable() throws EnableException {
         geolocationDB = new File(FileSystem.getDataFolder(), "GeoIP.dat");
-        if (!Check.isSpongeAvailable() || Settings.DATA_GEOLOCATIONS.isTrue()) {
+        if (Settings.DATA_GEOLOCATIONS.isTrue()) {
             try {
                 GeolocationCache.checkDB();
             } catch (UnknownHostException e) {
