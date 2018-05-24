@@ -261,7 +261,7 @@ public abstract class SQLDB extends Database {
         long keepActiveAfter = now - TimeAmount.DAY.ms() * Settings.KEEP_INACTIVE_PLAYERS_DAYS.getNumber();
 
         List<UUID> inactivePlayers = sessionsTable.getLastSeenForAllPlayers().entrySet().stream()
-                .filter(entry -> entry.getValue() > keepActiveAfter)
+                .filter(entry -> entry.getValue() < keepActiveAfter)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
         for (UUID uuid : inactivePlayers) {
