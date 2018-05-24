@@ -173,7 +173,8 @@ public class NetworkSettings {
                 DISPLAY_GAPS_IN_GRAPH_DATA,
                 AFK_THRESHOLD_MINUTES,
                 DATA_GEOLOCATIONS,
-                KEEP_LOGS_DAYS
+                KEEP_LOGS_DAYS,
+                KEEP_INACTIVE_PLAYERS_DAYS
         };
         Log.debug("NetworkSettings: Adding Config Values..");
         for (Settings setting : sameStrings) {

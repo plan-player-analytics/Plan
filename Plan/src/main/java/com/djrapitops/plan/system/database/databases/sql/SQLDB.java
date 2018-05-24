@@ -1,11 +1,13 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.database.databases.sql.tables.move.Version8TransferTable;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -15,6 +17,10 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Class containing main logic for different data related save and load functionality.
@@ -250,6 +256,22 @@ public abstract class SQLDB extends Database {
     private void clean() throws SQLException {
         tpsTable.clean();
         transferTable.clean();
+
+        long now = System.currentTimeMillis();
+        long keepActiveAfter = now - TimeAmount.DAY.ms() * Settings.KEEP_INACTIVE_PLAYERS_DAYS.getNumber();
+
+        List<UUID> inactivePlayers = sessionsTable.getLastSeenForAllPlayers().entrySet().stream()
+                .filter(entry -> entry.getValue() > keepActiveAfter)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+        for (UUID uuid : inactivePlayers) {
+            try {
+                removeOps.player(uuid);
+            } catch (DBException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+        }
+        Log.info("Removed data of " + inactivePlayers.size() + " players.");
     }
 
     public abstract Connection getConnection() throws SQLException;

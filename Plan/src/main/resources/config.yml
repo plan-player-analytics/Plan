@@ -81,6 +81,7 @@ Data:
     LogUnknownCommands: false
     CombineCommandAliases: true
   Geolocations: true
+  KeepInactivePlayerDataForDays: 180
 # -----------------------------------------------------
 Customization:
   UseServerTime: true

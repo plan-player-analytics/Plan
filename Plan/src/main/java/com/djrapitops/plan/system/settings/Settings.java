@@ -51,6 +51,7 @@ public enum Settings {
     MAX_PLAYERS_PLAYERS_PAGE("Customization.Display.MaxPlayersPlayersPage"),
     AFK_THRESHOLD_MINUTES("Data.AFKThresholdMinutes"),
     KEEP_LOGS_DAYS("Plugin.KeepLogsForXDays"),
+    KEEP_INACTIVE_PLAYERS_DAYS("Data.KeepInactivePlayerDataForDays"),
 
     // String
     DEBUG("Plugin.Debug"),
