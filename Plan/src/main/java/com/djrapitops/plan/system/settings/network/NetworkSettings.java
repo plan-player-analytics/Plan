@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.djrapitops.plan.system.settings.Settings.*;
+
 /**
  * Class for managing Config setting transfer from Bungee to Bukkit servers.
  *
@@ -36,7 +38,7 @@ public class NetworkSettings {
             return;
         }
 
-        if (Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue() || Settings.BUNGEE_COPY_CONFIG.isFalse()) {
+        if (BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue() || BUNGEE_COPY_CONFIG.isFalse()) {
             return;
         }
 
@@ -134,27 +136,50 @@ public class NetworkSettings {
     private Map<String, Object> getConfigValues() throws DBException {
         Log.debug("NetworkSettings: Loading Config Values..");
         Map<String, Object> configValues = new HashMap<>();
-        addConfigValue(configValues, Settings.DB_TYPE, "mysql");
+        addConfigValue(configValues, DB_TYPE, "mysql");
         Settings[] sameStrings = new Settings[]{
-                Settings.DB_HOST, Settings.DB_USER, Settings.DB_PASS,
-                Settings.DB_DATABASE, Settings.DB_LAUNCH_OPTIONS,
-                Settings.FORMAT_DECIMALS, Settings.FORMAT_SECONDS,
-                Settings.FORMAT_DAY, Settings.FORMAT_DAYS, Settings.FORMAT_HOURS,
-                Settings.FORMAT_MINUTES, Settings.FORMAT_MONTHS, Settings.FORMAT_MONTH,
-                Settings.FORMAT_YEAR, Settings.FORMAT_YEARS, Settings.FORMAT_ZERO_SECONDS,
-                Settings.USE_SERVER_TIME, Settings.DISPLAY_SESSIONS_AS_TABLE, Settings.APPEND_WORLD_PERC,
-                Settings.ORDER_WORLD_PIE_BY_PERC, Settings.MAX_SESSIONS, Settings.MAX_PLAYERS,
-                Settings.MAX_PLAYERS_PLAYERS_PAGE, Settings.PLAYERTABLE_FOOTER, Settings.FORMAT_DATE_RECENT_DAYS,
-                Settings.FORMAT_DATE_RECENT_DAYS_PATTERN, Settings.FORMAT_DATE_CLOCK, Settings.FORMAT_DATE_NO_SECONDS,
-                Settings.FORMAT_DATE_FULL, Settings.DISPLAY_PLAYER_IPS, Settings.ACTIVE_LOGIN_THRESHOLD,
-                Settings.ACTIVE_PLAY_THRESHOLD, Settings.DISPLAY_GAPS_IN_GRAPH_DATA, Settings.AFK_THRESHOLD_MINUTES,
-                Settings.DATA_GEOLOCATIONS
+                DB_HOST,
+                DB_USER,
+                DB_PASS,
+                DB_DATABASE,
+                DB_LAUNCH_OPTIONS,
+                FORMAT_DECIMALS,
+                FORMAT_SECONDS,
+                FORMAT_DAY,
+                FORMAT_DAYS,
+                FORMAT_HOURS,
+                FORMAT_MINUTES,
+                FORMAT_MONTHS,
+                FORMAT_MONTH,
+                FORMAT_YEAR,
+                FORMAT_YEARS,
+                FORMAT_ZERO_SECONDS,
+                USE_SERVER_TIME,
+                DISPLAY_SESSIONS_AS_TABLE,
+                APPEND_WORLD_PERC,
+                ORDER_WORLD_PIE_BY_PERC,
+                MAX_SESSIONS,
+                MAX_PLAYERS,
+                MAX_PLAYERS_PLAYERS_PAGE,
+                PLAYERTABLE_FOOTER,
+                FORMAT_DATE_RECENT_DAYS,
+                FORMAT_DATE_RECENT_DAYS_PATTERN,
+                FORMAT_DATE_CLOCK,
+                FORMAT_DATE_NO_SECONDS,
+                FORMAT_DATE_FULL,
+                DISPLAY_PLAYER_IPS,
+                ACTIVE_LOGIN_THRESHOLD,
+                ACTIVE_PLAY_THRESHOLD,
+                DISPLAY_GAPS_IN_GRAPH_DATA,
+                AFK_THRESHOLD_MINUTES,
+                DATA_GEOLOCATIONS,
+                KEEP_LOGS_DAYS
         };
         Log.debug("NetworkSettings: Adding Config Values..");
         for (Settings setting : sameStrings) {
             addConfigValue(configValues, setting, setting.toString());
         }
-        addConfigValue(configValues, Settings.DB_PORT, Settings.DB_PORT.getNumber());
+        addConfigValue(configValues, DB_PORT, DB_PORT.getNumber());
         addServerSpecificValues(configValues);
         return configValues;
     }
@@ -176,18 +201,18 @@ public class NetworkSettings {
         ServerSpecificSettings settings = Settings.serverSpecific();
 
         for (UUID serverUUID : Database.getActive().fetch().getServerUUIDs()) {
-            String theme = settings.getString(serverUUID, Settings.THEME_BASE);
-            Integer port = settings.getInt(serverUUID, Settings.WEBSERVER_PORT);
-            String name = settings.getString(serverUUID, Settings.SERVER_NAME);
+            String theme = settings.getString(serverUUID, THEME_BASE);
+            Integer port = settings.getInt(serverUUID, WEBSERVER_PORT);
+            String name = settings.getString(serverUUID, SERVER_NAME);
 
             if (!Verify.isEmpty(theme)) {
-                addConfigValue(configValues, serverUUID, Settings.THEME_BASE, theme);
+                addConfigValue(configValues, serverUUID, THEME_BASE, theme);
             }
             if (port != null && port != 0) {
-                addConfigValue(configValues, serverUUID, Settings.WEBSERVER_PORT, port);
+                addConfigValue(configValues, serverUUID, WEBSERVER_PORT, port);
             }
             if (!Verify.isEmpty(name)) {
-                addConfigValue(configValues, serverUUID, Settings.SERVER_NAME, name);
+                addConfigValue(configValues, serverUUID, SERVER_NAME, name);
             }
         }
     }

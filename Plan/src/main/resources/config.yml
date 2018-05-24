@@ -19,6 +19,7 @@ Plugin:
     CopyBungeeConfig: true
   Allow-Update-Command: true
   Notify-About-DEV-Releases: false
+  KeepLogsForXDays: 7
 
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:

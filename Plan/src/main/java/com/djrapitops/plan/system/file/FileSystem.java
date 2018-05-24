@@ -8,7 +8,11 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.tasks.LogsFolderCleanTask;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.File;
@@ -63,10 +67,11 @@ public class FileSystem implements SubSystem {
             if (configFile.exists()) {
                 configFile.createNewFile();
             }
+            RunnableFactory.createNew(new LogsFolderCleanTask(Log.getLogsFolder()))
+                    .runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 30L);
         } catch (IOException e) {
             throw new EnableException("Failed to create config.yml", e);
         }
-
     }
 
     @Override
