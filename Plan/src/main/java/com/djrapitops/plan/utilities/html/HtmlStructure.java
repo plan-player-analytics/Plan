@@ -20,6 +20,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Class for parsing layout components of the websites.
@@ -122,7 +123,7 @@ public class HtmlStructure {
 
         Database db = Database.getActive();
         UUID serverUUID = server.getUuid();
-        String id = serverUUID.toString().replace("-", "");
+        String id = ThreadLocalRandom.current().nextInt(100) + serverUUID.toString().replace("-", "");
 
         int playerCount = 0;
         String playerData = "[]";
