@@ -9,13 +9,13 @@ import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.api.ServerAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.database.BukkitDBSystem;
+import com.djrapitops.plan.system.database.ServerDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.info.BukkitInfoSystem;
+import com.djrapitops.plan.system.info.ServerInfoSystem;
 import com.djrapitops.plan.system.info.server.SpongeServerInfo;
 import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
-import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
+import com.djrapitops.plan.system.settings.config.SpongeConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -29,6 +29,8 @@ import com.djrapitops.plugin.api.utility.log.Log;
  */
 public class SpongeSystem extends PlanSystem implements ServerSystem {
 
+    private boolean firstInstall = false;
+
     public SpongeSystem(PlanSponge plugin) {
         testSystem = this;
 
@@ -36,12 +38,12 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
 
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
         fileSystem = new FileSystem(plugin);
-        configSystem = new BukkitConfigSystem();
-        databaseSystem = new BukkitDBSystem();
-        listenerSystem = new SpongeListenerSystem();
-        taskSystem = new SpongeTaskSystem();
+        configSystem = new SpongeConfigSystem();
+        databaseSystem = new ServerDBSystem();
+        listenerSystem = new SpongeListenerSystem(plugin);
+        taskSystem = new SpongeTaskSystem(plugin);
 
-        infoSystem = new BukkitInfoSystem();
+        infoSystem = new ServerInfoSystem();
         serverInfo = new SpongeServerInfo();
 
         hookHandler = new HookHandler();

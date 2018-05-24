@@ -9,12 +9,14 @@ import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
+
+import java.util.Arrays;
 
 /**
  * Command for registering web users.
@@ -27,27 +29,22 @@ import com.djrapitops.plugin.task.RunnableFactory;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class RegisterCommand extends SubCommand {
+public class RegisterCommand extends CommandNode {
 
     public RegisterCommand() {
-        super("register",
-                CommandType.PLAYER_OR_ARGS,
-                "", // No Permission Requirement
-                Locale.get(Msg.CMD_USG_WEB_REGISTER).toString(),
-                "<password> [name] [access lvl]");
+        // No Permission Requirement
+        super("register", "", CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_WEB_REGISTER).toString());
+        setArguments("<password>", "[name]", "[lvl]");
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_WEB_REGISTER).toArray());
         if (Check.isBukkitAvailable()) {
             setupFilter();
         }
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_WEB_REGISTER).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        String notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + super.getArguments());
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
+        String notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + Arrays.toString(getArguments()));
         String hashErrorMsg = "§cPassword hash error.";
         String permLvlErrorMsg = "§cIncorrect perm level, not a number: ";
         try {
@@ -65,7 +62,6 @@ public class RegisterCommand extends SubCommand {
         } catch (Exception e) {
             Log.toLog(this.getClass().getSimpleName(), e);
         }
-        return true;
     }
 
     private void consoleRegister(String[] args, ISender sender, String notEnoughArgsMsg) throws PassEncryptUtil.CannotPerformOperationException {

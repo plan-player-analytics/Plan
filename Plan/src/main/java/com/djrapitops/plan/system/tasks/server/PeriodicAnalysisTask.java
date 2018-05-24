@@ -1,27 +1,23 @@
-package com.djrapitops.plan.system.tasks.bukkit;
+package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 
-public class BootAnalysisTask extends AbsRunnable {
+public class PeriodicAnalysisTask extends AbsRunnable {
 
-    public BootAnalysisTask() {
-        super(BootAnalysisTask.class.getSimpleName());
+    public PeriodicAnalysisTask() {
+        super(PeriodicAnalysisTask.class.getSimpleName());
     }
 
     @Override
     public void run() {
         try {
-            String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
-            Log.info(bootAnalysisRunMsg);
             if (!Analysis.isAnalysisBeingRun()) {
                 WebExceptionLogger.logIfOccurs(this.getClass(), () ->
                         InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID()))
@@ -31,7 +27,9 @@ public class BootAnalysisTask extends AbsRunnable {
             if (!PlanPlugin.getInstance().isReloading()) {
                 Log.toLog(this.getClass(), e);
             }
-        } finally {
+        } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
+            Log.error("Periodic Analysis Task Disabled due to error, reload Plan to re-enable.");
+            Log.toLog(this.getClass(), e);
             cancel();
         }
     }

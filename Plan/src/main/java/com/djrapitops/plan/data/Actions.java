@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.data;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 
 /**
  * IDs of various actions

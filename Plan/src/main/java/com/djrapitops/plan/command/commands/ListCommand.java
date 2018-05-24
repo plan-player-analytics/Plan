@@ -4,10 +4,10 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 
 /**
  * Command used to display url to the player list page.
@@ -15,22 +15,17 @@ import com.djrapitops.plugin.command.SubCommand;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class ListCommand extends SubCommand {
+public class ListCommand extends CommandNode {
 
     public ListCommand() {
-        super("list, pl, playerlist, players", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), Locale.get(Msg.CMD_USG_LIST).toString(), "");
+        super("players|pl|playerlist|list", Permissions.INSPECT_OTHER.getPermission(), CommandType.CONSOLE);
+        setShortHelp(Locale.get(Msg.CMD_USG_LIST).toString());
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_LIST).toArray());
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_LIST).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         sendListMsg(sender);
-        return true;
     }
 
     private void sendListMsg(ISender sender) {

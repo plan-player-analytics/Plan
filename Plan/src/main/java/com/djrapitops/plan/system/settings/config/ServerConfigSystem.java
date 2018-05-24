@@ -15,7 +15,7 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
-public class BukkitConfigSystem extends ConfigSystem {
+public class ServerConfigSystem extends ConfigSystem {
 
     @Override
     protected void copyDefaults() throws IOException {

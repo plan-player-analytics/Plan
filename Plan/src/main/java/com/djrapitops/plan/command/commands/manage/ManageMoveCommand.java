@@ -8,9 +8,9 @@ import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
@@ -23,42 +23,40 @@ import com.djrapitops.plugin.utilities.Verify;
  * @author Rsl1122
  * @since 2.3.0
  */
-public class ManageMoveCommand extends SubCommand {
+public class ManageMoveCommand extends CommandNode {
 
     public ManageMoveCommand() {
-        super("move",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_MANAGE_MOVE).toString(),
-                "<fromDB> <toDB> [-a]");
+        super("move", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_MOVE).toString());
+        setArguments("<fromDB>", "<toDB>", "[-a]");
     }
 
     @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         if (!Condition.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
-            return true;
+            return;
         }
 
         String fromDB = args[0].toLowerCase();
         boolean isCorrectDB = "sqlite".equals(fromDB) || "mysql".equals(fromDB);
 
         if (!Condition.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB, sender)) {
-            return true;
+            return;
         }
 
         String toDB = args[1].toLowerCase();
         isCorrectDB = "sqlite".equals(toDB) || "mysql".equals(toDB);
 
         if (!Condition.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + toDB, sender)) {
-            return true;
+            return;
         }
 
         if (!Condition.isTrue(!Verify.equalsIgnoreCase(fromDB, toDB), Locale.get(Msg.MANAGE_FAIL_SAME_DB).toString(), sender)) {
-            return true;
+            return;
         }
 
         if (!Condition.isTrue(Verify.contains("-a", args), Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(args[1])), sender)) {
-            return true;
+            return;
         }
 
         try {
@@ -69,7 +67,6 @@ public class ManageMoveCommand extends SubCommand {
         } catch (Exception e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
         }
-        return true;
     }
 
     private void runMoveTask(final Database fromDatabase, final Database toDatabase, ISender sender) {

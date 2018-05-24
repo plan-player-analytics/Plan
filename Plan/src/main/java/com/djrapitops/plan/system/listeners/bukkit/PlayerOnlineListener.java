@@ -72,61 +72,69 @@ public class PlayerOnlineListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         try {
-            Player player = event.getPlayer();
-            NotificationCenter.checkNotifications(player);
-
-            UUID uuid = player.getUniqueId();
-            long time = MiscUtils.getTime();
-
-            AFKListener.AFK_TRACKER.performedAction(uuid, time);
-
-            String world = player.getWorld().getName();
-            String gm = player.getGameMode().name();
-
-            String ip = player.getAddress().getAddress().getHostAddress();
-
-            String playerName = player.getName();
-            String displayName = player.getDisplayName();
-
-            int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
-
-            SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
-
-            Processing.submit(
-                    new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
-                            new IPUpdateProcessor(uuid, ip, time),
-                            new NameProcessor(uuid, playerName, displayName),
-                            new PlayerPageUpdateProcessor(uuid)
-                    )
-            );
-            Processing.submit(new NetworkPageUpdateProcessor());
+            actOnJoinEvent(event);
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
     }
 
+    private void actOnJoinEvent(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        NotificationCenter.checkNotifications(player);
+
+        UUID uuid = player.getUniqueId();
+        long time = MiscUtils.getTime();
+
+        AFKListener.AFK_TRACKER.performedAction(uuid, time);
+
+        String world = player.getWorld().getName();
+        String gm = player.getGameMode().name();
+
+        String ip = player.getAddress().getAddress().getHostAddress();
+
+        String playerName = player.getName();
+        String displayName = player.getDisplayName();
+
+        int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
+
+        SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
+
+        Processing.submit(
+                new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
+                        new IPUpdateProcessor(uuid, ip, time),
+                        new NameProcessor(uuid, playerName, displayName),
+                        new PlayerPageUpdateProcessor(uuid)
+                )
+        );
+        Processing.submit(new NetworkPageUpdateProcessor());
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         try {
-            long time = MiscUtils.getTime();
-            Player player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
-
-            AFKListener.AFK_TRACKER.loggedOut(uuid, time);
-
-            Processing.submit(new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()));
-            Processing.submit(new EndSessionProcessor(uuid, time));
-            Processing.submit(new NetworkPageUpdateProcessor());
-
-            SessionCache sessionCache = SessionCache.getInstance();
-            if (sessionCache.isFirstSession(uuid)) {
-                int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
-                Processing.submit(new FirstLeaveProcessor(uuid, time, messagesSent));
-            }
-
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
+            actOnQuitEvent(event);
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
+    }
+
+    private void actOnQuitEvent(PlayerQuitEvent event) {
+        long time = MiscUtils.getTime();
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        AFKListener.AFK_TRACKER.loggedOut(uuid, time);
+
+        Processing.submit(new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()));
+        Processing.submit(new EndSessionProcessor(uuid, time));
+        Processing.submit(new NetworkPageUpdateProcessor());
+
+        SessionCache sessionCache = SessionCache.getInstance();
+        if (sessionCache.isFirstSession(uuid)) {
+            int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
+            Processing.submit(new FirstLeaveProcessor(uuid, time, messagesSent));
+        }
+
+        Processing.submit(new PlayerPageUpdateProcessor(uuid));
     }
 }

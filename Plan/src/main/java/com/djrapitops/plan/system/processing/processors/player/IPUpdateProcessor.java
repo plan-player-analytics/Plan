@@ -9,8 +9,11 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
@@ -32,11 +35,13 @@ public class IPUpdateProcessor implements CriticalRunnable {
 
     @Override
     public void run() {
-        String country = GeolocationCache.getCountry(ip);
-        try {
-            Database.getActive().save().geoInfo(uuid, new GeoInfo(ip, country, time));
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
+        if (Settings.DATA_GEOLOCATIONS.isTrue()) {
+            String country = GeolocationCache.getCountry(ip);
+            try {
+                Database.getActive().save().geoInfo(uuid, new GeoInfo(ip, country, time));
+            } catch (DBException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
+                Log.toLog(this.getClass(), e);
+            }
         }
     }
 }

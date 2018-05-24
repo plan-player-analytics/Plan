@@ -28,13 +28,13 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BukkitConnectionSystem extends ConnectionSystem {
+public class ServerConnectionSystem extends ConnectionSystem {
 
     private long latestServerMapRefresh;
 
     private Server mainServer;
 
-    public BukkitConnectionSystem() {
+    public ServerConnectionSystem() {
         latestServerMapRefresh = 0;
     }
 

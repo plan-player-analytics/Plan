@@ -125,6 +125,9 @@ public abstract class ConnectionSystem implements SubSystem {
         putRequest(requests, SaveDBSettingsRequest.createHandler());
         putRequest(requests, SendDBSettingsRequest.createHandler());
         putRequest(requests, CheckConnectionRequest.createHandler());
+
+//        putRequest(requests, UpdateRequest.createHandler());
+//        putRequest(requests, UpdateCancelRequest.createHandler());
         return requests;
     }
 

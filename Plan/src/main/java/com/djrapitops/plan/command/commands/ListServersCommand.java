@@ -8,9 +8,9 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 
 import java.util.List;
@@ -20,21 +20,19 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class ListServersCommand extends SubCommand {
+public class ListServersCommand extends CommandNode {
 
     private final PlanPlugin plugin;
 
     public ListServersCommand(PlanPlugin plugin) {
-        super("servers, serverlist, listservers, sl",
-                CommandType.CONSOLE,
-                Permissions.MANAGE.getPermission(),
-                "List servers in the network");
+        super("servers|serverlist|listservers|sl|ls", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
+        setShortHelp("List servers in the network");
 
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         ColorScheme colorScheme = plugin.getColorScheme();
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
@@ -50,7 +48,6 @@ public class ListServersCommand extends SubCommand {
             sender.sendMessage("§cDatabase Exception occurred.");
             Log.toLog(this.getClass(), e);
         }
-        return true;
     }
 
 }

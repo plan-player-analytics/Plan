@@ -8,9 +8,9 @@ import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.comparators.WebUserComparator;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -23,17 +23,18 @@ import java.util.List;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class WebListUsersCommand extends SubCommand {
+public class WebListUsersCommand extends CommandNode {
 
     private final PlanPlugin plugin;
 
     public WebListUsersCommand(PlanPlugin plugin) {
-        super("list", CommandType.CONSOLE, Permissions.MANAGE_WEB.getPerm(), "List registered web users & permission levels.");
+        super("list", Permissions.MANAGE_WEB.getPerm(), CommandType.CONSOLE);
+        setShortHelp("List registered web users & permission levels.");
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         RunnableFactory.createNew(new AbsRunnable("Webuser List Task") {
             @Override
             public void run() {
@@ -55,7 +56,6 @@ public class WebListUsersCommand extends SubCommand {
                 }
             }
         }).runTaskAsynchronously();
-        return true;
     }
 
 }

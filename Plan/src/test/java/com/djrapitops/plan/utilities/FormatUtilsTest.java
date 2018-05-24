@@ -161,7 +161,7 @@ public class FormatUtilsTest {
         String ip = "1.2.3.4";
         String ip2 = "1.2.3.26";
         String ip3 = "1.2.3.235";
-        String expected = "1.2.3.xx";
+        String expected = "1.2.xx.xx";
 
         assertEquals(expected, FormatUtils.formatIP(ip));
         assertEquals(expected, FormatUtils.formatIP(ip2));

@@ -31,19 +31,23 @@ public class ChatListener implements Listener {
         }
 
         try {
-            Player p = event.getPlayer();
-            UUID uuid = p.getUniqueId();
-            String name = p.getName();
-            String displayName = p.getDisplayName();
-
-            SessionCache sessionCache = SessionCache.getInstance();
-            if (sessionCache.isFirstSession(uuid)) {
-                sessionCache.firstSessionMessageSent(uuid);
-            }
-
-            Processing.submit(new NameProcessor(uuid, name, displayName));
+            actOnChatEvent(event);
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
+    }
+
+    private void actOnChatEvent(AsyncPlayerChatEvent event) {
+        Player p = event.getPlayer();
+        UUID uuid = p.getUniqueId();
+        String name = p.getName();
+        String displayName = p.getDisplayName();
+
+        SessionCache sessionCache = SessionCache.getInstance();
+        if (sessionCache.isFirstSession(uuid)) {
+            sessionCache.firstSessionMessageSent(uuid);
+        }
+
+        Processing.submit(new NameProcessor(uuid, name, displayName));
     }
 }

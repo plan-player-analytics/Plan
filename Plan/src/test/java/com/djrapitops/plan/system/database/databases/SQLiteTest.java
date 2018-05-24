@@ -22,6 +22,7 @@ import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -36,8 +37,10 @@ import utilities.TestConstants;
 import utilities.TestErrorManager;
 import utilities.mocks.SystemMockUtil;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -258,7 +261,7 @@ public class SQLiteTest {
         String expectedGeoLoc = "TestLocation";
         long time = MiscUtils.getTime();
 
-        GeoInfo expected = new GeoInfo(expectedIP, expectedGeoLoc, time);
+        GeoInfo expected = new GeoInfo(expectedIP, expectedGeoLoc, time, "3");
         geoInfoTable.saveGeoInfo(playerUUID, expected);
         geoInfoTable.saveGeoInfo(playerUUID, expected);
         commitTest();
@@ -563,7 +566,7 @@ public class SQLiteTest {
 
         sessionsTable.saveSession(playerUUID, session);
         nicknamesTable.saveUserName(playerUUID, "TestNick");
-        geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
+        geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
         actionsTable.insertAction(playerUUID, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(playerUUID));
@@ -579,7 +582,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testRemovalEverything() throws SQLException, DBException {
+    public void testRemovalEverything() throws SQLException, DBException, UnsupportedEncodingException, NoSuchAlgorithmException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
@@ -608,7 +611,7 @@ public class SQLiteTest {
         assertTrue(securityTable.getUsers().isEmpty());
     }
 
-    private void saveAllData(SQLDB database) throws SQLException {
+    private void saveAllData(SQLDB database) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
         System.out.println("Saving all possible data to the Database..");
         UserInfoTable userInfoTable = database.getUserInfoTable();
         UsersTable usersTable = database.getUsersTable();
@@ -632,7 +635,8 @@ public class SQLiteTest {
 
         sessionsTable.saveSession(playerUUID, session);
         nicknamesTable.saveUserName(playerUUID, "TestNick");
-        geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L));
+        geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
+                new SHA256Hash("1.2.3.4").create()));
         actionsTable.insertAction(playerUUID, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(playerUUID));
@@ -756,7 +760,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testBackupAndRestore() throws SQLException, DBInitException {
+    public void testBackupAndRestore() throws SQLException, DBInitException, UnsupportedEncodingException, NoSuchAlgorithmException {
         System.out.println("- Creating Backup Database -");
         SQLiteDB backup = new SQLiteDB("debug-backup" + MiscUtils.getTime());
         backup.init();
@@ -894,7 +898,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testWorldTableGetWorldNamesNoException() throws SQLException {
+    public void testWorldTableGetWorldNamesNoException() throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
         saveAllData(db);
         Set<String> worldNames = db.getWorldTable().getWorldNames(TestConstants.SERVER_UUID);
         assertEquals(new HashSet<>(worlds), worldNames);
@@ -924,11 +928,11 @@ public class SQLiteTest {
         usersTable.registerUser(secondUuid, 0, "");
         usersTable.registerUser(thirdUuid, 0, "");
 
-        geoInfoTable.saveGeoInfo(firstUuid, new GeoInfo("-", "Test1", 0));
-        GeoInfo secondInfo = new GeoInfo("-", "Test2", 5);
+        geoInfoTable.saveGeoInfo(firstUuid, new GeoInfo("-", "Test1", 0, "3"));
+        GeoInfo secondInfo = new GeoInfo("-", "Test2", 5, "3");
         geoInfoTable.saveGeoInfo(firstUuid, secondInfo);
-        geoInfoTable.saveGeoInfo(secondUuid, new GeoInfo("-", "Test3", 0));
-        geoInfoTable.saveGeoInfo(thirdUuid, new GeoInfo("-", "Test4", 0));
+        geoInfoTable.saveGeoInfo(secondUuid, new GeoInfo("-", "Test3", 0, "3"));
+        geoInfoTable.saveGeoInfo(thirdUuid, new GeoInfo("-", "Test4", 0, "3"));
 
         List<String> geolocations = geoInfoTable.getNetworkGeolocations();
         System.out.println(geolocations);

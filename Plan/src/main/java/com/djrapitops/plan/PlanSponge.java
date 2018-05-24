@@ -1,6 +1,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.system.SpongeSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -22,7 +23,7 @@ import org.spongepowered.api.plugin.Plugin;
 import java.io.File;
 import java.io.InputStream;
 
-@Plugin(id = "plan", name = "Plan", version = "4.2.0")
+@Plugin(id = "plan", name = "Plan", version = "4.3.0", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Inject
@@ -67,6 +68,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
+        registerCommand("plan", new PlanCommand(this));
     }
 
     @Override
@@ -90,7 +92,6 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         return PlanColorScheme.create();
     }
 
-
     @Override
     public void onReload() {
 
@@ -102,29 +103,8 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     }
 
     @Override
-    public void log(String level, String msg) {
-        switch (level.toUpperCase()) {
-            case "INFO_COLOR":
-            case "INFO":
-            case "I":
-                logger.info(msg);
-                break;
-            case "W":
-            case "WARN":
-            case "WARNING":
-                logger.warn(msg);
-                break;
-            case "E":
-            case "ERR":
-            case "ERROR":
-            case "SEVERE":
-                logger.error(msg);
-                break;
-            default:
-                logger.info(msg);
-                break;
-        }
-
+    public Logger getLogger() {
+        return logger;
     }
 
     @Override
@@ -134,7 +114,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Override
     public String getVersion() {
-        return "4.2.0";
+        return "4.2.1";
     }
 
     public SpongeSystem getSystem() {

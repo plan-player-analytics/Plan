@@ -2,7 +2,7 @@ package com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class HtmlUtils {
      * @return Html with placeholders replaced
      */
     public static String replacePlaceholders(String html, Map<String, Serializable> replaceMap) {
-        StrSubstitutor sub = new StrSubstitutor(replaceMap);
+        StringSubstitutor sub = new StringSubstitutor(replaceMap);
         sub.setEnableSubstitutionInVariables(true);
         return sub.replace(html);
     }

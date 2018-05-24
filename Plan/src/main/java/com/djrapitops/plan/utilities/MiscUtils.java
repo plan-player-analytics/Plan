@@ -1,14 +1,12 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandUtils;
@@ -142,10 +140,6 @@ public class MiscUtils {
     }
 
     public static String getPlanVersion() {
-        if (Check.isBukkitAvailable()) {
-            return Plan.getInstance().getDescription().getVersion();
-        } else {
-            return PlanBungee.getInstance().getDescription().getVersion();
-        }
+        return PlanPlugin.getInstance().getVersion();
     }
 }

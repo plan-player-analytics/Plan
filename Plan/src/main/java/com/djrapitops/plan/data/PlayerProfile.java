@@ -241,7 +241,7 @@ public class PlayerProfile {
 
     public GeoInfo getMostRecentGeoInfo() {
         if (geoInformation.isEmpty()) {
-            return new GeoInfo("-", "Not Known", MiscUtils.getTime());
+            return new GeoInfo("-", "Not Known", MiscUtils.getTime(), "");
         }
         geoInformation.sort(new GeoInfoComparator());
         return geoInformation.get(0);

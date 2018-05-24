@@ -36,6 +36,9 @@ public enum Settings {
     FORMAT_DATE_RECENT_DAYS("Customization.Formatting.Dates.RecentDays"),
     DISPLAY_PLAYER_IPS("Customization.Display.PlayerIPs"),
     DISPLAY_GAPS_IN_GRAPH_DATA("Customization.Display.GapsInGraphData"),
+    DATA_GEOLOCATIONS("Data.Geolocations"),
+    ALLOW_UPDATE("Plugin.Allow-Update-Command"),
+    NOTIFY_ABOUT_DEV_RELEASES("Plugin.Notify-About-DEV-Releases"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),
@@ -47,6 +50,8 @@ public enum Settings {
     MAX_PLAYERS("Customization.Display.MaxPlayers"),
     MAX_PLAYERS_PLAYERS_PAGE("Customization.Display.MaxPlayersPlayersPage"),
     AFK_THRESHOLD_MINUTES("Data.AFKThresholdMinutes"),
+    KEEP_LOGS_DAYS("Plugin.KeepLogsForXDays"),
+    KEEP_INACTIVE_PLAYERS_DAYS("Data.KeepInactivePlayerDataForDays"),
 
     // String
     DEBUG("Plugin.Debug"),

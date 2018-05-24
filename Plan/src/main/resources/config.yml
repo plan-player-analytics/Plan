@@ -17,6 +17,9 @@ Plugin:
   Bungee-Override:
     StandaloneMode: false
     CopyBungeeConfig: true
+  Allow-Update-Command: true
+  Notify-About-DEV-Releases: false
+  KeepLogsForXDays: 7
 
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:
@@ -77,6 +80,8 @@ Data:
   Commands:
     LogUnknownCommands: false
     CombineCommandAliases: true
+  Geolocations: true
+  KeepInactivePlayerDataForDays: 180
 # -----------------------------------------------------
 Customization:
   UseServerTime: true

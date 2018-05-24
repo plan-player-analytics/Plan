@@ -4,29 +4,26 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 
 /**
  * Command used to display url to the network page.
  *
  * @author Rsl1122
  */
-public class NetworkCommand extends SubCommand {
+public class NetworkCommand extends CommandNode {
 
     public NetworkCommand() {
-        super("network, n, netw",
-                CommandType.CONSOLE,
-                Permissions.ANALYZE.getPermission(),
-                "Get the link to the network page");
+        super("network|n|netw", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
+        setShortHelp("View the network page");
     }
 
     @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         sendNetworkMsg(sender);
-        return true;
     }
 
     private void sendNetworkMsg(ISender sender) {

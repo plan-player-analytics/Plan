@@ -5,9 +5,9 @@ import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.FormatUtils;
@@ -22,31 +22,23 @@ import java.util.List;
  * @author Rsl1122
  * @since 2.0.0
  */
-public class SearchCommand extends SubCommand {
+public class SearchCommand extends CommandNode {
 
     public SearchCommand() {
-        super("search",
-                CommandType.PLAYER_OR_ARGS,
-                Permissions.SEARCH.getPermission(),
-                Locale.get(Msg.CMD_USG_SEARCH).toString(),
-                "<part of playername>");
-
+        super("search", Permissions.SEARCH.getPermission(), CommandType.PLAYER_OR_ARGS);
+        setShortHelp(Locale.get(Msg.CMD_USG_SEARCH).toString());
+        setArguments("<text>");
+        setInDepthHelp(Locale.get(Msg.CMD_HELP_SEARCH).toArray());
     }
 
     @Override
-    public String[] addHelp() {
-        return Locale.get(Msg.CMD_HELP_SEARCH).toArray();
-    }
-
-    @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-            return true;
+            return;
         }
         sender.sendMessage(Locale.get(Msg.CMD_INFO_SEARCHING).toString());
 
         runSearchTask(args, sender);
-        return true;
     }
 
     private void runSearchTask(String[] args, ISender sender) {

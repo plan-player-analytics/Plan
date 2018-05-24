@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.info;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.connection.BukkitConnectionSystem;
+import com.djrapitops.plan.system.info.connection.ServerConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheNetworkPageContentRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SetupRequest;
@@ -19,10 +19,10 @@ import com.djrapitops.plugin.api.utility.log.Log;
  *
  * @author Rsl1122
  */
-public class BukkitInfoSystem extends InfoSystem {
+public class ServerInfoSystem extends InfoSystem {
 
-    public BukkitInfoSystem() {
-        super(new BukkitConnectionSystem());
+    public ServerInfoSystem() {
+        super(new ServerConnectionSystem());
     }
 
     @Override

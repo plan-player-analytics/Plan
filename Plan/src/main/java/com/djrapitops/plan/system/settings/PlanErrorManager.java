@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Rsl1122
  */
-public class PlanErrorManager extends ErrorManager {
+public class PlanErrorManager implements ErrorManager {
 
     @Override
     public void toLog(String source, Throwable e, Class callingPlugin) {

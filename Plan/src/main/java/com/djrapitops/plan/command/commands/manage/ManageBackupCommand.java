@@ -9,9 +9,9 @@ import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
@@ -22,28 +22,26 @@ import com.djrapitops.plugin.utilities.Verify;
  * @author Rsl1122
  * @since 2.3.0
  */
-public class ManageBackupCommand extends SubCommand {
+public class ManageBackupCommand extends CommandNode {
 
     public ManageBackupCommand() {
-        super("backup",
-                CommandType.CONSOLE,
-                Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_MANAGE_BACKUP).toString(),
-                "<DB>");
+        super("backup", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
+        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_BACKUP).toString());
+        setArguments("<DB>");
 
     }
 
     @Override
-    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
         try {
 
             if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
-                return true;
+                return;
             }
             String dbName = args[0].toLowerCase();
             boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
             if (!Condition.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName, sender)) {
-                return true;
+                return;
             }
 
             final Database database = DBSystem.getActiveDatabaseByName(dbName);
@@ -51,7 +49,7 @@ public class ManageBackupCommand extends SubCommand {
             // If DB is null return
             if (!Condition.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
                 Log.error(dbName + " was null!");
-                return true;
+                return;
             }
             Log.debug("Backup", "Start");
             runBackupTask(sender, args, database);
@@ -60,7 +58,6 @@ public class ManageBackupCommand extends SubCommand {
         } finally {
             Log.logDebug("Backup");
         }
-        return true;
     }
 
     private void runBackupTask(ISender sender, String[] args, final Database database) {
