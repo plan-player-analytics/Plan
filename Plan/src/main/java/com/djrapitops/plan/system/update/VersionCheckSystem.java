@@ -57,8 +57,10 @@ public class VersionCheckSystem implements SubSystem {
                 if (Version.isNewVersionAvailable(new Version(currentVersion), newestVersion.getVersion())) {
                     newVersionAvailable = newestVersion;
                     String notification =
-                            "New Release (" + newestVersion.getVersion().toString() + ") is available and can be updated " +
-                                    "to using update subcommand." + (newestVersion.isRelease() ? "" : " This is a DEV release.");
+                            "New Release (" + newestVersion.getVersion().toString() + ") is available " +
+//                                    "and can be updated to using update subcommand." +
+                                    newestVersion.getChangeLogUrl() +
+                                    (newestVersion.isRelease() ? "" : " This is a DEV release.");
                     Log.infoColor("§a----------------------------------------");
                     Log.infoColor("§a" + notification);
                     Log.infoColor("§a----------------------------------------");

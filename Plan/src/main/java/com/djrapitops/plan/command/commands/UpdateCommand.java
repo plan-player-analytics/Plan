@@ -112,7 +112,8 @@ public class UpdateCommand extends CommandNode {
         sender.sendMessage("Checking that all servers are online..");
         if (!checkNetworkStatus(sender)) {
             sender.sendMessage("§cNot all servers were online or accessible, you can still update available servers using /plan -update -force");
-            if (args.length > 1 && "-force".equals(args[1])) {
+            // If -force, continue, otherwise return.
+            if (args.length < 2 || !"-force".equals(args[1])) {
                 return;
             }
         }

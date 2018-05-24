@@ -174,7 +174,11 @@
           <groupId>org.slf4j</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>asm-all</artifactId>
+            <artifactId>asm</artifactId>
+            <groupId>org.ow2.asm</groupId>
+        </exclusion>
+          <exclusion>
+              <artifactId>asm-commons</artifactId>
           <groupId>org.ow2.asm</groupId>
         </exclusion>
       </exclusions>
@@ -314,10 +318,6 @@
           <groupId>com.flowpowered</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>asm</artifactId>
-          <groupId>org.ow2.asm</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>slf4j-api</artifactId>
           <groupId>org.slf4j</groupId>
         </exclusion>
@@ -325,6 +325,10 @@
           <artifactId>jsr305</artifactId>
           <groupId>com.google.code.findbugs</groupId>
         </exclusion>
+          <exclusion>
+              <artifactId>asm</artifactId>
+              <groupId>org.ow2.asm</groupId>
+          </exclusion>
         <exclusion>
           <artifactId>gson</artifactId>
           <groupId>com.google.code.gson</groupId>
