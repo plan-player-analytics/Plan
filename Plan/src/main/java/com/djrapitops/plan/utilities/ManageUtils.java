@@ -30,16 +30,22 @@ public class ManageUtils {
      * @param copyFromDB Database you want to backup.
      */
     public static void backup(String dbName, Database copyFromDB) throws DBInitException, SQLException {
-        String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
-        String fileName = dbName + "-backup-" + timeStamp;
-        SQLiteDB backupDB = new SQLiteDB(fileName);
-        Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
-        if (uuids.isEmpty()) {
-            return;
+        SQLiteDB backupDB = null;
+        try {
+            String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
+            String fileName = dbName + "-backup-" + timeStamp;
+            backupDB = new SQLiteDB(fileName);
+            Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
+            if (uuids.isEmpty()) {
+                return;
+            }
+            backupDB.init();
+            clearAndCopy(backupDB, copyFromDB);
+        } finally {
+            if (backupDB != null) {
+                backupDB.close();
+            }
         }
-        backupDB.init();
-        clearAndCopy(backupDB, copyFromDB);
-        backupDB.close();
     }
 
     /**
