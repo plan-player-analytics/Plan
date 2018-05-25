@@ -98,7 +98,7 @@ public class SessionCache {
     }
 
     /**
-     * Condition if a session is player's first session on the server.
+     * Check if a session is player's first session on the server.
      *
      * @param uuid UUID of the player
      * @return true / false

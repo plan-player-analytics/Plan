@@ -110,7 +110,7 @@ public class AnalysisUtils {
             day.setTimeInMillis(start);
             int hourOfDay = day.get(Calendar.HOUR_OF_DAY); // 0 AM is 0
             int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2; // Monday is 0, Sunday is -1
-            if (hourOfDay == 24) { // Condition if hour is 24 (Should be impossible but.)
+            if (hourOfDay == 24) { // If hour is 24 (Should be impossible but.)
                 hourOfDay = 0;
                 dayOfWeek += 1;
             }

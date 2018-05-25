@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -15,6 +14,8 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
+
+import java.util.Arrays;
 
 /**
  * This manage subcommand is used to backup a database to a .db file.
@@ -34,44 +35,39 @@ public class ManageBackupCommand extends CommandNode {
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         try {
+            Verify.isTrue(args.length >= 1,
+                    () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
 
-            if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
-                return;
-            }
             String dbName = args[0].toLowerCase();
-            boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
-            if (!Condition.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName, sender)) {
-                return;
-            }
 
-            final Database database = DBSystem.getActiveDatabaseByName(dbName);
+            boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql");
+            Verify.isTrue(isCorrectDB,
+                    () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName));
 
-            // If DB is null return
-            if (!Condition.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-                Log.error(dbName + " was null!");
-                return;
-            }
-            Log.debug("Backup", "Start");
+            Database database = DBSystem.getActiveDatabaseByName(dbName);
+
+            Verify.nullCheck(database, NullPointerException::new);
+
             runBackupTask(sender, args, database);
         } catch (DBInitException | NullPointerException e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
-        } finally {
-            Log.logDebug("Backup");
         }
     }
 
-    private void runBackupTask(ISender sender, String[] args, final Database database) {
+    private void runBackupTask(ISender sender, String[] args, Database database) {
         RunnableFactory.createNew(new AbsRunnable("BackupTask") {
             @Override
             public void run() {
                 try {
+                    Log.debug("Backup", "Start");
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
                     ManageUtils.backup(args[0], database);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {
-                    Log.toLog(this.getClass(), e);
+                    Log.toLog(ManageBackupCommand.class, e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
+                    Log.logDebug("Backup");
                     this.cancel();
                 }
             }

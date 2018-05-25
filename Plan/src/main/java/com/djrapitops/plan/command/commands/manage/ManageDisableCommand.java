@@ -4,10 +4,12 @@ import com.djrapitops.plan.system.listeners.bukkit.PlayerOnlineListener;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.utilities.Verify;
+
+import java.util.Arrays;
 
 /**
  * This manage SubCommand is used to disable some features of the plugin temporarily.
@@ -27,9 +29,9 @@ public class ManageDisableCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
-            return;
-        }
+        Verify.isTrue(args.length >= 1,
+                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+
         switch (args[0].toLowerCase()) {
             case "kickcount":
                 PlayerOnlineListener.setCountKicks(false);

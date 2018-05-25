@@ -5,7 +5,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -15,6 +14,7 @@ import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Arrays;
 
@@ -31,6 +31,10 @@ import java.util.Arrays;
  */
 public class RegisterCommand extends CommandNode {
 
+    private final String notEnoughArgsMsg;
+    private final String hashErrorMsg;
+    private final String permLvlErrorMsg;
+
     public RegisterCommand() {
         // No Permission Requirement
         super("register", "", CommandType.PLAYER_OR_ARGS);
@@ -40,13 +44,14 @@ public class RegisterCommand extends CommandNode {
         if (Check.isBukkitAvailable()) {
             setupFilter();
         }
+
+        notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + Arrays.toString(getArguments()));
+        hashErrorMsg = "§cPassword hash error.";
+        permLvlErrorMsg = "§cIncorrect perm level, not a number: ";
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        String notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + Arrays.toString(getArguments()));
-        String hashErrorMsg = "§cPassword hash error.";
-        String permLvlErrorMsg = "§cIncorrect perm level, not a number: ";
         try {
             if (CommandUtils.isPlayer(sender)) {
                 Log.info(sender.getName() + " issued WebUser register command.");
@@ -58,23 +63,23 @@ public class RegisterCommand extends CommandNode {
             Log.toLog(this.getClass().getSimpleName(), e);
             sender.sendMessage(hashErrorMsg);
         } catch (NumberFormatException e) {
-            sender.sendMessage(permLvlErrorMsg + args[2]);
+            throw new NumberFormatException(args[2]);
         } catch (Exception e) {
             Log.toLog(this.getClass().getSimpleName(), e);
         }
     }
 
     private void consoleRegister(String[] args, ISender sender, String notEnoughArgsMsg) throws PassEncryptUtil.CannotPerformOperationException {
-        if (Condition.isTrue(args.length >= 3, notEnoughArgsMsg, sender)) {
-            int permLevel;
-            permLevel = Integer.parseInt(args[2]);
-            String passHash = PassEncryptUtil.createHash(args[0]);
-            registerUser(new WebUser(args[1], passHash, permLevel), sender);
-        }
+        Verify.isTrue(args.length >= 3, () -> new IllegalArgumentException(notEnoughArgsMsg));
+
+        int permLevel;
+        permLevel = Integer.parseInt(args[2]);
+        String passHash = PassEncryptUtil.createHash(args[0]);
+        registerUser(new WebUser(args[1], passHash, permLevel), sender);
     }
 
     private void playerRegister(String[] args, ISender sender) throws PassEncryptUtil.CannotPerformOperationException {
-        final String notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(1 or 3) " + super.getArguments());
+        final String notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(1 or 3) " + Arrays.toString(this.getArguments()));
         boolean registerSenderAsUser = args.length == 1;
         if (registerSenderAsUser) {
             String user = sender.getName();
@@ -114,7 +119,8 @@ public class RegisterCommand extends CommandNode {
                 try {
                     Database database = Database.getActive();
                     boolean userExists = database.check().doesWebUserExists(userName);
-                    if (!Condition.isTrue(!userExists, existsMsg, sender)) {
+                    if (userExists) {
+                        sender.sendMessage(existsMsg);
                         return;
                     }
                     database.save().webUser(webUser);

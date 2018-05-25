@@ -14,8 +14,10 @@ import com.djrapitops.plugin.command.ISender;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Utility method class containing various static methods.
@@ -94,10 +96,6 @@ public class MiscUtils {
         }
         Collections.sort(matches);
         return matches;
-    }
-
-    public static <T> List<T> flatMap(Collection<? extends Collection<T>> coll) {
-        return coll.stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     public static void close(Closeable... close) {

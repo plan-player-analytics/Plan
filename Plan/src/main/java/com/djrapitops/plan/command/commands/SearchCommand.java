@@ -3,7 +3,6 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -33,9 +32,8 @@ public class SearchCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-            return;
-        }
+        Verify.isTrue(args.length >= 1, () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+
         sender.sendMessage(Locale.get(Msg.CMD_INFO_SEARCHING).toString());
 
         runSearchTask(args, sender);

@@ -5,14 +5,15 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import org.bukkit.ChatColor;
+import com.djrapitops.plugin.utilities.Verify;
+
+import java.util.Arrays;
 
 /**
  * Subcommand for checking WebUser permission level.
@@ -30,9 +31,9 @@ public class WebCheckCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).parse() + " <username>", sender)) {
-            return;
-        }
+        Verify.isTrue(args.length >= 1,
+                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+
         Database database = Database.getActive();
         String user = args[0];
 
@@ -40,7 +41,8 @@ public class WebCheckCommand extends CommandNode {
             @Override
             public void run() {
                 try {
-                    if (!Condition.isTrue(database.check().doesWebUserExists(user), ChatColor.RED + "[Plan] User Doesn't exist.", sender)) {
+                    if (!database.check().doesWebUserExists(user)) {
+                        sender.sendMessage("§c[Plan] User Doesn't exist.");
                         return;
                     }
                     WebUser info = database.fetch().getWebUser(user);

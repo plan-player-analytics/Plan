@@ -2,6 +2,7 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
@@ -41,6 +42,7 @@ public class InfoCommand extends CommandNode {
                 ball + mColor + " Version: " + sColor + plugin.getVersion(),
                 ball + mColor + " Up to date: " + sColor + upToDate,
                 ball + mColor + " Active Database: " + tColor + Database.getActive().getConfigName(),
+                ball + mColor + " Connected to Bungee: " + tColor + (ConnectionSystem.getInstance().isServerAvailable() ? "Yes" : "No"),
                 Locale.get(Msg.CMD_CONSTANT_FOOTER).toString()
         };
         sender.sendMessage(messages);

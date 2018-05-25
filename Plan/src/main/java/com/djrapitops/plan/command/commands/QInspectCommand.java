@@ -8,7 +8,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -20,7 +19,6 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
 
@@ -61,18 +59,20 @@ public class QInspectCommand extends CommandNode {
             public void run() {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
-                    if (!Condition.isTrue(Verify.notNull(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString(), sender)) {
+                    if (uuid == null) {
+                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString());
                         return;
                     }
+
                     Database database = Database.getActive();
-                    if (!Condition.isTrue(database.check().isPlayerRegistered(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
+                    if (!database.check().isPlayerRegistered(uuid)) {
+                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
                         return;
                     }
 
                     PlayerProfile playerProfile = database.fetch().getPlayerProfile(uuid);
 
                     sendMessages(sender, playerProfile);
-
                 } catch (DBException ex) {
                     Log.toLog(this.getClass(), ex);
                 } finally {
@@ -97,7 +97,7 @@ public class QInspectCommand extends CommandNode {
 
         ActivityIndex activityIndex = profile.getActivityIndex(now);
 
-        sender.sendMessage(colT + ball + " " + colM + " Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getColor());
+        sender.sendMessage(colT + ball + " " + colM + " Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getGroup());
         sender.sendMessage(colT + ball + " " + colM + " Registered: " + colS + FormatUtils.formatTimeStampYear(profile.getRegistered()));
         sender.sendMessage(colT + ball + " " + colM + " Last Seen: " + colS + FormatUtils.formatTimeStampYear(profile.getLastSeen()));
         sender.sendMessage(colT + ball + " " + colM + " Logged in from: " + colS + profile.getMostRecentGeoInfo().getGeolocation());

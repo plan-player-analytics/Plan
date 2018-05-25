@@ -5,12 +5,12 @@ import com.djrapitops.plan.system.processing.importing.importers.Importer;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Arrays;
 
@@ -31,9 +31,8 @@ public class ManageImportCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG) + " " + Arrays.toString(this.getArguments()), sender)) {
-            return;
-        }
+        Verify.isTrue(args.length >= 1,
+                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
 
         String importArg = args[0];
 
