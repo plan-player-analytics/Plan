@@ -16,8 +16,10 @@ import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -91,7 +93,8 @@ public class HtmlExport extends SpecificExport {
         List<String> lines = Arrays.asList(html.split("\n"));
 
         File htmlLocation = new File(outputFolder, "players");
-        htmlLocation.mkdirs();
+        Verify.isTrue(htmlLocation.exists() && htmlLocation.isDirectory() || htmlLocation.mkdirs(),
+                () -> new FileNotFoundException("Output folder could not be created at" + htmlLocation.getAbsolutePath()));
         File exportFile = new File(htmlLocation, "index.html");
         export(exportFile, lines);
     }
@@ -148,7 +151,8 @@ public class HtmlExport extends SpecificExport {
                     .replace("${defaultTheme}", Theme.getValue(ThemeVal.THEME_DEFAULT));
             List<String> lines = Arrays.asList(demo.split("\n"));
             File outputFolder = new File(this.outputFolder, "js");
-            outputFolder.mkdirs();
+            Verify.isTrue(outputFolder.exists() && outputFolder.isDirectory() || outputFolder.mkdirs(),
+                    () -> new FileNotFoundException("Output folder could not be created at" + outputFolder.getAbsolutePath()));
             export(new File(outputFolder, "demo.js"), lines);
         } catch (IOException e) {
             Log.toLog(this.getClass(), e);
@@ -189,7 +193,9 @@ public class HtmlExport extends SpecificExport {
         List<String> lines = FileUtil.lines(plugin, new File(plugin.getDataFolder(), possibleFile), resource);
         String outputFile = possibleFile.replace("web/", "");
         File to = new File(outputFolder, outputFile);
-        to.getParentFile().mkdirs();
+        File locationFolder = to.getParentFile();
+        Verify.isTrue(locationFolder.exists() && locationFolder.isDirectory() || locationFolder.mkdirs(),
+                () -> new FileNotFoundException("Output folder could not be created at" + locationFolder.getAbsolutePath()));
         if (to.exists()) {
             Files.delete(to.toPath());
             if (!to.createNewFile()) {
