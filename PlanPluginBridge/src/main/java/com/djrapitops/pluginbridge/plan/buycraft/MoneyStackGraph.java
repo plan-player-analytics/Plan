@@ -6,7 +6,6 @@ package com.djrapitops.pluginbridge.plan.buycraft;
 
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.html.graphs.stack.AbstractStackGraph;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackDataSet;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -32,7 +31,7 @@ public class MoneyStackGraph {
     }
 
     public static MoneyStackGraph create(List<Payment> payments) {
-        long now = MiscUtils.getTime();
+        long now = System.currentTimeMillis();
         long oldestDate = payments.isEmpty() ? now : payments.get(payments.size() - 1).getDate();
 
         String[] labels = getLabels(now, oldestDate);

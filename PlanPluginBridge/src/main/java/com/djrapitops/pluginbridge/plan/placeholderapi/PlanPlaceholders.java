@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -94,7 +93,7 @@ public class PlanPlaceholders extends PlaceholderExpansion {
     private Serializable getServerValue(String identifier) {
         Callable<ServerProfile> serverProfile = Analysis::getServerProfile;
 
-        long now = MiscUtils.getTime();
+        long now = System.currentTimeMillis();
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();
         long monthAgo = now - TimeAmount.MONTH.ms();
@@ -148,7 +147,7 @@ public class PlanPlaceholders extends PlaceholderExpansion {
         UUID uuid = player.getUniqueId();
         Callable<PlayerProfile> profile = () -> Database.getActive().fetch().getPlayerProfile(uuid);
 
-        long now = MiscUtils.getTime();
+        long now = System.currentTimeMillis();
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();
         long monthAgo = now - TimeAmount.MONTH.ms();
