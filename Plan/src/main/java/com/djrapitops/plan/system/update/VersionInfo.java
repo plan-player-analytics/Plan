@@ -58,6 +58,6 @@ public class VersionInfo implements Comparable<VersionInfo> {
 
     @Override
     public int compareTo(VersionInfo o) {
-        return -this.version.compareTo(o.version);
+        return o.version.compareTo(this.version);
     }
 }
