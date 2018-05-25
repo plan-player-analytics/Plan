@@ -1,3 +1,4 @@
+DEV|4.3.1-b1|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.3.2-DEV1/Plan-4.3.1-b1.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.3.2-DEV1
 REL|4.3.1|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.3.1/Plan-4.3.1.jar|https://www.spigotmc.org/resources/plan-player-analytics.32536/update?update=226625
 DEV|4.2.0-b1|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.2.1-DEV1/Plan-4.2.0-b1.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.2.1-DEV1
 REL|4.2.0|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.2.0/Plan-4.2.0.jar|https://www.spigotmc.org/resources/plan-player-analytics.32536/update?update=219875
