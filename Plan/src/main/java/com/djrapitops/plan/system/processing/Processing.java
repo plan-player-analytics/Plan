@@ -9,10 +9,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class Processing implements SubSystem {
 
@@ -24,6 +21,7 @@ public class Processing implements SubSystem {
         criticalExecutor = Executors.newFixedThreadPool(2);
         saveInstance(nonCriticalExecutor);
         saveInstance(criticalExecutor);
+        saveInstance(this);
     }
 
     public static void submit(Runnable runnable) {
@@ -40,27 +38,27 @@ public class Processing implements SubSystem {
 
     public static void submitNonCritical(Runnable runnable) {
         saveInstance(runnable);
-        getInstance().nonCriticalExecutor.submit(runnable);
+        CompletableFuture.supplyAsync(() -> runnable, getInstance().nonCriticalExecutor)
+                .thenAccept(Runnable::run)
+                .handle(Processing::exceptionHandler);
     }
 
     public static void submitCritical(Runnable runnable) {
         saveInstance(runnable);
-        getInstance().criticalExecutor.submit(runnable);
+        CompletableFuture.supplyAsync(() -> runnable, getInstance().criticalExecutor)
+                .thenAccept(Runnable::run)
+                .handle(Processing::exceptionHandler);
     }
 
     public static void submitNonCritical(Runnable... runnables) {
-        ExecutorService nonCriticalExecutor = getInstance().nonCriticalExecutor;
         for (Runnable runnable : runnables) {
-            saveInstance(runnable);
-            nonCriticalExecutor.submit(runnable);
+            submitNonCritical(runnable);
         }
     }
 
     public static void submitCritical(Runnable... runnables) {
-        ExecutorService criticalExecutor = getInstance().criticalExecutor;
         for (Runnable runnable : runnables) {
-            saveInstance(runnable);
-            criticalExecutor.submit(runnable);
+            submitCritical(runnable);
         }
     }
 
@@ -74,12 +72,35 @@ public class Processing implements SubSystem {
 
     public static <T> Future<T> submitNonCritical(Callable<T> task) {
         saveInstance(task);
-        return getInstance().nonCriticalExecutor.submit(task);
+        return CompletableFuture.supplyAsync(() -> task, getInstance().nonCriticalExecutor)
+                .thenApply(tCallable -> {
+                    try {
+                        return tCallable.call();
+                    } catch (Exception e) {
+                        throw new IllegalStateException(e);
+                    }
+                })
+                .handle(Processing::exceptionHandler);
+    }
+
+    private static <T> T exceptionHandler(T t, Throwable throwable) {
+        if (throwable != null) {
+            Log.toLog(Processing.class, throwable.getCause());
+        }
+        return t;
     }
 
     public static <T> Future<T> submitCritical(Callable<T> task) {
         saveInstance(task);
-        return getInstance().criticalExecutor.submit(task);
+        return CompletableFuture.supplyAsync(() -> task, getInstance().criticalExecutor)
+                .thenApply(tCallable -> {
+                    try {
+                        return tCallable.call();
+                    } catch (Exception e) {
+                        throw new IllegalStateException(e);
+                    }
+                })
+                .handle(Processing::exceptionHandler);
     }
 
     public static Processing getInstance() {
