@@ -12,10 +12,10 @@ package com.djrapitops.plan.system.settings.theme;
 public enum ThemeVal {
 
     THEME_DEFAULT("DefaultColor", "light-green"),
-    //
+
     FONT_STYLESHEET("Font.FontStyleSheet", "https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext"),
     FONT_FAMILY("Font.FontFamily", "\"Roboto\", sans-serif"),
-    //
+
     RED("Colors.red", "#E91E63"),
     PINK("Colors.pink", "#F44336"),
     PURPLE("Colors.purple", "#9C27B0"),
@@ -37,7 +37,7 @@ public enum ThemeVal {
     BLUE_GREY("Colors.blue-grey", "#607D8B"),
     BLACK("Colors.black", "#000000"),
     WHITE("Colors.Extra.White", "#fff"),
-    //
+
     GRAPH_PUNCHCARD("GraphColors.PunchCard", "#222"),
     GRAPH_PLAYERS_ONLINE("GraphColors.PlayersOnline", "#1E90FF"),
     GRAPH_TPS_HIGH("GraphColors.TPS.High", "#267F00"),
@@ -53,7 +53,7 @@ public enum ThemeVal {
     GRAPH_SERVER_PREF_PIE("GraphColors.ServerPreferencePie", "\"#0099C6\", \"#66AA00\", \"#316395\", \"#994499\", \"#22AA99\", \"#AAAA11\", \"#6633CC\", \"#E67300\", \"#329262\", \"#5574A6\""),
     WORLD_MAP_HIGH("GraphColors.WorldMap_High", "#267f00"),
     WORLD_MAP_LOW("GraphColors.WorldMap_Low", "#EEFFEE"),
-    //
+
     PARSED_SESSION_ACCORDION("ParsedElements.SessionAccordion", "teal"),
     PARSED_SERVER_ACCORDION("ParsedElements.ServerAccordion", "light-green");
 

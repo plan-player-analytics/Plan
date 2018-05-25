@@ -16,8 +16,7 @@ public enum Actions {
     FIRST_SESSION(1),
     FIRST_LOGOUT(2),
     NEW_NICKNAME(3),
-    KILLED(-2), // Not stored in ActionsTable.
-    ;
+    KILLED(-2); // Not stored in ActionsTable.
 
     private final int id;
 

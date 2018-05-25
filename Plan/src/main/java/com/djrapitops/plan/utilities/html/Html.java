@@ -27,7 +27,7 @@ public enum Html {
     COLOR_D("<span class=\"pink\">"),
     COLOR_E("<span class=\"yellow\">"),
     COLOR_F("<span class=\"white\">"),
-    //
+
     FONT_AWESOME_ICON("<i class=\"fa fa-${0}\"></i>"),
     FA_COLORED_ICON("<i class=\"col-${0} fa fa-${1}\"></i>"),
     GREEN_THUMB("<i class=\"fa fa-thumbs-up g\"></i>"),
@@ -42,21 +42,21 @@ public enum Html {
     LINK_EXTERNAL("<a class=\"link\" target=\"_blank\" href=\"${0}\">${1}</a>"),
     LINK_CLASS("class=\"link\""),
     IMG("<img src=\"${0}\">"),
-    //
+
     PARAGRAPH("<p>${0}</p>"),
     HEADER("<h1>${0}</h1>"),
     HEADER_2("<h2>${0}</h2>"),
-    //
+
     DIV_W_CLASS("<div class=\"${0}\">${1}</div>"),
     DIV_W_CLASS_STYLE("<div class=\"${0}\" style=\"${1}\">${2}</div>"),
-    //
+
     ROW("<div class=\"row\">${0}</div>"),
     CARD("<div class=\"card\">${0}</div>"),
     BODY("<div class=\"body\">${0}</div>"),
     PANEL("<div class=\"panel panel-default\">${0}</div>"),
     PANEL_BODY("<div class=\"panel-body\">${0}</div>"),
     HELP_BUBBLE("<div class=\"col-xs-6 col-sm-6 col-lg-6\"><a href=\"javascript:void(0)\" class=\"help material-icons pull-right\" data-trigger=\"focus\" data-toggle=\"popover\" data-placement=\"left\" data-container=\"body\" data-html=\"true\" data-original-title=\"${0}\" data-content=\"${1}\">help_outline</a></div>"),
-    //
+
     TABLE_END("</tbody></table>"),
     TABLE("<table class=\"table table-striped\">"),
     TABLE_SCROLL("<table class=\"table table-striped scrollbar\">"),

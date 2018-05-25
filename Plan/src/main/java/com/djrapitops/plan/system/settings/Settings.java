@@ -71,9 +71,9 @@ public enum Settings {
     WEBSERVER_CERTIFICATE_ALIAS("WebServer.Security.SSL-Certificate.Alias"),
     EXTERNAL_WEBSERVER_LINK("WebServer.ExternalWebServerAddress"),
     PLUGIN_BUYCRAFT_SECRET("Plugins.BuyCraft.Secret"),
-    //
+
     SERVER_NAME("Server.ServerName"),
-    //
+
     FORMAT_DATE_FULL("Customization.Formatting.Dates.Full"),
     FORMAT_DATE_NO_SECONDS("Customization.Formatting.Dates.NoSeconds"),
     FORMAT_DATE_CLOCK("Customization.Formatting.Dates.JustClock"),
@@ -89,11 +89,11 @@ public enum Settings {
     FORMAT_SECONDS("Customization.Formatting.TimeAmount.Seconds"),
     FORMAT_ZERO_SECONDS("Customization.Formatting.TimeAmount.Zero"),
     FORMAT_DECIMALS("Customization.Formatting.DecimalPoints"),
-    //
+
     COLOR_MAIN("Commands.Colors.Main"),
     COLOR_SEC("Commands.Colors.Secondary"),
     COLOR_TER("Commands.Colors.Highlight"),
-    //
+
     THEME_BASE("Theme.Base"),
     THEME_GRAPH_TPS_THRESHOLD_HIGH("Theme.Graphs.TPS.High-Threshold"),
     THEME_GRAPH_TPS_THRESHOLD_MED("Theme.Graphs.TPS.Medium-Threshold"),
@@ -103,7 +103,7 @@ public enum Settings {
     HIDE_TOWNS("Plugins.Towny.HideTowns"),
     // Config section
     WORLD_ALIASES("Customization.WorldAliases"),
-    //
+
     // Bungee
     BUNGEE_IP("Server.IP"),
     BUNGEE_NETWORK_NAME("Network.Name");
