@@ -170,16 +170,21 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {
+        Optional<Integer> serverID = serverTable.getServerID(serverUUID);
+        if (!serverID.isPresent()) {
+            return new ArrayList<>();
+        }
+
         Map<UUID, String> playerNames = usersTable.getPlayerNames();
         Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
 
         String sql = "SELECT * FROM " + tableName +
-                " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
+                " WHERE " + Col.SERVER_ID + "=?";
 
         return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
+                statement.setInt(1, serverID.get());
             }
 
             @Override

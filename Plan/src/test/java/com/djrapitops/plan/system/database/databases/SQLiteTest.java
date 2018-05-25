@@ -20,7 +20,6 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
 import com.djrapitops.plan.utilities.Base64Util;
-import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.StaticHolder;
@@ -759,7 +758,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testBackupAndRestore() throws SQLException, DBInitException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void testBackupAndRestore() throws SQLException, DBException, UnsupportedEncodingException, NoSuchAlgorithmException {
         System.out.println("- Creating Backup Database -");
         SQLiteDB backup = new SQLiteDB("debug-backup" + System.currentTimeMillis());
         backup.init();
@@ -767,7 +766,7 @@ public class SQLiteTest {
 
         saveAllData(db);
 
-        ManageUtils.clearAndCopy(backup, db);
+        db.backup().backup(backup);
 
         UserInfoTable userInfoTable = backup.getUserInfoTable();
         UsersTable usersTable = backup.getUsersTable();
