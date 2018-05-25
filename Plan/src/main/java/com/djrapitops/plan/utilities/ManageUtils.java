@@ -1,15 +1,14 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
-import com.djrapitops.plan.system.database.databases.sql.tables.move.BatchOperationTable;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -29,39 +28,25 @@ public class ManageUtils {
      * @param dbName     Name of database (mysql/sqlite)
      * @param copyFromDB Database you want to backup.
      */
-    public static void backup(String dbName, Database copyFromDB) throws DBInitException, SQLException {
+    public static void backup(String dbName, Database copyFromDB) throws SQLException {
         SQLiteDB backupDB = null;
         try {
             String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
             String fileName = dbName + "-backup-" + timeStamp;
             backupDB = new SQLiteDB(fileName);
-            Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
+            Collection<UUID> uuids = copyFromDB.fetch().getSavedUUIDs();
             if (uuids.isEmpty()) {
                 return;
             }
             backupDB.init();
             clearAndCopy(backupDB, copyFromDB);
+        } catch (DBException e) {
+            Log.toLog(ManageUtils.class, e);
         } finally {
             if (backupDB != null) {
                 backupDB.close();
             }
         }
-    }
-
-    /**
-     * Get the saved UUIDs in a hashset
-     *
-     * @param db Database to get UUIDs from
-     * @return uuids hashset as a Collection.
-     */
-    public static Collection<UUID> getUUIDS(Database db) {
-        final Set<UUID> uuids = new HashSet<>();
-        try {
-            uuids.addAll(db.fetch().getSavedUUIDs());
-        } catch (DBException e) {
-            Log.toLog(ManageUtils.class, e);
-        }
-        return uuids;
     }
 
     /**
@@ -71,11 +56,7 @@ public class ManageUtils {
      *                         to.
      * @param copyFromDB       Database where data will be copied from
      */
-    public static void clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) throws SQLException {
-        BatchOperationTable toDB = new BatchOperationTable((SQLDB) clearAndCopyToDB);
-        BatchOperationTable fromDB = new BatchOperationTable((SQLDB) copyFromDB);
-
-        toDB.removeAllData();
-        fromDB.copyEverything(toDB);
+    public static void clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) throws SQLException, DBException {
+        copyFromDB.backup().backup(clearAndCopyToDB);
     }
 }
