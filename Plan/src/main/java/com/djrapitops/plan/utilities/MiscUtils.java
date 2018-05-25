@@ -37,6 +37,7 @@ public class MiscUtils {
      *
      * @return Epoch ms.
      */
+    @Deprecated
     public static long getTime() {
         return System.currentTimeMillis();
     }

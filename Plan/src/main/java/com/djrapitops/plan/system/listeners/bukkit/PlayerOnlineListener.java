@@ -83,7 +83,7 @@ public class PlayerOnlineListener implements Listener {
         NotificationCenter.checkNotifications(player);
 
         UUID uuid = player.getUniqueId();
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
 
         AFKListener.AFK_TRACKER.performedAction(uuid, time);
 
