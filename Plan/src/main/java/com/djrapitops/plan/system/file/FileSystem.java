@@ -62,11 +62,12 @@ public class FileSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        dataFolder.mkdirs();
+        Verify.isTrue((dataFolder.exists() && dataFolder.isDirectory()) || dataFolder.mkdirs(),
+                () -> new EnableException("Could not create data folder at " + dataFolder.getAbsolutePath()));
         try {
-            if (configFile.exists()) {
-                configFile.createNewFile();
-            }
+            Verify.isTrue((configFile.exists() && configFile.isFile()) || configFile.createNewFile(),
+                    () -> new EnableException("Could not create config file at " + configFile.getAbsolutePath()));
+
             RunnableFactory.createNew(new LogsFolderCleanTask(Log.getLogsFolder()))
                     .runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 30L);
         } catch (IOException e) {
