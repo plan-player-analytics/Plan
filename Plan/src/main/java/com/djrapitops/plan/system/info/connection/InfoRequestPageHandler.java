@@ -4,7 +4,8 @@
  */
 package com.djrapitops.plan.system.info.connection;
 
-import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.pages.PageHandler;
@@ -54,22 +55,6 @@ public class InfoRequestPageHandler extends PageHandler {
     }
 
     private int getResponseCodeFor(WebException e) {
-        if (e instanceof BadRequestException) {
-            return 400;
-        } else if (e instanceof ForbiddenException) {
-            return 403;
-        } else if (e instanceof NotFoundException) {
-            return 404;
-        } else if (e instanceof UnauthorizedServerException) {
-            return 412;
-        } else if (e instanceof InternalErrorException) {
-            return 500;
-        } else if (e instanceof GatewayException) {
-            return 504;
-        } else if (e instanceof ConnectionFailException) {
-            return -1;
-        } else {
-            return 0;
-        }
+        return e.getResponseCode().getCode();
     }
 }
