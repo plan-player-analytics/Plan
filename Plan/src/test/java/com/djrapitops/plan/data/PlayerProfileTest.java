@@ -2,7 +2,6 @@ package com.djrapitops.plan.data;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -34,7 +33,7 @@ public class PlayerProfileTest {
         PlayerProfile p = new PlayerProfile(null, null, 0L);
         List<Session> sessions = new ArrayList<>();
 
-        long date = MiscUtils.getTime();
+        long date = System.currentTimeMillis();
         long week = TimeAmount.WEEK.ms();
         long weekAgo = date - week;
         long twoWeeksAgo = date - 2L * week;
@@ -58,7 +57,7 @@ public class PlayerProfileTest {
         PlayerProfile p = new PlayerProfile(null, null, 0L);
         List<Session> sessions = new ArrayList<>();
 
-        long date = MiscUtils.getTime();
+        long date = System.currentTimeMillis();
         long week = TimeAmount.WEEK.ms();
         long weekAgo = date - week;
         long twoWeeksAgo = date - 2L * week;
@@ -82,7 +81,7 @@ public class PlayerProfileTest {
         PlayerProfile p = new PlayerProfile(null, null, 0L);
         List<Session> sessions = new ArrayList<>();
 
-        long date = MiscUtils.getTime();
+        long date = System.currentTimeMillis();
         long week = TimeAmount.WEEK.ms();
         long weekAgo = date - week;
         long twoWeeksAgo = date - 2L * week;

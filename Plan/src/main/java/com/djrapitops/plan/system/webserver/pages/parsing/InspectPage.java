@@ -77,7 +77,7 @@ public class InspectPage extends Page {
     }
 
     public String parse(PlayerProfile profile, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
-        long now = MiscUtils.getTime();
+        long now = System.currentTimeMillis();
 
         addValue("refresh", FormatUtils.formatTimeStampClock(now));
         addValue("version", MiscUtils.getPlanVersion());

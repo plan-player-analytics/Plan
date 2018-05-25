@@ -9,7 +9,6 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.lang3.ArrayUtils;
@@ -37,7 +36,7 @@ public class PlayersTableCreator {
 
         StringBuilder html = new StringBuilder();
 
-        long now = MiscUtils.getTime();
+        long now = System.currentTimeMillis();
         UUID serverUUID = ServerInfo.getServerUUID();
 
         int i = 0;

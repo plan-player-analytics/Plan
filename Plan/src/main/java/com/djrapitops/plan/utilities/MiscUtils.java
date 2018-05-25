@@ -32,19 +32,9 @@ public class MiscUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    /**
-     * Used to get the current time as milliseconds.
-     *
-     * @return Epoch ms.
-     */
-    @Deprecated
-    public static long getTime() {
-        return System.currentTimeMillis();
-    }
-
     public static int getTimeZoneOffsetHours() {
         if (Settings.USE_SERVER_TIME.isTrue()) {
-            return -TimeZone.getDefault().getOffset(MiscUtils.getTime()) / (int) TimeAmount.HOUR.ms();
+            return -TimeZone.getDefault().getOffset(System.currentTimeMillis()) / (int) TimeAmount.HOUR.ms();
         }
         return 0;
     }

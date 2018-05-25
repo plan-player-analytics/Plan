@@ -4,7 +4,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.SpongeKillProcessor;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Format;
 import org.spongepowered.api.data.key.Keys;
@@ -34,7 +33,7 @@ public class SpongeDeathListener {
 
     @Listener
     public void onEntityDeath(DestructEntityEvent.Death event) {
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         Living dead = event.getTargetEntity();
 
         if (dead instanceof Player) {

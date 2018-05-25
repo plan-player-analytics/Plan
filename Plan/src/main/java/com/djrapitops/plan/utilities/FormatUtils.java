@@ -95,7 +95,7 @@ public class FormatUtils {
     }
 
     private static String replaceRecentDays(long epochMs, String format, String pattern) {
-        long now = MiscUtils.getTime();
+        long now = System.currentTimeMillis();
 
         long fromStartOfDay = now % TimeAmount.DAY.ms();
         if (epochMs > now - fromStartOfDay) {

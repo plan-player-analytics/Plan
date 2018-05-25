@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -67,7 +66,7 @@ public class NameProcessor implements CriticalRunnable {
             return;
         }
 
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
 
         Processing.submitCritical(() -> {
             String info = HtmlUtils.removeXSS(displayName);

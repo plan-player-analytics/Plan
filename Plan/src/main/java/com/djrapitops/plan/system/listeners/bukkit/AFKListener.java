@@ -1,7 +1,6 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.system.afk.AFKTracker;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,7 +28,7 @@ public class AFKListener implements Listener {
     private void event(PlayerEvent event) {
         try {
             UUID uuid = event.getPlayer().getUniqueId();
-            long time = MiscUtils.getTime();
+            long time = System.currentTimeMillis();
 
             AFK_TRACKER.performedAction(uuid, time);
         } catch (Exception e) {

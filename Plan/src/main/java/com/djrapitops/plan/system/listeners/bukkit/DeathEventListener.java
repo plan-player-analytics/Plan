@@ -4,7 +4,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.KillProcessor;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Format;
 import org.bukkit.Material;
@@ -32,7 +31,7 @@ public class DeathEventListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(EntityDeathEvent event) {
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         LivingEntity dead = event.getEntity();
 
         if (dead instanceof Player) {

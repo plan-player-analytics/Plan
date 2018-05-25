@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.listeners.bukkit;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +25,7 @@ public class WorldChangeListener implements Listener {
     }
 
     private void actOnEvent(PlayerChangedWorldEvent event) {
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
 
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();

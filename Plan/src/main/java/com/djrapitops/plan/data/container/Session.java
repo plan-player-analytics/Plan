@@ -1,7 +1,6 @@
 package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,7 +105,7 @@ public class Session {
      */
     public long getLength() {
         if (sessionEnd == -1) {
-            return MiscUtils.getTime() - sessionStart;
+            return System.currentTimeMillis() - sessionStart;
         }
         return sessionEnd - sessionStart;
     }

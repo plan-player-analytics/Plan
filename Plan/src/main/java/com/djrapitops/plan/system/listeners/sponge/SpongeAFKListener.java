@@ -1,7 +1,6 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.system.afk.AFKTracker;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -31,7 +30,7 @@ public class SpongeAFKListener {
     private void event(TargetPlayerEvent event) {
         try {
             UUID uuid = event.getTargetEntity().getUniqueId();
-            long time = MiscUtils.getTime();
+            long time = System.currentTimeMillis();
 
             AFK_TRACKER.performedAction(uuid, time);
         } catch (Exception e) {
@@ -42,21 +41,21 @@ public class SpongeAFKListener {
     @Listener(order = Order.POST)
     public void onMove(MoveEntityEvent event, @First Player player) {
         UUID uuid = player.getUniqueId();
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         AFK_TRACKER.performedAction(uuid, time);
     }
 
     @Listener(order = Order.POST)
     public void onPlayerChat(MessageChannelEvent.Chat event, @First Player player) {
         UUID uuid = player.getUniqueId();
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         AFK_TRACKER.performedAction(uuid, time);
     }
 
     @Listener(order = Order.POST)
     public void onPlayerCommand(SendCommandEvent event, @First Player player) {
         UUID uuid = player.getUniqueId();
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         AFK_TRACKER.performedAction(uuid, time);
     }
 

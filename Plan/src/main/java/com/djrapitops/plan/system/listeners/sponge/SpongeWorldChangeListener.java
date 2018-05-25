@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.listeners.sponge;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
@@ -37,7 +36,7 @@ public class SpongeWorldChangeListener {
     }
 
     private void actOnEvent(MoveEntityEvent.Teleport event, Player player) {
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
 
         UUID uuid = player.getUniqueId();
 

@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.listeners.sponge;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -36,7 +35,7 @@ public class SpongeGMChangeListener {
     private void actOnGMChangeEvent(ChangeGameModeEvent.TargetPlayer event) {
         Player player = event.getTargetEntity();
         UUID uuid = player.getUniqueId();
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
 
         String gameMode = event.getGameMode().getName().toUpperCase();
         String worldName = player.getWorld().getName();

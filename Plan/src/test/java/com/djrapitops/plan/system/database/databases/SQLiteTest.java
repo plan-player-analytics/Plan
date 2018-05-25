@@ -21,7 +21,6 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.ManageUtils;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.StaticHolder;
@@ -259,7 +258,7 @@ public class SQLiteTest {
 
         String expectedIP = "1.2.3.4";
         String expectedGeoLoc = "TestLocation";
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
 
         GeoInfo expected = new GeoInfo(expectedIP, expectedGeoLoc, time, "3");
         geoInfoTable.saveGeoInfo(playerUUID, expected);
@@ -762,7 +761,7 @@ public class SQLiteTest {
     @Test
     public void testBackupAndRestore() throws SQLException, DBInitException, UnsupportedEncodingException, NoSuchAlgorithmException {
         System.out.println("- Creating Backup Database -");
-        SQLiteDB backup = new SQLiteDB("debug-backup" + MiscUtils.getTime());
+        SQLiteDB backup = new SQLiteDB("debug-backup" + System.currentTimeMillis());
         backup.init();
         System.out.println("- Backup Database Created  -");
 

@@ -13,7 +13,6 @@ import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.Map;
@@ -53,7 +52,7 @@ public class ShutdownHook extends Thread {
         Database db = null;
         try {
             Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
-            long now = MiscUtils.getTime();
+            long now = System.currentTimeMillis();
             db = Database.getActive();
             saveFirstSessionInformation(db, now);
             saveActiveSessions(db, activeSessions, now);

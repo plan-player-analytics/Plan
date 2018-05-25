@@ -93,7 +93,7 @@ public class AnalysisData extends RawData {
     }
 
     public void analyze(ServerProfile profile) {
-        long now = MiscUtils.getTime();
+        long now = System.currentTimeMillis();
         refreshDate = now;
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();

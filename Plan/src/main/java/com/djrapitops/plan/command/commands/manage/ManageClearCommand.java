@@ -10,7 +10,6 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.Condition;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -72,7 +71,6 @@ public class ManageClearCommand extends CommandNode {
 
                     database.remove().everything();
 
-                    long now = MiscUtils.getTime();
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
                 } catch (FatalDBException e) {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString()

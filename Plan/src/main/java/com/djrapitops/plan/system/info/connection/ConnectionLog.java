@@ -6,7 +6,6 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.HashMap;
@@ -49,7 +48,7 @@ public class ConnectionLog {
     private static void logConnection(String address, String infoRequestName, int responseCode) {
         Map<String, Map<String, Entry>> log = getInstance().log;
         Map<String, Entry> requestMap = log.getOrDefault(address, new HashMap<>());
-        requestMap.put(infoRequestName, new Entry(responseCode, MiscUtils.getTime()));
+        requestMap.put(infoRequestName, new Entry(responseCode, System.currentTimeMillis()));
         log.put(address, requestMap);
     }
 

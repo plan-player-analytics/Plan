@@ -18,7 +18,6 @@ import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.tasks.ServerTaskSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -87,7 +86,7 @@ public class Analysis implements Callable<AnalysisData> {
     }
 
     private static void updateRefreshDate() {
-        Analysis.refreshDate = MiscUtils.getTime();
+        Analysis.refreshDate = System.currentTimeMillis();
     }
 
     private void updatePlayerNameCache(ServerProfile profile) {

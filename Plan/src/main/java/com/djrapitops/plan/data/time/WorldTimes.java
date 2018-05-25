@@ -1,7 +1,5 @@
 package com.djrapitops.plan.data.time;
 
-import com.djrapitops.plan.utilities.MiscUtils;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -28,7 +26,7 @@ public class WorldTimes {
         worldTimes = new HashMap<>();
         currentWorld = startingWorld;
         currentGamemode = startingGM;
-        addWorld(startingWorld, startingGM, MiscUtils.getTime());
+        addWorld(startingWorld, startingGM, System.currentTimeMillis());
     }
 
     /**

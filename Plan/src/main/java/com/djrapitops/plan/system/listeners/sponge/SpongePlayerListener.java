@@ -7,7 +7,6 @@ import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdatePr
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
 import com.djrapitops.plan.system.tasks.TaskSystem;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
@@ -82,7 +81,7 @@ public class SpongePlayerListener {
         NotificationCenter.checkNotifications(player);
 
         UUID uuid = player.getUniqueId();
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
 
         SpongeAFKListener.AFK_TRACKER.performedAction(uuid, time);
 
@@ -122,7 +121,7 @@ public class SpongePlayerListener {
     }
 
     private void actOnQuitEvent(ClientConnectionEvent.Disconnect event) {
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         Player player = event.getTargetEntity();
         UUID uuid = player.getUniqueId();
 

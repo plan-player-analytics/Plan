@@ -71,7 +71,7 @@ public class QInspectCommand extends CommandNode {
 
                     PlayerProfile playerProfile = database.fetch().getPlayerProfile(uuid);
 
-                    sendMsgs(sender, playerProfile);
+                    sendMessages(sender, playerProfile);
 
                 } catch (DBException ex) {
                     Log.toLog(this.getClass(), ex);
@@ -82,8 +82,8 @@ public class QInspectCommand extends CommandNode {
         }).runTaskAsynchronously();
     }
 
-    private void sendMsgs(ISender sender, PlayerProfile profile) {
-        long now = MiscUtils.getTime();
+    private void sendMessages(ISender sender, PlayerProfile profile) {
+        long now = System.currentTimeMillis();
 
         ColorScheme colorScheme = plugin.getColorScheme();
 

@@ -11,7 +11,6 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -619,7 +618,7 @@ public class SessionsTable extends UserIDTable {
         return query(new QueryStatement<Map<UUID, Map<UUID, List<Session>>>>(sql, 20000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, MiscUtils.getTime() - TimeAmount.MONTH.ms());
+                statement.setLong(1, System.currentTimeMillis() - TimeAmount.MONTH.ms());
             }
 
             @Override

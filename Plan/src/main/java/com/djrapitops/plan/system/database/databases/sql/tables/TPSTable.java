@@ -13,7 +13,6 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -133,7 +132,7 @@ public class TPSTable extends Table {
                 statement.setInt(1, pValue);
                 // More than 2 Months ago.
                 long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
-                statement.setLong(2, MiscUtils.getTime() - fiveWeeks);
+                statement.setLong(2, System.currentTimeMillis() - fiveWeeks);
             }
         });
     }
