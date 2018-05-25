@@ -109,7 +109,7 @@ public class GeoInfoTable extends UserIDTable {
                         }
                     });
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    Log.toLog(this.getClass(), e);
                 }
             }
         });
