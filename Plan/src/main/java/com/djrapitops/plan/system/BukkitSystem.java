@@ -30,8 +30,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 public class BukkitSystem extends PlanSystem implements ServerSystem {
 
     public BukkitSystem(Plan plugin) {
-
-        testSystem = this;
+        setTestSystem(this);
 
         Log.setErrorManager(new PlanErrorManager());
 

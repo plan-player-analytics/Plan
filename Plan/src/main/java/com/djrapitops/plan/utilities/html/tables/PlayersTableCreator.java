@@ -85,7 +85,7 @@ public class PlayersTableCreator {
         return html.toString();
     }
 
-    public static String createPluginsTable(Map<PluginData, AnalysisContainer> containers, List<PlayerProfile> players) {
+    public static String createPluginsTable(Map<PluginData, AnalysisContainer> containers, Collection<PlayerProfile> players) {
         TreeMap<String, Map<UUID, ? extends Serializable>> data = new TreeMap<>();
         for (AnalysisContainer container : containers.values()) {
             if (!container.hasPlayerTableValues()) {

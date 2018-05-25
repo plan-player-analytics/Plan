@@ -196,4 +196,8 @@ public abstract class PlanSystem implements SubSystem {
     public Processing getProcessing() {
         return processing;
     }
+
+    static void setTestSystem(PlanSystem testSystem) {
+        PlanSystem.testSystem = testSystem;
+    }
 }

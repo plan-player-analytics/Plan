@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.FatalDBException;
@@ -25,14 +24,11 @@ import com.djrapitops.plugin.utilities.Verify;
  */
 public class ManageClearCommand extends CommandNode {
 
-    private final PlanPlugin plugin;
-
-    public ManageClearCommand(PlanPlugin plugin) {
+    public ManageClearCommand() {
         super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
         setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_CLEAR).toString());
         setArguments("<DB>", "[-a]");
         setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_CLEAR).toArray());
-        this.plugin = plugin;
 
     }
 

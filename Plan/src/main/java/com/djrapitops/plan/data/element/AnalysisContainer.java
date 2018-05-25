@@ -30,13 +30,13 @@ import java.util.UUID;
  */
 public final class AnalysisContainer extends InspectContainer {
 
-    private TreeMap<String, Map<UUID, ? extends Serializable>> playerTableValues;
+    private Map<String, Map<UUID, ? extends Serializable>> playerTableValues;
 
     public AnalysisContainer() {
         playerTableValues = new TreeMap<>();
     }
 
-    public TreeMap<String, Map<UUID, ? extends Serializable>> getPlayerTableValues() {
+    public Map<String, Map<UUID, ? extends Serializable>> getPlayerTableValues() {
         return playerTableValues;
     }
 

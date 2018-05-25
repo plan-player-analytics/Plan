@@ -310,7 +310,7 @@ public class WorldTable extends Table {
         return query(new QueryAllStatement<Map<Integer, List<Integer>>>(sql, 100) {
             @Override
             public Map<Integer, List<Integer>> processResults(ResultSet set) throws SQLException {
-                HashMap<Integer, List<Integer>> map = new HashMap<>();
+                Map<Integer, List<Integer>> map = new HashMap<>();
                 while (set.next()) {
 
                     int serverID = set.getInt(Col.SERVER_ID.get());

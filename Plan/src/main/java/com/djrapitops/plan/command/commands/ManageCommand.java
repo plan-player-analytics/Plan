@@ -29,7 +29,7 @@ public class ManageCommand extends TreeCmdNode {
                         new ManageRestoreCommand(plugin),
                         new ManageRemoveCommand(),
                         new ManageHotSwapCommand(plugin),
-                        new ManageClearCommand(plugin),
+                        new ManageClearCommand(),
                 },
                 new CommandNode[]{
                         new ManageSetupCommand(),

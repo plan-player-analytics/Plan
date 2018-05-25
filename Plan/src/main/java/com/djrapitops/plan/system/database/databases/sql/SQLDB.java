@@ -373,7 +373,7 @@ public abstract class SQLDB extends Database {
     }
 
     public boolean isUsingMySQL() {
-        return this instanceof MySQLDB;
+        return usingMySQL;
     }
 
     @Override

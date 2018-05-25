@@ -29,7 +29,7 @@ public class SessionCache {
     }
 
     public static SessionCache getInstance() {
-        DataCache dataCache = CacheSystem.getInstance().getDataCache();
+        SessionCache dataCache = CacheSystem.getInstance().getDataCache();
         Verify.nullCheck(dataCache, () -> new IllegalStateException("Data Cache was not initialized."));
         return dataCache;
     }

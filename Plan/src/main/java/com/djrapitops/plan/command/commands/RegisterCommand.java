@@ -33,7 +33,6 @@ public class RegisterCommand extends CommandNode {
 
     private final String notEnoughArgsMsg;
     private final String hashErrorMsg;
-    private final String permLvlErrorMsg;
 
     public RegisterCommand() {
         // No Permission Requirement
@@ -47,7 +46,6 @@ public class RegisterCommand extends CommandNode {
 
         notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + Arrays.toString(getArguments()));
         hashErrorMsg = "§cPassword hash error.";
-        permLvlErrorMsg = "§cIncorrect perm level, not a number: ";
     }
 
     @Override

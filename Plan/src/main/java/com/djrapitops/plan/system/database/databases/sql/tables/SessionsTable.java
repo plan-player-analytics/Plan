@@ -760,7 +760,7 @@ public class SessionsTable extends UserIDTable {
         return query(new QueryAllStatement<Map<Integer, Integer>>(sql, 10000) {
             @Override
             public Map<Integer, Integer> processResults(ResultSet set) throws SQLException {
-                HashMap<Integer, Integer> idServerIdMap = new HashMap<>();
+                Map<Integer, Integer> idServerIdMap = new HashMap<>();
                 while (set.next()) {
                     idServerIdMap.put(set.getInt(Col.ID.get()), set.getInt(Col.SERVER_ID.get()));
                 }
