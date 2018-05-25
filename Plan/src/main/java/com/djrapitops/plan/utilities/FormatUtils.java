@@ -2,9 +2,7 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.utilities.Format;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.Location;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -35,17 +33,6 @@ public class FormatUtils {
      */
     public static String formatTimeAmount(long ms) {
         return formatMilliseconds(ms);
-    }
-
-    /**
-     * Format the time difference between an end point and a start point.
-     *
-     * @param before Epoch ms.
-     * @param after  Epoch ms.
-     * @return String formatted with the config settings.
-     */
-    public static String formatTimeAmountDifference(long before, long after) {
-        return formatMilliseconds(Math.abs(after - before));
     }
 
     public static String formatTimeStampISO8601NoClock(long epochMs) {
@@ -115,34 +102,6 @@ public class FormatUtils {
             format = replaceRecentDays(epochMs, format);
         }
         return format(epochMs, format);
-    }
-
-    /**
-     * Removes letters from a string leaving only numbers and dots.
-     *
-     * @param dataPoint String to remove stuff from.
-     * @return String with the stuff removed.
-     */
-    public static String removeLetters(String dataPoint) {
-        return Format.create(dataPoint)
-                .removeLetters()
-                .removeWhitespace()
-                .removeSymbolsButDot()
-                .toString();
-    }
-
-    /**
-     * Removes numbers from a string leaving only letters.
-     *
-     * @param dataPoint String to remove stuff from.
-     * @return String with the stuff removed.
-     */
-    public static String removeNumbers(String dataPoint) {
-        return Format.create(dataPoint)
-                .removeNumbers()
-                .removeWhitespace()
-                .removeDot()
-                .toString();
     }
 
     // Formats long in milliseconds into d:h:m:s string
@@ -235,17 +194,6 @@ public class FormatUtils {
     }
 
     /**
-     * Turns the version string into a integer
-     *
-     * @param versionString String - number format 1.1.1
-     * @return parsed double - for example 1,11
-     * @throws NumberFormatException When wrong format
-     */
-    public static long parseVersionNumber(String versionString) {
-        return com.djrapitops.plugin.utilities.FormatUtils.parseVersionNumber(versionString);
-    }
-
-    /**
      * Merges multiple arrays into one.
      *
      * @param arrays String arrays that need to be combined
@@ -253,16 +201,6 @@ public class FormatUtils {
      */
     public static String[] mergeArrays(String[]... arrays) {
         return com.djrapitops.plugin.utilities.FormatUtils.mergeArrays(arrays);
-    }
-
-    /**
-     * Formats a Minecraft Location into readable format.
-     *
-     * @param loc Location to format
-     * @return Readable location format.
-     */
-    public static String formatLocation(Location loc) {
-        return com.djrapitops.plugin.utilities.FormatUtils.formatLocation(loc);
     }
 
     /**
