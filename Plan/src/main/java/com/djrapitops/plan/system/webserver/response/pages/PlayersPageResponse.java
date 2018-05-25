@@ -37,8 +37,6 @@ public class PlayersPageResponse extends Response {
             PlanSystem system = PlanSystem.getInstance();
             PlanPlugin plugin = PlanPlugin.getInstance();
             Database db = system.getDatabaseSystem().getActiveDatabase();
-            List<String> names = new ArrayList<>(db.fetch().getPlayerNames().values());
-            Collections.sort(names);
             Map<String, String> replace = new HashMap<>();
             if (Check.isBukkitAvailable()) {
                 replace.put("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
@@ -48,7 +46,7 @@ public class PlayersPageResponse extends Response {
             replace.put("playersTable", buildPlayersTable(db));
             replace.put("version", plugin.getVersion());
             super.setContent(Theme.replaceColors(StringSubstitutor.replace(FileUtil.getStringFromResource("web/players.html"), replace)));
-        } catch (DBException | IOException e) {
+        } catch (IOException e) {
             Log.toLog(this.getClass(), e);
             setContent(new InternalErrorResponse("/players", e).getContent());
         }
@@ -57,8 +55,11 @@ public class PlayersPageResponse extends Response {
     private String buildPlayersTable(Database db) {
         try {
             List<UserInfo> users = new ArrayList<>(db.fetch().getUsers().values());
-            users.sort(new UserInfoLastPlayedComparator());
+
             Map<UUID, Long> lastSeenForAllPlayers = db.fetch().getLastSeenForAllPlayers();
+            users.forEach(user -> user.setLastSeen(lastSeenForAllPlayers.getOrDefault(user.getUuid(), 0L)));
+            users.sort(new UserInfoLastPlayedComparator());
+
             Map<UUID, List<Session>> sessionsByUser = AnalysisUtils.sortSessionsByUser(db.fetch().getSessionsWithNoExtras());
             Map<UUID, List<GeoInfo>> geoInfos = db.fetch().getAllGeoInfo();
 

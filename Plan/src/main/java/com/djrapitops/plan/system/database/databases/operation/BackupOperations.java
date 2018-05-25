@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public interface BackupOperations {
 
-    void backup(Database toDatabase) throws DBException, SQLException;
+    void backup(Database toDatabase) throws SQLException;
 
     void restore(Database fromDatabase) throws DBException, SQLException;
 

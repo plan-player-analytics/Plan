@@ -86,7 +86,7 @@ public class ConnectionLog {
          */
         @Override
         public int compareTo(Entry o) {
-            return -Long.compare(this.timeSent, o.timeSent);
+            return Long.compare(o.timeSent, this.timeSent);
         }
     }
 

@@ -92,7 +92,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
      *
      * @return amount of entities
      */
-    protected int getEntityCount() {
+    private int getEntityCount() {
         return Sponge.getGame().getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
     }
 }

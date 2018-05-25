@@ -65,7 +65,7 @@ public class MySQLDB extends SQLDB {
     @Override
     public void close() {
         try {
-            if (dataSource != null && dataSource instanceof BasicDataSource) {
+            if (dataSource instanceof BasicDataSource) {
                 ((BasicDataSource) dataSource).close();
             }
         } catch (SQLException e) {
