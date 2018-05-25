@@ -721,17 +721,30 @@ public class SessionsTable extends UserIDTable {
      * @param savedSessions Sessions of Player in a Server in the db.
      */
     private void matchSessions(List<Session> sessions, List<Session> savedSessions) {
-        Map<Long, Session> sessionsByStart = sessions.stream().collect(Collectors.toMap(Session::getSessionStart, Function.identity()));
-        Map<Long, Session> savedSessionsByStart = savedSessions.stream().collect(Collectors.toMap(Session::getSessionStart, Function.identity()));
-        for (Map.Entry<Long, Session> sessionEntry : sessionsByStart.entrySet()) {
+        Map<Long, List<Session>> sessionsByStart = turnToMapByStart(sessions);
+        Map<Long, List<Session>> savedSessionsByStart = turnToMapByStart(savedSessions);
+
+        for (Map.Entry<Long, List<Session>> sessionEntry : sessionsByStart.entrySet()) {
             long start = sessionEntry.getKey();
-            Session savedSession = savedSessionsByStart.get(start);
-            if (savedSession == null) {
+            if (!savedSessionsByStart.containsKey(start)) {
                 throw new IllegalStateException("Some of the sessions being matched were not saved.");
             }
-            Session session = sessionEntry.getValue();
-            session.setSessionID(savedSession.getSessionID());
+            Session savedSession = savedSessionsByStart.get(start).get(0);
+            sessionEntry.getValue().forEach(
+                    session -> session.setSessionID(savedSession.getSessionID())
+            );
         }
+    }
+
+    private Map<Long, List<Session>> turnToMapByStart(List<Session> sessions) {
+        Map<Long, List<Session>> sessionsByStart = new HashMap<>();
+        for (Session session : sessions) {
+            long start = session.getSessionStart();
+            List<Session> sorted = sessionsByStart.getOrDefault(start, new ArrayList<>());
+            sorted.add(session);
+            sessionsByStart.put(start, sorted);
+        }
+        return sessionsByStart;
     }
 
     public void alterTableV15() {
