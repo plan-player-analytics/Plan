@@ -23,7 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doReturn;
 
 /**
  * Mocking Utility for Bukkit version of Plan.
@@ -59,7 +60,7 @@ public class BukkitMockUtil extends MockUtil {
     }
 
     public BukkitMockUtil withDataFolder(File tempFolder) {
-        when(planMock.getDataFolder()).thenReturn(tempFolder);
+        doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 
@@ -75,7 +76,7 @@ public class BukkitMockUtil extends MockUtil {
         try {
             File pluginYml = getFile("/plugin.yml");
             PluginDescriptionFile description = new PluginDescriptionFile(new FileInputStream(pluginYml));
-            when(planMock.getDescription()).thenReturn(description);
+            doReturn(description).when(planMock).getDescription();
         } catch (FileNotFoundException | InvalidDescriptionException e) {
             System.out.println("Error while setting plugin description");
         }
@@ -98,7 +99,6 @@ public class BukkitMockUtil extends MockUtil {
         doReturn(TestConstants.BUKKIT_MAX_PLAYERS).when(serverMock).getMaxPlayers();
         FakeConsoleCmdSender sender = new FakeConsoleCmdSender();
         doReturn(sender).when(serverMock).getConsoleSender();
-        when(serverMock.getConsoleSender()).thenReturn(sender);
 
         BukkitScheduler bukkitScheduler = Mockito.mock(BukkitScheduler.class);
         doReturn(bukkitScheduler).when(serverMock).getScheduler();

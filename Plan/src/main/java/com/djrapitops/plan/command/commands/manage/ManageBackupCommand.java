@@ -1,12 +1,14 @@
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.ManageUtils;
+import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -15,10 +17,13 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.UUID;
 
 /**
- * This manage subcommand is used to backup a database to a .db file.
+ * This command is used to backup a database to a .db file.
  *
  * @author Rsl1122
  * @since 2.3.0
@@ -61,7 +66,7 @@ public class ManageBackupCommand extends CommandNode {
                 try {
                     Log.debug("Backup", "Start");
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
-                    ManageUtils.backup(args[0], database);
+                    createNewBackup(args[0], database);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {
                     Log.toLog(ManageBackupCommand.class, e);
@@ -72,5 +77,32 @@ public class ManageBackupCommand extends CommandNode {
                 }
             }
         }).runTaskAsynchronously();
+    }
+
+    /**
+     * Creates a new backup sqlite file with the data of given database.
+     *
+     * @param dbName     Name of database (mysql/sqlite)
+     * @param copyFromDB Database you want to backup.
+     */
+    private void createNewBackup(String dbName, Database copyFromDB) throws SQLException {
+        SQLiteDB backupDB = null;
+        try {
+            String timeStamp = FormatUtils.formatTimeStampISO8601NoClock(System.currentTimeMillis());
+            String fileName = dbName + "-backup-" + timeStamp;
+            backupDB = new SQLiteDB(fileName);
+            Collection<UUID> uuids = copyFromDB.fetch().getSavedUUIDs();
+            if (uuids.isEmpty()) {
+                return;
+            }
+            backupDB.init();
+            copyFromDB.backup().backup(backupDB);
+        } catch (DBException e) {
+            Log.toLog(this.getClass(), e);
+        } finally {
+            if (backupDB != null) {
+                backupDB.close();
+            }
+        }
     }
 }

@@ -7,7 +7,6 @@ import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -85,7 +84,7 @@ public class ManageRestoreCommand extends CommandNode {
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    ManageUtils.clearAndCopy(database, backupDB);
+                    database.backup().restore(backupDB);
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {

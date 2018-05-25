@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.BackupOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -24,7 +23,7 @@ public class SQLBackupOps extends SQLOps implements BackupOperations {
     }
 
     @Override
-    public void restore(Database fromDatabase) throws DBException, SQLException {
+    public void restore(Database fromDatabase) throws SQLException {
         fromDatabase.backup().backup(db);
     }
 }

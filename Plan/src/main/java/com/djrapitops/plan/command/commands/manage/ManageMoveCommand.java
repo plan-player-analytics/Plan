@@ -5,7 +5,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -72,7 +71,7 @@ public class ManageMoveCommand extends CommandNode {
                 try {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    ManageUtils.clearAndCopy(toDatabase, fromDatabase);
+                    fromDatabase.backup().backup(toDatabase);
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_MOVE_SUCCESS).toString());
 
