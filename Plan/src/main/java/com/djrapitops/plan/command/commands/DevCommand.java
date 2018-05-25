@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
@@ -29,16 +28,6 @@ public class DevCommand extends CommandNode {
     public void onCommand(ISender sender, String cmd, String[] args) {
         Verify.isTrue(args.length >= 1, () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
 
-        String feature = args[0];
-        switch (feature) {
-            case "web":
-                ConnectionSystem connectionSystem = ConnectionSystem.getInstance();
-                String accessAddress = connectionSystem.getMainAddress();
-                sender.sendMessage((connectionSystem.isServerAvailable())
-                        ? "Bungee: " + accessAddress : "Local: " + accessAddress);
-                break;
-            default:
-                break;
-        }
+        sender.sendMessage("No features currently implemented in the command.");
     }
 }

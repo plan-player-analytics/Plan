@@ -77,7 +77,6 @@ public class RegisterCommand extends CommandNode {
     }
 
     private void playerRegister(String[] args, ISender sender) throws PassEncryptUtil.CannotPerformOperationException {
-        final String notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(1 or 3) " + Arrays.toString(this.getArguments()));
         boolean registerSenderAsUser = args.length == 1;
         if (registerSenderAsUser) {
             String user = sender.getName();
