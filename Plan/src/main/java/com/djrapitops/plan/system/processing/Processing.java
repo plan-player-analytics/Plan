@@ -22,6 +22,8 @@ public class Processing implements SubSystem {
     public Processing() {
         nonCriticalExecutor = Executors.newFixedThreadPool(6);
         criticalExecutor = Executors.newFixedThreadPool(2);
+        saveInstance(nonCriticalExecutor);
+        saveInstance(criticalExecutor);
     }
 
     public static void submit(Runnable runnable) {
