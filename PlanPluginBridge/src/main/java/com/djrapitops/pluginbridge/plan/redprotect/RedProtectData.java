@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -11,7 +11,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.FormatUtils;
+import org.bukkit.Location;
 
 import java.util.Collection;
 import java.util.Set;
@@ -73,7 +73,8 @@ public class RedProtectData extends PluginData {
         for (Region region : regions) {
             int area = region.getArea();
             areaTotal += area;
-            String location = FormatUtils.formatLocation(region.getCenterLoc());
+            Location center = region.getCenterLoc();
+            String location = "x: " + center.getBlockX() + ", z: " + center.getBlockZ();
             String world = region.getWorld();
             regionTable.addRow(location, world, area);
         }
