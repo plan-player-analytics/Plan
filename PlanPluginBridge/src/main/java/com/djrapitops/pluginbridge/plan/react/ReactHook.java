@@ -43,7 +43,7 @@ public class ReactHook extends Hook {
                 table.createTable();
                 table.clean();
 
-                ITask task = RunnableFactory.createNew(new DataCollectionTask(table))
+                ITask task = RunnableFactory.createNew(new ReactDataTask(table))
                         .runTaskTimerAsynchronously(TimeAmount.SECOND.ticks() * 10L, TimeAmount.SECOND.ticks() * 10L);
                 setTask(task);
             }

@@ -71,20 +71,20 @@
                 <exclude>org.apache.logging.*</exclude>
               </excludes>
             </relocation>
-              <relocation>
-                  <pattern>com.maxmind</pattern>
-                  <shadedPattern>plan.com.maxmind</shadedPattern>
-                  <excludes>
-                      <exclude>org.apache.logging.*</exclude>
-                  </excludes>
-              </relocation>
-              <relocation>
-                  <pattern>com.fasterxml</pattern>
-                  <shadedPattern>plan.com.fasterxml</shadedPattern>
-                  <excludes>
-                      <exclude>org.apache.logging.*</exclude>
-                  </excludes>
-              </relocation>
+            <relocation>
+              <pattern>com.maxmind</pattern>
+              <shadedPattern>plan.com.maxmind</shadedPattern>
+              <excludes>
+                <exclude>org.apache.logging.*</exclude>
+              </excludes>
+            </relocation>
+            <relocation>
+              <pattern>com.fasterxml</pattern>
+              <shadedPattern>plan.com.fasterxml</shadedPattern>
+              <excludes>
+                <exclude>org.apache.logging.*</exclude>
+              </excludes>
+            </relocation>
           </relocations>
         </configuration>
       </plugin>

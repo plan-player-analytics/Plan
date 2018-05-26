@@ -2,6 +2,7 @@ package com.djrapitops.pluginbridge.plan.react;
 
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.volmit.react.React;
 import com.volmit.react.api.GraphSampleLine;
@@ -19,7 +20,7 @@ import java.util.Map;
  *
  * @author Rsl1122
  */
-public class DataCollectionTask extends AbsRunnable {
+public class ReactDataTask extends AbsRunnable {
 
     private static final SampledType[] STORED_TYPES = new SampledType[]{
             SampledType.ENT,
@@ -44,23 +45,31 @@ public class DataCollectionTask extends AbsRunnable {
     private final ReactDataTable table;
     private final Map<SampledType, List<ReactValue>> history;
 
-    public DataCollectionTask(ReactDataTable table) {
-        super(DataCollectionTask.class.getSimpleName());
+    public ReactDataTask(ReactDataTable table) {
+        super(ReactDataTask.class.getSimpleName());
         this.table = table;
         history = new EnumMap<>(SampledType.class);
     }
 
     @Override
     public void run() {
-        GMap<SampledType, GraphSampleLine> samplers = React.instance.graphController.getG();
+        try {
+            GMap<SampledType, GraphSampleLine> samplers = React.instance.graphController.getG();
 
-        for (SampledType type : STORED_TYPES) {
-            processType(samplers, type);
+            for (SampledType type : STORED_TYPES) {
+                processType(samplers, type);
+            }
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
+            cancel();
         }
     }
 
     private void processType(GMap<SampledType, GraphSampleLine> samplers, SampledType type) {
         GMap<Long, Double> values = samplers.get(type).getPlotBoard().getBetween(M.ms() - 10000, M.ms());
+        if (values.isEmpty()) {
+            return;
+        }
         List<ReactValue> storedValues = history.getOrDefault(type, new ArrayList<>());
         values.entrySet().stream()
                 .map(entry -> new ReactValue(type, entry.getKey(), entry.getValue()))
