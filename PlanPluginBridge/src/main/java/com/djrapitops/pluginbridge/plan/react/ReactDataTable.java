@@ -9,6 +9,7 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.volmit.react.api.SampledType;
 
 import java.sql.PreparedStatement;
@@ -41,6 +42,17 @@ public class ReactDataTable extends Table {
                 .column(Col.MINUTE_AVERAGE, Sql.DOUBLE)
                 .primaryKeyIDColumn(usingMySQL, Col.ID)
                 .toString());
+    }
+
+    public void clean() throws SQLException {
+        String sql = "DELETE FROM " + tableName + " WHERE " + Col.DATE + "<?";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, System.currentTimeMillis() - TimeAmount.MONTH.ms());
+            }
+        });
     }
 
     public void addData(ReactValue value) throws SQLException {
