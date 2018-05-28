@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -235,27 +236,18 @@ public class GeoInfoTable extends UserIDTable {
     }
 
     public List<String> getNetworkGeolocations() throws SQLException {
-        String subQuery = "SELECT " +
-                Col.USER_ID + ", " +
-                "MAX(" + Col.LAST_USED + ") as max" +
-                " FROM " + tableName +
-                " GROUP BY " + Col.USER_ID;
-        String sql = "SELECT " +
-                "f." + Col.GEOLOCATION +
-                " FROM (" + subQuery + ") as x" +
-                " INNER JOIN " + tableName + " AS f ON f." + Col.USER_ID + "=x." + Col.USER_ID +
-                " AND f." + Col.LAST_USED + "=x.max";
+        List<String> geolocations = new ArrayList<>();
 
-        return query(new QueryAllStatement<List<String>>(sql) {
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> geolocations = new ArrayList<>();
-                while (set.next()) {
-                    geolocations.add(set.getString(Col.GEOLOCATION.get()));
-                }
-                return geolocations;
+        Map<UUID, List<GeoInfo>> geoInfo = getAllGeoInfo();
+        for (List<GeoInfo> userGeoInfos : geoInfo.values()) {
+            if (userGeoInfos.isEmpty()) {
+                continue;
             }
-        });
+            userGeoInfos.sort(new GeoInfoComparator());
+            geolocations.add(userGeoInfos.get(0).getGeolocation());
+        }
+
+        return geolocations;
     }
 
     public void insertAllGeoInfo(Map<UUID, List<GeoInfo>> allIPsAndGeolocations) throws SQLException {
