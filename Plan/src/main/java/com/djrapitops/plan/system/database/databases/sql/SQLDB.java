@@ -271,7 +271,10 @@ public abstract class SQLDB extends Database {
                 Log.toLog(this.getClass().getName(), e);
             }
         }
-        Log.info("Removed data of " + inactivePlayers.size() + " players.");
+        int removed = inactivePlayers.size();
+        if (removed > 0) {
+            Log.info("Removed data of " + removed + " players.");
+        }
     }
 
     public abstract Connection getConnection() throws SQLException;
