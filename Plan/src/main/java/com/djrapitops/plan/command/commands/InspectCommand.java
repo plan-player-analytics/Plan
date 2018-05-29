@@ -18,7 +18,6 @@ import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import org.bukkit.ChatColor;
 
 import java.util.UUID;
 
@@ -65,16 +64,16 @@ public class InspectCommand extends CommandNode {
                         boolean senderHasWebUser = activeDB.check().doesWebUserExists(sender.getName());
 
                         if (!senderHasWebUser) {
-                            sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
+                            sender.sendMessage("§e[Plan] You might not have a web user, use /plan register <password>");
                         }
                     }
                     Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName));
                 } catch (FatalDBException ex) {
                     Log.toLog(this.getClass(), ex);
-                    sender.sendMessage(ChatColor.RED + "Fatal database exception occurred: " + ex.getMessage());
+                    sender.sendMessage("§cFatal database exception occurred: " + ex.getMessage());
                 } catch (DBException ex) {
                     Log.toLog(this.getClass(), ex);
-                    sender.sendMessage(ChatColor.YELLOW + "Non-Fatal database exception occurred: " + ex.getMessage());
+                    sender.sendMessage("§eNon-Fatal database exception occurred: " + ex.getMessage());
                 } finally {
                     this.cancel();
                 }

@@ -18,7 +18,6 @@ import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import org.bukkit.ChatColor;
 
 import java.util.Map;
 import java.util.Optional;
@@ -53,7 +52,7 @@ public class AnalyzeCommand extends CommandNode {
                 sendWebUserNotificationIfNecessary(sender);
                 sendLink(server, sender);
             } catch (DBException | WebException e) {
-                sender.sendMessage(ChatColor.RED + " Error occurred: " + e.toString());
+                sender.sendMessage("§cError occurred: " + e.toString());
                 Log.toLog(this.getClass(), e);
             }
         });
@@ -80,7 +79,7 @@ public class AnalyzeCommand extends CommandNode {
 
             boolean senderHasWebUser = Database.getActive().check().doesWebUserExists(sender.getName());
             if (!senderHasWebUser) {
-                sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
+                sender.sendMessage("§e[Plan] You might not have a web user, use /plan register <password>");
             }
         }
     }
