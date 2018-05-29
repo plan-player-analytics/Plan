@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.utilities.java.ThrowingVoidFunction;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.ArrayList;
@@ -19,9 +20,9 @@ import java.util.Map;
  */
 public class WebExceptionLogger {
 
-    public static void logIfOccurs(Class c, ExceptionLoggingAction action) {
+    public static void logIfOccurs(Class c, ThrowingVoidFunction<WebException> function) {
         try {
-            action.performAction();
+            function.apply();
         } catch (ConnectionFailException e) {
             if (shouldLog(e)) {
                 Log.warn(e.getMessage());
@@ -60,12 +61,6 @@ public class WebExceptionLogger {
             }
         }
         return null;
-    }
-
-    public interface ExceptionLoggingAction {
-
-        void performAction() throws WebException;
-
     }
 
 }
