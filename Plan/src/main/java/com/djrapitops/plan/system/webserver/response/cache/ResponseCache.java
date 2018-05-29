@@ -4,6 +4,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * This class contains the page cache.
@@ -29,23 +30,23 @@ public class ResponseCache {
     /**
      * Loads the response from the response cache.
      * <p>
-     * If the {@link Response} isn't cached, {@link ResponseLoader#createResponse()} in the {@code loader}
+     * If the {@link Response} isn't cached, {@link Supplier#get()} in the {@code loader}
      * is called to create the Response.
      * <p>
      * If the Response is created, it's automatically cached.
      *
      * @param identifier The identifier of the page
-     * @param loader     The {@link ResponseLoader} (How should it load the page if it's not cached)
-     * @return The Response that was cached or created by the {@link ResponseLoader loader}
+     * @param loader     The The {@link Response} {@link Supplier} (How should it load the page if it's not cached)
+     * @return The Response that was cached or created by the the {@link Response} {@link Supplier}
      */
-    public static Response loadResponse(String identifier, ResponseLoader loader) {
+    public static Response loadResponse(String identifier, Supplier<Response> loader) {
         Response response = loadResponse(identifier);
 
         if (response != null) {
             return response;
         }
 
-        response = loader.createResponse();
+        response = loader.get();
 
         cache.put(identifier, response);
 
@@ -68,10 +69,10 @@ public class ResponseCache {
      * If the cache already inherits that {@code identifier}, it's renewed.
      *
      * @param identifier The identifier of the page
-     * @param loader     The {@link ResponseLoader} (How it should load the page)
+     * @param loader     The {@link Response} {@link Supplier} (How it should load the page)
      */
-    public static void cacheResponse(String identifier, ResponseLoader loader) {
-        Response response = loader.createResponse();
+    public static void cacheResponse(String identifier, Supplier<Response> loader) {
+        Response response = loader.get();
         cache.put(identifier, response);
     }
 
@@ -92,15 +93,4 @@ public class ResponseCache {
         cache.clear();
     }
 
-    /**
-     * This interface is used for providing the method to load the page.
-     *
-     * @author Fuzzlemann
-     * @since 4.2.0
-     */
-    public interface ResponseLoader {
-
-        Response createResponse();
-
-    }
 }
