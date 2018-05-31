@@ -17,7 +17,6 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.importing.ServerImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportRefiner;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -225,7 +224,7 @@ public abstract class Importer {
     }
 
     private List<GeoInfo> convertGeoInfo(UserImportData userImportData) {
-        long date = MiscUtils.getTime();
+        long date = System.currentTimeMillis();
 
         return userImportData.getIps().parallelStream()
                 .map(ip -> {

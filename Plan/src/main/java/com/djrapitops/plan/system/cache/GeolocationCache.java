@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import com.google.common.cache.Cache;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
@@ -28,8 +27,6 @@ import java.util.zip.GZIPInputStream;
  * This class contains the geolocation cache.
  * <p>
  * It caches all IPs with their matching country.
- * <p>
- * This cache uses the Google Guava {@link Cache}.
  *
  * @author Fuzzlemann
  * @since 3.5.5

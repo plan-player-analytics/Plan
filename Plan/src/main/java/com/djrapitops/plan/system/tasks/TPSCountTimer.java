@@ -4,7 +4,6 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.TPSInsertProcessor;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 
@@ -33,7 +32,7 @@ public abstract class TPSCountTimer<T extends PlanPlugin> extends AbsRunnable {
     public void run() {
         try {
             long nanoTime = System.nanoTime();
-            long now = MiscUtils.getTime();
+            long now = System.currentTimeMillis();
 
             addNewTPSEntry(nanoTime, now);
 

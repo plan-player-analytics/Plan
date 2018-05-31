@@ -7,7 +7,6 @@ import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdatePr
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
 import com.djrapitops.plan.system.tasks.TaskSystem;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.entity.Player;
@@ -83,7 +82,7 @@ public class PlayerOnlineListener implements Listener {
         NotificationCenter.checkNotifications(player);
 
         UUID uuid = player.getUniqueId();
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
 
         AFKListener.AFK_TRACKER.performedAction(uuid, time);
 
@@ -119,7 +118,7 @@ public class PlayerOnlineListener implements Listener {
     }
 
     private void actOnQuitEvent(PlayerQuitEvent event) {
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 

@@ -43,7 +43,7 @@ public class ShutdownUpdateHook extends Thread {
             downloadNewJar(available, newJar);
             registerOldJarForDeletion(pluginsFolder, newJar);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.toLog(ShutdownUpdateHook.class, e);
         }
     }
 
@@ -129,6 +129,7 @@ public class ShutdownUpdateHook extends Thread {
             try {
                 ((URLClassLoader) classLoader).close();
             } catch (IOException e) {
+                // Loggers may be unavailable.
                 e.printStackTrace();
             }
         }

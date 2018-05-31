@@ -16,7 +16,6 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -40,13 +39,13 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     private void refreshServerMap() {
         Processing.submitNonCritical(() -> {
-            if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.SECOND.ms() * 15L) {
+            if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
                 try {
                     Database database = Database.getActive();
                     Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
                     bungeeInformation.ifPresent(server -> mainServer = server);
                     bukkitServers = database.fetch().getBukkitServers();
-                    latestServerMapRefresh = MiscUtils.getTime();
+                    latestServerMapRefresh = System.currentTimeMillis();
                 } catch (DBException e) {
                     Log.toLog(this.getClass(), e);
                 }

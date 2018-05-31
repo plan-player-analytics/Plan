@@ -1,7 +1,6 @@
 package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,7 +105,7 @@ public class Session {
      */
     public long getLength() {
         if (sessionEnd == -1) {
-            return MiscUtils.getTime() - sessionStart;
+            return System.currentTimeMillis() - sessionStart;
         }
         return sessionEnd - sessionStart;
     }
@@ -173,7 +172,7 @@ public class Session {
      * Used to get the ID of the session in the Database.
      *
      * @return ID if present.
-     * @throws NullPointerException if Session was not fetched from DB. Condition using {@code isFetchedFromDB}
+     * @throws NullPointerException if Session was not fetched from DB. Check {@code isFetchedFromDB} first.
      */
     public int getSessionID() {
         return sessionID != null ? sessionID : -1;

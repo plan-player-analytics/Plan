@@ -9,7 +9,6 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.hm.achievement.api.AdvancedAchievementsAPI;
@@ -47,7 +46,7 @@ public class AdvancedAchievementsData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
-        if (MiscUtils.getTime() - lastRefresh > TimeAmount.MINUTE.ms() * 5L) {
+        if (System.currentTimeMillis() - lastRefresh > TimeAmount.MINUTE.ms() * 5L) {
             refreshTotalAchievements();
         }
         long total = getTotal(totalAchievements);
@@ -65,6 +64,6 @@ public class AdvancedAchievementsData extends PluginData {
 
     private void refreshTotalAchievements() {
         totalAchievements = aaAPI.getPlayersTotalAchievements();
-        lastRefresh = MiscUtils.getTime();
+        lastRefresh = System.currentTimeMillis();
     }
 }

@@ -5,8 +5,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
-import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -14,6 +12,8 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
+
+import java.util.Arrays;
 
 /**
  * This manage SubCommand is used to move all data from one database to another.
@@ -33,29 +33,24 @@ public class ManageMoveCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Condition.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
-            return;
-        }
+        Verify.isTrue(args.length >= 2,
+                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
 
         String fromDB = args[0].toLowerCase();
-        boolean isCorrectDB = "sqlite".equals(fromDB) || "mysql".equals(fromDB);
-
-        if (!Condition.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB, sender)) {
-            return;
-        }
+        boolean isCorrectDB = Verify.equalsOne(fromDB, "sqlite", "mysql");
+        Verify.isTrue(isCorrectDB,
+                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB));
 
         String toDB = args[1].toLowerCase();
-        isCorrectDB = "sqlite".equals(toDB) || "mysql".equals(toDB);
+        isCorrectDB = Verify.equalsOne(toDB, "sqlite", "mysql");
+        Verify.isTrue(isCorrectDB,
+                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB));
 
-        if (!Condition.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + toDB, sender)) {
-            return;
-        }
+        Verify.isFalse(fromDB.equalsIgnoreCase(toDB),
+                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_SAME_DB).toString()));
 
-        if (!Condition.isTrue(!Verify.equalsIgnoreCase(fromDB, toDB), Locale.get(Msg.MANAGE_FAIL_SAME_DB).toString(), sender)) {
-            return;
-        }
-
-        if (!Condition.isTrue(Verify.contains("-a", args), Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(args[1])), sender)) {
+        if (!Verify.contains("-a", args)) {
+            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_OVERWRITE).parse(args[0])));
             return;
         }
 
@@ -76,10 +71,14 @@ public class ManageMoveCommand extends CommandNode {
                 try {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    ManageUtils.clearAndCopy(toDatabase, fromDatabase);
+                    fromDatabase.backup().backup(toDatabase);
+
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_MOVE_SUCCESS).toString());
-                    boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), Database.getActive().getConfigName());
-                    Condition.isTrue(!movedToCurrentDatabase, Locale.get(Msg.MANAGE_INFO_CONFIG_REMINDER).toString(), sender);
+
+                    boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(Database.getActive().getConfigName());
+                    if (movingToCurrentDB) {
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CONFIG_REMINDER).toString());
+                    }
                 } catch (Exception e) {
                     Log.toLog(this.getClass(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());

@@ -10,7 +10,9 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.database.databases.sql.tables.move.Version18TransferTable;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -74,8 +76,10 @@ public class GeoInfoTable extends UserIDTable {
 
     public void alterTableV17() {
         addColumns(Col.IP_HASH.get() + " varchar(200) DEFAULT ''");
+    }
 
-        RunnableFactory.createNew("DB Version 16->17", new AbsRunnable() {
+    public void alterTableV18() {
+        RunnableFactory.createNew("DB Version 17->18", new AbsRunnable() {
             @Override
             public void run() {
                 try {
@@ -91,6 +95,9 @@ public class GeoInfoTable extends UserIDTable {
                             for (List<GeoInfo> geoInfos : allGeoInfo.values()) {
                                 for (GeoInfo geoInfo : geoInfos) {
                                     try {
+                                        if (geoInfo.getIp().endsWith(".xx.xx")) {
+                                            continue;
+                                        }
                                         GeoInfo updatedInfo = new GeoInfo(
                                                 geoInfo.getIp(),
                                                 geoInfo.getGeolocation(),
@@ -99,6 +106,7 @@ public class GeoInfoTable extends UserIDTable {
                                         statement.setString(1, updatedInfo.getIp());
                                         statement.setString(2, updatedInfo.getIpHash());
                                         statement.setString(3, geoInfo.getIp());
+                                        statement.addBatch();
                                     } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
                                         if (Settings.DEV_MODE.isTrue()) {
                                             Log.toLog(this.getClass(), e);
@@ -108,11 +116,17 @@ public class GeoInfoTable extends UserIDTable {
                             }
                         }
                     });
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                    new Version18TransferTable(db).alterTableV18();
+                    db.setVersion(18);
+                } catch (SQLException | DBInitException e) {
+                    Log.toLog(this.getClass(), e);
                 }
             }
-        });
+        }).runTaskAsynchronously();
+    }
+
+    public void clean() {
+
     }
 
     public List<GeoInfo> getGeoInfo(UUID uuid) throws SQLException {
@@ -162,8 +176,9 @@ public class GeoInfoTable extends UserIDTable {
         List<GeoInfo> geoInfo = getGeoInfo(uuid);
         if (geoInfo.contains(info)) {
             updateGeoInfo(uuid, info);
+        } else {
+            insertGeoInfo(uuid, info);
         }
-        insertGeoInfo(uuid, info);
     }
 
     private void insertGeoInfo(UUID uuid, GeoInfo info) throws SQLException {
@@ -235,27 +250,18 @@ public class GeoInfoTable extends UserIDTable {
     }
 
     public List<String> getNetworkGeolocations() throws SQLException {
-        String subQuery = "SELECT " +
-                Col.USER_ID + ", " +
-                "MAX(" + Col.LAST_USED + ") as max" +
-                " FROM " + tableName +
-                " GROUP BY " + Col.USER_ID;
-        String sql = "SELECT " +
-                "f." + Col.GEOLOCATION +
-                " FROM (" + subQuery + ") as x" +
-                " INNER JOIN " + tableName + " AS f ON f." + Col.USER_ID + "=x." + Col.USER_ID +
-                " AND f." + Col.LAST_USED + "=x.max";
+        List<String> geolocations = new ArrayList<>();
 
-        return query(new QueryAllStatement<List<String>>(sql) {
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> geolocations = new ArrayList<>();
-                while (set.next()) {
-                    geolocations.add(set.getString(Col.GEOLOCATION.get()));
-                }
-                return geolocations;
+        Map<UUID, List<GeoInfo>> geoInfo = getAllGeoInfo();
+        for (List<GeoInfo> userGeoInfos : geoInfo.values()) {
+            if (userGeoInfos.isEmpty()) {
+                continue;
             }
-        });
+            userGeoInfos.sort(new GeoInfoComparator());
+            geolocations.add(userGeoInfos.get(0).getGeolocation());
+        }
+
+        return geolocations;
     }
 
     public void insertAllGeoInfo(Map<UUID, List<GeoInfo>> allIPsAndGeolocations) throws SQLException {

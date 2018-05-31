@@ -4,7 +4,6 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -30,7 +29,7 @@ public class SessionCache {
     }
 
     public static SessionCache getInstance() {
-        DataCache dataCache = CacheSystem.getInstance().getDataCache();
+        SessionCache dataCache = CacheSystem.getInstance().getDataCache();
         Verify.nullCheck(dataCache, () -> new IllegalStateException("Data Cache was not initialized."));
         return dataCache;
     }
@@ -71,7 +70,7 @@ public class SessionCache {
 
     public static void refreshActiveSessionsState() {
         for (Session session : activeSessions.values()) {
-            session.getWorldTimes().updateState(MiscUtils.getTime());
+            session.getWorldTimes().updateState(System.currentTimeMillis());
         }
     }
 
@@ -99,7 +98,7 @@ public class SessionCache {
     }
 
     /**
-     * Condition if a session is player's first session on the server.
+     * Check if a session is player's first session on the server.
      *
      * @param uuid UUID of the player
      * @return true / false

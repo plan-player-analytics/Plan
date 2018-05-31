@@ -6,6 +6,7 @@ import org.bukkit.Server;
 import org.spongepowered.api.Game;
 
 import java.net.InetSocketAddress;
+import java.util.function.Supplier;
 
 /**
  * Class responsible for holding server variable values that do not change
@@ -21,10 +22,10 @@ public class ServerProperties {
     private final int port;
     private final String version;
     private final String implVersion;
-    private final IPWrapper ip;
+    private final Supplier<String> ip;
     private final int maxPlayers;
 
-    private final OnlinePlayersWrapper onlinePlayers;
+    private final Supplier<Integer> onlinePlayers;
 
     public ServerProperties(Server server) {
         id = server.getServerId();
@@ -76,7 +77,7 @@ public class ServerProperties {
      * @return the ip.
      */
     public String getIp() {
-        return ip.getIP();
+        return ip.get();
     }
 
     public String getName() {
@@ -104,14 +105,6 @@ public class ServerProperties {
     }
 
     public int getOnlinePlayers() {
-        return onlinePlayers.getOnlinePlayers();
-    }
-
-    private interface OnlinePlayersWrapper {
-        int getOnlinePlayers();
-    }
-
-    private interface IPWrapper {
-        String getIP();
+        return onlinePlayers.get();
     }
 }

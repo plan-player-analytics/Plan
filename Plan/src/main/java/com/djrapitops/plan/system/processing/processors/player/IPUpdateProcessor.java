@@ -38,7 +38,8 @@ public class IPUpdateProcessor implements CriticalRunnable {
         if (Settings.DATA_GEOLOCATIONS.isTrue()) {
             String country = GeolocationCache.getCountry(ip);
             try {
-                Database.getActive().save().geoInfo(uuid, new GeoInfo(ip, country, time));
+                GeoInfo geoInfo = new GeoInfo(ip, country, time);
+                Database.getActive().save().geoInfo(uuid, geoInfo);
             } catch (DBException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
                 Log.toLog(this.getClass(), e);
             }

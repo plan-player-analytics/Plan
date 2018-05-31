@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class TableContainer {
 
-    private final String[] header;
+    protected final String[] header;
     private List<Serializable[]> values;
 
     private boolean jqueryDatatable;

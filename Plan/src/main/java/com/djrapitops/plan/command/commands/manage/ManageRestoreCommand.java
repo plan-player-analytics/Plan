@@ -7,8 +7,6 @@ import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
-import com.djrapitops.plan.utilities.ManageUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -40,18 +38,16 @@ public class ManageRestoreCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Condition.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments())), sender)) {
-            return;
-        }
+        Verify.isTrue(args.length >= 2,
+                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
 
         String db = args[1].toLowerCase();
-        boolean isCorrectDB = "sqlite".equals(db) || "mysql".equals(db);
+        boolean isCorrectDB = Verify.equalsOne(db, "sqlite", "mysql");
+        Verify.isTrue(isCorrectDB,
+                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB).toString()));
 
-        if (!Condition.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + db, sender)) {
-            return;
-        }
-
-        if (!Condition.isTrue(Verify.contains("-a", args), Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REWRITE).parse(args[1])), sender)) {
+        if (!Verify.contains("-a", args)) {
+            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REWRITE).parse(args[1])));
             return;
         }
 
@@ -73,7 +69,9 @@ public class ManageRestoreCommand extends CommandNode {
                     boolean containsDBFileExtension = backupDBName.endsWith(".db");
 
                     File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (containsDBFileExtension ? "" : ".db"));
-                    if (!Condition.isTrue(Verify.exists(backupDBFile), Locale.get(Msg.MANAGE_FAIL_FILE_NOT_FOUND) + " " + args[0], sender)) {
+
+                    if (!backupDBFile.exists()) {
+                        sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FILE_NOT_FOUND) + " " + args[0]);
                         return;
                     }
 
@@ -86,7 +84,7 @@ public class ManageRestoreCommand extends CommandNode {
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    ManageUtils.clearAndCopy(database, backupDB);
+                    database.backup().restore(backupDB);
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {

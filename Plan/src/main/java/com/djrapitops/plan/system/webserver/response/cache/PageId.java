@@ -16,19 +16,19 @@ public enum PageId {
     SERVER("serverPage:"),
     PLAYER("playerPage:"),
     PLAYERS("playersPage"),
-    //
+
     ERROR("error:"),
     FORBIDDEN(ERROR.of("Forbidden")),
     NOT_FOUND(ERROR.of("Not Found")),
     TRUE("true"),
     FALSE("false"),
-    //
+
     JS("js:"),
     CSS("css:"),
-    //
+
     FAVICON_REDIRECT("Redirect:Favicon"),
     AUTH_PROMPT("PromptAuth"),
-    //
+
     PLAYER_PLUGINS_TAB("playerPluginsTab:"),
     NETWORK_CONTENT("networkContent");
 

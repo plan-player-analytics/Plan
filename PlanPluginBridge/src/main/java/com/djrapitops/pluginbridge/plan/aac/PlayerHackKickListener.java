@@ -8,7 +8,6 @@ package com.djrapitops.pluginbridge.plan.aac;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import me.konsolas.aac.api.AACAPIProvider;
 import me.konsolas.aac.api.HackType;
@@ -38,7 +37,7 @@ public class PlayerHackKickListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         HackType hackType = event.getHackType();
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         int violations = AACAPIProvider.getAPI().getViolationLevel(player, hackType);
 
         HackObject hackObject = new HackObject(uuid, time, hackType, violations);

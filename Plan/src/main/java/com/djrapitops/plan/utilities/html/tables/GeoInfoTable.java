@@ -33,7 +33,7 @@ public class GeoInfoTable extends TableContainer {
         for (GeoInfo info : geoInfo) {
             long date = info.getLastUsed();
             addRow(
-                    displayIP ? FormatUtils.formatIP(info.getIp()) : "Hidden (Config)",
+                    displayIP ? info.getIp() : "Hidden (Config)",
                     info.getGeolocation(),
                     date != 0 ? FormatUtils.formatTimeStampYear(date) : "-"
             );

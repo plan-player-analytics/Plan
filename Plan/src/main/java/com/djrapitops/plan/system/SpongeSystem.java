@@ -32,7 +32,7 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
     private boolean firstInstall = false;
 
     public SpongeSystem(PlanSponge plugin) {
-        testSystem = this;
+        setTestSystem(this);
 
         Log.setErrorManager(new PlanErrorManager());
 

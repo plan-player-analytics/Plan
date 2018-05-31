@@ -4,6 +4,8 @@
  */
 package com.djrapitops.plan.api.exceptions.connection;
 
+import com.djrapitops.plan.system.webserver.response.ResponseCode;
+
 /**
  * Thrown when Connection gets a 412 response due to ServerUUID not being in the database.
  *
@@ -12,14 +14,14 @@ package com.djrapitops.plan.api.exceptions.connection;
 public class UnauthorizedServerException extends WebFailException {
 
     public UnauthorizedServerException(String message) {
-        super(message);
+        super(message, ResponseCode.PRECONDITION_FAILED);
     }
 
     public UnauthorizedServerException(String message, Throwable cause) {
-        super(message, cause);
+        super(message, cause, ResponseCode.PRECONDITION_FAILED);
     }
 
     public UnauthorizedServerException(Throwable cause) {
-        super(cause);
+        super(cause, ResponseCode.PRECONDITION_FAILED);
     }
 }

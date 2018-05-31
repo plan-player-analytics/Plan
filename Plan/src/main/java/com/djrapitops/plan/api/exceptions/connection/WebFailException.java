@@ -4,6 +4,8 @@
  */
 package com.djrapitops.plan.api.exceptions.connection;
 
+import com.djrapitops.plan.system.webserver.response.ResponseCode;
+
 /**
  * Group of WebExceptions that can be considered a failed connection state on some occasions.
  *
@@ -11,18 +13,19 @@ package com.djrapitops.plan.api.exceptions.connection;
  */
 public class WebFailException extends WebException {
 
-    public WebFailException() {
-    }
-
-    public WebFailException(String message) {
-        super(message);
-    }
-
     public WebFailException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public WebFailException(Throwable cause) {
-        super(cause);
+    public WebFailException(String message, ResponseCode responseCode) {
+        super(message, responseCode);
+    }
+
+    public WebFailException(String message, Throwable cause, ResponseCode responseCode) {
+        super(message, cause, responseCode);
+    }
+
+    public WebFailException(Throwable cause, ResponseCode responseCode) {
+        super(cause, responseCode);
     }
 }

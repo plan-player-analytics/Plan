@@ -185,7 +185,7 @@ public class DebugPageResponse extends ErrorResponse {
         try {
             content.append("<pre>### Logged Errors<br>");
 
-            TreeMap<String, List<String>> errors = ErrorLogger.getLoggedErrors(PlanPlugin.getInstance());
+            SortedMap<String, List<String>> errors = ErrorLogger.getLoggedErrors(PlanPlugin.getInstance());
 
             if (!errors.isEmpty()) {
                 List<String> errorLines = new ArrayList<>();

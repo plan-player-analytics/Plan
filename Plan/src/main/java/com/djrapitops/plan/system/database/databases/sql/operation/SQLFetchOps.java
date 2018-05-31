@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.sql.SQLException;
@@ -32,7 +31,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
                 profile.setAllTimePeak(peak.getDate());
                 profile.setAllTimePeakPlayers(peak.getPlayers());
             });
-            Optional<TPS> lastPeak = tpsTable.getPeakPlayerCount(serverUUID, MiscUtils.getTime() - (TimeAmount.DAY.ms() * 2L));
+            Optional<TPS> lastPeak = tpsTable.getPeakPlayerCount(serverUUID, System.currentTimeMillis() - (TimeAmount.DAY.ms() * 2L));
             lastPeak.ifPresent(peak -> {
                 profile.setLastPeakDate(peak.getDate());
                 profile.setLastPeakPlayers(peak.getPlayers());

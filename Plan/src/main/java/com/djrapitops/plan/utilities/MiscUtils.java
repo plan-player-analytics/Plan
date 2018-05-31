@@ -14,8 +14,10 @@ import com.djrapitops.plugin.command.ISender;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Utility method class containing various static methods.
@@ -32,18 +34,9 @@ public class MiscUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    /**
-     * Used to get the current time as milliseconds.
-     *
-     * @return Epoch ms.
-     */
-    public static long getTime() {
-        return System.currentTimeMillis();
-    }
-
     public static int getTimeZoneOffsetHours() {
         if (Settings.USE_SERVER_TIME.isTrue()) {
-            return -TimeZone.getDefault().getOffset(MiscUtils.getTime()) / (int) TimeAmount.HOUR.ms();
+            return -TimeZone.getDefault().getOffset(System.currentTimeMillis()) / (int) TimeAmount.HOUR.ms();
         }
         return 0;
     }
@@ -103,10 +96,6 @@ public class MiscUtils {
         }
         Collections.sort(matches);
         return matches;
-    }
-
-    public static <T> List<T> flatMap(Collection<? extends Collection<T>> coll) {
-        return coll.stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     public static void close(Closeable... close) {

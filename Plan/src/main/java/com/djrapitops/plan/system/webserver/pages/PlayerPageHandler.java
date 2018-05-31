@@ -49,7 +49,7 @@ public class PlayerPageHandler extends PageHandler {
         try {
             if (Database.getActive().check().isPlayerRegistered(uuid)) {
                 Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
-                if (response == null || !(response instanceof InspectPageResponse)) {
+                if (!(response instanceof InspectPageResponse)) {
                     InfoSystem.getInstance().generateAndCachePlayerPage(uuid);
                     response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
                 }

@@ -1,7 +1,7 @@
 name: Plan
 author: Rsl1122
 main: com.djrapitops.plan.Plan
-version: 4.3.1
+version: 4.3.2
 softdepend:
 - EssentialsX
 - Towny

@@ -4,6 +4,8 @@
  */
 package com.djrapitops.plan.api.exceptions.connection;
 
+import com.djrapitops.plan.system.webserver.response.ResponseCode;
+
 /**
  * Thrown when InfoRequest can not connect to the other server.
  *
@@ -12,14 +14,6 @@ package com.djrapitops.plan.api.exceptions.connection;
 public class GatewayException extends WebException {
 
     public GatewayException(String message) {
-        super(message);
-    }
-
-    public GatewayException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public GatewayException(Throwable cause) {
-        super(cause);
+        super(message, ResponseCode.GATEWAY_ERROR);
     }
 }

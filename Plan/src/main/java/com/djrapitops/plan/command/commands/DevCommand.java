@@ -4,13 +4,12 @@
  */
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.utilities.Verify;
 
 /**
  * Command used for testing functions that are too difficult to unit test.
@@ -27,25 +26,8 @@ public class DevCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String cmd, String[] args) {
-        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-            return;
-        }
-        String feature = args[0];
-        switch (feature) {
-            case "connection":
-                if (!Condition.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-                    break;
-                }
-                sender.sendMessage("[Plan] No implementation.");
-                break;
-            case "web":
-                ConnectionSystem connectionSystem = ConnectionSystem.getInstance();
-                String accessAddress = connectionSystem.getMainAddress();
-                sender.sendMessage((connectionSystem.isServerAvailable())
-                        ? "Bungee: " + accessAddress : "Local: " + accessAddress);
-                break;
-            default:
-                break;
-        }
+        Verify.isTrue(args.length >= 1, () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+
+        sender.sendMessage("No features currently implemented in the command.");
     }
 }

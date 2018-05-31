@@ -10,7 +10,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -32,10 +31,10 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     }
 
     private void refreshServerMap() {
-        if (latestServerMapRefresh < MiscUtils.getTime() - TimeAmount.SECOND.ms() * 15L) {
+        if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
             try {
                 bukkitServers = Database.getActive().fetch().getBukkitServers();
-                latestServerMapRefresh = MiscUtils.getTime();
+                latestServerMapRefresh = System.currentTimeMillis();
             } catch (DBException e) {
                 Log.toLog(this.getClass(), e);
             }

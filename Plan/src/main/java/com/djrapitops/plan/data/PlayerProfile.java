@@ -11,7 +11,6 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.comparators.ActionComparator;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 
@@ -177,7 +176,7 @@ public class PlayerProfile {
     }
 
     public long getTotalPlaytime() {
-        return getPlaytime(-1, MiscUtils.getTime() + 1L);
+        return getPlaytime(-1, System.currentTimeMillis() + 1L);
     }
 
     public long getPlaytime(long after, long before) {
@@ -189,7 +188,7 @@ public class PlayerProfile {
     }
 
     public long getLongestSession() {
-        return getLongestSession(-1, MiscUtils.getTime() + 1L);
+        return getLongestSession(-1, System.currentTimeMillis() + 1L);
     }
 
     public long getLongestSession(int after, long before) {
@@ -201,7 +200,7 @@ public class PlayerProfile {
     }
 
     public long getSessionMedian() {
-        return getSessionMedian(-1, MiscUtils.getTime() + 1L);
+        return getSessionMedian(-1, System.currentTimeMillis() + 1L);
     }
 
     public long getSessionMedian(int after, long before) {
@@ -215,7 +214,7 @@ public class PlayerProfile {
     // Special Getters
 
     public long getSessionAverage() {
-        return getSessionAverage(-1, MiscUtils.getTime() + 1L);
+        return getSessionAverage(-1, System.currentTimeMillis() + 1L);
     }
 
     public long getSessionAverage(int after, long before) {
@@ -241,7 +240,7 @@ public class PlayerProfile {
 
     public GeoInfo getMostRecentGeoInfo() {
         if (geoInformation.isEmpty()) {
-            return new GeoInfo("-", "Not Known", MiscUtils.getTime(), "");
+            return new GeoInfo("-", "Not Known", System.currentTimeMillis(), "");
         }
         geoInformation.sort(new GeoInfoComparator());
         return geoInformation.get(0);

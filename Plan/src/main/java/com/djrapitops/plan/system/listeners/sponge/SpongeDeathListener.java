@@ -4,7 +4,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.SpongeKillProcessor;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Format;
 import org.spongepowered.api.data.key.Keys;
@@ -13,7 +12,7 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.animal.Wolf;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.projectile.arrow.Arrow;
+import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.entity.projectile.source.ProjectileSource;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
@@ -34,7 +33,7 @@ public class SpongeDeathListener {
 
     @Listener
     public void onEntityDeath(DestructEntityEvent.Death event) {
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         Living dead = event.getTargetEntity();
 
         if (dead instanceof Player) {
@@ -60,8 +59,8 @@ public class SpongeDeathListener {
             processor = handlePlayerKill(time, dead, (Player) killerEntity);
         } else if (killerEntity instanceof Wolf) {
             processor = handleWolfKill(time, dead, (Wolf) killerEntity);
-        } else if (killerEntity instanceof Arrow) {
-            processor = handleArrowKill(time, dead, (Arrow) killerEntity);
+        } else if (killerEntity instanceof Projectile) {
+            processor = handleProjectileKill(time, dead, (Projectile) killerEntity);
         }
         if (processor != null) {
             Processing.submit(processor);
@@ -96,15 +95,17 @@ public class SpongeDeathListener {
         ).orElse(null);
     }
 
-    private SpongeKillProcessor handleArrowKill(long time, Living dead, Arrow arrow) {
-        ProjectileSource source = arrow.getShooter();
+    private SpongeKillProcessor handleProjectileKill(long time, Living dead, Projectile projectile) {
+        ProjectileSource source = projectile.getShooter();
         if (!(source instanceof Player)) {
             return null;
         }
 
         Player player = (Player) source;
 
-        return new SpongeKillProcessor(player.getUniqueId(), time, getUUID(dead), "Bow");
+        return new SpongeKillProcessor(player.getUniqueId(), time, getUUID(dead),
+                new Format(projectile.getType().getName()).capitalize().toString()
+        );
     }
 
     /**

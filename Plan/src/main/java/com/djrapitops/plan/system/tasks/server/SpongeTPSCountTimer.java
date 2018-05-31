@@ -8,12 +8,10 @@ import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.World;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
-import java.util.Iterator;
 
 public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
 
@@ -62,7 +60,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
         double tps = Sponge.getGame().getServer().getTicksPerSecond();
         int playersOnline = ServerInfo.getServerProperties().getOnlinePlayers();
         latestPlayersOnline = playersOnline;
-        int loadedChunks = -1;
+        int loadedChunks = -1; // getLoadedChunks();
         int entityCount = getEntityCount();
 
         return TPSBuilder.get()
@@ -83,13 +81,9 @@ public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
      */
     private int getLoadedChunks() {
         // DISABLED
-
         int loaded = 0;
         for (World world : Sponge.getGame().getServer().getWorlds()) {
-            Iterator<Chunk> iterator = world.getLoadedChunks().iterator();
-            while (iterator.hasNext()) {
-                loaded++;
-            }
+            loaded += world.getLoadedChunks().spliterator().estimateSize();
         }
         return loaded;
     }
@@ -99,7 +93,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
      *
      * @return amount of entities
      */
-    protected int getEntityCount() {
+    private int getEntityCount() {
         return Sponge.getGame().getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
     }
 }

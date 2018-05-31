@@ -9,7 +9,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
-import com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
+import com.djrapitops.plan.utilities.html.tables.PluginPlayersTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +73,7 @@ public class AnalysisPluginsTabContentCreator {
                 "<div class=\"card\">" +
                 "<div class=\"header\"><h2><i class=\"fa fa-users\"></i> Plugin Data</h2></div>" +
                 "<div class=\"body\">" +
-                "<div class=\"table-responsive\">" +
-                PlayersTableCreator.createPluginsTable(containers, Analysis.getServerProfile().getPlayers()) +
+                new PluginPlayersTable(containers, Analysis.getServerProfile().getPlayers()).parseHtml() +
                 "</div></div></div>" +
                 "</div></div></div>";
 

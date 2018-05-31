@@ -6,6 +6,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.sql.SqlService;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -44,4 +45,21 @@ public class SpongeMySQLDB extends MySQLDB {
         }
     }
 
+    @Override
+    public Connection getConnection() throws SQLException {
+        try {
+            return super.getConnection();
+        } catch (SQLException e) {
+            if (e.getMessage().contains("has been closed")) {
+                try {
+                    setupDataSource();
+                } catch (DBInitException setupException) {
+                    throw new IllegalStateException("Failed to set up a new datasource after connection failure.", setupException);
+                }
+                return super.getConnection();
+            } else {
+                throw e;
+            }
+        }
+    }
 }

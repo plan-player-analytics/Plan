@@ -28,7 +28,7 @@ public class ActionsTable extends TableContainer {
         }
     }
 
-    private void addValues(List<Action> actions) {
+    private void addValues(Iterable<Action> actions) {
         int i = 0;
         for (Action action : actions) {
             if (i > 50) {

@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.listeners.bungee;
 
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.BungeePlayerRegisterProcessor;
-import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.system.processing.processors.player.IPUpdateProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -28,9 +28,12 @@ public class PlayerOnlineListener implements Listener {
             ProxiedPlayer player = event.getPlayer();
             UUID uuid = player.getUniqueId();
             String name = player.getName();
-            long now = MiscUtils.getTime();
+            String ip = player.getAddress().getAddress().getHostAddress();
+            long now = System.currentTimeMillis();
 
-            Processing.submit(new BungeePlayerRegisterProcessor(uuid, name, now));
+            Processing.submit(new BungeePlayerRegisterProcessor(uuid, name, now,
+                    new IPUpdateProcessor(uuid, ip, now))
+            );
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

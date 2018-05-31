@@ -42,7 +42,7 @@ public class NetworkPage extends Page {
     public String toHtml() throws ParseException {
         try {
             UUID serverUUID = ServerInfo.getServerUUID();
-            long now = MiscUtils.getTime();
+            long now = System.currentTimeMillis();
             Database database = Database.getActive();
             List<TPS> networkOnlineData = database.fetch().getNetworkOnlineData();
             List<String> geolocations = database.fetch().getNetworkGeolocations();

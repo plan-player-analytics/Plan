@@ -5,7 +5,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -35,9 +34,8 @@ public class ManageRemoveCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-            return;
-        }
+        Verify.isTrue(args.length >= 1,
+                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
 
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
 
@@ -50,20 +48,20 @@ public class ManageRemoveCommand extends CommandNode {
             public void run() {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
-                    String message = Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString();
 
-                    if (!Condition.isTrue(Verify.notNull(uuid), message, sender)) {
+                    if (uuid == null) {
+                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString());
                         return;
                     }
 
-                    message = Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString();
                     Database database = Database.getActive();
-                    if (!Condition.isTrue(database.check().isPlayerRegistered(uuid), message, sender)) {
+                    if (!database.check().isPlayerRegistered(uuid)) {
+                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
                         return;
                     }
 
-                    message = Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(Database.getActive().getConfigName()));
-                    if (!Condition.isTrue(Verify.contains("-a", args), message, sender)) {
+                    if (!Verify.contains("-a", args)) {
+                        sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(database.getName())));
                         return;
                     }
 

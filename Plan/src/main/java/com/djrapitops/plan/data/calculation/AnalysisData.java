@@ -93,7 +93,7 @@ public class AnalysisData extends RawData {
     }
 
     public void analyze(ServerProfile profile) {
-        long now = MiscUtils.getTime();
+        long now = System.currentTimeMillis();
         refreshDate = now;
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();
@@ -225,14 +225,19 @@ public class AnalysisData extends RawData {
         long newW = value("newW");
         long newM = value("newM");
 
-        long fourDaysAgo = now - TimeAmount.DAY.ms() * 4L;
-        long twoWeeksAgo = now - TimeAmount.WEEK.ms() * 2L;
-
         List<PlayerProfile> playersStuckPerMonth = newMonth.stream()
-                .filter(p -> p.playedBetween(monthAgo, twoWeeksAgo) && p.playedBetween(twoWeeksAgo, now))
+                .filter(p -> {
+                    long backLimit = Math.max(monthAgo, p.getRegistered());
+                    long half = backLimit + ((now - backLimit) / 2L);
+                    return p.playedBetween(backLimit, half) && p.playedBetween(half, now);
+                })
                 .collect(Collectors.toList());
         List<PlayerProfile> playersStuckPerWeek = newWeek.stream()
-                .filter(p -> p.playedBetween(weekAgo, fourDaysAgo) && p.playedBetween(fourDaysAgo, now))
+                .filter(p -> {
+                    long backLimit = Math.max(weekAgo, p.getRegistered());
+                    long half = backLimit + ((now - backLimit) / 2L);
+                    return p.playedBetween(backLimit, half) && p.playedBetween(half, now);
+                })
                 .collect(Collectors.toList());
 
         int stuckPerM = playersStuckPerMonth.size();
@@ -240,32 +245,58 @@ public class AnalysisData extends RawData {
         got("stuckPerM", stuckPerM);
         got("stuckPerW", stuckPerW);
 
+        stickyMonthData = newMonth.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
+
         addValue("playersStuckMonth", stuckPerM);
         addValue("playersStuckWeek", stuckPerW);
         addValue("playersStuckPercMonth", newM != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerM, newM) * 100.0) + "%" : "-");
         addValue("playersStuckPercWeek", newW != 0 ? FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerW, newW) * 100.0) + "%" : "-");
 
-        stuckPerDay(newDay, newMonth, newD, playersStuckPerMonth, playersStuckPerWeek);
+        stuckPerDay(newDay, newD, monthAgo);
     }
 
-    private void stuckPerDay(List<PlayerProfile> newDay, List<PlayerProfile> newMonth, long newD, List<PlayerProfile> playersStuckPerMonth, List<PlayerProfile> playersStuckPerWeek) {
+    private void stuckPerDay(List<PlayerProfile> newDay, long newD, long monthAgo) {
         if (newD != 0) {
-            // New Players
-            stickyMonthData = newMonth.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
-            Set<StickyData> stickyW = playersStuckPerMonth.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
-            // New Players who stayed
-            Set<StickyData> stickyStuckM = newMonth.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
-            Set<StickyData> stickyStuckW = playersStuckPerWeek.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
+            List<PlayerProfile> stuckAfterMonth = new ArrayList<>();
+            List<PlayerProfile> notStuckAfterMonth = new ArrayList<>();
+
+            for (PlayerProfile player : players) {
+                long registered = player.getRegistered();
+
+                // Discard uncertain data
+                if (registered > monthAgo) {
+                    continue;
+                }
+
+                long monthAfterRegister = registered + TimeAmount.MONTH.ms();
+                long half = registered + (TimeAmount.MONTH.ms() / 2L);
+                if (player.playedBetween(registered, half) && player.playedBetween(half, monthAfterRegister)) {
+                    stuckAfterMonth.add(player);
+                } else {
+                    notStuckAfterMonth.add(player);
+                }
+            }
+
+            if (stuckAfterMonth.isEmpty() || notStuckAfterMonth.isEmpty()) {
+                addValue("playersStuckDay", 0);
+                addValue("playersStuckPercDay", "Not enough data");
+                return;
+            }
+
+            List<StickyData> stuck = stuckAfterMonth.stream().map(StickyData::new).collect(Collectors.toList());
+            List<StickyData> nonStuck = notStuckAfterMonth.stream().map(StickyData::new).collect(Collectors.toList());
+
+            StickyData avgStuck = AnalysisUtils.average(stuck);
+            StickyData avgNonStuck = AnalysisUtils.average(nonStuck);
 
             int stuckPerD = 0;
-            for (PlayerProfile playerProfile : newDay) {
-                double probability = AnalysisUtils.calculateProbabilityOfStaying(
-                        stickyMonthData, stickyW, stickyStuckM, stickyStuckW, playerProfile
-                );
-                if (probability >= 0.5) {
+            for (PlayerProfile player : newDay) {
+                StickyData stickyData = new StickyData(player);
+                if (stickyData.distance(avgStuck) < stickyData.distance(avgNonStuck)) {
                     stuckPerD++;
                 }
             }
+
             addValue("playersStuckDay", stuckPerD);
             addValue("playersStuckPercDay", FormatUtils.cutDecimals(MathUtils.averageDouble(stuckPerD, newD) * 100.0) + "%");
         } else {

@@ -170,16 +170,21 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {
+        Optional<Integer> serverID = serverTable.getServerID(serverUUID);
+        if (!serverID.isPresent()) {
+            return new ArrayList<>();
+        }
+
         Map<UUID, String> playerNames = usersTable.getPlayerNames();
         Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
 
         String sql = "SELECT * FROM " + tableName +
-                " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
+                " WHERE " + Col.SERVER_ID + "=?";
 
         return query(new QueryStatement<List<UserInfo>>(sql, 20000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
+                statement.setInt(1, serverID.get());
             }
 
             @Override
@@ -361,8 +366,34 @@ public class UserInfoTable extends UserIDTable {
         }
     }
 
-    // TODO improve performance of this method.
     public Set<UUID> getSavedUUIDs(UUID serverUUID) throws SQLException {
-        return getSavedUUIDs().get(serverUUID);
+        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
+        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
+        String sql = "SELECT " +
+                usersUUIDColumn + ", " +
+                serverUUIDColumn +
+                " FROM " + tableName +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID +
+                " WHERE s_uuid=?";
+
+        return query(new QueryStatement<Set<UUID>>(sql, 50000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> uuids = new HashSet<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
+                    uuids.add(uuid);
+                }
+                return uuids;
+            }
+        });
     }
 }

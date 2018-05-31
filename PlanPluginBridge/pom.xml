@@ -220,6 +220,12 @@
             <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.volmit</groupId>
+            <artifactId>react</artifactId>
+            <version>6.549</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>

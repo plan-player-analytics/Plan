@@ -29,7 +29,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 public class BungeeSystem extends PlanSystem {
 
     public BungeeSystem(PlanBungee plugin) {
-        testSystem = this;
+        setTestSystem(this);
 
         Log.setErrorManager(new PlanErrorManager());
 

@@ -1,8 +1,6 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.api.TimeAmount;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -12,9 +10,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import utilities.RandomData;
 import utilities.Teardown;
 import utilities.mocks.SystemMockUtil;
-import utilities.mocks.objects.MockUtils;
-
-import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -43,71 +38,9 @@ public class FormatUtilsTest {
     }
 
     @Test
-    public void testFormatTimeAmountSinceDate() {
-        Date before = new Date(300000L);
-        Date now = new Date(310000L);
-
-        String expResult = "10s";
-        String result = FormatUtils.formatTimeAmountDifference(before.getTime(), now.getTime());
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
     public void testFormatTimeAmountMonths() {
         long time = TimeAmount.DAY.ms() * 40L;
         assertEquals("1 month, 10d ", FormatUtils.formatTimeAmount(time));
-    }
-
-    @Test
-    public void testRemoveLetters() {
-        String dataPoint = "435729847jirggu.eiwb¤#¤%¤#";
-        String expResult = "435729847.";
-
-        String result = FormatUtils.removeLetters(dataPoint);
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testRemoveNumbers() {
-        String dataPoint = "34532453.5 $";
-        String expResult = "$";
-
-        String result = FormatUtils.removeNumbers(dataPoint);
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testRemoveNumbers2() {
-        String dataPoint = "l43r4545tl43  4.5";
-        String expResult = "lrtl";
-
-        String result = FormatUtils.removeNumbers(dataPoint);
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testParseVersionNumber() {
-        String versionString = "2.10.2";
-        long expResult = 21002000000000000L;
-
-        long result = FormatUtils.parseVersionNumber(versionString);
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testVersionNumber() {
-        String versionString = "2.10.2";
-        String versionString2 = "2.9.3";
-
-        long result = FormatUtils.parseVersionNumber(versionString);
-        long result2 = FormatUtils.parseVersionNumber(versionString2);
-
-        assertTrue("Higher version not higher", result > result2);
     }
 
     @Test
@@ -123,19 +56,6 @@ public class FormatUtilsTest {
         String[] result = FormatUtils.mergeArrays(arrays);
 
         assertArrayEquals(expResult, result);
-    }
-
-    @Test
-    public void testFormatLocation() {
-        int randomInt = RandomData.randomInt(0, 100);
-
-        World mockWorld = MockUtils.mockWorld();
-        Location loc = new Location(mockWorld, randomInt, randomInt, randomInt);
-
-        String expResult = "x " + randomInt + " z " + randomInt + " in World";
-        String result = FormatUtils.formatLocation(loc);
-
-        assertEquals(expResult, result);
     }
 
     @Test

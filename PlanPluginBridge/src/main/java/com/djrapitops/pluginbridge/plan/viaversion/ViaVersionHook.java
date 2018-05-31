@@ -18,8 +18,6 @@ import us.myles.ViaVersion.api.ViaAPI;
  */
 public class ViaVersionHook extends Hook {
 
-    private static PlayerVersionListener listener;
-
     /**
      * Hooks the plugin and registers it's PluginData objects.
      * <p>

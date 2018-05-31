@@ -53,7 +53,7 @@ public class ServerAccordion extends AbstractAccordion {
 
             List<Session> sessions = profile.getSessions(serverUUID);
             long playtime = PlayerProfile.getPlaytime(sessions.stream());
-            long afk = PlayerProfile.getAFKTime(sessions.stream());
+            long afkTime = PlayerProfile.getAFKTime(sessions.stream());
             int sessionCount = sessions.size();
             long avgSession = MathUtils.averageLong(playtime, sessionCount);
             long sessionMedian = PlayerProfile.getSessionMedian(sessions.stream());
@@ -64,6 +64,7 @@ public class ServerAccordion extends AbstractAccordion {
             long deaths = PlayerProfile.getDeathCount(sessions.stream());
 
             String play = FormatUtils.formatTimeAmount(playtime);
+            String afk = FormatUtils.formatTimeAmount(afkTime);
             String avg = sessionCount != 0 ? FormatUtils.formatTimeAmount(avgSession) : "-";
             String median = sessionCount != 0 ? FormatUtils.formatTimeAmount(sessionMedian) : "-";
             String longest = sessionCount != 0 ? FormatUtils.formatTimeAmount(longestSession) : "-";

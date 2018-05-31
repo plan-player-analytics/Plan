@@ -4,6 +4,8 @@
  */
 package com.djrapitops.plan.api.exceptions.connection;
 
+import com.djrapitops.plan.system.webserver.response.ResponseCode;
+
 /**
  * Thrown when connection is returned 401 Bad Request.
  *
@@ -12,6 +14,6 @@ package com.djrapitops.plan.api.exceptions.connection;
 public class BadRequestException extends WebException {
 
     public BadRequestException(String message) {
-        super(message);
+        super(message, ResponseCode.BAD_REQUEST);
     }
 }

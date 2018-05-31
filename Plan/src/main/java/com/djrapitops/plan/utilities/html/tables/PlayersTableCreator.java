@@ -3,19 +3,14 @@ package com.djrapitops.plan.utilities.html.tables;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.calculation.ActivityIndex;
-import com.djrapitops.plan.data.element.AnalysisContainer;
-import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.utility.log.Log;
-import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -37,7 +32,7 @@ public class PlayersTableCreator {
 
         StringBuilder html = new StringBuilder();
 
-        long now = MiscUtils.getTime();
+        long now = System.currentTimeMillis();
         UUID serverUUID = ServerInfo.getServerUUID();
 
         int i = 0;
@@ -85,67 +80,4 @@ public class PlayersTableCreator {
 
         return html.toString();
     }
-
-    public static String createPluginsTable(Map<PluginData, AnalysisContainer> containers, List<PlayerProfile> players) {
-        TreeMap<String, Map<UUID, ? extends Serializable>> data = new TreeMap<>();
-        for (AnalysisContainer container : containers.values()) {
-            if (!container.hasPlayerTableValues()) {
-                continue;
-            }
-            data.putAll(container.getPlayerTableValues());
-        }
-
-        List<String> header = new ArrayList<>(data.keySet());
-        Collections.sort(header);
-
-        int size = header.size();
-        TableContainer tableContainer = new TableContainer(true, header.toArray(new String[size]));
-
-        try {
-            if (players.isEmpty()) {
-                tableContainer.addRow("<b>No Players</b>");
-                throw new IllegalArgumentException("No players");
-            }
-
-            Map<UUID, String[]> sortedData = new HashMap<>();
-
-            for (PlayerProfile profile : players) {
-                UUID uuid = profile.getUuid();
-                String[] playerdata = new String[size];
-                for (int i = 0; i < size; i++) {
-                    String label = header.get(i);
-                    Map<UUID, ? extends Serializable> playerSpecificData = data.getOrDefault(label, new HashMap<>());
-                    Serializable value = playerSpecificData.get(uuid);
-                    if (value != null) {
-                        playerdata[i] = value.toString();
-                    } else {
-                        playerdata[i] = "-";
-                    }
-                }
-                sortedData.put(uuid, playerdata);
-            }
-
-            int i = 0;
-            int maxPlayers = Settings.MAX_PLAYERS.getNumber();
-            if (maxPlayers <= 0) {
-                maxPlayers = 2000;
-            }
-            for (PlayerProfile profile : players) {
-                if (i >= maxPlayers) {
-                    break;
-                }
-                UUID uuid = profile.getUuid();
-                String link = Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(profile.getName()), profile.getName());
-
-                String[] playerData = FormatUtils.mergeArrays(new String[]{link}, sortedData.getOrDefault(uuid, new String[]{}));
-                tableContainer.addRow(ArrayUtils.addAll(playerData));
-
-                i++;
-            }
-        } catch (IllegalArgumentException ignored) {
-        }
-        return tableContainer.parseHtml().replace(Html.TABLE_SCROLL.parse(), "<table class=\"table table-bordered table-striped table-hover player-table dataTable\">");
-    }
-
-
 }

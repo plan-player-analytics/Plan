@@ -4,7 +4,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.KillProcessor;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Format;
 import org.bukkit.Material;
@@ -32,7 +31,7 @@ public class DeathEventListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(EntityDeathEvent event) {
-        long time = MiscUtils.getTime();
+        long time = System.currentTimeMillis();
         LivingEntity dead = event.getEntity();
 
         if (dead instanceof Player) {
@@ -59,10 +58,10 @@ public class DeathEventListener implements Listener {
         KillProcessor processor = null;
         if (killerEntity instanceof Player) {
             processor = handlePlayerKill(time, dead, (Player) killerEntity);
-        } else if (killerEntity instanceof Wolf) {
-            processor = handleWolfKill(time, dead, (Wolf) killerEntity);
-        } else if (killerEntity instanceof Arrow) {
-            processor = handleArrowKill(time, dead, (Arrow) killerEntity);
+        } else if (killerEntity instanceof Tameable) {
+            processor = handlePetKill(time, dead, (Tameable) killerEntity);
+        } else if (killerEntity instanceof Projectile) {
+            processor = handleProjectileKill(time, dead, (Projectile) killerEntity);
         }
         if (processor != null) {
             Processing.submit(processor);
@@ -84,28 +83,32 @@ public class DeathEventListener implements Listener {
         return new KillProcessor(killer.getUniqueId(), time, dead, normalizeMaterialName(itemInHand));
     }
 
-    private KillProcessor handleWolfKill(long time, LivingEntity dead, Wolf wolf) {
-        if (!wolf.isTamed()) {
+    private KillProcessor handlePetKill(long time, LivingEntity dead, Tameable tameable) {
+        if (!tameable.isTamed()) {
             return null;
         }
 
-        AnimalTamer owner = wolf.getOwner();
+        AnimalTamer owner = tameable.getOwner();
         if (!(owner instanceof Player)) {
             return null;
         }
 
-        return new KillProcessor(owner.getUniqueId(), time, dead, "Wolf");
+        return new KillProcessor(owner.getUniqueId(), time, dead,
+                new Format(tameable.getType().name()).capitalize().toString()
+        );
     }
 
-    private KillProcessor handleArrowKill(long time, LivingEntity dead, Arrow arrow) {
-        ProjectileSource source = arrow.getShooter();
+    private KillProcessor handleProjectileKill(long time, LivingEntity dead, Projectile projectile) {
+        ProjectileSource source = projectile.getShooter();
         if (!(source instanceof Player)) {
             return null;
         }
 
         Player player = (Player) source;
 
-        return new KillProcessor(player.getUniqueId(), time, dead, "Bow");
+        return new KillProcessor(player.getUniqueId(), time, dead,
+                new Format(projectile.getType().name()).capitalize().toString()
+        );
     }
 
     /**

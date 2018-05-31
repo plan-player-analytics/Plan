@@ -7,7 +7,6 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.Condition;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -36,32 +35,29 @@ public class ManageHotSwapCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-            return;
-        }
+        Verify.isTrue(args.length >= 1,
+                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+
         String dbName = args[0].toLowerCase();
-        boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
 
-        if (!Condition.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName, sender)) {
-            return;
-        }
+        boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql");
+        Verify.isTrue(isCorrectDB,
+                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName));
 
-        if (Condition.isTrue(dbName.equals(Database.getActive().getConfigName()), Locale.get(Msg.MANAGE_FAIL_SAME_DB).toString(), sender)) {
-            return;
-        }
+        Verify.isFalse(dbName.equals(Database.getActive().getConfigName()),
+                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_SAME_DB).toString()));
 
         try {
             final Database database = DBSystem.getActiveDatabaseByName(dbName);
 
-            // If DB is null return
-            if (!Condition.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-                Log.error(dbName + " was null!");
-                return;
-            }
+            Verify.nullCheck(database, NullPointerException::new);
 
             if (!database.isOpen()) {
                 return;
             }
+        } catch (NullPointerException e) {
+            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+            return;
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());

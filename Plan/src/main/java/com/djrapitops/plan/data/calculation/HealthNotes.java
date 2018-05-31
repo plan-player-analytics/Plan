@@ -126,7 +126,7 @@ public class HealthNotes {
     }
 
     private void newPlayerNote() {
-        double avgOnlineOnRegister = MathUtils.averageInt(analysisData.getStickyMonthData().stream().map(StickyData::getOnlineOnJoin));
+        double avgOnlineOnRegister = MathUtils.averageDouble(analysisData.getStickyMonthData().stream().map(StickyData::getOnlineOnJoin));
         if (avgOnlineOnRegister >= 1) {
             notes.add("<p>" + Html.GREEN_THUMB.parse() + " New Players have players to play with when they join ("
                     + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)</p>");
