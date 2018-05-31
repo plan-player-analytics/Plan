@@ -20,34 +20,17 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public class Version8TransferTable extends Table {
+public class Version8TransferTable extends TransferTable {
 
     private final int serverID;
 
     public Version8TransferTable(SQLDB db) throws SQLException {
-        super("", db);
+        super(db);
         Optional<Integer> serverID = db.getServerTable().getServerID(ServerInfo.getServerUUID());
         if (!serverID.isPresent()) {
             throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
         }
         this.serverID = serverID.get();
-    }
-
-    @Override
-    public void createTable() {
-        throw new IllegalStateException("Method not supposed to be used on this table.");
-    }
-
-    private void renameTable(String from, String to) throws SQLException {
-        String sql = usingMySQL ?
-                "RENAME TABLE " + from + " TO " + to :
-                "ALTER TABLE " + from + " RENAME TO " + to;
-        execute(sql);
-    }
-
-    private void dropTable(String name) throws SQLException {
-        String sql = "DROP TABLE " + name;
-        execute(sql);
     }
 
     public void alterTablesToV10() throws SQLException, DBInitException {

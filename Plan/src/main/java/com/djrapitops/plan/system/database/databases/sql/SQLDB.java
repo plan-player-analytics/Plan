@@ -139,7 +139,7 @@ public abstract class SQLDB extends Database {
 
             if (newDatabase) {
                 Log.info("New Database created.");
-                versionTable.setVersion(17);
+                versionTable.setVersion(18);
             }
 
             int version = versionTable.getVersion();
@@ -186,6 +186,10 @@ public abstract class SQLDB extends Database {
             if (version < 17) {
                 geoInfoTable.alterTableV17();
                 versionTable.setVersion(17);
+            }
+            if (version < 18) {
+                geoInfoTable.alterTableV18();
+                // version set in the runnable in above method
             }
         } catch (SQLException e) {
             throw new DBInitException("Failed to set-up Database", e);
@@ -256,6 +260,7 @@ public abstract class SQLDB extends Database {
     private void clean() throws SQLException {
         tpsTable.clean();
         transferTable.clean();
+        geoInfoTable.clean();
 
         long now = System.currentTimeMillis();
         long keepActiveAfter = now - TimeAmount.DAY.ms() * Settings.KEEP_INACTIVE_PLAYERS_DAYS.getNumber();

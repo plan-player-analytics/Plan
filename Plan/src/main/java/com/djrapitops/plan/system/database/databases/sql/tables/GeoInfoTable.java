@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.database.databases.sql.tables.move.Version18TransferTable;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -75,8 +76,10 @@ public class GeoInfoTable extends UserIDTable {
 
     public void alterTableV17() {
         addColumns(Col.IP_HASH.get() + " varchar(200) DEFAULT ''");
+    }
 
-        RunnableFactory.createNew("DB Version 16->17", new AbsRunnable() {
+    public void alterTableV18() {
+        RunnableFactory.createNew("DB Version 17->18", new AbsRunnable() {
             @Override
             public void run() {
                 try {
@@ -92,14 +95,20 @@ public class GeoInfoTable extends UserIDTable {
                             for (List<GeoInfo> geoInfos : allGeoInfo.values()) {
                                 for (GeoInfo geoInfo : geoInfos) {
                                     try {
+                                        if (geoInfo.getIp().endsWith(".xx.xx")) {
+                                            continue;
+                                        }
                                         GeoInfo updatedInfo = new GeoInfo(
                                                 geoInfo.getIp(),
                                                 geoInfo.getGeolocation(),
                                                 geoInfo.getLastUsed()
                                         );
+                                        System.out.println(geoInfo.getIp());
+                                        System.out.println(updatedInfo.getIp());
                                         statement.setString(1, updatedInfo.getIp());
                                         statement.setString(2, updatedInfo.getIpHash());
                                         statement.setString(3, geoInfo.getIp());
+                                        statement.addBatch();
                                     } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
                                         if (Settings.DEV_MODE.isTrue()) {
                                             Log.toLog(this.getClass(), e);
@@ -109,11 +118,17 @@ public class GeoInfoTable extends UserIDTable {
                             }
                         }
                     });
-                } catch (SQLException e) {
+                    new Version18TransferTable(db).alterTableV18();
+                    db.setVersion(18);
+                } catch (SQLException | DBInitException e) {
                     Log.toLog(this.getClass(), e);
                 }
             }
-        });
+        }).runTaskAsynchronously();
+    }
+
+    public void clean() {
+
     }
 
     public List<GeoInfo> getGeoInfo(UUID uuid) throws SQLException {
