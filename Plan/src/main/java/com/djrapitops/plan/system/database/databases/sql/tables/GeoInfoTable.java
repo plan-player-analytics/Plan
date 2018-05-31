@@ -103,8 +103,6 @@ public class GeoInfoTable extends UserIDTable {
                                                 geoInfo.getGeolocation(),
                                                 geoInfo.getLastUsed()
                                         );
-                                        System.out.println(geoInfo.getIp());
-                                        System.out.println(updatedInfo.getIp());
                                         statement.setString(1, updatedInfo.getIp());
                                         statement.setString(2, updatedInfo.getIpHash());
                                         statement.setString(3, geoInfo.getIp());
