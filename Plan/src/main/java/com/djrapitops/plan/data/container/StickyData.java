@@ -13,22 +13,28 @@ import java.util.List;
 
 public class StickyData {
     private final double activityIndex;
-    private Integer messagesSent;
-    private Integer onlineOnJoin;
+    private Double messagesSent;
+    private Double onlineOnJoin;
 
     public StickyData(PlayerProfile player) {
         activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms()).getValue();
         loadActionVariables(player.getActions());
     }
 
+    public StickyData(double activityIndex, Double messagesSent, Double onlineOnJoin) {
+        this.activityIndex = activityIndex;
+        this.messagesSent = messagesSent;
+        this.onlineOnJoin = onlineOnJoin;
+    }
+
     private void loadActionVariables(List<Action> actions) {
         for (Action action : actions) {
             try {
                 if (messagesSent == null && action.getDoneAction() == Actions.FIRST_LOGOUT) {
-                    messagesSent = loadSentMessages(action);
+                    messagesSent = (double) loadSentMessages(action);
                 }
                 if (onlineOnJoin == null && action.getDoneAction() == Actions.FIRST_SESSION) {
-                    onlineOnJoin = loadOnlineOnJoin(action);
+                    onlineOnJoin = (double) loadOnlineOnJoin(action);
                 }
             } catch (IllegalArgumentException ignore) {
                 /* continue */
@@ -39,10 +45,10 @@ public class StickyData {
 
     private void setDefaultValuesIfNull() {
         if (messagesSent == null) {
-            messagesSent = 0;
+            messagesSent = 0.0;
         }
         if (onlineOnJoin == null) {
-            onlineOnJoin = 0;
+            onlineOnJoin = 0.0;
         }
     }
 
@@ -88,7 +94,15 @@ public class StickyData {
         return Objects.hashCode(activityIndex, messagesSent, onlineOnJoin);
     }
 
-    public int getOnlineOnJoin() {
+    public double getOnlineOnJoin() {
         return onlineOnJoin;
+    }
+
+    public double getActivityIndex() {
+        return activityIndex;
+    }
+
+    public Double getMessagesSent() {
+        return messagesSent;
     }
 }

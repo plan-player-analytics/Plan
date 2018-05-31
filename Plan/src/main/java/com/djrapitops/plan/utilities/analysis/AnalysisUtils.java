@@ -165,52 +165,6 @@ public class AnalysisUtils {
         return userSessions;
     }
 
-    public static double calculateProbabilityOfStaying(Set<StickyData> stickyMonthData, Set<StickyData> stickyW, Set<StickyData> stickyStuckM, Set<StickyData> stickyStuckW, PlayerProfile playerProfile) {
-        StickyData data = new StickyData(playerProfile);
-
-        Set<StickyData> similarM = new HashSet<>();
-        Set<StickyData> similarW = new HashSet<>();
-        for (StickyData stickyData : stickyMonthData) {
-            if (stickyData.distance(data) < 2.5) {
-                similarM.add(stickyData);
-            }
-        }
-        for (StickyData stickyData : stickyW) {
-            if (stickyData.distance(data) < 2.5) {
-                similarW.add(stickyData);
-            }
-        }
-
-        double probability = 1.0;
-
-        if (similarM.isEmpty() && similarW.isEmpty()) {
-            return 0;
-        }
-
-        if (!similarM.isEmpty()) {
-            int stickM = 0;
-            for (StickyData stickyData : stickyStuckM) {
-                if (similarM.contains(stickyData)) {
-                    stickM++;
-                }
-            }
-            probability *= ((double) stickM / similarM.size());
-        }
-
-        if (!similarW.isEmpty()) {
-            int stickW = 0;
-            for (StickyData stickyData : stickyStuckW) {
-                if (similarW.contains(stickyData)) {
-                    stickW++;
-                }
-            }
-
-            probability *= ((double) stickW / similarW.size());
-        }
-
-        return probability;
-    }
-
     public static TreeMap<Long, Map<String, Set<UUID>>> turnToActivityDataMap(long time, List<PlayerProfile> players) {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
         if (!players.isEmpty()) {
@@ -283,5 +237,25 @@ public class AnalysisUtils {
             gmTimesPerAlias.put(alias, aliasGMTimes);
         }
         return gmTimesPerAlias;
+    }
+
+    public static StickyData average(Collection<StickyData> stuck) {
+        int size = stuck.size();
+
+        double totalIndex = 0.0;
+        double totalMsgsSent = 0.0;
+        double totalPlayersOnline = 0.0;
+
+        for (StickyData stickyData : stuck) {
+            totalIndex += stickyData.getActivityIndex();
+            totalMsgsSent += stickyData.getMessagesSent();
+            totalPlayersOnline += stickyData.getOnlineOnJoin();
+        }
+
+        double averageIndex = totalIndex / (double) size;
+        double averageMessagesSent = totalMsgsSent / (double) size;
+        double averagePlayersOnline = totalPlayersOnline / (double) size;
+
+        return new StickyData(averageIndex, averageMessagesSent, averagePlayersOnline);
     }
 }
