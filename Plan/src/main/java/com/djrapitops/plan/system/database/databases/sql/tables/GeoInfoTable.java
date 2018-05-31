@@ -163,8 +163,9 @@ public class GeoInfoTable extends UserIDTable {
         List<GeoInfo> geoInfo = getGeoInfo(uuid);
         if (geoInfo.contains(info)) {
             updateGeoInfo(uuid, info);
+        } else {
+            insertGeoInfo(uuid, info);
         }
-        insertGeoInfo(uuid, info);
     }
 
     private void insertGeoInfo(UUID uuid, GeoInfo info) throws SQLException {
