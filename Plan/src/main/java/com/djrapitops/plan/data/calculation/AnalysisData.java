@@ -229,10 +229,18 @@ public class AnalysisData extends RawData {
         long twoWeeksAgo = now - TimeAmount.WEEK.ms() * 2L;
 
         List<PlayerProfile> playersStuckPerMonth = newMonth.stream()
-                .filter(p -> p.playedBetween(monthAgo, twoWeeksAgo) && p.playedBetween(twoWeeksAgo, now))
+                .filter(p -> {
+                    long backLimit = Math.max(monthAgo, p.getRegistered());
+                    long half = backLimit / 2L;
+                    return p.playedBetween(backLimit, half) && p.playedBetween(half, now);
+                })
                 .collect(Collectors.toList());
         List<PlayerProfile> playersStuckPerWeek = newWeek.stream()
-                .filter(p -> p.playedBetween(weekAgo, fourDaysAgo) && p.playedBetween(fourDaysAgo, now))
+                .filter(p -> {
+                    long backLimit = Math.max(weekAgo, p.getRegistered());
+                    long half = backLimit / 2L;
+                    return p.playedBetween(backLimit, half) && p.playedBetween(half, now);
+                })
                 .collect(Collectors.toList());
 
         int stuckPerM = playersStuckPerMonth.size();
