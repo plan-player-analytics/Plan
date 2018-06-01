@@ -2,11 +2,10 @@ package com.djrapitops.pluginbridge.plan.advancedachievements;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
-import com.hm.achievement.AdvancedAchievements;
 import com.hm.achievement.api.AdvancedAchievementsAPI;
-import com.hm.achievement.api.AdvancedAchievementsBukkitAPI;
+import com.hm.achievement.api.AdvancedAchievementsAPIFetcher;
 
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
+import java.util.Optional;
 
 /**
  * A Class responsible for hooking to AdvancedAchievements and registering 2
@@ -29,12 +28,12 @@ public class AdvancedAchievementsHook extends Hook {
         super("com.hm.achievement.AdvancedAchievements", hookH);
     }
 
-    public void hook() throws NoClassDefFoundError {
+    @Override
+	public void hook() throws NoClassDefFoundError {
         if (enabled) {
-            AdvancedAchievements aa = getPlugin(AdvancedAchievements.class);
-            if (Integer.parseInt(Character.toString(aa.getDescription().getVersion().charAt(0))) >= 5) {
-                AdvancedAchievementsAPI aaAPI = AdvancedAchievementsBukkitAPI.linkAdvancedAchievements();
-                addPluginDataSource(new AdvancedAchievementsData(aaAPI));
+            Optional<AdvancedAchievementsAPI> aaAPI = AdvancedAchievementsAPIFetcher.fetchInstance();
+            if (aaAPI.isPresent()) {
+                addPluginDataSource(new AdvancedAchievementsData(aaAPI.get()));
             } else {
                 enabled = false;
             }
