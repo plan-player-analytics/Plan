@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -129,29 +130,33 @@ public class GeoInfoTable extends UserIDTable {
 
     }
 
-    public List<GeoInfo> getGeoInfo(UUID uuid) throws SQLException {
+    public List<GeoInfo> getGeoInfo(UUID uuid) {
         String sql = "SELECT DISTINCT * FROM " + tableName +
                 " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID;
 
-        return query(new QueryStatement<List<GeoInfo>>(sql, 100) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public List<GeoInfo> processResults(ResultSet set) throws SQLException {
-                List<GeoInfo> geoInfo = new ArrayList<>();
-                while (set.next()) {
-                    String ip = set.getString(Col.IP.get());
-                    String geolocation = set.getString(Col.GEOLOCATION.get());
-                    String ipHash = set.getString(Col.IP_HASH.get());
-                    long lastUsed = set.getLong(Col.LAST_USED.get());
-                    geoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
+        try {
+            return query(new QueryStatement<List<GeoInfo>>(sql, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, uuid.toString());
                 }
-                return geoInfo;
-            }
-        });
+
+                @Override
+                public List<GeoInfo> processResults(ResultSet set) throws SQLException {
+                    List<GeoInfo> geoInfo = new ArrayList<>();
+                    while (set.next()) {
+                        String ip = set.getString(Col.IP.get());
+                        String geolocation = set.getString(Col.GEOLOCATION.get());
+                        String ipHash = set.getString(Col.IP_HASH.get());
+                        long lastUsed = set.getLong(Col.LAST_USED.get());
+                        geoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
+                    }
+                    return geoInfo;
+                }
+            });
+        } catch (SQLException e) {
+            throw new DBOpException("SQL Failed: " + sql, e);
+        }
     }
 
     private void updateGeoInfo(UUID uuid, GeoInfo info) throws SQLException {

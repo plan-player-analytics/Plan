@@ -11,6 +11,8 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -23,16 +25,14 @@ import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.RandomData;
-import utilities.Teardown;
-import utilities.TestConstants;
-import utilities.TestErrorManager;
+import utilities.*;
 import utilities.mocks.SystemMockUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -1031,5 +1031,26 @@ public class SQLiteTest {
         assertEquals(1, after.get(1).size());
         assertNotNull(after.get(2));
         assertEquals(1, after.get(2).size());
+    }
+
+    @Test
+    public void testNewContainerForPlayer() throws UnsupportedEncodingException, SQLException, NoSuchAlgorithmException {
+        saveAllData(db);
+
+        long start = System.nanoTime();
+
+        PlayerContainer container = db.fetch().getPlayerContainer(playerUUID);
+
+        assertTrue(container.supports(PlayerKeys.UUID));
+        assertTrue(container.supports(PlayerKeys.REGISTERED));
+        assertTrue(container.supports(PlayerKeys.NAME));
+
+        long end = System.nanoTime();
+
+        assertFalse("Took too long: " + ((end - start) / 1000000.0) + "ms", end - start > TimeAmount.SECOND.ns());
+
+        OptionalAssert.equals(playerUUID, container.getValue(PlayerKeys.UUID));
+        OptionalAssert.equals(123456789L, container.getValue(PlayerKeys.REGISTERED));
+        OptionalAssert.equals("Test", container.getValue(PlayerKeys.NAME));
     }
 }

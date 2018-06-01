@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.google.common.base.Objects;
@@ -33,6 +34,14 @@ public class GeoInfo {
         this.geolocation = geolocation;
         this.lastUsed = lastUsed;
         this.ipHash = ipHash;
+    }
+
+    public static DateMap<GeoInfo> intoDateMap(Iterable<GeoInfo> geoInfo) {
+        DateMap<GeoInfo> map = new DateMap<>();
+        for (GeoInfo info : geoInfo) {
+            map.put(info.lastUsed, info);
+        }
+        return map;
     }
 
     public String getIp() {

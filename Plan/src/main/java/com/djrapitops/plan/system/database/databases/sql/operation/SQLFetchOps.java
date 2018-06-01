@@ -1,10 +1,13 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
@@ -116,7 +119,20 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             return profile;
         } catch (SQLException e) {
             throw SQLErrorUtil.getExceptionFor(e);
+        } catch (DBOpException e) {
+            throw new DBException(e);
         }
+    }
+
+    @Override
+    public PlayerContainer getPlayerContainer(UUID uuid) {
+        PlayerContainer container = new PlayerContainer();
+        container.putRawData(PlayerKeys.UUID, uuid);
+
+        container.putAll(usersTable.getUserInformation(uuid));
+
+        container.put(PlayerKeys.GEO_INFO, () -> GeoInfo.intoDateMap(geoInfoTable.getGeoInfo(uuid)));
+        return container;
     }
 
     private void addUserInfoToProfile(PlayerProfile profile, Map<UUID, UserInfo> userInfo) {

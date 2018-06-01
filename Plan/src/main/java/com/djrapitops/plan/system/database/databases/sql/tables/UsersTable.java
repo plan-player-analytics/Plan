@@ -1,7 +1,11 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -13,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Table that is in charge of storing common player data for all servers.
@@ -455,6 +460,47 @@ public class UsersTable extends UserIDTable {
                 return uuidsByID;
             }
         });
+    }
+
+    public DataContainer getUserInformation(UUID uuid) {
+        Key<DataContainer> key = new Key<>(DataContainer.class, "plan_users_data");
+        DataContainer returnValue = new DataContainer();
+
+        Supplier<DataContainer> usersTableResults = () -> {
+            try {
+                String sql = "SELECT * FROM " + tableName + " WHERE " + Col.UUID + "=?";
+
+                return query(new QueryStatement<DataContainer>(sql) {
+                    @Override
+                    public void prepare(PreparedStatement statement) throws SQLException {
+                        statement.setString(1, uuid.toString());
+                    }
+
+                    @Override
+                    public DataContainer processResults(ResultSet set) throws SQLException {
+                        DataContainer container = new DataContainer();
+
+                        if (set.next()) {
+                            long registered = set.getLong(Col.REGISTERED.get());
+                            String name = set.getString(Col.USER_NAME.get());
+
+                            container.putRawData(PlayerKeys.REGISTERED, registered);
+                            container.putRawData(PlayerKeys.NAME, name);
+                        }
+
+                        return container;
+                    }
+                });
+            } catch (SQLException e) {
+                throw new DBOpException("Failed to fetch user info from plan_users", e);
+            }
+        };
+
+        returnValue.putSupplier(key, usersTableResults);
+        returnValue.putRawData(PlayerKeys.UUID, uuid);
+        returnValue.putSupplier(PlayerKeys.REGISTERED, () -> returnValue.getUnsafe(key).getUnsafe(PlayerKeys.REGISTERED));
+        returnValue.putSupplier(PlayerKeys.NAME, () -> returnValue.getUnsafe(key).getUnsafe(PlayerKeys.NAME));
+        return returnValue;
     }
 
     public enum Col implements Column {

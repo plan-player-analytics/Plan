@@ -27,6 +27,8 @@ import java.util.*;
  */
 public class NicknamesTable extends UserIDTable {
 
+    // TODO Add last used
+
     public NicknamesTable(SQLDB db) {
         super("plan_nicknames", db);
         serverTable = db.getServerTable();

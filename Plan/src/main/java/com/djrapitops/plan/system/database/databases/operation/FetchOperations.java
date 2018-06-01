@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.*;
@@ -20,6 +21,8 @@ public interface FetchOperations {
     PlayerProfile getPlayerProfile(UUID uuid) throws DBException;
 
     // UUIDs
+
+    PlayerContainer getPlayerContainer(UUID uuid);
 
     Set<UUID> getSavedUUIDs() throws DBException;
 
