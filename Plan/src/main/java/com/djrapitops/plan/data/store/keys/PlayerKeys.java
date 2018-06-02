@@ -22,6 +22,6 @@ public class PlayerKeys {
 
     public static final Key<Long> REGISTERED = new Key<>(Long.class, "registered");
 
-    public static final Key<DateMap<UUID>> KICKS = new Key<>(new Type<DateMap<UUID>>() {}, "kicks");
+    public static final Key<Integer> KICK_COUNT = new Key<>(Integer.class, "kick_count");
     public static final Key<DateMap<GeoInfo>> GEO_INFO = new Key<>(new Type<DateMap<GeoInfo>>() {}, "geo_info");
 }

@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -38,7 +38,7 @@ public class BungeeServerInfo extends ServerInfo {
             } else {
                 server = registerBungeeInfo(db);
             }
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             throw new EnableException("Failed to read Server information from Database.");
         }
         return server;

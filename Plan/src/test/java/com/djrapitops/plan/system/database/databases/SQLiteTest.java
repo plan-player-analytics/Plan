@@ -13,6 +13,8 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.objects.DateMap;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -39,7 +41,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -226,6 +227,7 @@ public class SQLiteTest {
 
     private void saveUserOne(SQLDB database) {
         database.getUsersTable().registerUser(playerUUID, 123456789L, "Test");
+        database.getUsersTable().kicked(playerUUID);
     }
 
     private void saveUserTwo() {
@@ -237,7 +239,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testActionsTable() throws SQLException {
+    public void testActionsTable() {
         saveUserOne();
         ActionsTable actionsTable = db.getActionsTable();
 
@@ -251,7 +253,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testIPTable() throws SQLException, DBInitException {
+    public void testIPTable() throws DBInitException {
         saveUserOne();
         GeoInfoTable geoInfoTable = db.getGeoInfoTable();
 
@@ -276,7 +278,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testNicknamesTable() throws SQLException, DBInitException {
+    public void testNicknamesTable() throws DBInitException {
         saveUserOne();
         NicknamesTable nickTable = db.getNicknamesTable();
 
@@ -357,7 +359,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testSessionPlaytimeSaving() throws SQLException, DBInitException {
+    public void testSessionPlaytimeSaving() throws DBInitException {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
@@ -388,7 +390,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testSessionSaving() throws SQLException, DBInitException {
+    public void testSessionSaving() throws DBInitException {
         saveUserOne();
         saveUserTwo();
 
@@ -453,7 +455,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testUserInfoTableRegisterRegistered() throws SQLException, DBInitException {
+    public void testUserInfoTableRegisterRegistered() throws DBInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
         assertTrue(usersTable.isRegistered(playerUUID));
@@ -512,7 +514,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testUsersTableUpdateName() throws SQLException, DBInitException {
+    public void testUsersTableUpdateName() throws DBInitException {
         saveUserOne();
 
         UsersTable usersTable = db.getUsersTable();
@@ -529,10 +531,10 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testUsersTableKickSaving() throws SQLException, DBInitException {
+    public void testUsersTableKickSaving() throws DBInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
-        assertEquals(0, usersTable.getTimesKicked(playerUUID));
+        assertEquals(1, usersTable.getTimesKicked(playerUUID));
 
         int random = new Random().nextInt(20);
 
@@ -540,11 +542,11 @@ public class SQLiteTest {
             usersTable.kicked(playerUUID);
         }
         commitTest();
-        assertEquals(random + 1, usersTable.getTimesKicked(playerUUID));
+        assertEquals(random + 2, usersTable.getTimesKicked(playerUUID));
     }
 
     @Test
-    public void testRemovalSingleUser() throws SQLException {
+    public void testRemovalSingleUser() {
         saveUserTwo();
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
@@ -580,7 +582,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testRemovalEverything() throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void testRemovalEverything() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
@@ -712,7 +714,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testSessionTableGetInfoOfServer() throws SQLException, DBInitException {
+    public void testSessionTableGetInfoOfServer() throws DBInitException {
         saveUserOne();
         saveUserTwo();
 
@@ -739,7 +741,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testKillTableGetKillsOfServer() throws SQLException, DBInitException {
+    public void testKillTableGetKillsOfServer() throws DBInitException {
         saveUserOne();
         saveUserTwo();
 
@@ -758,7 +760,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testBackupAndRestore() throws SQLException, DBException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void testBackupAndRestore() throws DBException, UnsupportedEncodingException, NoSuchAlgorithmException {
         System.out.println("- Creating Backup Database -");
         SQLiteDB backup = new SQLiteDB("debug-backup" + System.currentTimeMillis());
         backup.init();
@@ -793,7 +795,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testSaveWorldTimes() throws SQLException {
+    public void testSaveWorldTimes() {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
@@ -808,7 +810,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testSaveAllWorldTimes() throws SQLException {
+    public void testSaveAllWorldTimes() {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
         System.out.println(worldTimes);
@@ -830,7 +832,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testSaveSessionsWorldTimes() throws SQLException {
+    public void testSaveSessionsWorldTimes() {
         SessionsTable sessionsTable = db.getSessionsTable();
 
         saveUserOne();
@@ -855,14 +857,14 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testGetUserWorldTimes() throws SQLException {
+    public void testGetUserWorldTimes() {
         testSaveSessionsWorldTimes();
         WorldTimes worldTimesOfUser = db.getWorldTimesTable().getWorldTimesOfUser(playerUUID);
         assertEquals(createWorldTimes(), worldTimesOfUser);
     }
 
     @Test
-    public void testGetServerWorldTimes() throws SQLException {
+    public void testGetServerWorldTimes() {
         testSaveSessionsWorldTimes();
         WorldTimes worldTimesOfServer = db.getWorldTimesTable().getWorldTimesOfServer(TestConstants.SERVER_UUID);
         assertEquals(createWorldTimes(), worldTimesOfServer);
@@ -896,7 +898,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testWorldTableGetWorldNamesNoException() throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void testWorldTableGetWorldNamesNoException() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         saveAllData(db);
         Set<String> worldNames = db.getWorldTable().getWorldNames(TestConstants.SERVER_UUID);
         assertEquals(new HashSet<>(worlds), worldNames);
@@ -942,7 +944,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testWorldTableAlterV16() throws SQLException {
+    public void testWorldTableAlterV16() {
         saveUserOne();
         new Table("test", db) {
             @Override
@@ -1030,7 +1032,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testNewContainerForPlayer() throws UnsupportedEncodingException, SQLException, NoSuchAlgorithmException {
+    public void testNewContainerForPlayer() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         saveAllData(db);
 
         long start = System.nanoTime();
@@ -1040,7 +1042,10 @@ public class SQLiteTest {
         assertTrue(container.supports(PlayerKeys.UUID));
         assertTrue(container.supports(PlayerKeys.REGISTERED));
         assertTrue(container.supports(PlayerKeys.NAME));
+        assertTrue(container.supports(PlayerKeys.KICK_COUNT));
+
         assertTrue(container.supports(PlayerKeys.GEO_INFO));
+        assertTrue(container.supports(PlayerKeys.NICKNAMES));
 
         long end = System.nanoTime();
 
@@ -1049,5 +1054,14 @@ public class SQLiteTest {
         OptionalAssert.equals(playerUUID, container.getValue(PlayerKeys.UUID));
         OptionalAssert.equals(123456789L, container.getValue(PlayerKeys.REGISTERED));
         OptionalAssert.equals("Test", container.getValue(PlayerKeys.NAME));
+        OptionalAssert.equals(1, container.getValue(PlayerKeys.KICK_COUNT));
+
+        DateMap<GeoInfo> expectedGeoInfo = GeoInfo.intoDateMap(
+                Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789, "ZpT4PJ9HbaMfXfa8xSADTn5X1CHSR7nTT0ntv8hKdkw="))
+        );
+        OptionalAssert.equals(expectedGeoInfo, container.getValue(PlayerKeys.GEO_INFO));
+
+        List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, TestConstants.SERVER_UUID));
+        OptionalAssert.equals(expectedNicknames, container.getValue(PlayerKeys.NICKNAMES));
     }
 }

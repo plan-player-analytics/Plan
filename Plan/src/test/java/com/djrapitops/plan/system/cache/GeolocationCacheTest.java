@@ -3,11 +3,14 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.BukkitSystem;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.StaticHolder;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import utilities.Teardown;
 import utilities.mocks.BukkitMockUtil;
 
 import static org.junit.Assert.assertEquals;
@@ -25,6 +28,7 @@ public class GeolocationCacheTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        Teardown.resetSettingsTempValues();
         BukkitMockUtil mockUtil = BukkitMockUtil.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
                 .withLogging()
@@ -35,14 +39,24 @@ public class GeolocationCacheTest {
         StaticHolder.saveInstance(GeolocationCacheTest.class, planMock.getClass());
     }
 
+    @AfterClass
+    public static void tearDownClass() {
+        Teardown.resetSettingsTempValues();
+    }
+
     @Test
     public void testGeolocationCache() throws EnableException {
+        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
         BukkitSystem system = new BukkitSystem(planMock);
-        system.enable();
+        try {
+            system.enable();
 
-        String expected = "Germany";
-        String result = GeolocationCache.getCountry("141.52.255.1");
-        assertEquals(expected, result);
+            String expected = "Germany";
+            String result = GeolocationCache.getCountry("141.52.255.1");
+            assertEquals(expected, result);
+        } finally {
+            system.disable();
+        }
     }
 
 }

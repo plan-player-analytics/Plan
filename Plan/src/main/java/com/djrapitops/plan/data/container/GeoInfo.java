@@ -66,11 +66,22 @@ public class GeoInfo {
         if (o == null || getClass() != o.getClass()) return false;
         GeoInfo geoInfo = (GeoInfo) o;
         return Objects.equal(ip, geoInfo.ip) &&
-                Objects.equal(geolocation, geoInfo.geolocation);
+                Objects.equal(geolocation, geoInfo.geolocation) &&
+                Objects.equal(ipHash, geoInfo.ipHash);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(ip, geolocation);
+        return Objects.hashCode(ip, geolocation, ipHash);
+    }
+
+    @Override
+    public String toString() {
+        return "GeoInfo{" +
+                "ip='" + ip + '\'' +
+                ", geolocation='" + geolocation + '\'' +
+                ", ipHash='" + ipHash + '\'' +
+                ", lastUsed=" + lastUsed +
+                '}';
     }
 }

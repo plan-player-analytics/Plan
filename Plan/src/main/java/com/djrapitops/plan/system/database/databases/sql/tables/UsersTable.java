@@ -475,9 +475,11 @@ public class UsersTable extends UserIDTable {
                     if (set.next()) {
                         long registered = set.getLong(Col.REGISTERED.get());
                         String name = set.getString(Col.USER_NAME.get());
+                        int timesKicked = set.getInt(Col.TIMES_KICKED.get());
 
                         container.putRawData(PlayerKeys.REGISTERED, registered);
                         container.putRawData(PlayerKeys.NAME, name);
+                        container.putRawData(PlayerKeys.KICK_COUNT, timesKicked);
                     }
 
                     return container;
@@ -489,6 +491,7 @@ public class UsersTable extends UserIDTable {
         returnValue.putRawData(PlayerKeys.UUID, uuid);
         returnValue.putSupplier(PlayerKeys.REGISTERED, () -> returnValue.getUnsafe(key).getUnsafe(PlayerKeys.REGISTERED));
         returnValue.putSupplier(PlayerKeys.NAME, () -> returnValue.getUnsafe(key).getUnsafe(PlayerKeys.NAME));
+        returnValue.putSupplier(PlayerKeys.KICK_COUNT, () -> returnValue.getUnsafe(key).getUnsafe(PlayerKeys.KICK_COUNT));
         return returnValue;
     }
 

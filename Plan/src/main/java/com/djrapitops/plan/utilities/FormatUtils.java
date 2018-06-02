@@ -16,8 +16,6 @@ import java.util.TimeZone;
  */
 public class FormatUtils {
 
-    private static final DecimalFormat df = new DecimalFormat(Settings.FORMAT_DECIMALS.toString());
-
     /**
      * Constructor used to hide the public constructor
      */
@@ -210,7 +208,7 @@ public class FormatUtils {
      * @return String format of the double.
      */
     public static String cutDecimals(double d) {
-        return df.format(d);
+        return new DecimalFormat(Settings.FORMAT_DECIMALS.toString()).format(d);
     }
 
     public static String formatIP(String ip) {
