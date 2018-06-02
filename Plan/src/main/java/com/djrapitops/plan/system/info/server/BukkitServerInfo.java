@@ -28,11 +28,12 @@ public class BukkitServerInfo extends ServerInfo {
     private ServerInfoFile serverInfoFile;
     private Database database;
 
-    BukkitServerInfo() {
+    public BukkitServerInfo(Plan plugin) {
+        this(new ServerProperties(plugin.getServer()));
     }
 
-    public BukkitServerInfo(Plan plugin) {
-        serverProperties = new ServerProperties(plugin.getServer());
+    public BukkitServerInfo(ServerProperties serverProperties) {
+        super(serverProperties);
     }
 
     @Override

@@ -22,7 +22,7 @@ import java.util.UUID;
 public class BungeeServerInfo extends ServerInfo {
 
     public BungeeServerInfo(PlanBungee plugin) {
-        serverProperties = new ServerProperties(plugin.getProxy());
+        super(new ServerProperties(plugin.getProxy()));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class BungeeServerInfo extends ServerInfo {
         return server;
     }
 
-    private void updateServerInfo(Database db) throws DBException {
+    private void updateServerInfo(Database db) {
         String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
         if (!accessAddress.equals(server.getWebAddress())) {
             server.setWebAddress(accessAddress);
@@ -61,7 +61,7 @@ public class BungeeServerInfo extends ServerInfo {
         }
     }
 
-    private Server registerBungeeInfo(Database db) throws DBException, EnableException {
+    private Server registerBungeeInfo(Database db) throws EnableException {
         ServerProperties properties = ServerInfo.getServerProperties();
         UUID serverUUID = generateNewUUID(properties);
         String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();

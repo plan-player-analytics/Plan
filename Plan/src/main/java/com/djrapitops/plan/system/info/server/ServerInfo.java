@@ -23,6 +23,10 @@ public abstract class ServerInfo implements SubSystem {
     protected Server server;
     protected ServerProperties serverProperties;
 
+    public ServerInfo(ServerProperties serverProperties) {
+        this.serverProperties = serverProperties;
+    }
+
     public static ServerInfo getInstance() {
         ServerInfo serverInfo = PlanSystem.getInstance().getServerInfo();
         Verify.nullCheck(serverInfo, () -> new IllegalStateException("ServerInfo was not initialized."));

@@ -5,6 +5,6 @@ import org.spongepowered.api.Sponge;
 public class SpongeServerInfo extends BukkitServerInfo {
 
     public SpongeServerInfo() {
-        serverProperties = new ServerProperties(Sponge.getGame());
+        super(new ServerProperties(Sponge.getGame()));
     }
 }
