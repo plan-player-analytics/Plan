@@ -29,7 +29,7 @@ public class AdvancedAchievementsHook extends Hook {
     }
 
     @Override
-	public void hook() throws NoClassDefFoundError {
+    public void hook() throws NoClassDefFoundError {
         if (enabled) {
             Optional<AdvancedAchievementsAPI> aaAPI = AdvancedAchievementsAPIFetcher.fetchInstance();
             if (aaAPI.isPresent()) {
