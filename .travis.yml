@@ -19,7 +19,8 @@ jdk:
   - oraclejdk8
 script:
   - pwd
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+  - "$TRAVIS_PULL_REQUEST" = "true" || mvn test
+  - "$TRAVIS_PULL_REQUEST" = "false" || mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 cache:
   directories:
     - '$HOME/.m2/repository'
