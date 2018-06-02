@@ -5,6 +5,7 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
 import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
@@ -17,7 +18,6 @@ import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -96,7 +96,7 @@ public class LiteBansData extends PluginData implements BanData {
                     );
                 }
             }
-        } catch (SQLException ex) {
+        } catch (DBOpException ex) {
             Log.toLog(this.getClass().getName(), ex);
             table.addRow("Error: " + ex);
         }
@@ -124,7 +124,7 @@ public class LiteBansData extends PluginData implements BanData {
         return analysisContainer;
     }
 
-    private TableContainer getBanTable() throws SQLException {
+    private TableContainer getBanTable() {
         String banned = getWithIcon("Banned", "ban");
         String by = getWithIcon("Banned By", "gavel");
         String reason = getWithIcon("Reason", "balance-scale");
@@ -137,7 +137,7 @@ public class LiteBansData extends PluginData implements BanData {
         return banTable;
     }
 
-    private TableContainer getMuteTable() throws SQLException {
+    private TableContainer getMuteTable() {
         String muted = getWithIcon("Muted", "bell-slash-o");
         String by = getWithIcon("Muted By", "gavel");
         String reason = getWithIcon("Reason", "balance-scale");
@@ -150,7 +150,7 @@ public class LiteBansData extends PluginData implements BanData {
         return muteTable;
     }
 
-    private TableContainer getWarningTable() throws SQLException {
+    private TableContainer getWarningTable() {
         String warned = getWithIcon("Warned", "exclamation-triangle");
         String by = getWithIcon("Warned By", "gavel");
         String reason = getWithIcon("Reason", "balance-scale");
@@ -163,7 +163,7 @@ public class LiteBansData extends PluginData implements BanData {
         return warnTable;
     }
 
-    private TableContainer getKickTable() throws SQLException {
+    private TableContainer getKickTable() {
         String kicked = getWithIcon("Kicked", "user-times");
         String by = getWithIcon("Kicked By", "gavel");
         String reason = getWithIcon("Reason", "balance-scale");
@@ -201,8 +201,8 @@ public class LiteBansData extends PluginData implements BanData {
     public boolean isBanned(UUID uuid) {
         try {
             return !db.getBans(uuid).isEmpty();
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+        } catch (DBOpException e) {
+            Log.toLog(this.getClass(), e);
         }
         return false;
     }
@@ -217,8 +217,8 @@ public class LiteBansData extends PluginData implements BanData {
             }
 
             return collection.stream().filter(banned::contains).collect(Collectors.toSet());
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+        } catch (DBOpException e) {
+            Log.toLog(this.getClass(), e);
         }
         return new HashSet<>();
     }

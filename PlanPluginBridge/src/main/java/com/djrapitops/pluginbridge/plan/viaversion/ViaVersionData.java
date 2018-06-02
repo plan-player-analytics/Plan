@@ -4,6 +4,7 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
@@ -11,7 +12,6 @@ import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +41,8 @@ public class ViaVersionData extends PluginData {
 
             inspectContainer.addValue(getWithIcon("Last Join Version", "signal", "light-green"),
                     protocolVersion != -1 ? Protocol.getMCVersion(protocolVersion) : "Not Yet Known");
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
+        } catch (DBOpException ex) {
+            Log.toLog(this.getClass(), ex);
         }
 
         return inspectContainer;
@@ -54,8 +54,8 @@ public class ViaVersionData extends PluginData {
 
         try {
             versions = table.getProtocolVersions();
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
+        } catch (DBOpException ex) {
+            Log.toLog(this.getClass(), ex);
             return analysisContainer;
         }
 
