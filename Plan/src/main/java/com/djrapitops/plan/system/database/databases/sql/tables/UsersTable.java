@@ -1,7 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.DataContainer;
@@ -57,9 +56,8 @@ public class UsersTable extends UserIDTable {
 
     /**
      * @return a {@link Set} of the saved UUIDs.
-     * @throws SQLException when an error at retrieving the UUIDs happens
      */
-    public Set<UUID> getSavedUUIDs() throws SQLException {
+    public Set<UUID> getSavedUUIDs() {
         String sql = Select.from(tableName, Col.UUID).toString();
 
         return query(new QueryAllStatement<Set<UUID>>(sql, 50000) {
@@ -79,10 +77,9 @@ public class UsersTable extends UserIDTable {
      * Remove a user from Users Table.
      *
      * @param uuid the UUID of the user that should be removed.
-     * @throws SQLException DB Error
      */
     @Override
-    public void removeUser(UUID uuid) throws SQLException {
+    public void removeUser(UUID uuid) {
         String sql = "DELETE FROM " + tableName + " WHERE (" + Col.UUID + "=?)";
 
         execute(new ExecStatement(sql) {
@@ -114,9 +111,8 @@ public class UsersTable extends UserIDTable {
      *
      * @param playerName Name of a player
      * @return UUID of the player
-     * @throws SQLException DB Error
      */
-    public UUID getUuidOf(String playerName) throws SQLException {
+    public UUID getUuidOf(String playerName) {
         String sql = Select.from(tableName, Col.UUID)
                 .where("UPPER(" + Col.USER_NAME + ")=UPPER(?)")
                 .toString();
@@ -138,7 +134,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public List<Long> getRegisterDates() throws SQLException {
+    public List<Long> getRegisterDates() {
         String sql = Select.from(tableName, Col.REGISTERED).toString();
 
         return query(new QueryAllStatement<List<Long>>(sql, 50000) {
@@ -153,7 +149,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public boolean isRegistered(UUID uuid) throws SQLException {
+    public boolean isRegistered(UUID uuid) {
         String sql = Select.from(tableName, "COUNT(" + Col.ID + ") as c")
                 .where(Col.UUID + "=?")
                 .toString();
@@ -177,10 +173,9 @@ public class UsersTable extends UserIDTable {
      * @param uuid       UUID of the player.
      * @param registered Register date.
      * @param name       Name of the player.
-     * @throws SQLException             DB Error
      * @throws IllegalArgumentException If uuid or name are null.
      */
-    public void registerUser(UUID uuid, long registered, String name) throws SQLException {
+    public void registerUser(UUID uuid, long registered, String name) {
         Verify.nullCheck(uuid, name);
 
         execute(new ExecStatement(insertStatement) {
@@ -193,7 +188,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public void updateName(UUID uuid, String name) throws SQLException {
+    public void updateName(UUID uuid, String name) {
         String sql = Update.values(tableName, Col.USER_NAME.get())
                 .where(Col.UUID + "=?")
                 .toString();
@@ -207,7 +202,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public int getTimesKicked(UUID uuid) throws SQLException {
+    public int getTimesKicked(UUID uuid) {
         String sql = Select.from(tableName, Col.TIMES_KICKED)
                 .where(Col.UUID + "=?")
                 .toString();
@@ -228,7 +223,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public void kicked(UUID uuid) throws SQLException {
+    public void kicked(UUID uuid) {
         String sql = "UPDATE " + tableName + " SET "
                 + Col.TIMES_KICKED + "=" + Col.TIMES_KICKED + "+ 1" +
                 " WHERE " + Col.UUID + "=?";
@@ -241,7 +236,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public String getPlayerName(UUID uuid) throws SQLException {
+    public String getPlayerName(UUID uuid) {
         String sql = Select.from(tableName, Col.USER_NAME).where(Col.UUID + "=?").toString();
 
         return query(new QueryStatement<String>(sql) {
@@ -265,9 +260,8 @@ public class UsersTable extends UserIDTable {
      *
      * @param name the name / nickname.
      * @return a list of distinct names.
-     * @throws SQLException when an error at fetching the names happens.
      */
-    public List<String> getMatchingNames(String name) throws SQLException {
+    public List<String> getMatchingNames(String name) {
         String searchString = "%" + name.toLowerCase() + "%";
         NicknamesTable nicknamesTable = db.getNicknamesTable();
         String sql = "SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
@@ -302,7 +296,7 @@ public class UsersTable extends UserIDTable {
         return Col.USER_NAME.get();
     }
 
-    public Map<UUID, UserInfo> getUsers() throws SQLException {
+    public Map<UUID, UserInfo> getUsers() {
         String sql = Select.all(tableName).toString();
 
         return query(new QueryAllStatement<Map<UUID, UserInfo>>(sql, 20000) {
@@ -328,9 +322,8 @@ public class UsersTable extends UserIDTable {
      * Use UserInfoTable instead.
      *
      * @param users Users to insert
-     * @throws SQLException DB Error
      */
-    public void insertUsers(Map<UUID, UserInfo> users) throws SQLException {
+    public void insertUsers(Map<UUID, UserInfo> users) {
         if (Verify.isEmpty(users)) {
             return;
         }
@@ -353,7 +346,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public void updateKicked(Map<UUID, Integer> timesKicked) throws SQLException {
+    public void updateKicked(Map<UUID, Integer> timesKicked) {
         if (Verify.isEmpty(timesKicked)) {
             return;
         }
@@ -374,7 +367,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, Integer> getAllTimesKicked() throws SQLException {
+    public Map<UUID, Integer> getAllTimesKicked() {
         String sql = Select.from(tableName, Col.UUID, Col.TIMES_KICKED).toString();
 
         return query(new QueryAllStatement<Map<UUID, Integer>>(sql, 20000) {
@@ -392,7 +385,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, String> getPlayerNames() throws SQLException {
+    public Map<UUID, String> getPlayerNames() {
         String sql = Select.from(tableName, Col.UUID, Col.USER_NAME).toString();
 
         return query(new QueryAllStatement<Map<UUID, String>>(sql, 20000) {
@@ -410,7 +403,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public Optional<Long> getRegisterDate(UUID uuid) throws SQLException {
+    public Optional<Long> getRegisterDate(UUID uuid) {
         String sql = Select.from(tableName, Col.REGISTERED).where(Col.UUID + "=?").toString();
 
         return query(new QueryStatement<Optional<Long>>(sql) {
@@ -429,7 +422,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public int getPlayerCount() throws SQLException {
+    public int getPlayerCount() {
         String sql = "SELECT COUNT(*) AS player_count FROM " + tableName;
 
         return query(new QueryAllStatement<Integer>(sql) {
@@ -443,7 +436,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public Map<Integer, UUID> getUUIDsByID() throws SQLException {
+    public Map<Integer, UUID> getUUIDsByID() {
         String sql = Select.from(tableName, Col.ID, Col.UUID).toString();
 
         return query(new QueryAllStatement<Map<Integer, UUID>>(sql, 20000) {
@@ -467,33 +460,29 @@ public class UsersTable extends UserIDTable {
         DataContainer returnValue = new DataContainer();
 
         Supplier<DataContainer> usersTableResults = () -> {
-            try {
-                String sql = "SELECT * FROM " + tableName + " WHERE " + Col.UUID + "=?";
+            String sql = "SELECT * FROM " + tableName + " WHERE " + Col.UUID + "=?";
 
-                return query(new QueryStatement<DataContainer>(sql) {
-                    @Override
-                    public void prepare(PreparedStatement statement) throws SQLException {
-                        statement.setString(1, uuid.toString());
+            return query(new QueryStatement<DataContainer>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, uuid.toString());
+                }
+
+                @Override
+                public DataContainer processResults(ResultSet set) throws SQLException {
+                    DataContainer container = new DataContainer();
+
+                    if (set.next()) {
+                        long registered = set.getLong(Col.REGISTERED.get());
+                        String name = set.getString(Col.USER_NAME.get());
+
+                        container.putRawData(PlayerKeys.REGISTERED, registered);
+                        container.putRawData(PlayerKeys.NAME, name);
                     }
 
-                    @Override
-                    public DataContainer processResults(ResultSet set) throws SQLException {
-                        DataContainer container = new DataContainer();
-
-                        if (set.next()) {
-                            long registered = set.getLong(Col.REGISTERED.get());
-                            String name = set.getString(Col.USER_NAME.get());
-
-                            container.putRawData(PlayerKeys.REGISTERED, registered);
-                            container.putRawData(PlayerKeys.NAME, name);
-                        }
-
-                        return container;
-                    }
-                });
-            } catch (SQLException e) {
-                throw new DBOpException("Failed to fetch user info from plan_users", e);
-            }
+                    return container;
+                }
+            });
         };
 
         returnValue.putSupplier(key, usersTableResults);

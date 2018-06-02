@@ -52,7 +52,7 @@ public class SecurityTable extends Table {
         );
     }
 
-    public void removeUser(String user) throws SQLException {
+    public void removeUser(String user) {
         String sql = "DELETE FROM " + tableName + " WHERE (" + Col.USERNAME + "=?)";
 
         execute(new ExecStatement(sql) {
@@ -63,7 +63,7 @@ public class SecurityTable extends Table {
         });
     }
 
-    public WebUser getWebUser(String user) throws SQLException {
+    public WebUser getWebUser(String user) {
         String sql = Select.all(tableName).where(Col.USERNAME + "=?").toString();
 
         return query(new QueryStatement<WebUser>(sql) {
@@ -84,11 +84,11 @@ public class SecurityTable extends Table {
         });
     }
 
-    public void addNewUser(WebUser info) throws SQLException {
+    public void addNewUser(WebUser info) {
         addNewUser(info.getName(), info.getSaltedPassHash(), info.getPermLevel());
     }
 
-    public void addNewUser(String user, String saltPassHash, int permLevel) throws SQLException {
+    public void addNewUser(String user, String saltPassHash, int permLevel) {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -99,11 +99,11 @@ public class SecurityTable extends Table {
         });
     }
 
-    public boolean userExists(String user) throws SQLException {
+    public boolean userExists(String user) {
         return getWebUser(user) != null;
     }
 
-    public List<WebUser> getUsers() throws SQLException {
+    public List<WebUser> getUsers() {
         String sql = Select.all(tableName).toString();
 
         return query(new QueryAllStatement<List<WebUser>>(sql, 5000) {
@@ -144,7 +144,7 @@ public class SecurityTable extends Table {
         }
     }
 
-    public void addUsers(List<WebUser> users) throws SQLException {
+    public void addUsers(List<WebUser> users) {
         if (Verify.isEmpty(users)) {
             return;
         }

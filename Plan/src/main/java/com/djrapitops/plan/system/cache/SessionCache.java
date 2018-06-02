@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -61,7 +61,7 @@ public class SessionCache {
             }
             session.endSession(time);
             Database.getActive().save().session(uuid, session);
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             Log.toLog(this.getClass(), e);
         } finally {
             activeSessions.remove(uuid);

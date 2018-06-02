@@ -6,6 +6,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
@@ -81,7 +82,7 @@ public class ShutdownHook extends Thread {
                 UUID uuid = entry.getKey();
                 int messagesSent = entry.getValue();
                 db.save().action(uuid, new Action(now, Actions.FIRST_LOGOUT, "Messages sent: " + messagesSent));
-            } catch (DBException e) {
+            } catch (DBOpException e) {
                 Log.toLog(this.getClass(), e);
             }
         }
@@ -101,7 +102,7 @@ public class ShutdownHook extends Thread {
             try {
                 Log.debug("Shutdown: Saving a session: " + session.getSessionStart());
                 db.save().session(uuid, session);
-            } catch (DBException e) {
+            } catch (DBOpException e) {
                 Log.toLog(this.getClass(), e);
             }
         }

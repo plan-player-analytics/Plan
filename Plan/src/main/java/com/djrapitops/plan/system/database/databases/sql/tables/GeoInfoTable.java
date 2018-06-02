@@ -119,7 +119,7 @@ public class GeoInfoTable extends UserIDTable {
                     });
                     new Version18TransferTable(db).alterTableV18();
                     db.setVersion(18);
-                } catch (SQLException | DBInitException e) {
+                } catch (DBOpException | DBInitException e) {
                     Log.toLog(this.getClass(), e);
                 }
             }
@@ -134,32 +134,28 @@ public class GeoInfoTable extends UserIDTable {
         String sql = "SELECT DISTINCT * FROM " + tableName +
                 " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID;
 
-        try {
-            return query(new QueryStatement<List<GeoInfo>>(sql, 100) {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setString(1, uuid.toString());
-                }
+        return query(new QueryStatement<List<GeoInfo>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
 
-                @Override
-                public List<GeoInfo> processResults(ResultSet set) throws SQLException {
-                    List<GeoInfo> geoInfo = new ArrayList<>();
-                    while (set.next()) {
-                        String ip = set.getString(Col.IP.get());
-                        String geolocation = set.getString(Col.GEOLOCATION.get());
-                        String ipHash = set.getString(Col.IP_HASH.get());
-                        long lastUsed = set.getLong(Col.LAST_USED.get());
-                        geoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
-                    }
-                    return geoInfo;
+            @Override
+            public List<GeoInfo> processResults(ResultSet set) throws SQLException {
+                List<GeoInfo> geoInfo = new ArrayList<>();
+                while (set.next()) {
+                    String ip = set.getString(Col.IP.get());
+                    String geolocation = set.getString(Col.GEOLOCATION.get());
+                    String ipHash = set.getString(Col.IP_HASH.get());
+                    long lastUsed = set.getLong(Col.LAST_USED.get());
+                    geoInfo.add(new GeoInfo(ip, geolocation, lastUsed, ipHash));
                 }
-            });
-        } catch (SQLException e) {
-            throw new DBOpException("SQL Failed: " + sql, e);
-        }
+                return geoInfo;
+            }
+        });
     }
 
-    private void updateGeoInfo(UUID uuid, GeoInfo info) throws SQLException {
+    private void updateGeoInfo(UUID uuid, GeoInfo info) {
         String sql = "UPDATE " + tableName + " SET "
                 + Col.LAST_USED + "=?" +
                 " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID +
@@ -177,7 +173,7 @@ public class GeoInfoTable extends UserIDTable {
         });
     }
 
-    public void saveGeoInfo(UUID uuid, GeoInfo info) throws SQLException {
+    public void saveGeoInfo(UUID uuid, GeoInfo info) {
         List<GeoInfo> geoInfo = getGeoInfo(uuid);
         if (geoInfo.contains(info)) {
             updateGeoInfo(uuid, info);
@@ -186,7 +182,7 @@ public class GeoInfoTable extends UserIDTable {
         }
     }
 
-    private void insertGeoInfo(UUID uuid, GeoInfo info) throws SQLException {
+    private void insertGeoInfo(UUID uuid, GeoInfo info) {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -199,7 +195,7 @@ public class GeoInfoTable extends UserIDTable {
         });
     }
 
-    public Optional<String> getGeolocation(String ip) throws SQLException {
+    public Optional<String> getGeolocation(String ip) {
         String sql = Select.from(tableName, Col.GEOLOCATION)
                 .where(Col.IP + "=?")
                 .toString();
@@ -220,7 +216,7 @@ public class GeoInfoTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, List<GeoInfo>> getAllGeoInfo() throws SQLException {
+    public Map<UUID, List<GeoInfo>> getAllGeoInfo() {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String sql = "SELECT " +
@@ -254,7 +250,7 @@ public class GeoInfoTable extends UserIDTable {
         });
     }
 
-    public List<String> getNetworkGeolocations() throws SQLException {
+    public List<String> getNetworkGeolocations() {
         List<String> geolocations = new ArrayList<>();
 
         Map<UUID, List<GeoInfo>> geoInfo = getAllGeoInfo();
@@ -269,7 +265,7 @@ public class GeoInfoTable extends UserIDTable {
         return geolocations;
     }
 
-    public void insertAllGeoInfo(Map<UUID, List<GeoInfo>> allIPsAndGeolocations) throws SQLException {
+    public void insertAllGeoInfo(Map<UUID, List<GeoInfo>> allIPsAndGeolocations) {
         if (Verify.isEmpty(allIPsAndGeolocations)) {
             return;
         }

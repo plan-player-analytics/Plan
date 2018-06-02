@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
@@ -25,7 +26,6 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.nio.charset.Charset;
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -121,7 +121,7 @@ public class DebugPageResponse extends ErrorResponse {
         if (database instanceof SQLDB) {
             try {
                 content.append(" schema v").append(((SQLDB) database).getVersion());
-            } catch (SQLException e) {
+            } catch (DBOpException e) {
                 Log.toLog(this.getClass(), e);
             }
         }

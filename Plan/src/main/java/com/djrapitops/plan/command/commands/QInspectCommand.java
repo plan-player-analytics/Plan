@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -73,8 +73,13 @@ public class QInspectCommand extends CommandNode {
                     PlayerProfile playerProfile = database.fetch().getPlayerProfile(uuid);
 
                     sendMessages(sender, playerProfile);
-                } catch (DBException ex) {
-                    Log.toLog(this.getClass(), ex);
+                } catch (DBOpException e) {
+                    if (e.isFatal()) {
+                        sender.sendMessage("§cFatal database exception occurred: " + e.getMessage());
+                    } else {
+                        sender.sendMessage("§eNon-Fatal database exception occurred: " + e.getMessage());
+                    }
+                    Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();
                 }

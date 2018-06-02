@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -69,18 +69,6 @@ public class DataCache extends SessionCache implements SubSystem {
         }
     }
 
-    public void cacheSavedNames() {
-        try {
-            Map<UUID, String> playerNames = db.fetch().getPlayerNames();
-            this.playerNames.putAll(playerNames);
-            for (Map.Entry<UUID, String> entry : playerNames.entrySet()) {
-                uuids.put(entry.getValue(), entry.getKey());
-            }
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
-        }
-    }
-
     /**
      * Used to get the player name in the cache.
      *
@@ -93,7 +81,7 @@ public class DataCache extends SessionCache implements SubSystem {
             try {
                 name = db.fetch().getPlayerName(uuid);
                 playerNames.put(uuid, name);
-            } catch (DBException e) {
+            } catch (DBOpException e) {
                 Log.toLog(this.getClass(), e);
                 name = "Error occurred";
             }
@@ -118,7 +106,7 @@ public class DataCache extends SessionCache implements SubSystem {
                 if (!nicknames.isEmpty()) {
                     return nicknames.get(nicknames.size() - 1);
                 }
-            } catch (DBException e) {
+            } catch (DBOpException e) {
                 Log.toLog(this.getClass(), e);
             }
         }

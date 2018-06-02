@@ -70,7 +70,7 @@ public class KillsTable extends UserIDTable {
     }
 
     @Override
-    public void removeUser(UUID uuid) throws SQLException {
+    public void removeUser(UUID uuid) {
         String sql = "DELETE FROM " + tableName +
                 " WHERE " + Col.KILLER_ID + " = " + usersTable.statementSelectID +
                 " OR " + Col.VICTIM_ID + " = " + usersTable.statementSelectID;
@@ -84,7 +84,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) throws SQLException {
+    public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as victim_uuid";
         String sql = "SELECT " +
@@ -121,7 +121,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public void savePlayerKills(UUID uuid, int sessionID, List<PlayerKill> playerKills) throws SQLException {
+    public void savePlayerKills(UUID uuid, int sessionID, List<PlayerKill> playerKills) {
         if (Verify.isEmpty(playerKills)) {
             return;
         }
@@ -149,7 +149,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, List<PlayerKill>> getPlayerKills() throws SQLException {
+    public Map<UUID, List<PlayerKill>> getPlayerKills() {
         String usersVictimIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersKillerIDColumn = "a." + UsersTable.Col.ID;
         String usersVictimUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as victim_uuid";
@@ -181,7 +181,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public Map<Integer, List<PlayerKill>> getAllPlayerKillsBySessionID() throws SQLException {
+    public Map<Integer, List<PlayerKill>> getAllPlayerKillsBySessionID() {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as victim_uuid";
         String sql = "SELECT " +
@@ -214,7 +214,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) throws SQLException {
+    public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
         Map<Integer, List<PlayerKill>> playerKillsBySessionID = getAllPlayerKillsBySessionID();
         for (UUID serverUUID : map.keySet()) {
             for (List<Session> sessions : map.get(serverUUID).values()) {
@@ -228,7 +228,7 @@ public class KillsTable extends UserIDTable {
         }
     }
 
-    public void savePlayerKills(Map<UUID, Map<UUID, List<Session>>> allSessions) throws SQLException {
+    public void savePlayerKills(Map<UUID, Map<UUID, List<Session>>> allSessions) {
         if (Verify.isEmpty(allSessions)) {
             return;
         }
@@ -265,7 +265,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public void alterTableV16() throws SQLException {
+    public void alterTableV16() {
         addColumns(Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
 
         Map<Integer, Integer> sessionIDServerIDRelation = sessionsTable.getIDServerIDRelation();

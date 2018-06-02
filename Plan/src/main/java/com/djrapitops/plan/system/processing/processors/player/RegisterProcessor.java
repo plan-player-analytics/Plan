@@ -4,14 +4,12 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
@@ -55,8 +53,6 @@ public class RegisterProcessor implements CriticalRunnable {
             }
             SessionCache.getInstance().markFirstSession(uuid);
             db.save().action(uuid, new Action(time, Actions.FIRST_SESSION, "Online: " + playersOnline + " Players"));
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
         } finally {
             for (Runnable runnable : afterProcess) {
                 Processing.submit(runnable);

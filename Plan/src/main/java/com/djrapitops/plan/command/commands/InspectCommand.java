@@ -1,7 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.api.exceptions.database.FatalDBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.InspectCacheRequestProcessor;
@@ -68,12 +67,13 @@ public class InspectCommand extends CommandNode {
                         }
                     }
                     Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName));
-                } catch (FatalDBException ex) {
-                    Log.toLog(this.getClass(), ex);
-                    sender.sendMessage("§cFatal database exception occurred: " + ex.getMessage());
-                } catch (DBException ex) {
-                    Log.toLog(this.getClass(), ex);
-                    sender.sendMessage("§eNon-Fatal database exception occurred: " + ex.getMessage());
+                } catch (DBOpException e) {
+                    if (e.isFatal()) {
+                        sender.sendMessage("§cFatal database exception occurred: " + e.getMessage());
+                    } else {
+                        sender.sendMessage("§eNon-Fatal database exception occurred: " + e.getMessage());
+                    }
+                    Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();
                 }

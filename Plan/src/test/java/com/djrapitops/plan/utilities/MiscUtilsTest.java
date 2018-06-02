@@ -125,7 +125,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void testGetMatchingNames() throws Exception {
+    public void testGetMatchingNames() {
         String exp1 = "TestName";
         String exp2 = "TestName2";
 
@@ -145,7 +145,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void testGetMatchingNickNames() throws Exception {
+    public void testGetMatchingNickNames() {
         UUID uuid = UUID.randomUUID();
         String userName = RandomData.randomString(10);
         db.getUsersTable().registerUser(uuid, 0L, userName);

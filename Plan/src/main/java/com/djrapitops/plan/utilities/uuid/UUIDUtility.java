@@ -5,8 +5,7 @@
  */
 package com.djrapitops.plan.utilities.uuid;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.api.exceptions.database.FatalDBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.Check;
@@ -58,10 +57,10 @@ public class UUIDUtility {
         }
         try {
             uuid = db.fetch().getUuidOf(playerName);
-        } catch (FatalDBException e) {
-            Log.toLog(UUIDUtility.class, e);
-        } catch (DBException e) {
-            /* Ignored */
+        } catch (DBOpException e) {
+            if (e.isFatal()) {
+                Log.toLog(UUIDUtility.class, e);
+            }
         }
         try {
             if (uuid == null) {

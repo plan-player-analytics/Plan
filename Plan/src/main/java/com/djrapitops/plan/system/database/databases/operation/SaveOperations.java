@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.system.info.server.Server;
@@ -15,7 +14,7 @@ import java.util.UUID;
 
 /**
  * Operation methods for saving data.
- *
+ * <p>
  * Note: Method names subject to change (TODO remove insert update and such)
  *
  * @author Rsl1122
@@ -24,50 +23,49 @@ public interface SaveOperations {
 
     // Bulk save
 
-    void insertTPS(Map<UUID, List<TPS>> ofServers) throws DBException;
+    void insertTPS(Map<UUID, List<TPS>> ofServers);
 
-    void insertCommandUsage(Map<UUID, Map<String, Integer>> ofServers) throws DBException;
+    void insertCommandUsage(Map<UUID, Map<String, Integer>> ofServers);
 
-    void insertUsers(Map<UUID, UserInfo> ofServers) throws DBException;
+    void insertUsers(Map<UUID, UserInfo> ofServers);
 
-    void insertSessions(Map<UUID, Map<UUID, List<Session>>> ofServers, boolean containsExtraData)
-            throws DBException;
+    void insertSessions(Map<UUID, Map<UUID, List<Session>>> ofServers, boolean containsExtraData);
 
-    void kickAmount(Map<UUID, Integer> ofUsers) throws DBException;
+    void kickAmount(Map<UUID, Integer> ofUsers);
 
-    void insertUserInfo(Map<UUID, List<UserInfo>> ofServers) throws DBException;
+    void insertUserInfo(Map<UUID, List<UserInfo>> ofServers);
 
-    void insertNicknames(Map<UUID, Map<UUID, List<String>>> ofServers) throws DBException;
+    void insertNicknames(Map<UUID, Map<UUID, List<String>>> ofServers);
 
-    void insertAllGeoInfo(Map<UUID, List<GeoInfo>> ofUsers) throws DBException;
+    void insertAllGeoInfo(Map<UUID, List<GeoInfo>> ofUsers);
 
     // Single data point
 
-    void banStatus(UUID uuid, boolean banned) throws DBException;
+    void banStatus(UUID uuid, boolean banned);
 
-    void opStatus(UUID uuid, boolean op) throws DBException;
+    void opStatus(UUID uuid, boolean op);
 
-    void registerNewUser(UUID uuid, long registered, String name) throws DBException;
+    void registerNewUser(UUID uuid, long registered, String name);
 
-    void action(UUID uuid, Action action) throws DBException;
+    void action(UUID uuid, Action action);
 
-    void geoInfo(UUID uuid, GeoInfo geoInfo) throws DBException;
+    void geoInfo(UUID uuid, GeoInfo geoInfo);
 
-    void playerWasKicked(UUID uuid) throws DBException;
+    void playerWasKicked(UUID uuid);
 
-    void playerName(UUID uuid, String playerName) throws DBException;
+    void playerName(UUID uuid, String playerName);
 
-    void playerDisplayName(UUID uuid, String displayName) throws DBException;
+    void playerDisplayName(UUID uuid, String displayName);
 
-    void registerNewUserOnThisServer(UUID uuid, long registered) throws DBException;
+    void registerNewUserOnThisServer(UUID uuid, long registered);
 
-    void commandUsed(String commandName) throws DBException;
+    void commandUsed(String commandName);
 
-    void insertTPSforThisServer(TPS tps) throws DBException;
+    void insertTPSforThisServer(TPS tps);
 
-    void session(UUID uuid, Session session) throws DBException;
+    void session(UUID uuid, Session session);
 
-    void serverInfoForThisServer(Server server) throws DBException;
+    void serverInfoForThisServer(Server server);
 
-    void webUser(WebUser webUser) throws DBException;
+    void webUser(WebUser webUser);
 }

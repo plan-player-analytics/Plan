@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.webserver.auth;
 
 import com.djrapitops.plan.api.exceptions.PassEncryptException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.utilities.Base64Util;
@@ -54,7 +54,7 @@ public class BasicAuthentication implements Authentication {
                 throw new WebUserAuthException(FailReason.USER_PASS_MISMATCH, user);
             }
             return webUser;
-        } catch (DBException | PassEncryptException e) {
+        } catch (DBOpException | PassEncryptException e) {
             throw new WebUserAuthException(e);
         }
     }

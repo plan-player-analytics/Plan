@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.utilities.html;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
@@ -130,8 +130,8 @@ public class HtmlStructure {
         try {
             playerCount = db.count().getServerPlayerCount(serverUUID);
             playerData = new OnlineActivityGraph(db.fetch().getTPSData(serverUUID)).toHighChartsSeries();
-        } catch (DBException e) {
-            Log.toLog(HtmlStructure.class.getClass().getName(), e);
+        } catch (DBOpException e) {
+            Log.toLog(HtmlStructure.class, e);
         }
 
         return "<div class=\"col-xs-12 col-sm-12 col-md-6 col-lg-6\">" +

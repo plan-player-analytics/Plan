@@ -4,11 +4,9 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.operation.TransferOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,30 +22,18 @@ public class SQLTransferOps extends SQLOps implements TransferOperations {
     }
 
     @Override
-    public Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) throws DBException {
-        try {
-            return transferTable.getServerPlayerIsOnline(playerUUID);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) {
+        return transferTable.getServerPlayerIsOnline(playerUUID);
     }
 
     @Override
-    public void storeConfigSettings(String encodedSettingString) throws DBException {
-        try {
-            transferTable.storeConfigSettings(encodedSettingString);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void storeConfigSettings(String encodedSettingString) {
+        transferTable.storeConfigSettings(encodedSettingString);
     }
 
     @Override
-    public Optional<String> getEncodedConfigSettings() throws DBException {
-        try {
-            return transferTable.getConfigSettings();
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public Optional<String> getEncodedConfigSettings() {
+        return transferTable.getConfigSettings();
     }
 
 }

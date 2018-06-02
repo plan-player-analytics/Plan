@@ -78,9 +78,8 @@ public class ActionsTable extends UserIDTable {
      *
      * @param uuid UUID of the player
      * @return List of actions done by the player. Does not include the kills.
-     * @throws SQLException DB Error
      */
-    public List<Action> getActions(UUID uuid) throws SQLException {
+    public List<Action> getActions(UUID uuid) {
         String sql = Select.all(tableName)
                 .where(Col.USER_ID + "=" + usersTable.statementSelectID)
                 .toString();
@@ -106,7 +105,7 @@ public class ActionsTable extends UserIDTable {
         });
     }
 
-    public void insertAction(UUID uuid, Action action) throws SQLException {
+    public void insertAction(UUID uuid, Action action) {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -119,7 +118,7 @@ public class ActionsTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, Map<UUID, List<Action>>> getAllActions() throws SQLException {
+    public Map<UUID, Map<UUID, List<Action>>> getAllActions() {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
@@ -159,7 +158,7 @@ public class ActionsTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, List<Action>> getServerActions(UUID serverUUID) throws SQLException {
+    public Map<UUID, List<Action>> getServerActions(UUID serverUUID) {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String sql = "SELECT " +
@@ -198,7 +197,7 @@ public class ActionsTable extends UserIDTable {
         });
     }
 
-    public void insertActions(Map<UUID, Map<UUID, List<Action>>> allActions) throws SQLException {
+    public void insertActions(Map<UUID, Map<UUID, List<Action>>> allActions) {
         if (Verify.isEmpty(allActions)) {
             return;
         }

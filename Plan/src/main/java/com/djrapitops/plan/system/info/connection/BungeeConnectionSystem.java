@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
@@ -35,7 +35,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
             try {
                 bukkitServers = Database.getActive().fetch().getBukkitServers();
                 latestServerMapRefresh = System.currentTimeMillis();
-            } catch (DBException e) {
+            } catch (DBOpException e) {
                 Log.toLog(this.getClass(), e);
             }
         }

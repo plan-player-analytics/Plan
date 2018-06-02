@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SetupRequest;
@@ -40,7 +40,7 @@ public class ConnectionIn {
             if (Database.getActive().check().isServerInDatabase(serverUUID)) {
                 return;
             }
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             throw new TransferDatabaseException(e);
         }
 

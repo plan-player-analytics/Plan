@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
@@ -14,83 +13,83 @@ public interface FetchOperations {
 
     // Profiles
 
-    ServerProfile getServerProfile(UUID serverUUID) throws DBException;
+    ServerProfile getServerProfile(UUID serverUUID);
 
-    List<PlayerProfile> getPlayers(UUID serverUUID) throws DBException;
+    List<PlayerProfile> getPlayers(UUID serverUUID);
 
-    PlayerProfile getPlayerProfile(UUID uuid) throws DBException;
+    PlayerProfile getPlayerProfile(UUID uuid);
 
     // UUIDs
 
     PlayerContainer getPlayerContainer(UUID uuid);
 
-    Set<UUID> getSavedUUIDs() throws DBException;
+    Set<UUID> getSavedUUIDs();
 
-    Set<UUID> getSavedUUIDs(UUID server) throws DBException;
+    Set<UUID> getSavedUUIDs(UUID server);
 
-    Map<UUID, String> getServerNames() throws DBException;
+    Map<UUID, String> getServerNames();
 
-    Optional<UUID> getServerUUID(String serverName) throws DBException;
+    Optional<UUID> getServerUUID(String serverName);
 
-    UUID getUuidOf(String playerName) throws DBException;
+    UUID getUuidOf(String playerName);
 
     // WebUsers
 
-    WebUser getWebUser(String username) throws DBException;
+    WebUser getWebUser(String username);
 
     // Servers
 
-    Optional<String> getServerName(UUID serverUUID) throws DBException;
+    Optional<String> getServerName(UUID serverUUID);
 
-    Optional<Server> getBungeeInformation() throws DBException;
+    Optional<Server> getBungeeInformation();
 
-    Optional<Integer> getServerID(UUID serverUUID) throws DBException;
+    Optional<Integer> getServerID(UUID serverUUID);
 
     // Raw Data
 
-    List<TPS> getTPSData(UUID serverUUID) throws DBException;
+    List<TPS> getTPSData(UUID serverUUID);
 
-    List<TPS> getNetworkOnlineData() throws DBException;
+    List<TPS> getNetworkOnlineData();
 
-    List<Long> getRegisterDates() throws DBException;
+    List<Long> getRegisterDates();
 
-    Optional<TPS> getAllTimePeak(UUID serverUUID) throws DBException;
+    Optional<TPS> getAllTimePeak(UUID serverUUID);
 
-    Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws DBException;
+    Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate);
 
-    Map<UUID, Map<UUID, List<Session>>> getSessionsWithNoExtras() throws DBException;
+    Map<UUID, Map<UUID, List<Session>>> getSessionsWithNoExtras();
 
-    Map<UUID, Map<UUID, List<Session>>> getSessionsAndExtras() throws DBException;
+    Map<UUID, Map<UUID, List<Session>>> getSessionsAndExtras();
 
-    Set<String> getWorldNames(UUID serverUuid) throws DBException;
+    Set<String> getWorldNames(UUID serverUuid);
 
-    List<String> getNicknamesOfPlayerOnServer(UUID uuid, UUID serverUUID) throws DBException;
+    List<String> getNicknamesOfPlayerOnServer(UUID uuid, UUID serverUUID);
 
-    List<Action> getActions(UUID uuid) throws DBException;
+    List<Action> getActions(UUID uuid);
 
-    Map<UUID, UserInfo> getUsers() throws DBException;
+    Map<UUID, UserInfo> getUsers();
 
-    Map<UUID, Long> getLastSeenForAllPlayers() throws DBException;
+    Map<UUID, Long> getLastSeenForAllPlayers();
 
-    Map<UUID, List<GeoInfo>> getAllGeoInfo() throws DBException;
+    Map<UUID, List<GeoInfo>> getAllGeoInfo();
 
-    Map<UUID, String> getPlayerNames() throws DBException;
+    Map<UUID, String> getPlayerNames();
 
-    String getPlayerName(UUID playerUUID) throws DBException;
+    String getPlayerName(UUID playerUUID);
 
-    List<String> getNicknames(UUID uuid) throws DBException;
+    List<String> getNicknames(UUID uuid);
 
-    Map<UUID, Server> getBukkitServers() throws DBException;
+    Map<UUID, Server> getBukkitServers();
 
-    List<WebUser> getWebUsers() throws DBException;
+    List<WebUser> getWebUsers();
 
-    Map<Integer, String> getServerNamesByID() throws DBException;
+    Map<Integer, String> getServerNamesByID();
 
-    Map<UUID, Map<UUID, List<Session>>> getSessionsInLastMonth() throws DBException;
+    Map<UUID, Map<UUID, List<Session>>> getSessionsInLastMonth();
 
-    List<Server> getServers() throws DBException;
+    List<Server> getServers();
 
-    List<UUID> getServerUUIDs() throws DBException;
+    List<UUID> getServerUUIDs();
 
-    List<String> getNetworkGeolocations() throws DBException;
+    List<String> getNetworkGeolocations();
 }

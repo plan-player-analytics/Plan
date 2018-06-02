@@ -5,10 +5,8 @@
 package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
@@ -21,7 +19,6 @@ import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +42,6 @@ public class PlayerPageHandler extends PageHandler {
         if (uuid == null) {
             return notFound("Player UUID was not found in the database.");
         }
-
         try {
             if (Database.getActive().check().isPlayerRegistered(uuid)) {
                 Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
@@ -57,9 +53,6 @@ public class PlayerPageHandler extends PageHandler {
             } else {
                 return notFound("Player has not played on this server.");
             }
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
-            throw new InternalErrorException("Analysis", e);
         } catch (NoServersException e) {
             ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> new NotFoundResponse(e.getMessage()));
         }

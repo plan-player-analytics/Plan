@@ -6,7 +6,6 @@ package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -17,7 +16,6 @@ import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,8 +59,6 @@ public class ServerPageHandler extends PageHandler {
                 }
             } catch (IllegalArgumentException ignore) {
                 /*ignored*/
-            } catch (DBException e) {
-                Log.toLog(this.getClass(), e);
             }
         }
         return serverUUID;

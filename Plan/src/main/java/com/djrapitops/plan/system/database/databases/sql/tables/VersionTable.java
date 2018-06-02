@@ -29,7 +29,7 @@ public class VersionTable extends Table {
         );
     }
 
-    public boolean isNewDatabase() throws SQLException {
+    public boolean isNewDatabase() {
         String sql = usingMySQL ?
                 "SHOW TABLES LIKE ?" :
                 "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?";
@@ -51,7 +51,7 @@ public class VersionTable extends Table {
      * @return @throws SQLException
      */
     @Override
-    public int getVersion() throws SQLException {
+    public int getVersion() {
         String sql = "SELECT * FROM " + tableName;
 
         return query(new QueryAllStatement<Integer>(sql) {
@@ -70,9 +70,8 @@ public class VersionTable extends Table {
      * Set the DB Schema version
      *
      * @param version DB Schema version
-     * @throws SQLException DB Error
      */
-    public void setVersion(int version) throws SQLException {
+    public void setVersion(int version) {
         removeAllData();
 
         String sql = "INSERT INTO " + tableName + " (version) VALUES (?)";

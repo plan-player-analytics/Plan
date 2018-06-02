@@ -1,7 +1,6 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
@@ -14,7 +13,6 @@ import com.djrapitops.plugin.command.ISender;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
@@ -87,13 +85,7 @@ public class MiscUtils {
      */
     public static List<String> getMatchingPlayerNames(String search) {
         Database db = Database.getActive();
-        List<String> matches;
-        try {
-            matches = db.search().matchingPlayers(search);
-        } catch (DBException e) {
-            Log.toLog(MiscUtils.class, e);
-            return new ArrayList<>();
-        }
+        List<String> matches = db.search().matchingPlayers(search);
         Collections.sort(matches);
         return matches;
     }

@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -44,7 +44,7 @@ public class ListServersCommand extends CommandNode {
                 sender.sendMessage("  " + tCol + server.getId() + sCol + " : " + server.getName() + " : " + server.getWebAddress());
             }
             sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             sender.sendMessage("§cDatabase Exception occurred.");
             Log.toLog(this.getClass(), e);
         }

@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
@@ -124,8 +124,8 @@ public class PlayersPageResponse extends Response {
             } catch (IllegalArgumentException ignored) {
             }
             return html.append("</tbody></table>").toString();
-        } catch (DBException e) {
-            Log.toLog(PlayersPageResponse.class.getClass().getName(), e);
+        } catch (DBOpException e) {
+            Log.toLog(PlayersPageResponse.class, e);
             return new InternalErrorResponse("/players", e).getContent();
         }
     }

@@ -4,13 +4,11 @@
  */
 package com.djrapitops.plan.system.processing.processors;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.List;
 
@@ -48,10 +46,6 @@ public class TPSInsertProcessor implements CriticalRunnable {
                 .chunksLoaded(averageChunksLoaded)
                 .toTPS();
 
-        try {
-            Database.getActive().save().insertTPSforThisServer(tps);
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
-        }
+        Database.getActive().save().insertTPSforThisServer(tps);
     }
 }

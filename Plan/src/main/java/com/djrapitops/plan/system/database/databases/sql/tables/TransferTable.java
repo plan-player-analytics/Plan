@@ -75,7 +75,7 @@ public class TransferTable extends Table {
         addColumns(Col.PART + " bigint NOT NULL DEFAULT 0");
     }
 
-    public void clean() throws SQLException {
+    public void clean() {
         String sql = "DELETE FROM " + tableName +
                 " WHERE " + Col.EXPIRY + " < ?" +
                 " AND " + Col.INFO_TYPE + " != ?";
@@ -101,7 +101,7 @@ public class TransferTable extends Table {
     }
 
     @Deprecated
-    public Optional<UUID> getServerPlayerIsOnline(UUID playerUUID) throws SQLException {
+    public Optional<UUID> getServerPlayerIsOnline(UUID playerUUID) {
         String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
         String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
@@ -127,7 +127,7 @@ public class TransferTable extends Table {
         });
     }
 
-    public void storeConfigSettings(String encodedSettingString) throws SQLException {
+    public void storeConfigSettings(String encodedSettingString) {
         execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -140,7 +140,7 @@ public class TransferTable extends Table {
         });
     }
 
-    public Optional<String> getConfigSettings() throws SQLException {
+    public Optional<String> getConfigSettings() {
         return query(new QueryStatement<Optional<String>>(selectStatement, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

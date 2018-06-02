@@ -10,7 +10,6 @@ import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.Benchmark;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -24,7 +23,7 @@ public class Version8TransferTable extends TransferTable {
 
     private final int serverID;
 
-    public Version8TransferTable(SQLDB db) throws SQLException {
+    public Version8TransferTable(SQLDB db) {
         super(db);
         Optional<Integer> serverID = db.getServerTable().getServerID(ServerInfo.getServerUUID());
         if (!serverID.isPresent()) {
@@ -33,7 +32,7 @@ public class Version8TransferTable extends TransferTable {
         this.serverID = serverID.get();
     }
 
-    public void alterTablesToV10() throws SQLException, DBInitException {
+    public void alterTablesToV10() throws DBInitException {
         Benchmark.start("Schema copy from 8 to 10");
         copyCommandUsage();
 
@@ -61,7 +60,7 @@ public class Version8TransferTable extends TransferTable {
         Benchmark.stop("Schema copy from 8 to 10");
     }
 
-    private void copyUsers() throws SQLException, DBInitException {
+    private void copyUsers() throws DBInitException {
         String tempTableName = "temp_users";
         UsersTable usersTable = db.getUsersTable();
         renameTable("plan_users", tempTableName);
@@ -122,7 +121,7 @@ public class Version8TransferTable extends TransferTable {
         }
     }
 
-    private void copyCommandUsage() throws SQLException, DBInitException {
+    private void copyCommandUsage() throws DBInitException {
         String tempTableName = "temp_cmdusg";
         CommandUseTable commandUseTable = db.getCommandUseTable();
 
@@ -141,7 +140,7 @@ public class Version8TransferTable extends TransferTable {
         dropTable(tempTableName);
     }
 
-    private void copyTPS() throws SQLException, DBInitException {
+    private void copyTPS() throws DBInitException {
         String tempTableName = "temp_tps";
         TPSTable tpsTable = db.getTpsTable();
 

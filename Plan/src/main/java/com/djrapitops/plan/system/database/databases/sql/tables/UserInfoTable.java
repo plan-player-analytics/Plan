@@ -50,7 +50,7 @@ public class UserInfoTable extends UserIDTable {
         serverTable = db.getServerTable();
     }
 
-    public void registerUserInfo(UUID uuid, long registered) throws SQLException {
+    public void registerUserInfo(UUID uuid, long registered) {
         if (!usersTable.isRegistered(uuid)) {
             usersTable.registerUser(uuid, registered, "Waiting for Update..");
         }
@@ -74,7 +74,7 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public boolean isRegistered(UUID uuid, UUID serverUUID) throws SQLException {
+    public boolean isRegistered(UUID uuid, UUID serverUUID) {
         String sql = Select.from(tableName, "COUNT(" + Col.USER_ID + ") as c")
                 .where(Col.USER_ID + "=" + usersTable.statementSelectID)
                 .and(Col.SERVER_ID + "=" + serverTable.statementSelectServerID)
@@ -94,11 +94,11 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public boolean isRegistered(UUID uuid) throws SQLException {
+    public boolean isRegistered(UUID uuid) {
         return isRegistered(uuid, ServerInfo.getServerUUID());
     }
 
-    public void updateOpStatus(UUID uuid, boolean op) throws SQLException {
+    public void updateOpStatus(UUID uuid, boolean op) {
         String sql = Update.values(tableName, Col.OP)
                 .where(Col.USER_ID + "=" + usersTable.statementSelectID)
                 .toString();
@@ -112,7 +112,7 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public void updateBanStatus(UUID uuid, boolean banned) throws SQLException {
+    public void updateBanStatus(UUID uuid, boolean banned) {
         String sql = Update.values(tableName, Col.BANNED)
                 .where(Col.USER_ID + "=" + usersTable.statementSelectID)
                 .toString();
@@ -126,7 +126,7 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) throws SQLException {
+    public Map<UUID, UserInfo> getAllUserInfo(UUID uuid) {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
         String usersNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as name";
@@ -165,11 +165,11 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public UserInfo getUserInfo(UUID uuid) throws SQLException {
+    public UserInfo getUserInfo(UUID uuid) {
         return getAllUserInfo(uuid).get(ServerInfo.getServerUUID());
     }
 
-    public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {
+    public List<UserInfo> getServerUserInfo(UUID serverUUID) {
         Optional<Integer> serverID = serverTable.getServerID(serverUUID);
         if (!serverID.isPresent()) {
             return new ArrayList<>();
@@ -212,11 +212,11 @@ public class UserInfoTable extends UserIDTable {
      *
      * @return List of UserInfo objects.
      */
-    public List<UserInfo> getServerUserInfo() throws SQLException {
+    public List<UserInfo> getServerUserInfo() {
         return getServerUserInfo(ServerInfo.getServerUUID());
     }
 
-    public Map<UUID, List<UserInfo>> getAllUserInfo() throws SQLException {
+    public Map<UUID, List<UserInfo>> getAllUserInfo() {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
@@ -254,7 +254,7 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public void insertUserInfo(Map<UUID, List<UserInfo>> allUserInfos) throws SQLException {
+    public void insertUserInfo(Map<UUID, List<UserInfo>> allUserInfos) {
         if (Verify.isEmpty(allUserInfos)) {
             return;
         }
@@ -290,7 +290,7 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, Set<UUID>> getSavedUUIDs() throws SQLException {
+    public Map<UUID, Set<UUID>> getSavedUUIDs() {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
@@ -320,7 +320,7 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public int getServerUserCount(UUID serverUUID) throws SQLException {
+    public int getServerUserCount(UUID serverUUID) {
         String sql = "SELECT " +
                 " COUNT(" + Col.REGISTERED + ") as c" +
                 " FROM " + tableName +
@@ -366,7 +366,7 @@ public class UserInfoTable extends UserIDTable {
         }
     }
 
-    public Set<UUID> getSavedUUIDs(UUID serverUUID) throws SQLException {
+    public Set<UUID> getSavedUUIDs(UUID serverUUID) {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;

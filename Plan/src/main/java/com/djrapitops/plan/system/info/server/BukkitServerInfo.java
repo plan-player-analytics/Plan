@@ -6,12 +6,11 @@ package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -53,7 +52,7 @@ public class BukkitServerInfo extends ServerInfo {
         Optional<UUID> serverUUID = serverInfoFile.getUUID();
         try {
             return serverUUID.isPresent() ? updateDbInfo(serverUUID.get()) : registerServer();
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             String causeMsg = e.getCause().getMessage();
             throw new EnableException("Failed to read Server information from Database: " + causeMsg, e);
         } catch (IOException e) {
@@ -61,7 +60,7 @@ public class BukkitServerInfo extends ServerInfo {
         }
     }
 
-    private Server updateDbInfo(UUID serverUUID) throws IOException, DBException {
+    private Server updateDbInfo(UUID serverUUID) throws IOException {
         Optional<Integer> serverID = database.fetch().getServerID(serverUUID);
         if (!serverID.isPresent()) {
             return registerServer(serverUUID);
@@ -78,11 +77,11 @@ public class BukkitServerInfo extends ServerInfo {
         return server;
     }
 
-    private Server registerServer() throws DBException, IOException {
+    private Server registerServer() throws IOException {
         return registerServer(generateNewUUID(serverProperties));
     }
 
-    private Server registerServer(UUID serverUUID) throws DBException, IOException {
+    private Server registerServer(UUID serverUUID) throws IOException {
         String webAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
         String name = Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_");
         int maxPlayers = ServerInfo.getServerProperties().getMaxPlayers();
@@ -105,18 +104,5 @@ public class BukkitServerInfo extends ServerInfo {
     private UUID generateNewUUID(ServerProperties serverProperties) {
         String seed = serverProperties.getServerId() + serverProperties.getName() + serverProperties.getIp() + serverProperties.getPort() + serverProperties.getVersion() + serverProperties.getImplVersion();
         return UUID.nameUUIDFromBytes(seed.getBytes());
-    }
-
-    @Deprecated
-    public Optional<String> getBungeeConnectionAddress() {
-        try {
-            Optional<Server> bungeeInfo = Database.getActive().fetch().getBungeeInformation();
-            if (bungeeInfo.isPresent()) {
-                return Optional.of(bungeeInfo.get().getWebAddress());
-            }
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
-        }
-        return Optional.empty();
     }
 }

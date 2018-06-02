@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -81,7 +82,7 @@ public class WorldTimesTable extends UserIDTable {
         );
     }
 
-    public void addWorldTimesToSessions(UUID uuid, Map<Integer, Session> sessions) throws SQLException {
+    public void addWorldTimesToSessions(UUID uuid, Map<Integer, Session> sessions) {
         String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
         String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";
         String sql = "SELECT " +
@@ -129,7 +130,7 @@ public class WorldTimesTable extends UserIDTable {
         });
     }
 
-    public void saveWorldTimes(UUID uuid, int sessionID, WorldTimes worldTimes) throws SQLException {
+    public void saveWorldTimes(UUID uuid, int sessionID, WorldTimes worldTimes) {
         Map<String, GMTimes> worldTimesMap = worldTimes.getWorldTimes();
         if (Verify.isEmpty(worldTimesMap)) {
             return;
@@ -162,7 +163,7 @@ public class WorldTimesTable extends UserIDTable {
         });
     }
 
-    public WorldTimes getWorldTimesOfServer(UUID serverUUID) throws SQLException {
+    public WorldTimes getWorldTimesOfServer(UUID serverUUID) {
         String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
         String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";
         String sql = "SELECT " +
@@ -204,7 +205,7 @@ public class WorldTimesTable extends UserIDTable {
         });
     }
 
-    public WorldTimes getWorldTimesOfUser(UUID uuid) throws SQLException {
+    public WorldTimes getWorldTimesOfUser(UUID uuid) {
         String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
         String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";
         String sql = "SELECT " +
@@ -246,7 +247,7 @@ public class WorldTimesTable extends UserIDTable {
         });
     }
 
-    public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() throws SQLException {
+    public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() {
         String worldIDColumn = worldTable + "." + WorldTable.Col.ID;
         String worldNameColumn = worldTable + "." + WorldTable.Col.NAME + " as world_name";
         String sql = "SELECT " +
@@ -286,7 +287,7 @@ public class WorldTimesTable extends UserIDTable {
         });
     }
 
-    public void addWorldTimesToSessions(Map<UUID, Map<UUID, List<Session>>> map) throws SQLException {
+    public void addWorldTimesToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
         Map<Integer, WorldTimes> worldTimesBySessionID = getAllWorldTimesBySessionID();
 
         for (UUID serverUUID : map.keySet()) {
@@ -301,7 +302,7 @@ public class WorldTimesTable extends UserIDTable {
         }
     }
 
-    public void saveWorldTimes(Map<UUID, Map<UUID, List<Session>>> allSessions) throws SQLException {
+    public void saveWorldTimes(Map<UUID, Map<UUID, List<Session>>> allSessions) {
         if (Verify.isEmpty(allSessions)) {
             return;
         }
@@ -380,7 +381,7 @@ public class WorldTimesTable extends UserIDTable {
                     });
 
                     worldTable.alterTableV16();
-                } catch (SQLException e) {
+                } catch (DBOpException e) {
                     Log.toLog(this.getClass().getName(), e);
                 } finally {
                     cancel();
