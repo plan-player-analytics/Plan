@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerData;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -32,7 +33,7 @@ public class ServerAccordion extends AbstractAccordion {
     private final Map<UUID, String> serverNames;
     private PerServerData perServer;
 
-    public ServerAccordion(PlayerContainer container, Map<UUID, WorldTimes> worldTimesPerServer, Map<UUID, String> serverNames) {
+    public ServerAccordion(PlayerContainer container, Map<UUID, String> serverNames) {
         super("server_accordion");
 
         viewScript = new StringBuilder();
@@ -58,13 +59,13 @@ public class ServerAccordion extends AbstractAccordion {
             UUID serverUUID = entry.getKey();
             DataContainer container = entry.getValue();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
-            WorldTimes worldTimes = container.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
+            WorldTimes worldTimes = container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
 
-            List<Session> sessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
+            List<Session> sessions = container.getValue(PerServerKeys.SESSIONS).orElse(new ArrayList<>());
 
-            boolean banned = container.getValue(PlayerKeys.BANNED).orElse(false);
-            boolean opeator = container.getValue(PlayerKeys.OPERATOR).orElse(false);
-            long registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
+            boolean banned = container.getValue(PerServerKeys.BANNED).orElse(false);
+            boolean opeator = container.getValue(PerServerKeys.OPERATOR).orElse(false);
+            long registered = container.getValue(PerServerKeys.REGISTERED).orElse(0L);
 
             long playtime = PlayerProfile.getPlaytime(sessions.stream());
             long afkTime = PlayerProfile.getAFKTime(sessions.stream());

@@ -7,6 +7,7 @@ import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerData;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
@@ -191,18 +192,21 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             List<Session> serverSessions = entry.getValue();
 
             DataContainer perServer = perServerData.getOrDefault(serverUUID, new DataContainer());
-            perServer.putRawData(PlayerKeys.SESSIONS, serverSessions);
+            perServer.putRawData(PerServerKeys.SESSIONS, serverSessions);
 
-            perServer.putSupplier(PlayerKeys.WORLD_TIMES, () ->
-                    new SessionsMutator(perServer.getUnsafe(PlayerKeys.SESSIONS)).toTotalWorldTimes());
-            perServer.putSupplier(PlayerKeys.PLAYER_KILLS, () ->
-                    new SessionsMutator(perServer.getUnsafe(PlayerKeys.SESSIONS)).toPlayerKillList());
-            perServer.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () ->
-                    perServer.getUnsafe(PlayerKeys.PLAYER_KILLS).size());
-            perServer.putSupplier(PlayerKeys.MOB_KILL_COUNT, () ->
-                    new SessionsMutator(perServer.getUnsafe(PlayerKeys.SESSIONS)).toMobKillCount());
-            perServer.putSupplier(PlayerKeys.DEATH_COUNT, () ->
-                    new SessionsMutator(perServer.getUnsafe(PlayerKeys.SESSIONS)).toDeathCount());
+            perServer.putSupplier(PerServerKeys.LAST_SEEN, () ->
+                    new SessionsMutator(perServer.getUnsafe(PerServerKeys.SESSIONS)).toLastSeen());
+
+            perServer.putSupplier(PerServerKeys.WORLD_TIMES, () ->
+                    new SessionsMutator(perServer.getUnsafe(PerServerKeys.SESSIONS)).toTotalWorldTimes());
+            perServer.putSupplier(PerServerKeys.PLAYER_KILLS, () ->
+                    new SessionsMutator(perServer.getUnsafe(PerServerKeys.SESSIONS)).toPlayerKillList());
+            perServer.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () ->
+                    perServer.getUnsafe(PerServerKeys.PLAYER_KILLS).size());
+            perServer.putSupplier(PerServerKeys.MOB_KILL_COUNT, () ->
+                    new SessionsMutator(perServer.getUnsafe(PerServerKeys.SESSIONS)).toMobKillCount());
+            perServer.putSupplier(PerServerKeys.DEATH_COUNT, () ->
+                    new SessionsMutator(perServer.getUnsafe(PerServerKeys.SESSIONS)).toDeathCount());
 
             perServerData.put(serverUUID, perServer);
         }

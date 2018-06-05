@@ -134,7 +134,7 @@ public class InspectPage extends Page {
 
         String[] sessionsAccordion = HtmlStructure.createSessionsTabContentInspectPage(sessionsByServerName, allSessions, uuid);
 
-        ServerAccordion serverAccordion = new ServerAccordion(container, worldTimesPerServer, serverNames);
+        ServerAccordion serverAccordion = new ServerAccordion(container, serverNames);
 
         PlayerCalendar playerCalendar = new PlayerCalendar(allSessions, registered);
 
