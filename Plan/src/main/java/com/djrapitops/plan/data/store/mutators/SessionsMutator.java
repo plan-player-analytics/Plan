@@ -33,7 +33,7 @@ public class SessionsMutator {
 
     public SessionsMutator filterSessionsBetween(long after, long before) {
         sessions = sessions.stream()
-                .filter(session -> session.getSessionEnd() < after && session.getSessionStart() > before)
+                .filter(session -> session.getSessionEnd() >= after && session.getSessionStart() <= before)
                 .collect(Collectors.toList());
         return this;
     }

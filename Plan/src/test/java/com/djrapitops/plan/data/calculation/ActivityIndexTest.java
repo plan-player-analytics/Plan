@@ -1,6 +1,5 @@
 package com.djrapitops.plan.data.calculation;
 
-import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
@@ -76,6 +75,8 @@ public class ActivityIndexTest {
             sessions.add(new Session(0, threeWeeksAgo, threeWeeksAgo + requiredPlaytime * 3L, 0, 0, 0));
         }
         container.putRawData(PlayerKeys.SESSIONS, sessions);
+        assertTrue(container.supports(PlayerKeys.SESSIONS));
+        assertTrue(container.getValue(PlayerKeys.SESSIONS).isPresent());
 
         assertEquals(5.0, new ActivityIndex(container, date).getValue());
     }
@@ -106,14 +107,15 @@ public class ActivityIndexTest {
 
     @Test(timeout = 500)
     public void testTimeout() {
-        PlayerProfile p = new PlayerProfile(null, null, 0L);
+        PlayerContainer container = new PlayerContainer();
         List<Session> sessions = new ArrayList<>();
         long date = 0;
 
         for (int i = 0; i < 5000; i++) {
             sessions.add(new Session(0, 0, 0, 0, 0, 0));
         }
-        p.setSessions(null, sessions);
-        p.getActivityIndex(0);
+        container.putRawData(PlayerKeys.SESSIONS, sessions);
+
+        new ActivityIndex(container, 0).getValue();
     }
 }
