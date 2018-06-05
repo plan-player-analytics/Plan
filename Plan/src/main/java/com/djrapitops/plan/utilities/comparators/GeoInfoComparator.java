@@ -5,7 +5,7 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import java.util.Comparator;
 
 /**
- * Comparator for comparing Actions so that latest is the first component.
+ * Comparator for comparing GeoInfo so that most recent is the first component.
  *
  * @author Rsl1122
  */

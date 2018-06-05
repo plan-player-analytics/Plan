@@ -5,7 +5,7 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.Type;
-import com.djrapitops.plan.data.store.containers.PerServerData;
+import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class PlayerKeys {
 
     public static final Key<UUID> UUID = CommonKeys.UUID;
-    public static final Key<String> NAME = new Key<>(String.class, "name");
+    public static final Key<String> NAME = CommonKeys.NAME;
     public static final Key<List<Nickname>> NICKNAMES = new Key<>(new Type<List<Nickname>>() {}, "nicknames");
 
     public static final Key<Long> REGISTERED = CommonKeys.REGISTERED;
@@ -37,7 +37,7 @@ public class PlayerKeys {
     public static final Key<Integer> PLAYER_KILL_COUNT = CommonKeys.PLAYER_KILL_COUNT;
     public static final Key<Integer> MOB_KILL_COUNT = CommonKeys.MOB_KILL_COUNT;
     public static final Key<Integer> DEATH_COUNT = CommonKeys.DEATH_COUNT;
-    public static final Key<PerServerData> PER_SERVER = new Key<>(PerServerData.class, "per_server_data");
+    public static final Key<PerServerContainer> PER_SERVER = new Key<>(PerServerContainer.class, "per_server_data");
     public static final Key<Long> LAST_SEEN = CommonKeys.LAST_SEEN;
 
     public static final Key<Boolean> BANNED = CommonKeys.BANNED;

@@ -5,7 +5,7 @@ import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.containers.PerServerData;
+import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
@@ -171,19 +171,19 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         return container;
     }
 
-    private PerServerData getPerServerData(UUID uuid) {
-        PerServerData perServerData = new PerServerData();
+    private PerServerContainer getPerServerData(UUID uuid) {
+        PerServerContainer perServerContainer = new PerServerContainer();
 
         Map<UUID, UserInfo> allUserInfo = userInfoTable.getAllUserInfo(uuid);
         for (Map.Entry<UUID, UserInfo> entry : allUserInfo.entrySet()) {
             UUID serverUUID = entry.getKey();
             UserInfo info = entry.getValue();
 
-            DataContainer perServer = perServerData.getOrDefault(serverUUID, new DataContainer());
+            DataContainer perServer = perServerContainer.getOrDefault(serverUUID, new DataContainer());
             perServer.putRawData(PlayerKeys.REGISTERED, info.getRegistered());
             perServer.putRawData(PlayerKeys.BANNED, info.isBanned());
             perServer.putRawData(PlayerKeys.OPERATOR, info.isOpped());
-            perServerData.put(serverUUID, perServer);
+            perServerContainer.put(serverUUID, perServer);
         }
 
         Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
@@ -191,7 +191,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             UUID serverUUID = entry.getKey();
             List<Session> serverSessions = entry.getValue();
 
-            DataContainer perServer = perServerData.getOrDefault(serverUUID, new DataContainer());
+            DataContainer perServer = perServerContainer.getOrDefault(serverUUID, new DataContainer());
             perServer.putRawData(PerServerKeys.SESSIONS, serverSessions);
 
             perServer.putSupplier(PerServerKeys.LAST_SEEN, () ->
@@ -208,10 +208,10 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             perServer.putSupplier(PerServerKeys.DEATH_COUNT, () ->
                     new SessionsMutator(perServer.getUnsafe(PerServerKeys.SESSIONS)).toDeathCount());
 
-            perServerData.put(serverUUID, perServer);
+            perServerContainer.put(serverUUID, perServer);
         }
 
-        return perServerData;
+        return perServerContainer;
     }
 
     @Override

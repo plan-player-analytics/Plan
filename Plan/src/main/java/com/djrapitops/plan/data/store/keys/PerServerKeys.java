@@ -3,15 +3,16 @@ package com.djrapitops.plan.data.store.keys;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.time.WorldTimes;
 
 import java.util.List;
 
 /**
- * Key objects for PerServerData container.
+ * Key objects for PerServerContainer container.
  *
  * @author Rsl1122
- * @see com.djrapitops.plan.data.store.containers.PerServerData For the DataContainer.
+ * @see PerServerContainer For the DataContainer.
  */
 public class PerServerKeys {
 

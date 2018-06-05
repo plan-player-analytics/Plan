@@ -9,7 +9,7 @@ import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.store.containers.PerServerData;
+import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
@@ -107,8 +107,8 @@ public class InspectPage extends Page {
 
         addValue("toLastSeen", lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-");
 
-        PerServerData perServerData = container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerData());
-        PerServerDataMutator perServerDataMutator = new PerServerDataMutator(perServerData);
+        PerServerContainer perServerContainer = container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer());
+        PerServerDataMutator perServerDataMutator = new PerServerDataMutator(perServerContainer);
 
         Map<UUID, WorldTimes> worldTimesPerServer = perServerDataMutator.worldTimesPerServer();
         addValue("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());

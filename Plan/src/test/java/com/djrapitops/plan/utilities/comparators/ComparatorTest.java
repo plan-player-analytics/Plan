@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities.comparators;
 
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.UserInfo;
@@ -8,131 +9,147 @@ import com.djrapitops.plan.system.settings.locale.Message;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
-import com.google.common.collect.Ordering;
 import org.junit.Test;
 import utilities.RandomData;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
 public class ComparatorTest {
 
     @Test
-    public void testPointComparator() {
+    public void pointComparator() {
         List<Point> points = RandomData.randomPoints();
 
-        List<Long> longValues = points.stream().map(Point::getX).map(i -> (long) (double) i)
+        List<Long> expected = points.stream().map(Point::getX).map(i -> (long) (double) i)
                 .sorted(Long::compare).collect(Collectors.toList());
 
         points.sort(new PointComparator());
 
-        List<Long> afterSort = points.stream().map(Point::getX).map(i -> (long) (double) i).collect(Collectors.toList());
-        assertEquals(longValues, afterSort);
+        List<Long> result = points.stream().map(Point::getX).map(i -> (long) (double) i).collect(Collectors.toList());
+        assertEquals(expected, result);
     }
 
     @Test
-    public void testSessionDataComparator() {
+    public void sessionDataComparator() {
         List<Session> sessions = RandomData.randomSessions();
 
-        List<Long> longValues = sessions.stream().map(Session::getSessionStart)
+        List<Long> expected = sessions.stream().map(Session::getSessionStart)
                 .sorted(Long::compare).collect(Collectors.toList());
+        Collections.reverse(expected);
 
-        Collections.reverse(longValues);
         sessions.sort(new SessionStartComparator());
-        List<Long> afterSort = sessions.stream().map(Session::getSessionStart).collect(Collectors.toList());
+        List<Long> result = sessions.stream().map(Session::getSessionStart).collect(Collectors.toList());
 
-        assertEquals(longValues, afterSort);
+        assertEquals(expected, result);
     }
 
     @Test
-    public void testTPSComparator() {
+    public void tpsComparator() {
         List<TPS> tpsList = RandomData.randomTPS();
 
-        List<Long> longValues = tpsList.stream().map(TPS::getDate)
+        List<Long> expected = tpsList.stream().map(TPS::getDate)
                 .sorted(Long::compare).collect(Collectors.toList());
 
         tpsList.sort(new TPSComparator());
-        List<Long> afterSort = tpsList.stream().map(TPS::getDate).collect(Collectors.toList());
+        List<Long> result = tpsList.stream().map(TPS::getDate).collect(Collectors.toList());
 
-        assertEquals(longValues, afterSort);
+        assertEquals(expected, result);
     }
 
     @Test
-    public void testUserDataLastPlayedComparator() {
+    public void userDataLastPlayedComparator() {
         List<UserInfo> userInfo = RandomData.randomUserData();
 
-        List<Long> longValues = userInfo.stream().map(UserInfo::getLastSeen)
+        List<Long> expected = userInfo.stream().map(UserInfo::getLastSeen)
                 .sorted(Long::compare).collect(Collectors.toList());
+        Collections.reverse(expected);
 
-        Collections.reverse(longValues);
-        System.out.println(longValues);
         userInfo.sort(new UserInfoLastPlayedComparator());
-        List<Long> afterSort = userInfo.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
-        System.out.println(afterSort);
-        assertEquals(longValues, afterSort);
+        List<Long> result = userInfo.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
+        assertEquals(expected, result);
     }
 
     @Test
-    public void testUserDataNameComparator() {
+    public void userDataNameComparator() {
         List<UserInfo> userInfo = RandomData.randomUserData();
 
-        List<String> stringValues = userInfo.stream().map(UserInfo::getName)
+        List<String> expected = userInfo.stream().map(UserInfo::getName)
                 .sorted().collect(Collectors.toList());
 
         userInfo.sort(new UserInfoNameComparator());
-        List<String> afterSort = userInfo.stream().map(UserInfo::getName).collect(Collectors.toList());
+        List<String> result = userInfo.stream().map(UserInfo::getName).collect(Collectors.toList());
 
-        assertEquals(stringValues, afterSort);
+        assertEquals(expected, result);
     }
 
     @Test
-    public void testWebUserComparator() throws PassEncryptUtil.CannotPerformOperationException {
+    public void webUserComparator() throws PassEncryptUtil.CannotPerformOperationException {
         List<WebUser> webUsers = RandomData.randomWebUsers();
 
-        List<Integer> intValues = webUsers.stream().map(WebUser::getPermLevel)
+        List<Integer> expected = webUsers.stream().map(WebUser::getPermLevel)
                 .sorted(Integer::compare).collect(Collectors.toList());
-        Collections.reverse(intValues);
+        Collections.reverse(expected);
 
         webUsers.sort(new WebUserComparator());
-        List<Integer> afterSort = webUsers.stream().map(WebUser::getPermLevel).collect(Collectors.toList());
+        List<Integer> result = webUsers.stream().map(WebUser::getPermLevel).collect(Collectors.toList());
 
-        assertEquals(intValues, afterSort);
+        assertEquals(expected, result);
     }
 
     @Test
-    public void testStringLengthComparator() {
-        List<String> strings = Ordering.from(new StringLengthComparator())
-                .sortedCopy(Arrays.asList(
-                        RandomData.randomString(10),
-                        RandomData.randomString(3),
-                        RandomData.randomString(20),
-                        RandomData.randomString(7),
-                        RandomData.randomString(4),
-                        RandomData.randomString(86),
-                        RandomData.randomString(6))
-                );
+    public void stringLengthComparator() {
+        List<Integer> result = Stream.of(
+                RandomData.randomString(10),
+                RandomData.randomString(3),
+                RandomData.randomString(4),
+                RandomData.randomString(20),
+                RandomData.randomString(7),
+                RandomData.randomString(4),
+                RandomData.randomString(86),
+                RandomData.randomString(6)
+        )
+                .sorted(new StringLengthComparator())
+                .map(String::length)
+                .collect(Collectors.toList());
 
-        assertEquals(86, strings.get(0).length());
-        assertEquals(20, strings.get(1).length());
-        assertEquals(3, strings.get(strings.size() - 1).length());
+        List<Integer> expected = Arrays.asList(86, 20, 10, 7, 6, 4, 4, 3);
+        assertEquals(expected, result);
     }
 
     @Test
-    public void testLocaleEntryComparator() {
+    public void localeEntryComparator() {
         Map<Msg, Message> messageMap = new HashMap<>();
         messageMap.put(Msg.CMD_CONSTANT_FOOTER, new Message(RandomData.randomString(10)));
         messageMap.put(Msg.ANALYSIS_3RD_PARTY, new Message(RandomData.randomString(10)));
         messageMap.put(Msg.MANAGE_FAIL_NO_PLAYERS, new Message(RandomData.randomString(10)));
 
-        List<String> sorted = messageMap.entrySet().stream()
+        List<Msg> result = messageMap.entrySet().stream()
                 .sorted(new LocaleEntryComparator())
-                .map(entry -> entry.getKey().name())
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        assertEquals(Msg.ANALYSIS_3RD_PARTY.name(), sorted.get(0));
-        assertEquals(Msg.CMD_CONSTANT_FOOTER.name(), sorted.get(1));
-        assertEquals(Msg.MANAGE_FAIL_NO_PLAYERS.name(), sorted.get(2));
+        List<Msg> expected = Arrays.asList(
+                Msg.ANALYSIS_3RD_PARTY,
+                Msg.CMD_CONSTANT_FOOTER,
+                Msg.MANAGE_FAIL_NO_PLAYERS
+        );
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void geoInfoComparator() {
+        List<GeoInfo> geoInfos = RandomData.randomGeoInfo();
+
+        List<Long> expected = geoInfos.stream().map(GeoInfo::getLastUsed)
+                .sorted(Long::compare).collect(Collectors.toList());
+        Collections.reverse(expected);
+
+        geoInfos.sort(new GeoInfoComparator());
+        List<Long> result = geoInfos.stream().map(GeoInfo::getLastUsed).collect(Collectors.toList());
+        assertEquals(expected, result);
     }
 }

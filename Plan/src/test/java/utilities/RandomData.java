@@ -1,6 +1,7 @@
 package utilities;
 
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.UserInfo;
@@ -71,6 +72,15 @@ public class RandomData {
             UserInfo info = new UserInfo(UUID.randomUUID(), randomString(10), r.nextLong(), r.nextBoolean(), r.nextBoolean());
             info.setLastSeen(r.nextLong());
             test.add(info);
+        }
+        return test;
+    }
+
+    public static List<GeoInfo> randomGeoInfo() {
+        List<GeoInfo> test = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            GeoInfo geoInfo = new GeoInfo(randomString(10), randomString(10), r.nextLong(), "");
+            test.add(geoInfo);
         }
         return test;
     }

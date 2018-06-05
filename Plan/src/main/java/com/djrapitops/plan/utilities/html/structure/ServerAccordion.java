@@ -7,7 +7,7 @@ package com.djrapitops.plan.utilities.html.structure;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.containers.PerServerData;
+import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
@@ -31,7 +31,7 @@ public class ServerAccordion extends AbstractAccordion {
     private final StringBuilder viewScript;
 
     private final Map<UUID, String> serverNames;
-    private PerServerData perServer;
+    private PerServerContainer perServer;
 
     public ServerAccordion(PlayerContainer container, Map<UUID, String> serverNames) {
         super("server_accordion");
@@ -39,7 +39,7 @@ public class ServerAccordion extends AbstractAccordion {
         viewScript = new StringBuilder();
 
         this.serverNames = serverNames;
-        Optional<PerServerData> perServerData = container.getValue(PlayerKeys.PER_SERVER);
+        Optional<PerServerContainer> perServerData = container.getValue(PlayerKeys.PER_SERVER);
         if (perServerData.isPresent()) {
             perServer = perServerData.get();
         } else {

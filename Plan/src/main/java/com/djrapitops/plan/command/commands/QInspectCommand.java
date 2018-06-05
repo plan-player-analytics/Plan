@@ -2,8 +2,12 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.calculation.ActivityIndex;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -16,10 +20,12 @@ import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -64,15 +70,13 @@ public class QInspectCommand extends CommandNode {
                         return;
                     }
 
-                    Database database = Database.getActive();
-                    if (!database.check().isPlayerRegistered(uuid)) {
+                    PlayerContainer container = Database.getActive().fetch().getPlayerContainer(uuid);
+                    if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
                         sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
                         return;
                     }
 
-                    PlayerProfile playerProfile = database.fetch().getPlayerProfile(uuid);
-
-                    sendMessages(sender, playerProfile);
+                    sendMessages(sender, container);
                 } catch (DBOpException e) {
                     if (e.isFatal()) {
                         sender.sendMessage("§cFatal database exception occurred: " + e.getMessage());
@@ -87,7 +91,7 @@ public class QInspectCommand extends CommandNode {
         }).runTaskAsynchronously();
     }
 
-    private void sendMessages(ISender sender, PlayerProfile profile) {
+    private void sendMessages(ISender sender, PlayerContainer container) {
         long now = System.currentTimeMillis();
 
         ColorScheme colorScheme = plugin.getColorScheme();
@@ -96,23 +100,27 @@ public class QInspectCommand extends CommandNode {
         String colS = colorScheme.getSecondaryColor();
         String colT = colorScheme.getTertiaryColor();
 
-        String ball = DefaultMessages.BALL.parse();
+        sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + container.getValue(PlayerKeys.NAME).orElse("Unknown"));
 
-        sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + profile.getName());
+        ActivityIndex activityIndex = new ActivityIndex(container, now);
+        Long registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
+        Long lastSeen = container.getValue(PlayerKeys.LAST_SEEN).orElse(0L);
+        List<GeoInfo> geoInfo = container.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());
+        Optional<GeoInfo> mostRecentGeoInfo = new GeoInfoMutator(geoInfo).mostRecent();
+        String loginLocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().getGeolocation() : "-";
+        SessionsMutator sessionsMutator = new SessionsMutator(container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()));
 
-        ActivityIndex activityIndex = profile.getActivityIndex(now);
-
-        sender.sendMessage(colT + ball + " " + colM + " Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getGroup());
-        sender.sendMessage(colT + ball + " " + colM + " Registered: " + colS + FormatUtils.formatTimeStampYear(profile.getRegistered()));
-        sender.sendMessage(colT + ball + " " + colM + " Last Seen: " + colS + FormatUtils.formatTimeStampYear(profile.getLastSeen()));
-        sender.sendMessage(colT + ball + " " + colM + " Logged in from: " + colS + profile.getMostRecentGeoInfo().getGeolocation());
-        sender.sendMessage(colT + ball + " " + colM + " Playtime: " + colS + FormatUtils.formatTimeAmount(profile.getTotalPlaytime()));
-        sender.sendMessage(colT + ball + " " + colM + " Longest Session: " + colS + FormatUtils.formatTimeAmount(profile.getLongestSession(0, now)));
-        sender.sendMessage(colT + ball + " " + colM + " Times Kicked: " + colS + profile.getTimesKicked());
+        sender.sendMessage(colM + "  Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getGroup());
+        sender.sendMessage(colM + "  Registered: " + colS + (registered != 0 ? FormatUtils.formatTimeStampYear(registered) : "-"));
+        sender.sendMessage(colM + "  Last Seen: " + colS + (lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-"));
+        sender.sendMessage(colM + "  Logged in from: " + colS + loginLocation);
+        sender.sendMessage(colM + "  Playtime: " + colS + FormatUtils.formatTimeAmount(sessionsMutator.toPlaytime()));
+        sender.sendMessage(colM + "  Longest Session: " + colS + FormatUtils.formatTimeAmount(sessionsMutator.toLongestSessionLength()));
+        sender.sendMessage(colM + "  Times Kicked: " + colS + container.getValue(PlayerKeys.KICK_COUNT).orElse(0));
         sender.sendMessage("");
-        sender.sendMessage(colT + ball + " " + colM + " Player Kills : " + colS + profile.getPlayerKills().count());
-        sender.sendMessage(colT + ball + " " + colM + " Mob Kills : " + colS + profile.getMobKillCount());
-        sender.sendMessage(colT + ball + " " + colM + " Deaths : " + colS + profile.getDeathCount());
+        sender.sendMessage(colM + "  Player Kills : " + colS + sessionsMutator.toPlayerKillCount());
+        sender.sendMessage(colM + "  Mob Kills : " + colS + sessionsMutator.toMobKillCount());
+        sender.sendMessage(colM + "  Deaths : " + colS + sessionsMutator.toDeathCount());
 
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }

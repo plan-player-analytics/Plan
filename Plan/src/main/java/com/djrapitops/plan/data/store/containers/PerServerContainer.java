@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Container for data about a player on a single server.
+ * Container for data about a player linked to a single server.
  *
  * @author Rsl1122
  * @see com.djrapitops.plan.data.store.keys.PerServerKeys For Key objects.
  */
-public class PerServerData extends HashMap<UUID, DataContainer> {
+public class PerServerContainer extends HashMap<UUID, DataContainer> {
 }

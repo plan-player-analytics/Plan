@@ -123,4 +123,8 @@ public class SessionsMutator {
     public int count() {
         return sessions.size();
     }
+
+    public int toPlayerKillCount() {
+        return toPlayerKillList().size();
+    }
 }

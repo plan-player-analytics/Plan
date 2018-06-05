@@ -2,7 +2,7 @@ package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.containers.PerServerData;
+import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.time.WorldTimes;
 
@@ -10,15 +10,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Mutator for PerServerData object.
+ * Mutator for PerServerContainer object.
  *
  * @author Rsl1122
  */
 public class PerServerDataMutator {
 
-    private final PerServerData data;
+    private final PerServerContainer data;
 
-    public PerServerDataMutator(PerServerData data) {
+    public PerServerDataMutator(PerServerContainer data) {
         this.data = data;
     }
 
