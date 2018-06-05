@@ -83,52 +83,6 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     }
 
     @Override
-    public PlayerProfile getPlayerProfile(UUID uuid) {
-        if (!usersTable.isRegistered(uuid)) {
-            return null;
-        }
-
-        String playerName = usersTable.getPlayerName(uuid);
-        Optional<Long> registerDate = usersTable.getRegisterDate(uuid);
-
-        if (!registerDate.isPresent()) {
-            throw new IllegalStateException("User has been saved with null register date to a NOT NULL column");
-        }
-
-        PlayerProfile profile = new PlayerProfile(uuid, playerName, registerDate.get());
-        profile.setTimesKicked(usersTable.getTimesKicked(uuid));
-
-        Map<UUID, UserInfo> userInfo = userInfoTable.getAllUserInfo(uuid);
-        addUserInfoToProfile(profile, userInfo);
-
-        profile.setActions(actionsTable.getActions(uuid));
-        profile.setNicknames(nicknamesTable.getAllNicknames(uuid));
-        profile.setGeoInformation(geoInfoTable.getGeoInfo(uuid));
-
-        Map<UUID, List<Session>> sessions = sessionsTable.getSessions(uuid);
-        profile.setSessions(sessions);
-        profile.calculateWorldTimesPerServer();
-        profile.setTotalWorldTimes(worldTimesTable.getWorldTimesOfUser(uuid));
-
-        return profile;
-    }
-
-    private void addUserInfoToProfile(PlayerProfile profile, Map<UUID, UserInfo> userInfo) {
-        for (Map.Entry<UUID, UserInfo> entry : userInfo.entrySet()) {
-            UUID serverUUID = entry.getKey();
-            UserInfo info = entry.getValue();
-
-            profile.setRegistered(serverUUID, info.getRegistered());
-            if (info.isBanned()) {
-                profile.bannedOnServer(serverUUID);
-            }
-            if (info.isOpped()) {
-                profile.oppedOnServer(serverUUID);
-            }
-        }
-    }
-
-    @Override
     public PlayerContainer getPlayerContainer(UUID uuid) {
         PlayerContainer container = new PlayerContainer();
         container.putRawData(PlayerKeys.UUID, uuid);

@@ -17,8 +17,6 @@ public interface FetchOperations {
 
     List<PlayerProfile> getPlayers(UUID serverUUID);
 
-    PlayerProfile getPlayerProfile(UUID uuid);
-
     // UUIDs
 
     PlayerContainer getPlayerContainer(UUID uuid);
