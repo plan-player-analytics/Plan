@@ -13,7 +13,6 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -1047,6 +1046,23 @@ public class SQLiteTest {
         assertTrue(container.supports(PlayerKeys.GEO_INFO));
         assertTrue(container.supports(PlayerKeys.NICKNAMES));
 
+        assertTrue(container.supports(PlayerKeys.PER_SERVER));
+
+        assertTrue(container.supports(PlayerKeys.OPERATOR));
+        assertTrue(container.supports(PlayerKeys.BANNED));
+
+        assertTrue(container.supports(PlayerKeys.SESSIONS));
+        assertTrue(container.supports(PlayerKeys.WORLD_TIMES));
+        assertTrue(container.supports(PlayerKeys.LAST_SEEN));
+        assertTrue(container.supports(PlayerKeys.DEATH_COUNT));
+        assertTrue(container.supports(PlayerKeys.MOB_KILL_COUNT));
+        assertTrue(container.supports(PlayerKeys.PLAYER_KILLS));
+        assertTrue(container.supports(PlayerKeys.PLAYER_KILL_COUNT));
+
+        assertFalse(container.supports(PlayerKeys.ACTIVE_SESSION));
+        container.putRawData(PlayerKeys.ACTIVE_SESSION, new Session(System.currentTimeMillis(), "TestWorld", "SURVIVAL"));
+        assertTrue(container.supports(PlayerKeys.ACTIVE_SESSION));
+
         long end = System.nanoTime();
 
         assertFalse("Took too long: " + ((end - start) / 1000000.0) + "ms", end - start > TimeAmount.SECOND.ns());
@@ -1056,12 +1072,16 @@ public class SQLiteTest {
         OptionalAssert.equals("Test", container.getValue(PlayerKeys.NAME));
         OptionalAssert.equals(1, container.getValue(PlayerKeys.KICK_COUNT));
 
-        DateMap<GeoInfo> expectedGeoInfo = GeoInfo.intoDateMap(
-                Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789, "ZpT4PJ9HbaMfXfa8xSADTn5X1CHSR7nTT0ntv8hKdkw="))
-        );
+        List<GeoInfo> expectedGeoInfo =
+                Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789, "ZpT4PJ9HbaMfXfa8xSADTn5X1CHSR7nTT0ntv8hKdkw="));
         OptionalAssert.equals(expectedGeoInfo, container.getValue(PlayerKeys.GEO_INFO));
 
         List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, TestConstants.SERVER_UUID));
         OptionalAssert.equals(expectedNicknames, container.getValue(PlayerKeys.NICKNAMES));
+
+        OptionalAssert.equals(false, container.getValue(PlayerKeys.OPERATOR));
+        OptionalAssert.equals(false, container.getValue(PlayerKeys.BANNED));
+
+        // TODO Test rest
     }
 }

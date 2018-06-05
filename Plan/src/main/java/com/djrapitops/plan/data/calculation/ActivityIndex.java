@@ -1,20 +1,25 @@
 package com.djrapitops.plan.data.calculation;
 
-import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.utilities.Verify;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ActivityIndex {
 
     private final double value;
 
-    public ActivityIndex(PlayerProfile player, long date) {
-        value = calculate(player, date);
+    public ActivityIndex(DataContainer container, long date) {
+        Verify.isTrue(container.supports(PlayerKeys.SESSIONS),
+                () -> new IllegalArgumentException("Given container does not support sessions."));
+        value = calculate(container, date);
     }
 
     public static String[] getGroups() {
@@ -29,7 +34,7 @@ public class ActivityIndex {
         return value <= 0 ? 1 : value;
     }
 
-    private double calculate(PlayerProfile player, long date) {
+    private double calculate(DataContainer container, long date) {
         long week = TimeAmount.WEEK.ms();
         long weekAgo = date - week;
         long twoWeeksAgo = date - 2L * week;
@@ -38,24 +43,25 @@ public class ActivityIndex {
         long activePlayThreshold = loadSetting(Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms());
         int activeLoginThreshold = loadSetting(Settings.ACTIVE_LOGIN_THRESHOLD.getNumber());
 
-        List<Session> sessionsWeek = player.getSessions(weekAgo, date).collect(Collectors.toList());
-        List<Session> sessionsWeek2 = player.getSessions(twoWeeksAgo, weekAgo).collect(Collectors.toList());
-        List<Session> sessionsWeek3 = player.getSessions(threeWeeksAgo, twoWeeksAgo).collect(Collectors.toList());
+        List<Session> sessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
+        SessionsMutator weekOne = new SessionsMutator(sessions).filterSessionsBetween(weekAgo, date);
+        SessionsMutator weekTwo = new SessionsMutator(sessions).filterSessionsBetween(twoWeeksAgo, weekAgo);
+        SessionsMutator weekThree = new SessionsMutator(sessions).filterSessionsBetween(threeWeeksAgo, twoWeeksAgo);
 
         // Playtime per week multipliers, max out to avoid too high values.
         double max = 4.0;
 
-        long playtimeWeek = PlayerProfile.getActivePlaytime(sessionsWeek.stream());
+        long playtimeWeek = weekOne.toActivePlaytime();
         double weekPlay = (playtimeWeek * 1.0 / activePlayThreshold);
         if (weekPlay > max) {
             weekPlay = max;
         }
-        long playtimeWeek2 = PlayerProfile.getActivePlaytime(sessionsWeek2.stream());
+        long playtimeWeek2 = weekTwo.toActivePlaytime();
         double week2Play = (playtimeWeek2 * 1.0 / activePlayThreshold);
         if (week2Play > max) {
             week2Play = max;
         }
-        long playtimeWeek3 = PlayerProfile.getActivePlaytime(sessionsWeek3.stream());
+        long playtimeWeek3 = weekThree.toActivePlaytime();
         double week3Play = (playtimeWeek3 * 1.0 / activePlayThreshold);
         if (week3Play > max) {
             week3Play = max;
@@ -79,9 +85,9 @@ public class ActivityIndex {
 
         double playAvg = (weekPlay + week2Play + week3Play) / 3.0;
 
-        double weekLogin = sessionsWeek.size() >= activeLoginThreshold ? 1.0 : 0.5;
-        double week2Login = sessionsWeek2.size() >= activeLoginThreshold ? 1.0 : 0.5;
-        double week3Login = sessionsWeek3.size() >= activeLoginThreshold ? 1.0 : 0.5;
+        double weekLogin = weekOne.count() >= activeLoginThreshold ? 1.0 : 0.5;
+        double week2Login = weekTwo.count() >= activeLoginThreshold ? 1.0 : 0.5;
+        double week3Login = weekThree.count() >= activeLoginThreshold ? 1.0 : 0.5;
 
         double loginMultiplier = 1.0;
         double loginTotal = weekLogin + week2Login + week3Login;

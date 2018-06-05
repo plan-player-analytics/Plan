@@ -25,11 +25,11 @@ public class DataContainer extends HashMap<Key, Supplier> {
      * @param <T> Type of the object
      */
     public <T> void putRawData(Key<T> key, T obj) {
-        put(key, () -> obj);
+        super.put(key, () -> obj);
     }
 
     public <T> void putSupplier(Key<T> key, Supplier<T> supplier) {
-        put(key, new CachingSupplier<>(supplier));
+        super.put(key, new CachingSupplier<>(supplier));
     }
 
     /**
@@ -73,5 +73,19 @@ public class DataContainer extends HashMap<Key, Supplier> {
             throw new IllegalArgumentException("Unsupported Key");
         }
         return (T) supplier.get();
+    }
+
+    /**
+     * Normal put method.
+     *
+     * @param key   Key.
+     * @param value Supplier
+     * @return the previous value.
+     * @deprecated Use putSupplier instead for type safety.
+     */
+    @Override
+    @Deprecated
+    public Supplier put(Key key, Supplier value) {
+        return super.put(key, value);
     }
 }

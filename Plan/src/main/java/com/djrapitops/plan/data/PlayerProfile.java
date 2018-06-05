@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.comparators.ActionComparator;
@@ -123,7 +124,7 @@ public class PlayerProfile {
 
     // Calculating Getters
     public ActivityIndex getActivityIndex(long date) {
-        return activityIndexCache.computeIfAbsent(date, dateValue -> new ActivityIndex(this, dateValue));
+        return activityIndexCache.computeIfAbsent(date, dateValue -> new ActivityIndex(new PlayerContainer(), dateValue));
     }
 
     /**
