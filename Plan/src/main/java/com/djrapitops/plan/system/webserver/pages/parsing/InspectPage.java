@@ -5,10 +5,15 @@
 package com.djrapitops.plan.system.webserver.pages.parsing;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.data.PlayerProfile;
+import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.containers.PerServerData;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -19,7 +24,6 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.file.FileUtil;
@@ -61,22 +65,22 @@ public class InspectPage extends Page {
             }
             Benchmark.start("Inspect Parse, Fetch");
             Database db = Database.getActive();
-            PlayerProfile profile = db.fetch().getPlayerProfile(uuid);
-            if (profile == null) {
-                throw new IllegalStateException("Player profile was null!");
+            PlayerContainer container = db.fetch().getPlayerContainer(uuid);
+            if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
+                throw new IllegalStateException("Player is not registered");
             }
             UUID serverUUID = ServerInfo.getServerUUID();
             Map<UUID, String> serverNames = db.fetch().getServerNames();
 
             Benchmark.stop("Inspect Parse, Fetch");
 
-            return parse(profile, serverUUID, serverNames);
+            return parse(container, serverUUID, serverNames);
         } catch (Exception e) {
             throw new ParseException(e);
         }
     }
 
-    public String parse(PlayerProfile profile, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
+    public String parse(PlayerContainer container, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
         long now = System.currentTimeMillis();
 
         addValue("refresh", FormatUtils.formatTimeStampClock(now));
@@ -88,44 +92,49 @@ public class InspectPage extends Page {
         if (activeSession.isPresent()) {
             Session session = activeSession.get();
             session.setSessionID(Integer.MAX_VALUE);
-            profile.addActiveSession(session);
             online = serverNames.get(serverUUID);
+            container.putRawData(PlayerKeys.ACTIVE_SESSION, session);
         }
 
-        String playerName = profile.getName();
-        long registered = profile.getRegistered();
-        int timesKicked = profile.getTimesKicked();
-        long lastSeen = profile.getLastSeen();
+        String playerName = container.getValue(PlayerKeys.NAME).orElse("Unknown");
+        long registered = container.getValue(PlayerKeys.REGISTERED).orElse(-1L);
+        int timesKicked = container.getValue(PlayerKeys.KICK_COUNT).orElse(0);
+        long lastSeen = container.getValue(PlayerKeys.LAST_SEEN).orElse(-1L);
 
         addValue("registered", FormatUtils.formatTimeStampYear(registered));
         addValue("playerName", playerName);
         addValue("kickCount", timesKicked);
 
-        addValue("lastSeen", lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-");
+        addValue("toLastSeen", lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-");
 
-        Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
+        PerServerData perServerData = container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerData());
+        PerServerDataMutator perServerDataMutator = new PerServerDataMutator(perServerData);
+
+        Map<UUID, WorldTimes> worldTimesPerServer = perServerDataMutator.worldTimesPerServer();
         addValue("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
         addValue("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
         addValue("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
         addValue("serverPieColors", Theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
 
-        String favoriteServer = serverNames.get(profile.getFavoriteServer());
-        addValue("favoriteServer", favoriteServer != null ? favoriteServer : "Unknown");
+        String favoriteServer = serverNames.getOrDefault(perServerDataMutator.favoriteServer(), "Unknown");
+        addValue("favoriteServer", favoriteServer);
 
-        addValue("tableBodyNicknames", new NicknameTable(profile.getNicknames(), serverNames).parseBody());
-        addValue("tableBodyIPs", new GeoInfoTable(profile.getGeoInformation()).parseBody());
+        addValue("tableBodyNicknames", new NicknameTable(
+                container.getValue(PlayerKeys.NICKNAMES).orElse(new ArrayList<>()), serverNames)
+                .parseBody());
+        addValue("tableBodyIPs", new GeoInfoTable(container.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
 
-        Map<UUID, List<Session>> sessions = profile.getSessions();
+        Map<UUID, List<Session>> sessions = perServerDataMutator.sessionsPerServer();
         Map<String, List<Session>> sessionsByServerName = sessions.entrySet().stream()
                 .collect(Collectors.toMap(entry -> serverNames.get(entry.getKey()), Map.Entry::getValue));
 
-        List<Session> allSessions = profile.getAllSessions()
-                .sorted(new SessionStartComparator())
-                .collect(Collectors.toList());
+        List<Session> allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
+        SessionsMutator allSessionsMutator = new SessionsMutator(allSessions);
+        allSessions.sort(new SessionStartComparator());
 
         String[] sessionsAccordion = HtmlStructure.createSessionsTabContentInspectPage(sessionsByServerName, allSessions, uuid);
 
-        ServerAccordion serverAccordion = new ServerAccordion(profile, serverNames);
+        ServerAccordion serverAccordion = new ServerAccordion(container, worldTimesPerServer, serverNames);
 
         PlayerCalendar playerCalendar = new PlayerCalendar(allSessions, registered);
 
@@ -140,41 +149,41 @@ public class InspectPage extends Page {
         long weekAgo = now - TimeAmount.WEEK.ms();
         long monthAgo = now - TimeAmount.MONTH.ms();
 
-        List<Session> sessionsDay = profile.getSessions(dayAgo, now).collect(Collectors.toList());
-        List<Session> sessionsWeek = profile.getSessions(weekAgo, now).collect(Collectors.toList());
-        List<Session> sessionsMonth = profile.getSessions(monthAgo, now).collect(Collectors.toList());
+        SessionsMutator daySessionsMutator = new SessionsMutator(allSessions).filterSessionsBetween(dayAgo, now);
+        SessionsMutator weekSessionsMutator = new SessionsMutator(allSessions).filterSessionsBetween(weekAgo, now);
+        SessionsMutator monthSessionsMutator = new SessionsMutator(allSessions).filterSessionsBetween(monthAgo, now);
 
-        long playtime = PlayerProfile.getPlaytime(allSessions.stream());
-        long playtimeDay = PlayerProfile.getPlaytime(sessionsDay.stream());
-        long playtimeWeek = PlayerProfile.getPlaytime(sessionsWeek.stream());
-        long playtimeMonth = PlayerProfile.getPlaytime(sessionsMonth.stream());
+        long playtime = allSessionsMutator.toPlaytime();
+        long playtimeDay = daySessionsMutator.toPlaytime();
+        long playtimeWeek = weekSessionsMutator.toPlaytime();
+        long playtimeMonth = monthSessionsMutator.toPlaytime();
 
-        long afk = PlayerProfile.getAFKTime(allSessions.stream());
-        long afkDay = PlayerProfile.getAFKTime(sessionsDay.stream());
-        long afkWeek = PlayerProfile.getAFKTime(sessionsWeek.stream());
-        long afkMonth = PlayerProfile.getAFKTime(sessionsMonth.stream());
+        long afk = allSessionsMutator.toAfkTime();
+        long afkDay = daySessionsMutator.toAfkTime();
+        long afkWeek = weekSessionsMutator.toAfkTime();
+        long afkMonth = monthSessionsMutator.toAfkTime();
 
         long activeTotal = playtime - afk;
 
-        long longestSession = PlayerProfile.getLongestSession(allSessions.stream());
-        long longestSessionDay = PlayerProfile.getLongestSession(sessionsDay.stream());
-        long longestSessionWeek = PlayerProfile.getLongestSession(sessionsWeek.stream());
-        long longestSessionMonth = PlayerProfile.getLongestSession(sessionsMonth.stream());
+        long longestSession = allSessionsMutator.toLongestSessionLength();
+        long longestSessionDay = daySessionsMutator.toLongestSessionLength();
+        long longestSessionWeek = weekSessionsMutator.toLongestSessionLength();
+        long longestSessionMonth = monthSessionsMutator.toLongestSessionLength();
 
-        long sessionMedian = PlayerProfile.getSessionMedian(allSessions.stream());
-        long sessionMedianDay = PlayerProfile.getSessionMedian(sessionsDay.stream());
-        long sessionMedianWeek = PlayerProfile.getSessionMedian(sessionsWeek.stream());
-        long sessionMedianMonth = PlayerProfile.getSessionMedian(sessionsMonth.stream());
+        long sessionMedian = allSessionsMutator.toMedianSessionLength();
+        long sessionMedianDay = daySessionsMutator.toMedianSessionLength();
+        long sessionMedianWeek = weekSessionsMutator.toMedianSessionLength();
+        long sessionMedianMonth = monthSessionsMutator.toMedianSessionLength();
 
-        int sessionCount = allSessions.size();
-        int sessionCountDay = sessionsDay.size();
-        int sessionCountWeek = sessionsWeek.size();
-        int sessionCountMonth = sessionsMonth.size();
+        int sessionCount = allSessionsMutator.count();
+        int sessionCountDay = daySessionsMutator.count();
+        int sessionCountWeek = weekSessionsMutator.count();
+        int sessionCountMonth = monthSessionsMutator.count();
 
-        long sessionAverage = MathUtils.averageLong(playtime, sessionCount);
-        long sessionAverageDay = MathUtils.averageLong(playtimeDay, sessionCountDay);
-        long sessionAverageWeek = MathUtils.averageLong(playtimeWeek, sessionCountWeek);
-        long sessionAverageMonth = MathUtils.averageLong(playtimeMonth, sessionCountMonth);
+        long sessionAverage = allSessionsMutator.toAverageSessionLength();
+        long sessionAverageDay = daySessionsMutator.toAverageSessionLength();
+        long sessionAverageWeek = weekSessionsMutator.toAverageSessionLength();
+        long sessionAverageMonth = monthSessionsMutator.toAverageSessionLength();
 
         addValue("playtimeTotal", playtime > 0L ? FormatUtils.formatTimeAmount(playtime) : "-");
         addValue("playtimeDay", playtimeDay > 0L ? FormatUtils.formatTimeAmount(playtimeDay) : "-");
@@ -208,11 +217,10 @@ public class InspectPage extends Page {
         addValue("sessionCountWeek", sessionCountWeek);
         addValue("sessionCountMonth", sessionCountMonth);
 
-        List<Action> actions = profile.getAllActions();
-        addValue("tableBodyActions", new ActionsTable(actions).parseBody());
+        addValue("tableBodyActions", new ActionsTable(Collections.singletonList(new Action(0, Actions.UNKNOWN, "Deprecated"))).parseBody());
 
         String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
-        WorldTimes worldTimes = profile.getWorldTimes();
+        WorldTimes worldTimes = container.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
 
         WorldPie worldPie = new WorldPie(worldTimes);
 
@@ -241,13 +249,15 @@ public class InspectPage extends Page {
         addValue("mobKillCount", mobKillCount);
         addValue("deathCount", deathCount);
 
-        ActivityIndex activityIndex = profile.getActivityIndex(now);
+        ActivityIndex activityIndex = new ActivityIndex(container, now);
 
         addValue("activityIndexNumber", activityIndex.getFormattedValue());
         addValue("activityIndexColor", activityIndex.getColor());
         addValue("activityIndex", activityIndex.getGroup());
 
-        addValue("playerStatus", HtmlStructure.playerStatus(online, profile.getBannedOnServers(), profile.isOp()));
+        addValue("playerStatus", HtmlStructure.playerStatus(online,
+                container.getValue(PlayerKeys.BANNED).orElse(false),
+                container.getValue(PlayerKeys.OPERATOR).orElse(false)));
 
         if (!InfoSystem.getInstance().getConnectionSystem().isServerAvailable()) {
             addValue("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));

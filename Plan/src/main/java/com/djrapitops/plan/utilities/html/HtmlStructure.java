@@ -179,7 +179,7 @@ public class HtmlStructure {
                 "})</script>";
     }
 
-    public static String playerStatus(String online, Set<UUID> banned, boolean op) {
+    public static String playerStatus(String online, boolean banned, boolean op) {
         boolean offline = "offline".equalsIgnoreCase(online);
 
         StringBuilder html = new StringBuilder("<p>");
@@ -192,9 +192,8 @@ public class HtmlStructure {
         if (op) {
             html.append("<p>").append(Html.FA_COLORED_ICON.parse("blue", "superpowers")).append(" Operator</p>");
         }
-        int bannedOn = banned.size();
-        if (bannedOn != 0) {
-            html.append("<p>").append(Html.FA_COLORED_ICON.parse("red", "gavel")).append(" Banned (").append(bannedOn).append(")");
+        if (banned) {
+            html.append("<p>").append(Html.FA_COLORED_ICON.parse("red", "gavel")).append(" Banned");
         }
         return html.toString();
     }

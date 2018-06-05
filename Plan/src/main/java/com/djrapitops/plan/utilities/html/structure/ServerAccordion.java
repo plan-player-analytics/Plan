@@ -6,6 +6,10 @@ package com.djrapitops.plan.utilities.html.structure;
 
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.containers.PerServerData;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
@@ -14,9 +18,7 @@ import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plugin.utilities.Format;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * HTML utility class for creating a Server Accordion.
@@ -27,31 +29,43 @@ public class ServerAccordion extends AbstractAccordion {
 
     private final StringBuilder viewScript;
 
-    public ServerAccordion(PlayerProfile profile, Map<UUID, String> serverNames) {
+    private final Map<UUID, String> serverNames;
+    private PerServerData perServer;
+
+    public ServerAccordion(PlayerContainer container, Map<UUID, WorldTimes> worldTimesPerServer, Map<UUID, String> serverNames) {
         super("server_accordion");
 
         viewScript = new StringBuilder();
 
-        Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
-        if (worldTimesPerServer.isEmpty()) {
+        this.serverNames = serverNames;
+        Optional<PerServerData> perServerData = container.getValue(PlayerKeys.PER_SERVER);
+        if (perServerData.isPresent()) {
+            perServer = perServerData.get();
+        } else {
             return;
         }
 
-        addElements(profile, serverNames, worldTimesPerServer);
+        addElements();
     }
 
     public String toViewScript() {
         return viewScript.toString();
     }
 
-    private void addElements(PlayerProfile profile, Map<UUID, String> serverNames, Map<UUID, WorldTimes> worldTimesPerServer) {
+    private void addElements() {
         int i = 0;
-        for (Map.Entry<UUID, WorldTimes> entry : worldTimesPerServer.entrySet()) {
+        for (Map.Entry<UUID, DataContainer> entry : perServer.entrySet()) {
             UUID serverUUID = entry.getKey();
+            DataContainer container = entry.getValue();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
-            WorldTimes worldTimes = entry.getValue();
+            WorldTimes worldTimes = container.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
 
-            List<Session> sessions = profile.getSessions(serverUUID);
+            List<Session> sessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
+
+            boolean banned = container.getValue(PlayerKeys.BANNED).orElse(false);
+            boolean opeator = container.getValue(PlayerKeys.OPERATOR).orElse(false);
+            long registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
+
             long playtime = PlayerProfile.getPlaytime(sessions.stream());
             long afkTime = PlayerProfile.getAFKTime(sessions.stream());
             int sessionCount = sessions.size();
@@ -81,6 +95,11 @@ public class ServerAccordion extends AbstractAccordion {
             String title = serverName + "<span class=\"pull-right\">" + play + "</span>";
 
             String leftSide = new AccordionElementContentBuilder()
+                    .addRowBold("blue", "superpowers", "Operator", opeator ? "Yes" : "No")
+                    .addRowBold("red", "gavel", "Banned", banned ? "Yes" : "No")
+                    .addRowBold("light-green", "user-plus", "Registered",
+                            registered != 0 ? FormatUtils.formatTimeStampDay(registered) : "Not registered")
+                    .addBreak()
                     .addRowBold("teal", "calendar-check-o", "Sessions", sessionCount)
                     .addRowBold("green", "clock-o", "Server Playtime", play)
                     .addRowBold("grey", "clock-o", "Time AFK", afk)
