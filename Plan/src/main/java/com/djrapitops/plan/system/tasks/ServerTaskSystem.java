@@ -24,7 +24,8 @@ public class ServerTaskSystem extends TaskSystem {
     protected final PlanPlugin plugin;
     protected ITask bootAnalysisTask;
 
-    public ServerTaskSystem(PlanPlugin plugin) {
+    public ServerTaskSystem(PlanPlugin plugin, TPSCountTimer tpsCountTimer) {
+        super(tpsCountTimer);
         this.plugin = plugin;
     }
 

@@ -26,7 +26,6 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
@@ -231,18 +230,6 @@ public class InspectPage extends Page {
         addValue("gmSeries", worldPie.toHighChartsDrilldown());
 
         addValue("punchCardSeries", punchCardData);
-
-        List<Session> sessionsInLengthOrder = allSessions.stream()
-                .sorted(new SessionLengthComparator())
-                .collect(Collectors.toList());
-        if (sessionsInLengthOrder.isEmpty()) {
-            addValue("sessionLengthMedian", "-");
-            addValue("sessionLengthLongest", "-");
-        } else {
-            Session medianSession = sessionsInLengthOrder.get(sessionsInLengthOrder.size() / 2);
-            addValue("sessionLengthMedian", formatter.apply(medianSession.getLength()));
-            addValue("sessionLengthLongest", formatter.apply(sessionsInLengthOrder.get(0).getLength()));
-        }
 
         long playerKillCount = allSessions.stream().map(Session::getPlayerKills).mapToLong(Collection::size).sum();
         long mobKillCount = allSessions.stream().mapToLong(Session::getMobKills).sum();

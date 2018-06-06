@@ -16,7 +16,6 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plugin.utilities.Format;
 
@@ -68,13 +67,12 @@ public class ServerAccordion extends AbstractAccordion {
             List<Session> sessions = container.getValue(PerServerKeys.SESSIONS).orElse(new ArrayList<>());
 
             boolean banned = container.getValue(PerServerKeys.BANNED).orElse(false);
-            boolean opeator = container.getValue(PerServerKeys.OPERATOR).orElse(false);
+            boolean operator = container.getValue(PerServerKeys.OPERATOR).orElse(false);
             long registered = container.getValue(PerServerKeys.REGISTERED).orElse(0L);
 
             long playtime = PlayerProfile.getPlaytime(sessions.stream());
             long afkTime = PlayerProfile.getAFKTime(sessions.stream());
             int sessionCount = sessions.size();
-            long avgSession = MathUtils.averageLong(playtime, sessionCount);
             long sessionMedian = PlayerProfile.getSessionMedian(sessions.stream());
             long longestSession = PlayerProfile.getLongestSession(sessions.stream());
 
@@ -84,7 +82,6 @@ public class ServerAccordion extends AbstractAccordion {
 
             String play = timeFormatter.apply(playtime);
             String afk = timeFormatter.apply(afkTime);
-            String avg = timeFormatter.apply(avgSession);
             String median = timeFormatter.apply(sessionMedian);
             String longest = timeFormatter.apply(longestSession);
 
@@ -100,7 +97,7 @@ public class ServerAccordion extends AbstractAccordion {
             String title = serverName + "<span class=\"pull-right\">" + play + "</span>";
 
             String leftSide = new AccordionElementContentBuilder()
-                    .addRowBold("blue", "superpowers", "Operator", opeator ? "Yes" : "No")
+                    .addRowBold("blue", "superpowers", "Operator", operator ? "Yes" : "No")
                     .addRowBold("red", "gavel", "Banned", banned ? "Yes" : "No")
                     .addRowBold("light-green", "user-plus", "Registered", Formatters.year().apply(() -> registered))
                     .addBreak()

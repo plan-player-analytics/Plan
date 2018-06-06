@@ -18,10 +18,11 @@ import org.bukkit.Bukkit;
 public class BukkitTaskSystem extends ServerTaskSystem {
 
     public BukkitTaskSystem(Plan plugin) {
-        super(plugin);
-        tpsCountTimer = Check.isPaperAvailable()
-                ? new PaperTPSCountTimer(plugin)
-                : new BukkitTPSCountTimer(plugin);
+        super(plugin,
+                Check.isPaperAvailable()
+                        ? new PaperTPSCountTimer(plugin)
+                        : new BukkitTPSCountTimer(plugin)
+        );
     }
 
     @Override

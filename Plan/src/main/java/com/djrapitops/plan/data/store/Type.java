@@ -9,6 +9,9 @@ package com.djrapitops.plan.data.store;
  */
 public abstract class Type<T> {
 
+    public Type() {
+    }
+
     public static <K> Type<K> ofClass(Class<K> of) {
         return new Type<K>() {};
     }
@@ -17,4 +20,7 @@ public abstract class Type<T> {
         return new Type<K>() {};
     }
 
+    public Class<Type<T>> getGenericsClass() {
+        return (Class<Type<T>>) getClass();
+    }
 }

@@ -59,13 +59,7 @@ public class InspectCommand extends CommandNode {
                         return;
                     }
 
-                    if (CommandUtils.isPlayer(sender) && WebServer.getInstance().isAuthRequired()) {
-                        boolean senderHasWebUser = activeDB.check().doesWebUserExists(sender.getName());
-
-                        if (!senderHasWebUser) {
-                            sender.sendMessage("§e[Plan] You might not have a web user, use /plan register <password>");
-                        }
-                    }
+                    checkWebUserAndNotify(activeDB, sender);
                     Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName));
                 } catch (DBOpException e) {
                     if (e.isFatal()) {
@@ -79,5 +73,15 @@ public class InspectCommand extends CommandNode {
                 }
             }
         }).runTaskAsynchronously();
+    }
+
+    private void checkWebUserAndNotify(Database activeDB, ISender sender) {
+        if (CommandUtils.isPlayer(sender) && WebServer.getInstance().isAuthRequired()) {
+            boolean senderHasWebUser = activeDB.check().doesWebUserExists(sender.getName());
+
+            if (!senderHasWebUser) {
+                sender.sendMessage("§e[Plan] You might not have a web user, use /plan register <password>");
+            }
+        }
     }
 }
