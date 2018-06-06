@@ -99,7 +99,7 @@ public class ServerAccordion extends AbstractAccordion {
                     .addRowBold("blue", "superpowers", "Operator", opeator ? "Yes" : "No")
                     .addRowBold("red", "gavel", "Banned", banned ? "Yes" : "No")
                     .addRowBold("light-green", "user-plus", "Registered",
-                            registered != 0 ? FormatUtils.formatTimeStampDay(registered) : "Not registered")
+                            registered != 0 ? FormatUtils.formatTimeStampYear(registered) : "Not registered")
                     .addBreak()
                     .addRowBold("teal", "calendar-check-o", "Sessions", sessionCount)
                     .addRowBold("green", "clock-o", "Server Playtime", play)

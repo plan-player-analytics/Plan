@@ -105,7 +105,7 @@ public class InspectPage extends Page {
         addValue("playerName", playerName);
         addValue("kickCount", timesKicked);
 
-        addValue("toLastSeen", lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-");
+        addValue("lastSeen", lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-");
 
         PerServerContainer perServerContainer = container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer());
         PerServerDataMutator perServerDataMutator = new PerServerDataMutator(perServerContainer);
