@@ -2,7 +2,6 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
-import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -21,16 +20,6 @@ public class FormatUtils {
      */
     private FormatUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    /**
-     * Format time amount according to the config settings.
-     *
-     * @param ms Milliseconds.
-     * @return String formatted with the config settings.
-     */
-    public static String formatTimeAmount(long ms) {
-        return formatMilliseconds(ms);
     }
 
     public static String formatTimeStampISO8601NoClock(long epochMs) {
@@ -100,95 +89,6 @@ public class FormatUtils {
             format = replaceRecentDays(epochMs, format);
         }
         return format(epochMs, format);
-    }
-
-    // Formats long in milliseconds into d:h:m:s string
-    private static String formatMilliseconds(long ms) {
-        StringBuilder builder = new StringBuilder();
-        long x = ms / 1000;
-        long seconds = x % 60;
-        x /= 60;
-        long minutes = x % 60;
-        x /= 60;
-        long hours = x % 24;
-        x /= 24;
-        long days = x % 365;
-        long months = (days - days % 30) / 30;
-        days -= months * 30;
-        x /= 365;
-        long years = x;
-
-        String fYear = Settings.FORMAT_YEAR.toString();
-        String fYears = Settings.FORMAT_YEARS.toString();
-        String fMonth = Settings.FORMAT_MONTH.toString();
-        String fMonths = Settings.FORMAT_MONTHS.toString();
-        String fDay = Settings.FORMAT_DAY.toString();
-        String fDays = Settings.FORMAT_DAYS.toString();
-        String fHours = Settings.FORMAT_HOURS.toString();
-        String fMinutes = Settings.FORMAT_MINUTES.toString();
-        String fSeconds = Settings.FORMAT_SECONDS.toString();
-
-        if (years != 0) {
-            if (years == 1) {
-                builder.append(fYear);
-            } else {
-                builder.append(fYears.replace("%years%", String.valueOf(years)));
-            }
-        }
-        if (months != 0) {
-            if (months == 1) {
-                builder.append(fMonth);
-            } else {
-                builder.append(fMonths.replace("%months%", String.valueOf(months)));
-            }
-        }
-        if (days != 0) {
-            if (days == 1) {
-                builder.append(fDay);
-            } else {
-                builder.append(fDays.replace("%days%", String.valueOf(days)));
-            }
-        }
-
-        if (hours != 0) {
-            String h = fHours.replace("%hours%", String.valueOf(hours));
-            if (h.contains("%zero%") && String.valueOf(hours).length() == 1) {
-                builder.append('0');
-            }
-            builder.append(h);
-        }
-
-        if (minutes != 0) {
-            String m = fMinutes.replace("%minutes%", String.valueOf(minutes));
-            if (hours == 0 && m.contains("%hours%")) {
-                builder.append(fHours.replace("%zero%", "0").replace("%hours%", "0"));
-                m = m.replace("%hours%", "");
-            }
-            m = m.replace("%hours%", "");
-            if (m.contains("%zero%") && String.valueOf(minutes).length() == 1) {
-                builder.append('0');
-            }
-            builder.append(m);
-        }
-        if (seconds != 0) {
-            String s = fSeconds.replace("%seconds%", String.valueOf(seconds));
-            if (minutes == 0 && s.contains("%minutes%")) {
-                if (hours == 0 && fMinutes.contains("%hours%")) {
-                    builder.append(fHours.replace("%zero%", "0").replace("%hours%", "0"));
-                }
-                builder.append(fMinutes.replace("%hours%", "").replace("%zero%", "0").replace("%minutes%", "0"));
-            }
-            s = s.replace("%minutes%", "");
-            if (s.contains("%zero%") && String.valueOf(seconds).length() == 1) {
-                builder.append('0');
-            }
-            builder.append(s);
-        }
-        String formattedTime = StringUtils.remove(builder.toString(), "%zero%");
-        if (formattedTime.isEmpty()) {
-            return Settings.FORMAT_ZERO_SECONDS.toString();
-        }
-        return formattedTime;
     }
 
     /**

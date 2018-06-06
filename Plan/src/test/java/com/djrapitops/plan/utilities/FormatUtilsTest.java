@@ -1,6 +1,5 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plugin.api.TimeAmount;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -27,20 +26,6 @@ public class FormatUtilsTest {
         SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
         Teardown.resetSettingsTempValues();
-    }
-
-    @Test
-    public void testFormatTimeAmount() {
-        String expResult = "1s";
-        String result = FormatUtils.formatTimeAmount(TimeAmount.SECOND.ms());
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testFormatTimeAmountMonths() {
-        long time = TimeAmount.DAY.ms() * 40L;
-        assertEquals("1 month, 10d ", FormatUtils.formatTimeAmount(time));
     }
 
     @Test

@@ -6,12 +6,14 @@ package com.djrapitops.plan.utilities.html.structure;
 
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
@@ -53,6 +55,9 @@ public class SessionTabStructureCreator {
 
         boolean appendWorldPercentage = Settings.APPEND_WORLD_PERC.isTrue();
 
+        Formatter<Long> timeAmountFormatter = Formatters.timeAmount();
+        Formatter<DateHolder> timeStampFormatter = Formatters.year();
+
         for (Session session : allSessions) {
             if (i >= maxSessions) {
                 break;
@@ -62,11 +67,11 @@ public class SessionTabStructureCreator {
             UUID uuid = uuidsByID.get(sessionID);
             String serverName = serverNameIDMap.get(sessionID);
 
-            String sessionStart = FormatUtils.formatTimeStampYear(session.getSessionStart());
+            String sessionStart = timeStampFormatter.apply(session);
             long endOfSession = session.getSessionEnd();
-            String sessionLength = endOfSession == -1 ? "Online" : FormatUtils.formatTimeAmount(session.getLength());
-            String afk = (endOfSession == -1 ? "(Inaccurate) " : "") + FormatUtils.formatTimeAmount(session.getAfkLength());
-            String sessionEnd = endOfSession == -1 ? "Online" : FormatUtils.formatTimeStampYear(endOfSession);
+            String sessionLength = endOfSession == -1 ? "Online" : timeAmountFormatter.apply(session.getLength());
+            String afk = (endOfSession == -1 ? "(Inaccurate) " : "") + timeAmountFormatter.apply(session.getAfkLength());
+            String sessionEnd = endOfSession == -1 ? "Online" : timeStampFormatter.apply(session::getSessionEnd);
 
             int playerKillCount = session.getPlayerKills().size();
 

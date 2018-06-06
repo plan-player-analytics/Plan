@@ -5,9 +5,9 @@
 package com.djrapitops.plan.system.webserver.pages.parsing;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
@@ -17,7 +17,6 @@ import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.NetworkPageContent;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
@@ -79,7 +78,7 @@ public class NetworkPage extends Page {
         }
     }
 
-    private void uniquePlayers(long now, Database db) throws DBException {
+    private void uniquePlayers(long now, Database db) {
         Map<UUID, Map<UUID, List<Session>>> allSessions = db.fetch().getSessionsInLastMonth();
         Map<UUID, List<Session>> userSessions = AnalysisUtils.sortSessionsByUser(allSessions);
 
@@ -92,13 +91,13 @@ public class NetworkPage extends Page {
         addValue("playersUniqueMonth", AnalysisUtils.getUniquePlayers(userSessions, monthAgo));
     }
 
-    private void peakTimes(UUID serverUUID, long now, Database db) throws DBException {
+    private void peakTimes(UUID serverUUID, long now, Database db) {
         Optional<TPS> allTimePeak = db.fetch().getAllTimePeak(serverUUID);
         Optional<TPS> lastPeak = db.fetch().getPeakPlayerCount(serverUUID, now - TimeAmount.DAY.ms() * 2L);
 
         if (allTimePeak.isPresent()) {
             TPS tps = allTimePeak.get();
-            addValue("bestPeakTime", FormatUtils.formatTimeStampYear(tps.getDate()));
+            addValue("bestPeakTime", Formatters.year().apply(tps));
             addValue("playersBestPeak", tps.getPlayers());
         } else {
             addValue("bestPeakTime", "No Data");
@@ -106,7 +105,7 @@ public class NetworkPage extends Page {
         }
         if (lastPeak.isPresent()) {
             TPS tps = lastPeak.get();
-            addValue("lastPeakTime", FormatUtils.formatTimeStampYear(tps.getDate()));
+            addValue("lastPeakTime", Formatters.year().apply(tps));
             addValue("playersLastPeak", tps.getPlayers());
         } else {
             addValue("lastPeakTime", "No Data");

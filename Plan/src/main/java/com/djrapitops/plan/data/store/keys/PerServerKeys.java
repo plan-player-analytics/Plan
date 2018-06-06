@@ -16,6 +16,10 @@ import java.util.List;
  */
 public class PerServerKeys {
 
+    private PerServerKeys() {
+        /* Static variable class */
+    }
+
     public static final Key<Long> REGISTERED = CommonKeys.REGISTERED;
 
     public static final Key<List<Session>> SESSIONS = CommonKeys.SESSIONS;

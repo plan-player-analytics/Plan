@@ -14,6 +14,8 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -101,11 +103,11 @@ public class InspectPage extends Page {
         int timesKicked = container.getValue(PlayerKeys.KICK_COUNT).orElse(0);
         long lastSeen = container.getValue(PlayerKeys.LAST_SEEN).orElse(-1L);
 
-        addValue("registered", FormatUtils.formatTimeStampYear(registered));
+        addValue("registered", Formatters.year().apply(() -> registered));
         addValue("playerName", playerName);
         addValue("kickCount", timesKicked);
 
-        addValue("lastSeen", lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-");
+        addValue("lastSeen", Formatters.year().apply(() -> lastSeen));
 
         PerServerContainer perServerContainer = container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer());
         PerServerDataMutator perServerDataMutator = new PerServerDataMutator(perServerContainer);
@@ -185,32 +187,33 @@ public class InspectPage extends Page {
         long sessionAverageWeek = weekSessionsMutator.toAverageSessionLength();
         long sessionAverageMonth = monthSessionsMutator.toAverageSessionLength();
 
-        addValue("playtimeTotal", playtime > 0L ? FormatUtils.formatTimeAmount(playtime) : "-");
-        addValue("playtimeDay", playtimeDay > 0L ? FormatUtils.formatTimeAmount(playtimeDay) : "-");
-        addValue("playtimeWeek", playtimeWeek > 0L ? FormatUtils.formatTimeAmount(playtimeWeek) : "-");
-        addValue("playtimeMonth", playtimeMonth > 0L ? FormatUtils.formatTimeAmount(playtimeMonth) : "-");
+        Formatter<Long> formatter = Formatters.timeAmount();
+        addValue("playtimeTotal", formatter.apply(playtime));
+        addValue("playtimeDay", formatter.apply(playtimeDay));
+        addValue("playtimeWeek", formatter.apply(playtimeWeek));
+        addValue("playtimeMonth", formatter.apply(playtimeMonth));
 
-        addValue("activeTotal", activeTotal > 0L ? FormatUtils.formatTimeAmount(activeTotal) : "-");
+        addValue("activeTotal", formatter.apply(activeTotal));
 
-        addValue("afkTotal", afk > 0L ? FormatUtils.formatTimeAmount(afk) : "-");
-        addValue("afkDay", afkDay > 0L ? FormatUtils.formatTimeAmount(afkDay) : "-");
-        addValue("afkWeek", afkWeek > 0L ? FormatUtils.formatTimeAmount(afkWeek) : "-");
-        addValue("afkMonth", afkMonth > 0L ? FormatUtils.formatTimeAmount(afkMonth) : "-");
+        addValue("afkTotal", formatter.apply(afk));
+        addValue("afkDay", formatter.apply(afkDay));
+        addValue("afkWeek", formatter.apply(afkWeek));
+        addValue("afkMonth", formatter.apply(afkMonth));
 
-        addValue("sessionLengthLongest", longestSession > 0L ? FormatUtils.formatTimeAmount(longestSession) : "-");
-        addValue("sessionLongestDay", longestSessionDay > 0L ? FormatUtils.formatTimeAmount(longestSessionDay) : "-");
-        addValue("sessionLongestWeek", longestSessionWeek > 0L ? FormatUtils.formatTimeAmount(longestSessionWeek) : "-");
-        addValue("sessionLongestMonth", longestSessionMonth > 0L ? FormatUtils.formatTimeAmount(longestSessionMonth) : "-");
+        addValue("sessionLengthLongest", formatter.apply(longestSession));
+        addValue("sessionLongestDay", formatter.apply(longestSessionDay));
+        addValue("sessionLongestWeek", formatter.apply(longestSessionWeek));
+        addValue("sessionLongestMonth", formatter.apply(longestSessionMonth));
 
-        addValue("sessionLengthMedian", sessionMedian > 0L ? FormatUtils.formatTimeAmount(sessionMedian) : "-");
-        addValue("sessionMedianDay", sessionMedianDay > 0L ? FormatUtils.formatTimeAmount(sessionMedianDay) : "-");
-        addValue("sessionMedianWeek", sessionMedianWeek > 0L ? FormatUtils.formatTimeAmount(sessionMedianWeek) : "-");
-        addValue("sessionMedianMonth", sessionMedianMonth > 0L ? FormatUtils.formatTimeAmount(sessionMedianMonth) : "-");
+        addValue("sessionLengthMedian", formatter.apply(sessionMedian));
+        addValue("sessionMedianDay", formatter.apply(sessionMedianDay));
+        addValue("sessionMedianWeek", formatter.apply(sessionMedianWeek));
+        addValue("sessionMedianMonth", formatter.apply(sessionMedianMonth));
 
-        addValue("sessionAverage", sessionAverage > 0L ? FormatUtils.formatTimeAmount(sessionAverage) : "-");
-        addValue("sessionAverageDay", sessionAverageDay > 0L ? FormatUtils.formatTimeAmount(sessionAverageDay) : "-");
-        addValue("sessionAverageWeek", sessionAverageWeek > 0L ? FormatUtils.formatTimeAmount(sessionAverageWeek) : "-");
-        addValue("sessionAverageMonth", sessionAverageMonth > 0L ? FormatUtils.formatTimeAmount(sessionAverageMonth) : "-");
+        addValue("sessionAverage", formatter.apply(sessionAverage));
+        addValue("sessionAverageDay", formatter.apply(sessionAverageDay));
+        addValue("sessionAverageWeek", formatter.apply(sessionAverageWeek));
+        addValue("sessionAverageMonth", formatter.apply(sessionAverageMonth));
 
         addValue("sessionCount", sessionCount);
         addValue("sessionCountDay", sessionCountDay);
@@ -237,8 +240,8 @@ public class InspectPage extends Page {
             addValue("sessionLengthLongest", "-");
         } else {
             Session medianSession = sessionsInLengthOrder.get(sessionsInLengthOrder.size() / 2);
-            addValue("sessionLengthMedian", FormatUtils.formatTimeAmount(medianSession.getLength()));
-            addValue("sessionLengthLongest", FormatUtils.formatTimeAmount(sessionsInLengthOrder.get(0).getLength()));
+            addValue("sessionLengthMedian", formatter.apply(medianSession.getLength()));
+            addValue("sessionLengthLongest", formatter.apply(sessionsInLengthOrder.get(0).getLength()));
         }
 
         long playerKillCount = allSessions.stream().map(Session::getPlayerKills).mapToLong(Collection::size).sum();

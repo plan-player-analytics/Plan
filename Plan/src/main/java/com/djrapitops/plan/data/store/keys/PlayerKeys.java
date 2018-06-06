@@ -20,6 +20,10 @@ import java.util.UUID;
  */
 public class PlayerKeys {
 
+    private PlayerKeys() {
+        /* Static variable class */
+    }
+
     public static final Key<UUID> UUID = CommonKeys.UUID;
     public static final Key<String> NAME = CommonKeys.NAME;
     public static final Key<List<Nickname>> NICKNAMES = new Key<>(new Type<List<Nickname>>() {}, "nicknames");

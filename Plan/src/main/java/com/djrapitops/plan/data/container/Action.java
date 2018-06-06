@@ -5,7 +5,8 @@
 package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.Actions;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.html.Html;
 
 import java.util.Objects;
@@ -15,7 +16,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class Action {
+public class Action implements DateHolder {
     private final long date;
     private final Actions doneAction;
     private final String additionalInfo;
@@ -34,6 +35,7 @@ public class Action {
         this.serverID = serverID;
     }
 
+    @Override
     public long getDate() {
         return date;
     }
@@ -73,6 +75,6 @@ public class Action {
 
     @Override
     public String toString() {
-        return Html.TABLELINE_3.parse(FormatUtils.formatTimeStampYear(date), doneAction.toString(), additionalInfo);
+        return Html.TABLELINE_3.parse(Formatters.year().apply(this), doneAction.toString(), additionalInfo);
     }
 }

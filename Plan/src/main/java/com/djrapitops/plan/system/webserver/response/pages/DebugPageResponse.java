@@ -6,6 +6,9 @@ package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
@@ -14,7 +17,6 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.Benchmark;
@@ -70,6 +72,9 @@ public class DebugPageResponse extends ErrorResponse {
             content.append("<pre>**Connection Log:**<br>");
             content.append("Server Address | Request Type | Response | Sent<br>")
                     .append("-- | -- | -- | --<br>");
+
+            Formatter<DateHolder> formatter = Formatters.second();
+
             for (Map.Entry<String, Map<String, ConnectionLog.Entry>> entry : logEntries.entrySet()) {
                 String address = entry.getKey();
                 Map<String, ConnectionLog.Entry> requests = entry.getValue();
@@ -80,7 +85,7 @@ public class DebugPageResponse extends ErrorResponse {
                     content.append(address).append(" | ")
                             .append(infoRequest).append(" | ")
                             .append(logEntry.getResponseCode()).append(" | ")
-                            .append(FormatUtils.formatTimeStampSecond(logEntry.getTimeSent())).append("<br>");
+                            .append(formatter.apply(logEntry)).append("<br>");
                 }
 
             }

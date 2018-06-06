@@ -11,7 +11,7 @@ public class PlayerKillComparator implements Comparator<PlayerKill> {
 
     @Override
     public int compare(PlayerKill o1, PlayerKill o2) {
-        return Long.compare(o1.getTime(), o2.getTime());
+        return Long.compare(o1.getDate(), o2.getDate());
     }
 
 }

@@ -11,10 +11,11 @@ import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plugin.utilities.Format;
@@ -55,6 +56,9 @@ public class ServerAccordion extends AbstractAccordion {
 
     private void addElements() {
         int i = 0;
+
+        Formatter<Long> timeFormatter = Formatters.timeAmount();
+
         for (Map.Entry<UUID, DataContainer> entry : perServer.entrySet()) {
             UUID serverUUID = entry.getKey();
             DataContainer container = entry.getValue();
@@ -78,11 +82,11 @@ public class ServerAccordion extends AbstractAccordion {
             long playerKills = PlayerProfile.getPlayerKills(sessions.stream()).count();
             long deaths = PlayerProfile.getDeathCount(sessions.stream());
 
-            String play = FormatUtils.formatTimeAmount(playtime);
-            String afk = FormatUtils.formatTimeAmount(afkTime);
-            String avg = sessionCount != 0 ? FormatUtils.formatTimeAmount(avgSession) : "-";
-            String median = sessionCount != 0 ? FormatUtils.formatTimeAmount(sessionMedian) : "-";
-            String longest = sessionCount != 0 ? FormatUtils.formatTimeAmount(longestSession) : "-";
+            String play = timeFormatter.apply(playtime);
+            String afk = timeFormatter.apply(afkTime);
+            String avg = timeFormatter.apply(avgSession);
+            String median = timeFormatter.apply(sessionMedian);
+            String longest = timeFormatter.apply(longestSession);
 
             String sanitizedServerName = new Format(serverName)
                     .removeSymbols()
@@ -98,8 +102,7 @@ public class ServerAccordion extends AbstractAccordion {
             String leftSide = new AccordionElementContentBuilder()
                     .addRowBold("blue", "superpowers", "Operator", opeator ? "Yes" : "No")
                     .addRowBold("red", "gavel", "Banned", banned ? "Yes" : "No")
-                    .addRowBold("light-green", "user-plus", "Registered",
-                            registered != 0 ? FormatUtils.formatTimeStampYear(registered) : "Not registered")
+                    .addRowBold("light-green", "user-plus", "Registered", Formatters.year().apply(() -> registered))
                     .addBreak()
                     .addRowBold("teal", "calendar-check-o", "Sessions", sessionCount)
                     .addRowBold("green", "clock-o", "Server Playtime", play)

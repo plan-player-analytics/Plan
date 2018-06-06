@@ -5,6 +5,7 @@
 package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -62,7 +63,7 @@ public class ServerCalendar {
             long playtime = sessionsPerUsers.values().stream().flatMap(Collection::stream).mapToLong(Session::getLength).sum();
             long uniquePlayers = sessionsPerUsers.size();
 
-            series.append(",{title: 'Playtime: ").append(FormatUtils.formatTimeAmount(playtime))
+            series.append(",{title: 'Playtime: ").append(Formatters.timeAmount().apply(playtime))
                     .append("',start:'").append(day)
                     .append("',color: '").append(Theme.getValue(ThemeVal.GREEN)).append("'")
                     .append("}");
@@ -85,7 +86,7 @@ public class ServerCalendar {
             List<Session> sessions = entry.getValue();
 
             for (Session session : sessions) {
-                String day = FormatUtils.formatTimeStampISO8601NoClock(session.getSessionStart());
+                String day = Formatters.iso8601NoClock().apply(session);
 
                 Map<UUID, List<Session>> sessionsPerUserOfDay = sessionsByDay.getOrDefault(day, new HashMap<>());
                 List<Session> sessionsOfUser = sessionsPerUserOfDay.getOrDefault(player, new ArrayList<>());
@@ -98,14 +99,14 @@ public class ServerCalendar {
     }
 
     private Map<String, Integer> getRegisteredByDay() {
-        Map<String, Integer> RegisteredByDay = new HashMap<>();
+        Map<String, Integer> registeredByDay = new HashMap<>();
         for (Long registered : registerDates) {
             String day = FormatUtils.formatTimeStampISO8601NoClock(registered);
 
-            int registeredPerDay = RegisteredByDay.getOrDefault(day, 0);
+            int registeredPerDay = registeredByDay.getOrDefault(day, 0);
             registeredPerDay += 1;
-            RegisteredByDay.put(day, registeredPerDay);
+            registeredByDay.put(day, registeredPerDay);
         }
-        return RegisteredByDay;
+        return registeredByDay;
     }
 }

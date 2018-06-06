@@ -282,7 +282,7 @@ public class UserInfoTable extends UserIDTable {
                         statement.setLong(2, user.getRegistered());
                         statement.setString(3, serverUUID.toString());
                         statement.setBoolean(4, user.isBanned());
-                        statement.setBoolean(5, user.isOpped());
+                        statement.setBoolean(5, user.isOperator());
                         statement.addBatch();
                     }
                 }

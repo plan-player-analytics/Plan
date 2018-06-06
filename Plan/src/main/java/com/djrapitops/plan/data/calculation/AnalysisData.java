@@ -8,6 +8,8 @@ import com.djrapitops.plan.data.container.StickyData;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
@@ -140,8 +142,8 @@ public class AnalysisData extends RawData {
         healthTab(now, players, tpsDataMonth);
 
         long totalPlaytime = profile.getTotalPlaytime();
-        addValue("playtimeTotal", playersTotal != 0 ? FormatUtils.formatTimeAmount(totalPlaytime) : "No Players");
-        addValue("playtimeAverage", playersTotal != 0 ? FormatUtils.formatTimeAmount(MathUtils.averageLong(totalPlaytime, playersTotal)) : "-");
+        addValue("playtimeTotal", playersTotal != 0 ? Formatters.timeAmount().apply(totalPlaytime) : "No Players");
+        addValue("playtimeAverage", playersTotal != 0 ? Formatters.timeAmount().apply(MathUtils.averageLong(totalPlaytime, playersTotal)) : "-");
     }
 
     private void healthTab(long now, List<PlayerProfile> players, List<TPS> tpsDataMonth) {
@@ -321,7 +323,7 @@ public class AnalysisData extends RawData {
         addValue("sessionTabGraphViewFunctions", sessionContent[1]);
         addValue("tableBodySessions", tables[0]);
         addValue("listRecentLogins", tables[1]);
-        addValue("sessionAverage", FormatUtils.formatTimeAmount(MathUtils.averageLong(allSessions.stream().map(Session::getLength))));
+        addValue("sessionAverage", Formatters.timeAmount().apply(new SessionsMutator(allSessions).toAverageSessionLength()));
         addValue("punchCardSeries", new PunchCardGraph(sessionsMonth).toHighChartsSeries());
 
         addValue("deaths", ServerProfile.getDeathCount(allSessions));
@@ -338,7 +340,7 @@ public class AnalysisData extends RawData {
         addValue("tablePlayerlist", Settings.PLAYERTABLE_FOOTER.isTrue() ?
                 Html.TABLE_PLAYERS_FOOTER.parse(playersTableBody)
                 : Html.TABLE_PLAYERS.parse(playersTableBody));
-        addValue("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
+        addValue("worldTotal", Formatters.timeAmount().apply(worldTimes.getTotal()));
         WorldPie worldPie = new WorldPie(worldTimes);
         addValue("worldSeries", worldPie.toHighChartsSeries());
         addValue("gmSeries", worldPie.toHighChartsDrilldown());

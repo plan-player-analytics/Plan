@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.SHA256Hash;
@@ -17,29 +18,29 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Rsl1122
  */
-public class GeoInfo {
+public class GeoInfo implements DateHolder {
 
     private final String ip;
     private final String geolocation;
     private final String ipHash;
-    private final long lastUsed;
+    private final long date;
 
-    public GeoInfo(String ip, String geolocation, long lastUsed)
+    public GeoInfo(String ip, String geolocation, long date)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        this(FormatUtils.formatIP(ip), geolocation, lastUsed, new SHA256Hash(ip).create());
+        this(FormatUtils.formatIP(ip), geolocation, date, new SHA256Hash(ip).create());
     }
 
-    public GeoInfo(String ip, String geolocation, long lastUsed, String ipHash) {
+    public GeoInfo(String ip, String geolocation, long date, String ipHash) {
         this.ip = ip;
         this.geolocation = geolocation;
-        this.lastUsed = lastUsed;
+        this.date = date;
         this.ipHash = ipHash;
     }
 
     public static DateMap<GeoInfo> intoDateMap(Iterable<GeoInfo> geoInfo) {
         DateMap<GeoInfo> map = new DateMap<>();
         for (GeoInfo info : geoInfo) {
-            map.put(info.lastUsed, info);
+            map.put(info.date, info);
         }
         return map;
     }
@@ -52,8 +53,9 @@ public class GeoInfo {
         return geolocation;
     }
 
-    public long getLastUsed() {
-        return lastUsed;
+    @Override
+    public long getDate() {
+        return date;
     }
 
     public String getIpHash() {
@@ -81,7 +83,7 @@ public class GeoInfo {
                 "ip='" + ip + '\'' +
                 ", geolocation='" + geolocation + '\'' +
                 ", ipHash='" + ipHash + '\'' +
-                ", lastUsed=" + lastUsed +
+                ", date=" + date +
                 '}';
     }
 }

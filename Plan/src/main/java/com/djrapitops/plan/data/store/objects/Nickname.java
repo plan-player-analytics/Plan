@@ -8,15 +8,15 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class Nickname {
+public class Nickname implements DateHolder {
 
     private final String name;
-    private final long lastUsed;
+    private final long date;
     private final UUID serverUUID;
 
-    public Nickname(String name, long lastUsed, UUID serverUUID) {
+    public Nickname(String name, long date, UUID serverUUID) {
         this.name = name;
-        this.lastUsed = lastUsed;
+        this.date = date;
         this.serverUUID = serverUUID;
     }
 
@@ -24,8 +24,8 @@ public class Nickname {
         return name;
     }
 
-    public long getLastUsed() {
-        return lastUsed;
+    public long getDate() {
+        return date;
     }
 
     public UUID getServerUUID() {
@@ -36,7 +36,7 @@ public class Nickname {
     public String toString() {
         return "Nickname{" +
                 "name='" + name + '\'' +
-                ", lastUsed=" + lastUsed +
+                ", date=" + date +
                 ", serverUUID=" + serverUUID +
                 '}';
     }
@@ -46,7 +46,7 @@ public class Nickname {
         if (this == o) return true;
         if (!(o instanceof Nickname)) return false;
         Nickname nickname = (Nickname) o;
-        return lastUsed == nickname.lastUsed &&
+        return date == nickname.date &&
                 Objects.equals(name, nickname.name) &&
                 Objects.equals(serverUUID, nickname.serverUUID);
     }
@@ -54,6 +54,6 @@ public class Nickname {
     @Override
     public int hashCode() {
 
-        return Objects.hash(name, lastUsed, serverUUID);
+        return Objects.hash(name, date, serverUUID);
     }
 }

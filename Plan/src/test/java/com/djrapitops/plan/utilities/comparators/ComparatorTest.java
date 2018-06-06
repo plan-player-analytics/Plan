@@ -144,12 +144,12 @@ public class ComparatorTest {
     public void geoInfoComparator() {
         List<GeoInfo> geoInfos = RandomData.randomGeoInfo();
 
-        List<Long> expected = geoInfos.stream().map(GeoInfo::getLastUsed)
+        List<Long> expected = geoInfos.stream().map(GeoInfo::getDate)
                 .sorted(Long::compare).collect(Collectors.toList());
         Collections.reverse(expected);
 
         geoInfos.sort(new GeoInfoComparator());
-        List<Long> result = geoInfos.stream().map(GeoInfo::getLastUsed).collect(Collectors.toList());
+        List<Long> result = geoInfos.stream().map(GeoInfo::getDate).collect(Collectors.toList());
         assertEquals(expected, result);
     }
 }

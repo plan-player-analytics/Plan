@@ -131,7 +131,7 @@ public class KillsTable extends UserIDTable {
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (PlayerKill kill : playerKills) {
                     UUID victim = kill.getVictim();
-                    long date = kill.getTime();
+                    long date = kill.getDate();
                     String weapon = kill.getWeapon();
                     if (Verify.containsNull(victim, uuid)) {
                         continue;
@@ -248,7 +248,7 @@ public class KillsTable extends UserIDTable {
                             // Every kill
                             for (PlayerKill kill : session.getPlayerKills()) {
                                 UUID victim = kill.getVictim();
-                                long date = kill.getTime();
+                                long date = kill.getDate();
                                 String weapon = kill.getWeapon();
                                 statement.setString(1, killer.toString());
                                 statement.setString(2, victim.toString());

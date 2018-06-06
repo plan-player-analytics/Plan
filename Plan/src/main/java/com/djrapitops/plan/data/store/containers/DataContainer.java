@@ -2,6 +2,7 @@ package com.djrapitops.plan.data.store.containers;
 
 import com.djrapitops.plan.data.store.CachingSupplier;
 import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -61,7 +62,7 @@ public class DataContainer extends HashMap<Key, Supplier> {
             return Optional.empty();
         }
         try {
-            return Optional.of((T) supplier.get());
+            return Optional.ofNullable((T) supplier.get());
         } catch (ClassCastException e) {
             return Optional.empty();
         }
@@ -73,6 +74,16 @@ public class DataContainer extends HashMap<Key, Supplier> {
             throw new IllegalArgumentException("Unsupported Key");
         }
         return (T) supplier.get();
+    }
+
+    public <T> String getFormatted(Key<T> key, Formatter<Optional<T>> formatter) {
+        Optional<T> value = getValue(key);
+        return formatter.apply(value);
+    }
+
+    public <T> String getFormattedUnsafe(Key<T> key, Formatter<T> formatter) {
+        T value = getUnsafe(key);
+        return formatter.apply(value);
     }
 
     /**

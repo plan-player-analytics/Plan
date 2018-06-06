@@ -6,6 +6,7 @@ package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
@@ -50,9 +51,7 @@ public class SessionsTableCreator {
         StringBuilder sessionTableBuilder = new StringBuilder();
         StringBuilder recentLoginsBuilder = new StringBuilder();
 
-
         Set<String> recentLoginsNames = new HashSet<>();
-
 
         Map<Long, UUID> uuidBySessionStart = new HashMap<>();
         for (Map.Entry<UUID, Session> entry : SessionCache.getActiveSessions().entrySet()) {
@@ -78,8 +77,8 @@ public class SessionsTableCreator {
             }
 
             String name = dataCache.getName(uuid);
-            String start = FormatUtils.formatTimeStampYear(session.getSessionStart());
-            String length = session.getSessionEnd() != -1 ? FormatUtils.formatTimeAmount(session.getLength()) : "Online";
+            String start = Formatters.year().apply(session);
+            String length = session.getSessionEnd() != -1 ? Formatters.timeAmount().apply(session.getLength()) : "Online";
             String world = getLongestWorldPlayed(session);
 
             String inspectUrl = PlanAPI.getInstance().getPlayerInspectPageLink(name);

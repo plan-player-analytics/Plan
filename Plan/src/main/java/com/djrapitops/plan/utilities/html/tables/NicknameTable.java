@@ -5,8 +5,10 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
@@ -31,14 +33,14 @@ public class NicknameTable extends TableContainer {
     }
 
     private void addValues(List<Nickname> nicknames, Map<UUID, String> serverNames) {
+        Formatter<DateHolder> formatter = Formatters.day();
         for (Nickname nickname : nicknames) {
             UUID serverUUID = nickname.getServerUUID();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
-            long lastUsed = nickname.getLastUsed();
             addRow(
                     HtmlUtils.swapColorsToSpan(HtmlUtils.removeXSS(nickname.getName())),
                     serverName,
-                    lastUsed != 0 ? FormatUtils.formatTimeStampDay(lastUsed) : "-"
+                    formatter.apply(nickname)
             );
         }
     }

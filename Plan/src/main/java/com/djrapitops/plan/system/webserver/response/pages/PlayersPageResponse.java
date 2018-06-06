@@ -6,13 +6,15 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import com.djrapitops.plan.utilities.comparators.UserInfoLastPlayedComparator;
@@ -85,6 +87,9 @@ public class PlayersPageResponse extends Response {
                     throw new IllegalArgumentException("No players");
                 }
 
+                Formatter<Long> timeFormatter = Formatters.timeAmount();
+                Formatter<DateHolder> timeStampFormatter = Formatters.year();
+
                 int i = 0;
                 int maxPlayers = Settings.MAX_PLAYERS_PLAYERS_PAGE.getNumber();
                 if (maxPlayers <= 0) {
@@ -104,18 +109,16 @@ public class PlayersPageResponse extends Response {
                     long playtime = sessionCount != 0 ? sessions.stream()
                             .mapToLong(Session::getLength)
                             .sum() : 0L;
-                    long registered = userInfo.getRegistered();
-                    long lastSeen = lastSeenForAllPlayers.getOrDefault(uuid, 0L);
                     List<GeoInfo> geoInfoList = geoInfos.getOrDefault(uuid, new ArrayList<>());
                     geoInfoList.sort(new GeoInfoComparator());
                     String geolocation = geoInfoList.isEmpty() ? "Not Known" : geoInfoList.get(0).getGeolocation();
 
                     html.append(Html.TABLELINE_PLAYERS_PLAYERS_PAGE.parse(
                             link,
-                            playtime, FormatUtils.formatTimeAmount(playtime),
+                            playtime, timeFormatter.apply(playtime),
                             sessionCount + "",
-                            FormatUtils.formatTimeStampYear(registered),
-                            lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-",
+                            timeStampFormatter.apply(userInfo::getRegistered),
+                            timeStampFormatter.apply(userInfo::getLastSeen),
                             geolocation
                     ));
                     i++;

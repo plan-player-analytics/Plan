@@ -102,7 +102,7 @@ public class GeoInfoTable extends UserIDTable {
                                         GeoInfo updatedInfo = new GeoInfo(
                                                 geoInfo.getIp(),
                                                 geoInfo.getGeolocation(),
-                                                geoInfo.getLastUsed()
+                                                geoInfo.getDate()
                                         );
                                         statement.setString(1, updatedInfo.getIp());
                                         statement.setString(2, updatedInfo.getIpHash());
@@ -165,7 +165,7 @@ public class GeoInfoTable extends UserIDTable {
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, info.getLastUsed());
+                statement.setLong(1, info.getDate());
                 statement.setString(2, uuid.toString());
                 statement.setString(3, info.getIpHash());
                 statement.setString(4, info.getGeolocation());
@@ -190,7 +190,7 @@ public class GeoInfoTable extends UserIDTable {
                 statement.setString(2, info.getIp());
                 statement.setString(3, info.getIpHash());
                 statement.setString(4, info.getGeolocation());
-                statement.setLong(5, info.getLastUsed());
+                statement.setLong(5, info.getDate());
             }
         });
     }
@@ -280,7 +280,7 @@ public class GeoInfoTable extends UserIDTable {
                         String ip = info.getIp();
                         String ipHash = info.getIpHash();
                         String geoLocation = info.getGeolocation();
-                        long lastUsed = info.getLastUsed();
+                        long lastUsed = info.getDate();
 
                         statement.setString(1, uuid.toString());
                         statement.setString(2, ip);

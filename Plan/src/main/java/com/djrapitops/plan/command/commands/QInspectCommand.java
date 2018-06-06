@@ -8,11 +8,13 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -99,6 +101,8 @@ public class QInspectCommand extends CommandNode {
         String colM = colorScheme.getMainColor();
         String colS = colorScheme.getSecondaryColor();
         String colT = colorScheme.getTertiaryColor();
+        Formatter<DateHolder> timestamp = Formatters.year();
+        Formatter<Long> length = Formatters.timeAmount();
 
         sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + container.getValue(PlayerKeys.NAME).orElse("Unknown"));
 
@@ -111,11 +115,11 @@ public class QInspectCommand extends CommandNode {
         SessionsMutator sessionsMutator = new SessionsMutator(container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()));
 
         sender.sendMessage(colM + "  Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getGroup());
-        sender.sendMessage(colM + "  Registered: " + colS + (registered != 0 ? FormatUtils.formatTimeStampYear(registered) : "-"));
-        sender.sendMessage(colM + "  Last Seen: " + colS + (lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-"));
+        sender.sendMessage(colM + "  Registered: " + colS + timestamp.apply(() -> registered));
+        sender.sendMessage(colM + "  Last Seen: " + colS + timestamp.apply(() -> lastSeen));
         sender.sendMessage(colM + "  Logged in from: " + colS + loginLocation);
-        sender.sendMessage(colM + "  Playtime: " + colS + FormatUtils.formatTimeAmount(sessionsMutator.toPlaytime()));
-        sender.sendMessage(colM + "  Longest Session: " + colS + FormatUtils.formatTimeAmount(sessionsMutator.toLongestSessionLength()));
+        sender.sendMessage(colM + "  Playtime: " + colS + length.apply(sessionsMutator.toPlaytime()));
+        sender.sendMessage(colM + "  Longest Session: " + colS + length.apply(sessionsMutator.toLongestSessionLength()));
         sender.sendMessage(colM + "  Times Kicked: " + colS + container.getValue(PlayerKeys.KICK_COUNT).orElse(0));
         sender.sendMessage("");
         sender.sendMessage(colM + "  Player Kills : " + colS + sessionsMutator.toPlayerKillCount());

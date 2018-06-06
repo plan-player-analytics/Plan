@@ -3,9 +3,9 @@ package com.djrapitops.plan.utilities.html.tables;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.calculation.ActivityIndex;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -62,10 +62,10 @@ public class PlayersTableCreator {
                 html.append(Html.TABLELINE_PLAYERS.parse(
                         Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(profile.getName()), profile.getName()),
                         activityString,
-                        playtime, FormatUtils.formatTimeAmount(playtime),
+                        playtime, Formatters.timeAmount().apply(playtime),
                         loginTimes,
-                        registered, FormatUtils.formatTimeStampYear(registered),
-                        lastSeen, lastSeen != 0 ? FormatUtils.formatTimeStampYear(lastSeen) : "-",
+                        registered, Formatters.year().apply(() -> registered),
+                        lastSeen, Formatters.year().apply(() -> lastSeen),
                         geoLocation
                 ));
             } catch (NullPointerException e) {

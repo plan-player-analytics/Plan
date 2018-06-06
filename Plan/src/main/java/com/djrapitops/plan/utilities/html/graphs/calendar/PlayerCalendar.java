@@ -6,6 +6,8 @@ package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -51,7 +53,7 @@ public class PlayerCalendar {
             int sessionCount = sessions.size();
             long playtime = sessions.stream().mapToLong(Session::getLength).sum();
 
-            series.append(",{title: 'Playtime: ").append(FormatUtils.formatTimeAmount(playtime))
+            series.append(",{title: 'Playtime: ").append(Formatters.timeAmount().apply(playtime))
                     .append("',start:'").append(day)
                     .append("',color: '").append(Theme.getValue(ThemeVal.GREEN)).append("'")
                     .append("}");
@@ -65,7 +67,7 @@ public class PlayerCalendar {
     private Map<String, List<Session>> getSessionsByDay() {
         Map<String, List<Session>> sessionsByDay = new HashMap<>();
         for (Session session : allSessions) {
-            String day = FormatUtils.formatTimeStampISO8601NoClock(session.getSessionStart());
+            String day = Formatters.iso8601NoClock().apply(session);
 
             List<Session> sessionsOfDay = sessionsByDay.getOrDefault(day, new ArrayList<>());
             sessionsOfDay.add(session);
@@ -76,8 +78,10 @@ public class PlayerCalendar {
 
     private void appendSessionsAndKills(StringBuilder series) {
         long fiveMinutes = TimeAmount.MINUTE.ms() * 5L;
+
+        Formatter<Long> timeFormatter = Formatters.timeAmount();
         for (Session session : allSessions) {
-            String length = FormatUtils.formatTimeAmount(session.getLength());
+            String length = timeFormatter.apply(session.getLength());
 
             series.append(",{title: 'Session: ").append(length)
                     .append("',start:").append(session.getSessionStart())
@@ -85,7 +89,7 @@ public class PlayerCalendar {
                     .append("}");
 
             for (PlayerKill kill : session.getPlayerKills()) {
-                long time = kill.getTime();
+                long time = kill.getDate();
 
                 series.append(",{title: 'Killed: ").append(kill.getVictim())
                         .append("',start:").append(time)

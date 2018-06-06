@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public class Session {
+public class Session implements DateHolder {
 
     private final long sessionStart;
     private Integer sessionID;
@@ -108,6 +109,11 @@ public class Session {
             return System.currentTimeMillis() - sessionStart;
         }
         return sessionEnd - sessionStart;
+    }
+
+    @Override
+    public long getDate() {
+        return getSessionStart();
     }
 
     /**

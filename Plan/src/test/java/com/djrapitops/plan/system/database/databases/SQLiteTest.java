@@ -269,7 +269,7 @@ public class SQLiteTest {
         assertEquals(1, getInfo.size());
         GeoInfo actual = getInfo.get(0);
         assertEquals(expected, actual);
-        assertEquals(time, actual.getLastUsed());
+        assertEquals(time, actual.getDate());
 
         Optional<String> result = geoInfoTable.getGeolocation(expectedIP);
         assertTrue(result.isPresent());
@@ -450,7 +450,7 @@ public class SQLiteTest {
         assertEquals(1, userInfoTable.getServerUserCount(ServerInfo.getServerUUID()));
         assertEquals("Waiting for Update..", userInfo.getName());
         assertFalse(userInfo.isBanned());
-        assertFalse(userInfo.isOpped());
+        assertFalse(userInfo.isOperator());
     }
 
     @Test
@@ -474,7 +474,7 @@ public class SQLiteTest {
         assertEquals(223456789L, userInfo.getRegistered());
         assertEquals("Test", userInfo.getName());
         assertFalse(userInfo.isBanned());
-        assertFalse(userInfo.isOpped());
+        assertFalse(userInfo.isOperator());
 
         assertEquals(userInfo, userInfoTable.getServerUserInfo().get(0));
     }
@@ -491,7 +491,7 @@ public class SQLiteTest {
 
         UserInfo userInfo = userInfoTable.getUserInfo(playerUUID);
         assertTrue(userInfo.isBanned());
-        assertTrue(userInfo.isOpped());
+        assertTrue(userInfo.isOperator());
 
         userInfoTable.updateOpStatus(playerUUID, false);
         userInfoTable.updateBanStatus(playerUUID, true);
@@ -500,7 +500,7 @@ public class SQLiteTest {
         userInfo = userInfoTable.getUserInfo(playerUUID);
 
         assertTrue(userInfo.isBanned());
-        assertFalse(userInfo.isOpped());
+        assertFalse(userInfo.isOperator());
 
         userInfoTable.updateOpStatus(playerUUID, true);
         userInfoTable.updateBanStatus(playerUUID, false);
@@ -509,7 +509,7 @@ public class SQLiteTest {
         userInfo = userInfoTable.getUserInfo(playerUUID);
 
         assertFalse(userInfo.isBanned());
-        assertTrue(userInfo.isOpped());
+        assertTrue(userInfo.isOperator());
     }
 
     @Test

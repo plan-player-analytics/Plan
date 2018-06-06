@@ -8,6 +8,8 @@ import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.container.StickyData;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -168,8 +170,8 @@ public class HealthNotes {
         if (currentlyActive != 0) {
             long avgFourToTwoWeeks = MathUtils.averageLong(totalFourToTwoWeeks, currentlyActive);
             long avgLastTwoWeeks = MathUtils.averageLong(totalLastTwoWeeks, currentlyActive);
-            String avgLastTwoWeeksString = FormatUtils.formatTimeAmount(avgLastTwoWeeks);
-            String avgFourToTwoWeeksString = FormatUtils.formatTimeAmount(avgFourToTwoWeeks);
+            String avgLastTwoWeeksString = Formatters.timeAmount().apply(avgLastTwoWeeks);
+            String avgFourToTwoWeeksString = Formatters.timeAmount().apply(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
                 notes.add("<p>" + Html.GREEN_THUMB.parse() + " Active players seem to have things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
@@ -224,16 +226,17 @@ public class HealthNotes {
             serverHealth *= 0.8;
         }
 
+        Formatter<Long> formatter = Formatters.timeAmount();
         if (serverDownTime <= TimeAmount.DAY.ms()) {
             notes.add("<p>" + Html.GREEN_THUMB.parse() + " Total Server downtime (No Data) was "
-                    + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
+                    + formatter.apply(serverDownTime) + "</p>");
         } else if (serverDownTime <= TimeAmount.WEEK.ms()) {
             notes.add("<p>" + Html.YELLOW_FLAG.parse() + " Total Server downtime (No Data) was "
-                    + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
+                    + formatter.apply(serverDownTime) + "</p>");
             serverHealth *= (TimeAmount.WEEK.ms() - serverDownTime) * 1.0 / TimeAmount.WEEK.ms();
         } else {
             notes.add("<p>" + Html.RED_WARN.parse() + " Total Server downtime (No Data) was "
-                    + FormatUtils.formatTimeAmount(serverDownTime) + "</p>");
+                    + formatter.apply(serverDownTime) + "</p>");
             serverHealth *= (TimeAmount.MONTH.ms() - serverDownTime) * 1.0 / TimeAmount.MONTH.ms();
         }
     }

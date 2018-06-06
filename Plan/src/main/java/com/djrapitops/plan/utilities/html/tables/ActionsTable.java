@@ -6,7 +6,9 @@ package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
@@ -30,12 +32,13 @@ public class ActionsTable extends TableContainer {
 
     private void addValues(Iterable<Action> actions) {
         int i = 0;
+        Formatter<DateHolder> formatter = Formatters.year();
         for (Action action : actions) {
             if (i > 50) {
                 break;
             }
             addRow(
-                    FormatUtils.formatTimeStampYear(action.getDate()),
+                    formatter.apply(action),
                     action.getDoneAction().toString(),
                     HtmlUtils.swapColorsToSpan(action.getAdditionalInfo())
             );

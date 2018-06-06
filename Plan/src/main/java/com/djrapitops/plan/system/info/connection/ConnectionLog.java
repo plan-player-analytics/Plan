@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.info.connection;
 
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -60,22 +61,23 @@ public class ConnectionLog {
         return log;
     }
 
-    public static class Entry implements Comparable<Entry> {
+    public static class Entry implements Comparable<Entry>, DateHolder {
 
         private final int responseCode;
-        private final long timeSent;
+        private final long date;
 
-        public Entry(int responseCode, long timeSent) {
+        public Entry(int responseCode, long date) {
             this.responseCode = responseCode;
-            this.timeSent = timeSent;
+            this.date = date;
         }
 
         public int getResponseCode() {
             return responseCode;
         }
 
-        public long getTimeSent() {
-            return timeSent;
+        @Override
+        public long getDate() {
+            return date;
         }
 
         /**
@@ -86,7 +88,7 @@ public class ConnectionLog {
          */
         @Override
         public int compareTo(Entry o) {
-            return Long.compare(o.timeSent, this.timeSent);
+            return Long.compare(o.date, this.date);
         }
     }
 

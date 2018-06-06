@@ -21,6 +21,10 @@ import java.util.UUID;
  */
 public class ServerKeys {
 
+    private ServerKeys() {
+        /* Static variable class */
+    }
+
     public static final Key<UUID> UUID = CommonKeys.UUID;
     public static final Key<String> NAME = CommonKeys.NAME;
 

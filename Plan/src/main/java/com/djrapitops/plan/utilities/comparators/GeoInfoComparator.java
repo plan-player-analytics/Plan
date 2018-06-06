@@ -13,7 +13,7 @@ public class GeoInfoComparator implements Comparator<GeoInfo> {
 
     @Override
     public int compare(GeoInfo o1, GeoInfo o2) {
-        return -Long.compare(o1.getLastUsed(), o2.getLastUsed());
+        return -Long.compare(o1.getDate(), o2.getDate());
     }
 
 }
