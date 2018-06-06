@@ -7,10 +7,13 @@ import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -23,6 +26,105 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     public SQLFetchOps(SQLDB db) {
         super(db);
+    }
+
+    public ServerContainer getServerContainer(UUID serverUUID) {
+        ServerContainer container = new ServerContainer();
+
+        container.putSupplier(ServerKeys.PLAYERS, () -> getPlayerContainers(serverUUID));
+
+        container.putSupplier(ServerKeys.TPS, () -> tpsTable.getTPSData(serverUUID));
+        container.putSupplier(ServerKeys.ALL_TIME_PEAK_PLAYERS, () -> {
+            Optional<TPS> allTimePeak = tpsTable.getAllTimePeak(serverUUID);
+            if (allTimePeak.isPresent()) {
+                TPS peak = allTimePeak.get();
+                return new DateObj<>(peak.getDate(), peak.getPlayers());
+            }
+            return null;
+        });
+        container.putSupplier(ServerKeys.RECENT_PEAK_PLAYERS, () -> {
+            long twoDaysAgo = System.currentTimeMillis() - (TimeAmount.DAY.ms() * 2L);
+            Optional<TPS> lastPeak = tpsTable.getPeakPlayerCount(serverUUID, twoDaysAgo);
+            if (lastPeak.isPresent()) {
+                TPS peak = lastPeak.get();
+                return new DateObj<>(peak.getDate(), peak.getPlayers());
+            }
+            return null;
+        });
+
+        container.putSupplier(ServerKeys.COMMAND_USAGE, () -> commandUseTable.getCommandUse(serverUUID));
+        container.putSupplier(ServerKeys.WORLD_TIMES, () -> worldTimesTable.getWorldTimesOfServer(serverUUID));
+
+        // Calculating getters
+        container.putSupplier(ServerKeys.PLAYER_KILLS, () ->
+                new SessionsMutator(container.getUnsafe(ServerKeys.SESSIONS)).toPlayerKillList());
+        container.putSupplier(ServerKeys.PLAYER_KILL_COUNT, () ->
+                container.getUnsafe(ServerKeys.PLAYER_KILLS).size());
+        container.putSupplier(ServerKeys.MOB_KILL_COUNT, () ->
+                new SessionsMutator(container.getUnsafe(ServerKeys.SESSIONS)).toMobKillCount());
+        container.putSupplier(ServerKeys.DEATH_COUNT, () ->
+                new SessionsMutator(container.getUnsafe(ServerKeys.SESSIONS)).toDeathCount());
+
+        return container;
+    }
+
+    private List<PlayerContainer> getPlayerContainers(UUID serverUUID) {
+        List<PlayerContainer> containers = new ArrayList<>();
+
+        List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID);
+        Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
+        Map<UUID, List<GeoInfo>> geoInfo = geoInfoTable.getAllGeoInfo();
+
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
+        Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
+        map.put(serverUUID, sessions);
+        killsTable.addKillsToSessions(map);
+        worldTimesTable.addWorldTimesToSessions(map);
+
+        for (UserInfo userInfo : serverUserInfo) {
+            PlayerContainer container = new PlayerContainer();
+            UUID uuid = userInfo.getUuid();
+            container.putRawData(PlayerKeys.UUID, uuid);
+
+            container.putRawData(PlayerKeys.REGISTERED, userInfo.getRegistered());
+            container.putRawData(PlayerKeys.NAME, userInfo.getName());
+            container.putRawData(PlayerKeys.KICK_COUNT, timesKicked.get(uuid));
+            container.putSupplier(PlayerKeys.GEO_INFO, () -> geoInfo.get(uuid));
+            container.putSupplier(PlayerKeys.NICKNAMES, () -> nicknamesTable.getNicknameInformation(uuid));
+            container.putSupplier(PlayerKeys.PER_SERVER, () -> getPerServerData(uuid));
+
+            container.putRawData(PlayerKeys.BANNED, userInfo.isBanned());
+            container.putRawData(PlayerKeys.OPERATOR, userInfo.isOperator());
+
+            container.putSupplier(PlayerKeys.SESSIONS, () -> {
+                        List<Session> playerSessions = sessions.getOrDefault(uuid, new ArrayList<>());
+                        container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(playerSessions::add);
+                        return playerSessions;
+                    }
+            );
+
+            // Calculating getters
+            container.putSupplier(PlayerKeys.WORLD_TIMES, () -> {
+                WorldTimes worldTimes = new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
+                container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(session.getWorldTimes()));
+                return worldTimes;
+            });
+
+            container.putSupplier(PlayerKeys.LAST_SEEN, () ->
+                    new SessionsMutator(container.getUnsafe(PlayerKeys.SESSIONS)).toLastSeen());
+
+            container.putSupplier(PlayerKeys.PLAYER_KILLS, () ->
+                    new SessionsMutator(container.getUnsafe(PlayerKeys.SESSIONS)).toPlayerKillList());
+            container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () ->
+                    container.getUnsafe(PlayerKeys.PLAYER_KILLS).size());
+            container.putSupplier(PlayerKeys.MOB_KILL_COUNT, () ->
+                    new SessionsMutator(container.getUnsafe(PlayerKeys.SESSIONS)).toMobKillCount());
+            container.putSupplier(PlayerKeys.DEATH_COUNT, () ->
+                    new SessionsMutator(container.getUnsafe(PlayerKeys.SESSIONS)).toDeathCount());
+
+        }
+
+        return containers;
     }
 
     @Override
@@ -70,7 +172,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             if (userInfo.isBanned()) {
                 profile.bannedOnServer(serverUUID);
             }
-            if (userInfo.isOpped()) {
+            if (userInfo.isOperator()) {
                 profile.oppedOnServer(serverUUID);
             }
             profile.setActions(actions.getOrDefault(uuid, new ArrayList<>()));
@@ -136,7 +238,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             DataContainer perServer = perServerContainer.getOrDefault(serverUUID, new DataContainer());
             perServer.putRawData(PlayerKeys.REGISTERED, info.getRegistered());
             perServer.putRawData(PlayerKeys.BANNED, info.isBanned());
-            perServer.putRawData(PlayerKeys.OPERATOR, info.isOpped());
+            perServer.putRawData(PlayerKeys.OPERATOR, info.isOperator());
             perServerContainer.put(serverUUID, perServer);
         }
 
