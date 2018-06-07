@@ -146,6 +146,7 @@ public class AnalysisData extends RawData {
         addValue("playtimeAverage", playersTotal != 0 ? Formatters.timeAmount().apply(MathUtils.averageLong(totalPlaytime, playersTotal)) : "-");
     }
 
+    @Deprecated
     private void healthTab(long now, List<PlayerProfile> players, List<TPS> tpsDataMonth) {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = AnalysisUtils.turnToActivityDataMap(now, players);
 
@@ -171,16 +172,19 @@ public class AnalysisData extends RawData {
         addValue("healthIndex", healthNotes.getServerHealth());
     }
 
+    @Deprecated
     private void commandUsage(Map<String, Integer> commandUsage) {
         addValue("commandUniqueCount", String.valueOf(commandUsage.size()));
         addValue("commandCount", MathUtils.sumInt(commandUsage.values().stream().map(i -> (int) i)));
         addValue("tableBodyCommands", new CommandUseTable(commandUsage).parseBody());
     }
 
+    @Deprecated
     private void geolocationsTab(List<String> geoLocations) {
         addValue("geoMapSeries", new WorldMap(geoLocations).toHighChartsSeries());
     }
 
+    @Deprecated
     private void onlineActivityNumbers(ServerProfile profile, Map<UUID, List<Session>> sessions, List<PlayerProfile> players) {
         long now = value("now");
         long dayAgo = value("dayAgo");
@@ -221,6 +225,7 @@ public class AnalysisData extends RawData {
         stickiness(now, weekAgo, monthAgo, newDay, newWeek, newMonth);
     }
 
+    @Deprecated
     private void stickiness(long now, long weekAgo, long monthAgo,
                             List<PlayerProfile> newDay, List<PlayerProfile> newWeek, List<PlayerProfile> newMonth) {
         long newD = value("newD");
@@ -311,6 +316,7 @@ public class AnalysisData extends RawData {
         return players.stream().map(PlayerProfile::getRegistered).collect(Collectors.toList());
     }
 
+    @Deprecated
     private void sessionData(long monthAgo, Map<UUID, List<Session>> sessions, List<Session> allSessions) {
         List<Session> sessionsMonth = allSessions.stream()
                 .filter(s -> s.getSessionStart() >= monthAgo)
@@ -331,6 +337,7 @@ public class AnalysisData extends RawData {
         addValue("killCount", ServerProfile.getPlayerKills(allSessions).size());
     }
 
+    @Deprecated
     private void directProfileVariables(ServerProfile profile) {
         WorldTimes worldTimes = profile.getServerWorldtimes();
         long allTimePeak = profile.getAllTimePeak();
@@ -350,6 +357,7 @@ public class AnalysisData extends RawData {
         addValue("playersBestPeak", allTimePeak != -1 ? profile.getAllTimePeakPlayers() : "-");
     }
 
+    @Deprecated
     private void performanceTab(List<TPS> tpsData, List<TPS> tpsDataDay, List<TPS> tpsDataWeek, List<TPS> tpsDataMonth) {
         got("tpsSpikeMonth", ServerProfile.getLowSpikeCount(tpsDataMonth));
         got("tpsSpikeWeek", ServerProfile.getLowSpikeCount(tpsDataWeek));

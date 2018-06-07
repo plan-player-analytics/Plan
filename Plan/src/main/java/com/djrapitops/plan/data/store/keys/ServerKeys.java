@@ -17,6 +17,7 @@ import java.util.UUID;
  * Keys for the ServerContainer.
  *
  * @author Rsl1122
+ * @see com.djrapitops.plan.system.database.databases.sql.operation.SQLFetchOps For Suppliers for each key
  * @see com.djrapitops.plan.data.store.containers.ServerContainer For DataContainer.
  */
 public class ServerKeys {
@@ -29,6 +30,7 @@ public class ServerKeys {
     public static final Key<String> NAME = CommonKeys.NAME;
 
     public static final Key<List<PlayerContainer>> PLAYERS = new Key<>(new Type<List<PlayerContainer>>() {}, "players");
+    public static final Key<Integer> PLAYER_COUNT = new Key<>(Integer.class, "player_count");
 
     public static final Key<List<Session>> SESSIONS = CommonKeys.SESSIONS;
     public static final Key<WorldTimes> WORLD_TIMES = CommonKeys.WORLD_TIMES;

@@ -32,6 +32,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         ServerContainer container = new ServerContainer();
 
         container.putSupplier(ServerKeys.PLAYERS, () -> getPlayerContainers(serverUUID));
+        container.putSupplier(ServerKeys.PLAYER_COUNT, container.getUnsafe(ServerKeys.PLAYERS)::size);
 
         container.putSupplier(ServerKeys.TPS, () -> tpsTable.getTPSData(serverUUID));
         container.putSupplier(ServerKeys.ALL_TIME_PEAK_PLAYERS, () -> {
