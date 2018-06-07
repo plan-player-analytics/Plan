@@ -64,6 +64,9 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
             for (UserInfo userInfo : serverUserInfo) {
                 UUID uuid = userInfo.getUuid();
+                if (uuid == null) {
+                    continue;
+                }
                 PlayerProfile profile = new PlayerProfile(uuid, userInfo.getName(), userInfo.getRegistered());
                 profile.setTimesKicked(timesKicked.getOrDefault(uuid, 0));
                 if (userInfo.isBanned()) {
