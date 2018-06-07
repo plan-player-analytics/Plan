@@ -9,6 +9,7 @@ import com.djrapitops.plan.utilities.SHA256Hash;
 import com.google.common.base.Objects;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -23,9 +24,9 @@ public class GeoInfo {
     private final String ipHash;
     private final long lastUsed;
 
-    public GeoInfo(String ip, String geolocation, long lastUsed)
+    public GeoInfo(InetAddress address, String geolocation, long lastUsed)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        this(FormatUtils.formatIP(ip), geolocation, lastUsed, new SHA256Hash(ip).create());
+        this(FormatUtils.formatIP(address), geolocation, lastUsed, new SHA256Hash(address.getHostAddress()).create());
     }
 
     public GeoInfo(String ip, String geolocation, long lastUsed, String ipHash) {

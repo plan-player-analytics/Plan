@@ -21,6 +21,7 @@ import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ProviderRegistration;
 import org.spongepowered.api.service.ban.BanService;
 
+import java.net.InetAddress;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -92,7 +93,7 @@ public class SpongePlayerListener {
             gm = gameMode.get().getName().toUpperCase();
         }
 
-        String ip = player.getConnection().getAddress().getAddress().getHostAddress();
+        InetAddress address = player.getConnection().getAddress().getAddress();
 
         String playerName = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
@@ -103,7 +104,7 @@ public class SpongePlayerListener {
 
         Processing.submit(
                 new RegisterProcessor(uuid, time, time, playerName, playersOnline,
-                        new IPUpdateProcessor(uuid, ip, time),
+                        new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)
                 )
