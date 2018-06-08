@@ -3,7 +3,7 @@ package com.djrapitops.plan.data.store.mutators;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.keys.CommonKeys;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -22,9 +22,13 @@ public class SessionsMutator {
     private List<Session> sessions;
 
     public static SessionsMutator forContainer(DataContainer dataContainer) {
-        Verify.isTrue(dataContainer.supports(PlayerKeys.SESSIONS),
-                () -> new IllegalArgumentException("Given DataContainer does not support SESSIONS"));
-        return new SessionsMutator(dataContainer.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()));
+        Verify.isTrue(dataContainer.supports(CommonKeys.SESSIONS),
+                () -> new IllegalArgumentException("Given DataContainer does not support SESSIONS-key"));
+        return new SessionsMutator(dataContainer.getValue(CommonKeys.SESSIONS).orElse(new ArrayList<>()));
+    }
+
+    public static SessionsMutator copyOf(SessionsMutator mutator) {
+        return new SessionsMutator(mutator.sessions);
     }
 
     public SessionsMutator(List<Session> sessions) {

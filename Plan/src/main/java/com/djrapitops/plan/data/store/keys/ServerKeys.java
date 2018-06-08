@@ -30,6 +30,7 @@ public class ServerKeys {
     public static final Key<String> NAME = CommonKeys.NAME;
 
     public static final Key<List<PlayerContainer>> PLAYERS = new Key<>(new Type<List<PlayerContainer>>() {}, "players");
+    public static final Key<List<PlayerContainer>> OPERATORS = new Key<>(new Type<List<PlayerContainer>>() {}, "operators");
     public static final Key<Integer> PLAYER_COUNT = new Key<>(Integer.class, "player_count");
 
     public static final Key<List<Session>> SESSIONS = CommonKeys.SESSIONS;

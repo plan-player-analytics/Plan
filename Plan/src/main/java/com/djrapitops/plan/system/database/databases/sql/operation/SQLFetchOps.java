@@ -21,6 +21,7 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SQLFetchOps extends SQLOps implements FetchOperations {
 
@@ -57,6 +58,8 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         container.putSupplier(ServerKeys.WORLD_TIMES, () -> worldTimesTable.getWorldTimesOfServer(serverUUID));
 
         // Calculating getters
+        container.putSupplier(ServerKeys.OPERATORS, () -> container.getUnsafe(ServerKeys.PLAYERS).stream()
+                .filter(player -> player.getValue(PlayerKeys.OPERATOR).orElse(false)).collect(Collectors.toList()));
         container.putSupplier(ServerKeys.PLAYER_KILLS,
                 new SessionsMutator(container.getUnsafe(ServerKeys.SESSIONS))::toPlayerKillList);
         container.putSupplier(ServerKeys.PLAYER_KILL_COUNT, container.getUnsafe(ServerKeys.PLAYER_KILLS)::size);

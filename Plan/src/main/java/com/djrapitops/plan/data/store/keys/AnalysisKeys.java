@@ -2,6 +2,8 @@ package com.djrapitops.plan.data.store.keys;
 
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.PlaceholderKey;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 
 /**
  * Key objects used for Analysis.
@@ -21,6 +23,8 @@ public class AnalysisKeys {
     public static final PlaceholderKey<Integer> TPS_MEDIUM = new PlaceholderKey<>(Integer.class, "tpsMedium");
     public static final PlaceholderKey<Integer> TPS_HIGH = new PlaceholderKey<>(Integer.class, "tpsHigh");
     public static final PlaceholderKey<Integer> PLAYERS_MAX = new PlaceholderKey<>(Integer.class, "playersMax");
+    public static final PlaceholderKey<Integer> PLAYERS_ONLINE = new PlaceholderKey<>(Integer.class, "playersOnline");
+    public static final PlaceholderKey<Integer> PLAYERS_TOTAL = new PlaceholderKey<>(Integer.class, "playersTotal");
     //
     public static final PlaceholderKey<String> WORLD_PIE_COLORS = new PlaceholderKey<>(String.class, "worldPieColors");
     public static final PlaceholderKey<String> GM_PIE_COLORS = new PlaceholderKey<>(String.class, "gm_pie_colors");
@@ -31,11 +35,9 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> TPS_LOW_COLOR = new PlaceholderKey<>(String.class, "tpsLowColor");
     public static final PlaceholderKey<String> WORLD_MAP_HIGH_COLOR = new PlaceholderKey<>(String.class, "worldMapColHigh");
     public static final PlaceholderKey<String> WORLD_MAP_LOW_COLOR = new PlaceholderKey<>(String.class, "worldMapColLow");
-    public static final PlaceholderKey<Integer> PLAYERS_ONLINE = new PlaceholderKey<>(Integer.class, "playersOnline");
-    public static final PlaceholderKey<Integer> PLAYERS_TOTAL = new PlaceholderKey<>(Integer.class, "playersTotal");
     // Tables & other structures
     public static final PlaceholderKey<String> PLAYERS_TABLE = new PlaceholderKey<>(String.class, "tablePlayerlist");
-    public static final PlaceholderKey<String> SESSION_ACCORDION = new PlaceholderKey<>(String.class, "accordionSessions");
+    public static final PlaceholderKey<String> SESSION_ACCORDION_HTML = new PlaceholderKey<>(String.class, "accordionSessions");
     public static final PlaceholderKey<String> SESSION_ACCORDION_FUNCTIONS = new PlaceholderKey<>(String.class, "sessionTabGraphViewFunctions");
     public static final PlaceholderKey<String> SESSION_TABLE = new PlaceholderKey<>(String.class, "tableBodySessions");
     public static final PlaceholderKey<String> RECENT_LOGINS = new PlaceholderKey<>(String.class, "listRecentLogins");
@@ -118,10 +120,14 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = new PlaceholderKey<>(String.class, "activityPieSeries");
     public static final PlaceholderKey<String> CALENDAR_SERIES = new PlaceholderKey<>(String.class, "calendarSeries");
     // Variables used only during analysis
+    public static final Key<SessionsMutator> SESSIONS_MUTATOR = new Key<>(SessionsMutator.class, "SESSIONS_MUTATOR");
+    public static final Key<Long> PLAYTIME_TOTAL = new Key<>(Long.class, "PLAYTIME_TOTAL");
     public static final Key<Long> ANALYSIS_TIME = new Key<>(Long.class, "ANALYSIS_TIME");
     public static final Key<Long> ANALYSIS_TIME_DAY_AGO = new Key<>(Long.class, "ANALYSIS_TIME_DAY_AGO");
     public static final Key<Long> ANALYSIS_TIME_WEEK_AGO = new Key<>(Long.class, "ANALYSIS_TIME_WEEK_AGO");
     public static final Key<Long> ANALYSIS_TIME_MONTH_AGO = new Key<>(Long.class, "ANALYSIS_TIME_MONTH_AGO");
+    public static final Key<SessionAccordion> SESSION_ACCORDION = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
+
 
     private AnalysisKeys() {
         /* Static variable class */
