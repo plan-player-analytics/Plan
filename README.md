@@ -12,7 +12,7 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 ### Links
 - [Spigot, Resource page](https://www.spigotmc.org/resources/plan-player-analytics.32536/)
 - [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues)
-- [License](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml)
+- [License](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE)
 
 ## Documentation
 Documentation can be found [On the Wiki](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki)
