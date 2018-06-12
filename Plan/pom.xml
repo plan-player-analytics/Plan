@@ -150,9 +150,6 @@
                     <include>**/*.css</include>
                     <include>locale/*.txt</include>
                 </includes>
-                <excludes>
-                    <exclude>licence.yml</exclude>
-                </excludes>
             </resource>
         </resources>
         <plugins>
