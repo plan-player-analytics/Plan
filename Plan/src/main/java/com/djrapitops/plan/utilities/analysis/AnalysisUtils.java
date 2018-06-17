@@ -4,9 +4,11 @@ import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.StickyData;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
+import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
@@ -257,5 +259,34 @@ public class AnalysisUtils {
         double averagePlayersOnline = totalPlayersOnline / (double) size;
 
         return new StickyData(averageIndex, averageMessagesSent, averagePlayersOnline);
+    }
+
+    public static String getLongestWorldPlayed(Session session) {
+        Map<String, String> aliases = WorldAliasSettings.getAliases();
+        if (!session.supports(SessionKeys.WORLD_TIMES)) {
+            return "No World Time Data";
+        }
+        if (!session.supports(SessionKeys.END)) {
+            return "Current: " + aliases.get(session.getUnsafe(SessionKeys.WORLD_TIMES).getCurrentWorld());
+        }
+
+        WorldTimes worldTimes = session.getUnsafe(SessionKeys.WORLD_TIMES);
+        Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);
+        long total = worldTimes.getTotal();
+
+        long longest = 0;
+        String theWorld = "-";
+        for (Map.Entry<String, Long> entry : playtimePerAlias.entrySet()) {
+            String world = entry.getKey();
+            long time = entry.getValue();
+            if (time > longest) {
+                longest = time;
+                theWorld = world;
+            }
+        }
+
+        double percentage = longest * 100.0 / total;
+
+        return theWorld + " (" + FormatUtils.cutDecimals(percentage) + "%)";
     }
 }

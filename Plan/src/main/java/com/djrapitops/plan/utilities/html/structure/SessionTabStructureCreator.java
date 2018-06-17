@@ -14,6 +14,7 @@ import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
@@ -79,7 +80,7 @@ public class SessionTabStructureCreator {
             String link = PlanAPI.getInstance().getPlayerInspectPageLink(name);
 
             String info = appendWorldPercentage
-                    ? HtmlStructure.separateWithDots(sessionStart, SessionsTableCreator.getLongestWorldPlayed(session))
+                    ? HtmlStructure.separateWithDots(sessionStart, AnalysisUtils.getLongestWorldPlayed(session))
                     : sessionStart;
             String nameAndInfo = appendName ?
                     HtmlStructure.separateWithDots(name, info) :

@@ -10,10 +10,10 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.tables.KillsTable;
-import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -107,7 +107,7 @@ public class SessionAccordion extends AbstractAccordion {
             int deaths = session.getValue(SessionKeys.DEATH_COUNT).orElse(0);
 
             String info = appendWorldPercentage
-                    ? HtmlStructure.separateWithDots(sessionStart, SessionsTableCreator.getLongestWorldPlayed(session))
+                    ? HtmlStructure.separateWithDots(sessionStart, AnalysisUtils.getLongestWorldPlayed(session))
                     : sessionStart;
             String title = HtmlStructure.separateWithDots(playerName, info) + "<span class=\"pull-right\">" + length + "</span>";
             String htmlID = "" + session.getValue(SessionKeys.START).orElse(0L) + i;
@@ -178,7 +178,7 @@ public class SessionAccordion extends AbstractAccordion {
             int deaths = session.getValue(SessionKeys.DEATH_COUNT).orElse(0);
 
             String info = appendWorldPercentage
-                    ? HtmlStructure.separateWithDots(sessionStart, SessionsTableCreator.getLongestWorldPlayed(session))
+                    ? HtmlStructure.separateWithDots(sessionStart, AnalysisUtils.getLongestWorldPlayed(session))
                     : sessionStart;
             String title = HtmlStructure.separateWithDots(serverName, info) + "<span class=\"pull-right\">" + length + "</span>";
             String htmlID = "" + session.getValue(SessionKeys.START).orElse(0L) + i;

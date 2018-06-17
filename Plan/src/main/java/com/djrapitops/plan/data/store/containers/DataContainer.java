@@ -71,7 +71,7 @@ public class DataContainer extends HashMap<Key, Supplier> {
     public <T> T getUnsafe(Key<T> key) {
         Supplier supplier = get(key);
         if (supplier == null) {
-            throw new IllegalArgumentException("Unsupported Key");
+            throw new IllegalArgumentException("Unsupported Key: " + key.getKeyName());
         }
         return (T) supplier.get();
     }

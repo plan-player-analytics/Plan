@@ -39,6 +39,7 @@ import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 import com.djrapitops.plan.utilities.html.tables.ActionsTable;
 import com.djrapitops.plan.utilities.html.tables.GeoInfoTable;
 import com.djrapitops.plan.utilities.html.tables.NicknameTable;
+import com.djrapitops.plan.utilities.html.tables.PlayerSessionTable;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -134,7 +135,19 @@ public class InspectPage extends Page {
         SessionsMutator allSessionsMutator = new SessionsMutator(allSessions);
         allSessions.sort(new SessionStartComparator());
 
-        SessionAccordion sessionAccordion = SessionAccordion.forPlayer(allSessions, () -> serverNames);
+        String sessionAccordionViewScript = "";
+        if (allSessions.isEmpty()) {
+            addValue("accordionSessions", "<div class=\"body\">" + "<p>No Sessions</p>" + "</div>");
+        } else {
+            if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
+                addValue("accordionSessions", new PlayerSessionTable(playerName, allSessions).parseHtml());
+            } else {
+                SessionAccordion sessionAccordion = SessionAccordion.forPlayer(allSessions, () -> serverNames);
+                addValue("accordionSessions", sessionAccordion.toHtml());
+                sessionAccordionViewScript = sessionAccordion.toViewScript();
+            }
+        }
+
         // TODO Session table if setting is enabled
         ServerAccordion serverAccordion = new ServerAccordion(container, serverNames);
 
@@ -143,9 +156,8 @@ public class InspectPage extends Page {
         addValue("calendarSeries", playerCalendar.toCalendarSeries());
         addValue("firstDay", 1);
 
-        addValue("accordionSessions", sessionAccordion.toHtml());
         addValue("accordionServers", serverAccordion.toHtml());
-        addValue("sessionTabGraphViewFunctions", sessionAccordion.toViewScript() + serverAccordion.toViewScript());
+        addValue("sessionTabGraphViewFunctions", sessionAccordionViewScript + serverAccordion.toViewScript());
 
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();
