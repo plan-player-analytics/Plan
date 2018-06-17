@@ -6,10 +6,7 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * DataContainer for information about a player's play session.
@@ -71,6 +68,8 @@ public class Session extends DataContainer implements DateHolder {
         putRawData(SessionKeys.SERVER_UUID, serverUUID);
         putRawData(SessionKeys.START, sessionStart);
         putRawData(SessionKeys.END, sessionEnd);
+        putRawData(SessionKeys.WORLD_TIMES, new WorldTimes(new HashMap<>()));
+        putRawData(SessionKeys.PLAYER_KILLS, new ArrayList<>());
         putSupplier(SessionKeys.MOB_KILL_COUNT, () -> mobKills);
         putSupplier(SessionKeys.DEATH_COUNT, () -> deaths);
         putSupplier(SessionKeys.AFK_TIME, () -> afkTime);

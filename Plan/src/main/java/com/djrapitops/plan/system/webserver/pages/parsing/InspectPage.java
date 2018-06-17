@@ -35,6 +35,7 @@ import com.djrapitops.plan.utilities.html.graphs.calendar.PlayerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
+import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 import com.djrapitops.plan.utilities.html.tables.ActionsTable;
 import com.djrapitops.plan.utilities.html.tables.GeoInfoTable;
 import com.djrapitops.plan.utilities.html.tables.NicknameTable;
@@ -133,8 +134,8 @@ public class InspectPage extends Page {
         SessionsMutator allSessionsMutator = new SessionsMutator(allSessions);
         allSessions.sort(new SessionStartComparator());
 
-        String[] sessionsAccordion = HtmlStructure.createSessionsTabContentInspectPage(sessionsByServerName, allSessions, uuid);
-
+        SessionAccordion sessionAccordion = SessionAccordion.forPlayer(allSessions, () -> serverNames);
+        // TODO Session table if setting is enabled
         ServerAccordion serverAccordion = new ServerAccordion(container, serverNames);
 
         PlayerCalendar playerCalendar = new PlayerCalendar(allSessions, registered);
@@ -142,9 +143,9 @@ public class InspectPage extends Page {
         addValue("calendarSeries", playerCalendar.toCalendarSeries());
         addValue("firstDay", 1);
 
-        addValue("accordionSessions", sessionsAccordion[0]);
+        addValue("accordionSessions", sessionAccordion.toHtml());
         addValue("accordionServers", serverAccordion.toHtml());
-        addValue("sessionTabGraphViewFunctions", sessionsAccordion[1] + serverAccordion.toViewScript());
+        addValue("sessionTabGraphViewFunctions", sessionAccordion.toViewScript() + serverAccordion.toViewScript());
 
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();

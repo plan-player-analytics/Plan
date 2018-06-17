@@ -61,6 +61,7 @@ public class HtmlStructure {
         return builder.toString();
     }
 
+    @Deprecated
     public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
         if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
             Map<UUID, List<Session>> sessionsByPlayer = new HashMap<>();

@@ -17,36 +17,33 @@ public class Formatters {
     public static Formatter<DateHolder> year() {
         return dateHolder -> {
             long date = dateHolder.getDate();
-            return date <= 0 ? FormatUtils.formatTimeStampYear(date) : "-";
+            return date > 0 ? FormatUtils.formatTimeStampYear(date) : "-";
         };
     }
 
     public static Formatter<DateHolder> day() {
         return dateHolder -> {
             long date = dateHolder.getDate();
-            return date <= 0 ? FormatUtils.formatTimeStampDay(date) : "-";
+            return date > 0 ? FormatUtils.formatTimeStampDay(date) : "-";
         };
     }
 
     public static Formatter<DateHolder> second() {
         return dateHolder -> {
             long date = dateHolder.getDate();
-            return date <= 0 ? FormatUtils.formatTimeStampSecond(date) : "-";
+            return date > 0 ? FormatUtils.formatTimeStampSecond(date) : "-";
         };
     }
 
     public static Formatter<DateHolder> clock() {
         return dateHolder -> {
             long date = dateHolder.getDate();
-            return date <= 0 ? FormatUtils.formatTimeStampClock(date) : "-";
+            return date > 0 ? FormatUtils.formatTimeStampClock(date) : "-";
         };
     }
 
     public static Formatter<DateHolder> iso8601NoClock() {
-        return dateHolder -> {
-            long date = dateHolder.getDate();
-            return date <= 0 ? FormatUtils.formatTimeStampISO8601NoClock(date) : "-";
-        };
+        return dateHolder -> FormatUtils.formatTimeStampISO8601NoClock(dateHolder.getDate());
     }
 
     public static Formatter<Long> timeAmount() {

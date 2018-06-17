@@ -26,7 +26,7 @@ public class DataContainer extends HashMap<Key, Supplier> {
      * @param <T> Type of the object
      */
     public <T> void putRawData(Key<T> key, T obj) {
-        super.put(key, () -> obj);
+        putSupplier(key, () -> obj);
     }
 
     public <T> void putSupplier(Key<T> key, Supplier<T> supplier) {
