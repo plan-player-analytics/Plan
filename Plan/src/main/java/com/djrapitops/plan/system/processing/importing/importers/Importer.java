@@ -116,7 +116,7 @@ public abstract class Importer {
         Benchmark.stop(benchmarkName);
     }
 
-    private void processUserData() throws DBException {
+    private void processUserData() {
         String benchmarkName = "Processing User Data";
         String getDataBenchmarkName = "Getting User Data";
         String insertDataIntoCollectionsBenchmarkName = "Insert User Data into Collections";
@@ -215,7 +215,7 @@ public abstract class Importer {
         int mobKills = userImportData.getMobKills();
         int deaths = userImportData.getDeaths();
 
-        Session session = new Session(0, 0L, 0L, mobKills, deaths, 0);
+        Session session = new Session(0, userImportData.getUuid(), ServerInfo.getServerUUID(), 0L, 0L, mobKills, deaths, 0);
 
         session.setPlayerKills(userImportData.getKills());
         session.setWorldTimes(new WorldTimes(userImportData.getWorldTimes()));

@@ -99,7 +99,7 @@ public class SpongePlayerListener {
 
         int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
 
-        SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
+        SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
 
         Processing.submit(
                 new RegisterProcessor(uuid, time, time, playerName, playersOnline,

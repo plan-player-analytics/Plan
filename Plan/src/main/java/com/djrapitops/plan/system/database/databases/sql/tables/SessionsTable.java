@@ -178,7 +178,7 @@ public class SessionsTable extends UserIDTable {
                     int deaths = set.getInt(Col.DEATHS.get());
                     int mobKills = set.getInt(Col.MOB_KILLS.get());
                     List<Session> sessions = sessionsByServer.getOrDefault(serverUUID, new ArrayList<>());
-                    sessions.add(new Session(id, start, end, mobKills, deaths, timeAFK));
+                    sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
                     sessionsByServer.put(serverUUID, sessions);
                 }
                 return sessionsByServer;
@@ -473,7 +473,7 @@ public class SessionsTable extends UserIDTable {
                     long timeAFK = set.getLong(Col.AFK_TIME.get());
 
                     List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
-                    sessions.add(new Session(set.getInt(Col.ID.get()), start, end, mobKills, deaths, timeAFK));
+                    sessions.add(new Session(set.getInt(Col.ID.get()), uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
                     sessionsByUser.put(uuid, sessions);
                 }
                 return sessionsByUser;
@@ -567,7 +567,7 @@ public class SessionsTable extends UserIDTable {
 
                     long timeAFK = set.getLong(Col.AFK_TIME.get());
 
-                    Session session = new Session(id, start, end, mobKills, deaths, timeAFK);
+                    Session session = new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK);
                     sessions.add(session);
 
                     sessionsByUser.put(uuid, sessions);
@@ -623,7 +623,7 @@ public class SessionsTable extends UserIDTable {
 
                     long timeAFK = set.getLong(Col.AFK_TIME.get());
 
-                    Session session = new Session(id, start, end, mobKills, deaths, timeAFK);
+                    Session session = new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK);
                     sessions.add(session);
 
                     sessionsByUser.put(uuid, sessions);

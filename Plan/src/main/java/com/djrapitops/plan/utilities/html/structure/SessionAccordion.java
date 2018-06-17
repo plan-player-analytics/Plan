@@ -34,7 +34,20 @@ public class SessionAccordion extends AbstractAccordion {
     }
 
     private void addElements() {
+        if (forPlayer) {
+            addElementsForPlayer();
+        } else {
+            addElementsForServer();
+        }
         // Requires refactoring of Session object to contain information about player and server
+    }
+
+    private void addElementsForServer() {
+
+    }
+
+    private void addElementsForPlayer() {
+
     }
 
 }

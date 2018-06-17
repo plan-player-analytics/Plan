@@ -26,7 +26,7 @@ public class ServerKeys {
         /* Static variable class */
     }
 
-    public static final Key<UUID> UUID = CommonKeys.UUID;
+    public static final Key<UUID> SERVER_UUID = CommonKeys.SERVER_UUID;
     public static final Key<String> NAME = CommonKeys.NAME;
 
     public static final Key<List<PlayerContainer>> PLAYERS = new Key<>(new Type<List<PlayerContainer>>() {}, "players");

@@ -9,10 +9,12 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import utilities.TestConstants;
 import utilities.mocks.SystemMockUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,6 +27,8 @@ import static org.junit.Assert.assertTrue;
 public class ActivityIndexTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+    private static final UUID UUID = TestConstants.PLAYER_ONE_UUID;
+    private static final UUID SERVER_UUID = TestConstants.SERVER_UUID;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -46,9 +50,9 @@ public class ActivityIndexTest {
         int requiredLogins = Settings.ACTIVE_LOGIN_THRESHOLD.getNumber();
 
         for (int i = 0; i < requiredLogins; i++) {
-            sessions.add(new Session(0, weekAgo, weekAgo + requiredPlaytime * 4L, 0, 0, 0));
-            sessions.add(new Session(0, twoWeeksAgo, twoWeeksAgo + requiredPlaytime * 4L, 0, 0, 0));
-            sessions.add(new Session(0, threeWeeksAgo, threeWeeksAgo + requiredPlaytime * 4L, 0, 0, 0));
+            sessions.add(new Session(0, UUID, SERVER_UUID, weekAgo, weekAgo + requiredPlaytime * 4L, 0, 0, 0));
+            sessions.add(new Session(0, UUID, SERVER_UUID, twoWeeksAgo, twoWeeksAgo + requiredPlaytime * 4L, 0, 0, 0));
+            sessions.add(new Session(0, UUID, SERVER_UUID, threeWeeksAgo, threeWeeksAgo + requiredPlaytime * 4L, 0, 0, 0));
         }
         container.putRawData(PlayerKeys.SESSIONS, sessions);
 
@@ -70,9 +74,9 @@ public class ActivityIndexTest {
         int requiredLogins = Settings.ACTIVE_LOGIN_THRESHOLD.getNumber();
 
         for (int i = 0; i < requiredLogins * 2; i++) {
-            sessions.add(new Session(0, weekAgo, weekAgo + requiredPlaytime * 3L, 0, 0, 0));
-            sessions.add(new Session(0, twoWeeksAgo, twoWeeksAgo + requiredPlaytime * 3L, 0, 0, 0));
-            sessions.add(new Session(0, threeWeeksAgo, threeWeeksAgo + requiredPlaytime * 3L, 0, 0, 0));
+            sessions.add(new Session(0, UUID, SERVER_UUID, weekAgo, weekAgo + requiredPlaytime * 3L, 0, 0, 0));
+            sessions.add(new Session(0, UUID, SERVER_UUID, twoWeeksAgo, twoWeeksAgo + requiredPlaytime * 3L, 0, 0, 0));
+            sessions.add(new Session(0, UUID, SERVER_UUID, threeWeeksAgo, threeWeeksAgo + requiredPlaytime * 3L, 0, 0, 0));
         }
         container.putRawData(PlayerKeys.SESSIONS, sessions);
         assertTrue(container.supports(PlayerKeys.SESSIONS));
@@ -96,9 +100,9 @@ public class ActivityIndexTest {
         long requiredPlaytime = Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms() / requiredLogins;
 
         for (int i = 0; i < requiredLogins; i++) {
-            sessions.add(new Session(i, weekAgo, weekAgo + requiredPlaytime, 0, 0, 0));
-            sessions.add(new Session(i * 2, twoWeeksAgo, twoWeeksAgo + requiredPlaytime, 0, 0, 0));
-            sessions.add(new Session(i * 3, threeWeeksAgo, threeWeeksAgo + requiredPlaytime, 0, 0, 0));
+            sessions.add(new Session(i, UUID, SERVER_UUID, weekAgo, weekAgo + requiredPlaytime, 0, 0, 0));
+            sessions.add(new Session(i * 2, UUID, SERVER_UUID, twoWeeksAgo, twoWeeksAgo + requiredPlaytime, 0, 0, 0));
+            sessions.add(new Session(i * 3, UUID, SERVER_UUID, threeWeeksAgo, threeWeeksAgo + requiredPlaytime, 0, 0, 0));
         }
         container.putRawData(PlayerKeys.SESSIONS, sessions);
 
@@ -112,7 +116,7 @@ public class ActivityIndexTest {
         long date = 0;
 
         for (int i = 0; i < 5000; i++) {
-            sessions.add(new Session(0, 0, 0, 0, 0, 0));
+            sessions.add(new Session(0, UUID, SERVER_UUID, 0, 0, 0, 0, 0));
         }
         container.putRawData(PlayerKeys.SESSIONS, sessions);
 

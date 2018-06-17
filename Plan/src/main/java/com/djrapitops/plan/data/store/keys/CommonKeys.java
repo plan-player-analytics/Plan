@@ -21,6 +21,7 @@ public class CommonKeys {
     }
 
     public static final Key<UUID> UUID = new Key<>(UUID.class, "uuid");
+    public static final Key<UUID> SERVER_UUID = new Key<>(UUID.class, "server_uuid");
     public static final Key<String> NAME = new Key<>(String.class, "name");
     public static final Key<Long> REGISTERED = new Key<>(Long.class, "registered");
 

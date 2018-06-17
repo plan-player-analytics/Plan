@@ -10,6 +10,7 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
@@ -17,6 +18,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -92,8 +94,8 @@ public class ShutdownHook extends Thread {
         for (Map.Entry<UUID, Session> entry : activeSessions.entrySet()) {
             UUID uuid = entry.getKey();
             Session session = entry.getValue();
-            long sessionEnd = session.getSessionEnd();
-            if (sessionEnd == -1) {
+            Optional<Long> end = session.getValue(SessionKeys.END);
+            if (!end.isPresent()) {
                 session.endSession(now);
             }
             if (!db.isOpen()) {

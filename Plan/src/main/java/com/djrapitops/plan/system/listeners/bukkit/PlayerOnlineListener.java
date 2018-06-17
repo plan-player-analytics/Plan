@@ -96,7 +96,7 @@ public class PlayerOnlineListener implements Listener {
 
         int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
 
-        SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
+        SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
 
         Processing.submit(
                 new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,

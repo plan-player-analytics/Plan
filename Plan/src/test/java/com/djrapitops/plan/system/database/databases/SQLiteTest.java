@@ -362,7 +362,7 @@ public class SQLiteTest {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
-        Session session = new Session(12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -393,7 +393,7 @@ public class SQLiteTest {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -558,7 +558,7 @@ public class SQLiteTest {
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds();
 
-        Session session = new Session(12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -627,7 +627,7 @@ public class SQLiteTest {
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds(database);
 
-        Session session = new Session(12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -717,7 +717,7 @@ public class SQLiteTest {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -800,7 +800,7 @@ public class SQLiteTest {
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
         worldTimesTable.saveWorldTimes(playerUUID, 1, worldTimes);
 
-        Session session = new Session(1, 12345L, 23456L, 0, 0, 0);
+        Session session = new Session(1, playerUUID, TestConstants.SERVER_UUID, 12345L, 23456L, 0, 0, 0);
         Map<Integer, Session> sessions = new HashMap<>();
         sessions.put(1, session);
         worldTimesTable.addWorldTimesToSessions(playerUUID, sessions);
@@ -814,7 +814,7 @@ public class SQLiteTest {
         WorldTimes worldTimes = createWorldTimes();
         System.out.println(worldTimes);
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        Session session = new Session(1, 12345L, 23456L, 0, 0, 0);
+        Session session = new Session(1, playerUUID, TestConstants.SERVER_UUID, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -837,7 +837,7 @@ public class SQLiteTest {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
         System.out.println(worldTimes);
-        Session session = new Session(1, 12345L, 23456L, 0, 0, 0);
+        Session session = new Session(1, playerUUID, TestConstants.SERVER_UUID, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -1060,7 +1060,7 @@ public class SQLiteTest {
         assertTrue(container.supports(PlayerKeys.PLAYER_KILL_COUNT));
 
         assertFalse(container.supports(PlayerKeys.ACTIVE_SESSION));
-        container.putRawData(PlayerKeys.ACTIVE_SESSION, new Session(System.currentTimeMillis(), "TestWorld", "SURVIVAL"));
+        container.putRawData(PlayerKeys.ACTIVE_SESSION, new Session(TestConstants.PLAYER_ONE_UUID, System.currentTimeMillis(), "TestWorld", "SURVIVAL"));
         assertTrue(container.supports(PlayerKeys.ACTIVE_SESSION));
 
         long end = System.nanoTime();
