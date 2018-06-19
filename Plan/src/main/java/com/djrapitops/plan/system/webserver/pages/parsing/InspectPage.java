@@ -132,7 +132,7 @@ public class InspectPage extends Page {
                 .collect(Collectors.toMap(entry -> serverNames.get(entry.getKey()), Map.Entry::getValue));
 
         List<Session> allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
-        SessionsMutator allSessionsMutator = new SessionsMutator(allSessions);
+        SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
         allSessions.sort(new SessionStartComparator());
 
         String sessionAccordionViewScript = "";
@@ -163,38 +163,38 @@ public class InspectPage extends Page {
         long weekAgo = now - TimeAmount.WEEK.ms();
         long monthAgo = now - TimeAmount.MONTH.ms();
 
-        SessionsMutator daySessionsMutator = new SessionsMutator(allSessions).filterSessionsBetween(dayAgo, now);
-        SessionsMutator weekSessionsMutator = new SessionsMutator(allSessions).filterSessionsBetween(weekAgo, now);
-        SessionsMutator monthSessionsMutator = new SessionsMutator(allSessions).filterSessionsBetween(monthAgo, now);
+        SessionsMutator daySessionsMutator = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(dayAgo, now);
+        SessionsMutator weekSessionsMutator = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(weekAgo, now);
+        SessionsMutator monthSessionsMutator = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(monthAgo, now);
 
-        long playtime = allSessionsMutator.toPlaytime();
+        long playtime = sessionsMutator.toPlaytime();
         long playtimeDay = daySessionsMutator.toPlaytime();
         long playtimeWeek = weekSessionsMutator.toPlaytime();
         long playtimeMonth = monthSessionsMutator.toPlaytime();
 
-        long afk = allSessionsMutator.toAfkTime();
+        long afk = sessionsMutator.toAfkTime();
         long afkDay = daySessionsMutator.toAfkTime();
         long afkWeek = weekSessionsMutator.toAfkTime();
         long afkMonth = monthSessionsMutator.toAfkTime();
 
         long activeTotal = playtime - afk;
 
-        long longestSession = allSessionsMutator.toLongestSessionLength();
+        long longestSession = sessionsMutator.toLongestSessionLength();
         long longestSessionDay = daySessionsMutator.toLongestSessionLength();
         long longestSessionWeek = weekSessionsMutator.toLongestSessionLength();
         long longestSessionMonth = monthSessionsMutator.toLongestSessionLength();
 
-        long sessionMedian = allSessionsMutator.toMedianSessionLength();
+        long sessionMedian = sessionsMutator.toMedianSessionLength();
         long sessionMedianDay = daySessionsMutator.toMedianSessionLength();
         long sessionMedianWeek = weekSessionsMutator.toMedianSessionLength();
         long sessionMedianMonth = monthSessionsMutator.toMedianSessionLength();
 
-        int sessionCount = allSessionsMutator.count();
+        int sessionCount = sessionsMutator.count();
         int sessionCountDay = daySessionsMutator.count();
         int sessionCountWeek = weekSessionsMutator.count();
         int sessionCountMonth = monthSessionsMutator.count();
 
-        long sessionAverage = allSessionsMutator.toAverageSessionLength();
+        long sessionAverage = sessionsMutator.toAverageSessionLength();
         long sessionAverageDay = daySessionsMutator.toAverageSessionLength();
         long sessionAverageWeek = weekSessionsMutator.toAverageSessionLength();
         long sessionAverageMonth = monthSessionsMutator.toAverageSessionLength();

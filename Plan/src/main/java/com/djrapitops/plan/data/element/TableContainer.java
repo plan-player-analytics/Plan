@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.data.element;
 
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
 
@@ -19,6 +20,7 @@ import java.util.List;
 public class TableContainer {
 
     protected final String[] header;
+    protected final Formatter[] formatters;
     private List<Serializable[]> values;
 
     private boolean jqueryDatatable;
@@ -32,11 +34,13 @@ public class TableContainer {
      */
     public TableContainer(String... header) {
         this.header = header;
+        this.formatters = new Formatter[header.length];
         values = new ArrayList<>();
     }
 
     public TableContainer(boolean players, String... header) {
         this.header = FormatUtils.mergeArrays(new String[]{Html.FONT_AWESOME_ICON.parse("user") + " Player"}, header);
+        this.formatters = new Formatter[header.length];
         values = new ArrayList<>();
     }
 
@@ -48,7 +52,7 @@ public class TableContainer {
         return getTableHeader() +
                 parseHeader() +
                 parseBody() +
-                "</table>";
+                "</table>" + (jqueryDatatable ? "</div>" : "");
     }
 
     public final String parseBody() {
@@ -58,21 +62,30 @@ public class TableContainer {
             addRow("No Data");
         }
         for (Serializable[] row : values) {
+
             int maxIndex = row.length - 1;
             body.append("<tr>");
             for (int i = 0; i < header.length; i++) {
-                body.append("<td>");
-                if (i > maxIndex) {
-                    body.append("-");
-                } else {
-                    body.append(row[i]);
+                try {
+                    Serializable value = row[i];
+                    Formatter formatter = formatters[i];
+                    body.append("<td").append(formatter != null ? " data-order=\"" + value + "\">" : ">");
+                    if (i > maxIndex) {
+                        body.append("-");
+                    } else {
+                        body.append(formatter != null ? formatter.apply(value) : value);
+                    }
+                    body.append("</td>");
+                } catch (ClassCastException e) {
+                    throw new IllegalStateException("Invalid formatter given at index " + i + ": " + e.getMessage(), e);
                 }
-                body.append("</td>");
             }
             body.append("</tr>");
+
         }
 
         return Html.TABLE_BODY.parse(body.toString());
+
     }
 
     public final void setColor(String color) {
@@ -88,6 +101,12 @@ public class TableContainer {
         return header.toString();
     }
 
+    public final void setFormatter(int index, Formatter formatter) {
+        if (index < formatters.length) {
+            formatters[index] = formatter;
+        }
+    }
+
     /**
      * Make use of JQuery Datatables plugin.
      * <p>
@@ -99,7 +118,7 @@ public class TableContainer {
 
     private String getTableHeader() {
         if (jqueryDatatable) {
-            return "<div class=\"table-responsive\">" + Html.TABLE_JQUERY.parse() + "</div>";
+            return "<div class=\"table-responsive\">" + Html.TABLE_JQUERY.parse();
         } else {
             return Html.TABLE_SCROLL.parse();
         }

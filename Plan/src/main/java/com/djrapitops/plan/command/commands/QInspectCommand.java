@@ -112,7 +112,7 @@ public class QInspectCommand extends CommandNode {
         List<GeoInfo> geoInfo = container.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());
         Optional<GeoInfo> mostRecentGeoInfo = new GeoInfoMutator(geoInfo).mostRecent();
         String loginLocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().getGeolocation() : "-";
-        SessionsMutator sessionsMutator = new SessionsMutator(container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()));
+        SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
 
         sender.sendMessage(colM + "  Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getGroup());
         sender.sendMessage(colM + "  Registered: " + colS + timestamp.apply(() -> registered));

@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.data.store.mutators.CommandUseMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
@@ -20,12 +21,15 @@ import com.djrapitops.plan.utilities.html.graphs.line.*;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
+import com.djrapitops.plan.utilities.html.tables.CommandUseTable;
+import com.djrapitops.plan.utilities.html.tables.PlayersTable;
 import com.djrapitops.plan.utilities.html.tables.ServerSessionTable;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +49,15 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addAnalysisSuppliers() {
+        putSupplier(AnalysisKeys.SESSIONS_MUTATOR, () -> SessionsMutator.forContainer(serverContainer));
+        putSupplier(AnalysisKeys.TPS_MUTATOR, () -> TPSMutator.forContainer(serverContainer));
+
         addConstants();
+        addPlayerSuppliers();
+        addSessionSuppliers();
+        addGraphSuppliers();
+        addTPSAverageSuppliers();
+        addCommandSuppliers();
     }
 
     private void addConstants() {
@@ -62,15 +74,8 @@ public class AnalysisContainer extends DataContainer {
         putRawData(AnalysisKeys.TPS_MEDIUM, Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber());
         putRawData(AnalysisKeys.TPS_HIGH, Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH.getNumber());
 
-        putSupplier(AnalysisKeys.SESSIONS_MUTATOR, () -> new SessionsMutator(serverContainer.getValue(ServerKeys.SESSIONS).orElse(new ArrayList<>())));
-        putSupplier(AnalysisKeys.TPS_MUTATOR, () -> new TPSMutator(serverContainer.getValue(ServerKeys.TPS).orElse(new ArrayList<>())));
-
         addServerProperties();
         addThemeColors();
-        addPlayerSuppliers();
-        addSessionSuppliers();
-        addGraphSuppliers();
-        addTPSAverageSuppliers();
     }
 
     private void addServerProperties() {
@@ -117,6 +122,9 @@ public class AnalysisContainer extends DataContainer {
                         .map(dateObj -> Formatters.year().apply(dateObj)).orElse("-")
         );
         putSupplier(AnalysisKeys.OPERATORS, () -> serverContainer.getValue(ServerKeys.OPERATORS).map(List::size).orElse(0));
+        putSupplier(AnalysisKeys.PLAYERS_TABLE, () ->
+                PlayersTable.forServerPage(serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())).parseHtml()
+        );
     }
 
     private void addSessionSuppliers() {
@@ -202,5 +210,11 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVG_RAM_DAY, () -> getUnsafe(tpsDay).averageRAM());
         putSupplier(AnalysisKeys.AVG_ENTITY_DAY, () -> getUnsafe(tpsDay).averageEntities());
         putSupplier(AnalysisKeys.AVG_CHUNK_DAY, () -> getUnsafe(tpsDay).averageChunks());
+    }
+
+    private void addCommandSuppliers() {
+        putSupplier(AnalysisKeys.COMMAND_USAGE_TABLE, () -> new CommandUseTable(serverContainer).parseHtml());
+        putSupplier(AnalysisKeys.COMMAND_COUNT_UNIQUE, () -> serverContainer.getValue(ServerKeys.COMMAND_USAGE).map(Map::size).orElse(0));
+        putSupplier(AnalysisKeys.COMMAND_COUNT, () -> CommandUseMutator.forContainer(serverContainer).commandUsageCount());
     }
 }

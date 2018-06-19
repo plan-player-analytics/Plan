@@ -21,6 +21,12 @@ public class Formatters {
         };
     }
 
+    public static Formatter<Long> yearLongValue() {
+        return date -> {
+            return date > 0 ? FormatUtils.formatTimeStampYear(date) : "-";
+        };
+    }
+
     public static Formatter<DateHolder> day() {
         return dateHolder -> {
             long date = dateHolder.getDate();

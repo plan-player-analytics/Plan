@@ -1,16 +1,10 @@
 package com.djrapitops.plan.data.calculation;
 
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.utilities.Verify;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ActivityIndex {
 
@@ -23,8 +17,6 @@ public class ActivityIndex {
     }
 
     public ActivityIndex(DataContainer container, long date) {
-        Verify.isTrue(container.supports(PlayerKeys.SESSIONS),
-                () -> new IllegalArgumentException("Given container does not support sessions."));
         value = calculate(container, date);
     }
 
@@ -49,10 +41,10 @@ public class ActivityIndex {
         long activePlayThreshold = loadSetting(Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms());
         int activeLoginThreshold = loadSetting(Settings.ACTIVE_LOGIN_THRESHOLD.getNumber());
 
-        List<Session> sessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
-        SessionsMutator weekOne = new SessionsMutator(sessions).filterSessionsBetween(weekAgo, date);
-        SessionsMutator weekTwo = new SessionsMutator(sessions).filterSessionsBetween(twoWeeksAgo, weekAgo);
-        SessionsMutator weekThree = new SessionsMutator(sessions).filterSessionsBetween(threeWeeksAgo, twoWeeksAgo);
+        SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
+        SessionsMutator weekOne = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(weekAgo, date);
+        SessionsMutator weekTwo = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(twoWeeksAgo, weekAgo);
+        SessionsMutator weekThree = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(threeWeeksAgo, twoWeeksAgo);
 
         // Playtime per week multipliers, max out to avoid too high values.
         double max = 4.0;

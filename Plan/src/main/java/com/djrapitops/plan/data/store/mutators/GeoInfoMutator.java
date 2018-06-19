@@ -1,6 +1,8 @@
 package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 
 import java.util.ArrayList;
@@ -17,6 +19,10 @@ import java.util.Optional;
 public class GeoInfoMutator {
 
     private final List<GeoInfo> geoInfo;
+
+    public static GeoInfoMutator forContainer(DataContainer container) {
+        return new GeoInfoMutator(container.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>()));
+    }
 
     public GeoInfoMutator(List<GeoInfo> geoInfo) {
         this.geoInfo = geoInfo;

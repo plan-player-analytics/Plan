@@ -6,7 +6,6 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +28,6 @@ public class TPSMutator {
     }
 
     public static TPSMutator forContainer(DataContainer dataContainer) {
-        Verify.isTrue(dataContainer.supports(ServerKeys.TPS),
-                () -> new IllegalArgumentException("Given DataContainer does not support SESSIONS-key"));
         return new TPSMutator(dataContainer.getValue(ServerKeys.TPS).orElse(new ArrayList<>()));
     }
 
