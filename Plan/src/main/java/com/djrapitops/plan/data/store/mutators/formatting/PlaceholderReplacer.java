@@ -14,16 +14,16 @@ import java.util.HashMap;
  */
 public class PlaceholderReplacer extends HashMap<String, Serializable> implements Formatter<String> {
 
-    public void addPlaceholder(DataContainer container, PlaceholderKey key) {
+    public void addPlaceholderFrom(DataContainer container, PlaceholderKey key) {
         if (!container.supports(key)) {
             return;
         }
         put(key.getPlaceholder(), container.get(key).get().toString());
     }
 
-    public void addAllPlaceholders(DataContainer container, PlaceholderKey... keys) {
+    public void addAllPlaceholdersFrom(DataContainer container, PlaceholderKey... keys) {
         for (PlaceholderKey key : keys) {
-            addPlaceholder(container, key);
+            addPlaceholderFrom(container, key);
         }
     }
 

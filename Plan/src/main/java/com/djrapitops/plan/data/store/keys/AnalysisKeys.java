@@ -3,11 +3,14 @@ package com.djrapitops.plan.data.store.keys;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.PlaceholderKey;
 import com.djrapitops.plan.data.store.Type;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.UUID;
 
 /**
@@ -127,6 +130,7 @@ public class AnalysisKeys {
     // Variables used only during analysis
     public static final Key<SessionsMutator> SESSIONS_MUTATOR = new Key<>(SessionsMutator.class, "SESSIONS_MUTATOR");
     public static final Key<TPSMutator> TPS_MUTATOR = new Key<>(TPSMutator.class, "TPS_MUTATOR");
+    public static final Key<PlayersMutator> PLAYERS_MUTATOR = new Key<>(PlayersMutator.class, "PLAYERS_MUTATOR");
     public static final Key<Long> PLAYTIME_TOTAL = new Key<>(Long.class, "PLAYTIME_TOTAL");
     public static final Key<Long> ANALYSIS_TIME = new Key<>(Long.class, "ANALYSIS_TIME");
     public static final Key<Long> ANALYSIS_TIME_DAY_AGO = new Key<>(Long.class, "ANALYSIS_TIME_DAY_AGO");
@@ -134,6 +138,7 @@ public class AnalysisKeys {
     public static final Key<Long> ANALYSIS_TIME_MONTH_AGO = new Key<>(Long.class, "ANALYSIS_TIME_MONTH_AGO");
     public static final Key<SessionAccordion> SESSION_ACCORDION = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
     public static final Key<Map<UUID, String>> PLAYER_NAMES = new Key<>(new Type<Map<UUID, String>>() {}, "PLAYER_NAMES");
+    public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = new Key<>(new Type<TreeMap<Long, Map<String, Set<UUID>>>>() {}, "ACTIVITY_DATA");
 
     private AnalysisKeys() {
         /* Static variable class */

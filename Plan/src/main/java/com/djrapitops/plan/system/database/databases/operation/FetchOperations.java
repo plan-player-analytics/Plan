@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.*;
@@ -12,6 +13,8 @@ import java.util.*;
 public interface FetchOperations {
 
     // Profiles
+
+    ServerContainer getServerContainer(UUID serverUUID);
 
     ServerProfile getServerProfile(UUID serverUUID);
 

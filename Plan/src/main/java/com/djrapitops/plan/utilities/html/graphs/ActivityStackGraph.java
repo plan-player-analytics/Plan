@@ -5,6 +5,7 @@
 package com.djrapitops.plan.utilities.html.graphs;
 
 import com.djrapitops.plan.data.calculation.ActivityIndex;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -24,6 +25,10 @@ public class ActivityStackGraph extends AbstractStackGraph {
 
     public ActivityStackGraph(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
         super(getLabels(activityData.navigableKeySet()), getDataSets(activityData));
+    }
+
+    public ActivityStackGraph(long date, PlayersMutator mutator) {
+        this(mutator.toActivityDataMap(date));
     }
 
     private static String[] getLabels(NavigableSet<Long> dates) {

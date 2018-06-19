@@ -5,6 +5,9 @@
 package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
@@ -25,6 +28,17 @@ public class ServerCalendar {
     public ServerCalendar(List<Long> registerDates, Map<UUID, List<Session>> sessions) {
         this.registerDates = registerDates;
         this.sessions = sessions;
+    }
+
+    public ServerCalendar(PlayersMutator mutator) {
+        registerDates = new ArrayList<>();
+        sessions = new HashMap<>();
+
+        for (PlayerContainer container : mutator.all()) {
+            UUID uuid = container.getUnsafe(PlayerKeys.UUID);
+            registerDates.add(container.getValue(PlayerKeys.REGISTERED).orElse(0L));
+            sessions.put(uuid, container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()));
+        }
     }
 
     public String toCalendarSeries() {

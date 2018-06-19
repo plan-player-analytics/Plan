@@ -6,6 +6,7 @@ import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.CommandUseMutator;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
@@ -17,7 +18,12 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
+import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
+import com.djrapitops.plan.utilities.html.graphs.WorldMap;
+import com.djrapitops.plan.utilities.html.graphs.calendar.ServerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.line.*;
+import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
@@ -51,6 +57,7 @@ public class AnalysisContainer extends DataContainer {
     private void addAnalysisSuppliers() {
         putSupplier(AnalysisKeys.SESSIONS_MUTATOR, () -> SessionsMutator.forContainer(serverContainer));
         putSupplier(AnalysisKeys.TPS_MUTATOR, () -> TPSMutator.forContainer(serverContainer));
+        putSupplier(AnalysisKeys.PLAYERS_MUTATOR, () -> PlayersMutator.forContainer(serverContainer));
 
         addConstants();
         addPlayerSuppliers();
@@ -123,7 +130,7 @@ public class AnalysisContainer extends DataContainer {
         );
         putSupplier(AnalysisKeys.OPERATORS, () -> serverContainer.getValue(ServerKeys.OPERATORS).map(List::size).orElse(0));
         putSupplier(AnalysisKeys.PLAYERS_TABLE, () ->
-                PlayersTable.forServerPage(serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())).parseHtml()
+                PlayersTable.forServerPage(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).all()).parseHtml()
         );
     }
 
@@ -160,6 +167,13 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount()
                 .apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
         );
+        putSupplier(AnalysisKeys.PUNCHCARD_SERIES, () -> new PunchCardGraph(
+                SessionsMutator.copyOf(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
+                        .filterSessionsBetween(
+                                getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
+                                getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+                ).all()).toHighChartsSeries()
+        );
     }
 
     private void addGraphSuppliers() {
@@ -175,6 +189,19 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.RAM_SERIES, () -> new RamGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.ENTITY_SERIES, () -> new EntityGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.CHUNK_SERIES, () -> new ChunkGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.WORLD_MAP_SERIES, () ->
+                new WorldMap(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).getGeolocations()).toHighChartsSeries()
+        );
+        putSupplier(AnalysisKeys.CALENDAR_SERIES, () -> new ServerCalendar(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).toCalendarSeries());
+
+        putSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
+        Key<ActivityStackGraph> activityStackGraph = new Key<>(ActivityStackGraph.class, "ACTIVITY_STACK_GRAPH");
+        putSupplier(activityStackGraph, () -> new ActivityStackGraph(getUnsafe(AnalysisKeys.ACTIVITY_DATA)));
+        putSupplier(AnalysisKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
+        putSupplier(AnalysisKeys.ACTIVITY_STACK_SERIES, () -> getUnsafe(activityStackGraph).toHighChartsSeries());
+        putSupplier(AnalysisKeys.ACTIVITY_PIE_SERIES, () ->
+                new ActivityPie(getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME))).toHighChartsSeries()
+        );
     }
 
     private void addTPSAverageSuppliers() {

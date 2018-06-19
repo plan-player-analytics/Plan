@@ -7,23 +7,20 @@ package com.djrapitops.plan.system.info.request;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.data.calculation.AnalysisData;
-import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
  * InfoRequest to generate Analysis page HTML at the receiving end.
@@ -78,18 +75,14 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
         try {
             UUID serverUUID = ServerInfo.getServerUUID();
             Database db = Database.getActive();
-            DataCache dataCache = DataCache.getInstance();
 
-            AnalysisData analysisData = Analysis.runAnalysisFor(serverUUID, db, dataCache);
-            return new AnalysisPage(analysisData).toHtml();
-        } catch (DBException e) {
+            AnalysisContainer analysisContainer = new AnalysisContainer(db.fetch().getServerContainer(serverUUID));
+            return new AnalysisPage(analysisContainer).toHtml();
+        } catch (DBOpException e) {
             if (!e.getCause().getMessage().contains("Connection is closed")) {
                 Log.toLog(this.getClass(), e);
             }
             throw new InternalErrorException("Analysis failed due to exception", e);
-        } catch (InterruptedException | ExecutionException e) {
-            /* Plugin is shutting down, exceptions ignored */
-            return new InternalErrorResponse("Plugin may be shutting down", e).getContent();
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
             throw new InternalErrorException("Analysis failed due to exception", e);

@@ -167,6 +167,7 @@ public class AnalysisUtils {
         return userSessions;
     }
 
+    @Deprecated
     public static TreeMap<Long, Map<String, Set<UUID>>> turnToActivityDataMap(long time, List<PlayerProfile> players) {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
         if (!players.isEmpty()) {
