@@ -4,9 +4,13 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.CommonKeys;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +42,8 @@ public class SessionsMutator {
 
     public SessionsMutator filterSessionsBetween(long after, long before) {
         sessions = sessions.stream()
-                .filter(session -> session.getSessionEnd() >= after && session.getSessionStart() <= before)
+                .filter(session -> after <= session.getValue(SessionKeys.END).orElse(System.currentTimeMillis())
+                        && session.getUnsafe(SessionKeys.START) <= before)
                 .collect(Collectors.toList());
         return this;
     }
@@ -47,8 +52,7 @@ public class SessionsMutator {
         WorldTimes total = new WorldTimes(new HashMap<>());
 
         for (Session session : sessions) {
-            WorldTimes worldTimes = session.getWorldTimes();
-            total.add(worldTimes);
+            session.getValue(SessionKeys.WORLD_TIMES).ifPresent(total::add);
         }
 
         return total;
@@ -56,20 +60,20 @@ public class SessionsMutator {
 
     public List<PlayerKill> toPlayerKillList() {
         return sessions.stream()
-                .map(Session::getPlayerKills)
+                .map(session -> session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
     public int toMobKillCount() {
         return sessions.stream()
-                .mapToInt(Session::getMobKills)
+                .mapToInt(session -> session.getValue(SessionKeys.MOB_KILL_COUNT).orElse(0))
                 .sum();
     }
 
     public int toDeathCount() {
         return sessions.stream()
-                .mapToInt(Session::getDeaths)
+                .mapToInt(session -> session.getValue(SessionKeys.DEATH_COUNT).orElse(0))
                 .sum();
     }
 
@@ -81,20 +85,22 @@ public class SessionsMutator {
 
     public long toAfkTime() {
         return sessions.stream()
-                .mapToLong(Session::getAfkLength)
+                .mapToLong(session -> session.getValue(SessionKeys.AFK_TIME).orElse(0L))
                 .sum();
     }
 
     public long toActivePlaytime() {
         return sessions.stream()
-                .mapToLong(Session::getActiveLength)
+                .mapToLong(session -> session.getValue(SessionKeys.ACTIVE_TIME).orElse(0L))
                 .sum();
     }
 
     public long toLastSeen() {
         return sessions.stream()
-                .mapToLong(session -> Math.max(session.getSessionStart(), session.getSessionEnd()))
-                .max().orElse(-1);
+                .mapToLong(session -> Math.max(session.getUnsafe(
+                        SessionKeys.START),
+                        session.getValue(SessionKeys.END).orElse(System.currentTimeMillis()))
+                ).max().orElse(-1);
     }
 
     public long toLongestSessionLength() {
@@ -123,6 +129,32 @@ public class SessionsMutator {
             return 0;
         }
         return sessionLengths.get(sessionLengths.size() / 2);
+    }
+
+    public int toUniqueJoinsPerDay() {
+        Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
+        Function<Long, Integer> function = Formatters.dayOfYear();
+
+        for (Session session : sessions) {
+            Optional<UUID> uuidValue = session.getValue(SessionKeys.UUID);
+            if (!uuidValue.isPresent()) {
+                continue;
+            }
+            UUID uuid = uuidValue.get();
+            int day = function.apply(session.getUnsafe(SessionKeys.START));
+
+            uniqueJoins.computeIfAbsent(day, computedDay -> new HashSet<>());
+            uniqueJoins.get(day).add(uuid);
+        }
+
+        int total = MathUtils.sumInt(uniqueJoins.values().stream().map(Set::size));
+        int numberOfDays = uniqueJoins.size();
+
+        if (numberOfDays == 0) {
+            return 0;
+        }
+
+        return total / numberOfDays;
     }
 
     public int count() {

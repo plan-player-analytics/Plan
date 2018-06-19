@@ -3,6 +3,9 @@ package com.djrapitops.plan.data.store.mutators.formatting;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.FormatUtils;
 
+import java.util.Calendar;
+import java.util.function.Function;
+
 /**
  * Class that holds static methods for getting new instances of different {@link Formatter}s.
  *
@@ -54,5 +57,13 @@ public class Formatters {
 
     public static Formatter<Long> timeAmount() {
         return new TimeAmountFormatter();
+    }
+
+    public static Function<Long, Integer> dayOfYear() {
+        return date -> {
+            Calendar day = Calendar.getInstance();
+            day.setTimeInMillis(date);
+            return day.get(Calendar.DAY_OF_YEAR);
+        };
     }
 }

@@ -6,7 +6,6 @@ import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 
 import java.util.Map;
 import java.util.Set;
@@ -136,7 +135,6 @@ public class AnalysisKeys {
     public static final Key<Long> ANALYSIS_TIME_DAY_AGO = new Key<>(Long.class, "ANALYSIS_TIME_DAY_AGO");
     public static final Key<Long> ANALYSIS_TIME_WEEK_AGO = new Key<>(Long.class, "ANALYSIS_TIME_WEEK_AGO");
     public static final Key<Long> ANALYSIS_TIME_MONTH_AGO = new Key<>(Long.class, "ANALYSIS_TIME_MONTH_AGO");
-    public static final Key<SessionAccordion> SESSION_ACCORDION = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
     public static final Key<Map<UUID, String>> PLAYER_NAMES = new Key<>(new Type<Map<UUID, String>>() {}, "PLAYER_NAMES");
     public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = new Key<>(new Type<TreeMap<Long, Map<String, Set<UUID>>>>() {}, "ACTIVITY_DATA");
 

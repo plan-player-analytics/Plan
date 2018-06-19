@@ -132,14 +132,58 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.PLAYERS_TABLE, () ->
                 PlayersTable.forServerPage(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).all()).parseHtml()
         );
+
+        newAndUniquePlayerCounts();
+    }
+
+    private void newAndUniquePlayerCounts() {
+        Key<PlayersMutator> newDay = new Key<>(PlayersMutator.class, "NEW_DAY");
+        Key<PlayersMutator> newWeek = new Key<>(PlayersMutator.class, "NEW_WEEK");
+        Key<PlayersMutator> newMonth = new Key<>(PlayersMutator.class, "NEW_MONTH");
+        Key<PlayersMutator> uniqueDay = new Key<>(PlayersMutator.class, "NEW_DAY");
+        Key<PlayersMutator> uniqueWeek = new Key<>(PlayersMutator.class, "NEW_WEEK");
+        Key<PlayersMutator> uniqueMonth = new Key<>(PlayersMutator.class, "NEW_MONTH");
+        putSupplier(newDay, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+        );
+        putSupplier(newWeek, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+        );
+        putSupplier(newMonth, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+        );
+        putSupplier(uniqueDay, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+        );
+        putSupplier(uniqueWeek, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+        );
+        putSupplier(uniqueMonth, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+        );
+
+        putSupplier(AnalysisKeys.PLAYERS_NEW_DAY, () -> getUnsafe(newDay).count());
+        putSupplier(AnalysisKeys.PLAYERS_NEW_WEEK, () -> getUnsafe(newWeek).count());
+        putSupplier(AnalysisKeys.PLAYERS_NEW_MONTH, () -> getUnsafe(newMonth).count());
+        putSupplier(AnalysisKeys.PLAYERS_DAY, () -> getUnsafe(uniqueDay).count());
+        putSupplier(AnalysisKeys.PLAYERS_WEEK, () -> getUnsafe(uniqueWeek).count());
+        putSupplier(AnalysisKeys.PLAYERS_MONTH, () -> getUnsafe(uniqueMonth).count());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_DAY, () -> getUnsafe(uniqueDay).newPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_WEEK, () -> getUnsafe(uniqueWeek).newPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_MONTH, () -> getUnsafe(uniqueMonth).newPerDay());
     }
 
     private void addSessionSuppliers() {
-        putSupplier(AnalysisKeys.SESSION_ACCORDION, () -> SessionAccordion.forServer(
+        Key<SessionAccordion> sessionAccordion = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
+        putSupplier(sessionAccordion, () -> SessionAccordion.forServer(
                 getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
                 () -> Database.getActive().fetch().getServerNames(),
                 () -> getUnsafe(AnalysisKeys.PLAYER_NAMES)
         ));
+        putSupplier(AnalysisKeys.SESSION_ACCORDION_HTML, () -> getUnsafe(sessionAccordion).toHtml());
+        putSupplier(AnalysisKeys.SESSION_ACCORDION_FUNCTIONS, () -> getUnsafe(sessionAccordion).toViewScript());
+
         putSupplier(AnalysisKeys.RECENT_LOGINS, () -> new RecentLoginList(
                         serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())
                 ).toHtml()
@@ -147,8 +191,6 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.SESSION_TABLE, () -> new ServerSessionTable(
                 getUnsafe(AnalysisKeys.PLAYER_NAMES), getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all()).parseHtml()
         );
-        putSupplier(AnalysisKeys.SESSION_ACCORDION_HTML, () -> getUnsafe(AnalysisKeys.SESSION_ACCORDION).toHtml());
-        putSupplier(AnalysisKeys.SESSION_ACCORDION_FUNCTIONS, () -> getUnsafe(AnalysisKeys.SESSION_ACCORDION).toViewScript());
 
         putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount()
                 .apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
@@ -167,13 +209,25 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount()
                 .apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
         );
-        putSupplier(AnalysisKeys.PUNCHCARD_SERIES, () -> new PunchCardGraph(
-                SessionsMutator.copyOf(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
-                        .filterSessionsBetween(
-                                getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
-                                getUnsafe(AnalysisKeys.ANALYSIS_TIME))
-                ).all()).toHighChartsSeries()
+
+        Key<SessionsMutator> sessionsDay = new Key<>(SessionsMutator.class, "SESSIONS_DAY");
+        Key<SessionsMutator> sessionsWeek = new Key<>(SessionsMutator.class, "SESSIONS_WEEK");
+        Key<SessionsMutator> sessionsMonth = new Key<>(SessionsMutator.class, "SESSIONS_MONTH");
+        putSupplier(sessionsDay, () -> SessionsMutator.copyOf(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR))
+                .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
+        putSupplier(sessionsWeek, () -> SessionsMutator.copyOf(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR))
+                .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+        );
+        putSupplier(sessionsMonth, () -> SessionsMutator.copyOf(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR))
+                .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+        );
+
+        putSupplier(AnalysisKeys.PUNCHCARD_SERIES, () -> new PunchCardGraph(getUnsafe(sessionsMonth).all()).toHighChartsSeries());
+        putSupplier(AnalysisKeys.AVG_PLAYERS, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toUniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_DAY, () -> getUnsafe(sessionsDay).toUniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toUniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_MONTH, () -> getUnsafe(sessionsMonth).toUniqueJoinsPerDay());
     }
 
     private void addGraphSuppliers() {

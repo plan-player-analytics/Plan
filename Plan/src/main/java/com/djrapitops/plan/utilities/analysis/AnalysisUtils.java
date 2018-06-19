@@ -54,6 +54,7 @@ public class AnalysisUtils {
         return uuids.size();
     }
 
+    @Deprecated
     public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long after) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
 

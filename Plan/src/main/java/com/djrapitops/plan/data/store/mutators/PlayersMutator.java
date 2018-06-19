@@ -6,9 +6,13 @@ import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Mutator for a bunch of {@link com.djrapitops.plan.data.store.containers.PlayerContainer}s.
@@ -31,8 +35,35 @@ public class PlayersMutator {
         return new PlayersMutator(container.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>()));
     }
 
+    public PlayersMutator filterPlayedBetween(long after, long before) {
+        players = players.stream().filter(player ->
+                player.getValue(PlayerKeys.SESSIONS)
+                        .map(sessions -> sessions.stream().anyMatch(session -> {
+                            long start = session.getValue(SessionKeys.START).orElse(-1L);
+                            long end = session.getValue(SessionKeys.END).orElse(-1L);
+                            return (after <= start && start <= before) || (after <= end && end <= before);
+                        })).orElse(false)
+        ).collect(Collectors.toList());
+        return this;
+    }
+
+    public PlayersMutator filterRegisteredBetween(long after, long before) {
+        players = players.stream().filter(player ->
+                player.getValue(PlayerKeys.REGISTERED).map(date -> after <= date && date <= before).orElse(false)
+        ).collect(Collectors.toList());
+        return this;
+    }
+
     public List<PlayerContainer> all() {
         return players;
+    }
+
+    public List<Long> registerDates() {
+        List<Long> registerDates = new ArrayList<>();
+        for (PlayerContainer player : players) {
+            registerDates.add(player.getValue(PlayerKeys.REGISTERED).orElse(-1L));
+        }
+        return registerDates;
     }
 
     public List<String> getGeolocations() {
@@ -63,5 +94,27 @@ public class PlayersMutator {
             }
         }
         return activityData;
+    }
+
+    public int count() {
+        return players.size();
+    }
+
+    public int newPerDay() {
+        List<Long> registerDates = registerDates();
+        int total = 0;
+        Function<Long, Integer> formatter = Formatters.dayOfYear();
+        Set<Integer> days = new HashSet<>();
+        for (Long date : registerDates) {
+            int day = formatter.apply(date);
+            days.add(day);
+            total++;
+        }
+        int numberOfDays = days.size();
+
+        if (numberOfDays == 0) {
+            return 0;
+        }
+        return total / numberOfDays;
     }
 }

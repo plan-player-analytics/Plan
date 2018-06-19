@@ -130,9 +130,8 @@ public class Session extends DataContainer implements DateHolder {
      *
      * @return Long in ms.
      */
-    @Deprecated
     public long getLength() {
-        return getUnsafe(SessionKeys.LENGTH);
+        return getValue(SessionKeys.LENGTH).orElse(0L);
     }
 
     @Override
