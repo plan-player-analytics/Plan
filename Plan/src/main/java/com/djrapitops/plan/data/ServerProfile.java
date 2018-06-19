@@ -8,14 +8,12 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.comparators.PlayerProfileLastPlayedComparator;
-import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
 import java.util.function.Function;
@@ -61,24 +59,7 @@ public class ServerProfile {
     }
 
     public static long getLowSpikeCount(List<TPS> tpsData) {
-        int mediumThreshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
-
-        boolean wasLow = false;
-        long spikeCount = 0L;
-
-        for (TPS tpsObj : tpsData) {
-            double tps = tpsObj.getTicksPerSecond();
-            if (tps < mediumThreshold) {
-                if (!wasLow) {
-                    spikeCount++;
-                    wasLow = true;
-                }
-            } else {
-                wasLow = false;
-            }
-        }
-
-        return spikeCount;
+        return new TPSMutator(tpsData).lowTpsSpikeCount();
     }
 
     public static List<PlayerKill> getPlayerKills(List<Session> s) {
@@ -106,65 +87,15 @@ public class ServerProfile {
     }
 
     public static long serverDownTime(List<TPS> tpsData) {
-        long lastDate = -1;
-        long downTime = 0;
-        for (TPS tps : tpsData) {
-            long date = tps.getDate();
-            if (lastDate == -1) {
-                lastDate = date;
-                continue;
-            }
-
-            long diff = date - lastDate;
-            if (diff > TimeAmount.MINUTE.ms() * 3L) {
-                downTime += diff;
-            }
-            lastDate = date;
-        }
-
-        return downTime;
+        return new TPSMutator(tpsData).serverDownTime();
     }
 
     public static long serverIdleTime(List<TPS> tpsData) {
-        long lastDate = -1;
-        int lastPlayers = 0;
-        long idleTime = 0;
-        for (TPS tps : tpsData) {
-            long date = tps.getDate();
-            int players = tps.getPlayers();
-            if (lastDate == -1) {
-                lastDate = date;
-                lastPlayers = players;
-                continue;
-            }
-
-            long diff = date - lastDate;
-            if (lastPlayers == 0 && players == 0) {
-                idleTime += diff;
-            }
-
-            lastDate = date;
-            lastPlayers = players;
-        }
-
-        return idleTime;
+        return new TPSMutator(tpsData).serverIdleTime();
     }
 
     public static double aboveLowThreshold(List<TPS> tpsData) {
-        if (tpsData.isEmpty()) {
-            return 1;
-        }
-
-        int threshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
-
-        long count = 0;
-        for (TPS tps : tpsData) {
-            if (tps.getTicksPerSecond() >= threshold) {
-                count++;
-            }
-        }
-
-        return count * 1.0 / tpsData.size();
+        return new TPSMutator(tpsData).percentageTPSAboveLowThreshold();
     }
 
     public List<PlayerProfile> getPlayers() {
@@ -189,57 +120,6 @@ public class ServerProfile {
 
     public void setCommandUsage(Map<String, Integer> commandUsage) {
         this.commandUsage = commandUsage;
-    }
-
-    public double getAverageTPS(long after, long before) {
-        OptionalDouble average = getTPSData(after, before)
-                .mapToDouble(TPS::getTicksPerSecond)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
-    }
-
-    public double getAverageCPU(long after, long before) {
-        OptionalDouble average = getTPSData(after, before)
-                .mapToDouble(TPS::getCPUUsage)
-                .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
-    }
-
-    public double getAverageRAM(long after, long before) {
-        OptionalDouble average = getTPSData(after, before)
-                .mapToDouble(TPS::getUsedMemory)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
-    }
-
-    public double getAverageEntities(long after, long before) {
-        OptionalDouble average = getTPSData(after, before)
-                .mapToDouble(TPS::getEntityCount)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
-    }
-
-    public double getAverageChunks(long after, long before) {
-        OptionalDouble average = getTPSData(after, before)
-                .mapToDouble(TPS::getChunksLoaded)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
     }
 
     public long getNewPlayers(long after, long before) {
@@ -354,18 +234,6 @@ public class ServerProfile {
             uuids.add(player.getUuid());
         }
         return uuids;
-    }
-
-    public long serverDownTime(long after, long before) {
-        return serverDownTime(getTPSData(after, before)
-                .sorted(new TPSComparator())
-                .collect(Collectors.toList()));
-    }
-
-    public long serverIdleTime(long after, long before) {
-        return serverIdleTime(getTPSData(after, before)
-                .sorted(new TPSComparator())
-                .collect(Collectors.toList()));
     }
 
     public PlayerProfile getPlayer(UUID uuid) {

@@ -4,6 +4,7 @@ import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.PlaceholderKey;
 import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 
 import java.util.Map;
@@ -93,21 +94,21 @@ public class AnalysisKeys {
     public static final PlaceholderKey<Integer> TPS_SPIKE_MONTH = new PlaceholderKey<>(Integer.class, "tpsSpikeMonth");
     public static final PlaceholderKey<Integer> TPS_SPIKE_WEEK = new PlaceholderKey<>(Integer.class, "tpsSpikeWeek");
     public static final PlaceholderKey<Integer> TPS_SPIKE_DAY = new PlaceholderKey<>(Integer.class, "tpsSpikeDay");
-    public static final PlaceholderKey<Integer> AVG_TPS_MONTH = new PlaceholderKey<>(Integer.class, "tpsAverageMonth");
-    public static final PlaceholderKey<Integer> AVG_TPS_WEEK = new PlaceholderKey<>(Integer.class, "tpsAverageWeek");
-    public static final PlaceholderKey<Integer> AVG_TPS_DAY = new PlaceholderKey<>(Integer.class, "tpsAverageDay");
-    public static final PlaceholderKey<Integer> AVG_CPU_MONTH = new PlaceholderKey<>(Integer.class, "cpuAverageMonth");
-    public static final PlaceholderKey<Integer> AVG_CPU_WEEK = new PlaceholderKey<>(Integer.class, "cpuAverageWeek");
-    public static final PlaceholderKey<Integer> AVG_CPU_DAY = new PlaceholderKey<>(Integer.class, "cpuAverageDay");
-    public static final PlaceholderKey<Integer> AVG_RAM_MONTH = new PlaceholderKey<>(Integer.class, "ramAverageMonth");
-    public static final PlaceholderKey<Integer> AVG_RAM_WEEK = new PlaceholderKey<>(Integer.class, "ramAverageWeek");
-    public static final PlaceholderKey<Integer> AVG_RAM_DAY = new PlaceholderKey<>(Integer.class, "ramAverageDay");
-    public static final PlaceholderKey<Integer> AVG_ENTITY_MONTH = new PlaceholderKey<>(Integer.class, "entityAverageMonth");
-    public static final PlaceholderKey<Integer> AVG_ENTITY_WEEK = new PlaceholderKey<>(Integer.class, "entityAverageWeek");
-    public static final PlaceholderKey<Integer> AVG_ENTITY_DAY = new PlaceholderKey<>(Integer.class, "entityAverageDay");
-    public static final PlaceholderKey<Integer> AVG_CHUNK_MONTH = new PlaceholderKey<>(Integer.class, "chunkAverageMonth");
-    public static final PlaceholderKey<Integer> AVG_CHUNK_WEEK = new PlaceholderKey<>(Integer.class, "chunkAverageWeek");
-    public static final PlaceholderKey<Integer> AVG_CHUNK_DAY = new PlaceholderKey<>(Integer.class, "chunkAverageDay");
+    public static final PlaceholderKey<Double> AVG_TPS_MONTH = new PlaceholderKey<>(Double.class, "tpsAverageMonth");
+    public static final PlaceholderKey<Double> AVG_TPS_WEEK = new PlaceholderKey<>(Double.class, "tpsAverageWeek");
+    public static final PlaceholderKey<Double> AVG_TPS_DAY = new PlaceholderKey<>(Double.class, "tpsAverageDay");
+    public static final PlaceholderKey<Double> AVG_CPU_MONTH = new PlaceholderKey<>(Double.class, "cpuAverageMonth");
+    public static final PlaceholderKey<Double> AVG_CPU_WEEK = new PlaceholderKey<>(Double.class, "cpuAverageWeek");
+    public static final PlaceholderKey<Double> AVG_CPU_DAY = new PlaceholderKey<>(Double.class, "cpuAverageDay");
+    public static final PlaceholderKey<Double> AVG_RAM_MONTH = new PlaceholderKey<>(Double.class, "ramAverageMonth");
+    public static final PlaceholderKey<Double> AVG_RAM_WEEK = new PlaceholderKey<>(Double.class, "ramAverageWeek");
+    public static final PlaceholderKey<Double> AVG_RAM_DAY = new PlaceholderKey<>(Double.class, "ramAverageDay");
+    public static final PlaceholderKey<Double> AVG_ENTITY_MONTH = new PlaceholderKey<>(Double.class, "entityAverageMonth");
+    public static final PlaceholderKey<Double> AVG_ENTITY_WEEK = new PlaceholderKey<>(Double.class, "entityAverageWeek");
+    public static final PlaceholderKey<Double> AVG_ENTITY_DAY = new PlaceholderKey<>(Double.class, "entityAverageDay");
+    public static final PlaceholderKey<Double> AVG_CHUNK_MONTH = new PlaceholderKey<>(Double.class, "chunkAverageMonth");
+    public static final PlaceholderKey<Double> AVG_CHUNK_WEEK = new PlaceholderKey<>(Double.class, "chunkAverageWeek");
+    public static final PlaceholderKey<Double> AVG_CHUNK_DAY = new PlaceholderKey<>(Double.class, "chunkAverageDay");
     // Data for Charts
     public static final PlaceholderKey<String> WORLD_PIE_SERIES = new PlaceholderKey<>(String.class, "worldSeries");
     public static final PlaceholderKey<String> GM_PIE_SERIES = new PlaceholderKey<>(String.class, "gmSeries");
@@ -125,6 +126,7 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> CALENDAR_SERIES = new PlaceholderKey<>(String.class, "calendarSeries");
     // Variables used only during analysis
     public static final Key<SessionsMutator> SESSIONS_MUTATOR = new Key<>(SessionsMutator.class, "SESSIONS_MUTATOR");
+    public static final Key<TPSMutator> TPS_MUTATOR = new Key<>(TPSMutator.class, "TPS_MUTATOR");
     public static final Key<Long> PLAYTIME_TOTAL = new Key<>(Long.class, "PLAYTIME_TOTAL");
     public static final Key<Long> ANALYSIS_TIME = new Key<>(Long.class, "ANALYSIS_TIME");
     public static final Key<Long> ANALYSIS_TIME_DAY_AGO = new Key<>(Long.class, "ANALYSIS_TIME_DAY_AGO");

@@ -28,7 +28,7 @@ public class SessionsMutator {
     }
 
     public static SessionsMutator copyOf(SessionsMutator mutator) {
-        return new SessionsMutator(mutator.sessions);
+        return new SessionsMutator(new ArrayList<>(mutator.sessions));
     }
 
     public SessionsMutator(List<Session> sessions) {

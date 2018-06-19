@@ -1,9 +1,9 @@
 package com.djrapitops.plan.utilities.html.graphs.line;
 
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.store.mutators.TPSMutator;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Graph about Entity Counts gathered by TPSCountTimer.
@@ -15,12 +15,10 @@ import java.util.stream.Collectors;
 public class EntityGraph extends AbstractLineGraph {
 
     public EntityGraph(List<TPS> tpsData) {
-        super(turnToPoints(tpsData));
+        this(new TPSMutator(tpsData));
     }
 
-    private static List<Point> turnToPoints(List<TPS> tpsData) {
-        return tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getEntityCount()))
-                .collect(Collectors.toList());
+    public EntityGraph(TPSMutator mutator) {
+        super(mutator.entityPoints());
     }
 }
