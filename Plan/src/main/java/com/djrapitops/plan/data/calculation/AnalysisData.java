@@ -30,9 +30,7 @@ import com.djrapitops.plan.utilities.html.graphs.line.*;
 import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
-import com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import com.djrapitops.plan.utilities.html.tables.CommandUseTable;
-import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
@@ -321,14 +319,12 @@ public class AnalysisData extends RawData {
         List<Session> sessionsMonth = allSessions.stream()
                 .filter(s -> s.getSessionStart() >= monthAgo)
                 .collect(Collectors.toList());
-        String[] tables = SessionsTableCreator.createTable(sessions, allSessions);
-        String[] sessionContent = SessionTabStructureCreator.createStructure(sessions, allSessions);
 
         addValue("sessionCount", allSessions.size());
-        addValue("accordionSessions", sessionContent[0]);
-        addValue("sessionTabGraphViewFunctions", sessionContent[1]);
-        addValue("tableBodySessions", tables[0]);
-        addValue("listRecentLogins", tables[1]);
+        addValue("accordionSessions", "");
+        addValue("sessionTabGraphViewFunctions", "");
+        addValue("tableBodySessions", "");
+        addValue("listRecentLogins", "");
         addValue("sessionAverage", Formatters.timeAmount().apply(new SessionsMutator(allSessions).toAverageSessionLength()));
         addValue("punchCardSeries", new PunchCardGraph(sessionsMonth).toHighChartsSeries());
 

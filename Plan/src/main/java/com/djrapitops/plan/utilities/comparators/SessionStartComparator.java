@@ -5,7 +5,7 @@ import com.djrapitops.plan.data.container.Session;
 import java.util.Comparator;
 
 /**
- * Comparator for Sessions in descending start order (Latest first).
+ * Comparator for Sessions in descending start order (Most recent first).
  *
  * @author Rsl1122
  */

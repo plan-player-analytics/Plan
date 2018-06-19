@@ -2,8 +2,12 @@ package com.djrapitops.plan.data.store.keys;
 
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.PlaceholderKey;
+import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
+
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Key objects used for Analysis.
@@ -127,7 +131,7 @@ public class AnalysisKeys {
     public static final Key<Long> ANALYSIS_TIME_WEEK_AGO = new Key<>(Long.class, "ANALYSIS_TIME_WEEK_AGO");
     public static final Key<Long> ANALYSIS_TIME_MONTH_AGO = new Key<>(Long.class, "ANALYSIS_TIME_MONTH_AGO");
     public static final Key<SessionAccordion> SESSION_ACCORDION = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
-
+    public static final Key<Map<UUID, String>> PLAYER_NAMES = new Key<>(new Type<Map<UUID, String>>() {}, "PLAYER_NAMES");
 
     private AnalysisKeys() {
         /* Static variable class */

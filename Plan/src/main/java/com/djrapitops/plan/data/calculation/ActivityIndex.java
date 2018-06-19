@@ -16,6 +16,12 @@ public class ActivityIndex {
 
     private final double value;
 
+    // Temp constructor for PlayerProfile support
+    @Deprecated
+    public ActivityIndex() {
+        value = 0.0;
+    }
+
     public ActivityIndex(DataContainer container, long date) {
         Verify.isTrue(container.supports(PlayerKeys.SESSIONS),
                 () -> new IllegalArgumentException("Given container does not support sessions."));

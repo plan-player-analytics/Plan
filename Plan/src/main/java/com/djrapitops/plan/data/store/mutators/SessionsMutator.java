@@ -35,6 +35,10 @@ public class SessionsMutator {
         this.sessions = sessions;
     }
 
+    public List<Session> all() {
+        return sessions;
+    }
+
     public SessionsMutator filterSessionsBetween(long after, long before) {
         sessions = sessions.stream()
                 .filter(session -> session.getSessionEnd() >= after && session.getSessionStart() <= before)

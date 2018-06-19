@@ -2,19 +2,25 @@ package com.djrapitops.plan.data.store.containers;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
+import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
+import com.djrapitops.plan.utilities.html.tables.ServerSessionTable;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Container used for analysis.
@@ -77,6 +83,11 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addPlayerSuppliers() {
+        putSupplier(AnalysisKeys.PLAYER_NAMES, () -> serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())
+                .stream().collect(Collectors.toMap(
+                        p -> p.getUnsafe(PlayerKeys.UUID), p -> p.getValue(PlayerKeys.NAME).orElse("?"))
+                )
+        );
         putSupplier(AnalysisKeys.PLAYERS_TOTAL, () -> serverContainer.getValue(ServerKeys.PLAYER_COUNT).orElse(0));
         putSupplier(AnalysisKeys.PLAYERS_LAST_PEAK, () ->
                 serverContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS)
@@ -98,6 +109,21 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addSessionSuppliers() {
+        putSupplier(AnalysisKeys.SESSION_ACCORDION, () -> SessionAccordion.forServer(
+                getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
+                () -> Database.getActive().fetch().getServerNames(),
+                () -> getUnsafe(AnalysisKeys.PLAYER_NAMES)
+        ));
+        putSupplier(AnalysisKeys.RECENT_LOGINS, () -> new RecentLoginList(
+                        serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())
+                ).toHtml()
+        );
+        putSupplier(AnalysisKeys.SESSION_TABLE, () -> new ServerSessionTable(
+                getUnsafe(AnalysisKeys.PLAYER_NAMES), getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all()).parseHtml()
+        );
+        putSupplier(AnalysisKeys.SESSION_ACCORDION_HTML, () -> getUnsafe(AnalysisKeys.SESSION_ACCORDION).toHtml());
+        putSupplier(AnalysisKeys.SESSION_ACCORDION_FUNCTIONS, () -> getUnsafe(AnalysisKeys.SESSION_ACCORDION).toViewScript());
+
         putSupplier(AnalysisKeys.SESSIONS_MUTATOR, () -> new SessionsMutator(serverContainer.getValue(ServerKeys.SESSIONS).orElse(new ArrayList<>())));
         putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount()
                 .apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
