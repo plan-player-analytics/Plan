@@ -2,6 +2,7 @@ package com.djrapitops.plan.data.store.containers;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
@@ -43,6 +44,8 @@ public class AnalysisContainer extends DataContainer {
 
     private final ServerContainer serverContainer;
 
+    private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {}, "SERVER_NAMES");
+
     public AnalysisContainer(ServerContainer serverContainer) {
         this.serverContainer = serverContainer;
         addAnalysisSuppliers();
@@ -81,7 +84,9 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addServerProperties() {
-        putSupplier(AnalysisKeys.SERVER_NAME, ServerInfo::getServerName);
+        putSupplier(AnalysisKeys.SERVER_NAME, () ->
+                getUnsafe(serverNames).getOrDefault(serverContainer.getUnsafe(ServerKeys.SERVER_UUID), "Plan")
+        );
 
         ServerProperties serverProperties = ServerInfo.getServerProperties();
         putRawData(AnalysisKeys.PLAYERS_MAX, serverProperties.getMaxPlayers());
@@ -178,7 +183,7 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY, () -> {
             try {
                 return getUnsafe(retentionDay);
-            } catch (IllegalStateException e) {
+            } catch (IllegalStateException noPlayersAfterDateFiltering) {
                 return 0;
             }
         });
@@ -186,7 +191,7 @@ public class AnalysisContainer extends DataContainer {
             try {
                 Integer playersNewDay = getUnsafe(AnalysisKeys.PLAYERS_NEW_DAY);
                 return playersNewDay != 0 ? Formatters.percentage().apply(1.0 * getUnsafe(retentionDay) / playersNewDay) : "-";
-            } catch (IllegalStateException e) {
+            } catch (IllegalStateException noPlayersAfterDateFiltering) {
                 return "Not enough data";
             }
         });
@@ -194,9 +199,10 @@ public class AnalysisContainer extends DataContainer {
 
     private void addSessionSuppliers() {
         Key<SessionAccordion> sessionAccordion = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
+        putSupplier(serverNames, () -> Database.getActive().fetch().getServerNames());
         putSupplier(sessionAccordion, () -> SessionAccordion.forServer(
                 getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
-                () -> Database.getActive().fetch().getServerNames(),
+                getSupplier(serverNames),
                 () -> getUnsafe(AnalysisKeys.PLAYER_NAMES)
         ));
         putSupplier(AnalysisKeys.SESSION_ACCORDION_HTML, () -> getUnsafe(sessionAccordion).toHtml());

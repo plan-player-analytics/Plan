@@ -24,25 +24,25 @@ import java.util.UUID;
 public class AnalysisKeys {
 
     // Constants (Affected only by config settings)
-    public static final PlaceholderKey<String> VERSION = new PlaceholderKey<>(String.class, "version");
+    public static final PlaceholderKey<String> VERSION = CommonPlaceholderKeys.VERSION;
     public static final PlaceholderKey<String> SERVER_NAME = new PlaceholderKey<>(String.class, "serverName");
-    public static final PlaceholderKey<Integer> TIME_ZONE = new PlaceholderKey<>(Integer.class, "timeZone");
+    public static final PlaceholderKey<Integer> TIME_ZONE = CommonPlaceholderKeys.TIME_ZONE;
     public static final PlaceholderKey<Integer> FIRST_DAY = new PlaceholderKey<>(Integer.class, "firstDay");
     public static final PlaceholderKey<Integer> TPS_MEDIUM = new PlaceholderKey<>(Integer.class, "tpsMedium");
     public static final PlaceholderKey<Integer> TPS_HIGH = new PlaceholderKey<>(Integer.class, "tpsHigh");
     public static final PlaceholderKey<Integer> PLAYERS_MAX = new PlaceholderKey<>(Integer.class, "playersMax");
-    public static final PlaceholderKey<Integer> PLAYERS_ONLINE = new PlaceholderKey<>(Integer.class, "playersOnline");
-    public static final PlaceholderKey<Integer> PLAYERS_TOTAL = new PlaceholderKey<>(Integer.class, "playersTotal");
+    public static final PlaceholderKey<Integer> PLAYERS_ONLINE = CommonPlaceholderKeys.PLAYERS_ONLINE;
+    public static final PlaceholderKey<Integer> PLAYERS_TOTAL = CommonPlaceholderKeys.PLAYERS_TOTAL;
     //
     public static final PlaceholderKey<String> WORLD_PIE_COLORS = new PlaceholderKey<>(String.class, "worldPieColors");
     public static final PlaceholderKey<String> GM_PIE_COLORS = new PlaceholderKey<>(String.class, "gmPieColors");
     public static final PlaceholderKey<String> ACTIVITY_PIE_COLORS = new PlaceholderKey<>(String.class, "activityPieColors");
-    public static final PlaceholderKey<String> PLAYERS_GRAPH_COLOR = new PlaceholderKey<>(String.class, "playersGraphColor");
+    public static final PlaceholderKey<String> PLAYERS_GRAPH_COLOR = CommonPlaceholderKeys.PLAYERS_GRAPH_COLOR;
     public static final PlaceholderKey<String> TPS_HIGH_COLOR = new PlaceholderKey<>(String.class, "tpsHighColor");
     public static final PlaceholderKey<String> TPS_MEDIUM_COLOR = new PlaceholderKey<>(String.class, "tpsMediumColor");
     public static final PlaceholderKey<String> TPS_LOW_COLOR = new PlaceholderKey<>(String.class, "tpsLowColor");
-    public static final PlaceholderKey<String> WORLD_MAP_HIGH_COLOR = new PlaceholderKey<>(String.class, "worldMapColHigh");
-    public static final PlaceholderKey<String> WORLD_MAP_LOW_COLOR = new PlaceholderKey<>(String.class, "worldMapColLow");
+    public static final PlaceholderKey<String> WORLD_MAP_HIGH_COLOR = CommonPlaceholderKeys.WORLD_MAP_HIGH_COLOR;
+    public static final PlaceholderKey<String> WORLD_MAP_LOW_COLOR = CommonPlaceholderKeys.WORLD_MAP_LOW_COLOR;
     // Tables & other structures
     public static final PlaceholderKey<String> PLAYERS_TABLE = new PlaceholderKey<>(String.class, "tablePlayerlist");
     public static final PlaceholderKey<String> SESSION_ACCORDION_HTML = new PlaceholderKey<>(String.class, "accordionSessions");
@@ -54,15 +54,15 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> PLUGINS_TAB = new PlaceholderKey<>(String.class, "navPluginsTabs");
     public static final PlaceholderKey<String> PLUGINS_TAB_NAV = new PlaceholderKey<>(String.class, "tabsPlugins");
     // Formatted time values
-    public static final PlaceholderKey<String> REFRESH_TIME_F = new PlaceholderKey<>(String.class, "refresh");
-    public static final PlaceholderKey<String> LAST_PEAK_TIME_F = new PlaceholderKey<>(String.class, "lastPeakTime");
-    public static final PlaceholderKey<String> ALL_TIME_PEAK_TIME_F = new PlaceholderKey<>(String.class, "bestPeakTime");
+    public static final PlaceholderKey<String> REFRESH_TIME_F = CommonPlaceholderKeys.REFRESH_TIME_F;
+    public static final PlaceholderKey<String> LAST_PEAK_TIME_F = CommonPlaceholderKeys.LAST_PEAK_TIME_F;
+    public static final PlaceholderKey<String> ALL_TIME_PEAK_TIME_F = CommonPlaceholderKeys.ALL_TIME_PEAK_TIME_F;
     public static final PlaceholderKey<String> AVERAGE_SESSION_LENGTH_F = new PlaceholderKey<>(String.class, "sessionAverage");
     public static final PlaceholderKey<String> AVERAGE_PLAYTIME_F = new PlaceholderKey<>(String.class, "playtimeAverage");
     public static final PlaceholderKey<String> PLAYTIME_F = new PlaceholderKey<>(String.class, "playtimeTotal");
     // Direct values, possibly formatted
-    public static final PlaceholderKey<String> PLAYERS_LAST_PEAK = new PlaceholderKey<>(String.class, "playersLastPeak");
-    public static final PlaceholderKey<String> PLAYERS_ALL_TIME_PEAK = new PlaceholderKey<>(String.class, "playersBestPeak");
+    public static final PlaceholderKey<String> PLAYERS_LAST_PEAK = CommonPlaceholderKeys.PLAYERS_LAST_PEAK;
+    public static final PlaceholderKey<String> PLAYERS_ALL_TIME_PEAK = CommonPlaceholderKeys.PLAYERS_ALL_TIME_PEAK;
     public static final PlaceholderKey<Integer> OPERATORS = new PlaceholderKey<>(Integer.class, "ops");
     public static final PlaceholderKey<Integer> PLAYERS_REGULAR = new PlaceholderKey<>(Integer.class, "playersRegular");
     public static final PlaceholderKey<Integer> SESSION_COUNT = new PlaceholderKey<>(Integer.class, "sessionCount");
@@ -73,12 +73,12 @@ public class AnalysisKeys {
     public static final PlaceholderKey<Integer> COMMAND_COUNT = new PlaceholderKey<>(Integer.class, "commandCount");
     public static final PlaceholderKey<Integer> COMMAND_COUNT_UNIQUE = new PlaceholderKey<>(Integer.class, "commandUniqueCount");
     //
-    public static final PlaceholderKey<Integer> PLAYERS_DAY = new PlaceholderKey<>(Integer.class, "playersDay");
-    public static final PlaceholderKey<Integer> PLAYERS_WEEK = new PlaceholderKey<>(Integer.class, "playersWeek");
-    public static final PlaceholderKey<Integer> PLAYERS_MONTH = new PlaceholderKey<>(Integer.class, "playersMonth");
-    public static final PlaceholderKey<Integer> PLAYERS_NEW_DAY = new PlaceholderKey<>(Integer.class, "playersNewDay");
-    public static final PlaceholderKey<Integer> PLAYERS_NEW_WEEK = new PlaceholderKey<>(Integer.class, "playersNewWeek");
-    public static final PlaceholderKey<Integer> PLAYERS_NEW_MONTH = new PlaceholderKey<>(Integer.class, "playersNewMonth");
+    public static final PlaceholderKey<Integer> PLAYERS_DAY = CommonPlaceholderKeys.PLAYERS_DAY;
+    public static final PlaceholderKey<Integer> PLAYERS_WEEK = CommonPlaceholderKeys.PLAYERS_WEEK;
+    public static final PlaceholderKey<Integer> PLAYERS_MONTH = CommonPlaceholderKeys.PLAYERS_MONTH;
+    public static final PlaceholderKey<Integer> PLAYERS_NEW_DAY = CommonPlaceholderKeys.PLAYERS_NEW_DAY;
+    public static final PlaceholderKey<Integer> PLAYERS_NEW_WEEK = CommonPlaceholderKeys.PLAYERS_NEW_WEEK;
+    public static final PlaceholderKey<Integer> PLAYERS_NEW_MONTH = CommonPlaceholderKeys.PLAYERS_NEW_MONTH;
     public static final PlaceholderKey<Integer> AVG_PLAYERS = new PlaceholderKey<>(Integer.class, "playersAverage");
     public static final PlaceholderKey<Integer> AVG_PLAYERS_DAY = new PlaceholderKey<>(Integer.class, "playersAverageDay");
     public static final PlaceholderKey<Integer> AVG_PLAYERS_WEEK = new PlaceholderKey<>(Integer.class, "playersAverageWeek");
@@ -115,22 +115,22 @@ public class AnalysisKeys {
     // Data for Charts
     public static final PlaceholderKey<String> WORLD_PIE_SERIES = new PlaceholderKey<>(String.class, "worldSeries");
     public static final PlaceholderKey<String> GM_PIE_SERIES = new PlaceholderKey<>(String.class, "gmSeries");
-    public static final PlaceholderKey<String> PLAYERS_ONLINE_SERIES = new PlaceholderKey<>(String.class, "playersOnlineSeries");
+    public static final PlaceholderKey<String> PLAYERS_ONLINE_SERIES = CommonPlaceholderKeys.PLAYERS_ONLINE_SERIES;
     public static final PlaceholderKey<String> TPS_SERIES = new PlaceholderKey<>(String.class, "tpsSeries");
     public static final PlaceholderKey<String> CPU_SERIES = new PlaceholderKey<>(String.class, "cpuSeries");
     public static final PlaceholderKey<String> RAM_SERIES = new PlaceholderKey<>(String.class, "ramSeries");
     public static final PlaceholderKey<String> ENTITY_SERIES = new PlaceholderKey<>(String.class, "entitySeries");
     public static final PlaceholderKey<String> CHUNK_SERIES = new PlaceholderKey<>(String.class, "chunkSeries");
     public static final PlaceholderKey<String> PUNCHCARD_SERIES = new PlaceholderKey<>(String.class, "punchCardSeries");
-    public static final PlaceholderKey<String> WORLD_MAP_SERIES = new PlaceholderKey<>(String.class, "geoMapSeries");
+    public static final PlaceholderKey<String> WORLD_MAP_SERIES = CommonPlaceholderKeys.WORLD_MAP_SERIES;
     public static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = new PlaceholderKey<>(String.class, "activityStackSeries");
     public static final PlaceholderKey<String> ACTIVITY_STACK_CATEGORIES = new PlaceholderKey<>(String.class, "activityStackCategories");
     public static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = new PlaceholderKey<>(String.class, "activityPieSeries");
     public static final PlaceholderKey<String> CALENDAR_SERIES = new PlaceholderKey<>(String.class, "calendarSeries");
     // Variables used only during analysis
-    public static final Key<SessionsMutator> SESSIONS_MUTATOR = new Key<>(SessionsMutator.class, "SESSIONS_MUTATOR");
-    public static final Key<TPSMutator> TPS_MUTATOR = new Key<>(TPSMutator.class, "TPS_MUTATOR");
-    public static final Key<PlayersMutator> PLAYERS_MUTATOR = new Key<>(PlayersMutator.class, "PLAYERS_MUTATOR");
+    public static final Key<SessionsMutator> SESSIONS_MUTATOR = CommonKeys.SESSIONS_MUTATOR;
+    public static final Key<TPSMutator> TPS_MUTATOR = CommonKeys.TPS_MUTATOR;
+    public static final Key<PlayersMutator> PLAYERS_MUTATOR = CommonKeys.PLAYERS_MUTATOR;
     public static final Key<PlayersOnlineResolver> PLAYERS_ONLINE_RESOLVER = new Key<>(PlayersOnlineResolver.class, "PLAYERS_ONLINE_RESOLVER");
     public static final Key<Long> PLAYTIME_TOTAL = new Key<>(Long.class, "PLAYTIME_TOTAL");
     public static final Key<Long> ANALYSIS_TIME = new Key<>(Long.class, "ANALYSIS_TIME");

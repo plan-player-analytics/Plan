@@ -33,6 +33,10 @@ public class DataContainer extends HashMap<Key, Supplier> {
         super.put(key, new CachingSupplier<>(supplier));
     }
 
+    public <T> Supplier<T> getSupplier(Key<T> key) {
+        return (Supplier<T>) super.get(key);
+    }
+
     /**
      * Check if a Value with the given Key has been placed into the container.
      *
@@ -57,12 +61,12 @@ public class DataContainer extends HashMap<Key, Supplier> {
      * @return Optional of the object if the key is registered and key matches the type of the object. Otherwise empty.
      */
     public <T> Optional<T> getValue(Key<T> key) {
-        Supplier supplier = get(key);
+        Supplier<T> supplier = getSupplier(key);
         if (supplier == null) {
             return Optional.empty();
         }
         try {
-            return Optional.ofNullable((T) supplier.get());
+            return Optional.ofNullable(supplier.get());
         } catch (ClassCastException e) {
             return Optional.empty();
         }
@@ -98,5 +102,18 @@ public class DataContainer extends HashMap<Key, Supplier> {
     @Deprecated
     public Supplier put(Key key, Supplier value) {
         return super.put(key, value);
+    }
+
+    /**
+     * Normal get method.
+     *
+     * @param key Key.
+     * @return Supplier
+     * @deprecated Use getSupplier instead for types.
+     */
+    @Override
+    @Deprecated
+    public Supplier get(Object key) {
+        return super.get(key);
     }
 }

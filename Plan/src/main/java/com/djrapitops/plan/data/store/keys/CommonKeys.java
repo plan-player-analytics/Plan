@@ -4,6 +4,9 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.Type;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.time.WorldTimes;
 
 import java.util.List;
@@ -36,5 +39,9 @@ public class CommonKeys {
 
     public static final Key<Boolean> BANNED = new Key<>(Boolean.class, "banned");
     public static final Key<Boolean> OPERATOR = new Key<>(Boolean.class, "operator");
+
+    public static final Key<SessionsMutator> SESSIONS_MUTATOR = new Key<>(SessionsMutator.class, "SESSIONS_MUTATOR");
+    public static final Key<TPSMutator> TPS_MUTATOR = new Key<>(TPSMutator.class, "TPS_MUTATOR");
+    public static final Key<PlayersMutator> PLAYERS_MUTATOR = new Key<>(PlayersMutator.class, "PLAYERS_MUTATOR");
 
 }
