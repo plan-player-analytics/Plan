@@ -1,11 +1,11 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;

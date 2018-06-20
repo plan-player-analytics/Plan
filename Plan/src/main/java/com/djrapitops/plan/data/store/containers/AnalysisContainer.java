@@ -5,10 +5,7 @@ import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
-import com.djrapitops.plan.data.store.mutators.CommandUseMutator;
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -32,10 +29,7 @@ import com.djrapitops.plan.utilities.html.tables.PlayersTable;
 import com.djrapitops.plan.utilities.html.tables.ServerSessionTable;
 import com.djrapitops.plugin.api.TimeAmount;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -172,6 +166,28 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_DAY, () -> getUnsafe(uniqueDay).newPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_WEEK, () -> getUnsafe(uniqueWeek).newPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_MONTH, () -> getUnsafe(uniqueMonth).newPerDay());
+
+        Key<Integer> retentionDay = new Key<>(Integer.class, "RETENTION_DAY");
+        // compareAndFindThoseLikelyToBeRetained can throw exception.
+        putSupplier(retentionDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).compareAndFindThoseLikelyToBeRetained(
+                getUnsafe(newDay).all(), getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
+                getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER)
+                ).count()
+        );
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY, () -> {
+            try {
+                return getUnsafe(retentionDay);
+            } catch (IllegalStateException e) {
+                return 0;
+            }
+        });
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY_PERC, () -> {
+            try {
+                return Formatters.percentage().apply(1.0 * getUnsafe(retentionDay) / getUnsafe(AnalysisKeys.PLAYERS_NEW_DAY));
+            } catch (IllegalStateException e) {
+                return "Not enough data";
+            }
+        });
     }
 
     private void addSessionSuppliers() {
@@ -228,6 +244,24 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVG_PLAYERS_DAY, () -> getUnsafe(sessionsDay).toUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_MONTH, () -> getUnsafe(sessionsMonth).toUniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK, () ->
+                PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).filterRetained(
+                        getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO),
+                        getUnsafe(AnalysisKeys.ANALYSIS_TIME)
+                ).count()
+        );
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH, () ->
+                PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).filterRetained(
+                        getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
+                        getUnsafe(AnalysisKeys.ANALYSIS_TIME)
+                ).count()
+        );
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK_PERC, () -> Formatters.percentage().apply(
+                1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / getUnsafe(AnalysisKeys.PLAYERS_NEW_WEEK))
+        );
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH_PERC, () -> Formatters.percentage().apply(
+                1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / getUnsafe(AnalysisKeys.PLAYERS_NEW_MONTH))
+        );
     }
 
     private void addGraphSuppliers() {
@@ -256,6 +290,13 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.ACTIVITY_PIE_SERIES, () ->
                 new ActivityPie(getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME))).toHighChartsSeries()
         );
+        putSupplier(AnalysisKeys.PLAYERS_REGULAR, () -> {
+            Map<String, Set<UUID>> activityNow = getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME));
+            Set<UUID> veryActiveNow = activityNow.getOrDefault("Very Active", new HashSet<>());
+            Set<UUID> activeNow = activityNow.getOrDefault("Active", new HashSet<>());
+            Set<UUID> regularNow = activityNow.getOrDefault("Regular", new HashSet<>());
+            return veryActiveNow.size() + activeNow.size() + regularNow.size();
+        });
     }
 
     private void addTPSAverageSuppliers() {
@@ -272,6 +313,8 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(tpsDay, () -> TPSMutator.copyOf(getUnsafe(AnalysisKeys.TPS_MUTATOR))
                 .filterDataBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
+
+        putSupplier(AnalysisKeys.PLAYERS_ONLINE_RESOLVER, () -> new PlayersOnlineResolver(getUnsafe(AnalysisKeys.TPS_MUTATOR)));
 
         putSupplier(AnalysisKeys.TPS_SPIKE_MONTH, () -> getUnsafe(tpsMonth).lowTpsSpikeCount());
         putSupplier(AnalysisKeys.AVG_TPS_MONTH, () -> getUnsafe(tpsMonth).averageTPS());

@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.utilities.html.graphs;
 
-import com.djrapitops.plan.data.calculation.ActivityIndex;
+import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;

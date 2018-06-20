@@ -4,10 +4,10 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.StickyData;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.mutators.RetentionData;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -55,7 +55,7 @@ public class AnalysisData extends RawData {
     private long refreshDate;
 
     private Map<String, Long> analyzedValues;
-    private Set<StickyData> stickyMonthData;
+    private Set<RetentionData> stickyMonthData;
     private List<PlayerProfile> players;
 
     public AnalysisData() {
@@ -250,7 +250,7 @@ public class AnalysisData extends RawData {
         got("stuckPerM", stuckPerM);
         got("stuckPerW", stuckPerW);
 
-        stickyMonthData = newMonth.stream().map(StickyData::new).distinct().collect(Collectors.toSet());
+        stickyMonthData = newMonth.stream().map(RetentionData::new).distinct().collect(Collectors.toSet());
 
         addValue("playersStuckMonth", stuckPerM);
         addValue("playersStuckWeek", stuckPerW);
@@ -288,16 +288,16 @@ public class AnalysisData extends RawData {
                 return;
             }
 
-            List<StickyData> stuck = stuckAfterMonth.stream().map(StickyData::new).collect(Collectors.toList());
-            List<StickyData> nonStuck = notStuckAfterMonth.stream().map(StickyData::new).collect(Collectors.toList());
+            List<RetentionData> stuck = stuckAfterMonth.stream().map(RetentionData::new).collect(Collectors.toList());
+            List<RetentionData> nonStuck = notStuckAfterMonth.stream().map(RetentionData::new).collect(Collectors.toList());
 
-            StickyData avgStuck = AnalysisUtils.average(stuck);
-            StickyData avgNonStuck = AnalysisUtils.average(nonStuck);
+            RetentionData avgStuck = AnalysisUtils.average(stuck);
+            RetentionData avgNonStuck = AnalysisUtils.average(nonStuck);
 
             int stuckPerD = 0;
             for (PlayerProfile player : newDay) {
-                StickyData stickyData = new StickyData(player);
-                if (stickyData.distance(avgStuck) < stickyData.distance(avgNonStuck)) {
+                RetentionData retentionData = new RetentionData(player);
+                if (retentionData.distance(avgStuck) < retentionData.distance(avgNonStuck)) {
                     stuckPerD++;
                 }
             }
@@ -403,7 +403,7 @@ public class AnalysisData extends RawData {
         return analyzedValues.getOrDefault(key, 0L);
     }
 
-    public Set<StickyData> getStickyMonthData() {
+    public Set<RetentionData> getStickyMonthData() {
         return stickyMonthData;
     }
 

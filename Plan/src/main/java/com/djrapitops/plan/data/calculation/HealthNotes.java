@@ -6,8 +6,8 @@ package com.djrapitops.plan.data.calculation;
 
 import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
-import com.djrapitops.plan.data.container.StickyData;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.store.mutators.RetentionData;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
@@ -128,7 +128,7 @@ public class HealthNotes {
     }
 
     private void newPlayerNote() {
-        double avgOnlineOnRegister = MathUtils.averageDouble(analysisData.getStickyMonthData().stream().map(StickyData::getOnlineOnJoin));
+        double avgOnlineOnRegister = MathUtils.averageDouble(analysisData.getStickyMonthData().stream().map(RetentionData::getOnlineOnJoin));
         if (avgOnlineOnRegister >= 1) {
             notes.add("<p>" + Html.GREEN_THUMB.parse() + " New Players have players to play with when they join ("
                     + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)</p>");

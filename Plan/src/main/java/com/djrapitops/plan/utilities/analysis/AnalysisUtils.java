@@ -1,10 +1,10 @@
 package com.djrapitops.plan.utilities.analysis;
 
 import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.StickyData;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.mutators.ActivityIndex;
+import com.djrapitops.plan.data.store.mutators.RetentionData;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
@@ -243,24 +243,21 @@ public class AnalysisUtils {
         return gmTimesPerAlias;
     }
 
-    public static StickyData average(Collection<StickyData> stuck) {
+    public static RetentionData average(Collection<RetentionData> stuck) {
         int size = stuck.size();
 
         double totalIndex = 0.0;
-        double totalMsgsSent = 0.0;
         double totalPlayersOnline = 0.0;
 
-        for (StickyData stickyData : stuck) {
-            totalIndex += stickyData.getActivityIndex();
-            totalMsgsSent += stickyData.getMessagesSent();
-            totalPlayersOnline += stickyData.getOnlineOnJoin();
+        for (RetentionData retentionData : stuck) {
+            totalIndex += retentionData.getActivityIndex();
+            totalPlayersOnline += retentionData.getOnlineOnJoin();
         }
 
         double averageIndex = totalIndex / (double) size;
-        double averageMessagesSent = totalMsgsSent / (double) size;
         double averagePlayersOnline = totalPlayersOnline / (double) size;
 
-        return new StickyData(averageIndex, averageMessagesSent, averagePlayersOnline);
+        return new RetentionData(averageIndex, averagePlayersOnline);
     }
 
     public static String getLongestWorldPlayed(Session session) {

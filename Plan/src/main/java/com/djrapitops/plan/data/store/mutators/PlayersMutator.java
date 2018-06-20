@@ -1,6 +1,5 @@
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
@@ -8,6 +7,7 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
@@ -51,6 +51,19 @@ public class PlayersMutator {
         players = players.stream().filter(player ->
                 player.getValue(PlayerKeys.REGISTERED).map(date -> after <= date && date <= before).orElse(false)
         ).collect(Collectors.toList());
+        return this;
+    }
+
+    public PlayersMutator filterRetained(long after, long before) {
+        players = players.stream()
+                .filter(player -> {
+                    long backLimit = Math.max(after, player.getValue(PlayerKeys.REGISTERED).orElse(0L));
+                    long half = backLimit + ((before - backLimit) / 2L);
+                    SessionsMutator firstHalf = SessionsMutator.forContainer(player);
+                    SessionsMutator secondHalf = SessionsMutator.copyOf(firstHalf);
+                    return !firstHalf.playedBetween(backLimit, half) && !secondHalf.playedBetween(half, before);
+                })
+                .collect(Collectors.toList());
         return this;
     }
 
@@ -116,5 +129,60 @@ public class PlayersMutator {
             return 0;
         }
         return total / numberOfDays;
+    }
+
+    /**
+     * Compares players in the mutator to other players in terms of player retention.
+     *
+     * @param compareTo Players to compare to.
+     * @param dateLimit Epoch ms back limit, if the player registered after this their value is not used.
+     * @return Mutator containing the players that are considered to be retained.
+     * @throws IllegalStateException If all players are rejected due to dateLimit.
+     */
+    public PlayersMutator compareAndFindThoseLikelyToBeRetained(Iterable<PlayerContainer> compareTo,
+                                                                long dateLimit,
+                                                                PlayersOnlineResolver onlineResolver) {
+        Collection<PlayerContainer> retainedAfterMonth = new ArrayList<>();
+        Collection<PlayerContainer> notRetainedAfterMonth = new ArrayList<>();
+
+        for (PlayerContainer player : players) {
+            long registered = player.getValue(PlayerKeys.REGISTERED).orElse(System.currentTimeMillis());
+
+            // Discard uncertain data
+            if (registered > dateLimit) {
+                continue;
+            }
+
+            long monthAfterRegister = registered + TimeAmount.MONTH.ms();
+            long half = registered + (TimeAmount.MONTH.ms() / 2L);
+            if (player.playedBetween(registered, half) && player.playedBetween(half, monthAfterRegister)) {
+                retainedAfterMonth.add(player);
+            } else {
+                notRetainedAfterMonth.add(player);
+            }
+        }
+
+        if (retainedAfterMonth.isEmpty() || notRetainedAfterMonth.isEmpty()) {
+            throw new IllegalStateException("No players to compare to after rejecting with dateLimit");
+        }
+
+        List<RetentionData> retained = retainedAfterMonth.stream()
+                .map(player -> new RetentionData(player, onlineResolver))
+                .collect(Collectors.toList());
+        List<RetentionData> notRetained = notRetainedAfterMonth.stream()
+                .map(player -> new RetentionData(player, onlineResolver))
+                .collect(Collectors.toList());
+
+        RetentionData avgRetained = AnalysisUtils.average(retained);
+        RetentionData avgNotRetained = AnalysisUtils.average(notRetained);
+
+        List<PlayerContainer> toBeRetained = new ArrayList<>();
+        for (PlayerContainer player : compareTo) {
+            RetentionData retentionData = new RetentionData(player, onlineResolver);
+            if (retentionData.distance(avgRetained) < retentionData.distance(avgNotRetained)) {
+                toBeRetained.add(player);
+            }
+        }
+        return new PlayersMutator(toBeRetained);
     }
 }

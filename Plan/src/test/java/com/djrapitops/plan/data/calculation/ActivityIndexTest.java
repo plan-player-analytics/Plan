@@ -3,6 +3,7 @@ package com.djrapitops.plan.data.calculation;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
 import org.junit.BeforeClass;

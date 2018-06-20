@@ -4,6 +4,7 @@ import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.PlaceholderKey;
 import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 
@@ -86,12 +87,12 @@ public class AnalysisKeys {
     public static final PlaceholderKey<Integer> AVG_PLAYERS_NEW_DAY = new PlaceholderKey<>(Integer.class, "playersNewAverageDay");
     public static final PlaceholderKey<Integer> AVG_PLAYERS_NEW_WEEK = new PlaceholderKey<>(Integer.class, "playersNewAverageWeek");
     public static final PlaceholderKey<Integer> AVG_PLAYERS_NEW_MONTH = new PlaceholderKey<>(Integer.class, "playersNewAverageMonth");
-    public static final PlaceholderKey<Integer> PLAYERS_STUCK_DAY = new PlaceholderKey<>(Integer.class, "playersStuckDay");
-    public static final PlaceholderKey<String> PLAYERS_STUCK_DAY_PERC = new PlaceholderKey<>(String.class, "playersStuckPercDay");
-    public static final PlaceholderKey<Integer> PLAYERS_STUCK_WEEK = new PlaceholderKey<>(Integer.class, "playersStuckWeek");
-    public static final PlaceholderKey<String> PLAYERS_STUCK_WEEK_PERC = new PlaceholderKey<>(String.class, "playersStuckPercWeek");
-    public static final PlaceholderKey<Integer> PLAYERS_STUCK_MONTH = new PlaceholderKey<>(Integer.class, "playersStuckMonth");
-    public static final PlaceholderKey<String> PLAYERS_STUCK_MONTH_PERC = new PlaceholderKey<>(String.class, "playersStuckPercMonth");
+    public static final PlaceholderKey<Integer> PLAYERS_RETAINED_DAY = new PlaceholderKey<>(Integer.class, "playersStuckDay");
+    public static final PlaceholderKey<String> PLAYERS_RETAINED_DAY_PERC = new PlaceholderKey<>(String.class, "playersStuckPercDay");
+    public static final PlaceholderKey<Integer> PLAYERS_RETAINED_WEEK = new PlaceholderKey<>(Integer.class, "playersStuckWeek");
+    public static final PlaceholderKey<String> PLAYERS_RETAINED_WEEK_PERC = new PlaceholderKey<>(String.class, "playersStuckPercWeek");
+    public static final PlaceholderKey<Integer> PLAYERS_RETAINED_MONTH = new PlaceholderKey<>(Integer.class, "playersStuckMonth");
+    public static final PlaceholderKey<String> PLAYERS_RETAINED_MONTH_PERC = new PlaceholderKey<>(String.class, "playersStuckPercMonth");
     //
     public static final PlaceholderKey<Integer> TPS_SPIKE_MONTH = new PlaceholderKey<>(Integer.class, "tpsSpikeMonth");
     public static final PlaceholderKey<Integer> TPS_SPIKE_WEEK = new PlaceholderKey<>(Integer.class, "tpsSpikeWeek");
@@ -130,6 +131,7 @@ public class AnalysisKeys {
     public static final Key<SessionsMutator> SESSIONS_MUTATOR = new Key<>(SessionsMutator.class, "SESSIONS_MUTATOR");
     public static final Key<TPSMutator> TPS_MUTATOR = new Key<>(TPSMutator.class, "TPS_MUTATOR");
     public static final Key<PlayersMutator> PLAYERS_MUTATOR = new Key<>(PlayersMutator.class, "PLAYERS_MUTATOR");
+    public static final Key<PlayersOnlineResolver> PLAYERS_ONLINE_RESOLVER = new Key<>(PlayersOnlineResolver.class, "PLAYERS_ONLINE_RESOLVER");
     public static final Key<Long> PLAYTIME_TOTAL = new Key<>(Long.class, "PLAYTIME_TOTAL");
     public static final Key<Long> ANALYSIS_TIME = new Key<>(Long.class, "ANALYSIS_TIME");
     public static final Key<Long> ANALYSIS_TIME_DAY_AGO = new Key<>(Long.class, "ANALYSIS_TIME_DAY_AGO");

@@ -6,12 +6,12 @@ package com.djrapitops.plan.system.webserver.pages.parsing;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.Actions;
-import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;

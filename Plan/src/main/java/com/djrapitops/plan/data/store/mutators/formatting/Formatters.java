@@ -25,9 +25,7 @@ public class Formatters {
     }
 
     public static Formatter<Long> yearLongValue() {
-        return date -> {
-            return date > 0 ? FormatUtils.formatTimeStampYear(date) : "-";
-        };
+        return date -> date > 0 ? FormatUtils.formatTimeStampYear(date) : "-";
     }
 
     public static Formatter<DateHolder> day() {
@@ -65,5 +63,9 @@ public class Formatters {
             day.setTimeInMillis(date);
             return day.get(Calendar.DAY_OF_YEAR);
         };
+    }
+
+    public static Formatter<Double> percentage() {
+        return value -> value >= 0 ? FormatUtils.cutDecimals(value * 100.0) + "%" : "-";
     }
 }

@@ -1,7 +1,6 @@
-package com.djrapitops.plan.data.calculation;
+package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.TimeAmount;

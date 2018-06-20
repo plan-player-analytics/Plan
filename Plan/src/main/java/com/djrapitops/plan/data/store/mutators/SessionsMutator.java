@@ -11,6 +11,7 @@ import com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -42,8 +43,7 @@ public class SessionsMutator {
 
     public SessionsMutator filterSessionsBetween(long after, long before) {
         sessions = sessions.stream()
-                .filter(session -> after <= session.getValue(SessionKeys.END).orElse(System.currentTimeMillis())
-                        && session.getUnsafe(SessionKeys.START) <= before)
+                .filter(getBetweenPredicate(after, before))
                 .collect(Collectors.toList());
         return this;
     }
@@ -163,5 +163,17 @@ public class SessionsMutator {
 
     public int toPlayerKillCount() {
         return toPlayerKillList().size();
+    }
+
+    public boolean playedBetween(long after, long before) {
+        return sessions.stream().anyMatch(getBetweenPredicate(after, before));
+    }
+
+    private Predicate<Session> getBetweenPredicate(long after, long before) {
+        return session -> {
+            Long start = session.getUnsafe(SessionKeys.START);
+            Long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
+            return (after <= start && start <= before) || (after <= end && end <= before);
+        };
     }
 }

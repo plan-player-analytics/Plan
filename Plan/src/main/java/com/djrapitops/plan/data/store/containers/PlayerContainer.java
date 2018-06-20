@@ -1,5 +1,7 @@
 package com.djrapitops.plan.data.store.containers;
 
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+
 /**
  * DataContainer about a Player.
  * <p>
@@ -9,4 +11,9 @@ package com.djrapitops.plan.data.store.containers;
  * @see com.djrapitops.plan.data.store.keys.PlayerKeys For Key objects.
  */
 public class PlayerContainer extends DataContainer {
+
+    public boolean playedBetween(long after, long before) {
+        return SessionsMutator.forContainer(this).playedBetween(after, before);
+    }
+
 }
