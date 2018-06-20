@@ -67,6 +67,13 @@ public class PlayersMutator {
         return this;
     }
 
+    public PlayersMutator filterActive(long date, double limit) {
+        players = players.stream()
+                .filter(player -> new ActivityIndex(player, date).getValue() >= limit)
+                .collect(Collectors.toList());
+        return this;
+    }
+
     public List<PlayerContainer> all() {
         return players;
     }

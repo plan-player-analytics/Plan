@@ -32,4 +32,9 @@ public class PlayersOnlineResolver {
         }
         return Optional.of(entry.getValue());
     }
+
+    public boolean isServerOnline(long date, long timeLimit) {
+        Long lastEntry = onlineNumberMap.floorKey(date);
+        return date - lastEntry < timeLimit;
+    }
 }

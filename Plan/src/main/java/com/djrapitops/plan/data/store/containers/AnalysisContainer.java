@@ -59,6 +59,7 @@ public class AnalysisContainer extends DataContainer {
         addGraphSuppliers();
         addTPSAverageSuppliers();
         addCommandSuppliers();
+        addServerHealth();
     }
 
     private void addConstants() {
@@ -340,5 +341,12 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.COMMAND_USAGE_TABLE, () -> new CommandUseTable(serverContainer).parseHtml());
         putSupplier(AnalysisKeys.COMMAND_COUNT_UNIQUE, () -> serverContainer.getValue(ServerKeys.COMMAND_USAGE).map(Map::size).orElse(0));
         putSupplier(AnalysisKeys.COMMAND_COUNT, () -> CommandUseMutator.forContainer(serverContainer).commandUsageCount());
+    }
+
+    private void addServerHealth() {
+        Key<HealthInformation> healthInformation = new Key<>(HealthInformation.class, "HEALTH_INFORMATION");
+        putSupplier(healthInformation, () -> new HealthInformation(this));
+        putSupplier(AnalysisKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
+        putSupplier(AnalysisKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
     }
 }

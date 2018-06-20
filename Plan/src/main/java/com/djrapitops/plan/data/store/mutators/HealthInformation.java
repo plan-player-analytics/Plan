@@ -1,13 +1,9 @@
-/*
- * Licence is provided in the jar as license.yml also here:
- * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
- */
-package com.djrapitops.plan.data.calculation;
+package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.ServerProfile;
-import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.store.mutators.RetentionData;
+import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.containers.AnalysisContainer;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
@@ -17,43 +13,30 @@ import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
- * Class in charge of Server health analysis.
+ * Server Health analysis mutator.
  *
  * @author Rsl1122
  */
-@Deprecated
-public class HealthNotes {
+public class HealthInformation {
 
+    private final AnalysisContainer analysisContainer;
     private final List<String> notes;
-    private final AnalysisData analysisData;
-    private final SortedMap<Long, Map<String, Set<UUID>>> activityData;
-    private final List<TPS> tpsDataMonth;
     private final long now;
-    private final long fourWeeksAgo;
     private double serverHealth;
+    private long fourWeeksAgo;
 
-    public HealthNotes(AnalysisData analysisData, SortedMap<Long, Map<String, Set<UUID>>> activityData, List<TPS> tpsDataMonth, long now) {
+    public HealthInformation(AnalysisContainer analysisContainer) {
+        this.analysisContainer = analysisContainer;
         this.notes = new ArrayList<>();
-        serverHealth = 100.0;
+        calculate();
 
-        this.analysisData = analysisData;
-        this.activityData = activityData;
-        this.tpsDataMonth = tpsDataMonth;
-        this.now = now;
-        this.fourWeeksAgo = now - TimeAmount.WEEK.ms() * 4L;
+        now = analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME);
+        fourWeeksAgo = analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO);
     }
 
-    public void analyzeHealth() {
-        activityChangeNote();
-        newPlayerNote();
-        activePlayerPlaytimeChange();
-        lowPerformance();
-    }
-
-    public String parse() {
+    public String toHtml() {
         StringBuilder healthNoteBuilder = new StringBuilder();
         for (String healthNote : notes) {
             healthNoteBuilder.append(healthNote);
@@ -61,11 +44,20 @@ public class HealthNotes {
         return healthNoteBuilder.toString();
     }
 
+    private void calculate() {
+        activityChangeNote();
+        newPlayerNote();
+        activePlayerPlaytimeChange();
+        lowPerformance();
+    }
+
     public double getServerHealth() {
         return serverHealth;
     }
 
     private void activityChangeNote() {
+        TreeMap<Long, Map<String, Set<UUID>>> activityData = analysisContainer.getUnsafe(AnalysisKeys.ACTIVITY_DATA);
+
         Map<String, Set<UUID>> activityNow = activityData.getOrDefault(now, new HashMap<>());
         Set<UUID> veryActiveNow = activityNow.getOrDefault("Very Active", new HashSet<>());
         Set<UUID> activeNow = activityNow.getOrDefault("Active", new HashSet<>());
@@ -129,7 +121,14 @@ public class HealthNotes {
     }
 
     private void newPlayerNote() {
-        double avgOnlineOnRegister = MathUtils.averageDouble(analysisData.getStickyMonthData().stream().map(RetentionData::getOnlineOnJoin));
+        Key<PlayersMutator> newMonth = new Key<>(PlayersMutator.class, "NEW_MONTH");
+        PlayersMutator newPlayersMonth = analysisContainer.getValue(newMonth).orElse(new PlayersMutator(new ArrayList<>()));
+        PlayersOnlineResolver onlineResolver = analysisContainer.getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER);
+
+        double avgOnlineOnRegister = newPlayersMonth.registerDates().stream()
+                .mapToInt(date -> onlineResolver.getOnlineOn(date).orElse(-1))
+                .filter(value -> value != -1)
+                .average().orElse(0);
         if (avgOnlineOnRegister >= 1) {
             notes.add("<p>" + Html.GREEN_THUMB.parse() + " New Players have players to play with when they join ("
                     + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)</p>");
@@ -139,38 +138,37 @@ public class HealthNotes {
             serverHealth -= 5;
         }
 
-        long newM = analysisData.value("newM");
-        long stuckPerM = analysisData.value("stuckPerM");
+        long playersNewMonth = analysisContainer.getValue(AnalysisKeys.PLAYERS_NEW_MONTH).orElse(0);
+        long playersRetainedMonth = analysisContainer.getValue(AnalysisKeys.PLAYERS_RETAINED_MONTH).orElse(0);
 
-        if (newM != 0) {
-            double stuckPerc = MathUtils.averageDouble(stuckPerM, newM) * 100;
+        if (playersNewMonth != 0) {
+            double stuckPerc = MathUtils.averageDouble(playersRetainedMonth, playersNewMonth) * 100;
             if (stuckPerc >= 25) {
                 notes.add("<p>" + Html.GREEN_THUMB.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
-                        + "% of new players have stuck around (" + stuckPerM + "/" + newM + ")</p>");
+                        + "% of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")</p>");
             } else {
                 notes.add("<p>" + Html.YELLOW_FLAG.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
-                        + "% of new players have stuck around (" + stuckPerM + "/" + newM + ")</p>");
+                        + "% of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")</p>");
             }
         }
     }
 
     private void activePlayerPlaytimeChange() {
-        List<PlayerProfile> currentActivePlayers = analysisData.getPlayers().stream()
-                .filter(player -> player.getActivityIndex(now).getValue() >= 1.75)
-                .collect(Collectors.toList());
-
-        long twoWeeksAgo = now - TimeAmount.WEEK.ms() * 2L;
+        PlayersMutator currentlyActive = PlayersMutator.copyOf(analysisContainer.getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).filterActive(now, 1.75);
+        long twoWeeksAgo = (now - (now - fourWeeksAgo)) / 2L;
 
         long totalFourToTwoWeeks = 0;
         long totalLastTwoWeeks = 0;
-        for (PlayerProfile activePlayer : currentActivePlayers) {
-            totalFourToTwoWeeks += activePlayer.getPlaytime(analysisData.value("monthAgo"), twoWeeksAgo);
-            totalLastTwoWeeks += activePlayer.getPlaytime(twoWeeksAgo, now);
+        for (PlayerContainer activePlayer : currentlyActive.all()) {
+            totalFourToTwoWeeks += SessionsMutator.forContainer(activePlayer)
+                    .filterSessionsBetween(fourWeeksAgo, twoWeeksAgo).toActivePlaytime();
+            totalLastTwoWeeks += SessionsMutator.forContainer(activePlayer)
+                    .filterSessionsBetween(twoWeeksAgo, now).toActivePlaytime();
         }
-        int currentlyActive = currentActivePlayers.size();
-        if (currentlyActive != 0) {
-            long avgFourToTwoWeeks = MathUtils.averageLong(totalFourToTwoWeeks, currentlyActive);
-            long avgLastTwoWeeks = MathUtils.averageLong(totalLastTwoWeeks, currentlyActive);
+        int activeCount = currentlyActive.count();
+        if (activeCount != 0) {
+            long avgFourToTwoWeeks = MathUtils.averageLong(totalFourToTwoWeeks, activeCount);
+            long avgLastTwoWeeks = MathUtils.averageLong(totalLastTwoWeeks, activeCount);
             String avgLastTwoWeeksString = Formatters.timeAmount().apply(avgLastTwoWeeks);
             String avgFourToTwoWeeksString = Formatters.timeAmount().apply(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
@@ -191,9 +189,11 @@ public class HealthNotes {
     }
 
     private void lowPerformance() {
-        long serverDownTime = ServerProfile.serverDownTime(tpsDataMonth);
-        double aboveThreshold = ServerProfile.aboveLowThreshold(tpsDataMonth);
-        long tpsSpikeMonth = analysisData.value("tpsSpikeMonth");
+        Key<TPSMutator> tpsMonth = new Key<>(TPSMutator.class, "TPS_MONTH");
+        TPSMutator tpsMutator = analysisContainer.getUnsafe(tpsMonth);
+        long serverDownTime = tpsMutator.serverDownTime();
+        double aboveThreshold = tpsMutator.percentageTPSAboveLowThreshold();
+        long tpsSpikeMonth = analysisContainer.getValue(AnalysisKeys.TPS_SPIKE_MONTH).orElse(0);
 
         String avgLowThresholdString = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         if (aboveThreshold >= 0.96) {
@@ -251,4 +251,5 @@ public class HealthNotes {
         regularNewCompareSet.removeAll(veryActiveFWAG);
         return regularNewCompareSet.size();
     }
+
 }
