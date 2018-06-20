@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.util.List;
 
@@ -29,12 +28,12 @@ public class TPSInsertProcessor implements CriticalRunnable {
     public void run() {
         List<TPS> history = tpsList;
         final long lastDate = history.get(history.size() - 1).getDate();
-        final double averageTPS = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getTicksPerSecond)));
+        final double averageTPS = history.stream().mapToDouble(TPS::getTicksPerSecond).average().orElse(0);
         final int peakPlayersOnline = history.stream().mapToInt(TPS::getPlayers).max().orElse(0);
-        final double averageCPUUsage = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage)));
-        final long averageUsedMemory = MathUtils.averageLong(history.stream().map(TPS::getUsedMemory));
-        final int averageEntityCount = (int) MathUtils.averageInt(history.stream().map(TPS::getEntityCount));
-        final int averageChunksLoaded = (int) MathUtils.averageInt(history.stream().map(TPS::getChunksLoaded));
+        final double averageCPUUsage = history.stream().mapToDouble(TPS::getCPUUsage).average().orElse(0);
+        final long averageUsedMemory = (long) history.stream().mapToLong(TPS::getUsedMemory).average().orElse(0);
+        final int averageEntityCount = (int) history.stream().mapToInt(TPS::getEntityCount).average().orElse(0);
+        final int averageChunksLoaded = (int) history.stream().mapToInt(TPS::getChunksLoaded).average().orElse(0);
 
         TPS tps = TPSBuilder.get()
                 .date(lastDate)

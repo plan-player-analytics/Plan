@@ -26,6 +26,7 @@ import java.util.stream.Stream;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class PlayerProfile {
 
     // Identification

@@ -11,6 +11,7 @@ import org.apache.commons.text.WordUtils;
  *
  * @author Rsl1122
  */
+@Deprecated
 public enum Actions {
     UNKNOWN(-1),
     FIRST_SESSION(1),

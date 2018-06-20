@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -142,12 +141,12 @@ public class HealthInformation {
         long playersRetainedMonth = analysisContainer.getValue(AnalysisKeys.PLAYERS_RETAINED_MONTH).orElse(0);
 
         if (playersNewMonth != 0) {
-            double stuckPerc = MathUtils.averageDouble(playersRetainedMonth, playersNewMonth) * 100;
-            if (stuckPerc >= 25) {
-                notes.add("<p>" + Html.GREEN_THUMB.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
-                        + "% of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")</p>");
+            double retainPercentage = playersRetainedMonth / playersNewMonth;
+            if (retainPercentage >= 0.25) {
+                notes.add("<p>" + Html.GREEN_THUMB.parse() + " " + Formatters.percentage().apply(retainPercentage)
+                        + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")</p>");
             } else {
-                notes.add("<p>" + Html.YELLOW_FLAG.parse() + " " + FormatUtils.cutDecimals(stuckPerc)
+                notes.add("<p>" + Html.YELLOW_FLAG.parse() + " " + Formatters.percentage().apply(retainPercentage)
                         + "% of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")</p>");
             }
         }
@@ -167,8 +166,8 @@ public class HealthInformation {
         }
         int activeCount = currentlyActive.count();
         if (activeCount != 0) {
-            long avgFourToTwoWeeks = MathUtils.averageLong(totalFourToTwoWeeks, activeCount);
-            long avgLastTwoWeeks = MathUtils.averageLong(totalLastTwoWeeks, activeCount);
+            long avgFourToTwoWeeks = totalFourToTwoWeeks / (long) activeCount;
+            long avgLastTwoWeeks = totalLastTwoWeeks / (long) activeCount;
             String avgLastTwoWeeksString = Formatters.timeAmount().apply(avgLastTwoWeeks);
             String avgFourToTwoWeeksString = Formatters.timeAmount().apply(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {

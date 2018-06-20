@@ -5,7 +5,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.RetentionData;
-import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -15,17 +14,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Class that contains various methods that are used in analysis.
+ *
  * @author Rsl1122
  */
 public class AnalysisUtils {
 
-    /**
-     * Constructor used to hide the public constructor
-     */
     private AnalysisUtils() {
-        throw new IllegalStateException("Utility class");
+        /* static method class.*/
     }
 
+    @Deprecated
     public static long getNewPlayers(List<Long> registered, long scale, long now) {
         long newPlayers = 0;
         if (!registered.isEmpty()) {
@@ -38,6 +37,7 @@ public class AnalysisUtils {
         return newPlayers;
     }
 
+    @Deprecated
     public static int getUniquePlayers(Map<UUID, List<Session>> sessions, long after) {
         Set<UUID> uuids = new HashSet<>();
 
@@ -71,7 +71,7 @@ public class AnalysisUtils {
             }
         });
 
-        int total = MathUtils.sumInt(uniqueJoins.values().stream().map(Set::size));
+        int total = uniqueJoins.values().stream().mapToInt(Set::size).sum();
         int numberOfDays = uniqueJoins.size();
 
         if (numberOfDays == 0) {
@@ -81,6 +81,7 @@ public class AnalysisUtils {
         return total / numberOfDays;
     }
 
+    @Deprecated
     public static long getNewUsersPerDay(List<Long> registers, long after, long total) {
         Set<Integer> days = new HashSet<>();
         for (Long date : registers) {
@@ -128,7 +129,7 @@ public class AnalysisUtils {
     }
 
     public static int getDayOfYear(Session session) {
-        return getDayOfYear(session.getSessionStart());
+        return getDayOfYear(session.getUnsafe(SessionKeys.START));
 
     }
 
@@ -214,33 +215,6 @@ public class AnalysisUtils {
             playtimePerAlias.put(alias, playtimePerAlias.getOrDefault(alias, 0L) + playtime);
         }
         return playtimePerAlias;
-    }
-
-    public static Map<String, GMTimes> getGMTimesPerAlias(WorldTimes worldTimes) {
-        Map<String, String> aliases = WorldAliasSettings.getAliases();
-
-        Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();
-
-        String[] gms = GMTimes.getGMKeyArray();
-
-        for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
-            String worldName = entry.getKey();
-            GMTimes gmTimes = entry.getValue();
-
-            if (!aliases.containsKey(worldName)) {
-                aliases.put(worldName, worldName);
-                WorldAliasSettings.addWorld(worldName);
-            }
-
-            String alias = aliases.get(worldName);
-
-            GMTimes aliasGMTimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
-            for (String gm : gms) {
-                aliasGMTimes.addTime(gm, gmTimes.getTime(gm));
-            }
-            gmTimesPerAlias.put(alias, aliasGMTimes);
-        }
-        return gmTimesPerAlias;
     }
 
     public static RetentionData average(Collection<RetentionData> stuck) {

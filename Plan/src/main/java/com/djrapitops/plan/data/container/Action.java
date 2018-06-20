@@ -16,6 +16,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class Action implements DateHolder {
     private final long date;
     private final Actions doneAction;

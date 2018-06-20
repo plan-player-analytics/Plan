@@ -16,8 +16,10 @@ public interface FetchOperations {
 
     ServerContainer getServerContainer(UUID serverUUID);
 
+    @Deprecated
     ServerProfile getServerProfile(UUID serverUUID);
 
+    @Deprecated
     List<PlayerProfile> getPlayers(UUID serverUUID);
 
     // UUIDs
@@ -66,6 +68,7 @@ public interface FetchOperations {
 
     List<String> getNicknamesOfPlayerOnServer(UUID uuid, UUID serverUUID);
 
+    @Deprecated
     List<Action> getActions(UUID uuid);
 
     Map<UUID, UserInfo> getUsers();

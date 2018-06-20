@@ -112,6 +112,8 @@ public class PlayersMutator {
                     activityData.put(time, map);
                 }
             }
+        } else {
+            activityData.put(date, Collections.emptyMap());
         }
         return activityData;
     }

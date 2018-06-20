@@ -18,6 +18,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class ActionsTable extends TableContainer {
 
     public ActionsTable(List<Action> actions) {

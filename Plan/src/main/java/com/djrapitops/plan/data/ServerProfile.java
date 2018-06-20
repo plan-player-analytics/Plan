@@ -27,6 +27,7 @@ import java.util.stream.Stream;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class ServerProfile {
 
     private final UUID serverUUID;

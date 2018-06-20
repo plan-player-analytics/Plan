@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 /**
  * @author Rsl1122
  */
+@Deprecated
 public class MathUtils {
 
     private static final DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(Locale.ENGLISH);

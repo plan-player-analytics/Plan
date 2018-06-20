@@ -35,7 +35,7 @@ public class AnalysisKeys {
     public static final PlaceholderKey<Integer> PLAYERS_TOTAL = new PlaceholderKey<>(Integer.class, "playersTotal");
     //
     public static final PlaceholderKey<String> WORLD_PIE_COLORS = new PlaceholderKey<>(String.class, "worldPieColors");
-    public static final PlaceholderKey<String> GM_PIE_COLORS = new PlaceholderKey<>(String.class, "gm_pie_colors");
+    public static final PlaceholderKey<String> GM_PIE_COLORS = new PlaceholderKey<>(String.class, "gmPieColors");
     public static final PlaceholderKey<String> ACTIVITY_PIE_COLORS = new PlaceholderKey<>(String.class, "activityPieColors");
     public static final PlaceholderKey<String> PLAYERS_GRAPH_COLOR = new PlaceholderKey<>(String.class, "playersGraphColor");
     public static final PlaceholderKey<String> TPS_HIGH_COLOR = new PlaceholderKey<>(String.class, "tpsHighColor");

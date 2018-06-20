@@ -184,7 +184,8 @@ public class AnalysisContainer extends DataContainer {
         });
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY_PERC, () -> {
             try {
-                return Formatters.percentage().apply(1.0 * getUnsafe(retentionDay) / getUnsafe(AnalysisKeys.PLAYERS_NEW_DAY));
+                Integer playersNewDay = getUnsafe(AnalysisKeys.PLAYERS_NEW_DAY);
+                return playersNewDay != 0 ? Formatters.percentage().apply(1.0 * getUnsafe(retentionDay) / playersNewDay) : "-";
             } catch (IllegalStateException e) {
                 return "Not enough data";
             }
@@ -220,8 +221,11 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.PLAYTIME_F, () -> Formatters.timeAmount()
                 .apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL))
         );
-        putSupplier(AnalysisKeys.AVERAGE_PLAYTIME_F, () -> Formatters.timeAmount()
-                .apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL) / (long) getUnsafe(AnalysisKeys.PLAYERS_TOTAL))
+        putSupplier(AnalysisKeys.AVERAGE_PLAYTIME_F, () -> {
+                    long players = getUnsafe(AnalysisKeys.PLAYERS_TOTAL);
+                    return players != 0 ? Formatters.timeAmount()
+                            .apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL) / players) : "-";
+                }
         );
         putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount()
                 .apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
@@ -257,11 +261,17 @@ public class AnalysisContainer extends DataContainer {
                         getUnsafe(AnalysisKeys.ANALYSIS_TIME)
                 ).count()
         );
-        putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK_PERC, () -> Formatters.percentage().apply(
-                1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / getUnsafe(AnalysisKeys.PLAYERS_NEW_WEEK))
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK_PERC, () -> {
+                    Integer playersNewWeek = getUnsafe(AnalysisKeys.PLAYERS_NEW_WEEK);
+                    return playersNewWeek != 0 ? Formatters.percentage().apply(
+                            1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
+                }
         );
-        putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH_PERC, () -> Formatters.percentage().apply(
-                1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / getUnsafe(AnalysisKeys.PLAYERS_NEW_MONTH))
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH_PERC, () -> {
+                    Integer playersNewMonth = getUnsafe(AnalysisKeys.PLAYERS_NEW_MONTH);
+                    return playersNewMonth != 0 ? Formatters.percentage().apply(
+                            1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth) : "-";
+                }
         );
     }
 
@@ -292,7 +302,8 @@ public class AnalysisContainer extends DataContainer {
                 new ActivityPie(getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME))).toHighChartsSeries()
         );
         putSupplier(AnalysisKeys.PLAYERS_REGULAR, () -> {
-            Map<String, Set<UUID>> activityNow = getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME));
+            Map<String, Set<UUID>> activityNow = getUnsafe(AnalysisKeys.ACTIVITY_DATA)
+                    .floorEntry(getUnsafe(AnalysisKeys.ANALYSIS_TIME)).getValue();
             Set<UUID> veryActiveNow = activityNow.getOrDefault("Very Active", new HashSet<>());
             Set<UUID> activeNow = activityNow.getOrDefault("Active", new HashSet<>());
             Set<UUID> regularNow = activityNow.getOrDefault("Regular", new HashSet<>());

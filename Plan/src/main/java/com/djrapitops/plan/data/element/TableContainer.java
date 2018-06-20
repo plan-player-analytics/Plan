@@ -67,16 +67,16 @@ public class TableContainer {
             body.append("<tr>");
             for (int i = 0; i < header.length; i++) {
                 try {
-                    Serializable value = row[i];
-                    Formatter formatter = formatters[i];
-                    body.append("<td").append(formatter != null ? " data-order=\"" + value + "\">" : ">");
                     if (i > maxIndex) {
-                        body.append("-");
+                        body.append("<td>-");
                     } else {
+                        Serializable value = row[i];
+                        Formatter formatter = formatters[i];
+                        body.append("<td").append(formatter != null ? " data-order=\"" + value + "\">" : ">");
                         body.append(formatter != null ? formatter.apply(value) : value);
                     }
                     body.append("</td>");
-                } catch (ClassCastException e) {
+                } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
                     throw new IllegalStateException("Invalid formatter given at index " + i + ": " + e.getMessage(), e);
                 }
             }

@@ -9,6 +9,7 @@ import java.util.Comparator;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class ActionComparator implements Comparator<Action> {
 
     @Override

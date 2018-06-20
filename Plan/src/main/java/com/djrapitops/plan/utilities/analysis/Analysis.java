@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 /**
  * @author Rsl1122
  */
+@Deprecated
 public class Analysis implements Callable<AnalysisData> {
 
     private static Long refreshDate;
@@ -156,6 +157,7 @@ public class Analysis implements Callable<AnalysisData> {
         return containers;
     }
 
+    @Deprecated
     public static boolean isAnalysisBeingRun() {
         return serverProfile != null;
     }
@@ -164,7 +166,7 @@ public class Analysis implements Callable<AnalysisData> {
         Analysis.serverProfile = serverProfile;
     }
 
-    private AnalysisData analyze() throws Exception {
+    private AnalysisData analyze() {
         log(Locale.get(Msg.ANALYSIS_FETCH).toString());
         Log.logDebug("Analysis", "Analysis Fetch Phase");
         Benchmark.start("Analysis", "Analysis: Fetch Phase");

@@ -14,6 +14,7 @@ import java.util.Comparator;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class PlayerProfileLastPlayedComparator implements Comparator<PlayerProfile> {
 
     @Override

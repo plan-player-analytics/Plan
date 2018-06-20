@@ -24,7 +24,6 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -652,7 +651,7 @@ public class SQLiteTest {
         Random r = new Random();
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         int availableProcessors = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
-        final double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
+        final double averageCPUUsage = operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0;
         final long usedMemory = 51231251254L;
         final int entityCount = 6123;
         final int chunksLoaded = 2134;

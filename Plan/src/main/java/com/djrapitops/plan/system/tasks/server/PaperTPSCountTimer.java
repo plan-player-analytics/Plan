@@ -2,7 +2,6 @@ package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.bukkit.World;
 
 public class PaperTPSCountTimer extends BukkitTPSCountTimer {
@@ -23,8 +22,6 @@ public class PaperTPSCountTimer extends BukkitTPSCountTimer {
         if (tps > 20) {
             tps = 20;
         }
-
-        tps = MathUtils.round(tps);
 
         return new TPS(now, tps, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded);
     }

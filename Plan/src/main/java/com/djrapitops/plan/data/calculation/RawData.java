@@ -12,6 +12,7 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Deprecated
 public abstract class RawData {
 
     private final Map<String, Serializable> replaceMap;

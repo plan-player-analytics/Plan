@@ -50,6 +50,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Deprecated
 public class AnalysisData extends RawData {
 
     private long refreshDate;
