@@ -6,12 +6,14 @@ package com.djrapitops.plan.data.additional.importer;
 
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.system.processing.importing.ServerImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportData;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import utilities.RandomData;
+import utilities.TestConstants;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -117,7 +119,7 @@ public class ImportBuilderTest {
                 .deaths(randomInt)
                 .worldTimes(ImmutableMap.of(randomString, gmTimes))
                 .nicknames(randomString, randomString)
-                .nicknames(Collections.singletonList(randomString))
+                .nicknames(Collections.singletonList(new Nickname(randomString, System.currentTimeMillis(), TestConstants.SERVER_UUID)))
                 .build();
 
         assertNotNull(data);

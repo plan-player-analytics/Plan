@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.database.databases.operation;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface SaveOperations {
 
     void insertUserInfo(Map<UUID, List<UserInfo>> ofServers);
 
-    void insertNicknames(Map<UUID, Map<UUID, List<String>>> ofServers);
+    void insertNicknames(Map<UUID, Map<UUID, List<Nickname>>> ofServers);
 
     void insertAllGeoInfo(Map<UUID, List<GeoInfo>> ofUsers);
 
@@ -47,6 +48,7 @@ public interface SaveOperations {
 
     void registerNewUser(UUID uuid, long registered, String name);
 
+    @Deprecated
     void action(UUID uuid, Action action);
 
     void geoInfo(UUID uuid, GeoInfo geoInfo);
@@ -55,7 +57,7 @@ public interface SaveOperations {
 
     void playerName(UUID uuid, String playerName);
 
-    void playerDisplayName(UUID uuid, String displayName);
+    void playerDisplayName(UUID uuid, Nickname nickname);
 
     void registerNewUserOnThisServer(UUID uuid, long registered);
 

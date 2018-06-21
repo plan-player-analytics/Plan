@@ -9,6 +9,7 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -146,7 +147,7 @@ public abstract class Importer {
 
         Map<UUID, UserInfo> users = new HashMap<>();
         List<UserInfo> userInfo = new ArrayList<>();
-        Map<UUID, List<String>> nickNames = new HashMap<>();
+        Map<UUID, List<Nickname>> nickNames = new HashMap<>();
         Map<UUID, List<Session>> sessions = new HashMap<>();
         Map<UUID, List<GeoInfo>> geoInfo = new HashMap<>();
         Map<UUID, Integer> timesKicked = new HashMap<>();

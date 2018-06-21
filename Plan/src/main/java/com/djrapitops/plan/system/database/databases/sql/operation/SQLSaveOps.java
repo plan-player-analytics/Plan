@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
@@ -56,7 +57,7 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void insertNicknames(Map<UUID, Map<UUID, List<String>>> ofServers) {
+    public void insertNicknames(Map<UUID, Map<UUID, List<Nickname>>> ofServers) {
         nicknamesTable.insertNicknames(ofServers);
     }
 
@@ -101,8 +102,8 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void playerDisplayName(UUID uuid, String displayName) {
-        nicknamesTable.saveUserName(uuid, displayName);
+    public void playerDisplayName(UUID uuid, Nickname nickname) {
+        nicknamesTable.saveUserName(uuid, nickname);
     }
 
     @Override

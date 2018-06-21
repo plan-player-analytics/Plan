@@ -5,7 +5,9 @@
 package com.djrapitops.plan.system.processing.importing;
 
 import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 
 import java.util.*;
 
@@ -17,7 +19,7 @@ public class UserImportData {
 
     private String name;
     private UUID uuid;
-    private List<String> nicknames;
+    private List<Nickname> nicknames;
 
     private long registered;
     private boolean op;
@@ -32,7 +34,7 @@ public class UserImportData {
     private int mobKills;
     private int deaths;
 
-    private UserImportData(String name, UUID uuid, List<String> nicknames, long registered, boolean op, boolean banned, int timesKicked, List<String> ips, Map<String, GMTimes> worldTimes, List<PlayerKill> kills, int mobKills, int deaths) {
+    private UserImportData(String name, UUID uuid, List<Nickname> nicknames, long registered, boolean op, boolean banned, int timesKicked, List<String> ips, Map<String, GMTimes> worldTimes, List<PlayerKill> kills, int mobKills, int deaths) {
         this.name = name;
         this.uuid = uuid;
         this.nicknames = nicknames;
@@ -67,11 +69,11 @@ public class UserImportData {
         this.uuid = uuid;
     }
 
-    public List<String> getNicknames() {
+    public List<Nickname> getNicknames() {
         return nicknames;
     }
 
-    public void setNicknames(List<String> nicknames) {
+    public void setNicknames(List<Nickname> nicknames) {
         this.nicknames = nicknames;
     }
 
@@ -148,7 +150,7 @@ public class UserImportData {
     }
 
     public static final class UserImportDataBuilder {
-        private final List<String> nicknames = new ArrayList<>();
+        private final List<Nickname> nicknames = new ArrayList<>();
         private final List<String> ips = new ArrayList<>();
         private final Map<String, GMTimes> worldTimes = new HashMap<>();
         private final List<PlayerKill> kills = new ArrayList<>();
@@ -194,11 +196,16 @@ public class UserImportData {
         }
 
         public UserImportDataBuilder nicknames(String... nicknames) {
-            this.nicknames.addAll(Arrays.asList(nicknames));
+            long time = System.currentTimeMillis();
+            UUID serverUUID = ServerInfo.getServerUUID();
+
+            Arrays.stream(nicknames)
+                    .map(nick -> new Nickname(nick, time, serverUUID))
+                    .forEach(this.nicknames::add);
             return this;
         }
 
-        public UserImportDataBuilder nicknames(Collection<String> nicknames) {
+        public UserImportDataBuilder nicknames(Collection<Nickname> nicknames) {
             this.nicknames.addAll(nicknames);
             return this;
         }

@@ -286,17 +286,14 @@ public class SQLiteTest {
         saveUserOne();
         NicknamesTable nickTable = db.getNicknamesTable();
 
-        String expected = "TestNickname";
+        Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), TestConstants.SERVER_UUID);
         nickTable.saveUserName(playerUUID, expected);
         nickTable.saveUserName(playerUUID, expected);
         commitTest();
 
-        List<String> nicknames = nickTable.getNicknames(playerUUID);
+        List<Nickname> nicknames = nickTable.getNicknameInformation(playerUUID);
         assertEquals(1, nicknames.size());
         assertEquals(expected, nicknames.get(0));
-
-        Map<UUID, List<String>> allNicknames = nickTable.getAllNicknames(playerUUID);
-        assertEquals(nicknames, allNicknames.get(ServerInfo.getServerUUID()));
     }
 
     @Test
@@ -569,7 +566,7 @@ public class SQLiteTest {
         session.setPlayerKills(createKills());
 
         sessionsTable.saveSession(playerUUID, session);
-        nicknamesTable.saveUserName(playerUUID, "TestNick");
+        nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
         geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
         actionsTable.insertAction(playerUUID, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
@@ -638,7 +635,7 @@ public class SQLiteTest {
         session.setPlayerKills(createKills());
 
         sessionsTable.saveSession(playerUUID, session);
-        nicknamesTable.saveUserName(playerUUID, "TestNick");
+        nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
         geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
                 new SHA256Hash("1.2.3.4").create()));
         actionsTable.insertAction(playerUUID, new Action(1324L, Actions.FIRST_SESSION, "Add"));

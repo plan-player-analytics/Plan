@@ -142,7 +142,7 @@ public abstract class SQLDB extends Database {
 
             if (newDatabase) {
                 Log.info("New Database created.");
-                versionTable.setVersion(18);
+                versionTable.setVersion(19);
             }
 
             int version = versionTable.getVersion();
@@ -193,6 +193,9 @@ public abstract class SQLDB extends Database {
             if (version < 18) {
                 geoInfoTable.alterTableV18();
                 // version set in the runnable in above method
+            }
+            if (version < 19) {
+                nicknamesTable.alterTableV19();
             }
         } catch (DBOpException e) {
             throw new DBInitException("Failed to set-up Database", e);

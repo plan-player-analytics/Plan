@@ -6,6 +6,7 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
@@ -152,8 +153,8 @@ public class MiscUtilsTest {
         db.getUsersTable().registerUser(TestConstants.PLAYER_ONE_UUID, 1L, "Not random");
 
         String nickname = "2" + RandomData.randomString(10);
-        db.getNicknamesTable().saveUserName(uuid, nickname);
-        db.getNicknamesTable().saveUserName(TestConstants.PLAYER_ONE_UUID, "No nick");
+        db.getNicknamesTable().saveUserName(uuid, new Nickname(nickname, System.currentTimeMillis(), TestConstants.SERVER_UUID));
+        db.getNicknamesTable().saveUserName(TestConstants.PLAYER_ONE_UUID, new Nickname("No nick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
 
         String search = "2";
 
