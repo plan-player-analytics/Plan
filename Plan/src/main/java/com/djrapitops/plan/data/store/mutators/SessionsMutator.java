@@ -7,7 +7,6 @@ import com.djrapitops.plan.data.store.keys.CommonKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.util.*;
 import java.util.function.Function;
@@ -147,7 +146,7 @@ public class SessionsMutator {
             uniqueJoins.get(day).add(uuid);
         }
 
-        int total = MathUtils.sumInt(uniqueJoins.values().stream().map(Set::size));
+        int total = (int) uniqueJoins.values().stream().mapToInt(Set::size).count();
         int numberOfDays = uniqueJoins.size();
 
         if (numberOfDays == 0) {

@@ -5,8 +5,6 @@
 package com.djrapitops.plan.system.webserver.pages.parsing;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.data.Actions;
-import com.djrapitops.plan.data.container.Action;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
@@ -36,7 +34,6 @@ import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
-import com.djrapitops.plan.utilities.html.tables.ActionsTable;
 import com.djrapitops.plan.utilities.html.tables.GeoInfoTable;
 import com.djrapitops.plan.utilities.html.tables.NicknameTable;
 import com.djrapitops.plan.utilities.html.tables.PlayerSessionTable;
@@ -231,8 +228,6 @@ public class InspectPage extends Page {
         addValue("sessionCountDay", sessionCountDay);
         addValue("sessionCountWeek", sessionCountWeek);
         addValue("sessionCountMonth", sessionCountMonth);
-
-        addValue("tableBodyActions", new ActionsTable(Collections.singletonList(new Action(0, Actions.UNKNOWN, "Deprecated"))).parseBody());
 
         String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
         WorldTimes worldTimes = container.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));

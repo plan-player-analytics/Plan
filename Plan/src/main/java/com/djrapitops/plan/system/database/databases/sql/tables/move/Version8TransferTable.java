@@ -49,8 +49,6 @@ public class Version8TransferTable extends TransferTable {
         db.getWorldTimesTable().createTable();
 
         dropTable("plan_actions");
-        db.getActionsTable().createTable();
-
         dropTable("plan_gamemodetimes");
         dropTable("temp_nicks");
         dropTable("temp_kills");

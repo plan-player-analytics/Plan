@@ -35,7 +35,6 @@ public abstract class SQLDB extends Database {
 
     private final UsersTable usersTable;
     private final UserInfoTable userInfoTable;
-    private final ActionsTable actionsTable;
     private final KillsTable killsTable;
     private final NicknamesTable nicknamesTable;
     private final SessionsTable sessionsTable;
@@ -73,7 +72,6 @@ public abstract class SQLDB extends Database {
 
         usersTable = new UsersTable(this);
         userInfoTable = new UserInfoTable(this);
-        actionsTable = new ActionsTable(this);
         geoInfoTable = new GeoInfoTable(this);
         nicknamesTable = new NicknamesTable(this);
         sessionsTable = new SessionsTable(this);
@@ -165,7 +163,6 @@ public abstract class SQLDB extends Database {
                 versionTable.setVersion(11);
             }
             if (version < 12) {
-                actionsTable.alterTableV12();
                 geoInfoTable.alterTableV12();
                 versionTable.setVersion(12);
             }
@@ -222,8 +219,8 @@ public abstract class SQLDB extends Database {
         return new Table[]{
                 serverTable, usersTable, userInfoTable, geoInfoTable,
                 nicknamesTable, sessionsTable, killsTable,
-                commandUseTable, actionsTable, tpsTable,
-                worldTable, worldTimesTable, securityTable, transferTable
+                commandUseTable, tpsTable, worldTable,
+                worldTimesTable, securityTable, transferTable
         };
     }
 
@@ -235,10 +232,9 @@ public abstract class SQLDB extends Database {
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
                 transferTable, geoInfoTable, nicknamesTable, killsTable,
-                worldTimesTable, sessionsTable, actionsTable,
-                worldTable, userInfoTable, usersTable,
-                commandUseTable, tpsTable, securityTable,
-                serverTable
+                worldTimesTable, sessionsTable, worldTable,
+                userInfoTable, usersTable, commandUseTable,
+                tpsTable, securityTable, serverTable
         };
     }
 
@@ -414,10 +410,6 @@ public abstract class SQLDB extends Database {
 
     public ServerTable getServerTable() {
         return serverTable;
-    }
-
-    public ActionsTable getActionsTable() {
-        return actionsTable;
     }
 
     public UserInfoTable getUserInfoTable() {

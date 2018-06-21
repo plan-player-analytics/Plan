@@ -1,9 +1,10 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
-import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
@@ -129,63 +130,6 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         }
 
         return containers;
-    }
-
-    @Override
-    public ServerProfile getServerProfile(UUID serverUUID) {
-        ServerProfile profile = new ServerProfile(serverUUID);
-
-        profile.setPlayers(getPlayers(serverUUID));
-        profile.setTps(tpsTable.getTPSData(serverUUID));
-        Optional<TPS> allTimePeak = tpsTable.getAllTimePeak(serverUUID);
-        allTimePeak.ifPresent(peak -> {
-            profile.setAllTimePeak(peak.getDate());
-            profile.setAllTimePeakPlayers(peak.getPlayers());
-        });
-        Optional<TPS> lastPeak = tpsTable.getPeakPlayerCount(serverUUID, System.currentTimeMillis() - (TimeAmount.DAY.ms() * 2L));
-        lastPeak.ifPresent(peak -> {
-            profile.setLastPeakDate(peak.getDate());
-            profile.setLastPeakPlayers(peak.getPlayers());
-        });
-
-        profile.setCommandUsage(commandUseTable.getCommandUse(serverUUID));
-        profile.setServerWorldtimes(worldTimesTable.getWorldTimesOfServer(serverUUID));
-
-        return profile;
-    }
-
-    @Override
-    public List<PlayerProfile> getPlayers(UUID serverUUID) {
-        List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID);
-        Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
-        Map<UUID, List<Action>> actions = actionsTable.getServerActions(serverUUID);
-        Map<UUID, List<GeoInfo>> geoInfo = geoInfoTable.getAllGeoInfo();
-
-        Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
-        Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
-        map.put(serverUUID, sessions);
-        killsTable.addKillsToSessions(map);
-        worldTimesTable.addWorldTimesToSessions(map);
-
-        List<PlayerProfile> players = new ArrayList<>();
-
-        for (UserInfo userInfo : serverUserInfo) {
-            UUID uuid = userInfo.getUuid();
-            PlayerProfile profile = new PlayerProfile(uuid, userInfo.getName(), userInfo.getRegistered());
-            profile.setTimesKicked(timesKicked.getOrDefault(uuid, 0));
-            if (userInfo.isBanned()) {
-                profile.bannedOnServer(serverUUID);
-            }
-            if (userInfo.isOperator()) {
-                profile.oppedOnServer(serverUUID);
-            }
-            profile.setActions(actions.getOrDefault(uuid, new ArrayList<>()));
-            profile.setGeoInformation(geoInfo.getOrDefault(uuid, new ArrayList<>()));
-            profile.setSessions(serverUUID, sessions.getOrDefault(uuid, new ArrayList<>()));
-
-            players.add(profile);
-        }
-        return players;
     }
 
     @Override
@@ -339,11 +283,6 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     @Override
     public List<String> getNicknamesOfPlayerOnServer(UUID uuid, UUID serverUUID) {
         return nicknamesTable.getNicknames(uuid, serverUUID);
-    }
-
-    @Override
-    public List<Action> getActions(UUID uuid) {
-        return actionsTable.getActions(uuid);
     }
 
     @Override

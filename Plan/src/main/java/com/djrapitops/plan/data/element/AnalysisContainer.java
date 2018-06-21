@@ -10,7 +10,7 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 /**
- * Container used to parse data for Analysis page.
+ * Container used to parse data for Server page.
  * <p>
  * Similar to InspectContainer, but can contain data for each player for a bigger Player data table.
  * <p>

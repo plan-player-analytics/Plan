@@ -8,7 +8,6 @@ package com.djrapitops.plan.system.database.databases;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.Key;
@@ -240,20 +239,6 @@ public class SQLiteTest {
 
     private void saveUserTwo(SQLDB database) {
         database.getUsersTable().registerUser(player2UUID, 123456789L, "Test");
-    }
-
-    @Test
-    public void testActionsTable() {
-        saveUserOne();
-        ActionsTable actionsTable = db.getActionsTable();
-
-        Action save = new Action(234567890L, Actions.FIRST_SESSION, "Additional Info");
-        Action expected = new Action(234567890L, Actions.FIRST_SESSION, "Additional Info", 1);
-
-        actionsTable.insertAction(playerUUID, save);
-
-        List<Action> actions = actionsTable.getActions(playerUUID);
-        assertEquals(expected, actions.get(0));
     }
 
     @Test
@@ -555,7 +540,6 @@ public class SQLiteTest {
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
         GeoInfoTable geoInfoTable = db.getGeoInfoTable();
-        ActionsTable actionsTable = db.getActionsTable();
 
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds();
@@ -568,7 +552,6 @@ public class SQLiteTest {
         sessionsTable.saveSession(playerUUID, session);
         nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
         geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
-        actionsTable.insertAction(playerUUID, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(playerUUID));
 
@@ -579,7 +562,6 @@ public class SQLiteTest {
         assertTrue(nicknamesTable.getNicknames(playerUUID).isEmpty());
         assertTrue(geoInfoTable.getGeoInfo(playerUUID).isEmpty());
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
-        assertTrue(actionsTable.getActions(playerUUID).isEmpty());
     }
 
     @Test
@@ -589,7 +571,6 @@ public class SQLiteTest {
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
         GeoInfoTable geoInfoTable = db.getGeoInfoTable();
-        ActionsTable actionsTable = db.getActionsTable();
         TPSTable tpsTable = db.getTpsTable();
         SecurityTable securityTable = db.getSecurityTable();
 
@@ -604,7 +585,6 @@ public class SQLiteTest {
         assertTrue(nicknamesTable.getNicknames(playerUUID).isEmpty());
         assertTrue(geoInfoTable.getGeoInfo(playerUUID).isEmpty());
         assertTrue(sessionsTable.getSessions(playerUUID).isEmpty());
-        assertTrue(actionsTable.getActions(playerUUID).isEmpty());
         assertTrue(db.getCommandUseTable().getCommandUse().isEmpty());
         assertTrue(db.getWorldTable().getAllWorlds().isEmpty());
         assertTrue(tpsTable.getTPSData().isEmpty());
@@ -619,7 +599,6 @@ public class SQLiteTest {
         SessionsTable sessionsTable = database.getSessionsTable();
         NicknamesTable nicknamesTable = database.getNicknamesTable();
         GeoInfoTable geoInfoTable = database.getGeoInfoTable();
-        ActionsTable actionsTable = database.getActionsTable();
         TPSTable tpsTable = database.getTpsTable();
         SecurityTable securityTable = database.getSecurityTable();
 
@@ -638,7 +617,6 @@ public class SQLiteTest {
         nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
         geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
                 new SHA256Hash("1.2.3.4").create()));
-        actionsTable.insertAction(playerUUID, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(playerUUID));
 
@@ -776,7 +754,6 @@ public class SQLiteTest {
         SessionsTable sessionsTable = backup.getSessionsTable();
         NicknamesTable nicknamesTable = backup.getNicknamesTable();
         GeoInfoTable ipsTable = backup.getGeoInfoTable();
-        ActionsTable actionsTable = backup.getActionsTable();
         TPSTable tpsTable = backup.getTpsTable();
         SecurityTable securityTable = backup.getSecurityTable();
 
@@ -787,7 +764,6 @@ public class SQLiteTest {
         assertFalse(nicknamesTable.getNicknames(playerUUID).isEmpty());
         assertFalse(ipsTable.getGeoInfo(playerUUID).isEmpty());
         assertFalse(sessionsTable.getSessions(playerUUID).isEmpty());
-        assertFalse(actionsTable.getActions(playerUUID).isEmpty());
         assertFalse(backup.getCommandUseTable().getCommandUse().isEmpty());
         assertFalse(backup.getWorldTable().getAllWorlds().isEmpty());
         assertFalse(tpsTable.getTPSData().isEmpty());
@@ -878,7 +854,7 @@ public class SQLiteTest {
         System.out.println("\n- Running RegisterProcessors -");
         List<RegisterProcessor> processors = new ArrayList<>();
         for (int i = 0; i < 200; i++) {
-            processors.add(new RegisterProcessor(playerUUID, 500L, 1000L, "name", 4));
+            processors.add(new RegisterProcessor(playerUUID, 500L, "name"));
         }
         for (RegisterProcessor processor : processors) {
             processor.run();

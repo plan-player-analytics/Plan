@@ -1,9 +1,7 @@
 package com.djrapitops.plan.utilities.analysis;
 
-import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.RetentionData;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
@@ -54,51 +52,6 @@ public class AnalysisUtils {
         return uuids.size();
     }
 
-    @Deprecated
-    public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long after) {
-        Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
-
-        sessions.forEach((uuid, s) -> {
-            for (Session session : s) {
-                if (session.getSessionStart() < after) {
-                    continue;
-                }
-
-                int day = getDayOfYear(session);
-
-                uniqueJoins.computeIfAbsent(day, computedDay -> new HashSet<>());
-                uniqueJoins.get(day).add(uuid);
-            }
-        });
-
-        int total = uniqueJoins.values().stream().mapToInt(Set::size).sum();
-        int numberOfDays = uniqueJoins.size();
-
-        if (numberOfDays == 0) {
-            return 0;
-        }
-
-        return total / numberOfDays;
-    }
-
-    @Deprecated
-    public static long getNewUsersPerDay(List<Long> registers, long after, long total) {
-        Set<Integer> days = new HashSet<>();
-        for (Long date : registers) {
-            if (date < after) {
-                continue;
-            }
-            int day = getDayOfYear(date);
-            days.add(day);
-        }
-        int numberOfDays = days.size();
-
-        if (numberOfDays == 0) {
-            return 0;
-        }
-        return total / numberOfDays;
-    }
-
     /**
      * Transforms the session start list into a list of int arrays.
      * <p>
@@ -126,17 +79,6 @@ public class AnalysisUtils {
             }
             return new int[]{dayOfWeek, hourOfDay};
         }).collect(Collectors.toList());
-    }
-
-    public static int getDayOfYear(Session session) {
-        return getDayOfYear(session.getUnsafe(SessionKeys.START));
-
-    }
-
-    public static int getDayOfYear(long date) {
-        Calendar day = Calendar.getInstance();
-        day.setTimeInMillis(date);
-        return day.get(Calendar.DAY_OF_YEAR);
     }
 
     public static double getAveragePerDay(long after, long before, long total) {
@@ -167,26 +109,6 @@ public class AnalysisUtils {
         }
 
         return userSessions;
-    }
-
-    @Deprecated
-    public static TreeMap<Long, Map<String, Set<UUID>>> turnToActivityDataMap(long time, List<PlayerProfile> players) {
-        TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
-        if (!players.isEmpty()) {
-            for (PlayerProfile player : players) {
-                for (long date = time; date >= time - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms()) {
-                    ActivityIndex activityIndex = player.getActivityIndex(date);
-                    String activityGroup = activityIndex.getGroup();
-
-                    Map<String, Set<UUID>> map = activityData.getOrDefault(date, new HashMap<>());
-                    Set<UUID> uuids = map.getOrDefault(activityGroup, new HashSet<>());
-                    uuids.add(player.getUuid());
-                    map.put(activityGroup, uuids);
-                    activityData.put(date, map);
-                }
-            }
-        }
-        return activityData;
     }
 
     public static Map<String, Long> getPlaytimePerAlias(WorldTimes worldTimes) {

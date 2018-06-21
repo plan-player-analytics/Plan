@@ -1,8 +1,6 @@
 package com.djrapitops.plan.data.container;
 
-import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.store.objects.DateHolder;
-import com.djrapitops.plan.system.cache.DataCache;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -53,12 +51,6 @@ public class PlayerKill implements DateHolder {
      */
     public String getWeapon() {
         return weapon;
-    }
-
-    @Deprecated
-    public Action convertToAction() {
-        String name = DataCache.getInstance().getName(victim);
-        return new Action(date, Actions.KILLED, name + " with " + weapon);
     }
 
     @Override

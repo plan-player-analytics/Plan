@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -22,11 +21,6 @@ import java.util.Optional;
 public class RetentionData {
     private final double activityIndex;
     private double onlineOnJoin;
-
-    @Deprecated
-    public RetentionData(PlayerProfile player) {
-        activityIndex = player.getActivityIndex(player.getRegistered() + TimeAmount.DAY.ms()).getValue();
-    }
 
     public RetentionData(double activityIndex, double onlineOnJoin) {
         this.activityIndex = activityIndex;

@@ -15,7 +15,6 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -53,9 +52,8 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
             throw new BadRequestException("Requested Analysis page from wrong server.");
         }
 
-        if (!Analysis.isAnalysisBeingRun()) {
-            generateAndCache(serverUUID);
-        }
+        // TODO Create a new system to prevent multiple concurrent Analysis
+        generateAndCache(serverUUID);
 
         return DefaultResponses.SUCCESS.get();
     }

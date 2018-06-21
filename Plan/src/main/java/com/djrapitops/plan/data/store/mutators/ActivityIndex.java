@@ -9,12 +9,6 @@ public class ActivityIndex {
 
     private final double value;
 
-    // Temp constructor for PlayerProfile support
-    @Deprecated
-    public ActivityIndex() {
-        value = 0.0;
-    }
-
     public ActivityIndex(DataContainer container, long date) {
         value = calculate(container, date);
     }

@@ -1,9 +1,10 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.system.info.server.Server;
@@ -15,12 +16,6 @@ public interface FetchOperations {
     // Profiles
 
     ServerContainer getServerContainer(UUID serverUUID);
-
-    @Deprecated
-    ServerProfile getServerProfile(UUID serverUUID);
-
-    @Deprecated
-    List<PlayerProfile> getPlayers(UUID serverUUID);
 
     // UUIDs
 
@@ -67,9 +62,6 @@ public interface FetchOperations {
     Set<String> getWorldNames(UUID serverUuid);
 
     List<String> getNicknamesOfPlayerOnServer(UUID uuid, UUID serverUUID);
-
-    @Deprecated
-    List<Action> getActions(UUID uuid);
 
     Map<UUID, UserInfo> getUsers();
 

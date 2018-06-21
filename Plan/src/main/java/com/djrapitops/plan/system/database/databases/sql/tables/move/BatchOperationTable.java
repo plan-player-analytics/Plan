@@ -80,19 +80,10 @@ public class BatchOperationTable extends Table {
         copyTPS(toDB);
         copyWebUsers(toDB);
         copyCommandUse(toDB);
-        copyActions(toDB);
         copyIPsAndGeolocs(toDB);
         copyNicknames(toDB);
         copySessions(toDB);
         copyUserInfo(toDB);
-    }
-
-    public void copyActions(BatchOperationTable toDB) {
-        if (toDB.equals(this)) {
-            return;
-        }
-        Log.debug("Batch Copy Actions");
-        toDB.db.getActionsTable().insertActions(db.getActionsTable().getAllActions());
     }
 
     public void copyCommandUse(BatchOperationTable toDB) {

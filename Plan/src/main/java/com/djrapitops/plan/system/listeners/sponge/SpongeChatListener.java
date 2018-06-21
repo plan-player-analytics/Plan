@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
-import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.NameProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -36,12 +35,6 @@ public class SpongeChatListener {
         UUID uuid = player.getUniqueId();
         String name = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
-
-        SessionCache sessionCache = SessionCache.getInstance();
-        if (sessionCache.isFirstSession(uuid)) {
-            sessionCache.firstSessionMessageSent(uuid);
-        }
-
         Processing.submit(new NameProcessor(uuid, name, displayName));
     }
 

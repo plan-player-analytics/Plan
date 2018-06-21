@@ -1,10 +1,11 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
@@ -20,13 +21,13 @@ import java.util.*;
  */
 public class PluginPlayersTable extends TableContainer {
 
-    private Collection<PlayerProfile> players;
+    private Collection<PlayerContainer> players;
 
-    public PluginPlayersTable(Map<PluginData, AnalysisContainer> containers, Collection<PlayerProfile> players) {
+    public PluginPlayersTable(Map<PluginData, AnalysisContainer> containers, Collection<PlayerContainer> players) {
         this(getPluginDataSet(containers), players);
     }
 
-    private PluginPlayersTable(TreeMap<String, Map<UUID, ? extends Serializable>> pluginDataSet, Collection<PlayerProfile> players) {
+    private PluginPlayersTable(TreeMap<String, Map<UUID, ? extends Serializable>> pluginDataSet, Collection<PlayerContainer> players) {
         super(true, getHeaders(pluginDataSet.keySet()));
 
         this.players = players;
@@ -64,12 +65,13 @@ public class PluginPlayersTable extends TableContainer {
         if (maxPlayers <= 0) {
             maxPlayers = 2000;
         }
-        for (PlayerProfile profile : players) {
+        for (PlayerContainer profile : players) {
             if (i >= maxPlayers) {
                 break;
             }
-            UUID uuid = profile.getUuid();
-            String link = Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(profile.getName()), profile.getName());
+            UUID uuid = profile.getUnsafe(PlayerKeys.UUID);
+            String name = profile.getValue(PlayerKeys.NAME).orElse("Unknown");
+            String link = Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name);
 
             String[] playerData = FormatUtils.mergeArrays(new String[]{link}, rows.getOrDefault(uuid, new String[]{}));
             addRow(ArrayUtils.addAll(playerData));
@@ -82,8 +84,8 @@ public class PluginPlayersTable extends TableContainer {
         Map<UUID, String[]> rows = new HashMap<>();
 
         int size = header.length - 1;
-        for (PlayerProfile profile : players) {
-            UUID uuid = profile.getUuid();
+        for (PlayerContainer profile : players) {
+            UUID uuid = profile.getUnsafe(PlayerKeys.UUID);
 
             String[] row = new String[size];
             for (int i = 0; i < size; i++) {

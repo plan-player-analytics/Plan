@@ -9,7 +9,6 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 import com.djrapitops.plan.utilities.html.tables.PluginPlayersTable;
 import com.djrapitops.plugin.StaticHolder;
@@ -78,7 +77,8 @@ public class AnalysisPluginsTabContentCreator {
                 "<div class=\"card\">" +
                 "<div class=\"header\"><h2><i class=\"fa fa-users\"></i> Plugin Data</h2></div>" +
                 "<div class=\"body\">" +
-                new PluginPlayersTable(containers, Analysis.getServerProfile().getPlayers()).parseHtml() +
+                // TODO Start using ServerContainer and PlayerContainers instead
+                new PluginPlayersTable(containers, new ArrayList<>()).parseHtml() +
                 "</div></div></div>" +
                 "</div></div></div>";
 

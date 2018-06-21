@@ -15,7 +15,7 @@ import java.io.IOException;
 import static com.djrapitops.plan.data.store.keys.AnalysisKeys.*;
 
 /**
- * Used for parsing a Html String out of AnalysisData and the html file.
+ * Used for parsing a Html String out of AnalysisContainer and the html file.
  *
  * @author Rsl1122
  */

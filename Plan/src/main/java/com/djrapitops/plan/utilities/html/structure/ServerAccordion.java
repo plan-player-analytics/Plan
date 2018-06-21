@@ -4,13 +4,12 @@
  */
 package com.djrapitops.plan.utilities.html.structure;
 
-import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -19,7 +18,10 @@ import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plugin.utilities.Format;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * HTML utility class for creating a Server Accordion.
@@ -64,21 +66,21 @@ public class ServerAccordion extends AbstractAccordion {
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
             WorldTimes worldTimes = container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
 
-            List<Session> sessions = container.getValue(PerServerKeys.SESSIONS).orElse(new ArrayList<>());
+            SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
 
             boolean banned = container.getValue(PerServerKeys.BANNED).orElse(false);
             boolean operator = container.getValue(PerServerKeys.OPERATOR).orElse(false);
             long registered = container.getValue(PerServerKeys.REGISTERED).orElse(0L);
 
-            long playtime = PlayerProfile.getPlaytime(sessions.stream());
-            long afkTime = PlayerProfile.getAFKTime(sessions.stream());
-            int sessionCount = sessions.size();
-            long sessionMedian = PlayerProfile.getSessionMedian(sessions.stream());
-            long longestSession = PlayerProfile.getLongestSession(sessions.stream());
+            long playtime = sessionsMutator.toPlaytime();
+            long afkTime = sessionsMutator.toAfkTime();
+            int sessionCount = sessionsMutator.count();
+            long sessionMedian = sessionsMutator.toMedianSessionLength();
+            long longestSession = sessionsMutator.toLongestSessionLength();
 
-            long mobKills = PlayerProfile.getMobKillCount(sessions.stream());
-            long playerKills = PlayerProfile.getPlayerKills(sessions.stream()).count();
-            long deaths = PlayerProfile.getDeathCount(sessions.stream());
+            long mobKills = sessionsMutator.toMobKillCount();
+            long playerKills = sessionsMutator.toPlayerKillCount();
+            long deaths = sessionsMutator.toDeathCount();
 
             String play = timeFormatter.apply(playtime);
             String afk = timeFormatter.apply(afkTime);

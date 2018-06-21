@@ -9,8 +9,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
-import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -92,12 +90,12 @@ public class HtmlStructure {
         return b.toString();
     }
 
+    // TODO Rework into NetworkPage generation
     public static String createServerContainer() {
         ServerProperties properties = ServerInfo.getServerProperties();
         int maxPlayers = properties.getMaxPlayers();
         int online = properties.getOnlinePlayers();
-        Optional<Long> analysisRefreshDate = Analysis.getRefreshDate();
-        String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStampClock).orElse("-");
+        String refresh = "-";
 
         Server server = ServerInfo.getServer();
 

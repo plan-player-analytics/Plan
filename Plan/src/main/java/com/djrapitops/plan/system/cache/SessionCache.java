@@ -20,7 +20,6 @@ import java.util.UUID;
  */
 public class SessionCache {
 
-    private static final Map<UUID, Integer> firstSessionInformation = new HashMap<>();
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
     protected final PlanSystem system;
 
@@ -88,46 +87,4 @@ public class SessionCache {
         return Optional.empty();
     }
 
-    /**
-     * Used for marking first Session Actions to be saved.
-     *
-     * @param uuid UUID of the new player.
-     */
-    @Deprecated
-    public void markFirstSession(UUID uuid) {
-        firstSessionInformation.put(uuid, 0);
-    }
-
-    /**
-     * Check if a session is player's first session on the server.
-     *
-     * @param uuid UUID of the player
-     * @return true / false
-     */
-    @Deprecated
-    public boolean isFirstSession(UUID uuid) {
-        return firstSessionInformation.containsKey(uuid);
-    }
-
-    @Deprecated
-    public void endFirstSessionActionTracking(UUID uuid) {
-        firstSessionInformation.remove(uuid);
-    }
-
-    @Deprecated
-    public void firstSessionMessageSent(UUID uuid) {
-        Integer msgCount = firstSessionInformation.getOrDefault(uuid, 0);
-        msgCount++;
-        firstSessionInformation.put(uuid, msgCount);
-    }
-
-    @Deprecated
-    public int getFirstSessionMsgCount(UUID uuid) {
-        return firstSessionInformation.getOrDefault(uuid, 0);
-    }
-
-    @Deprecated
-    public Map<UUID, Integer> getFirstSessionMsgCounts() {
-        return firstSessionInformation;
-    }
 }

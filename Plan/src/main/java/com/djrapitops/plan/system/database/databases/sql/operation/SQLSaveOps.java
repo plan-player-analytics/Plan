@@ -5,7 +5,10 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -79,11 +82,6 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     @Override
     public void registerNewUser(UUID uuid, long registered, String name) {
         usersTable.registerUser(uuid, registered, name);
-    }
-
-    @Override
-    public void action(UUID uuid, Action action) {
-        actionsTable.insertAction(uuid, action);
     }
 
     @Override
