@@ -1,11 +1,26 @@
 package com.djrapitops.plan.data.store.containers;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.html.graphs.WorldMap;
+import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
+import com.djrapitops.plugin.api.utility.log.Log;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * DataContainer for the whole network.
@@ -18,8 +33,35 @@ public class NetworkContainer extends DataContainer {
 
     private final ServerContainer bungeeContainer;
 
+    private final Map<UUID, AnalysisContainer> serverContainers;
+
     public NetworkContainer(ServerContainer bungeeContainer) {
         this.bungeeContainer = bungeeContainer;
+        serverContainers = new HashMap<>();
+
+        putSupplier(NetworkKeys.PLAYERS_MUTATOR, () -> PlayersMutator.forContainer(bungeeContainer));
+
+        addConstants();
+        addPlayerInformation();
+    }
+
+    public void putAnalysisContainer(AnalysisContainer analysisContainer) {
+        serverContainers.put(analysisContainer.getServerContainer().getUnsafe(ServerKeys.SERVER_UUID), analysisContainer);
+    }
+
+    public Optional<AnalysisContainer> getAnalysisContainer(UUID serverUUID) {
+        AnalysisContainer container = serverContainers.get(serverUUID);
+        if (container != null) {
+            return Optional.of(container);
+        }
+        try {
+            AnalysisContainer analysisContainer = new AnalysisContainer(Database.getActive().fetch().getServerContainer(serverUUID));
+            serverContainers.put(serverUUID, analysisContainer);
+            return Optional.of(analysisContainer);
+        } catch (DBOpException e) {
+            Log.toLog(this.getClass(), e);
+        }
+        return Optional.empty();
     }
 
     private void addConstants() {
@@ -32,6 +74,67 @@ public class NetworkContainer extends DataContainer {
 
         putSupplier(NetworkKeys.NETWORK_NAME, () -> bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan"));
         putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties()::getOnlinePlayers);
+        putRawData(NetworkKeys.WORLD_MAP_LOW_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_LOW));
+        putRawData(NetworkKeys.WORLD_MAP_HIGH_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_HIGH));
+        putRawData(NetworkKeys.PLAYERS_GRAPH_COLOR, Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+    }
+
+    private void addPlayerInformation() {
+        putSupplier(NetworkKeys.PLAYERS_TOTAL, () -> bungeeContainer.getValue(ServerKeys.PLAYER_COUNT).orElse(-1));
+        putSupplier(NetworkKeys.WORLD_MAP_SERIES, () ->
+                new WorldMap(PlayersMutator.forContainer(bungeeContainer)).toHighChartsSeries()
+        );
+        putSupplier(NetworkKeys.PLAYERS_ONLINE_SERIES, () ->
+                new OnlineActivityGraph(TPSMutator.forContainer(bungeeContainer)).toHighChartsSeries()
+        );
+        putSupplier(NetworkKeys.ALL_TIME_PEAK_TIME_F, () ->
+                bungeeContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS).map(Formatters.year()::apply).orElse("No data")
+        );
+        putSupplier(NetworkKeys.RECENT_PEAK_TIME_F, () ->
+                bungeeContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS).map(Formatters.year()::apply).orElse("No data")
+        );
+        putSupplier(NetworkKeys.PLAYERS_ALL_TIME_PEAK, () ->
+                bungeeContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS).map(dateObj -> "" + dateObj.getValue()).orElse("-")
+        );
+        putSupplier(NetworkKeys.PLAYERS_RECENT_PEAK, () ->
+                bungeeContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS).map(dateObj -> "" + dateObj.getValue()).orElse("-")
+        );
+
+        addPlayerCounts();
+    }
+
+    private void addPlayerCounts() {
+        Key<PlayersMutator> newDay = new Key<>(PlayersMutator.class, "NEW_DAY");
+        Key<PlayersMutator> newWeek = new Key<>(PlayersMutator.class, "NEW_WEEK");
+        Key<PlayersMutator> newMonth = new Key<>(PlayersMutator.class, "NEW_MONTH");
+        Key<PlayersMutator> uniqueDay = new Key<>(PlayersMutator.class, "UNIQUE_DAY");
+        Key<PlayersMutator> uniqueWeek = new Key<>(PlayersMutator.class, "UNIQUE_WEEK");
+        Key<PlayersMutator> uniqueMonth = new Key<>(PlayersMutator.class, "UNIQUE_MONTH");
+        putSupplier(newDay, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_DAY_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
+        );
+        putSupplier(newWeek, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_WEEK_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
+        );
+        putSupplier(newMonth, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
+        );
+        putSupplier(uniqueDay, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_DAY_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
+        );
+        putSupplier(uniqueWeek, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_WEEK_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
+        );
+        putSupplier(uniqueMonth, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+                .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
+        );
+
+        putSupplier(NetworkKeys.PLAYERS_NEW_DAY, () -> getUnsafe(newDay).count());
+        putSupplier(NetworkKeys.PLAYERS_NEW_WEEK, () -> getUnsafe(newWeek).count());
+        putSupplier(NetworkKeys.PLAYERS_NEW_MONTH, () -> getUnsafe(newMonth).count());
+        putSupplier(NetworkKeys.PLAYERS_DAY, () -> getUnsafe(uniqueDay).count());
+        putSupplier(NetworkKeys.PLAYERS_WEEK, () -> getUnsafe(uniqueWeek).count());
+        putSupplier(NetworkKeys.PLAYERS_MONTH, () -> getUnsafe(uniqueMonth).count());
     }
 
 }

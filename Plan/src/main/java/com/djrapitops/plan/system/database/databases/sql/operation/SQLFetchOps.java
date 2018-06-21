@@ -12,6 +12,7 @@ import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -33,6 +34,13 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     public ServerContainer getServerContainer(UUID serverUUID) {
         ServerContainer container = new ServerContainer();
 
+        Optional<Server> serverInfo = serverTable.getServerInfo(serverUUID);
+        if (!serverInfo.isPresent()) {
+            return container;
+        }
+
+        container.putRawData(ServerKeys.SERVER_UUID, serverUUID);
+        container.putRawData(ServerKeys.NAME, serverInfo.get().getName());
         container.putSupplier(ServerKeys.PLAYERS, () -> getPlayerContainers(serverUUID));
         container.putSupplier(ServerKeys.PLAYER_COUNT, container.getUnsafe(ServerKeys.PLAYERS)::size);
 
@@ -61,6 +69,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         // Calculating getters
         container.putSupplier(ServerKeys.OPERATORS, () -> container.getUnsafe(ServerKeys.PLAYERS).stream()
                 .filter(player -> player.getValue(PlayerKeys.OPERATOR).orElse(false)).collect(Collectors.toList()));
+        container.putSupplier(ServerKeys.SESSIONS, () -> PlayersMutator.forContainer(container).getSessions());
         container.putSupplier(ServerKeys.PLAYER_KILLS, SessionsMutator.forContainer(container)::toPlayerKillList);
         container.putSupplier(ServerKeys.PLAYER_KILL_COUNT, container.getUnsafe(ServerKeys.PLAYER_KILLS)::size);
         container.putSupplier(ServerKeys.MOB_KILL_COUNT, SessionsMutator.forContainer(container)::toMobKillCount);

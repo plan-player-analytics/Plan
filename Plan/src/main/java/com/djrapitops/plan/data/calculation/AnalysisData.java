@@ -5,8 +5,6 @@ import com.djrapitops.plan.data.PlayerProfile;
 import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.element.AnalysisContainer;
-import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.mutators.RetentionData;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
@@ -29,7 +27,6 @@ import com.djrapitops.plan.utilities.html.graphs.calendar.ServerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.line.*;
 import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
-import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.tables.CommandUseTable;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -62,12 +59,6 @@ public class AnalysisData extends RawData {
     public AnalysisData() {
         analyzedValues = new HashMap<>();
         stickyMonthData = new HashSet<>();
-    }
-
-    public void parsePluginsSection(Map<PluginData, AnalysisContainer> containers) {
-        String[] navAndTabs = AnalysisPluginsTabContentCreator.createContent(containers);
-        addValue("navPluginsTabs", navAndTabs[0]);
-        addValue("tabsPlugins", navAndTabs[1]);
     }
 
     private void addConstants() {

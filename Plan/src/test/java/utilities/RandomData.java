@@ -48,9 +48,13 @@ public class RandomData {
     public static List<Session> randomSessions() {
         List<Session> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            test.add(new Session(1, TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, r.nextLong(), r.nextLong(), 0, 0, 0));
+            test.add(randomSession());
         }
         return test;
+    }
+
+    public static Session randomSession() {
+        return new Session(1, TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, r.nextLong(), r.nextLong(), 0, 0, 0);
     }
 
     public static List<Point> randomPoints() {

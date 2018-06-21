@@ -1,6 +1,7 @@
 package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
@@ -193,5 +194,19 @@ public class PlayersMutator {
             }
         }
         return new PlayersMutator(toBeRetained);
+    }
+
+    public List<Session> getSessions() {
+        return players.stream()
+                .map(player -> player.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    public List<UUID> uuids() {
+        return players.stream()
+                .map(player -> player.getValue(PlayerKeys.UUID).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }

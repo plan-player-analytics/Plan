@@ -23,6 +23,7 @@ import com.djrapitops.plan.utilities.html.graphs.calendar.ServerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.line.*;
 import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 import com.djrapitops.plan.utilities.html.tables.CommandUseTable;
@@ -51,6 +52,10 @@ public class AnalysisContainer extends DataContainer {
         addAnalysisSuppliers();
     }
 
+    public ServerContainer getServerContainer() {
+        return serverContainer;
+    }
+
     private void addAnalysisSuppliers() {
         putSupplier(AnalysisKeys.SESSIONS_MUTATOR, () -> SessionsMutator.forContainer(serverContainer));
         putSupplier(AnalysisKeys.TPS_MUTATOR, () -> TPSMutator.forContainer(serverContainer));
@@ -63,6 +68,7 @@ public class AnalysisContainer extends DataContainer {
         addTPSAverageSuppliers();
         addCommandSuppliers();
         addServerHealth();
+        addPluginSuppliers();
     }
 
     private void addConstants() {
@@ -140,9 +146,9 @@ public class AnalysisContainer extends DataContainer {
         Key<PlayersMutator> newDay = new Key<>(PlayersMutator.class, "NEW_DAY");
         Key<PlayersMutator> newWeek = new Key<>(PlayersMutator.class, "NEW_WEEK");
         Key<PlayersMutator> newMonth = new Key<>(PlayersMutator.class, "NEW_MONTH");
-        Key<PlayersMutator> uniqueDay = new Key<>(PlayersMutator.class, "NEW_DAY");
-        Key<PlayersMutator> uniqueWeek = new Key<>(PlayersMutator.class, "NEW_WEEK");
-        Key<PlayersMutator> uniqueMonth = new Key<>(PlayersMutator.class, "NEW_MONTH");
+        Key<PlayersMutator> uniqueDay = new Key<>(PlayersMutator.class, "UNIQUE_DAY");
+        Key<PlayersMutator> uniqueWeek = new Key<>(PlayersMutator.class, "UNIQUE_WEEK");
+        Key<PlayersMutator> uniqueMonth = new Key<>(PlayersMutator.class, "UNIQUE_MONTH");
         putSupplier(newDay, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
@@ -365,5 +371,12 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(healthInformation, () -> new HealthInformation(this));
         putSupplier(AnalysisKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
         putSupplier(AnalysisKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
+    }
+
+    private void addPluginSuppliers() {
+        // TODO Refactor into a system that supports running the analysis on Bungee
+        String[] navAndTabs = AnalysisPluginsTabContentCreator.createContent(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).uuids());
+        putRawData(AnalysisKeys.PLUGINS_TAB_NAV, navAndTabs[0]);
+        putRawData(AnalysisKeys.PLUGINS_TAB, navAndTabs[1]);
     }
 }

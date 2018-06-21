@@ -69,21 +69,20 @@ public class Analysis implements Callable<AnalysisData> {
      *
      * @return ServerProfile being analyzed or null if analysis is not being run.
      */
+    // TODO Remove use of this method in PluginData
     public static ServerProfile getServerProfile() {
         return serverProfile;
     }
 
-    @Override
-    public AnalysisData call() throws Exception {
-        return runAnalysis();
+    // TODO Remove use of this method and replace with a new source for the method
+    @Deprecated
+    public static boolean isAnalysisBeingRun() {
+        return serverProfile != null;
     }
 
-    private AnalysisData runAnalysis() throws Exception {
-        ((ServerTaskSystem) TaskSystem.getInstance()).cancelBootAnalysis();
-
-        Benchmark.start("Analysis: Total");
-        log(Locale.get(Msg.ANALYSIS_START).toString());
-        return analyze();
+    @Override
+    public AnalysisData call() {
+        return runAnalysis();
     }
 
     private static void updateRefreshDate() {
@@ -157,9 +156,12 @@ public class Analysis implements Callable<AnalysisData> {
         return containers;
     }
 
-    @Deprecated
-    public static boolean isAnalysisBeingRun() {
-        return serverProfile != null;
+    private AnalysisData runAnalysis() {
+        ((ServerTaskSystem) TaskSystem.getInstance()).cancelBootAnalysis();
+
+        Benchmark.start("Analysis: Total");
+        log(Locale.get(Msg.ANALYSIS_START).toString());
+        return analyze();
     }
 
     private static void setServerProfile(ServerProfile serverProfile) {
@@ -194,8 +196,6 @@ public class Analysis implements Callable<AnalysisData> {
             Benchmark.stop("Analysis", "Analysis: Data Analysis");
 
             log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
-            Log.logDebug("Analysis", "Analyzing additional data sources (3rd party)");
-            analysisData.parsePluginsSection(analyzeAdditionalPluginData(server.getUuids()));
             return analysisData;
         } finally {
             Analysis.updateRefreshDate();

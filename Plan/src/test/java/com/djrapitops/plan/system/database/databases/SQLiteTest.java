@@ -11,8 +11,13 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.Actions;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.containers.ServerContainer;
+import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -38,6 +43,7 @@ import utilities.mocks.SystemMockUtil;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.lang.reflect.Field;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -1082,5 +1088,57 @@ public class SQLiteTest {
         OptionalAssert.equals(false, container.getValue(PlayerKeys.BANNED));
 
         // TODO Test rest
+    }
+
+    @Test
+    public void playerContainerSupportsAllPlayerKeys() throws UnsupportedEncodingException, NoSuchAlgorithmException, IllegalAccessException {
+        saveAllData(db);
+
+        PlayerContainer playerContainer = db.fetch().getPlayerContainer(TestConstants.PLAYER_ONE_UUID);
+        // Active sessions are added after fetching
+        playerContainer.putRawData(PlayerKeys.ACTIVE_SESSION, RandomData.randomSession());
+
+        List<String> unsupported = new ArrayList<>();
+        for (Field field : PlayerKeys.class.getDeclaredFields()) {
+            Key key = (Key) field.get(null);
+            if (!playerContainer.supports(key)) {
+                unsupported.add(field.getName());
+            }
+        }
+
+        assertTrue("Some keys are not supported by PlayerContainer: PlayerKeys." + unsupported.toString(), unsupported.isEmpty());
+    }
+
+    @Test
+    public void serverContainerSupportsAllServerKeys() throws UnsupportedEncodingException, NoSuchAlgorithmException, IllegalAccessException {
+        saveAllData(db);
+
+        ServerContainer serverContainer = db.fetch().getServerContainer(TestConstants.SERVER_UUID);
+
+        List<String> unsupported = new ArrayList<>();
+        for (Field field : ServerKeys.class.getDeclaredFields()) {
+            Key key = (Key) field.get(null);
+            if (!serverContainer.supports(key)) {
+                unsupported.add(field.getName());
+            }
+        }
+
+        assertTrue("Some keys are not supported by ServerContainer: ServerKeys." + unsupported.toString(), unsupported.isEmpty());
+    }
+
+    @Test
+    public void analysisContainerSupportsAllAnalysisKeys() throws IllegalAccessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+        serverContainerSupportsAllServerKeys();
+        AnalysisContainer analysisContainer = new AnalysisContainer(db.fetch().getServerContainer(TestConstants.SERVER_UUID));
+
+        List<String> unsupported = new ArrayList<>();
+        for (Field field : AnalysisKeys.class.getDeclaredFields()) {
+            Key key = (Key) field.get(null);
+            if (!analysisContainer.supports(key)) {
+                unsupported.add(field.getName());
+            }
+        }
+
+        assertTrue("Some keys are not supported by AnalysisContainer: AnalysisKeys." + unsupported.toString(), unsupported.isEmpty());
     }
 }
