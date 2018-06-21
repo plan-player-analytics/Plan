@@ -33,6 +33,7 @@ import java.util.*;
  * @author Rsl1122
  * @see Action
  */
+@Deprecated
 public class ActionsTable extends UserIDTable {
 
     public ActionsTable(SQLDB db) {

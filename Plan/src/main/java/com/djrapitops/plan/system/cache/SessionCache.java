@@ -93,6 +93,7 @@ public class SessionCache {
      *
      * @param uuid UUID of the new player.
      */
+    @Deprecated
     public void markFirstSession(UUID uuid) {
         firstSessionInformation.put(uuid, 0);
     }
@@ -103,24 +104,29 @@ public class SessionCache {
      * @param uuid UUID of the player
      * @return true / false
      */
+    @Deprecated
     public boolean isFirstSession(UUID uuid) {
         return firstSessionInformation.containsKey(uuid);
     }
 
+    @Deprecated
     public void endFirstSessionActionTracking(UUID uuid) {
         firstSessionInformation.remove(uuid);
     }
 
+    @Deprecated
     public void firstSessionMessageSent(UUID uuid) {
         Integer msgCount = firstSessionInformation.getOrDefault(uuid, 0);
         msgCount++;
         firstSessionInformation.put(uuid, msgCount);
     }
 
+    @Deprecated
     public int getFirstSessionMsgCount(UUID uuid) {
         return firstSessionInformation.getOrDefault(uuid, 0);
     }
 
+    @Deprecated
     public Map<UUID, Integer> getFirstSessionMsgCounts() {
         return firstSessionInformation;
     }

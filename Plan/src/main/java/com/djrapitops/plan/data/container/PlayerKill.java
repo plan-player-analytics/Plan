@@ -55,6 +55,7 @@ public class PlayerKill implements DateHolder {
         return weapon;
     }
 
+    @Deprecated
     public Action convertToAction() {
         String name = DataCache.getInstance().getName(victim);
         return new Action(date, Actions.KILLED, name + " with " + weapon);
