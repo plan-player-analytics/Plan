@@ -110,22 +110,22 @@ public class NetworkContainer extends DataContainer {
         Key<PlayersMutator> uniqueDay = new Key<>(PlayersMutator.class, "UNIQUE_DAY");
         Key<PlayersMutator> uniqueWeek = new Key<>(PlayersMutator.class, "UNIQUE_WEEK");
         Key<PlayersMutator> uniqueMonth = new Key<>(PlayersMutator.class, "UNIQUE_MONTH");
-        putSupplier(newDay, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+        putSupplier(newDay, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_DAY_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(newWeek, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+        putSupplier(newWeek, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_WEEK_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(newMonth, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+        putSupplier(newMonth, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(uniqueDay, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+        putSupplier(uniqueDay, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_DAY_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(uniqueWeek, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+        putSupplier(uniqueWeek, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_WEEK_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(uniqueMonth, () -> PlayersMutator.copyOf(getUnsafe(NetworkKeys.PLAYERS_MUTATOR))
+        putSupplier(uniqueMonth, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
 

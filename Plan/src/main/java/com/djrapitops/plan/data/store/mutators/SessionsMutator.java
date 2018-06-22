@@ -41,10 +41,9 @@ public class SessionsMutator {
     }
 
     public SessionsMutator filterSessionsBetween(long after, long before) {
-        sessions = sessions.stream()
+        return new SessionsMutator(sessions.stream()
                 .filter(getBetweenPredicate(after, before))
-                .collect(Collectors.toList());
-        return this;
+                .collect(Collectors.toList()));
     }
 
     public WorldTimes toTotalWorldTimes() {

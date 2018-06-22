@@ -4,6 +4,7 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.utilities.comparators.MapComparator;
+import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.Collections;
@@ -21,8 +22,9 @@ public class CommandUseTable extends TableContainer {
     }
 
     public CommandUseTable(Map<String, Integer> commandUse) {
-        super("Command", "Times Used");
+        super(Html.FONT_AWESOME_ICON.parse("terminal") + " Command", Html.FONT_AWESOME_ICON.parse("list-ol") + "Times Used");
 
+        setColor("lime");
         if (commandUse.isEmpty()) {
             addRow("No Commands");
         } else {

@@ -36,10 +36,9 @@ public class TPSMutator {
     }
 
     public TPSMutator filterDataBetween(long after, long before) {
-        tpsData = tpsData.stream()
+        return new TPSMutator(tpsData.stream()
                 .filter(tps -> tps.getDate() >= after && tps.getDate() <= before)
-                .collect(Collectors.toList());
-        return this;
+                .collect(Collectors.toList()));
     }
 
     public List<TPS> all() {

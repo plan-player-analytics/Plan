@@ -29,10 +29,12 @@ public class HealthInformation {
     public HealthInformation(AnalysisContainer analysisContainer) {
         this.analysisContainer = analysisContainer;
         this.notes = new ArrayList<>();
-        calculate();
 
         now = analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME);
         fourWeeksAgo = analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO);
+
+        serverHealth = 100.0;
+        calculate();
     }
 
     public String toHtml() {
@@ -153,7 +155,7 @@ public class HealthInformation {
     }
 
     private void activePlayerPlaytimeChange() {
-        PlayersMutator currentlyActive = PlayersMutator.copyOf(analysisContainer.getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).filterActive(now, 1.75);
+        PlayersMutator currentlyActive = analysisContainer.getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).filterActive(now, 1.75);
         long twoWeeksAgo = (now - (now - fourWeeksAgo)) / 2L;
 
         long totalFourToTwoWeeks = 0;

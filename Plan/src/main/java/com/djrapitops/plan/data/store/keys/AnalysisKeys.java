@@ -49,10 +49,10 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> SESSION_ACCORDION_FUNCTIONS = new PlaceholderKey<>(String.class, "sessionTabGraphViewFunctions");
     public static final PlaceholderKey<String> SESSION_TABLE = new PlaceholderKey<>(String.class, "tableBodySessions");
     public static final PlaceholderKey<String> RECENT_LOGINS = new PlaceholderKey<>(String.class, "listRecentLogins");
-    public static final PlaceholderKey<String> COMMAND_USAGE_TABLE = new PlaceholderKey<>(String.class, "tableBodyCommands");
+    public static final PlaceholderKey<String> COMMAND_USAGE_TABLE = new PlaceholderKey<>(String.class, "tableCommandUsage");
     public static final PlaceholderKey<String> HEALTH_NOTES = new PlaceholderKey<>(String.class, "healthNotes");
-    public static final PlaceholderKey<String> PLUGINS_TAB = new PlaceholderKey<>(String.class, "navPluginsTabs");
-    public static final PlaceholderKey<String> PLUGINS_TAB_NAV = new PlaceholderKey<>(String.class, "tabsPlugins");
+    public static final PlaceholderKey<String> PLUGINS_TAB = new PlaceholderKey<>(String.class, "tabsPlugins");
+    public static final PlaceholderKey<String> PLUGINS_TAB_NAV = new PlaceholderKey<>(String.class, "navPluginsTabs");
     // Formatted time values
     public static final PlaceholderKey<String> REFRESH_TIME_F = CommonPlaceholderKeys.REFRESH_TIME_F;
     public static final PlaceholderKey<String> LAST_PEAK_TIME_F = CommonPlaceholderKeys.LAST_PEAK_TIME_F;

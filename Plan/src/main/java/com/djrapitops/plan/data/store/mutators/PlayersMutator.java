@@ -37,42 +37,37 @@ public class PlayersMutator {
     }
 
     public PlayersMutator filterPlayedBetween(long after, long before) {
-        players = players.stream().filter(player ->
+        return new PlayersMutator(players.stream().filter(player ->
                 player.getValue(PlayerKeys.SESSIONS)
                         .map(sessions -> sessions.stream().anyMatch(session -> {
                             long start = session.getValue(SessionKeys.START).orElse(-1L);
                             long end = session.getValue(SessionKeys.END).orElse(-1L);
                             return (after <= start && start <= before) || (after <= end && end <= before);
                         })).orElse(false)
-        ).collect(Collectors.toList());
-        return this;
+        ).collect(Collectors.toList()));
     }
 
     public PlayersMutator filterRegisteredBetween(long after, long before) {
-        players = players.stream().filter(player ->
+        return new PlayersMutator(players.stream().filter(player ->
                 player.getValue(PlayerKeys.REGISTERED).map(date -> after <= date && date <= before).orElse(false)
-        ).collect(Collectors.toList());
-        return this;
+        ).collect(Collectors.toList()));
     }
 
     public PlayersMutator filterRetained(long after, long before) {
-        players = players.stream()
+        return new PlayersMutator(players.stream()
                 .filter(player -> {
                     long backLimit = Math.max(after, player.getValue(PlayerKeys.REGISTERED).orElse(0L));
                     long half = backLimit + ((before - backLimit) / 2L);
-                    SessionsMutator firstHalf = SessionsMutator.forContainer(player);
-                    SessionsMutator secondHalf = SessionsMutator.copyOf(firstHalf);
-                    return !firstHalf.playedBetween(backLimit, half) && !secondHalf.playedBetween(half, before);
+                    SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
+                    return !sessionsMutator.playedBetween(backLimit, half) && !sessionsMutator.playedBetween(half, before);
                 })
-                .collect(Collectors.toList());
-        return this;
+                .collect(Collectors.toList()));
     }
 
     public PlayersMutator filterActive(long date, double limit) {
-        players = players.stream()
-                .filter(player -> new ActivityIndex(player, date).getValue() >= limit)
-                .collect(Collectors.toList());
-        return this;
+        return new PlayersMutator(players.stream()
+                .filter(player -> player.getActivityIndex(date).getValue() >= limit)
+                .collect(Collectors.toList()));
     }
 
     public List<PlayerContainer> all() {
@@ -102,8 +97,8 @@ public class PlayersMutator {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
         if (!players.isEmpty()) {
             for (PlayerContainer player : players) {
-                for (long time = date; time >= time - TimeAmount.MONTH.ms() * 2L; time -= TimeAmount.WEEK.ms()) {
-                    ActivityIndex activityIndex = new ActivityIndex(player, time);
+                for (long time = date; time >= date - TimeAmount.MONTH.ms() * 2L; time -= TimeAmount.WEEK.ms()) {
+                    ActivityIndex activityIndex = player.getActivityIndex(time);
                     String activityGroup = activityIndex.getGroup();
 
                     Map<String, Set<UUID>> map = activityData.getOrDefault(time, new HashMap<>());

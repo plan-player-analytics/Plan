@@ -80,7 +80,7 @@ public class AnalysisPluginsTabContentCreator {
                 // TODO Start using ServerContainer and PlayerContainers instead
                 new PluginPlayersTable(containers, new ArrayList<>()).parseHtml() +
                 "</div></div></div>" +
-                "</div></div></div>";
+                "</div></div>";
 
         return new String[]{
                 (displayGeneralTab ? "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>" : "")

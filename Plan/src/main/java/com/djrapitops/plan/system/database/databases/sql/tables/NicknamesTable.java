@@ -71,6 +71,10 @@ public class NicknamesTable extends UserIDTable {
         RunnableFactory.createNew(new AbsRunnable("DB version 18->19") {
             @Override
             public void run() {
+                // Create actions table if version 18 transfer is run concurrently.
+                execute("CREATE TABLE IF NOT EXISTS plan_actions " +
+                        "(action_id integer, date bigint, server_id integer, user_id integer, additional_info varchar(1))");
+
                 Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
                 Map<UUID, Integer> serverIDsByUUID = new HashMap<>();
                 for (Map.Entry<Integer, UUID> entry : serverUUIDsByID.entrySet()) {
@@ -125,7 +129,7 @@ public class NicknamesTable extends UserIDTable {
                 });
 
                 db.setVersion(19);
-                execute("DROP TABLE plan_actions");
+                executeUnsafe("DROP TABLE plan_actions");
             }
         }).runTaskAsynchronously();
     }

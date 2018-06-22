@@ -8,6 +8,7 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
+import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.IOException;
@@ -68,17 +69,19 @@ public class AnalysisPage extends Page {
                 PLAYERS_RETAINED_MONTH, PLAYERS_RETAINED_MONTH_PERC,
 
                 TPS_SPIKE_MONTH, TPS_SPIKE_WEEK, TPS_SPIKE_DAY,
-                AVG_TPS_MONTH, AVG_TPS_WEEK, AVG_TPS_DAY,
-                AVG_CPU_MONTH, AVG_CPU_WEEK, AVG_CPU_DAY,
-                AVG_RAM_MONTH, AVG_RAM_WEEK, AVG_RAM_DAY,
-                AVG_ENTITY_MONTH, AVG_ENTITY_WEEK, AVG_ENTITY_DAY,
-                AVG_CHUNK_MONTH, AVG_CHUNK_WEEK, AVG_CHUNK_DAY,
 
                 WORLD_PIE_SERIES, GM_PIE_SERIES, PLAYERS_ONLINE_SERIES,
                 TPS_SERIES, CPU_SERIES, RAM_SERIES,
                 ENTITY_SERIES, CHUNK_SERIES, PUNCHCARD_SERIES,
                 WORLD_MAP_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES,
                 ACTIVITY_PIE_SERIES, CALENDAR_SERIES
+        );
+        placeholderReplacer.addPlaceholdersFrom(analysisContainer, FormatUtils::cutDecimals,
+                AVG_TPS_MONTH, AVG_TPS_WEEK, AVG_TPS_DAY,
+                AVG_CPU_MONTH, AVG_CPU_WEEK, AVG_CPU_DAY,
+                AVG_RAM_MONTH, AVG_RAM_WEEK, AVG_RAM_DAY,
+                AVG_ENTITY_MONTH, AVG_ENTITY_WEEK, AVG_ENTITY_DAY,
+                AVG_CHUNK_MONTH, AVG_CHUNK_WEEK, AVG_CHUNK_DAY
         );
 
         try {
