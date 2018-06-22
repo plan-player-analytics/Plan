@@ -43,6 +43,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -1073,6 +1074,9 @@ public class SQLiteTest {
 
         List<String> unsupported = new ArrayList<>();
         for (Field field : PlayerKeys.class.getDeclaredFields()) {
+            if (!Modifier.isPublic(field.getModifiers())) {
+                continue;
+            }
             Key key = (Key) field.get(null);
             if (!playerContainer.supports(key)) {
                 unsupported.add(field.getName());
@@ -1090,6 +1094,9 @@ public class SQLiteTest {
 
         List<String> unsupported = new ArrayList<>();
         for (Field field : ServerKeys.class.getDeclaredFields()) {
+            if (!Modifier.isPublic(field.getModifiers())) {
+                continue;
+            }
             Key key = (Key) field.get(null);
             if (!serverContainer.supports(key)) {
                 unsupported.add(field.getName());
@@ -1106,6 +1113,9 @@ public class SQLiteTest {
 
         List<String> unsupported = new ArrayList<>();
         for (Field field : AnalysisKeys.class.getDeclaredFields()) {
+            if (!Modifier.isPublic(field.getModifiers())) {
+                continue;
+            }
             Key key = (Key) field.get(null);
             if (!analysisContainer.supports(key)) {
                 unsupported.add(field.getName());

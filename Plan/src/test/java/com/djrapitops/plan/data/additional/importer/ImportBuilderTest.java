@@ -4,16 +4,26 @@
  */
 package com.djrapitops.plan.data.additional.importer;
 
+import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.system.database.databases.SQLiteTest;
+import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.processing.importing.ServerImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportData;
+import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.collect.ImmutableMap;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestErrorManager;
+import utilities.mocks.SystemMockUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,8 +39,26 @@ import static org.junit.Assert.*;
  */
 public class ImportBuilderTest {
 
+    @ClassRule
+    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+
     private int randomInt = RandomData.randomInt(0, 10);
     private String randomString = RandomData.randomString(randomInt);
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        System.out.println("--- Test Class Setup     ---");
+        SystemMockUtil.setUp(temporaryFolder.getRoot())
+                .enableConfigSystem()
+                .enableDatabaseSystem()
+                .enableServerInfoSystem();
+        StaticHolder.saveInstance(SQLDB.class, Plan.class);
+        StaticHolder.saveInstance(SQLiteTest.class, Plan.class);
+
+        Log.setErrorManager(new TestErrorManager());
+
+        System.out.println("--- Class Setup Complete ---\n");
+    }
 
     @Test
     public void testEmptyServerBuilder() {
