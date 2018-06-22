@@ -34,13 +34,13 @@ public class TableContainer {
      */
     public TableContainer(String... header) {
         this.header = header;
-        this.formatters = new Formatter[header.length];
+        this.formatters = new Formatter[this.header.length];
         values = new ArrayList<>();
     }
 
     public TableContainer(boolean players, String... header) {
         this.header = FormatUtils.mergeArrays(new String[]{Html.FONT_AWESOME_ICON.parse("user") + " Player"}, header);
-        this.formatters = new Formatter[header.length];
+        this.formatters = new Formatter[this.header.length];
         values = new ArrayList<>();
     }
 

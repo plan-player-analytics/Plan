@@ -1,9 +1,14 @@
 package com.djrapitops.plan.data.store.mutators;
 
+import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.TimeAmount;
+
+import java.util.List;
+import java.util.Optional;
 
 public class ActivityIndex {
 
@@ -34,10 +39,18 @@ public class ActivityIndex {
         long activePlayThreshold = loadSetting(Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms());
         int activeLoginThreshold = loadSetting(Settings.ACTIVE_LOGIN_THRESHOLD.getNumber());
 
-        SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
-        SessionsMutator weekOne = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(weekAgo, date);
-        SessionsMutator weekTwo = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(twoWeeksAgo, weekAgo);
-        SessionsMutator weekThree = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(threeWeeksAgo, twoWeeksAgo);
+        Optional<List<Session>> sessionsValue = container.getValue(PlayerKeys.SESSIONS);
+        if (!sessionsValue.isPresent()) {
+            return 0.0;
+        }
+        SessionsMutator sessionsMutator = new SessionsMutator(sessionsValue.get());
+        if (sessionsMutator.all().isEmpty()) {
+            return 0.0;
+        }
+
+        SessionsMutator weekOne = sessionsMutator.filterSessionsBetween(weekAgo, date);
+        SessionsMutator weekTwo = sessionsMutator.filterSessionsBetween(twoWeeksAgo, weekAgo);
+        SessionsMutator weekThree = sessionsMutator.filterSessionsBetween(threeWeeksAgo, twoWeeksAgo);
 
         // Playtime per week multipliers, max out to avoid too high values.
         double max = 4.0;

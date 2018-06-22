@@ -160,9 +160,9 @@ public class InspectPage extends Page {
         long weekAgo = now - TimeAmount.WEEK.ms();
         long monthAgo = now - TimeAmount.MONTH.ms();
 
-        SessionsMutator daySessionsMutator = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(dayAgo, now);
-        SessionsMutator weekSessionsMutator = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(weekAgo, now);
-        SessionsMutator monthSessionsMutator = SessionsMutator.copyOf(sessionsMutator).filterSessionsBetween(monthAgo, now);
+        SessionsMutator daySessionsMutator = sessionsMutator.filterSessionsBetween(dayAgo, now);
+        SessionsMutator weekSessionsMutator = sessionsMutator.filterSessionsBetween(weekAgo, now);
+        SessionsMutator monthSessionsMutator = sessionsMutator.filterSessionsBetween(monthAgo, now);
 
         long playtime = sessionsMutator.toPlaytime();
         long playtimeDay = daySessionsMutator.toPlaytime();
@@ -247,7 +247,7 @@ public class InspectPage extends Page {
         addValue("mobKillCount", mobKillCount);
         addValue("deathCount", deathCount);
 
-        ActivityIndex activityIndex = new ActivityIndex(container, now);
+        ActivityIndex activityIndex = container.getActivityIndex(now);
 
         addValue("activityIndexNumber", activityIndex.getFormattedValue());
         addValue("activityIndexColor", activityIndex.getColor());

@@ -106,7 +106,7 @@ public class QInspectCommand extends CommandNode {
 
         sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + container.getValue(PlayerKeys.NAME).orElse("Unknown"));
 
-        ActivityIndex activityIndex = new ActivityIndex(container, now);
+        ActivityIndex activityIndex = container.getActivityIndex(now);
         Long registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
         Long lastSeen = container.getValue(PlayerKeys.LAST_SEEN).orElse(0L);
         List<GeoInfo> geoInfo = container.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());

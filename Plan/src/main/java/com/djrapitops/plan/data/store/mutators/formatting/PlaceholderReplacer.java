@@ -2,6 +2,7 @@ package com.djrapitops.plan.data.store.mutators.formatting;
 
 import com.djrapitops.plan.data.store.PlaceholderKey;
 import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.Serializable;
@@ -18,7 +19,11 @@ public class PlaceholderReplacer extends HashMap<String, Serializable> implement
         if (!container.supports(key)) {
             return;
         }
+        long ns = System.nanoTime();
+        Log.debug(key.getPlaceholder());
         put(key.getPlaceholder(), container.getSupplier(key).get().toString());
+        ns = System.nanoTime() - ns;
+        Log.debug(key.getPlaceholder() + ": " + Formatters.benchmark().apply(ns));
     }
 
     public void addAllPlaceholdersFrom(DataContainer container, PlaceholderKey... keys) {

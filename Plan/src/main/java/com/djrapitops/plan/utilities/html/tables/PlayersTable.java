@@ -70,7 +70,7 @@ public class PlayersTable extends TableContainer {
             long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
             long lastSeen = sessionsMutator.toLastSeen();
 
-            ActivityIndex activityIndex = new ActivityIndex(player, now);
+            ActivityIndex activityIndex = player.getActivityIndex(now);
             boolean isBanned = player.getValue(PlayerKeys.BANNED).orElse(false);
             String activityString = activityIndex.getFormattedValue()
                     + (isBanned ? " (<b>Banned</b>)" : " (" + activityIndex.getGroup() + ")");

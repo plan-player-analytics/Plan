@@ -149,22 +149,22 @@ public class AnalysisContainer extends DataContainer {
         Key<PlayersMutator> uniqueDay = new Key<>(PlayersMutator.class, "UNIQUE_DAY");
         Key<PlayersMutator> uniqueWeek = new Key<>(PlayersMutator.class, "UNIQUE_WEEK");
         Key<PlayersMutator> uniqueMonth = new Key<>(PlayersMutator.class, "UNIQUE_MONTH");
-        putSupplier(newDay, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+        putSupplier(newDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(newWeek, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+        putSupplier(newWeek, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(newMonth, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+        putSupplier(newMonth, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(uniqueDay, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+        putSupplier(uniqueDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(uniqueWeek, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+        putSupplier(uniqueWeek, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(uniqueMonth, () -> PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR))
+        putSupplier(uniqueMonth, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
 
@@ -246,13 +246,13 @@ public class AnalysisContainer extends DataContainer {
         Key<SessionsMutator> sessionsDay = new Key<>(SessionsMutator.class, "SESSIONS_DAY");
         Key<SessionsMutator> sessionsWeek = new Key<>(SessionsMutator.class, "SESSIONS_WEEK");
         Key<SessionsMutator> sessionsMonth = new Key<>(SessionsMutator.class, "SESSIONS_MONTH");
-        putSupplier(sessionsDay, () -> SessionsMutator.copyOf(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR))
+        putSupplier(sessionsDay, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
                 .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(sessionsWeek, () -> SessionsMutator.copyOf(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR))
+        putSupplier(sessionsWeek, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
                 .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(sessionsMonth, () -> SessionsMutator.copyOf(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR))
+        putSupplier(sessionsMonth, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
                 .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
 
@@ -262,13 +262,13 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_MONTH, () -> getUnsafe(sessionsMonth).toUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK, () ->
-                PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).filterRetained(
+                getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).filterRetained(
                         getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO),
                         getUnsafe(AnalysisKeys.ANALYSIS_TIME)
                 ).count()
         );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH, () ->
-                PlayersMutator.copyOf(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).filterRetained(
+                getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).filterRetained(
                         getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
                         getUnsafe(AnalysisKeys.ANALYSIS_TIME)
                 ).count()
@@ -328,13 +328,13 @@ public class AnalysisContainer extends DataContainer {
         Key<TPSMutator> tpsWeek = new Key<>(TPSMutator.class, "TPS_WEEK");
         Key<TPSMutator> tpsDay = new Key<>(TPSMutator.class, "TPS_DAY");
 
-        putSupplier(tpsMonth, () -> TPSMutator.copyOf(getUnsafe(AnalysisKeys.TPS_MUTATOR))
+        putSupplier(tpsMonth, () -> getUnsafe(AnalysisKeys.TPS_MUTATOR)
                 .filterDataBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(tpsWeek, () -> TPSMutator.copyOf(getUnsafe(AnalysisKeys.TPS_MUTATOR))
+        putSupplier(tpsWeek, () -> getUnsafe(AnalysisKeys.TPS_MUTATOR)
                 .filterDataBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(tpsDay, () -> TPSMutator.copyOf(getUnsafe(AnalysisKeys.TPS_MUTATOR))
+        putSupplier(tpsDay, () -> getUnsafe(AnalysisKeys.TPS_MUTATOR)
                 .filterDataBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
 

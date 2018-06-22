@@ -127,6 +127,8 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, container.getUnsafe(PlayerKeys.PLAYER_KILLS)::size);
             container.putSupplier(PlayerKeys.MOB_KILL_COUNT, SessionsMutator.forContainer(container)::toMobKillCount);
             container.putSupplier(PlayerKeys.DEATH_COUNT, SessionsMutator.forContainer(container)::toDeathCount);
+
+            containers.add(container);
         }
 
         return containers;

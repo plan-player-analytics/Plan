@@ -2,6 +2,7 @@ package com.djrapitops.plan.data.store.mutators.formatting;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.Calendar;
 import java.util.function.Function;
@@ -67,5 +68,15 @@ public class Formatters {
 
     public static Formatter<Double> percentage() {
         return value -> value >= 0 ? FormatUtils.cutDecimals(value * 100.0) + "%" : "-";
+    }
+
+    public static Formatter<Long> benchmark() {
+        return ns -> {
+            if (ns > TimeAmount.MILLISECOND.ns() * 5L) {
+                return (ns / TimeAmount.MILLISECOND.ns()) + "ms";
+            } else {
+                return 1.0 * ns / TimeAmount.MILLISECOND.ns() + "ms";
+            }
+        };
     }
 }
