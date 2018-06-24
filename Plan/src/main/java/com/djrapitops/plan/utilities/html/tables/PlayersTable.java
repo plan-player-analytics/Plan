@@ -10,6 +10,7 @@ import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.utilities.comparators.PlayerContainerLastPlayedComparator;
 import com.djrapitops.plan.utilities.html.Html;
 
 import java.util.List;
@@ -55,6 +56,8 @@ public class PlayersTable extends TableContainer {
     private void addRows() {
         PlanAPI planAPI = PlanAPI.getInstance();
         long now = System.currentTimeMillis();
+
+        players.sort(new PlayerContainerLastPlayedComparator());
 
         int i = 0;
         for (PlayerContainer player : players) {
