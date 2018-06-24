@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.junit.rules.TemporaryFolder;
 import utilities.Teardown;
 import utilities.mocks.SystemMockUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
@@ -33,7 +35,9 @@ public class PlayersTableTest {
 
     @Test
     public void noClassCastExceptionsFromFormatting() {
-        List<PlayerContainer> players = Collections.singletonList(new PlayerContainer());
+        PlayerContainer container = new PlayerContainer();
+        container.putRawData(PlayerKeys.SESSIONS, new ArrayList<>());
+        List<PlayerContainer> players = Collections.singletonList(container);
         String html = PlayersTable.forServerPage(players).parseHtml();
 
         testHtmlValidity(html);
