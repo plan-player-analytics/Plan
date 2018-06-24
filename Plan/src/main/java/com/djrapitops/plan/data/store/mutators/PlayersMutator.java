@@ -10,6 +10,7 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.*;
 import java.util.function.Function;
@@ -33,6 +34,9 @@ public class PlayersMutator {
     }
 
     public static PlayersMutator forContainer(DataContainer container) {
+        if (!container.supports(ServerKeys.PLAYERS)) {
+            Log.warn(container.getClass().getSimpleName() + " does not support PLAYERS key.");
+        }
         return new PlayersMutator(container.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>()));
     }
 

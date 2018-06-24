@@ -31,7 +31,7 @@ public class NetworkPage extends Page {
             PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
             placeholderReplacer.addAllPlaceholdersFrom(networkContainer,
                     VERSION, NETWORK_NAME, TIME_ZONE,
-                    PLAYERS_ONLINE_SERIES, PLAYERS_TOTAL, PLAYERS_GRAPH_COLOR,
+                    PLAYERS_ONLINE, PLAYERS_ONLINE_SERIES, PLAYERS_TOTAL, PLAYERS_GRAPH_COLOR,
                     REFRESH_TIME_F, RECENT_PEAK_TIME_F, ALL_TIME_PEAK_TIME_F,
                     PLAYERS_ALL_TIME_PEAK, PLAYERS_RECENT_PEAK,
                     PLAYERS_DAY, PLAYERS_WEEK, PLAYERS_MONTH,
@@ -40,7 +40,7 @@ public class NetworkPage extends Page {
             );
             NetworkPageContent networkPageContent = (NetworkPageContent)
                     ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
-            addValue("tabContentServers", networkPageContent.getContents());
+            placeholderReplacer.put("tabContentServers", networkPageContent.getContents());
 
             return placeholderReplacer.apply(FileUtil.getStringFromResource("web/network.html"));
         } catch (Exception e) {

@@ -4,9 +4,9 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +28,11 @@ public class TPSMutator {
         this.tpsData = tpsData;
     }
 
-    public static TPSMutator forContainer(DataContainer dataContainer) {
-        return new TPSMutator(dataContainer.getValue(ServerKeys.TPS).orElse(new ArrayList<>()));
+    public static TPSMutator forContainer(DataContainer container) {
+        if (!container.supports(ServerKeys.TPS)) {
+            Log.warn(container.getClass().getSimpleName() + " does not support TPS key.");
+        }
+        return new TPSMutator(container.getValue(ServerKeys.TPS).orElse(new ArrayList<>()));
     }
 
     public static TPSMutator copyOf(TPSMutator mutator) {
@@ -171,7 +174,7 @@ public class TPSMutator {
                 .filter(num -> num >= 0)
                 .average();
         if (average.isPresent()) {
-            return Double.parseDouble(FormatUtils.cutDecimals(average.getAsDouble()));
+            return average.getAsDouble();
         }
         return -1;
     }
@@ -182,7 +185,7 @@ public class TPSMutator {
                 .filter(num -> num >= 0)
                 .average();
         if (average.isPresent()) {
-            return Double.parseDouble(FormatUtils.cutDecimals(average.getAsDouble()));
+            return average.getAsDouble();
         }
         return -1;
     }
@@ -193,7 +196,7 @@ public class TPSMutator {
                 .filter(num -> num >= 0)
                 .average();
         if (average.isPresent()) {
-            return Double.parseDouble(FormatUtils.cutDecimals(average.getAsDouble()));
+            return average.getAsDouble();
         }
         return -1;
     }
@@ -204,7 +207,7 @@ public class TPSMutator {
                 .filter(num -> num >= 0)
                 .average();
         if (average.isPresent()) {
-            return Double.parseDouble(FormatUtils.cutDecimals(average.getAsDouble()));
+            return average.getAsDouble();
         }
         return -1;
     }
@@ -215,7 +218,7 @@ public class TPSMutator {
                 .filter(num -> num >= 0)
                 .average();
         if (average.isPresent()) {
-            return Double.parseDouble(FormatUtils.cutDecimals(average.getAsDouble()));
+            return average.getAsDouble();
         }
         return -1;
     }

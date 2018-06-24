@@ -5,7 +5,9 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.base.Objects;
 
@@ -101,8 +103,10 @@ public abstract class Table {
         for (String statement : statements) {
             try {
                 execute(statement);
-            } catch (DBOpException ignored) {
-                /* ignored */
+            } catch (DBOpException e) {
+                if (Settings.DEV_MODE.isTrue()) {
+                    Log.toLog(this.getClass(), e);
+                }
             }
         }
     }

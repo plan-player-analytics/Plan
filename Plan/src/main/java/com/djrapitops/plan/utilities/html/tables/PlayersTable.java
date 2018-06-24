@@ -32,7 +32,7 @@ public class PlayersTable extends TableContainer {
                 Html.FONT_AWESOME_ICON.parse("clock-o") + " Playtime",
                 Html.FONT_AWESOME_ICON.parse("calendar-plus-o") + " Sessions",
                 Html.FONT_AWESOME_ICON.parse("user-plus") + " Registered",
-                Html.FONT_AWESOME_ICON.parse("calendar-check-o") + " Registered",
+                Html.FONT_AWESOME_ICON.parse("calendar-check-o") + " Last Seen",
                 Html.FONT_AWESOME_ICON.parse("globe") + " Geolocation"
         );
         this.players = players;

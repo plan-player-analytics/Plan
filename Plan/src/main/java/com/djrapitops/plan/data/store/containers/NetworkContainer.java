@@ -15,6 +15,7 @@ import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.html.graphs.WorldMap;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.HashMap;
@@ -67,6 +68,9 @@ public class NetworkContainer extends DataContainer {
     private void addConstants() {
         long now = System.currentTimeMillis();
         putRawData(NetworkKeys.REFRESH_TIME, now);
+        putRawData(NetworkKeys.REFRESH_TIME_DAY_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeAmount.DAY.ms());
+        putRawData(NetworkKeys.REFRESH_TIME_WEEK_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeAmount.WEEK.ms());
+        putRawData(NetworkKeys.REFRESH_TIME_MONTH_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeAmount.MONTH.ms());
         putSupplier(NetworkKeys.REFRESH_TIME_F, () -> Formatters.second().apply(() -> getUnsafe(NetworkKeys.REFRESH_TIME)));
 
         putRawData(NetworkKeys.VERSION, PlanPlugin.getInstance().getVersion());
@@ -80,7 +84,7 @@ public class NetworkContainer extends DataContainer {
     }
 
     private void addPlayerInformation() {
-        putSupplier(NetworkKeys.PLAYERS_TOTAL, () -> bungeeContainer.getValue(ServerKeys.PLAYER_COUNT).orElse(-1));
+        putSupplier(NetworkKeys.PLAYERS_TOTAL, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).count());
         putSupplier(NetworkKeys.WORLD_MAP_SERIES, () ->
                 new WorldMap(PlayersMutator.forContainer(bungeeContainer)).toHighChartsSeries()
         );
@@ -120,13 +124,13 @@ public class NetworkContainer extends DataContainer {
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
         putSupplier(uniqueDay, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
-                .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_DAY_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
+                .filterPlayedBetween(getUnsafe(NetworkKeys.REFRESH_TIME_DAY_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
         putSupplier(uniqueWeek, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
-                .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_WEEK_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
+                .filterPlayedBetween(getUnsafe(NetworkKeys.REFRESH_TIME_WEEK_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
         putSupplier(uniqueMonth, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
-                .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
+                .filterPlayedBetween(getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
 
         putSupplier(NetworkKeys.PLAYERS_NEW_DAY, () -> getUnsafe(newDay).count());

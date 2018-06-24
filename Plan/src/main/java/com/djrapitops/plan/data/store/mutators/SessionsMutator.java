@@ -7,6 +7,7 @@ import com.djrapitops.plan.data.store.keys.CommonKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.*;
 import java.util.function.Function;
@@ -24,8 +25,11 @@ public class SessionsMutator {
 
     private List<Session> sessions;
 
-    public static SessionsMutator forContainer(DataContainer dataContainer) {
-        return new SessionsMutator(dataContainer.getValue(CommonKeys.SESSIONS).orElse(new ArrayList<>()));
+    public static SessionsMutator forContainer(DataContainer container) {
+        if (!container.supports(CommonKeys.SESSIONS)) {
+            Log.warn(container.getClass().getSimpleName() + " does not support SESSIONS key.");
+        }
+        return new SessionsMutator(container.getValue(CommonKeys.SESSIONS).orElse(new ArrayList<>()));
     }
 
     public static SessionsMutator copyOf(SessionsMutator mutator) {

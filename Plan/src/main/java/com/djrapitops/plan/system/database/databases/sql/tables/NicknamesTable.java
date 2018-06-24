@@ -66,7 +66,7 @@ public class NicknamesTable extends UserIDTable {
     }
 
     public void alterTableV19() {
-        addColumns(Col.LAST_USED + " " + Sql.LONG + "NOT NULL DEFAULT '0'");
+        addColumns(Col.LAST_USED + " bigint NOT NULL DEFAULT '0'");
 
         RunnableFactory.createNew(new AbsRunnable("DB version 18->19") {
             @Override

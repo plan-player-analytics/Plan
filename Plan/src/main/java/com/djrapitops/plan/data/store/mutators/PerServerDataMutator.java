@@ -29,6 +29,7 @@ public class PerServerDataMutator {
 
     public List<Session> flatMapSessions() {
         return data.values().stream()
+                .filter(container -> container.supports(PerServerKeys.SESSIONS))
                 .map(container -> container.getUnsafe(PerServerKeys.SESSIONS))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
@@ -38,8 +39,10 @@ public class PerServerDataMutator {
         WorldTimes total = new WorldTimes(new HashMap<>());
 
         for (DataContainer container : data.values()) {
-            WorldTimes worldTimes = container.getUnsafe(PerServerKeys.WORLD_TIMES);
-            total.add(worldTimes);
+            if (container.supports(PerServerKeys.WORLD_TIMES)) {
+                WorldTimes worldTimes = container.getUnsafe(PerServerKeys.WORLD_TIMES);
+                total.add(worldTimes);
+            }
         }
 
         return total;
@@ -48,7 +51,8 @@ public class PerServerDataMutator {
     public Map<UUID, WorldTimes> worldTimesPerServer() {
         Map<UUID, WorldTimes> timesMap = new HashMap<>();
         for (Map.Entry<UUID, DataContainer> entry : data.entrySet()) {
-            timesMap.put(entry.getKey(), entry.getValue().getUnsafe(PerServerKeys.WORLD_TIMES));
+            DataContainer container = entry.getValue();
+            timesMap.put(entry.getKey(), container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())));
         }
         return timesMap;
     }
@@ -71,14 +75,14 @@ public class PerServerDataMutator {
     public Map<UUID, List<Session>> sessionsPerServer() {
         Map<UUID, List<Session>> sessionMap = new HashMap<>();
         for (Map.Entry<UUID, DataContainer> entry : data.entrySet()) {
-            sessionMap.put(entry.getKey(), entry.getValue().getUnsafe(PerServerKeys.SESSIONS));
+            sessionMap.put(entry.getKey(), entry.getValue().getValue(PerServerKeys.SESSIONS).orElse(new ArrayList<>()));
         }
         return sessionMap;
     }
 
     public boolean isBanned() {
         for (DataContainer container : data.values()) {
-            if (container.getUnsafe(PlayerKeys.BANNED)) {
+            if (container.getValue(PlayerKeys.BANNED).orElse(false)) {
                 return true;
             }
         }
@@ -87,7 +91,7 @@ public class PerServerDataMutator {
 
     public boolean isOperator() {
         for (DataContainer container : data.values()) {
-            if (container.getUnsafe(PlayerKeys.OPERATOR)) {
+            if (container.getValue(PlayerKeys.OPERATOR).orElse(false)) {
                 return true;
             }
         }

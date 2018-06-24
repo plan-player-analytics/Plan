@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.store.containers.*;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
@@ -60,7 +61,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         container.putRawData(ServerKeys.SERVER_UUID, serverUUID);
         container.putRawData(ServerKeys.NAME, serverInfo.get().getName());
         container.putSupplier(ServerKeys.PLAYERS, () -> getPlayerContainers(serverUUID));
-        container.putSupplier(ServerKeys.PLAYER_COUNT, container.getUnsafe(ServerKeys.PLAYERS)::size);
+        container.putSupplier(ServerKeys.PLAYER_COUNT, () -> container.getUnsafe(ServerKeys.PLAYERS).size());
 
         container.putSupplier(ServerKeys.TPS, () -> tpsTable.getTPSData(serverUUID));
         container.putSupplier(ServerKeys.ALL_TIME_PEAK_PLAYERS, () -> {
@@ -87,10 +88,10 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         // Calculating getters
         container.putSupplier(ServerKeys.OPERATORS, () -> PlayersMutator.forContainer(container).operators());
         container.putSupplier(ServerKeys.SESSIONS, () -> PlayersMutator.forContainer(container).getSessions());
-        container.putSupplier(ServerKeys.PLAYER_KILLS, SessionsMutator.forContainer(container)::toPlayerKillList);
-        container.putSupplier(ServerKeys.PLAYER_KILL_COUNT, container.getUnsafe(ServerKeys.PLAYER_KILLS)::size);
-        container.putSupplier(ServerKeys.MOB_KILL_COUNT, SessionsMutator.forContainer(container)::toMobKillCount);
-        container.putSupplier(ServerKeys.DEATH_COUNT, SessionsMutator.forContainer(container)::toDeathCount);
+        container.putSupplier(ServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
+        container.putSupplier(ServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(ServerKeys.PLAYER_KILLS).size());
+        container.putSupplier(ServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
+        container.putSupplier(ServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
 
         return container;
     }
@@ -137,20 +138,22 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             // Calculating getters
             container.putSupplier(PlayerKeys.WORLD_TIMES, () -> {
                 WorldTimes worldTimes = new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
-                container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(session.getWorldTimes()));
+                container.getValue(PlayerKeys.ACTIVE_SESSION)
+                        .ifPresent(session -> worldTimes.add(
+                                session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())))
+                        );
                 return worldTimes;
             });
 
-            container.putSupplier(PlayerKeys.LAST_SEEN, SessionsMutator.forContainer(container)::toLastSeen);
+            container.putSupplier(PlayerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
 
-            container.putSupplier(PlayerKeys.PLAYER_KILLS, SessionsMutator.forContainer(container)::toPlayerKillList);
-            container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, container.getUnsafe(PlayerKeys.PLAYER_KILLS)::size);
-            container.putSupplier(PlayerKeys.MOB_KILL_COUNT, SessionsMutator.forContainer(container)::toMobKillCount);
-            container.putSupplier(PlayerKeys.DEATH_COUNT, SessionsMutator.forContainer(container)::toDeathCount);
+            container.putSupplier(PlayerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
+            container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PlayerKeys.PLAYER_KILLS).size());
+            container.putSupplier(PlayerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
+            container.putSupplier(PlayerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
 
             containers.add(container);
         }
-
         return containers;
     }
 
@@ -186,14 +189,13 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             );
 
             // Calculating getters
-            container.putSupplier(PlayerKeys.LAST_SEEN, SessionsMutator.forContainer(container)::toLastSeen);
+            container.putSupplier(PlayerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
 
-            container.putSupplier(PlayerKeys.MOB_KILL_COUNT, SessionsMutator.forContainer(container)::toMobKillCount);
-            container.putSupplier(PlayerKeys.DEATH_COUNT, SessionsMutator.forContainer(container)::toDeathCount);
+            container.putSupplier(PlayerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
+            container.putSupplier(PlayerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
 
             containers.add(container);
         }
-
         return containers;
     }
 
@@ -228,13 +230,13 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
                 List<Session> serverSessions = sessionEntry.getValue();
                 container.putRawData(PerServerKeys.SESSIONS, serverSessions);
 
-                container.putSupplier(PerServerKeys.LAST_SEEN, SessionsMutator.forContainer(container)::toLastSeen);
+                container.putSupplier(PerServerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
 
-                container.putSupplier(PerServerKeys.WORLD_TIMES, SessionsMutator.forContainer(container)::toTotalWorldTimes);
-                container.putSupplier(PerServerKeys.PLAYER_KILLS, SessionsMutator.forContainer(container)::toPlayerKillList);
-                container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, container.getUnsafe(PerServerKeys.PLAYER_KILLS)::size);
-                container.putSupplier(PerServerKeys.MOB_KILL_COUNT, SessionsMutator.forContainer(container)::toMobKillCount);
-                container.putSupplier(PerServerKeys.DEATH_COUNT, SessionsMutator.forContainer(container)::toDeathCount);
+                container.putSupplier(PerServerKeys.WORLD_TIMES, () -> SessionsMutator.forContainer(container).toTotalWorldTimes());
+                container.putSupplier(PerServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
+                container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PerServerKeys.PLAYER_KILLS).size());
+                container.putSupplier(PerServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
+                container.putSupplier(PerServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
                 perServerContainer.put(serverUUID, container);
                 perServerContainers.put(uuid, perServerContainer);
             }
@@ -253,8 +255,8 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         container.putSupplier(PlayerKeys.NICKNAMES, () -> nicknamesTable.getNicknameInformation(uuid));
         container.putSupplier(PlayerKeys.PER_SERVER, () -> getPerServerData(uuid));
 
-        container.putSupplier(PlayerKeys.BANNED, new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER))::isBanned);
-        container.putSupplier(PlayerKeys.OPERATOR, new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER))::isOperator);
+        container.putSupplier(PlayerKeys.BANNED, () -> new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isBanned());
+        container.putSupplier(PlayerKeys.OPERATOR, () -> new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isOperator());
 
         container.putSupplier(PlayerKeys.SESSIONS, () -> {
                     List<Session> sessions = new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapSessions();
@@ -265,16 +267,18 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         container.putSupplier(PlayerKeys.WORLD_TIMES, () ->
         {
             WorldTimes worldTimes = new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
-            container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(session.getWorldTimes()));
+            container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(
+                    session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())))
+            );
             return worldTimes;
         });
 
-        container.putSupplier(PlayerKeys.LAST_SEEN, SessionsMutator.forContainer(container)::toLastSeen);
+        container.putSupplier(PlayerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
 
-        container.putSupplier(PlayerKeys.PLAYER_KILLS, SessionsMutator.forContainer(container)::toPlayerKillList);
-        container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, container.getUnsafe(PlayerKeys.PLAYER_KILLS)::size);
-        container.putSupplier(PlayerKeys.MOB_KILL_COUNT, SessionsMutator.forContainer(container)::toMobKillCount);
-        container.putSupplier(PlayerKeys.DEATH_COUNT, SessionsMutator.forContainer(container)::toDeathCount);
+        container.putSupplier(PlayerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
+        container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PlayerKeys.PLAYER_KILLS).size());
+        container.putSupplier(PlayerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
+        container.putSupplier(PlayerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
 
         return container;
     }
@@ -302,13 +306,13 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
             container.putRawData(PerServerKeys.SESSIONS, serverSessions);
 
-            container.putSupplier(PerServerKeys.LAST_SEEN, SessionsMutator.forContainer(container)::toLastSeen);
+            container.putSupplier(PerServerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
 
-            container.putSupplier(PerServerKeys.WORLD_TIMES, SessionsMutator.forContainer(container)::toTotalWorldTimes);
-            container.putSupplier(PerServerKeys.PLAYER_KILLS, SessionsMutator.forContainer(container)::toPlayerKillList);
-            container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, container.getUnsafe(PerServerKeys.PLAYER_KILLS)::size);
-            container.putSupplier(PerServerKeys.MOB_KILL_COUNT, SessionsMutator.forContainer(container)::toMobKillCount);
-            container.putSupplier(PerServerKeys.DEATH_COUNT, SessionsMutator.forContainer(container)::toDeathCount);
+            container.putSupplier(PerServerKeys.WORLD_TIMES, () -> SessionsMutator.forContainer(container).toTotalWorldTimes());
+            container.putSupplier(PerServerKeys.PLAYER_KILLS, () -> SessionsMutator.forContainer(container).toPlayerKillList());
+            container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PerServerKeys.PLAYER_KILLS).size());
+            container.putSupplier(PerServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
+            container.putSupplier(PerServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
 
             perServerContainer.put(serverUUID, container);
         }

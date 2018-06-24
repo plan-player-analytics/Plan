@@ -23,12 +23,9 @@ public abstract class Page {
         this.placeHolders = new HashMap<>();
     }
 
+    @Deprecated
     protected void addValue(String placeholder, Serializable value) {
         placeHolders.put(placeholder, value);
-    }
-
-    protected void addValues(Map<String, Serializable> values) {
-        placeHolders.putAll(values);
     }
 
     public abstract String toHtml() throws ParseException;
