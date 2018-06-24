@@ -32,7 +32,7 @@ public class PlaceholderReplacer extends HashMap<String, Serializable> implement
         }
     }
 
-    public <T> void addPlaceholderFrom(DataContainer container, Formatter<T> formatter, PlaceholderKey<T> key) {
+    public <T> void addAllPlaceholderFrom(DataContainer container, Formatter<T> formatter, PlaceholderKey<T> key) {
         if (!container.supports(key)) {
             return;
         }
@@ -45,7 +45,7 @@ public class PlaceholderReplacer extends HashMap<String, Serializable> implement
 
     public <T> void addPlaceholdersFrom(DataContainer container, Formatter<T> formatter, PlaceholderKey<T>... keys) {
         for (PlaceholderKey<T> key : keys) {
-            addPlaceholderFrom(container, formatter, key);
+            addAllPlaceholderFrom(container, formatter, key);
         }
     }
 

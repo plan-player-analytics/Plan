@@ -204,4 +204,9 @@ public class PlayersMutator {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+
+    public List<PlayerContainer> operators() {
+        return players.stream()
+                .filter(player -> player.getValue(PlayerKeys.OPERATOR).orElse(false)).collect(Collectors.toList());
+    }
 }

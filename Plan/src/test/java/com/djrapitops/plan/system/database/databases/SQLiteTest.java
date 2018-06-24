@@ -12,9 +12,11 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
+import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.objects.Nickname;
@@ -1123,5 +1125,24 @@ public class SQLiteTest {
         }
 
         assertTrue("Some keys are not supported by AnalysisContainer: AnalysisKeys." + unsupported.toString(), unsupported.isEmpty());
+    }
+
+    @Test
+    public void networkContainerSupportsAllNetworkKeys() throws IllegalAccessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+        serverContainerSupportsAllServerKeys();
+        NetworkContainer networkContainer = db.fetch().getNetworkContainer();
+
+        List<String> unsupported = new ArrayList<>();
+        for (Field field : NetworkKeys.class.getDeclaredFields()) {
+            if (!Modifier.isPublic(field.getModifiers())) {
+                continue;
+            }
+            Key key = (Key) field.get(null);
+            if (!networkContainer.supports(key)) {
+                unsupported.add(field.getName());
+            }
+        }
+
+        assertTrue("Some keys are not supported by NetworkContainer: NetworkKeys." + unsupported.toString(), unsupported.isEmpty());
     }
 }

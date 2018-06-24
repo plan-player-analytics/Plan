@@ -3,6 +3,7 @@ package com.djrapitops.plan.data.store.mutators;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
+import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.time.WorldTimes;
 
@@ -22,9 +23,13 @@ public class PerServerDataMutator {
         this.data = data;
     }
 
+    public static PerServerDataMutator forContainer(DataContainer container) {
+        return new PerServerDataMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer()));
+    }
+
     public List<Session> flatMapSessions() {
         return data.values().stream()
-                .map(container -> container.getUnsafe(PlayerKeys.SESSIONS))
+                .map(container -> container.getUnsafe(PerServerKeys.SESSIONS))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
@@ -33,7 +38,7 @@ public class PerServerDataMutator {
         WorldTimes total = new WorldTimes(new HashMap<>());
 
         for (DataContainer container : data.values()) {
-            WorldTimes worldTimes = container.getUnsafe(PlayerKeys.WORLD_TIMES);
+            WorldTimes worldTimes = container.getUnsafe(PerServerKeys.WORLD_TIMES);
             total.add(worldTimes);
         }
 
@@ -43,7 +48,7 @@ public class PerServerDataMutator {
     public Map<UUID, WorldTimes> worldTimesPerServer() {
         Map<UUID, WorldTimes> timesMap = new HashMap<>();
         for (Map.Entry<UUID, DataContainer> entry : data.entrySet()) {
-            timesMap.put(entry.getKey(), entry.getValue().getUnsafe(PlayerKeys.WORLD_TIMES));
+            timesMap.put(entry.getKey(), entry.getValue().getUnsafe(PerServerKeys.WORLD_TIMES));
         }
         return timesMap;
     }
@@ -53,9 +58,7 @@ public class PerServerDataMutator {
         UUID maxServer = null;
 
         for (Map.Entry<UUID, DataContainer> entry : data.entrySet()) {
-            long total = entry.getValue().getValue(PlayerKeys.WORLD_TIMES)
-                    .orElse(new WorldTimes(new HashMap<>()))
-                    .getTotal();
+            long total = SessionsMutator.forContainer(entry.getValue()).toPlaytime();
             if (total > max) {
                 max = total;
                 maxServer = entry.getKey();
@@ -68,7 +71,7 @@ public class PerServerDataMutator {
     public Map<UUID, List<Session>> sessionsPerServer() {
         Map<UUID, List<Session>> sessionMap = new HashMap<>();
         for (Map.Entry<UUID, DataContainer> entry : data.entrySet()) {
-            sessionMap.put(entry.getKey(), entry.getValue().getUnsafe(PlayerKeys.SESSIONS));
+            sessionMap.put(entry.getKey(), entry.getValue().getUnsafe(PerServerKeys.SESSIONS));
         }
         return sessionMap;
     }
