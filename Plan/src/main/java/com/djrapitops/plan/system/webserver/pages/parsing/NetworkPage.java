@@ -20,7 +20,7 @@ import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
  *
  * @author Rsl1122
  */
-public class NetworkPage extends Page {
+public class NetworkPage implements Page {
 
     @Override
     public String toHtml() throws ParseException {

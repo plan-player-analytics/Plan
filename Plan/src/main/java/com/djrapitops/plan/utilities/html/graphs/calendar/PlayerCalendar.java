@@ -6,6 +6,8 @@ package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -28,7 +30,14 @@ public class PlayerCalendar {
     private final List<Session> allSessions;
     private final long registered;
 
-    public PlayerCalendar(List<Session> allSessions, long registered) {
+    public PlayerCalendar(PlayerContainer container) {
+        this(
+                container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()),
+                container.getValue(PlayerKeys.REGISTERED).orElse(0L)
+        );
+    }
+
+    private PlayerCalendar(List<Session> allSessions, long registered) {
         this.allSessions = allSessions;
         this.registered = registered;
     }

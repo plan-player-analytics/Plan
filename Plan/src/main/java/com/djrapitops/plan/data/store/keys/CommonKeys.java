@@ -3,6 +3,7 @@ package com.djrapitops.plan.data.store.keys;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.PlaceholderKey;
 import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
@@ -26,11 +27,11 @@ public class CommonKeys {
     public static final Key<UUID> UUID = new Key<>(UUID.class, "uuid");
     public static final Key<UUID> SERVER_UUID = new Key<>(UUID.class, "server_uuid");
     public static final Key<String> NAME = new Key<>(String.class, "name");
-    public static final Key<Long> REGISTERED = new Key<>(Long.class, "registered");
+    public static final PlaceholderKey<Long> REGISTERED = new PlaceholderKey<>(Long.class, "registered");
 
     public static final Key<List<Session>> SESSIONS = new Key<>(new Type<List<Session>>() {}, "sessions");
     public static final Key<WorldTimes> WORLD_TIMES = new Key<>(WorldTimes.class, "world_times");
-    public static final Key<Long> LAST_SEEN = new Key<>(Long.class, "last_seen");
+    public static final PlaceholderKey<Long> LAST_SEEN = new PlaceholderKey<>(Long.class, "lastSeen");
 
     public static final Key<List<PlayerKill>> PLAYER_KILLS = new Key<>(new Type<List<PlayerKill>>() {}, "player_kills");
     public static final Key<Integer> PLAYER_KILL_COUNT = new Key<>(Integer.class, "player_kill_count");

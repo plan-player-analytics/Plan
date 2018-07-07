@@ -20,7 +20,7 @@ import static com.djrapitops.plan.data.store.keys.AnalysisKeys.*;
  *
  * @author Rsl1122
  */
-public class AnalysisPage extends Page {
+public class AnalysisPage implements Page {
 
     private final AnalysisContainer analysisContainer;
 
@@ -76,7 +76,7 @@ public class AnalysisPage extends Page {
                 WORLD_MAP_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES,
                 ACTIVITY_PIE_SERIES, CALENDAR_SERIES
         );
-        placeholderReplacer.addPlaceholdersFrom(analysisContainer, FormatUtils::cutDecimals,
+        placeholderReplacer.addAllPlaceholdersFrom(analysisContainer, FormatUtils::cutDecimals,
                 AVG_TPS_MONTH, AVG_TPS_WEEK, AVG_TPS_DAY,
                 AVG_CPU_MONTH, AVG_CPU_WEEK, AVG_CPU_DAY,
                 AVG_RAM_MONTH, AVG_RAM_WEEK, AVG_RAM_DAY,

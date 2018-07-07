@@ -31,7 +31,7 @@ public class Version18TransferTable extends TransferTable {
         db.getGeoInfoTable().createTable();
         execute("INSERT INTO plan_ips (" +
                 "user_id, ip, ip_hash, geolocation, last_used" +
-                ") SELECT user_id, ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, user_id");
+                ") SELECT user_id, ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, user_id, ip, geolocation");
         dropTable(tempTableName);
     }
 }

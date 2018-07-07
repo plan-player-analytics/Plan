@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 import com.djrapitops.plan.utilities.html.tables.PluginPlayersTable;
 import com.djrapitops.plugin.StaticHolder;
@@ -24,11 +25,12 @@ import java.util.*;
  */
 public class AnalysisPluginsTabContentCreator {
 
-    public static String[] createContent(List<UUID> uuids) {
-        if (uuids.isEmpty()) {
+    public static String[] createContent(PlayersMutator mutator) {
+        if (mutator.all().isEmpty()) {
             return new String[]{"<li><a>No Data</a></li>", ""};
         }
 
+        List<UUID> uuids = mutator.uuids();
         Map<PluginData, AnalysisContainer> containers = analyzeAdditionalPluginData(uuids);
 
         List<PluginData> order = new ArrayList<>(containers.keySet());
@@ -77,8 +79,7 @@ public class AnalysisPluginsTabContentCreator {
                 "<div class=\"card\">" +
                 "<div class=\"header\"><h2><i class=\"fa fa-users\"></i> Plugin Data</h2></div>" +
                 "<div class=\"body\">" +
-                // TODO Start using ServerContainer and PlayerContainers instead
-                new PluginPlayersTable(containers, new ArrayList<>()).parseHtml() +
+                new PluginPlayersTable(containers, mutator.all()).parseHtml() +
                 "</div></div></div>" +
                 "</div></div>";
 

@@ -4,6 +4,7 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.PlaceholderKey;
 import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.objects.Nickname;
@@ -29,7 +30,7 @@ public class PlayerKeys {
     public static final Key<String> NAME = CommonKeys.NAME;
     public static final Key<List<Nickname>> NICKNAMES = new Key<>(new Type<List<Nickname>>() {}, "nicknames");
 
-    public static final Key<Long> REGISTERED = CommonKeys.REGISTERED;
+    public static final PlaceholderKey<Long> REGISTERED = CommonKeys.REGISTERED;
 
     public static final Key<Integer> KICK_COUNT = new Key<>(Integer.class, "kick_count");
     public static final Key<List<GeoInfo>> GEO_INFO = new Key<>(new Type<List<GeoInfo>>() {}, "geo_info");
@@ -43,7 +44,7 @@ public class PlayerKeys {
     public static final Key<Integer> MOB_KILL_COUNT = CommonKeys.MOB_KILL_COUNT;
     public static final Key<Integer> DEATH_COUNT = CommonKeys.DEATH_COUNT;
     public static final Key<PerServerContainer> PER_SERVER = new Key<>(PerServerContainer.class, "per_server_data");
-    public static final Key<Long> LAST_SEEN = CommonKeys.LAST_SEEN;
+    public static final PlaceholderKey<Long> LAST_SEEN = CommonKeys.LAST_SEEN;
 
     public static final Key<Boolean> BANNED = CommonKeys.BANNED;
     public static final Key<Boolean> OPERATOR = CommonKeys.OPERATOR;

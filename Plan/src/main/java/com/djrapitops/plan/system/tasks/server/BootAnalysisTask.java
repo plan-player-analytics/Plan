@@ -21,7 +21,6 @@ public class BootAnalysisTask extends AbsRunnable {
         try {
             String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
             Log.info(bootAnalysisRunMsg);
-            // TODO Create a new system to prevent multiple concurrent Analysis
             WebExceptionLogger.logIfOccurs(this.getClass(), () ->
                     InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID()))
             );

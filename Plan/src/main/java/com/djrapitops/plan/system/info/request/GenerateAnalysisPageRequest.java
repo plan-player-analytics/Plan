@@ -18,6 +18,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,6 +29,7 @@ import java.util.UUID;
  */
 public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implements GenerateRequest {
 
+    private boolean runningAnalysis = false;
     private final UUID serverUUID;
 
     public GenerateAnalysisPageRequest(UUID serverUUID) {
@@ -52,8 +54,9 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
             throw new BadRequestException("Requested Analysis page from wrong server.");
         }
 
-        // TODO Create a new system to prevent multiple concurrent Analysis
-        generateAndCache(serverUUID);
+        if (!runningAnalysis) {
+            generateAndCache(serverUUID);
+        }
 
         return DefaultResponses.SUCCESS.get();
     }
@@ -66,11 +69,15 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
 
     @Override
     public void runLocally() throws WebException {
-        generateAndCache(serverUUID);
+        // Get the handler from ConnectionSystem and run the request.
+        InfoSystem.getInstance().getConnectionSystem()
+                .getInfoRequest(this.getClass().getSimpleName())
+                .handleRequest(Collections.singletonMap("server", serverUUID.toString()));
     }
 
     private String analyseAndGetHtml() throws InternalErrorException {
         try {
+            runningAnalysis = true;
             UUID serverUUID = ServerInfo.getServerUUID();
             Database db = Database.getActive();
 
@@ -84,6 +91,8 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
             throw new InternalErrorException("Analysis failed due to exception", e);
+        } finally {
+            runningAnalysis = false;
         }
     }
 

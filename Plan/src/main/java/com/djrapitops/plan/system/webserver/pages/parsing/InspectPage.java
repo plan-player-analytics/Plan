@@ -14,6 +14,7 @@ import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -27,7 +28,6 @@ import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
-import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
 import com.djrapitops.plan.utilities.html.graphs.calendar.PlayerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
@@ -42,14 +42,13 @@ import com.djrapitops.plugin.api.TimeAmount;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Used for parsing Inspect page out of database data and the html.
  *
  * @author Rsl1122
  */
-public class InspectPage extends Page {
+public class InspectPage implements Page {
 
     private final UUID uuid;
 
@@ -83,9 +82,11 @@ public class InspectPage extends Page {
     public String parse(PlayerContainer container, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
         long now = System.currentTimeMillis();
 
-        addValue("refresh", FormatUtils.formatTimeStampClock(now));
-        addValue("version", MiscUtils.getPlanVersion());
-        addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
+        PlaceholderReplacer replacer = new PlaceholderReplacer();
+
+        replacer.put("refresh", FormatUtils.formatTimeStampClock(now));
+        replacer.put("version", MiscUtils.getPlanVersion());
+        replacer.put("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
         String online = "Offline";
         Optional<Session> activeSession = SessionCache.getCachedSession(uuid);
@@ -97,36 +98,31 @@ public class InspectPage extends Page {
         }
 
         String playerName = container.getValue(PlayerKeys.NAME).orElse("Unknown");
-        long registered = container.getValue(PlayerKeys.REGISTERED).orElse(-1L);
         int timesKicked = container.getValue(PlayerKeys.KICK_COUNT).orElse(0);
-        long lastSeen = container.getValue(PlayerKeys.LAST_SEEN).orElse(-1L);
 
-        addValue("registered", Formatters.year().apply(() -> registered));
-        addValue("playerName", playerName);
-        addValue("kickCount", timesKicked);
+        replacer.addAllPlaceholdersFrom(container, Formatters.yearLongValue(),
+                PlayerKeys.REGISTERED, PlayerKeys.LAST_SEEN
+        );
 
-        addValue("lastSeen", Formatters.year().apply(() -> lastSeen));
+        replacer.put("playerName", playerName);
+        replacer.put("kickCount", timesKicked);
 
         PerServerContainer perServerContainer = container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer());
         PerServerDataMutator perServerDataMutator = new PerServerDataMutator(perServerContainer);
 
         Map<UUID, WorldTimes> worldTimesPerServer = perServerDataMutator.worldTimesPerServer();
-        addValue("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
-        addValue("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
-        addValue("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
-        addValue("serverPieColors", Theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
+        replacer.put("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
+        replacer.put("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+        replacer.put("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
+        replacer.put("serverPieColors", Theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
 
         String favoriteServer = serverNames.getOrDefault(perServerDataMutator.favoriteServer(), "Unknown");
-        addValue("favoriteServer", favoriteServer);
+        replacer.put("favoriteServer", favoriteServer);
 
-        addValue("tableBodyNicknames", new NicknameTable(
+        replacer.put("tableBodyNicknames", new NicknameTable(
                 container.getValue(PlayerKeys.NICKNAMES).orElse(new ArrayList<>()), serverNames)
                 .parseBody());
-        addValue("tableBodyIPs", new GeoInfoTable(container.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
-
-        Map<UUID, List<Session>> sessions = perServerDataMutator.sessionsPerServer();
-        Map<String, List<Session>> sessionsByServerName = sessions.entrySet().stream()
-                .collect(Collectors.toMap(entry -> serverNames.get(entry.getKey()), Map.Entry::getValue));
+        replacer.put("tableBodyIPs", new GeoInfoTable(container.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
 
         List<Session> allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
@@ -134,27 +130,26 @@ public class InspectPage extends Page {
 
         String sessionAccordionViewScript = "";
         if (allSessions.isEmpty()) {
-            addValue("accordionSessions", "<div class=\"body\">" + "<p>No Sessions</p>" + "</div>");
+            replacer.put("accordionSessions", "<div class=\"body\">" + "<p>No Sessions</p>" + "</div>");
         } else {
             if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
-                addValue("accordionSessions", new PlayerSessionTable(playerName, allSessions).parseHtml());
+                replacer.put("accordionSessions", new PlayerSessionTable(playerName, allSessions).parseHtml());
             } else {
                 SessionAccordion sessionAccordion = SessionAccordion.forPlayer(allSessions, () -> serverNames);
-                addValue("accordionSessions", sessionAccordion.toHtml());
+                replacer.put("accordionSessions", sessionAccordion.toHtml());
                 sessionAccordionViewScript = sessionAccordion.toViewScript();
             }
         }
 
-        // TODO Session table if setting is enabled
         ServerAccordion serverAccordion = new ServerAccordion(container, serverNames);
 
-        PlayerCalendar playerCalendar = new PlayerCalendar(allSessions, registered);
+        PlayerCalendar playerCalendar = new PlayerCalendar(container);
 
-        addValue("calendarSeries", playerCalendar.toCalendarSeries());
-        addValue("firstDay", 1);
+        replacer.put("calendarSeries", playerCalendar.toCalendarSeries());
+        replacer.put("firstDay", 1);
 
-        addValue("accordionServers", serverAccordion.toHtml());
-        addValue("sessionTabGraphViewFunctions", sessionAccordionViewScript + serverAccordion.toViewScript());
+        replacer.put("accordionServers", serverAccordion.toHtml());
+        replacer.put("sessionTabGraphViewFunctions", sessionAccordionViewScript + serverAccordion.toViewScript());
 
         long dayAgo = now - TimeAmount.DAY.ms();
         long weekAgo = now - TimeAmount.WEEK.ms();
@@ -197,70 +192,70 @@ public class InspectPage extends Page {
         long sessionAverageMonth = monthSessionsMutator.toAverageSessionLength();
 
         Formatter<Long> formatter = Formatters.timeAmount();
-        addValue("playtimeTotal", formatter.apply(playtime));
-        addValue("playtimeDay", formatter.apply(playtimeDay));
-        addValue("playtimeWeek", formatter.apply(playtimeWeek));
-        addValue("playtimeMonth", formatter.apply(playtimeMonth));
+        replacer.put("playtimeTotal", formatter.apply(playtime));
+        replacer.put("playtimeDay", formatter.apply(playtimeDay));
+        replacer.put("playtimeWeek", formatter.apply(playtimeWeek));
+        replacer.put("playtimeMonth", formatter.apply(playtimeMonth));
 
-        addValue("activeTotal", formatter.apply(activeTotal));
+        replacer.put("activeTotal", formatter.apply(activeTotal));
 
-        addValue("afkTotal", formatter.apply(afk));
-        addValue("afkDay", formatter.apply(afkDay));
-        addValue("afkWeek", formatter.apply(afkWeek));
-        addValue("afkMonth", formatter.apply(afkMonth));
+        replacer.put("afkTotal", formatter.apply(afk));
+        replacer.put("afkDay", formatter.apply(afkDay));
+        replacer.put("afkWeek", formatter.apply(afkWeek));
+        replacer.put("afkMonth", formatter.apply(afkMonth));
 
-        addValue("sessionLengthLongest", formatter.apply(longestSession));
-        addValue("sessionLongestDay", formatter.apply(longestSessionDay));
-        addValue("sessionLongestWeek", formatter.apply(longestSessionWeek));
-        addValue("sessionLongestMonth", formatter.apply(longestSessionMonth));
+        replacer.put("sessionLengthLongest", formatter.apply(longestSession));
+        replacer.put("sessionLongestDay", formatter.apply(longestSessionDay));
+        replacer.put("sessionLongestWeek", formatter.apply(longestSessionWeek));
+        replacer.put("sessionLongestMonth", formatter.apply(longestSessionMonth));
 
-        addValue("sessionLengthMedian", formatter.apply(sessionMedian));
-        addValue("sessionMedianDay", formatter.apply(sessionMedianDay));
-        addValue("sessionMedianWeek", formatter.apply(sessionMedianWeek));
-        addValue("sessionMedianMonth", formatter.apply(sessionMedianMonth));
+        replacer.put("sessionLengthMedian", formatter.apply(sessionMedian));
+        replacer.put("sessionMedianDay", formatter.apply(sessionMedianDay));
+        replacer.put("sessionMedianWeek", formatter.apply(sessionMedianWeek));
+        replacer.put("sessionMedianMonth", formatter.apply(sessionMedianMonth));
 
-        addValue("sessionAverage", formatter.apply(sessionAverage));
-        addValue("sessionAverageDay", formatter.apply(sessionAverageDay));
-        addValue("sessionAverageWeek", formatter.apply(sessionAverageWeek));
-        addValue("sessionAverageMonth", formatter.apply(sessionAverageMonth));
+        replacer.put("sessionAverage", formatter.apply(sessionAverage));
+        replacer.put("sessionAverageDay", formatter.apply(sessionAverageDay));
+        replacer.put("sessionAverageWeek", formatter.apply(sessionAverageWeek));
+        replacer.put("sessionAverageMonth", formatter.apply(sessionAverageMonth));
 
-        addValue("sessionCount", sessionCount);
-        addValue("sessionCountDay", sessionCountDay);
-        addValue("sessionCountWeek", sessionCountWeek);
-        addValue("sessionCountMonth", sessionCountMonth);
+        replacer.put("sessionCount", sessionCount);
+        replacer.put("sessionCountDay", sessionCountDay);
+        replacer.put("sessionCountWeek", sessionCountWeek);
+        replacer.put("sessionCountMonth", sessionCountMonth);
 
         String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
         WorldTimes worldTimes = container.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
 
         WorldPie worldPie = new WorldPie(worldTimes);
 
-        addValue("worldPieSeries", worldPie.toHighChartsSeries());
-        addValue("gmSeries", worldPie.toHighChartsDrilldown());
+        replacer.put("worldPieSeries", worldPie.toHighChartsSeries());
+        replacer.put("gmSeries", worldPie.toHighChartsDrilldown());
 
-        addValue("punchCardSeries", punchCardData);
+        replacer.put("punchCardSeries", punchCardData);
 
         long playerKillCount = allSessions.stream().map(Session::getPlayerKills).mapToLong(Collection::size).sum();
         long mobKillCount = allSessions.stream().mapToLong(Session::getMobKills).sum();
         long deathCount = allSessions.stream().mapToLong(Session::getDeaths).sum();
 
-        addValue("playerKillCount", playerKillCount);
-        addValue("mobKillCount", mobKillCount);
-        addValue("deathCount", deathCount);
+        replacer.put("playerKillCount", playerKillCount);
+        replacer.put("mobKillCount", mobKillCount);
+        replacer.put("deathCount", deathCount);
 
         ActivityIndex activityIndex = container.getActivityIndex(now);
 
-        addValue("activityIndexNumber", activityIndex.getFormattedValue());
-        addValue("activityIndexColor", activityIndex.getColor());
-        addValue("activityIndex", activityIndex.getGroup());
+        replacer.put("activityIndexNumber", activityIndex.getFormattedValue());
+        replacer.put("activityIndexColor", activityIndex.getColor());
+        replacer.put("activityIndex", activityIndex.getGroup());
 
-        addValue("playerStatus", HtmlStructure.playerStatus(online,
+        replacer.put("playerStatus", HtmlStructure.playerStatus(online,
                 container.getValue(PlayerKeys.BANNED).orElse(false),
                 container.getValue(PlayerKeys.OPERATOR).orElse(false)));
 
         if (!InfoSystem.getInstance().getConnectionSystem().isServerAvailable()) {
-            addValue("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
+            replacer.put("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
         }
 
-        return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("web/player.html"), placeHolders);
+        return replacer.apply(FileUtil.getStringFromResource("web/player.html"));
     }
 }

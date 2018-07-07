@@ -46,10 +46,8 @@ public class AnalyzeCommand extends CommandNode {
                 Server server = getServer(args).orElseGet(ServerInfo::getServer);
                 UUID serverUUID = server.getUuid();
 
-                // TODO Create a new system to prevent multiple concurrent Analysis
-                if (!ServerInfo.getServerUUID().equals(serverUUID)) {
-                    InfoSystem.getInstance().generateAnalysisPage(serverUUID);
-                }
+
+                InfoSystem.getInstance().generateAnalysisPage(serverUUID);
                 sendWebUserNotificationIfNecessary(sender);
                 sendLink(server, sender);
             } catch (DBOpException | WebException e) {

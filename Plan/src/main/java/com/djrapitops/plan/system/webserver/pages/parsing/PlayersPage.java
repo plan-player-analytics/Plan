@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class PlayersPage extends Page {
+public class PlayersPage implements Page {
 
     @Override
     public String toHtml() throws ParseException {

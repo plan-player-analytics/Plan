@@ -17,7 +17,6 @@ public class PeriodicAnalysisTask extends AbsRunnable {
     @Override
     public void run() {
         try {
-            // TODO Create a new system to prevent multiple concurrent Analysis
             WebExceptionLogger.logIfOccurs(this.getClass(), () ->
                     InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID()))
             );
