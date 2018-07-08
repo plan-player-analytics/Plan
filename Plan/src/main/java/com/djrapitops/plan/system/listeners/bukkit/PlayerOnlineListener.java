@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 /**
@@ -89,7 +90,7 @@ public class PlayerOnlineListener implements Listener {
         String world = player.getWorld().getName();
         String gm = player.getGameMode().name();
 
-        String ip = player.getAddress().getAddress().getHostAddress();
+        InetAddress address = player.getAddress().getAddress();
 
         String playerName = player.getName();
         String displayName = player.getDisplayName();
@@ -100,7 +101,7 @@ public class PlayerOnlineListener implements Listener {
 
         Processing.submit(
                 new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
-                        new IPUpdateProcessor(uuid, ip, time),
+                        new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)
                 )

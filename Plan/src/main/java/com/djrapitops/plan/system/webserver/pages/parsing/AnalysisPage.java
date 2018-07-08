@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.calculation.AnalysisData;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.IOException;
 
@@ -22,6 +23,7 @@ public class AnalysisPage extends Page {
     private final AnalysisData data;
 
     public AnalysisPage(AnalysisData analysisData) {
+        Verify.nullCheck(analysisData, () -> new IllegalArgumentException("Analysis failed, data object was null"));
         this.data = analysisData;
     }
 
