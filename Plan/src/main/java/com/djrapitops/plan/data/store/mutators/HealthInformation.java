@@ -1,3 +1,7 @@
+/*
+ * License is provided in the jar as LICENSE also here:
+ * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
+ */
 package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.data.store.Key;
@@ -252,5 +256,4 @@ public class HealthInformation {
         regularNewCompareSet.removeAll(veryActiveFWAG);
         return regularNewCompareSet.size();
     }
-
 }

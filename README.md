@@ -1,8 +1,8 @@
 # ![Player Analytics](https://puu.sh/t8vin.png)
 
 [![Build Status](https://travis-ci.org/Rsl1122/Plan-PlayerAnalytics.svg?branch=master)](https://travis-ci.org/Rsl1122/Plan-PlayerAnalytics)
-[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=com.djrapitops%3APlan)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
-[![Discord](https://img.shields.io/discord/364107873267089409.svg?logo=discord)](https://discord.gg/yXKmjzT)
+[![Discord](https://img.shields.io/discord/364107873267089409.svg?logo=discord)](https://discord.gg/yXKmjzT)  
+[![Quality Gate](https://sonarcloud.io/api/project_badges/quality_gate?project=com.djrapitops%3APlan)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 
 Player Analytics is a Bukkit plugin that gathers data about player activity & displays that data on an internal webserver.
 Originally the plugin only displayed data of other plugins, but now it gathers it's own data, while displaying data from various other plugins.
@@ -12,7 +12,7 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 ### Links
 - [Spigot, Resource page](https://www.spigotmc.org/resources/plan-player-analytics.32536/)
 - [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues)
-- [License](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml)
+- [License](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE)
 
 ## Documentation
 Documentation can be found [On the Wiki](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki)

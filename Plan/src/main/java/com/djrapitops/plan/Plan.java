@@ -3,7 +3,7 @@
  *    Copyright (C) 2017  Risto Lahtela / Rsl1122
  *
  *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the Plan License. (licence.yml)
+ *    it under the terms of the Plan License. (LICENSE)
  *    Modified software can only be redistributed if allowed in the licence.
  *
  *    This program is distributed in the hope that it will be useful,
@@ -15,7 +15,7 @@
  *    along with this program.
  *    If not it should be visible on the distribution page.
  *    Or here
- *    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml
+ *    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
 package com.djrapitops.plan;
 

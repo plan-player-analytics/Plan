@@ -1,6 +1,6 @@
 /*
- * Licence is provided in the jar as license.yml also here:
- * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
+ * License is provided in the jar as LICENSE also here:
+ * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
 package com.djrapitops.plan.system.listeners.bungee;
 
@@ -13,6 +13,7 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 /**
@@ -28,11 +29,11 @@ public class PlayerOnlineListener implements Listener {
             ProxiedPlayer player = event.getPlayer();
             UUID uuid = player.getUniqueId();
             String name = player.getName();
-            String ip = player.getAddress().getAddress().getHostAddress();
+            InetAddress address = player.getAddress().getAddress();
             long now = System.currentTimeMillis();
 
             Processing.submit(new BungeePlayerRegisterProcessor(uuid, name, now,
-                    new IPUpdateProcessor(uuid, ip, now))
+                    new IPUpdateProcessor(uuid, address, now))
             );
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);

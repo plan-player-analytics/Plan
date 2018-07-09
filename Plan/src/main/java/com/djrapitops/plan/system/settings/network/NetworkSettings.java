@@ -1,6 +1,6 @@
 /*
- * Licence is provided in the jar as license.yml also here:
- * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
+ * License is provided in the jar as LICENSE also here:
+ * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
 package com.djrapitops.plan.system.settings.network;
 
@@ -45,7 +45,7 @@ public class NetworkSettings {
         Processing.submitNonCritical(() -> {
             try {
                 new NetworkSettings().loadFromDatabase();
-            } catch (DBException | UnsupportedTransferDatabaseException e) {
+            } catch (UnsupportedTransferDatabaseException e) {
                 Log.toLog(NetworkSettings.class, e);
             }
         });
@@ -65,7 +65,7 @@ public class NetworkSettings {
         });
     }
 
-    public void loadFromDatabase() throws DBException, UnsupportedTransferDatabaseException {
+    public void loadFromDatabase() throws UnsupportedTransferDatabaseException {
         Log.debug("NetworkSettings: Fetch Config settings from database..");
         Optional<String> encodedConfigSettings = Database.getActive().transfer().getEncodedConfigSettings();
 
@@ -133,7 +133,7 @@ public class NetworkSettings {
         Database.getActive().transfer().storeConfigSettings(base64);
     }
 
-    private Map<String, Object> getConfigValues() throws DBException {
+    private Map<String, Object> getConfigValues() {
         Log.debug("NetworkSettings: Loading Config Values..");
         Map<String, Object> configValues = new HashMap<>();
         addConfigValue(configValues, DB_TYPE, "mysql");
@@ -197,7 +197,7 @@ public class NetworkSettings {
         }
     }
 
-    private void addServerSpecificValues(Map<String, Object> configValues) throws DBException {
+    private void addServerSpecificValues(Map<String, Object> configValues) {
         Log.debug("NetworkSettings: Adding Server-specific Config Values..");
         ServerSpecificSettings settings = Settings.serverSpecific();
 

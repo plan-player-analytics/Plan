@@ -1,6 +1,6 @@
 /*
- * Licence is provided in the jar as license.yml also here:
- * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
+ * License is provided in the jar as LICENSE also here:
+ * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
 package com.djrapitops.plan.system.processing.importing.importers;
 
@@ -18,6 +18,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.importing.ServerImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportRefiner;
+import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -231,7 +232,7 @@ public abstract class Importer {
                 .map(ip -> {
                     String geoLoc = GeolocationCache.getCountry(ip);
                     try {
-                        return new GeoInfo(ip, geoLoc, date);
+                        return new GeoInfo(ip, geoLoc, date, new SHA256Hash(ip).create());
                     } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
                         throw new IllegalArgumentException(e);
                     }

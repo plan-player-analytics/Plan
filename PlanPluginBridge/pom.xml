@@ -69,6 +69,10 @@
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+            <id>advanced-achievements-repo</id>
+            <url>https://raw.github.com/PyvesB/AdvancedAchievements/mvn-repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -94,9 +98,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.hm</groupId>
-            <artifactId>advanced.achievements</artifactId>
-            <version>5.2</version>
+            <groupId>com.hm.achievement</groupId>
+            <artifactId>advanced-achievements-api</artifactId>
+            <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

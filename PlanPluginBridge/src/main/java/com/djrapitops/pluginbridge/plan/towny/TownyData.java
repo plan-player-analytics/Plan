@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.utilities.Verify;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Coord;
 import com.palmergames.bukkit.towny.object.Resident;
@@ -29,7 +30,6 @@ import java.util.stream.Collectors;
  */
 public class TownyData extends PluginData {
 
-
     public TownyData() {
         super(ContainerSize.TAB, "Towny");
         super.setPluginIcon("bank");
@@ -37,33 +37,36 @@ public class TownyData extends PluginData {
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         String playerName = DataCache.getInstance().getName(uuid);
 
-        Resident resident = TownyUniverse.getDataSource().getResident(playerName);
+        try {
+            Resident resident = TownyUniverse.getDataSource().getResident(playerName);
 
-        if (resident.hasTown()) {
-            Town town = resident.getTown();
-            String townName = town.getName();
-            String mayorName = town.getMayor().getName();
-            String townMayor = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mayorName), mayorName);
+            if (resident.hasTown()) {
+                Town town = resident.getTown();
+                String townName = town.getName();
+                String mayorName = town.getMayor().getName();
+                String townMayor = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mayorName), mayorName);
 
-            inspectContainer.addValue(getWithIcon("Town", "bank", "brown"), townName);
-            inspectContainer.addValue(getWithIcon("Town Mayor", "user", "brown"), townMayor);
+                inspectContainer.addValue(getWithIcon("Town", "bank", "brown"), townName);
+                inspectContainer.addValue(getWithIcon("Town Mayor", "user", "brown"), townMayor);
 
-            try {
-                Coord homeBlock = town.getHomeBlock().getCoord();
-                String coordinates = "x: " + homeBlock.getX() + " z: " + homeBlock.getZ();
-                inspectContainer.addValue(getWithIcon("Town Coordinates", "map-pin", "red"), coordinates);
-            } catch (TownyException e) {
+                try {
+                    Coord homeBlock = town.getHomeBlock().getCoord();
+                    String coordinates = "x: " + homeBlock.getX() + " z: " + homeBlock.getZ();
+                    inspectContainer.addValue(getWithIcon("Town Coordinates", "map-pin", "red"), coordinates);
+                } catch (TownyException e) {
+                }
+
+                int residents = town.getResidents().size();
+                inspectContainer.addValue(getWithIcon("Town Residents", "users", "brown"), residents);
+                return inspectContainer;
             }
-
-            int residents = town.getResidents().size();
-            inspectContainer.addValue(getWithIcon("Town Residents", "users", "brown"), residents);
-        } else {
-            inspectContainer.addValue(getWithIcon("Town", "bank", "brown"), "No Town");
+        } catch (NotRegisteredException ignore) {
+            /* No Towny Resident. */
         }
-
+        inspectContainer.addValue(getWithIcon("Town", "bank", "brown"), "No Town");
         return inspectContainer;
     }
 

@@ -5,7 +5,7 @@ before_install:
   - pwd
   - cd PlanPluginBridge
   - ls
-  - mvn install:install-file -Dfile=/home/travis/build/Rsl1122/Plan-PlayerAnalytics/PlanPluginBridge/PlanPluginBridge-4.3.0.jar -DpomFile=/home/travis/build/Rsl1122/Plan-PlayerAnalytics/PlanPluginBridge/pom.xml
+  - mvn install:install-file -Dfile=./PlanPluginBridge-4.3.0.jar -DpomFile=./pom.xml
   - cd ../Plan
   - ls
 install:
@@ -19,7 +19,8 @@ jdk:
   - oraclejdk8
 script:
   - pwd
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then mvn test; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar; fi'
 cache:
   directories:
     - '$HOME/.m2/repository'

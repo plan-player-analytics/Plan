@@ -208,6 +208,9 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
             for (UserInfo userInfo : serverUserInfo) {
                 UUID uuid = userInfo.getUuid();
+                if (uuid == null) {
+                    continue;
+                }
                 PerServerContainer perServerContainer = perServerContainers.getOrDefault(uuid, new PerServerContainer());
                 DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
                 container.putRawData(PlayerKeys.REGISTERED, userInfo.getRegistered());

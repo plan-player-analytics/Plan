@@ -1,6 +1,6 @@
 /*
- * Licence is provided in the jar as license.yml also here:
- * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
+ * License is provided in the jar as LICENSE also here:
+ * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
@@ -12,6 +12,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
@@ -23,10 +24,10 @@ import java.util.UUID;
 public class IPUpdateProcessor implements CriticalRunnable {
 
     private final UUID uuid;
-    private final String ip;
+    private final InetAddress ip;
     private final long time;
 
-    public IPUpdateProcessor(UUID uuid, String ip, long time) {
+    public IPUpdateProcessor(UUID uuid, InetAddress ip, long time) {
         this.uuid = uuid;
         this.ip = ip;
         this.time = time;
@@ -35,7 +36,7 @@ public class IPUpdateProcessor implements CriticalRunnable {
     @Override
     public void run() {
         if (Settings.DATA_GEOLOCATIONS.isTrue()) {
-            String country = GeolocationCache.getCountry(ip);
+            String country = GeolocationCache.getCountry(ip.getHostAddress());
             try {
                 GeoInfo geoInfo = new GeoInfo(ip, country, time);
                 Database.getActive().save().geoInfo(uuid, geoInfo);

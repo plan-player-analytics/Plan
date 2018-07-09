@@ -3,6 +3,8 @@ package com.djrapitops.plan.utilities;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
 
+import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,23 +113,40 @@ public class FormatUtils {
         return new DecimalFormat(Settings.FORMAT_DECIMALS.toString()).format(d);
     }
 
-    public static String formatIP(String ip) {
+    public static String formatIP(InetAddress address) {
+        String ip = address.getHostAddress();
         if ("localhost".equals(ip)) {
             return ip;
         }
-        StringBuilder b = new StringBuilder();
-        int i = 0;
-        for (String part : ip.split("\\.")) {
-            if (i >= 2) {
-                break;
+        if (address instanceof Inet6Address) {
+            StringBuilder b = new StringBuilder();
+            int i = 0;
+            for (String part : ip.split(":")) {
+                if (i >= 3) {
+                    break;
+                }
+
+                b.append(part).append(':');
+
+                i++;
             }
 
-            b.append(part).append('.');
+            return b.append("xx..").toString();
+        } else {
+            StringBuilder b = new StringBuilder();
+            int i = 0;
+            for (String part : ip.split("\\.")) {
+                if (i >= 2) {
+                    break;
+                }
 
-            i++;
+                b.append(part).append('.');
+
+                i++;
+            }
+
+            return b.append("xx.xx").toString();
         }
-
-        return b.append("xx.xx").toString();
     }
 
     /**

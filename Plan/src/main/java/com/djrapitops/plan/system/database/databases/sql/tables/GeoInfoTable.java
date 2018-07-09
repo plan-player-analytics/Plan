@@ -20,6 +20,8 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -100,7 +102,7 @@ public class GeoInfoTable extends UserIDTable {
                                             continue;
                                         }
                                         GeoInfo updatedInfo = new GeoInfo(
-                                                geoInfo.getIp(),
+                                                InetAddress.getByName(geoInfo.getIp()),
                                                 geoInfo.getGeolocation(),
                                                 geoInfo.getDate()
                                         );
@@ -108,7 +110,7 @@ public class GeoInfoTable extends UserIDTable {
                                         statement.setString(2, updatedInfo.getIpHash());
                                         statement.setString(3, geoInfo.getIp());
                                         statement.addBatch();
-                                    } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+                                    } catch (UnknownHostException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
                                         if (Settings.DEV_MODE.isTrue()) {
                                             Log.toLog(this.getClass(), e);
                                         }
