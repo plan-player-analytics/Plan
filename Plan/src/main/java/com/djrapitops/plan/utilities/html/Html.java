@@ -74,25 +74,25 @@ public enum Html {
             "<th><i class=\"fa fa-user\"></i> Name</th>" +
             "<th><i class=\"fa fa-check\"></i> Activity Index</th>" +
             "<th><i class=\"fa fa-clock-o\"></i> Playtime</th>" +
-            "<th><i class=\"fa fa-calendar-plus-o\"></i> Sessions</th>" +
+            "<th><i class=\"far fa-calendar-plus\"></i> Sessions</th>" +
             "<th><i class=\"fa fa-user-plus\"></i> Registered</th>" +
-            "<th><i class=\"fa fa-calendar-check-o\"></i> Last Seen</th>" +
+            "<th><i class=\"far fa-calendar-check\"></i> Last Seen</th>" +
             "<th><i class=\"fa fa-globe\"></i> Geolocation</th></thead>" +
             "<tfoot><tr><th><i class=\"fa fa-user\"></i> Name</th>" +
             "<th><i class=\"fa fa-check\"></i> Activity Index</th>" +
             "<th><i class=\"fa fa-clock-o\"></i> Playtime</th>" +
-            "<th><i class=\"fa fa-calendar-plus-o\"></i> Sessions</th>" +
+            "<th><i class=\"far fa-calendar-plus\"></i> Sessions</th>" +
             "<th><i class=\"fa fa-user-plus\"></i> Registered</th>" +
-            "<th><i class=\"fa fa-calendar-check-o\"></i> Last Seen</th>" +
+            "<th><i class=\"far fa-calendar-check\"></i> Last Seen</th>" +
             "<th><i class=\"fa fa-globe\"></i> Geolocation</th>" +
             "</tr></tfoot><tbody>${0}</tbody></table>"),
     TABLE_PLAYERS("<table class=\"table table-bordered table-striped table-hover player-table dataTable\"><thead><tr>" +
             "<th><i class=\"fa fa-user\"></i> Name</th>" +
             "<th><i class=\"fa fa-check\"></i> Activity Index</th>" +
             "<th><i class=\"fa fa-clock-o\"></i> Playtime</th>" +
-            "<th><i class=\"fa fa-calendar-plus-o\"></i> Sessions</th>" +
+            "<th><i class=\"far fa-calendar-plus\"></i> Sessions</th>" +
             "<th><i class=\"fa fa-user-plus\"></i> Registered</th>" +
-            "<th><i class=\"fa fa-calendar-check-o\"></i> Last Seen</th>" +
+            "<th><i class=\"far fa-calendar-check\"></i> Last Seen</th>" +
             "<th><i class=\"fa fa-globe\"></i> Geolocation</th></thead>" +
             "<tbody>${0}</tbody></table>"),
     TABLE_SESSIONS_START(TABLE_START_3.parse("Session Started", "Session Ended", "Session Length")),
