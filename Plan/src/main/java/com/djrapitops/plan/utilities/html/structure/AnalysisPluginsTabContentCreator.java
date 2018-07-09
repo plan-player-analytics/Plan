@@ -25,13 +25,16 @@ import java.util.*;
  */
 public class AnalysisPluginsTabContentCreator {
 
-    public static String[] createContent(PlayersMutator mutator) {
+    public static String[] createContent(
+            PlayersMutator mutator,
+            com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer
+    ) {
         if (mutator.all().isEmpty()) {
             return new String[]{"<li><a>No Data</a></li>", ""};
         }
 
         List<UUID> uuids = mutator.uuids();
-        Map<PluginData, AnalysisContainer> containers = analyzeAdditionalPluginData(uuids);
+        Map<PluginData, AnalysisContainer> containers = analyzeAdditionalPluginData(uuids, analysisContainer);
 
         List<PluginData> order = new ArrayList<>(containers.keySet());
         order.sort(new PluginDataNameComparator());
@@ -90,7 +93,10 @@ public class AnalysisPluginsTabContentCreator {
         };
     }
 
-    private static Map<PluginData, AnalysisContainer> analyzeAdditionalPluginData(Collection<UUID> uuids) {
+    private static Map<PluginData, AnalysisContainer> analyzeAdditionalPluginData(
+            Collection<UUID> uuids,
+            com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer
+    ) {
         Map<PluginData, AnalysisContainer> containers = new HashMap<>();
 
         List<PluginData> sources = HookHandler.getInstance().getAdditionalDataSources();
@@ -101,6 +107,7 @@ public class AnalysisPluginsTabContentCreator {
             try {
                 Benchmark.start("Analysis", "Analysis: Source " + source.getSourcePlugin());
 
+                source.setAnalysisData(analysisContainer);
                 AnalysisContainer container = source.getServerData(uuids, new AnalysisContainer());
                 if (container != null && !container.isEmpty()) {
                     containers.put(source, container);
