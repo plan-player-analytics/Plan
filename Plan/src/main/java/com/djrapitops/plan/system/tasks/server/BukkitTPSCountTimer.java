@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.tasks.server;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -43,7 +42,7 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
     private TPS calculateTPS(long diff, long now) {
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         int availableProcessors = operatingSystemMXBean.getAvailableProcessors();
-        double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
+        double averageCPUUsage = operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0;
 
         if (averageCPUUsage < 0) { // If unavailable, getSystemLoadAverage() returns -1
             averageCPUUsage = -1;

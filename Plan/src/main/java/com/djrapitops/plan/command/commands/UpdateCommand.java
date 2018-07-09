@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
@@ -101,7 +101,7 @@ public class UpdateCommand extends CommandNode {
         try {
             cancel(sender, Database.getActive().fetch().getServers());
             sender.sendMessage("§aCancel operation performed.");
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             sender.sendMessage("§cDatabase error occurred, cancel could not be performed.");
             Log.toLog(this.getClass().getName(), e);
         }
@@ -120,7 +120,7 @@ public class UpdateCommand extends CommandNode {
         try {
             List<Server> servers = Database.getActive().fetch().getServers();
             update(sender, servers, args);
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }
@@ -228,7 +228,7 @@ public class UpdateCommand extends CommandNode {
                 success = false;
             }
             return success;
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             sender.sendMessage("§cDatabase error occurred, update has been cancelled.");
             Log.toLog(this.getClass().getName(), e);
             return false;

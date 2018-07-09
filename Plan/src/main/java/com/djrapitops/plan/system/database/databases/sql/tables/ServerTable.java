@@ -73,7 +73,7 @@ public class ServerTable extends Table {
         }
     }
 
-    private void updateServerInfo(Server info) throws SQLException {
+    private void updateServerInfo(Server info) {
         String sql = Update.values(tableName,
                 Col.SERVER_UUID,
                 Col.NAME,
@@ -96,7 +96,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public void saveCurrentServerInfo(Server info) throws SQLException {
+    public void saveCurrentServerInfo(Server info) {
         if (getServerID(info.getUuid()).isPresent()) {
             updateServerInfo(info);
         } else {
@@ -109,9 +109,8 @@ public class ServerTable extends Table {
      *
      * @param serverUUID UUID of the server.
      * @return ID or or empty optional.
-     * @throws SQLException DB Error
      */
-    public Optional<Integer> getServerID(UUID serverUUID) throws SQLException {
+    public Optional<Integer> getServerID(UUID serverUUID) {
         String sql = Select.from(tableName,
                 Col.SERVER_ID)
                 .where(Col.SERVER_UUID + "=?")
@@ -139,9 +138,8 @@ public class ServerTable extends Table {
      *
      * @param info Info to instert (All variables should be present.
      * @throws IllegalStateException if one of the Server variables is null
-     * @throws SQLException          DB Error
      */
-    private void saveNewServerInfo(Server info) throws SQLException {
+    private void saveNewServerInfo(Server info) {
         UUID uuid = info.getUuid();
         String name = info.getName();
         String webAddress = info.getWebAddress();
@@ -164,9 +162,8 @@ public class ServerTable extends Table {
      *
      * @param serverUUID UUID of the server.
      * @return Name or empty optional.
-     * @throws SQLException DB Error
      */
-    public Optional<String> getServerName(UUID serverUUID) throws SQLException {
+    public Optional<String> getServerName(UUID serverUUID) {
         String sql = Select.from(tableName,
                 Col.NAME)
                 .where(Col.SERVER_UUID + "=?")
@@ -189,7 +186,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public Map<Integer, String> getServerNamesByID() throws SQLException {
+    public Map<Integer, String> getServerNamesByID() {
         String sql = Select.from(tableName,
                 Col.SERVER_ID, Col.NAME)
                 .toString();
@@ -207,7 +204,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public Map<UUID, String> getServerNames() throws SQLException {
+    public Map<UUID, String> getServerNames() {
         String sql = Select.from(tableName,
                 Col.SERVER_UUID, Col.NAME)
                 .toString();
@@ -225,7 +222,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public Map<Integer, UUID> getServerUUIDsByID() throws SQLException {
+    public Map<Integer, UUID> getServerUUIDsByID() {
         String sql = Select.from(tableName,
                 Col.SERVER_ID, Col.SERVER_UUID)
                 .toString();
@@ -247,9 +244,8 @@ public class ServerTable extends Table {
      * Used to get BungeeCord WebServer info if present.
      *
      * @return information about Bungee server.
-     * @throws SQLException DB Error
      */
-    public Optional<Server> getBungeeInfo() throws SQLException {
+    public Optional<Server> getBungeeInfo() {
         String sql = Select.from(tableName, "*")
                 .where(Col.NAME + "=?")
                 .toString();
@@ -276,7 +272,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public Map<UUID, Server> getBukkitServers() throws SQLException {
+    public Map<UUID, Server> getBukkitServers() {
         String sql = Select.from(tableName, "*")
                 .where(Col.NAME + "!=?")
                 .toString();
@@ -304,7 +300,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public List<UUID> getServerUUIDs() throws SQLException {
+    public List<UUID> getServerUUIDs() {
         String sql = Select.from(tableName, Col.SERVER_UUID)
                 .toString();
 
@@ -325,7 +321,7 @@ public class ServerTable extends Table {
         return Col.SERVER_UUID.get();
     }
 
-    public void insertAllServers(List<Server> allServer) throws SQLException {
+    public void insertAllServers(List<Server> allServer) {
         if (Verify.isEmpty(allServer)) {
             return;
         }
@@ -353,7 +349,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public Optional<UUID> getServerUUID(String serverName) throws SQLException {
+    public Optional<UUID> getServerUUID(String serverName) {
         String sql = Select.from(tableName,
                 Col.SERVER_UUID)
                 .where(Col.NAME + "=?")
@@ -376,7 +372,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public Optional<Server> getServerInfo(UUID serverUUID) throws SQLException {
+    public Optional<Server> getServerInfo(UUID serverUUID) {
         String sql = Select.from(tableName, "*")
                 .where(Col.SERVER_UUID + "=?")
                 .toString();
@@ -402,7 +398,7 @@ public class ServerTable extends Table {
         });
     }
 
-    public int getMaxPlayers() throws SQLException {
+    public int getMaxPlayers() {
         String sql = "SELECT SUM(" + Col.MAX_PLAYERS + ") AS max FROM " + tableName;
 
         return query(new QueryAllStatement<Integer>(sql) {

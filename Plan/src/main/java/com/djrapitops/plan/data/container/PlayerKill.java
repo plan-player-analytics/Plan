@@ -1,7 +1,6 @@
 package com.djrapitops.plan.data.container;
 
-import com.djrapitops.plan.data.Actions;
-import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -12,10 +11,10 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PlayerKill {
+public class PlayerKill implements DateHolder {
 
     private final UUID victim;
-    private final long time;
+    private final long date;
     private final String weapon;
 
     /**
@@ -23,12 +22,12 @@ public class PlayerKill {
      *
      * @param victim UUID of the victim.
      * @param weapon Weapon used.
-     * @param time   Epoch millisecond at which the kill occurred.
+     * @param date   Epoch millisecond at which the kill occurred.
      */
-    public PlayerKill(UUID victim, String weapon, long time) {
+    public PlayerKill(UUID victim, String weapon, long date) {
         this.victim = victim;
         this.weapon = weapon;
-        this.time = time;
+        this.date = date;
     }
 
     /**
@@ -40,13 +39,9 @@ public class PlayerKill {
         return victim;
     }
 
-    /**
-     * Get the Epoch millisecond the kill occurred.
-     *
-     * @return long in ms.
-     */
-    public long getTime() {
-        return time;
+    @Override
+    public long getDate() {
+        return date;
     }
 
     /**
@@ -58,31 +53,26 @@ public class PlayerKill {
         return weapon;
     }
 
-    public Action convertToAction() {
-        String name = DataCache.getInstance().getName(victim);
-        return new Action(time, Actions.KILLED, name + " with " + weapon);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlayerKill that = (PlayerKill) o;
-        return time == that.time &&
+        return date == that.date &&
                 Objects.equals(victim, that.victim) &&
                 Objects.equals(weapon, that.weapon);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(victim, time, weapon);
+        return Objects.hash(victim, date, weapon);
     }
 
     @Override
     public String toString() {
         return "PlayerKill{" +
                 "victim=" + victim + ", " +
-                "time=" + time + ", " +
+                "date=" + date + ", " +
                 "weapon='" + weapon + "'}";
     }
 }

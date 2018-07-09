@@ -65,7 +65,7 @@ public class BukkitMockUtil extends MockUtil {
     }
 
     public BukkitMockUtil withLogging() {
-        doCallRealMethod().when(planMock).log(Mockito.anyString(), Mockito.anyString());
+        Mockito.doCallRealMethod().when(planMock).log(Mockito.anyString(), Mockito.anyString());
         TestLogger testLogger = new TestLogger();
         doReturn(testLogger).when(planMock).getLogger();
         return this;

@@ -5,112 +5,46 @@
 package com.djrapitops.plan.system.webserver.pages.parsing;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.store.containers.NetworkContainer;
+import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.NetworkPageContent;
-import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
-import com.djrapitops.plan.utilities.html.HtmlUtils;
-import com.djrapitops.plan.utilities.html.graphs.WorldMap;
-import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
-import com.djrapitops.plugin.api.TimeAmount;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
 
 /**
  * Html String parser for /network page.
  *
  * @author Rsl1122
  */
-public class NetworkPage extends Page {
+public class NetworkPage implements Page {
 
     @Override
     public String toHtml() throws ParseException {
         try {
-            UUID serverUUID = ServerInfo.getServerUUID();
-            long now = System.currentTimeMillis();
             Database database = Database.getActive();
-            List<TPS> networkOnlineData = database.fetch().getNetworkOnlineData();
-            List<String> geolocations = database.fetch().getNetworkGeolocations();
+            NetworkContainer networkContainer = database.fetch().getNetworkContainer();
 
-            peakTimes(serverUUID, now, database);
-
-            uniquePlayers(now, database);
-
-            addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
-            addValue("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
-            addValue("version", VersionCheckSystem.getCurrentVersion());
-            addValue("playersOnlineSeries", new OnlineActivityGraph(networkOnlineData).toHighChartsSeries());
-            addValue("playersGraphColor", Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
-            addValue("worldMapColLow", Theme.getValue(ThemeVal.WORLD_MAP_LOW));
-            addValue("worldMapColHigh", Theme.getValue(ThemeVal.WORLD_MAP_HIGH));
-            addValue("playersOnline", ServerInfo.getServerProperties().getOnlinePlayers());
-
-            addValue("playersTotal", database.count().getNetworkPlayerCount());
-
-            addValue("geoMapSeries", new WorldMap(geolocations).toHighChartsSeries());
-
-            List<Long> registerDates = database.fetch().getRegisterDates();
-            addValue("playersNewDay", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.DAY.ms(), now));
-            addValue("playersNewWeek", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.WEEK.ms(), now));
-            addValue("playersNewMonth", AnalysisUtils.getNewPlayers(registerDates, TimeAmount.MONTH.ms(), now));
-
+            PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
+            placeholderReplacer.addAllPlaceholdersFrom(networkContainer,
+                    VERSION, NETWORK_NAME, TIME_ZONE,
+                    PLAYERS_ONLINE, PLAYERS_ONLINE_SERIES, PLAYERS_TOTAL, PLAYERS_GRAPH_COLOR,
+                    REFRESH_TIME_F, RECENT_PEAK_TIME_F, ALL_TIME_PEAK_TIME_F,
+                    PLAYERS_ALL_TIME_PEAK, PLAYERS_RECENT_PEAK,
+                    PLAYERS_DAY, PLAYERS_WEEK, PLAYERS_MONTH,
+                    PLAYERS_NEW_DAY, PLAYERS_NEW_WEEK, PLAYERS_NEW_MONTH,
+                    WORLD_MAP_SERIES, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR
+            );
             NetworkPageContent networkPageContent = (NetworkPageContent)
                     ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
-            addValue("tabContentServers", networkPageContent.getContents());
+            placeholderReplacer.put("tabContentServers", networkPageContent.getContents());
 
-            return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("web/network.html"), placeHolders);
+            return placeholderReplacer.apply(FileUtil.getStringFromResource("web/network.html"));
         } catch (Exception e) {
             throw new ParseException(e);
-        }
-    }
-
-    private void uniquePlayers(long now, Database db) throws DBException {
-        Map<UUID, Map<UUID, List<Session>>> allSessions = db.fetch().getSessionsInLastMonth();
-        Map<UUID, List<Session>> userSessions = AnalysisUtils.sortSessionsByUser(allSessions);
-
-        long dayAgo = now - TimeAmount.DAY.ms();
-        long weekAgo = now - TimeAmount.WEEK.ms();
-        long monthAgo = now - TimeAmount.MONTH.ms();
-
-        addValue("playersUniqueDay", AnalysisUtils.getUniquePlayers(userSessions, dayAgo));
-        addValue("playersUniqueWeek", AnalysisUtils.getUniquePlayers(userSessions, weekAgo));
-        addValue("playersUniqueMonth", AnalysisUtils.getUniquePlayers(userSessions, monthAgo));
-    }
-
-    private void peakTimes(UUID serverUUID, long now, Database db) throws DBException {
-        Optional<TPS> allTimePeak = db.fetch().getAllTimePeak(serverUUID);
-        Optional<TPS> lastPeak = db.fetch().getPeakPlayerCount(serverUUID, now - TimeAmount.DAY.ms() * 2L);
-
-        if (allTimePeak.isPresent()) {
-            TPS tps = allTimePeak.get();
-            addValue("bestPeakTime", FormatUtils.formatTimeStampYear(tps.getDate()));
-            addValue("playersBestPeak", tps.getPlayers());
-        } else {
-            addValue("bestPeakTime", "No Data");
-            addValue("playersBestPeak", "");
-        }
-        if (lastPeak.isPresent()) {
-            TPS tps = lastPeak.get();
-            addValue("lastPeakTime", FormatUtils.formatTimeStampYear(tps.getDate()));
-            addValue("playersLastPeak", tps.getPlayers());
-        } else {
-            addValue("lastPeakTime", "No Data");
-            addValue("playersLastPeak", "");
         }
     }
 }

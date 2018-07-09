@@ -25,7 +25,9 @@ public class HtmlUtils {
      * @param html       Html to replace placeholders from
      * @param replaceMap Placeholders and values
      * @return Html with placeholders replaced
+     * @deprecated Use {@link com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer} instead.
      */
+    @Deprecated
     public static String replacePlaceholders(String html, Map<String, Serializable> replaceMap) {
         StringSubstitutor sub = new StringSubstitutor(replaceMap);
         sub.setEnableSubstitutionInVariables(true);

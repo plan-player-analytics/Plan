@@ -5,8 +5,6 @@ import com.djrapitops.plan.system.database.databases.operation.BackupOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.move.BatchOperationTable;
 
-import java.sql.SQLException;
-
 public class SQLBackupOps extends SQLOps implements BackupOperations {
 
     public SQLBackupOps(SQLDB db) {
@@ -14,7 +12,7 @@ public class SQLBackupOps extends SQLOps implements BackupOperations {
     }
 
     @Override
-    public void backup(Database toDatabase) throws SQLException {
+    public void backup(Database toDatabase) {
         BatchOperationTable toDB = new BatchOperationTable((SQLDB) toDatabase);
         BatchOperationTable fromDB = new BatchOperationTable(db);
 
@@ -23,7 +21,7 @@ public class SQLBackupOps extends SQLOps implements BackupOperations {
     }
 
     @Override
-    public void restore(Database fromDatabase) throws SQLException {
+    public void restore(Database fromDatabase) {
         fromDatabase.backup().backup(db);
     }
 }

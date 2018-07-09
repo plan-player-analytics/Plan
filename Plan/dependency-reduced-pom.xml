@@ -35,7 +35,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.1.1</version>
+          <version>3.1.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -65,21 +65,21 @@
               <pattern>org.apache</pattern>
               <shadedPattern>plan.org.apache</shadedPattern>
               <excludes>
-                <exclude>org.apache.logging.**</exclude>
+                  <exclude>org.apache.logging.**</exclude>
               </excludes>
             </relocation>
             <relocation>
               <pattern>com.maxmind</pattern>
               <shadedPattern>plan.com.maxmind</shadedPattern>
               <excludes>
-                <exclude>org.apache.logging.**</exclude>
+                  <exclude>org.apache.logging.**</exclude>
               </excludes>
             </relocation>
             <relocation>
               <pattern>com.fasterxml</pattern>
               <shadedPattern>plan.com.fasterxml</shadedPattern>
               <excludes>
-                <exclude>org.apache.logging.**</exclude>
+                  <exclude>org.apache.logging.**</exclude>
               </excludes>
             </relocation>
           </relocations>
