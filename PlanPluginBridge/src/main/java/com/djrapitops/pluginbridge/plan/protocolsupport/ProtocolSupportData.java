@@ -4,6 +4,7 @@
  */
 package com.djrapitops.pluginbridge.plan.protocolsupport;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
@@ -13,7 +14,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.viaversion.Protocol;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class ProtocolSupportData extends PluginData {
 
             inspectContainer.addValue(getWithIcon("Last Join Version", "signal", "light-green"),
                     protocolVersion != -1 ? Protocol.getMCVersion(protocolVersion) : "Not Yet Known");
-        } catch (SQLException ex) {
+        } catch (DBOpException ex) {
             Log.toLog(this.getClass().getName(), ex);
         }
 
@@ -56,7 +56,7 @@ public class ProtocolSupportData extends PluginData {
 
         try {
             versions = table.getProtocolVersions();
-        } catch (SQLException ex) {
+        } catch (DBOpException ex) {
             Log.toLog(this.getClass().getName(), ex);
             return analysisContainer;
         }

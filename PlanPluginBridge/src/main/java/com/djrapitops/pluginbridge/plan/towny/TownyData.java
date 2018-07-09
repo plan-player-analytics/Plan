@@ -9,6 +9,8 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.Html;
@@ -91,7 +93,13 @@ public class TownyData extends PluginData {
                         .forEach(uuid -> userTowns.put(uuid, uuid.equals(mayorUUID) ? "<b>" + townName + "</b>" : townName));
             }
             analysisContainer.addPlayerTableValues(getWithIcon("Town", "bank"), userTowns);
-            analysisContainer.addHtml("townAccordion", TownAccordionCreator.createAccordion(towns));
+
+            TownsAccordion townsAccordion = new TownsAccordion(
+                    towns,
+                    analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
+            );
+
+            analysisContainer.addHtml("townAccordion", townsAccordion.toHtml());
         }
 
         return analysisContainer;

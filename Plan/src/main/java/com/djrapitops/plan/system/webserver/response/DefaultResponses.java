@@ -4,8 +4,6 @@
  */
 package com.djrapitops.plan.system.webserver.response;
 
-import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;
-import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 

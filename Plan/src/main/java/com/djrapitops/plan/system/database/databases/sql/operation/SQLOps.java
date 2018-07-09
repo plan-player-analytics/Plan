@@ -9,7 +9,6 @@ public class SQLOps {
 
     protected final UsersTable usersTable;
     protected final UserInfoTable userInfoTable;
-    protected final ActionsTable actionsTable;
     protected final KillsTable killsTable;
     protected final NicknamesTable nicknamesTable;
     protected final SessionsTable sessionsTable;
@@ -27,7 +26,6 @@ public class SQLOps {
 
         usersTable = db.getUsersTable();
         userInfoTable = db.getUserInfoTable();
-        actionsTable = db.getActionsTable();
         killsTable = db.getKillsTable();
         nicknamesTable = db.getNicknamesTable();
         sessionsTable = db.getSessionsTable();

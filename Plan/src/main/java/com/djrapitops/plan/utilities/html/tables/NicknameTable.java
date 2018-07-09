@@ -5,6 +5,10 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
@@ -18,7 +22,7 @@ import java.util.UUID;
  */
 public class NicknameTable extends TableContainer {
 
-    public NicknameTable(Map<UUID, List<String>> nicknames, Map<UUID, String> serverNames) {
+    public NicknameTable(List<Nickname> nicknames, Map<UUID, String> serverNames) {
         super("Nickname", "Server");
 
         if (nicknames.isEmpty()) {
@@ -28,15 +32,16 @@ public class NicknameTable extends TableContainer {
         }
     }
 
-    private void addValues(Map<UUID, List<String>> nicknames, Map<UUID, String> serverNames) {
-        for (Map.Entry<UUID, List<String>> entry : nicknames.entrySet()) {
-            String serverName = serverNames.getOrDefault(entry.getKey(), "Unknown");
-            for (String nick : entry.getValue()) {
-                addRow(
-                        HtmlUtils.swapColorsToSpan(HtmlUtils.removeXSS(nick)),
-                        serverName
-                );
-            }
+    private void addValues(List<Nickname> nicknames, Map<UUID, String> serverNames) {
+        Formatter<DateHolder> formatter = Formatters.day();
+        for (Nickname nickname : nicknames) {
+            UUID serverUUID = nickname.getServerUUID();
+            String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
+            addRow(
+                    HtmlUtils.swapColorsToSpan(HtmlUtils.removeXSS(nickname.getName())),
+                    serverName,
+                    formatter.apply(nickname)
+            );
         }
     }
 }

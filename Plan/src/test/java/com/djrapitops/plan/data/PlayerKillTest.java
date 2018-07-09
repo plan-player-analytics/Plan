@@ -29,7 +29,7 @@ public class PlayerKillTest {
 
     @Test
     public void testGetDate() {
-        assertEquals(playerKill.getTime(), 100L);
+        assertEquals(playerKill.getDate(), 100L);
     }
 
     @Test

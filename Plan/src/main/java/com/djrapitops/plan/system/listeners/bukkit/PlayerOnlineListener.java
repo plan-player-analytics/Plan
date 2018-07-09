@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.entity.Player;
@@ -95,12 +94,10 @@ public class PlayerOnlineListener implements Listener {
         String playerName = player.getName();
         String displayName = player.getDisplayName();
 
-        int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
-
-        SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
+        SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
 
         Processing.submit(
-                new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
+                new RegisterProcessor(uuid, player.getFirstPlayed(), playerName,
                         new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)
@@ -128,13 +125,6 @@ public class PlayerOnlineListener implements Listener {
         Processing.submit(new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()));
         Processing.submit(new EndSessionProcessor(uuid, time));
         Processing.submit(new NetworkPageUpdateProcessor());
-
-        SessionCache sessionCache = SessionCache.getInstance();
-        if (sessionCache.isFirstSession(uuid)) {
-            int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
-            Processing.submit(new FirstLeaveProcessor(uuid, time, messagesSent));
-        }
-
         Processing.submit(new PlayerPageUpdateProcessor(uuid));
     }
 }

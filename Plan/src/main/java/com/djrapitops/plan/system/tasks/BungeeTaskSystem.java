@@ -22,7 +22,7 @@ public class BungeeTaskSystem extends TaskSystem {
     private final PlanBungee plugin;
 
     public BungeeTaskSystem(PlanBungee plugin) {
-        tpsCountTimer = new BungeeTPSCountTimer(plugin);
+        super(new BungeeTPSCountTimer(plugin));
         this.plugin = plugin;
     }
 

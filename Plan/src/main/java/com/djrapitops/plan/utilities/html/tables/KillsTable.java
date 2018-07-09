@@ -3,8 +3,10 @@ package com.djrapitops.plan.utilities.html.tables;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.comparators.PlayerKillComparator;
 import com.djrapitops.plan.utilities.html.Html;
 
@@ -30,6 +32,8 @@ public class KillsTable extends TableContainer {
         playerKills.sort(new PlayerKillComparator());
         Collections.reverse(playerKills);
 
+        Formatter<DateHolder> timestamp = Formatters.year();
+
         int i = 0;
         DataCache dataCache = DataCache.getInstance();
         for (PlayerKill kill : playerKills) {
@@ -37,11 +41,9 @@ public class KillsTable extends TableContainer {
                 break;
             }
 
-            long date = kill.getTime();
-
             String name = dataCache.getName(kill.getVictim());
             addRow(
-                    FormatUtils.formatTimeStampYear(date),
+                    timestamp.apply(kill),
                     Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
                     kill.getWeapon()
             );

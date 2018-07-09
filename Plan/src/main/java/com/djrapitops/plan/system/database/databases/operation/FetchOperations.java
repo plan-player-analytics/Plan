@@ -1,93 +1,119 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.store.containers.NetworkContainer;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.system.info.server.Server;
 
 import java.util.*;
 
 public interface FetchOperations {
 
-    // Profiles
+    /**
+     * Used to get a NetworkContainer, some limitations apply to values returned by DataContainer keys.
+     * <p>
+     * Limitations:
+     * - Bungee ServerContainer does not support: ServerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
+     * - Bungee ServerContainer ServerKeys.TPS only contains playersOnline values
+     * - NetworkKeys.PLAYERS PlayerContainers:
+     * - do not support: PlayerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
+     * - PlayerKeys.PER_SERVER does not support: PerServerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
+     * <p>
+     * Blocking methods are not called until DataContainer getter methods are called.
+     *
+     * @return a new NetworkContainer.
+     */
+    NetworkContainer getNetworkContainer();
 
-    ServerProfile getServerProfile(UUID serverUUID) throws DBException;
+    /**
+     * Used to get a ServerContainer, some limitations apply to values returned by DataContainer keys.
+     * <p>
+     * Limitations:
+     * - ServerKeys.PLAYERS PlayerContainers PlayerKeys.PER_SERVER only contains information about the queried server.
+     * <p>
+     * Blocking methods are not called until DataContainer getter methods are called.
+     *
+     * @param serverUUID UUID of the Server.
+     * @return a new ServerContainer.
+     */
+    ServerContainer getServerContainer(UUID serverUUID);
 
-    List<PlayerProfile> getPlayers(UUID serverUUID) throws DBException;
+    /**
+     * Used to get PlayerContainers of all players on the network, some limitations apply to DataContainer keys.
+     * <p>
+     * Limitations:
+     * - PlayerContainers do not support: PlayerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
+     * - PlayerContainers PlayerKeys.PER_SERVER does not support: PerServerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
+     * <p>
+     * Blocking methods are not called until DataContainer getter methods are called.
+     *
+     * @return a list of PlayerContainers in Plan database.
+     */
+    List<PlayerContainer> getAllPlayerContainers();
 
-    PlayerProfile getPlayerProfile(UUID uuid) throws DBException;
+    /**
+     * Used to get a PlayerContainer of a specific player.
+     * <p>
+     * Blocking methods are not called until DataContainer getter methods are called.
+     *
+     * @param uuid UUID of the player.
+     * @return a new PlayerContainer.
+     */
+    PlayerContainer getPlayerContainer(UUID uuid);
 
     // UUIDs
 
-    Set<UUID> getSavedUUIDs() throws DBException;
+    Set<UUID> getSavedUUIDs();
 
-    Set<UUID> getSavedUUIDs(UUID server) throws DBException;
+    Set<UUID> getSavedUUIDs(UUID server);
 
-    Map<UUID, String> getServerNames() throws DBException;
+    Map<UUID, String> getServerNames();
 
-    Optional<UUID> getServerUUID(String serverName) throws DBException;
+    Optional<UUID> getServerUUID(String serverName);
 
-    UUID getUuidOf(String playerName) throws DBException;
+    UUID getUuidOf(String playerName);
 
     // WebUsers
 
-    WebUser getWebUser(String username) throws DBException;
+    WebUser getWebUser(String username);
 
     // Servers
 
-    Optional<String> getServerName(UUID serverUUID) throws DBException;
+    Optional<String> getServerName(UUID serverUUID);
 
-    Optional<Server> getBungeeInformation() throws DBException;
+    Optional<Server> getBungeeInformation();
 
-    Optional<Integer> getServerID(UUID serverUUID) throws DBException;
+    Optional<Integer> getServerID(UUID serverUUID);
 
     // Raw Data
 
-    List<TPS> getTPSData(UUID serverUUID) throws DBException;
+    List<TPS> getTPSData(UUID serverUUID);
 
-    List<TPS> getNetworkOnlineData() throws DBException;
+    Map<UUID, Map<UUID, List<Session>>> getSessionsWithNoExtras();
 
-    List<Long> getRegisterDates() throws DBException;
+    Map<UUID, UserInfo> getUsers();
 
-    Optional<TPS> getAllTimePeak(UUID serverUUID) throws DBException;
+    Map<UUID, Long> getLastSeenForAllPlayers();
 
-    Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws DBException;
+    Map<UUID, List<GeoInfo>> getAllGeoInfo();
 
-    Map<UUID, Map<UUID, List<Session>>> getSessionsWithNoExtras() throws DBException;
+    Map<UUID, String> getPlayerNames();
 
-    Map<UUID, Map<UUID, List<Session>>> getSessionsAndExtras() throws DBException;
+    String getPlayerName(UUID playerUUID);
 
-    Set<String> getWorldNames(UUID serverUuid) throws DBException;
+    List<String> getNicknames(UUID uuid);
 
-    List<String> getNicknamesOfPlayerOnServer(UUID uuid, UUID serverUUID) throws DBException;
+    Map<UUID, Server> getBukkitServers();
 
-    List<Action> getActions(UUID uuid) throws DBException;
+    List<WebUser> getWebUsers();
 
-    Map<UUID, UserInfo> getUsers() throws DBException;
+    List<Server> getServers();
 
-    Map<UUID, Long> getLastSeenForAllPlayers() throws DBException;
+    List<UUID> getServerUUIDs();
 
-    Map<UUID, List<GeoInfo>> getAllGeoInfo() throws DBException;
-
-    Map<UUID, String> getPlayerNames() throws DBException;
-
-    String getPlayerName(UUID playerUUID) throws DBException;
-
-    List<String> getNicknames(UUID uuid) throws DBException;
-
-    Map<UUID, Server> getBukkitServers() throws DBException;
-
-    List<WebUser> getWebUsers() throws DBException;
-
-    Map<Integer, String> getServerNamesByID() throws DBException;
-
-    Map<UUID, Map<UUID, List<Session>>> getSessionsInLastMonth() throws DBException;
-
-    List<Server> getServers() throws DBException;
-
-    List<UUID> getServerUUIDs() throws DBException;
-
-    List<String> getNetworkGeolocations() throws DBException;
 }

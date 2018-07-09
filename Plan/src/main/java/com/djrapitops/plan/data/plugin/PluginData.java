@@ -28,6 +28,8 @@ public abstract class PluginData {
 
     private String helpText;
 
+    protected com.djrapitops.plan.data.store.containers.AnalysisContainer analysisData;
+
     public PluginData(ContainerSize size, String sourcePlugin) {
         this.size = size;
         this.sourcePlugin = sourcePlugin;
@@ -86,5 +88,9 @@ public abstract class PluginData {
 
     public final String getWithIcon(String text, String icon, String color) {
         return Html.FA_COLORED_ICON.parse(color, icon) + " " + text;
+    }
+
+    public final void setAnalysisData(com.djrapitops.plan.data.store.containers.AnalysisContainer analysisData) {
+        this.analysisData = analysisData;
     }
 }

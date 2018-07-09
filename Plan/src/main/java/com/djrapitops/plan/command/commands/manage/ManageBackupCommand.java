@@ -2,13 +2,13 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -17,7 +17,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -85,10 +84,10 @@ public class ManageBackupCommand extends CommandNode {
      * @param dbName     Name of database (mysql/sqlite)
      * @param copyFromDB Database you want to backup.
      */
-    private void createNewBackup(String dbName, Database copyFromDB) throws SQLException {
+    private void createNewBackup(String dbName, Database copyFromDB) {
         SQLiteDB backupDB = null;
         try {
-            String timeStamp = FormatUtils.formatTimeStampISO8601NoClock(System.currentTimeMillis());
+            String timeStamp = Formatters.iso8601NoClock().apply(System::currentTimeMillis);
             String fileName = dbName + "-backup-" + timeStamp;
             backupDB = new SQLiteDB(fileName);
             Collection<UUID> uuids = copyFromDB.fetch().getSavedUUIDs();

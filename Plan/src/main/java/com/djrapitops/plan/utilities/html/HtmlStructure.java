@@ -4,18 +4,12 @@
  */
 package com.djrapitops.plan.utilities.html;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
-import com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
-import com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -61,18 +55,6 @@ public class HtmlStructure {
         return builder.toString();
     }
 
-    public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
-        if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
-            Map<UUID, List<Session>> sessionsByPlayer = new HashMap<>();
-            sessionsByPlayer.put(uuid, allSessions);
-            return new String[]{Html.TABLE_SESSIONS.parse("", "", "", SessionsTableCreator.createTable(sessionsByPlayer, allSessions)[0]), ""};
-        } else {
-            Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
-            map.put(uuid, sessions);
-            return SessionTabStructureCreator.createStructure(map, allSessions, false);
-        }
-    }
-
     public static String[] createInspectPageTabContentCalculating() {
         String tab = "<div class=\"tab\">" +
                 "<div class=\"row clearfix\">" +
@@ -108,12 +90,12 @@ public class HtmlStructure {
         return b.toString();
     }
 
+    // TODO Rework into NetworkPage generation
     public static String createServerContainer() {
         ServerProperties properties = ServerInfo.getServerProperties();
         int maxPlayers = properties.getMaxPlayers();
         int online = properties.getOnlinePlayers();
-        Optional<Long> analysisRefreshDate = Analysis.getRefreshDate();
-        String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStampClock).orElse("-");
+        String refresh = "-";
 
         Server server = ServerInfo.getServer();
 
@@ -130,8 +112,8 @@ public class HtmlStructure {
         try {
             playerCount = db.count().getServerPlayerCount(serverUUID);
             playerData = new OnlineActivityGraph(db.fetch().getTPSData(serverUUID)).toHighChartsSeries();
-        } catch (DBException e) {
-            Log.toLog(HtmlStructure.class.getClass().getName(), e);
+        } catch (DBOpException e) {
+            Log.toLog(HtmlStructure.class, e);
         }
 
         return "<div class=\"col-xs-12 col-sm-12 col-md-6 col-lg-6\">" +
@@ -179,7 +161,7 @@ public class HtmlStructure {
                 "})</script>";
     }
 
-    public static String playerStatus(String online, Set<UUID> banned, boolean op) {
+    public static String playerStatus(String online, boolean banned, boolean op) {
         boolean offline = "offline".equalsIgnoreCase(online);
 
         StringBuilder html = new StringBuilder("<p>");
@@ -192,9 +174,8 @@ public class HtmlStructure {
         if (op) {
             html.append("<p>").append(Html.FA_COLORED_ICON.parse("blue", "superpowers")).append(" Operator</p>");
         }
-        int bannedOn = banned.size();
-        if (bannedOn != 0) {
-            html.append("<p>").append(Html.FA_COLORED_ICON.parse("red", "gavel")).append(" Banned (").append(bannedOn).append(")");
+        if (banned) {
+            html.append("<p>").append(Html.FA_COLORED_ICON.parse("red", "gavel")).append(" Banned");
         }
         return html.toString();
     }

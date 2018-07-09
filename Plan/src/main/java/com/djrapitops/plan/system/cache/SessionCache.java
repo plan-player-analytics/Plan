@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -20,7 +20,6 @@ import java.util.UUID;
  */
 public class SessionCache {
 
-    private static final Map<UUID, Integer> firstSessionInformation = new HashMap<>();
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
     protected final PlanSystem system;
 
@@ -61,7 +60,7 @@ public class SessionCache {
             }
             session.endSession(time);
             Database.getActive().save().session(uuid, session);
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             Log.toLog(this.getClass(), e);
         } finally {
             activeSessions.remove(uuid);
@@ -88,40 +87,4 @@ public class SessionCache {
         return Optional.empty();
     }
 
-    /**
-     * Used for marking first Session Actions to be saved.
-     *
-     * @param uuid UUID of the new player.
-     */
-    public void markFirstSession(UUID uuid) {
-        firstSessionInformation.put(uuid, 0);
-    }
-
-    /**
-     * Check if a session is player's first session on the server.
-     *
-     * @param uuid UUID of the player
-     * @return true / false
-     */
-    public boolean isFirstSession(UUID uuid) {
-        return firstSessionInformation.containsKey(uuid);
-    }
-
-    public void endFirstSessionActionTracking(UUID uuid) {
-        firstSessionInformation.remove(uuid);
-    }
-
-    public void firstSessionMessageSent(UUID uuid) {
-        Integer msgCount = firstSessionInformation.getOrDefault(uuid, 0);
-        msgCount++;
-        firstSessionInformation.put(uuid, msgCount);
-    }
-
-    public int getFirstSessionMsgCount(UUID uuid) {
-        return firstSessionInformation.getOrDefault(uuid, 0);
-    }
-
-    public Map<UUID, Integer> getFirstSessionMsgCounts() {
-        return firstSessionInformation;
-    }
 }

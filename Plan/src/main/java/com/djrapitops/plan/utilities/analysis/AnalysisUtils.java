@@ -1,29 +1,28 @@
 package com.djrapitops.plan.utilities.analysis;
 
-import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.StickyData;
-import com.djrapitops.plan.data.time.GMTimes;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.mutators.RetentionData;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
+import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Class that contains various methods that are used in analysis.
+ *
  * @author Rsl1122
  */
 public class AnalysisUtils {
 
-    /**
-     * Constructor used to hide the public constructor
-     */
     private AnalysisUtils() {
-        throw new IllegalStateException("Utility class");
+        /* static method class.*/
     }
 
+    @Deprecated
     public static long getNewPlayers(List<Long> registered, long scale, long now) {
         long newPlayers = 0;
         if (!registered.isEmpty()) {
@@ -36,6 +35,7 @@ public class AnalysisUtils {
         return newPlayers;
     }
 
+    @Deprecated
     public static int getUniquePlayers(Map<UUID, List<Session>> sessions, long after) {
         Set<UUID> uuids = new HashSet<>();
 
@@ -50,49 +50,6 @@ public class AnalysisUtils {
         }
 
         return uuids.size();
-    }
-
-    public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long after) {
-        Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
-
-        sessions.forEach((uuid, s) -> {
-            for (Session session : s) {
-                if (session.getSessionStart() < after) {
-                    continue;
-                }
-
-                int day = getDayOfYear(session);
-
-                uniqueJoins.computeIfAbsent(day, computedDay -> new HashSet<>());
-                uniqueJoins.get(day).add(uuid);
-            }
-        });
-
-        int total = MathUtils.sumInt(uniqueJoins.values().stream().map(Set::size));
-        int numberOfDays = uniqueJoins.size();
-
-        if (numberOfDays == 0) {
-            return 0;
-        }
-
-        return total / numberOfDays;
-    }
-
-    public static long getNewUsersPerDay(List<Long> registers, long after, long total) {
-        Set<Integer> days = new HashSet<>();
-        for (Long date : registers) {
-            if (date < after) {
-                continue;
-            }
-            int day = getDayOfYear(date);
-            days.add(day);
-        }
-        int numberOfDays = days.size();
-
-        if (numberOfDays == 0) {
-            return 0;
-        }
-        return total / numberOfDays;
     }
 
     /**
@@ -122,17 +79,6 @@ public class AnalysisUtils {
             }
             return new int[]{dayOfWeek, hourOfDay};
         }).collect(Collectors.toList());
-    }
-
-    public static int getDayOfYear(Session session) {
-        return getDayOfYear(session.getSessionStart());
-
-    }
-
-    public static int getDayOfYear(long date) {
-        Calendar day = Calendar.getInstance();
-        day.setTimeInMillis(date);
-        return day.get(Calendar.DAY_OF_YEAR);
     }
 
     public static double getAveragePerDay(long after, long before, long total) {
@@ -165,25 +111,6 @@ public class AnalysisUtils {
         return userSessions;
     }
 
-    public static TreeMap<Long, Map<String, Set<UUID>>> turnToActivityDataMap(long time, List<PlayerProfile> players) {
-        TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
-        if (!players.isEmpty()) {
-            for (PlayerProfile player : players) {
-                for (long date = time; date >= time - TimeAmount.MONTH.ms() * 2L; date -= TimeAmount.WEEK.ms()) {
-                    ActivityIndex activityIndex = player.getActivityIndex(date);
-                    String activityGroup = activityIndex.getGroup();
-
-                    Map<String, Set<UUID>> map = activityData.getOrDefault(date, new HashMap<>());
-                    Set<UUID> uuids = map.getOrDefault(activityGroup, new HashSet<>());
-                    uuids.add(player.getUuid());
-                    map.put(activityGroup, uuids);
-                    activityData.put(date, map);
-                }
-            }
-        }
-        return activityData;
-    }
-
     public static Map<String, Long> getPlaytimePerAlias(WorldTimes worldTimes) {
         // WorldTimes Map<String, GMTimes>
         Map<String, Long> playtimePerWorld = worldTimes.getWorldTimes()
@@ -212,50 +139,49 @@ public class AnalysisUtils {
         return playtimePerAlias;
     }
 
-    public static Map<String, GMTimes> getGMTimesPerAlias(WorldTimes worldTimes) {
-        Map<String, String> aliases = WorldAliasSettings.getAliases();
-
-        Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();
-
-        String[] gms = GMTimes.getGMKeyArray();
-
-        for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
-            String worldName = entry.getKey();
-            GMTimes gmTimes = entry.getValue();
-
-            if (!aliases.containsKey(worldName)) {
-                aliases.put(worldName, worldName);
-                WorldAliasSettings.addWorld(worldName);
-            }
-
-            String alias = aliases.get(worldName);
-
-            GMTimes aliasGMTimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
-            for (String gm : gms) {
-                aliasGMTimes.addTime(gm, gmTimes.getTime(gm));
-            }
-            gmTimesPerAlias.put(alias, aliasGMTimes);
-        }
-        return gmTimesPerAlias;
-    }
-
-    public static StickyData average(Collection<StickyData> stuck) {
+    public static RetentionData average(Collection<RetentionData> stuck) {
         int size = stuck.size();
 
         double totalIndex = 0.0;
-        double totalMsgsSent = 0.0;
         double totalPlayersOnline = 0.0;
 
-        for (StickyData stickyData : stuck) {
-            totalIndex += stickyData.getActivityIndex();
-            totalMsgsSent += stickyData.getMessagesSent();
-            totalPlayersOnline += stickyData.getOnlineOnJoin();
+        for (RetentionData retentionData : stuck) {
+            totalIndex += retentionData.getActivityIndex();
+            totalPlayersOnline += retentionData.getOnlineOnJoin();
         }
 
         double averageIndex = totalIndex / (double) size;
-        double averageMessagesSent = totalMsgsSent / (double) size;
         double averagePlayersOnline = totalPlayersOnline / (double) size;
 
-        return new StickyData(averageIndex, averageMessagesSent, averagePlayersOnline);
+        return new RetentionData(averageIndex, averagePlayersOnline);
+    }
+
+    public static String getLongestWorldPlayed(Session session) {
+        Map<String, String> aliases = WorldAliasSettings.getAliases();
+        if (!session.supports(SessionKeys.WORLD_TIMES)) {
+            return "No World Time Data";
+        }
+        if (!session.supports(SessionKeys.END)) {
+            return "Current: " + aliases.get(session.getUnsafe(SessionKeys.WORLD_TIMES).getCurrentWorld());
+        }
+
+        WorldTimes worldTimes = session.getUnsafe(SessionKeys.WORLD_TIMES);
+        Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);
+        long total = worldTimes.getTotal();
+
+        long longest = 0;
+        String theWorld = "-";
+        for (Map.Entry<String, Long> entry : playtimePerAlias.entrySet()) {
+            String world = entry.getKey();
+            long time = entry.getValue();
+            if (time > longest) {
+                longest = time;
+                theWorld = world;
+            }
+        }
+
+        double percentage = longest * 100.0 / total;
+
+        return theWorld + " (" + FormatUtils.cutDecimals(percentage) + "%)";
     }
 }

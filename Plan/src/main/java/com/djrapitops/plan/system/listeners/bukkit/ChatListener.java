@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
-import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.NameProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -42,12 +41,6 @@ public class ChatListener implements Listener {
         UUID uuid = p.getUniqueId();
         String name = p.getName();
         String displayName = p.getDisplayName();
-
-        SessionCache sessionCache = SessionCache.getInstance();
-        if (sessionCache.isFirstSession(uuid)) {
-            sessionCache.firstSessionMessageSent(uuid);
-        }
-
         Processing.submit(new NameProcessor(uuid, name, displayName));
     }
 }

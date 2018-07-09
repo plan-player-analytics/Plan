@@ -4,15 +4,14 @@
  */
 package com.djrapitops.pluginbridge.plan.vault;
 
-import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.Analysis;
-import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
@@ -50,17 +49,14 @@ public class VaultEcoData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
-        ServerProfile serverProfile = Analysis.getServerProfile();
-
-        List<FakeOfflinePlayer> profiles = collection.stream()
-                .map(serverProfile::getPlayer)
-                .filter(Verify::notNull)
-                .map(profile -> new FakeOfflinePlayer(profile.getUuid(), profile.getName()))
+        List<FakeOfflinePlayer> offlinePlayers = analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR)
+                .map(PlayersMutator::all).orElse(new ArrayList<>())
+                .stream().map(FakeOfflinePlayer::new)
                 .collect(Collectors.toList());
 
         Map<UUID, String> balances = new HashMap<>();
         double totalBalance = 0.0;
-        for (FakeOfflinePlayer p : profiles) {
+        for (FakeOfflinePlayer p : offlinePlayers) {
             double bal = econ.getBalance(p);
             totalBalance += bal;
             balances.put(p.getUniqueId(), econ.format(bal));

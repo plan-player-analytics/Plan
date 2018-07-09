@@ -4,10 +4,8 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
 
@@ -26,10 +24,6 @@ public class KickProcessor implements CriticalRunnable {
 
     @Override
     public void run() {
-        try {
-            Database.getActive().save().playerWasKicked(uuid);
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
-        }
+        Database.getActive().save().playerWasKicked(uuid);
     }
 }

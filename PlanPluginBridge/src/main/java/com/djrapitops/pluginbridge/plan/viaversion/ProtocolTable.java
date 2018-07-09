@@ -46,7 +46,7 @@ public class ProtocolTable extends Table {
         );
     }
 
-    public void saveProtocolVersion(UUID uuid, int version) throws SQLException {
+    public void saveProtocolVersion(UUID uuid, int version) {
         if (exists(uuid)) {
             updateProtocolVersion(uuid, version);
         } else {
@@ -54,7 +54,7 @@ public class ProtocolTable extends Table {
         }
     }
 
-    public int getProtocolVersion(UUID uuid) throws SQLException {
+    public int getProtocolVersion(UUID uuid) {
         String sql = "SELECT " + columnProtocolVersion + " FROM " + tableName + " WHERE " + columnUUID + "=?";
 
         return query(new QueryStatement<Integer>(sql) {
@@ -74,7 +74,7 @@ public class ProtocolTable extends Table {
         });
     }
 
-    public Map<UUID, Integer> getProtocolVersions() throws SQLException {
+    public Map<UUID, Integer> getProtocolVersions() {
         return query(new QueryAllStatement<Map<UUID, Integer>>(Select.all(tableName).toString(), 5000) {
             @Override
             public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
@@ -89,11 +89,11 @@ public class ProtocolTable extends Table {
         });
     }
 
-    private boolean exists(UUID uuid) throws SQLException {
+    private boolean exists(UUID uuid) {
         return getProtocolVersion(uuid) != -1;
     }
 
-    private void updateProtocolVersion(UUID uuid, int version) throws SQLException {
+    private void updateProtocolVersion(UUID uuid, int version) {
         String sql = "UPDATE " + tableName + " SET "
                 + columnProtocolVersion + "=? "
                 + " WHERE (" + columnUUID + "=?)";
@@ -107,7 +107,7 @@ public class ProtocolTable extends Table {
         });
     }
 
-    private void insertProtocolVersion(UUID uuid, int version) throws SQLException {
+    private void insertProtocolVersion(UUID uuid, int version) {
         String sql = "INSERT INTO " + tableName + " ("
                 + columnUUID + ", "
                 + columnProtocolVersion

@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
@@ -98,12 +97,10 @@ public class SpongePlayerListener {
         String playerName = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
 
-        int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
-
-        SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
+        SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
 
         Processing.submit(
-                new RegisterProcessor(uuid, time, time, playerName, playersOnline,
+                new RegisterProcessor(uuid, time, playerName,
                         new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)
@@ -131,13 +128,6 @@ public class SpongePlayerListener {
         Processing.submit(new BanAndOpProcessor(uuid, isBanned(player.getProfile()), false));
         Processing.submit(new EndSessionProcessor(uuid, time));
         Processing.submit(new NetworkPageUpdateProcessor());
-
-        SessionCache sessionCache = SessionCache.getInstance();
-        if (sessionCache.isFirstSession(uuid)) {
-            int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
-            Processing.submit(new FirstLeaveProcessor(uuid, time, messagesSent));
-        }
-
         Processing.submit(new PlayerPageUpdateProcessor(uuid));
     }
 }

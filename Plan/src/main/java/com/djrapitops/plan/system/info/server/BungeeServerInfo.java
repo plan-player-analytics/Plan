@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -22,7 +22,7 @@ import java.util.UUID;
 public class BungeeServerInfo extends ServerInfo {
 
     public BungeeServerInfo(PlanBungee plugin) {
-        serverProperties = new ServerProperties(plugin.getProxy());
+        super(new ServerProperties(plugin.getProxy()));
     }
 
     @Override
@@ -38,13 +38,13 @@ public class BungeeServerInfo extends ServerInfo {
             } else {
                 server = registerBungeeInfo(db);
             }
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             throw new EnableException("Failed to read Server information from Database.");
         }
         return server;
     }
 
-    private void updateServerInfo(Database db) throws DBException {
+    private void updateServerInfo(Database db) {
         String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
         if (!accessAddress.equals(server.getWebAddress())) {
             server.setWebAddress(accessAddress);
@@ -61,7 +61,7 @@ public class BungeeServerInfo extends ServerInfo {
         }
     }
 
-    private Server registerBungeeInfo(Database db) throws DBException, EnableException {
+    private Server registerBungeeInfo(Database db) throws EnableException {
         ServerProperties properties = ServerInfo.getServerProperties();
         UUID serverUUID = generateNewUUID(properties);
         String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();

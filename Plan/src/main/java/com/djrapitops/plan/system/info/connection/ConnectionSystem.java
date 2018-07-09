@@ -8,7 +8,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
@@ -104,7 +104,7 @@ public abstract class ConnectionSystem implements SubSystem {
             return Database.getActive().transfer().getServerPlayerIsOnlineOn(playerUUID);
         } catch (UnsupportedTransferDatabaseException e) {
             /* Do nothing */
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             Log.toLog(this.getClass(), e);
         }
         return Optional.empty();

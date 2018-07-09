@@ -1,10 +1,12 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.operation.*;
+import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
+import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.database.databases.sql.tables.move.Version8TransferTable;
 import com.djrapitops.plan.system.settings.Settings;
@@ -16,6 +18,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +35,6 @@ public abstract class SQLDB extends Database {
 
     private final UsersTable usersTable;
     private final UserInfoTable userInfoTable;
-    private final ActionsTable actionsTable;
     private final KillsTable killsTable;
     private final NicknamesTable nicknamesTable;
     private final SessionsTable sessionsTable;
@@ -70,7 +72,6 @@ public abstract class SQLDB extends Database {
 
         usersTable = new UsersTable(this);
         userInfoTable = new UserInfoTable(this);
-        actionsTable = new ActionsTable(this);
         geoInfoTable = new GeoInfoTable(this);
         nicknamesTable = new NicknamesTable(this);
         sessionsTable = new SessionsTable(this);
@@ -115,7 +116,7 @@ public abstract class SQLDB extends Database {
                     if (isOpen()) {
                         clean();
                     }
-                } catch (SQLException e) {
+                } catch (DBOpException e) {
                     Log.toLog(this.getClass(), e);
                     cancel();
                 }
@@ -139,7 +140,7 @@ public abstract class SQLDB extends Database {
 
             if (newDatabase) {
                 Log.info("New Database created.");
-                versionTable.setVersion(18);
+                versionTable.setVersion(19);
             }
 
             int version = versionTable.getVersion();
@@ -151,7 +152,7 @@ public abstract class SQLDB extends Database {
                     public void run() {
                         try {
                             new Version8TransferTable(db).alterTablesToV10();
-                        } catch (DBInitException | SQLException e) {
+                        } catch (DBInitException | DBOpException e) {
                             Log.toLog(this.getClass(), e);
                         }
                     }
@@ -162,7 +163,6 @@ public abstract class SQLDB extends Database {
                 versionTable.setVersion(11);
             }
             if (version < 12) {
-                actionsTable.alterTableV12();
                 geoInfoTable.alterTableV12();
                 versionTable.setVersion(12);
             }
@@ -191,7 +191,10 @@ public abstract class SQLDB extends Database {
                 geoInfoTable.alterTableV18();
                 // version set in the runnable in above method
             }
-        } catch (SQLException e) {
+            if (version < 19) {
+                nicknamesTable.alterTableV19();
+            }
+        } catch (DBOpException e) {
             throw new DBInitException("Failed to set-up Database", e);
         }
     }
@@ -216,8 +219,8 @@ public abstract class SQLDB extends Database {
         return new Table[]{
                 serverTable, usersTable, userInfoTable, geoInfoTable,
                 nicknamesTable, sessionsTable, killsTable,
-                commandUseTable, actionsTable, tpsTable,
-                worldTable, worldTimesTable, securityTable, transferTable
+                commandUseTable, tpsTable, worldTable,
+                worldTimesTable, securityTable, transferTable
         };
     }
 
@@ -229,10 +232,9 @@ public abstract class SQLDB extends Database {
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
                 transferTable, geoInfoTable, nicknamesTable, killsTable,
-                worldTimesTable, sessionsTable, actionsTable,
-                worldTable, userInfoTable, usersTable,
-                commandUseTable, tpsTable, securityTable,
-                serverTable
+                worldTimesTable, sessionsTable, worldTable,
+                userInfoTable, usersTable, commandUseTable,
+                tpsTable, securityTable, serverTable
         };
     }
 
@@ -249,15 +251,15 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    public int getVersion() throws SQLException {
+    public int getVersion() {
         return versionTable.getVersion();
     }
 
-    public void setVersion(int version) throws SQLException {
+    public void setVersion(int version) {
         versionTable.setVersion(version);
     }
 
-    private void clean() throws SQLException {
+    private void clean() {
         tpsTable.clean();
         transferTable.clean();
         geoInfoTable.clean();
@@ -270,11 +272,7 @@ public abstract class SQLDB extends Database {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
         for (UUID uuid : inactivePlayers) {
-            try {
-                removeOps.player(uuid);
-            } catch (DBException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
+            removeOps.player(uuid);
         }
         int removed = inactivePlayers.size();
         if (removed > 0) {
@@ -289,7 +287,7 @@ public abstract class SQLDB extends Database {
      * <p>
      * MySQL has Auto Commit enabled.
      */
-    public void commit(Connection connection) throws SQLException {
+    public void commit(Connection connection) {
         try {
             if (!usingMySQL) {
                 connection.commit();
@@ -303,9 +301,13 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    public void returnToPool(Connection connection) throws SQLException {
-        if (usingMySQL && connection != null) {
-            connection.close();
+    public void returnToPool(Connection connection) {
+        try {
+            if (usingMySQL && connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            Log.toLog(this.getClass(), e);
         }
     }
 
@@ -319,6 +321,48 @@ public abstract class SQLDB extends Database {
             if (!usingMySQL) {
                 connection.rollback();
             }
+        } finally {
+            returnToPool(connection);
+        }
+    }
+
+    public boolean execute(ExecStatement statement) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
+                return statement.execute(preparedStatement);
+            }
+        } catch (SQLException e) {
+            throw DBOpException.forCause(statement.getSql(), e);
+        } finally {
+            commit(connection);
+        }
+    }
+
+    public void executeBatch(ExecStatement statement) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
+                statement.executeBatch(preparedStatement);
+            }
+        } catch (SQLException e) {
+            throw DBOpException.forCause(statement.getSql(), e);
+        } finally {
+            commit(connection);
+        }
+    }
+
+    public <T> T query(QueryStatement<T> statement) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
+                return statement.executeQuery(preparedStatement);
+            }
+        } catch (SQLException e) {
+            throw DBOpException.forCause(statement.getSql(), e);
         } finally {
             returnToPool(connection);
         }
@@ -366,10 +410,6 @@ public abstract class SQLDB extends Database {
 
     public ServerTable getServerTable() {
         return serverTable;
-    }
-
-    public ActionsTable getActionsTable() {
-        return actionsTable;
     }
 
     public UserInfoTable getUserInfoTable() {

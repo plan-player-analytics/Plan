@@ -62,9 +62,8 @@ public class CommandUseTable extends Table {
      *
      * @param serverUUID UUID of the server.
      * @return command - times used Map
-     * @throws SQLException DB Error
      */
-    public Map<String, Integer> getCommandUse(UUID serverUUID) throws SQLException {
+    public Map<String, Integer> getCommandUse(UUID serverUUID) {
         String sql = Select.from(tableName,
                 Col.COMMAND, Col.TIMES_USED)
                 .where(Col.SERVER_ID + "=" + serverTable.statementSelectServerID)
@@ -93,13 +92,12 @@ public class CommandUseTable extends Table {
      * Used to get all commands used in this server.
      *
      * @return command - times used Map
-     * @throws SQLException DB Error
      */
-    public Map<String, Integer> getCommandUse() throws SQLException {
+    public Map<String, Integer> getCommandUse() {
         return getCommandUse(ServerInfo.getServerUUID());
     }
 
-    public void commandUsed(String command) throws SQLException {
+    public void commandUsed(String command) {
         if (command.length() > 20) {
             return;
         }
@@ -121,7 +119,7 @@ public class CommandUseTable extends Table {
         }
     }
 
-    public Optional<String> getCommandByID(int id) throws SQLException {
+    public Optional<String> getCommandByID(int id) {
         String sql = Select.from(tableName, Col.COMMAND).where(Col.COMMAND_ID + "=?").toString();
 
         return query(new QueryStatement<Optional<String>>(sql) {
@@ -140,7 +138,7 @@ public class CommandUseTable extends Table {
         });
     }
 
-    private void insertCommand(String command) throws SQLException {
+    private void insertCommand(String command) {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -151,7 +149,7 @@ public class CommandUseTable extends Table {
         });
     }
 
-    public Optional<Integer> getCommandID(String command) throws SQLException {
+    public Optional<Integer> getCommandID(String command) {
         String sql = Select.from(tableName, Col.COMMAND_ID).where(Col.COMMAND + "=?").toString();
 
         return query(new QueryStatement<Optional<Integer>>(sql) {
@@ -170,7 +168,7 @@ public class CommandUseTable extends Table {
         });
     }
 
-    public Map<UUID, Map<String, Integer>> getAllCommandUsages() throws SQLException {
+    public Map<UUID, Map<String, Integer>> getAllCommandUsages() {
         String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
         String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
@@ -223,7 +221,7 @@ public class CommandUseTable extends Table {
         }
     }
 
-    public void insertCommandUsage(Map<UUID, Map<String, Integer>> allCommandUsages) throws SQLException {
+    public void insertCommandUsage(Map<UUID, Map<String, Integer>> allCommandUsages) {
         if (allCommandUsages.isEmpty()) {
             return;
         }

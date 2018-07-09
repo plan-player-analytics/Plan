@@ -4,8 +4,6 @@
  */
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
-
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,12 +18,12 @@ public interface TransferOperations {
 
     // Save
 
-    void storeConfigSettings(String encodedSettingString) throws DBException;
+    void storeConfigSettings(String encodedSettingString);
 
     // Get
 
     @Deprecated
-    Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) throws DBException;
+    Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID);
 
-    Optional<String> getEncodedConfigSettings() throws DBException;
+    Optional<String> getEncodedConfigSettings();
 }

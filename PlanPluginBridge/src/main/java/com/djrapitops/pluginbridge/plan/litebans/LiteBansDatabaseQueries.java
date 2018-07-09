@@ -1,5 +1,6 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
@@ -41,13 +42,15 @@ public class LiteBansDatabaseQueries extends Table {
     }
 
     @Override
-    protected <T> T query(QueryStatement<T> statement) throws SQLException {
+    protected <T> T query(QueryStatement<T> statement) {
         try (PreparedStatement preparedStatement = database.prepareStatement(statement.getSql())) {
             return statement.executeQuery(preparedStatement);
+        } catch (SQLException e) {
+            throw DBOpException.forCause(statement.getSql(), e);
         }
     }
 
-    private List<LiteBansDBObj> getObjs(String table) throws SQLException {
+    private List<LiteBansDBObj> getObjs(String table) {
         String sql = selectSQL + table + " LIMIT 5000";
 
         return query(new QueryAllStatement<List<LiteBansDBObj>>(sql, 2000) {
@@ -58,19 +61,19 @@ public class LiteBansDatabaseQueries extends Table {
         });
     }
 
-    public List<LiteBansDBObj> getBans() throws SQLException {
+    public List<LiteBansDBObj> getBans() {
         return getObjs(banTable);
     }
 
-    public List<LiteBansDBObj> getMutes() throws SQLException {
+    public List<LiteBansDBObj> getMutes() {
         return getObjs(mutesTable);
     }
 
-    public List<LiteBansDBObj> getWarnings() throws SQLException {
+    public List<LiteBansDBObj> getWarnings() {
         return getObjs(warningsTable);
     }
 
-    public List<LiteBansDBObj> getKicks() throws SQLException {
+    public List<LiteBansDBObj> getKicks() {
         return getObjs(kicksTable);
     }
 
@@ -93,23 +96,23 @@ public class LiteBansDatabaseQueries extends Table {
         return objs;
     }
 
-    public List<LiteBansDBObj> getBans(UUID playerUUID) throws SQLException {
+    public List<LiteBansDBObj> getBans(UUID playerUUID) {
         return getObjs(playerUUID, banTable);
     }
 
-    public List<LiteBansDBObj> getMutes(UUID playerUUID) throws SQLException {
+    public List<LiteBansDBObj> getMutes(UUID playerUUID) {
         return getObjs(playerUUID, mutesTable);
     }
 
-    public List<LiteBansDBObj> getWarnings(UUID playerUUID) throws SQLException {
+    public List<LiteBansDBObj> getWarnings(UUID playerUUID) {
         return getObjs(playerUUID, warningsTable);
     }
 
-    public List<LiteBansDBObj> getKicks(UUID playerUUID) throws SQLException {
+    public List<LiteBansDBObj> getKicks(UUID playerUUID) {
         return getObjs(playerUUID, kicksTable);
     }
 
-    private List<LiteBansDBObj> getObjs(UUID playerUUID, String table) throws SQLException {
+    private List<LiteBansDBObj> getObjs(UUID playerUUID, String table) {
         String sql = selectSQL + table + " WHERE uuid=?";
 
         return query(new QueryStatement<List<LiteBansDBObj>>(sql, 2000) {

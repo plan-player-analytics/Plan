@@ -9,7 +9,6 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.utilities.FormatUtils;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
@@ -43,7 +42,7 @@ public class GriefPreventionData extends PluginData {
                         Claim::getArea)
                 );
         String softMuted = dataStore.isSoftMuted(uuid) ? "Yes" : "No";
-        long totalArea = MathUtils.sumLong(claims.values().stream().map(i -> (long) i));
+        long totalArea = claims.values().stream().mapToInt(i -> i).sum();
 
         inspectContainer.addValue(getWithIcon("SoftMuted", "bell-slash-o", "deep-orange"), softMuted);
         inspectContainer.addValue(getWithIcon("Claims", "map-marker", "blue-grey"), claims.size());
@@ -73,7 +72,7 @@ public class GriefPreventionData extends PluginData {
             area.put(uuid, blocks);
         }
 
-        long totalArea = MathUtils.sumLong(area.values().stream().map(i -> (long) i));
+        long totalArea = area.values().stream().mapToInt(i -> i).sum();
         analysisContainer.addValue(getWithIcon("Total Claimed Area", "map-o", "blue-grey"), totalArea);
 
         analysisContainer.addPlayerTableValues(getWithIcon("Claimed Area", "map-o"), area);

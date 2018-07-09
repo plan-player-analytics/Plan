@@ -4,6 +4,8 @@
  */
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.data.store.objects.DateMap;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.google.common.base.Objects;
@@ -17,23 +19,31 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Rsl1122
  */
-public class GeoInfo {
+public class GeoInfo implements DateHolder {
 
     private final String ip;
     private final String geolocation;
     private final String ipHash;
-    private final long lastUsed;
+    private final long date;
 
     public GeoInfo(InetAddress address, String geolocation, long lastUsed)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
         this(FormatUtils.formatIP(address), geolocation, lastUsed, new SHA256Hash(address.getHostAddress()).create());
     }
 
-    public GeoInfo(String ip, String geolocation, long lastUsed, String ipHash) {
+    public GeoInfo(String ip, String geolocation, long date, String ipHash) {
         this.ip = ip;
         this.geolocation = geolocation;
-        this.lastUsed = lastUsed;
+        this.date = date;
         this.ipHash = ipHash;
+    }
+
+    public static DateMap<GeoInfo> intoDateMap(Iterable<GeoInfo> geoInfo) {
+        DateMap<GeoInfo> map = new DateMap<>();
+        for (GeoInfo info : geoInfo) {
+            map.put(info.date, info);
+        }
+        return map;
     }
 
     public String getIp() {
@@ -44,8 +54,9 @@ public class GeoInfo {
         return geolocation;
     }
 
-    public long getLastUsed() {
-        return lastUsed;
+    @Override
+    public long getDate() {
+        return date;
     }
 
     public String getIpHash() {
@@ -58,11 +69,22 @@ public class GeoInfo {
         if (o == null || getClass() != o.getClass()) return false;
         GeoInfo geoInfo = (GeoInfo) o;
         return Objects.equal(ip, geoInfo.ip) &&
-                Objects.equal(geolocation, geoInfo.geolocation);
+                Objects.equal(geolocation, geoInfo.geolocation) &&
+                Objects.equal(ipHash, geoInfo.ipHash);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(ip, geolocation);
+        return Objects.hashCode(ip, geolocation, ipHash);
+    }
+
+    @Override
+    public String toString() {
+        return "GeoInfo{" +
+                "ip='" + ip + '\'' +
+                ", geolocation='" + geolocation + '\'' +
+                ", ipHash='" + ipHash + '\'' +
+                ", date=" + date +
+                '}';
     }
 }
