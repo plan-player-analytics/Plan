@@ -9,6 +9,8 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
@@ -67,7 +69,11 @@ public class FactionsData extends PluginData {
         analysisContainer.addValue(getWithIcon("Number of Factions", "flag", "deep-purple"), factions.size());
 
         if (!factions.isEmpty()) {
-            analysisContainer.addHtml("factionAccordion", FactionAccordionCreator.createAccordion(factions));
+            FactionsAccordion factionsAccordion = new FactionsAccordion(
+                    factions,
+                    analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
+            );
+            analysisContainer.addHtml("factionAccordion", factionsAccordion.toHtml());
 
             Map<UUID, String> userFactions = new HashMap<>();
             for (UUID uuid : uuids) {

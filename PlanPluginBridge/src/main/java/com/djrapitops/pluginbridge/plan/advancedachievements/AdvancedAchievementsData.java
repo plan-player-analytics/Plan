@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -9,7 +9,6 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.hm.achievement.api.AdvancedAchievementsAPI;
 
@@ -50,7 +49,8 @@ public class AdvancedAchievementsData extends PluginData {
             refreshTotalAchievements();
         }
         long total = getTotal(totalAchievements);
-        String average = FormatUtils.cutDecimals(MathUtils.averageDouble(total, totalAchievements.size()));
+        int size = totalAchievements.size();
+        String average = size != 0 ? FormatUtils.cutDecimals(total * 1.0 / size) : "-";
 
         analysisContainer.addValue(getWithIcon("Total Achievements", "check-circle-o", "green"), total);
         analysisContainer.addValue(getWithIcon("Average Achievements", "check-circle-o", "green"), average);
@@ -59,7 +59,7 @@ public class AdvancedAchievementsData extends PluginData {
     }
 
     private long getTotal(Map<UUID, Integer> totalAchievements) {
-        return MathUtils.sumLong(totalAchievements.values().stream().map(i -> (long) i));
+        return totalAchievements.values().stream().mapToInt(i -> i).sum();
     }
 
     private void refreshTotalAchievements() {

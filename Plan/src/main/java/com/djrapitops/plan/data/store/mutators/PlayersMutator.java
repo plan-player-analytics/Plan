@@ -14,6 +14,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -40,38 +41,41 @@ public class PlayersMutator {
         return new PlayersMutator(container.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>()));
     }
 
+    public <T extends Predicate<PlayerContainer>> PlayersMutator filterBy(T by) {
+        return new PlayersMutator(players.stream().filter(by).collect(Collectors.toList()));
+    }
+
     public PlayersMutator filterPlayedBetween(long after, long before) {
-        return new PlayersMutator(players.stream().filter(player ->
-                player.getValue(PlayerKeys.SESSIONS)
+        return filterBy(
+                player -> player.getValue(PlayerKeys.SESSIONS)
                         .map(sessions -> sessions.stream().anyMatch(session -> {
                             long start = session.getValue(SessionKeys.START).orElse(-1L);
                             long end = session.getValue(SessionKeys.END).orElse(-1L);
                             return (after <= start && start <= before) || (after <= end && end <= before);
                         })).orElse(false)
-        ).collect(Collectors.toList()));
+        );
     }
 
     public PlayersMutator filterRegisteredBetween(long after, long before) {
-        return new PlayersMutator(players.stream().filter(player ->
-                player.getValue(PlayerKeys.REGISTERED).map(date -> after <= date && date <= before).orElse(false)
-        ).collect(Collectors.toList()));
+        return filterBy(
+                player -> player.getValue(PlayerKeys.REGISTERED)
+                        .map(date -> after <= date && date <= before).orElse(false)
+        );
     }
 
     public PlayersMutator filterRetained(long after, long before) {
-        return new PlayersMutator(players.stream()
-                .filter(player -> {
+        return filterBy(
+                player -> {
                     long backLimit = Math.max(after, player.getValue(PlayerKeys.REGISTERED).orElse(0L));
                     long half = backLimit + ((before - backLimit) / 2L);
                     SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
                     return !sessionsMutator.playedBetween(backLimit, half) && !sessionsMutator.playedBetween(half, before);
-                })
-                .collect(Collectors.toList()));
+                }
+        );
     }
 
     public PlayersMutator filterActive(long date, double limit) {
-        return new PlayersMutator(players.stream()
-                .filter(player -> player.getActivityIndex(date).getValue() >= limit)
-                .collect(Collectors.toList()));
+        return filterBy(player -> player.getActivityIndex(date).getValue() >= limit);
     }
 
     public List<PlayerContainer> all() {

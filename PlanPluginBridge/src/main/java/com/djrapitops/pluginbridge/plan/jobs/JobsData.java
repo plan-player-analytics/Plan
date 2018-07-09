@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -10,7 +10,6 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.dao.JobsDAOData;
 
@@ -76,13 +75,12 @@ public class JobsData extends PluginData {
                 jobTable.addRow(
                         job,
                         amountOfWorkers,
-                        FormatUtils.cutDecimals(MathUtils.averageDouble(totalLevel, amountOfWorkers)),
+                        amountOfWorkers != 0 ? FormatUtils.cutDecimals(totalLevel / amountOfWorkers) : "-",
                         totalLevel
                 );
             }
         }
         analysisContainer.addTable("jobTable", jobTable);
-
 
         return analysisContainer;
     }

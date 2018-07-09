@@ -9,15 +9,14 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.utilities.html.Html;
 import org.kingdoms.constants.kingdom.OfflineKingdom;
 import org.kingdoms.constants.player.OfflineKingdomPlayer;
 import org.kingdoms.manager.game.GameManagement;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * PluginData for Kingdoms and Kingdoms+ plugins.
@@ -59,7 +58,12 @@ public class KingdomsData extends PluginData {
         analysisContainer.addValue(getWithIcon("Number of Kingdoms", "shield", "amber"), kingdoms.size());
 
         if (!kingdoms.isEmpty()) {
-            analysisContainer.addHtml("kingdomsAccordion", KingdomAccordionCreator.createAccordion(kingdoms));
+            KingdomsAccordion kingdomsAccordion = new KingdomsAccordion(
+                    kingdoms,
+                    analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
+            );
+
+            analysisContainer.addHtml("kingdomsAccordion", kingdomsAccordion.toHtml());
 
             Map<UUID, String> userKingDoms = new HashMap<>();
             for (Map.Entry<String, OfflineKingdom> entry : kingdoms.entrySet()) {
