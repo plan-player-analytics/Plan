@@ -106,7 +106,7 @@ public class LiteBansData extends PluginData implements BanData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         TableContainer banTable = getBanTable();
         TableContainer muteTable = getMuteTable();
         TableContainer warningTable = getWarningTable();
@@ -200,7 +200,7 @@ public class LiteBansData extends PluginData implements BanData {
     @Override
     public boolean isBanned(UUID uuid) {
         try {
-            return !db.getBans(uuid).isEmpty();
+            return db.getBans(uuid).stream().anyMatch(LiteBansDBObj::isActive);
         } catch (DBOpException e) {
             Log.toLog(this.getClass(), e);
         }
@@ -210,11 +210,10 @@ public class LiteBansData extends PluginData implements BanData {
     @Override
     public Collection<UUID> filterBanned(Collection<UUID> collection) {
         try {
-            List<LiteBansDBObj> bans = db.getBans();
-            Set<UUID> banned = new HashSet<>();
-            for (LiteBansDBObj ban : bans) {
-                banned.add(ban.getUuid());
-            }
+            Set<UUID> banned = db.getBans().stream()
+                    .filter(LiteBansDBObj::isActive)
+                    .map(LiteBansDBObj::getUuid)
+                    .collect(Collectors.toSet());
 
             return collection.stream().filter(banned::contains).collect(Collectors.toSet());
         } catch (DBOpException e) {
