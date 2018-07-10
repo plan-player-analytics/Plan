@@ -138,10 +138,10 @@ public class HtmlStructure {
                 "<span class=\"pull-right\">" + playerCount + "</span></p>" +
                 "<p><i class=\"col-blue fa fa-user\"></i> Players Online " +
                 "<span class=\"pull-right\">" + online + " / " + maxPlayers + "</span></p>" +
-                "<p><i class=\"col-deep-orange fa fa-compass\"></i> Type " +
+                "<p><i class=\"col-deep-orange far fa-compass\"></i> Type " +
                 "<span class=\"pull-right\">" + serverType + "</span></p></div>" +
                 "<div class=\"col-md-4\">" +
-                "<p><i class=\"fa fa-clock-o\"></i> Last Refresh" +
+                "<p><i class=\"far fa-clock\"></i> Last Refresh" +
                 "<span class=\"pull-right\"><b>" + refresh + "</b></span></p>" +
                 "<br>" +
                 "<a href=\"" + address + "\"><button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-light-green waves-effect\">" +
