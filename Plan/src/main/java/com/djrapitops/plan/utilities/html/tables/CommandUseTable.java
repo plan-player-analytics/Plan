@@ -4,8 +4,8 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.utilities.comparators.MapComparator;
-import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class CommandUseTable extends TableContainer {
     }
 
     public CommandUseTable(Map<String, Integer> commandUse) {
-        super(Html.FONT_AWESOME_ICON.parse("terminal") + " Command", Html.FONT_AWESOME_ICON.parse("list-ol") + "Times Used");
+        super(Icon.called("terminal") + " Command", Icon.called("list-ol") + "Times Used");
 
         setColor("lime");
         if (commandUse.isEmpty()) {

@@ -9,6 +9,8 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.comparators.PlayerKillComparator;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
 public class KillsTable extends TableContainer {
 
     public KillsTable(List<PlayerKill> playerKills) {
-        super(Html.FONT_AWESOME_ICON.parse("clock-o") + " Time", "Killed", "With");
+        super(Icon.called("clock").of(Family.REGULAR) + " Time", "Killed", "With");
 
         if (playerKills.isEmpty()) {
             addRow("No Kills");

@@ -16,6 +16,9 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.utilities.Format;
 
 import java.util.HashMap;
@@ -99,19 +102,19 @@ public class ServerAccordion extends AbstractAccordion {
             String title = serverName + "<span class=\"pull-right\">" + play + "</span>";
 
             String leftSide = new AccordionElementContentBuilder()
-                    .addRowBold("blue", "superpowers", "Operator", operator ? "Yes" : "No")
-                    .addRowBold("red", "gavel", "Banned", banned ? "Yes" : "No")
-                    .addRowBold("light-green", "user-plus", "Registered", Formatters.year().apply(() -> registered))
+                    .addRowBold(Icons.OPERATOR, "Operator", operator ? "Yes" : "No")
+                    .addRowBold(Icons.BANNED, "Banned", banned ? "Yes" : "No")
+                    .addRowBold(Icon.called("user-plus").of(Color.LIGHT_GREEN), "Registered", Formatters.year().apply(() -> registered))
                     .addBreak()
-                    .addRowBold("teal", "calendar-check-o", "Sessions", sessionCount)
-                    .addRowBold("green", "clock-o", "Server Playtime", play)
-                    .addRowBold("grey", "clock-o", "Time AFK", afk)
-                    .addRowBold("teal", "clock-o", "Longest Session", longest)
-                    .addRowBold("teal", "clock-o", "Session Median", median)
+                    .addRowBold(Icons.SESSION_COUNT, "Sessions", sessionCount)
+                    .addRowBold(Icons.PLAYTIME, "Server Playtime", play)
+                    .addRowBold(Icons.AFK_LENGTH, "Time AFK", afk)
+                    .addRowBold(Icons.SESSION_LENGTH, "Longest Session", longest)
+                    .addRowBold(Icons.SESSION_LENGTH, "Session Median", median)
                     .addBreak()
-                    .addRowBold("red", "crosshairs", "Player Kills", playerKills)
-                    .addRowBold("green", "crosshairs", "Mob Kills", mobKills)
-                    .addRowBold("red", "frown-o", "Deaths", deaths)
+                    .addRowBold(Icons.PLAYER_KILLS, "Player Kills", playerKills)
+                    .addRowBold(Icons.MOB_KILLS, "Mob Kills", mobKills)
+                    .addRowBold(Icons.DEATHS, "Deaths", deaths)
                     .toHtml();
 
             String rightSide = "<div id=\"" + worldId + "\" class=\"dashboard-donut-chart\"></div>" +

@@ -10,6 +10,9 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -166,16 +169,24 @@ public class HtmlStructure {
 
         StringBuilder html = new StringBuilder("<p>");
         if (offline) {
-            html.append(Html.FA_COLORED_ICON.parse("red", "circle")).append(" ").append(online);
+            html.append(Icon.called("circle").of(Color.RED))
+                    .append(" Offline");
         } else {
-            html.append(Html.FA_COLORED_ICON.parse("green", "circle")).append(" Online (").append(online).append(")");
+            html.append(Icon.called("circle").of(Color.GREEN))
+                    .append(" Online (")
+                    .append(online)
+                    .append(")");
         }
         html.append("</p>");
         if (op) {
-            html.append("<p>").append(Html.FA_COLORED_ICON.parse("blue", "superpowers")).append(" Operator</p>");
+            html.append("<p>")
+                    .append(Icons.OPERATOR)
+                    .append(" Operator</p>");
         }
         if (banned) {
-            html.append("<p>").append(Html.FA_COLORED_ICON.parse("red", "gavel")).append(" Banned");
+            html.append("<p>")
+                    .append(Icons.BANNED)
+                    .append(" Banned");
         }
         return html.toString();
     }

@@ -23,7 +23,7 @@ import java.util.UUID;
 public class NicknameTable extends TableContainer {
 
     public NicknameTable(List<Nickname> nicknames, Map<UUID, String> serverNames) {
-        super("Nickname", "Server");
+        super("Nickname", "Server", "Last Seen");
 
         if (nicknames.isEmpty()) {
             addRow("No Nicknames");
@@ -33,7 +33,7 @@ public class NicknameTable extends TableContainer {
     }
 
     private void addValues(List<Nickname> nicknames, Map<UUID, String> serverNames) {
-        Formatter<DateHolder> formatter = Formatters.day();
+        Formatter<DateHolder> formatter = Formatters.year();
         for (Nickname nickname : nicknames) {
             UUID serverUUID = nickname.getServerUUID();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");

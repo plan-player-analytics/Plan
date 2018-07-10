@@ -12,6 +12,8 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.PlayerContainerLastPlayedComparator;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.util.List;
 
@@ -27,13 +29,13 @@ public class PlayersTable extends TableContainer {
 
     private PlayersTable(List<PlayerContainer> players, int maxPlayers) {
         super(
-                Html.FONT_AWESOME_ICON.parse("user") + " Name",
-                Html.FONT_AWESOME_ICON.parse("check") + " Activity Index",
-                Html.FONT_AWESOME_ICON.parse("clock-o") + " Playtime",
-                Html.FONT_AWESOME_ICON.parse("calendar-plus-o") + " Sessions",
-                Html.FONT_AWESOME_ICON.parse("user-plus") + " Registered",
-                Html.FONT_AWESOME_ICON.parse("calendar-check-o") + " Last Seen",
-                Html.FONT_AWESOME_ICON.parse("globe") + " Geolocation"
+                Icon.called("user") + " Name",
+                Icon.called("check") + " Activity Index",
+                Icon.called("clock").of(Family.REGULAR) + " Playtime",
+                Icon.called("calendar-plus").of(Family.REGULAR) + " Sessions",
+                Icon.called("user-plus") + " Registered",
+                Icon.called("calendar-check").of(Family.REGULAR) + " Last Seen",
+                Icon.called("globe") + " Geolocation"
         );
         this.players = players;
         this.maxPlayers = maxPlayers;

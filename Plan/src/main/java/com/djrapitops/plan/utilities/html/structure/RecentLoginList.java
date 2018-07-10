@@ -31,12 +31,15 @@ public class RecentLoginList {
     }
 
     public String toHtml() {
-        StringBuilder html = new StringBuilder();
-
         List<RecentLogin> recentLogins = getMostRecentLogins();
 
-        Formatter<DateHolder> formatter = Formatters.year();
+        Formatter<DateHolder> formatter = Formatters.second();
 
+        if (recentLogins.isEmpty()) {
+            return "<li>No Recent Logins</li>";
+        }
+
+        StringBuilder html = new StringBuilder();
         int i = 0;
         for (RecentLogin recentLogin : recentLogins) {
             if (i >= 20) {

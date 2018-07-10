@@ -19,6 +19,7 @@ import com.djrapitops.plan.system.info.server.ServerProperties;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -39,7 +40,7 @@ public class DebugPageResponse extends ErrorResponse {
 
     public DebugPageResponse() {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setTitle(Html.FONT_AWESOME_ICON.parse("bug") + " Debug Information");
+        super.setTitle(Icon.called("bug") + " Debug Information");
         super.setParagraph(buildParagraph());
         replacePlaceholders();
     }

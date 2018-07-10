@@ -3,6 +3,8 @@ package com.djrapitops.plan.data.plugin;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.google.common.base.Objects;
 
 import java.util.Collection;
@@ -23,7 +25,7 @@ public abstract class PluginData {
     private final ContainerSize size;
     private final String sourcePlugin;
 
-    private String pluginIcon;
+    private Icon pluginIcon;
     private String iconColor;
 
     private String helpText;
@@ -39,12 +41,24 @@ public abstract class PluginData {
 
     public abstract AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer fillThis) throws Exception;
 
-    protected final void setPluginIcon(String pluginIcon) {
+    protected final void setPluginIcon(Icon pluginIcon) {
         this.pluginIcon = pluginIcon;
     }
 
+    /**
+     * @deprecated Use {@code setPluginIcon(Icon)} instead
+     */
+    @Deprecated
+    protected final void setPluginIcon(String pluginIcon) {
+        this.pluginIcon = Icon.called(pluginIcon != null ? pluginIcon : "cube").build();
+    }
+
+    /**
+     * @deprecated Use {@code setPluginIcon(Icon)} instead
+     */
+    @Deprecated
     protected final void setIconColor(String iconColor) {
-        this.iconColor = iconColor;
+        pluginIcon.setColor(Color.matchString(iconColor));
     }
 
     public final String getHelpText() {
@@ -52,7 +66,7 @@ public abstract class PluginData {
     }
 
     public final String parsePluginIcon() {
-        return pluginIcon != null ? Html.FA_COLORED_ICON.parse((iconColor != null ? iconColor : "black"), pluginIcon) : Html.FONT_AWESOME_ICON.parse("cube");
+        return (pluginIcon != null ? pluginIcon : Icon.called("cube").build()).toHtml();
     }
 
     public final ContainerSize getSize() {
@@ -82,12 +96,24 @@ public abstract class PluginData {
         return Objects.hashCode(size, sourcePlugin, pluginIcon);
     }
 
+    /**
+     * @deprecated Use {@code getWithIcon(String, Icon)} instead
+     */
+    @Deprecated
     public final String getWithIcon(String text, String icon) {
-        return getWithIcon(text, icon, "");
+        return getWithIcon(text, Icon.called(icon).build());
     }
 
+    /**
+     * @deprecated Use {@code getWithIcon(String, Icon)} instead
+     */
+    @Deprecated
     public final String getWithIcon(String text, String icon, String color) {
-        return Html.FA_COLORED_ICON.parse(color, icon) + " " + text;
+        return getWithIcon(text, Icon.called(icon).of(Color.matchString(color)).build());
+    }
+
+    public final String getWithIcon(String text, Icon icon) {
+        return icon.toHtml() + " " + text;
     }
 
     public final void setAnalysisData(com.djrapitops.plan.data.store.containers.AnalysisContainer analysisData) {

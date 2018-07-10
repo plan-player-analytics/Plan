@@ -7,6 +7,7 @@ package com.djrapitops.plan.data.element;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,7 +40,10 @@ public class TableContainer {
     }
 
     public TableContainer(boolean players, String... header) {
-        this.header = FormatUtils.mergeArrays(new String[]{Html.FONT_AWESOME_ICON.parse("user") + " Player"}, header);
+        this.header = FormatUtils.mergeArrays(
+                new String[]{Icon.called("user").build() + " Player"},
+                header
+        );
         this.formatters = new Formatter[this.header.length];
         values = new ArrayList<>();
     }

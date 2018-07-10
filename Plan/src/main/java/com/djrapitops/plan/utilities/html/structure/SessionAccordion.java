@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plan.utilities.html.tables.KillsTable;
 
 import java.util.*;
@@ -114,14 +115,14 @@ public class SessionAccordion extends AbstractAccordion {
             String worldHtmlID = "worldPieSession" + htmlID;
 
             String leftSide = new AccordionElementContentBuilder()
-                    .addRowBold("teal", "clock-o", "Session Ended", sessionEnd)
-                    .addRowBold("green", "clock-o", "Session Length", length)
-                    .addRowBold("grey", "clock-o", "AFK", afk)
-                    .addRowBold("green", "server", "Server", serverName)
+                    .addRowBold(Icons.SESSION_LENGTH, "Session Ended", sessionEnd)
+                    .addRowBold(Icons.PLAYTIME, "Session Length", length)
+                    .addRowBold(Icons.AFK_LENGTH, "AFK", afk)
+                    .addRowBold(Icons.SERVER, "Server", serverName)
                     .addBreak()
-                    .addRowBold("red", "crosshairs", "Player Kills", playerKillCount)
-                    .addRowBold("green", "crosshairs", "Mob Kills", mobKillCount)
-                    .addRowBold("red", "frown-o", "Deaths", deaths)
+                    .addRowBold(Icons.PLAYER_KILLS, "Player Kills", playerKillCount)
+                    .addRowBold(Icons.MOB_KILLS, "Mob Kills", mobKillCount)
+                    .addRowBold(Icons.DEATHS, "Deaths", deaths)
                     .toHtml();
 
             String rightSide = "<div id=\"" + worldHtmlID + "\" class=\"dashboard-donut-chart\"></div>" +
@@ -185,14 +186,14 @@ public class SessionAccordion extends AbstractAccordion {
             String worldHtmlID = "worldPieSession" + htmlID;
 
             String leftSide = new AccordionElementContentBuilder()
-                    .addRowBold("teal", "clock-o", "Session Ended", sessionEnd)
-                    .addRowBold("green", "clock-o", "Session Length", length)
-                    .addRowBold("grey", "clock-o", "AFK", afk)
-                    .addRowBold("grey", "server", "Server", serverName)
+                    .addRowBold(Icons.SESSION_LENGTH, "Session Ended", sessionEnd)
+                    .addRowBold(Icons.PLAYTIME, "Session Length", length)
+                    .addRowBold(Icons.AFK_LENGTH, "AFK", afk)
+                    .addRowBold(Icons.SERVER, "Server", serverName)
                     .addBreak()
-                    .addRowBold("red", "crosshairs", "Player Kills", playerKillCount)
-                    .addRowBold("green", "crosshairs", "Mob Kills", mobKillCount)
-                    .addRowBold("red", "frown-o", "Deaths", deaths)
+                    .addRowBold(Icons.PLAYER_KILLS, "Player Kills", playerKillCount)
+                    .addRowBold(Icons.MOB_KILLS, "Mob Kills", mobKillCount)
+                    .addRowBold(Icons.DEATHS, "Deaths", deaths)
                     .toHtml();
 
             String rightSide = "<div id=\"" + worldHtmlID + "\" class=\"dashboard-donut-chart\"></div>" +
