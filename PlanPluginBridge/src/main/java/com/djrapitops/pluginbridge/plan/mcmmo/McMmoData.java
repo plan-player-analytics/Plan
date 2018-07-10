@@ -10,7 +10,9 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.gmail.nossr50.database.DatabaseManager;
 import com.gmail.nossr50.datatypes.player.PlayerProfile;
 import com.gmail.nossr50.datatypes.skills.SkillType;
@@ -29,8 +31,7 @@ public class McMmoData extends PluginData {
 
     public McMmoData() {
         super(ContainerSize.THIRD, "MCMMO");
-        super.setIconColor("indigo");
-        super.setPluginIcon("compass");
+        setPluginIcon(Icon.called("compass").of(Color.INDIGO).of(Family.REGULAR).build());
     }
 
     @Override
@@ -39,8 +40,8 @@ public class McMmoData extends PluginData {
 
         PlayerProfile profile = db.loadPlayerProfile("", uuid, false);
 
-        String skillS = Html.FONT_AWESOME_ICON.parse("star") + " Skill";
-        String levelS = Html.FONT_AWESOME_ICON.parse("plus") + " Level";
+        String skillS = getWithIcon("Skill", Icon.called("star"));
+        String levelS = getWithIcon("Level", Icon.called("plus"));
         TableContainer skillTable = new TableContainer(skillS, levelS);
         skillTable.setColor("indigo");
 
@@ -54,9 +55,9 @@ public class McMmoData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
-        String skillS = Html.FONT_AWESOME_ICON.parse("star") + " Skill";
-        String tLevel = Html.FONT_AWESOME_ICON.parse("plus") + " Total Level";
-        String aLevel = Html.FONT_AWESOME_ICON.parse("plus") + " Average Level";
+        String skillS = getWithIcon("Skill", Icon.called("star"));
+        String tLevel = getWithIcon("Total Level", Icon.called("plus"));
+        String aLevel = getWithIcon("Average Level", Icon.called("plus"));
 
         DatabaseManager databaseManager = mcMMO.getDatabaseManager();
 

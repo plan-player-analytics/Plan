@@ -9,6 +9,9 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plugin.utilities.FormatUtils;
 import net.kaikk.mc.gpp.Claim;
 import net.kaikk.mc.gpp.DataStore;
@@ -27,8 +30,7 @@ public class GriefPreventionPlusData extends PluginData {
 
     public GriefPreventionPlusData(DataStore dataStore) {
         super(ContainerSize.THIRD, "GriefPreventionPlus");
-        super.setPluginIcon("shield");
-        super.setIconColor("blue-grey");
+        setPluginIcon(Icon.called("shield-alt").of(Color.BLUE_GREY).build());
         this.dataStore = dataStore;
     }
 
@@ -43,10 +45,13 @@ public class GriefPreventionPlusData extends PluginData {
                 );
         long totalArea = claims.values().stream().mapToInt(i -> i).sum();
 
-        inspectContainer.addValue(getWithIcon("Claims", "map-marker", "blue-grey"), claims.size());
-        inspectContainer.addValue(getWithIcon("Claimed Area", "map-o", "light-green"), totalArea);
+        inspectContainer.addValue(getWithIcon("Claims", Icon.called("map-marker").of(Color.BLUE_GREY)), claims.size());
+        inspectContainer.addValue(getWithIcon("Claimed Area", Icon.called("map").of(Family.REGULAR).of(Color.BLUE_GREY)), totalArea);
 
-        TableContainer claimsTable = new TableContainer(getWithIcon("Claim", "map-marker"), getWithIcon("Area", "map-o"));
+        TableContainer claimsTable = new TableContainer(
+                getWithIcon("Claim", Icon.called("map-marker")),
+                getWithIcon("Area", Icon.called("map").of(Family.REGULAR))
+        );
         claimsTable.setColor("blue-grey");
         for (Map.Entry<String, Integer> entry : claims.entrySet()) {
             claimsTable.addRow(entry.getKey(), entry.getValue());
@@ -71,9 +76,9 @@ public class GriefPreventionPlusData extends PluginData {
         }
 
         long totalArea = area.values().stream().mapToInt(i -> i).sum();
-        analysisContainer.addValue(getWithIcon("Total Claimed Area", "map-o", "blue-grey"), totalArea);
+        analysisContainer.addValue(getWithIcon("Total Claimed Area", Icon.called("map").of(Family.REGULAR).of(Color.BLUE_GREY)), totalArea);
 
-        analysisContainer.addPlayerTableValues(getWithIcon("Claimed Area", "map-o"), area);
+        analysisContainer.addPlayerTableValues(getWithIcon("Claimed Area", Icon.called("map").of(Family.REGULAR)), area);
 
         return analysisContainer;
     }

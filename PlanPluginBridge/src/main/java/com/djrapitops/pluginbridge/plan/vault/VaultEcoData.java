@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -12,6 +12,8 @@ import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
@@ -30,8 +32,7 @@ public class VaultEcoData extends PluginData {
 
     public VaultEcoData(Economy econ) {
         super(ContainerSize.THIRD, "Economy (" + econ.getName() + ")");
-        super.setIconColor("green");
-        super.setPluginIcon("money");
+        setPluginIcon(Icon.called("money-bill-wave").of(Color.GREEN).build());
         this.econ = econ;
     }
 
@@ -42,7 +43,7 @@ public class VaultEcoData extends PluginData {
             return inspectContainer;
         }
         OfflinePlayer p = new FakeOfflinePlayer(uuid, name);
-        inspectContainer.addValue(getWithIcon("Balance", "money", "green"), econ.format(econ.getBalance(p)));
+        inspectContainer.addValue(getWithIcon("Balance", Icon.called("money-bill-wave").of(Color.GREEN)), econ.format(econ.getBalance(p)));
 
         return inspectContainer;
     }
@@ -61,8 +62,8 @@ public class VaultEcoData extends PluginData {
             totalBalance += bal;
             balances.put(p.getUniqueId(), econ.format(bal));
         }
-        analysisContainer.addValue(getWithIcon("Server Balance", "money", "green"), FormatUtils.cutDecimals(totalBalance));
-        analysisContainer.addPlayerTableValues(getWithIcon("Balance", "money"), balances);
+        analysisContainer.addValue(getWithIcon("Server Balance", Icon.called("money-bill-wave").of(Color.GREEN)), FormatUtils.cutDecimals(totalBalance));
+        analysisContainer.addPlayerTableValues(getWithIcon("Balance", Icon.called("money-bill-wave")), balances);
 
         return analysisContainer;
     }

@@ -12,6 +12,8 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import org.kingdoms.constants.kingdom.OfflineKingdom;
 import org.kingdoms.constants.player.OfflineKingdomPlayer;
 import org.kingdoms.manager.game.GameManagement;
@@ -27,8 +29,7 @@ public class KingdomsData extends PluginData {
 
     public KingdomsData() {
         super(ContainerSize.TAB, "Kingdoms");
-        super.setIconColor("amber");
-        super.setPluginIcon("shield");
+        setPluginIcon(Icon.called("crown").of(Color.AMBER).build());
     }
 
     @Override
@@ -37,14 +38,14 @@ public class KingdomsData extends PluginData {
         String kingdomName = kingdomPlayer.getKingdomName();
 
         if (kingdomName == null) {
-            inspectContainer.addValue(getWithIcon("Kingdom", "shield", "amber"), "No Kingdom");
+            inspectContainer.addValue(getWithIcon("Kingdom", Icon.called("fort-awesome").of(Color.AMBER)), "No Kingdom");
         } else {
             OfflineKingdom kingdom = GameManagement.getKingdomManager().getOfflineKingdom(kingdomName);
             if (kingdom != null) {
                 String king = kingdom.getKingName();
                 String link = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(king), king);
-                inspectContainer.addValue(getWithIcon("Kingdom", "shield", "amber"), kingdomName);
-                inspectContainer.addValue(getWithIcon("King", "user", "amber"), link);
+                inspectContainer.addValue(getWithIcon("Kingdom", Icon.called("fort-awesome").of(Color.AMBER)), kingdomName);
+                inspectContainer.addValue(getWithIcon("King", Icon.called("chess-king").of(Color.AMBER)), link);
             }
         }
 
@@ -55,7 +56,7 @@ public class KingdomsData extends PluginData {
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         Map<String, OfflineKingdom> kingdoms = GameManagement.getKingdomManager().getKingdomList();
 
-        analysisContainer.addValue(getWithIcon("Number of Kingdoms", "shield", "amber"), kingdoms.size());
+        analysisContainer.addValue(getWithIcon("Number of Kingdoms", Icon.called("fort-awesome").of(Color.AMBER)), kingdoms.size());
 
         if (!kingdoms.isEmpty()) {
             KingdomsAccordion kingdomsAccordion = new KingdomsAccordion(
@@ -79,7 +80,7 @@ public class KingdomsData extends PluginData {
                     }
                 }
             }
-            analysisContainer.addPlayerTableValues(getWithIcon("Kingdom", "shield"), userKingDoms);
+            analysisContainer.addPlayerTableValues(getWithIcon("Kingdom", Icon.called("fort-awesome")), userKingDoms);
         }
 
         return analysisContainer;

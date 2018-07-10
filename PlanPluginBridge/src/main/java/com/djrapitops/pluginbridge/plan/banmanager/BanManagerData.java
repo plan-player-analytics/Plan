@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -12,6 +12,10 @@ import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import me.confuser.banmanager.BmAPI;
 import me.confuser.banmanager.data.PlayerBanData;
 import me.confuser.banmanager.data.PlayerMuteData;
@@ -29,8 +33,7 @@ public class BanManagerData extends PluginData implements BanData {
 
     public BanManagerData() {
         super(ContainerSize.THIRD, "BanManager");
-        super.setIconColor("red");
-        super.setPluginIcon("gavel");
+        setPluginIcon(Icons.BANNED);
     }
 
     @Override
@@ -38,7 +41,7 @@ public class BanManagerData extends PluginData implements BanData {
         boolean banned = BmAPI.isBanned(uuid);
         boolean muted = BmAPI.isMuted(uuid);
 
-        inspectContainer.addValue(getWithIcon("Banned", "gavel", "red"), banned ? "Yes" : "No");
+        inspectContainer.addValue(getWithIcon("Banned", Icons.BANNED), banned ? "Yes" : "No");
 
         if (banned) {
             PlayerBanData currentBan = BmAPI.getCurrentBan(uuid);
@@ -48,12 +51,12 @@ public class BanManagerData extends PluginData implements BanData {
             long ends = currentBan.getExpires();
             String reason = currentBan.getReason();
 
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Banned by", "user", "red"), link);
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Date", "calendar", "red"), FormatUtils.formatTimeStampYear(date));
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Ends", "calendar-check-o", "red"), FormatUtils.formatTimeStampYear(ends));
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Reason", "comment", "red"), reason);
+            inspectContainer.addValue("&nbsp;" + getWithIcon("Banned by", Icon.called("user").of(Color.RED)), link);
+            inspectContainer.addValue("&nbsp;" + getWithIcon("Date", Icon.called("calendar").of(Color.RED).of(Family.REGULAR)), FormatUtils.formatTimeStampYear(date));
+            inspectContainer.addValue("&nbsp;" + getWithIcon("Ends", Icon.called("calendar-check").of(Color.RED).of(Family.REGULAR)), FormatUtils.formatTimeStampYear(ends));
+            inspectContainer.addValue("&nbsp;" + getWithIcon("Reason", Icon.called("comment").of(Color.RED).of(Family.REGULAR)), reason);
         }
-        inspectContainer.addValue(getWithIcon("Muted", "bell-slash-o", "deep-orange"), muted ? "Yes" : "No");
+        inspectContainer.addValue(getWithIcon("Muted", Icon.called("bell-slash").of(Color.DEEP_ORANGE)), muted ? "Yes" : "No");
         if (muted) {
             PlayerMuteData currentMute = BmAPI.getCurrentMute(uuid);
             String mutedBy = currentMute.getActor().getName();
@@ -62,10 +65,10 @@ public class BanManagerData extends PluginData implements BanData {
             long ends = currentMute.getExpires();
             String reason = currentMute.getReason();
 
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Muted by", "user", "deep-orange"), link);
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Date", "calendar", "deep-orange"), FormatUtils.formatTimeStampYear(date));
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Ends", "calendar-check-o", "deep-orange"), FormatUtils.formatTimeStampYear(ends));
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Reason", "comment", "deep-orange"), reason);
+            inspectContainer.addValue("&nbsp;" + getWithIcon("Muted by", Icon.called("user").of(Color.DEEP_ORANGE)), link);
+            inspectContainer.addValue("&nbsp;" + getWithIcon("Date", Icon.called("calendar").of(Color.DEEP_ORANGE).of(Family.REGULAR)), FormatUtils.formatTimeStampYear(date));
+            inspectContainer.addValue("&nbsp;" + getWithIcon("Ends", Icon.called("calendar-check").of(Color.DEEP_ORANGE).of(Family.REGULAR)), FormatUtils.formatTimeStampYear(ends));
+            inspectContainer.addValue("&nbsp;" + getWithIcon("Reason", Icon.called("comment").of(Color.DEEP_ORANGE).of(Family.REGULAR)), reason);
         }
 
         return inspectContainer;

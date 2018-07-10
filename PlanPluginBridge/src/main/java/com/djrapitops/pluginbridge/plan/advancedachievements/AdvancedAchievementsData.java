@@ -9,6 +9,9 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.hm.achievement.api.AdvancedAchievementsAPI;
 
@@ -29,15 +32,14 @@ public class AdvancedAchievementsData extends PluginData {
 
     public AdvancedAchievementsData(AdvancedAchievementsAPI aaAPI) {
         super(ContainerSize.THIRD, "AdvancedAchievements");
-        super.setPluginIcon("star");
-        super.setIconColor("green");
+        setPluginIcon(Icon.called("star").of(Color.GREEN).build());
         this.aaAPI = aaAPI;
         refreshTotalAchievements();
     }
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
-        String text = getWithIcon("Achievements", "check-circle-o", "green");
+        String text = getWithIcon("Achievements", Icon.called("check-circle").of(Family.REGULAR).of(Color.GREEN));
         inspectContainer.addValue(text, aaAPI.getPlayerTotalAchievements(uuid));
 
         return inspectContainer;
@@ -52,9 +54,9 @@ public class AdvancedAchievementsData extends PluginData {
         int size = totalAchievements.size();
         String average = size != 0 ? FormatUtils.cutDecimals(total * 1.0 / size) : "-";
 
-        analysisContainer.addValue(getWithIcon("Total Achievements", "check-circle-o", "green"), total);
-        analysisContainer.addValue(getWithIcon("Average Achievements", "check-circle-o", "green"), average);
-        analysisContainer.addPlayerTableValues(getWithIcon("Achievements", "star"), totalAchievements);
+        analysisContainer.addValue(getWithIcon("Total Achievements", Icon.called("check-circle").of(Family.REGULAR).of(Color.GREEN)), total);
+        analysisContainer.addValue(getWithIcon("Average Achievements", Icon.called("check-circle").of(Family.REGULAR).of(Color.GREEN)), average);
+        analysisContainer.addPlayerTableValues(getWithIcon("Achievements", Icon.called("star")), totalAchievements);
         return analysisContainer;
     }
 

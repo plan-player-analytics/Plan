@@ -14,6 +14,8 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plugin.utilities.Verify;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
@@ -34,8 +36,7 @@ public class TownyData extends PluginData {
 
     public TownyData() {
         super(ContainerSize.TAB, "Towny");
-        super.setPluginIcon("bank");
-        super.setIconColor("brown");
+        setPluginIcon(Icon.called("university").of(Color.BROWN).build());
     }
 
     @Override
@@ -51,18 +52,18 @@ public class TownyData extends PluginData {
                 String mayorName = town.getMayor().getName();
                 String townMayor = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mayorName), mayorName);
 
-                inspectContainer.addValue(getWithIcon("Town", "bank", "brown"), townName);
-                inspectContainer.addValue(getWithIcon("Town Mayor", "user", "brown"), townMayor);
+                inspectContainer.addValue(getWithIcon("Town", Icon.called("university").of(Color.BROWN)), townName);
+                inspectContainer.addValue(getWithIcon("Town Mayor", Icon.called("user").of(Color.BROWN)), townMayor);
 
                 try {
                     Coord homeBlock = town.getHomeBlock().getCoord();
                     String coordinates = "x: " + homeBlock.getX() + " z: " + homeBlock.getZ();
-                    inspectContainer.addValue(getWithIcon("Town Coordinates", "map-pin", "red"), coordinates);
+                    inspectContainer.addValue(getWithIcon("Town Coordinates", Icon.called("map-pin").of(Color.RED)), coordinates);
                 } catch (TownyException e) {
                 }
 
                 int residents = town.getResidents().size();
-                inspectContainer.addValue(getWithIcon("Town Residents", "users", "brown"), residents);
+                inspectContainer.addValue(getWithIcon("Town Residents", Icon.called("users").of(Color.BROWN)), residents);
                 return inspectContainer;
             }
         } catch (NotRegisteredException ignore) {
@@ -76,7 +77,7 @@ public class TownyData extends PluginData {
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         List<Town> towns = getTopTowns();
 
-        analysisContainer.addValue(getWithIcon("Number of Towns", "bank", "brown"), towns.size());
+        analysisContainer.addValue(getWithIcon("Number of Towns", Icon.called("university").of(Color.BROWN)), towns.size());
 
         if (!towns.isEmpty()) {
 
@@ -92,7 +93,7 @@ public class TownyData extends PluginData {
                         .filter(Verify::notNull)
                         .forEach(uuid -> userTowns.put(uuid, uuid.equals(mayorUUID) ? "<b>" + townName + "</b>" : townName));
             }
-            analysisContainer.addPlayerTableValues(getWithIcon("Town", "bank"), userTowns);
+            analysisContainer.addPlayerTableValues(getWithIcon("Town", Icon.called("university")), userTowns);
 
             TownsAccordion townsAccordion = new TownsAccordion(
                     towns,

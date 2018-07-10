@@ -10,6 +10,8 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.dao.JobsDAOData;
 
@@ -25,15 +27,16 @@ public class JobsData extends PluginData {
 
     public JobsData() {
         super(ContainerSize.THIRD, "Jobs");
-        super.setIconColor("brown");
-        super.setPluginIcon("suitcase");
+        setPluginIcon(Icon.called("suitcase").of(Color.BROWN).build());
     }
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         List<JobsDAOData> playersJobs = Jobs.getDBManager().getDB().getAllJobs(null, uuid);
 
-        TableContainer jobTable = new TableContainer(getWithIcon("Job", "suitcase"), getWithIcon("Level", "plus"));
+        TableContainer jobTable = new TableContainer(
+                getWithIcon("Job", Icon.called("suitcase")),
+                getWithIcon("Level", Icon.called("plus")));
         for (JobsDAOData job : playersJobs) {
             jobTable.addRow(job.getJobName(), job.getLevel());
         }
@@ -52,7 +55,12 @@ public class JobsData extends PluginData {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
-        TableContainer jobTable = new TableContainer(getWithIcon("Job", "suitcase"), getWithIcon("Workers", "users"), getWithIcon("Total Level", "plus"), getWithIcon("Average Level", "plus"));
+        TableContainer jobTable = new TableContainer(
+                getWithIcon("Job", Icon.called("suitcase")),
+                getWithIcon("Workers", Icon.called("users")),
+                getWithIcon("Total Level", Icon.called("plus")),
+                getWithIcon("Average Level", Icon.called("plus"))
+        );
 
         if (allJobs.isEmpty()) {
             jobTable.addRow("No Jobs with Workers");
@@ -75,8 +83,8 @@ public class JobsData extends PluginData {
                 jobTable.addRow(
                         job,
                         amountOfWorkers,
-                        amountOfWorkers != 0 ? FormatUtils.cutDecimals(totalLevel / amountOfWorkers) : "-",
-                        totalLevel
+                        totalLevel,
+                        amountOfWorkers != 0 ? FormatUtils.cutDecimals(totalLevel / amountOfWorkers) : "-"
                 );
             }
         }

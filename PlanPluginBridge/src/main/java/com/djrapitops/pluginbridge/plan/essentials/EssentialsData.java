@@ -9,6 +9,8 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.UserMap;
@@ -26,8 +28,7 @@ public class EssentialsData extends PluginData {
 
     public EssentialsData(Essentials essentials) {
         super(ContainerSize.THIRD, "Essentials");
-        super.setPluginIcon("flask");
-        super.setIconColor("deep-orange");
+        setPluginIcon(Icon.called("flask").of(Color.DEEP_ORANGE).build());
         this.essentials = essentials;
     }
 
@@ -39,8 +40,8 @@ public class EssentialsData extends PluginData {
             boolean jailed = user.isJailed();
             boolean muted = user.isMuted();
 
-            inspectContainer.addValue(getWithIcon("Jailed", "ban", "deep-orange"), jailed ? "Yes" : "No");
-            inspectContainer.addValue(getWithIcon("Muted", "bell-slash-o", "deep-orange"), muted ? "Yes" : "No");
+            inspectContainer.addValue(getWithIcon("Jailed", Icon.called("ban").of(Color.DEEP_ORANGE)), jailed ? "Yes" : "No");
+            inspectContainer.addValue(getWithIcon("Muted", Icon.called("bell-slash").of(Color.DEEP_ORANGE)), muted ? "Yes" : "No");
         } else {
             inspectContainer.addValue("No Essentials Data for this user", "-");
         }
@@ -64,15 +65,18 @@ public class EssentialsData extends PluginData {
         String jailedString = jailed.values().stream().filter("Yes"::equals).count() + " / " + uuids.size();
         String mutedString = muted.values().stream().filter("Yes"::equals).count() + " / " + uuids.size();
 
-        analysisContainer.addValue(getWithIcon("Players in Jail", "ban", "red"), jailedString);
-        analysisContainer.addValue(getWithIcon("Muted", "bell-slash-o", "deep-orange"), mutedString);
+        analysisContainer.addValue(getWithIcon("Players in Jail", Icon.called("ban").of(Color.DEEP_ORANGE)), jailedString);
+        analysisContainer.addValue(getWithIcon("Muted", Icon.called("bell-slash").of(Color.DEEP_ORANGE)), mutedString);
 
-        analysisContainer.addPlayerTableValues(getWithIcon("Jailed", "ban"), jailed);
-        analysisContainer.addPlayerTableValues(getWithIcon("Muted", "bell-slash-o"), muted);
+        analysisContainer.addPlayerTableValues(getWithIcon("Jailed", Icon.called("ban")), jailed);
+        analysisContainer.addPlayerTableValues(getWithIcon("Muted", Icon.called("bell-slash")), muted);
 
         List<String> warpsList = new ArrayList<>(essentials.getWarps().getList());
         if (!warpsList.isEmpty()) {
-            TableContainer warps = new TableContainer(getWithIcon("Warp", "map-marker"), getWithIcon("Command", "terminal"));
+            TableContainer warps = new TableContainer(
+                    getWithIcon("Warp", Icon.called("map-marker-alt")),
+                    getWithIcon("Command", Icon.called("terminal"))
+            );
             warps.setColor("light-green");
 
             Collections.sort(warpsList);

@@ -13,6 +13,9 @@ import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.util.*;
 
@@ -27,8 +30,7 @@ public class BuyCraftData extends PluginData {
 
     public BuyCraftData(String secret) {
         super(ContainerSize.TAB, "BuyCraft");
-        super.setIconColor("blue");
-        super.setPluginIcon("shopping-bag");
+        setPluginIcon(Icon.called("shopping-bag").of(Color.BLUE).build());
 
         this.secret = secret;
     }
@@ -57,9 +59,9 @@ public class BuyCraftData extends PluginData {
     private void addPlayerTable(AnalysisContainer analysisContainer, List<Payment> payments) {
         TableContainer payTable = new TableContainer(
                 true,
-                getWithIcon("Date", "calendar"),
-                getWithIcon("Amount", "money"),
-                getWithIcon("Packages", "cube")
+                getWithIcon("Date", Icon.called("calendar").of(Family.REGULAR)),
+                getWithIcon("Amount", Icon.called("money-bill-wave")),
+                getWithIcon("Packages", Icon.called("cube"))
         );
         payTable.setColor("blue");
         for (Payment payment : payments) {
@@ -91,7 +93,10 @@ public class BuyCraftData extends PluginData {
             paymentTotals.put(currency, paymentTotals.getOrDefault(currency, 0.0) + amount);
         }
         for (Map.Entry<String, Double> entry : paymentTotals.entrySet()) {
-            analysisContainer.addValue(getWithIcon("Total " + entry.getKey(), "money", "blue"), FormatUtils.cutDecimals(entry.getValue()));
+            analysisContainer.addValue(
+                    getWithIcon("Total " + entry.getKey(), Icon.called("money-bill-wave").of(Color.BLUE)),
+                    FormatUtils.cutDecimals(entry.getValue())
+            );
         }
     }
 }

@@ -112,6 +112,10 @@ public abstract class PluginData {
         return getWithIcon(text, Icon.called(icon).of(Color.matchString(color)).build());
     }
 
+    public final String getWithIcon(String text, Icon.Builder builder) {
+        return getWithIcon(text, builder.build());
+    }
+
     public final String getWithIcon(String text, Icon icon) {
         return icon.toHtml() + " " + text;
     }

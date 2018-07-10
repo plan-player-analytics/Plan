@@ -4,6 +4,9 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plan.utilities.html.structure.AbstractAccordion;
 import com.djrapitops.plan.utilities.html.structure.AccordionElement;
 import com.djrapitops.plan.utilities.html.structure.AccordionElementContentBuilder;
@@ -62,16 +65,16 @@ public class KingdomsAccordion extends AbstractAccordion {
 
             String leftSide = new AccordionElementContentBuilder()
                     .addHtml(kingdomLore != null ? "<p>" + kingdomLore + "</p>" : "")
-                    .addRowBold("amber", "user", "King", kingName)
-                    .addRowBold("amber", "users", "Members", memberCount)
-                    .addRowBold("amber", "bolt", "Might", might)
-                    .addRowBold("amber", "cubes", "Resources", resourcePoints)
+                    .addRowBold(Icon.called("chess-king").of(Color.AMBER), "King", kingName)
+                    .addRowBold(Icon.called("users").of(Color.AMBER), "Members", memberCount)
+                    .addRowBold(Icon.called("bolt").of(Color.AMBER), "Might", might)
+                    .addRowBold(Icon.called("cubes").of(Color.AMBER), "Resources", resourcePoints)
                     .toHtml();
 
             String rightSide = new AccordionElementContentBuilder()
-                    .addRowBold("red", "crosshairs", "Player Kills", playerKills)
-                    .addRowBold("green", "crosshairs", "Mob Kills", mobKills)
-                    .addRowBold("red", "frown-o", "Deaths", deaths)
+                    .addRowBold(Icons.PLAYER_KILLS, "Player Kills", playerKills)
+                    .addRowBold(Icons.MOB_KILLS, "Mob Kills", mobKills)
+                    .addRowBold(Icons.DEATHS, "Deaths", deaths)
                     .toHtml();
 
             addElement(new AccordionElement(htmlID, kingdomName + "<span class=\"pull-right\">" + separated + "</span>")

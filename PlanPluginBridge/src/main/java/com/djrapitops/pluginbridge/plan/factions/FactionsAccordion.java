@@ -5,6 +5,10 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plan.utilities.html.structure.AbstractAccordion;
 import com.djrapitops.plan.utilities.html.structure.AccordionElement;
 import com.djrapitops.plan.utilities.html.structure.AccordionElementContentBuilder;
@@ -72,16 +76,16 @@ public class FactionsAccordion extends AbstractAccordion {
             String htmlID = "faction_" + factionName + "_" + createdAtMillis;
 
             String leftSide = new AccordionElementContentBuilder()
-                    .addRowBold("deep-purple", "calendar-o", "Created", created)
-                    .addRowBold("purple", "bolt", "Power", powerString)
-                    .addRowBold("purple", "user", "Leader", leaderName)
-                    .addRowBold("purple", "users", "Members", memberCount)
-                    .addRowBold("purple", "map", "Land Count", landCount)
+                    .addRowBold(Icon.called("calendar").of(Color.DEEP_PURPLE).of(Family.REGULAR), "Created", created)
+                    .addRowBold(Icon.called("bolt").of(Color.PURPLE), "Power", powerString)
+                    .addRowBold(Icon.called("user").of(Color.PURPLE), "Leader", leaderName)
+                    .addRowBold(Icon.called("users").of(Color.PURPLE), "Members", memberCount)
+                    .addRowBold(Icon.called("map").of(Color.PURPLE), "Land Count", landCount)
                     .toHtml();
 
             String rightSide = new AccordionElementContentBuilder()
-                    .addRowBold("red", "crosshairs", "Player Kills", playerKills)
-                    .addRowBold("red", "frown-o", "Deaths", deaths)
+                    .addRowBold(Icons.PLAYER_KILLS, "Player Kills", playerKills)
+                    .addRowBold(Icons.DEATHS, "Deaths", deaths)
                     .toHtml();
 
             addElement(
