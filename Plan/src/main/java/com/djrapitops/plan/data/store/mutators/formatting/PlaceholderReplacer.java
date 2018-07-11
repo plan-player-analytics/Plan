@@ -36,11 +36,7 @@ public class PlaceholderReplacer extends HashMap<String, Serializable> implement
         if (!container.supports(key)) {
             return;
         }
-        long ns = System.nanoTime();
-        Log.debug(key.getPlaceholder());
         put(key.getPlaceholder(), formatter.apply(container.getSupplier(key).get()));
-        ns = System.nanoTime() - ns;
-        Log.debug(key.getPlaceholder() + ": " + Formatters.benchmark().apply(ns));
     }
 
     public <T> void addAllPlaceholdersFrom(DataContainer container, Formatter<T> formatter, PlaceholderKey<T>... keys) {

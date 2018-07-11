@@ -103,21 +103,22 @@ public class PlayersMutator {
 
     public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date) {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
-        if (!players.isEmpty()) {
-            for (PlayerContainer player : players) {
-                for (long time = date; time >= date - TimeAmount.MONTH.ms() * 2L; time -= TimeAmount.WEEK.ms()) {
+        for (long time = date; time >= date - TimeAmount.MONTH.ms() * 2L; time -= TimeAmount.WEEK.ms()) {
+            Map<String, Set<UUID>> map = activityData.getOrDefault(time, new HashMap<>());
+            if (!players.isEmpty()) {
+                for (PlayerContainer player : players) {
+                    if (player.getValue(PlayerKeys.REGISTERED).orElse(0L) < time) {
+                        continue;
+                    }
                     ActivityIndex activityIndex = player.getActivityIndex(time);
                     String activityGroup = activityIndex.getGroup();
 
-                    Map<String, Set<UUID>> map = activityData.getOrDefault(time, new HashMap<>());
                     Set<UUID> uuids = map.getOrDefault(activityGroup, new HashSet<>());
                     uuids.add(player.getUnsafe(PlayerKeys.UUID));
                     map.put(activityGroup, uuids);
-                    activityData.put(time, map);
                 }
             }
-        } else {
-            activityData.put(date, Collections.emptyMap());
+            activityData.put(time, map);
         }
         return activityData;
     }
