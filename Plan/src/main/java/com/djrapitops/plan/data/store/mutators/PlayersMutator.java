@@ -107,7 +107,7 @@ public class PlayersMutator {
             Map<String, Set<UUID>> map = activityData.getOrDefault(time, new HashMap<>());
             if (!players.isEmpty()) {
                 for (PlayerContainer player : players) {
-                    if (player.getValue(PlayerKeys.REGISTERED).orElse(0L) < time) {
+                    if (player.getValue(PlayerKeys.REGISTERED).orElse(0L) > time) {
                         continue;
                     }
                     ActivityIndex activityIndex = player.getActivityIndex(time);

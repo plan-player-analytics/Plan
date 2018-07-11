@@ -36,7 +36,9 @@ public class NetworkPage implements Page {
                     PLAYERS_ALL_TIME_PEAK, PLAYERS_RECENT_PEAK,
                     PLAYERS_DAY, PLAYERS_WEEK, PLAYERS_MONTH,
                     PLAYERS_NEW_DAY, PLAYERS_NEW_WEEK, PLAYERS_NEW_MONTH,
-                    WORLD_MAP_SERIES, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR
+                    WORLD_MAP_SERIES, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR,
+                    HEALTH_INDEX, HEALTH_NOTES,
+                    ACTIVITY_PIE_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES
             );
             NetworkPageContent networkPageContent = (NetworkPageContent)
                     ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);

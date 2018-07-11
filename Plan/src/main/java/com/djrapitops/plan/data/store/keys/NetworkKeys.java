@@ -4,6 +4,11 @@ import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.PlaceholderKey;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.UUID;
+
 /**
  * Key objects for {@link com.djrapitops.plan.data.store.containers.NetworkContainer}.
  *
@@ -35,12 +40,19 @@ public class NetworkKeys {
 
     public static final PlaceholderKey<String> WORLD_MAP_SERIES = CommonPlaceholderKeys.WORLD_MAP_SERIES;
     public static final PlaceholderKey<String> PLAYERS_ONLINE_SERIES = CommonPlaceholderKeys.PLAYERS_ONLINE_SERIES;
+    public static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = CommonPlaceholderKeys.ACTIVITY_STACK_SERIES;
+    public static final PlaceholderKey<String> ACTIVITY_STACK_CATEGORIES = CommonPlaceholderKeys.ACTIVITY_STACK_CATEGORIES;
+    public static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = CommonPlaceholderKeys.ACTIVITY_PIE_SERIES;
+    public static final PlaceholderKey<Double> HEALTH_INDEX = CommonPlaceholderKeys.HEALTH_INDEX;
+    public static final PlaceholderKey<String> HEALTH_NOTES = CommonPlaceholderKeys.HEALTH_NOTES;
 
     public static final Key<Long> REFRESH_TIME = new Key<>(Long.class, "REFRESH_TIME");
     public static final Key<Long> REFRESH_TIME_DAY_AGO = new Key<>(Long.class, "REFRESH_TIME_DAY_AGO");
     public static final Key<Long> REFRESH_TIME_WEEK_AGO = new Key<>(Long.class, "REFRESH_TIME_WEEK_AGO");
     public static final Key<Long> REFRESH_TIME_MONTH_AGO = new Key<>(Long.class, "REFRESH_TIME_MONTH_AGO");
     public static final Key<PlayersMutator> PLAYERS_MUTATOR = CommonKeys.PLAYERS_MUTATOR;
+
+    public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = CommonKeys.ACTIVITY_DATA;
 
     private NetworkKeys() {
         /* static variable class */

@@ -19,6 +19,12 @@ class CommonPlaceholderKeys {
     static final PlaceholderKey<Integer> PLAYERS_ONLINE = new PlaceholderKey<>(Integer.class, "playersOnline");
     static final PlaceholderKey<Integer> PLAYERS_TOTAL = new PlaceholderKey<>(Integer.class, "playersTotal");
     static final PlaceholderKey<String> WORLD_MAP_SERIES = new PlaceholderKey<>(String.class, "geoMapSeries");
+    static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = new PlaceholderKey<>(String.class, "activityStackSeries");
+    static final PlaceholderKey<String> ACTIVITY_STACK_CATEGORIES = new PlaceholderKey<>(String.class, "activityStackCategories");
+    static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = new PlaceholderKey<>(String.class, "activityPieSeries");
+
+    static final PlaceholderKey<String> HEALTH_NOTES = new PlaceholderKey<>(String.class, "healthNotes");
+    static final PlaceholderKey<Double> HEALTH_INDEX = new PlaceholderKey<>(Double.class, "healthIndex");
 
     static final PlaceholderKey<Integer> PLAYERS_DAY = new PlaceholderKey<>(Integer.class, "playersDay");
     static final PlaceholderKey<Integer> PLAYERS_WEEK = new PlaceholderKey<>(Integer.class, "playersWeek");

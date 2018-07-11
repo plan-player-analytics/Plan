@@ -18,11 +18,11 @@ public interface FetchOperations {
      * Used to get a NetworkContainer, some limitations apply to values returned by DataContainer keys.
      * <p>
      * Limitations:
-     * - Bungee ServerContainer does not support: ServerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
+     * - Bungee ServerContainer does not support: ServerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_DEATHS, PLAYER_KILL_COUNT
      * - Bungee ServerContainer ServerKeys.TPS only contains playersOnline values
      * - NetworkKeys.PLAYERS PlayerContainers:
-     * - do not support: PlayerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
-     * - PlayerKeys.PER_SERVER does not support: PerServerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_KILL_COUNT
+     * - do not support: PlayerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_DEATHS, PLAYER_KILL_COUNT
+     * - PlayerKeys.PER_SERVER does not support: PerServerKeys WORLD_TIMES, PLAYER_KILLS, PLAYER_DEATHS, PLAYER_KILL_COUNT
      * <p>
      * Blocking methods are not called until DataContainer getter methods are called.
      *

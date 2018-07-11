@@ -15,16 +15,16 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class PerServerDataMutator {
+public class PerServerMutator {
 
     private final PerServerContainer data;
 
-    public PerServerDataMutator(PerServerContainer data) {
+    public PerServerMutator(PerServerContainer data) {
         this.data = data;
     }
 
-    public static PerServerDataMutator forContainer(DataContainer container) {
-        return new PerServerDataMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer()));
+    public static PerServerMutator forContainer(DataContainer container) {
+        return new PerServerMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer()));
     }
 
     public List<Session> flatMapSessions() {

@@ -8,13 +8,16 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
 import com.djrapitops.plan.utilities.html.graphs.WorldMap;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
+import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -44,6 +47,14 @@ public class NetworkContainer extends DataContainer {
 
         addConstants();
         addPlayerInformation();
+        addNetworkHealth();
+    }
+
+    private void addNetworkHealth() {
+        Key<NetworkHealthInformation> healthInformation = new Key<>(NetworkHealthInformation.class, "HEALTH_INFORMATION");
+        putSupplier(healthInformation, () -> new NetworkHealthInformation(this));
+        putSupplier(NetworkKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
+        putSupplier(NetworkKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
     }
 
     public void putAnalysisContainer(AnalysisContainer analysisContainer) {
@@ -91,6 +102,15 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.PLAYERS_ONLINE_SERIES, () ->
                 new OnlineActivityGraph(TPSMutator.forContainer(bungeeContainer)).toHighChartsSeries()
         );
+        Key<ActivityStackGraph> activityStackGraph = new Key<>(ActivityStackGraph.class, "ACTIVITY_STACK_GRAPH");
+        putSupplier(NetworkKeys.ACTIVITY_DATA, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(NetworkKeys.REFRESH_TIME)));
+        putSupplier(activityStackGraph, () -> new ActivityStackGraph(getUnsafe(NetworkKeys.ACTIVITY_DATA)));
+        putSupplier(NetworkKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
+        putSupplier(NetworkKeys.ACTIVITY_STACK_SERIES, () -> getUnsafe(activityStackGraph).toHighChartsSeries());
+        putSupplier(NetworkKeys.ACTIVITY_PIE_SERIES, () ->
+                new ActivityPie(getUnsafe(NetworkKeys.ACTIVITY_DATA).get(getUnsafe(NetworkKeys.REFRESH_TIME))).toHighChartsSeries()
+        );
+
         putSupplier(NetworkKeys.ALL_TIME_PEAK_TIME_F, () ->
                 bungeeContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS).map(Formatters.year()::apply).orElse("No data")
         );

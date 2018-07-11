@@ -10,7 +10,7 @@ import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
-import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
+import com.djrapitops.plan.data.store.mutators.PerServerMutator;
 import com.djrapitops.plan.data.store.mutators.PvpInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
@@ -107,15 +107,15 @@ public class InspectPage implements Page {
         replacer.put("kickCount", timesKicked);
 
         PerServerContainer perServerContainer = container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer());
-        PerServerDataMutator perServerDataMutator = new PerServerDataMutator(perServerContainer);
+        PerServerMutator perServerMutator = new PerServerMutator(perServerContainer);
 
-        Map<UUID, WorldTimes> worldTimesPerServer = perServerDataMutator.worldTimesPerServer();
+        Map<UUID, WorldTimes> worldTimesPerServer = perServerMutator.worldTimesPerServer();
         replacer.put("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
         replacer.put("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
         replacer.put("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
         replacer.put("serverPieColors", Theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
 
-        String favoriteServer = serverNames.getOrDefault(perServerDataMutator.favoriteServer(), "Unknown");
+        String favoriteServer = serverNames.getOrDefault(perServerMutator.favoriteServer(), "Unknown");
         replacer.put("favoriteServer", favoriteServer);
 
         replacer.put("tableBodyNicknames", new NicknameTable(

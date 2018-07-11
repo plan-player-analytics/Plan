@@ -50,7 +50,7 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> SESSION_TABLE = new PlaceholderKey<>(String.class, "tableBodySessions");
     public static final PlaceholderKey<String> RECENT_LOGINS = new PlaceholderKey<>(String.class, "listRecentLogins");
     public static final PlaceholderKey<String> COMMAND_USAGE_TABLE = new PlaceholderKey<>(String.class, "tableCommandUsage");
-    public static final PlaceholderKey<String> HEALTH_NOTES = new PlaceholderKey<>(String.class, "healthNotes");
+    public static final PlaceholderKey<String> HEALTH_NOTES = CommonPlaceholderKeys.HEALTH_NOTES;
     public static final PlaceholderKey<String> PLUGINS_TAB = new PlaceholderKey<>(String.class, "tabsPlugins");
     public static final PlaceholderKey<String> PLUGINS_TAB_NAV = new PlaceholderKey<>(String.class, "navPluginsTabs");
     // Formatted time values
@@ -69,7 +69,7 @@ public class AnalysisKeys {
     public static final PlaceholderKey<Integer> DEATHS = new PlaceholderKey<>(Integer.class, "deaths");
     public static final PlaceholderKey<Integer> MOB_KILL_COUNT = new PlaceholderKey<>(Integer.class, "mobKillCount");
     public static final PlaceholderKey<Integer> PLAYER_KILL_COUNT = new PlaceholderKey<>(Integer.class, "killCount");
-    public static final PlaceholderKey<Double> HEALTH_INDEX = new PlaceholderKey<>(Double.class, "healthIndex");
+    public static final PlaceholderKey<Double> HEALTH_INDEX = CommonPlaceholderKeys.HEALTH_INDEX;
     public static final PlaceholderKey<Integer> COMMAND_COUNT = new PlaceholderKey<>(Integer.class, "commandCount");
     public static final PlaceholderKey<Integer> COMMAND_COUNT_UNIQUE = new PlaceholderKey<>(Integer.class, "commandUniqueCount");
     //
@@ -123,9 +123,9 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> CHUNK_SERIES = new PlaceholderKey<>(String.class, "chunkSeries");
     public static final PlaceholderKey<String> PUNCHCARD_SERIES = new PlaceholderKey<>(String.class, "punchCardSeries");
     public static final PlaceholderKey<String> WORLD_MAP_SERIES = CommonPlaceholderKeys.WORLD_MAP_SERIES;
-    public static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = new PlaceholderKey<>(String.class, "activityStackSeries");
-    public static final PlaceholderKey<String> ACTIVITY_STACK_CATEGORIES = new PlaceholderKey<>(String.class, "activityStackCategories");
-    public static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = new PlaceholderKey<>(String.class, "activityPieSeries");
+    public static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = CommonPlaceholderKeys.ACTIVITY_STACK_SERIES;
+    public static final PlaceholderKey<String> ACTIVITY_STACK_CATEGORIES = CommonPlaceholderKeys.ACTIVITY_STACK_CATEGORIES;
+    public static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = CommonPlaceholderKeys.ACTIVITY_PIE_SERIES;
     public static final PlaceholderKey<String> CALENDAR_SERIES = new PlaceholderKey<>(String.class, "calendarSeries");
     // Variables used only during analysis
     public static final Key<SessionsMutator> SESSIONS_MUTATOR = CommonKeys.SESSIONS_MUTATOR;
@@ -138,7 +138,7 @@ public class AnalysisKeys {
     public static final Key<Long> ANALYSIS_TIME_WEEK_AGO = new Key<>(Long.class, "ANALYSIS_TIME_WEEK_AGO");
     public static final Key<Long> ANALYSIS_TIME_MONTH_AGO = new Key<>(Long.class, "ANALYSIS_TIME_MONTH_AGO");
     public static final Key<Map<UUID, String>> PLAYER_NAMES = new Key<>(new Type<Map<UUID, String>>() {}, "PLAYER_NAMES");
-    public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = new Key<>(new Type<TreeMap<Long, Map<String, Set<UUID>>>>() {}, "ACTIVITY_DATA");
+    public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = CommonKeys.ACTIVITY_DATA;
     public static final Key<Set<UUID>> BAN_DATA = new Key<>(new Type<Set<UUID>>() {}, "BAN_DATA");
 
     private AnalysisKeys() {

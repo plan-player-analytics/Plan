@@ -10,7 +10,7 @@ import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
+import com.djrapitops.plan.data.store.mutators.PerServerMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateObj;
@@ -137,7 +137,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
             // Calculating getters
             container.putSupplier(PlayerKeys.WORLD_TIMES, () -> {
-                WorldTimes worldTimes = new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
+                WorldTimes worldTimes = new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
                 container.getValue(PlayerKeys.ACTIVE_SESSION)
                         .ifPresent(session -> worldTimes.add(
                                 session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())))
@@ -182,7 +182,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             container.putSupplier(PlayerKeys.PER_SERVER, () -> perServerInfo.get(uuid));
 
             container.putSupplier(PlayerKeys.SESSIONS, () -> {
-                        List<Session> playerSessions = PerServerDataMutator.forContainer(container).flatMapSessions();
+                List<Session> playerSessions = PerServerMutator.forContainer(container).flatMapSessions();
                         container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(playerSessions::add);
                         return playerSessions;
                     }
@@ -259,18 +259,18 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         container.putSupplier(PlayerKeys.NICKNAMES, () -> nicknamesTable.getNicknameInformation(uuid));
         container.putSupplier(PlayerKeys.PER_SERVER, () -> getPerServerData(uuid));
 
-        container.putSupplier(PlayerKeys.BANNED, () -> new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isBanned());
-        container.putSupplier(PlayerKeys.OPERATOR, () -> new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isOperator());
+        container.putSupplier(PlayerKeys.BANNED, () -> new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isBanned());
+        container.putSupplier(PlayerKeys.OPERATOR, () -> new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).isOperator());
 
         container.putSupplier(PlayerKeys.SESSIONS, () -> {
-                    List<Session> sessions = new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapSessions();
+            List<Session> sessions = new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapSessions();
                     container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(sessions::add);
                     return sessions;
                 }
         );
         container.putSupplier(PlayerKeys.WORLD_TIMES, () ->
         {
-            WorldTimes worldTimes = new PerServerDataMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
+            WorldTimes worldTimes = new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
             container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(
                     session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>())))
             );
