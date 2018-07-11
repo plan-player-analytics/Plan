@@ -11,7 +11,8 @@ import java.util.UUID;
  * Interface for PluginData objects that affect Ban state of players.
  *
  * @author Rsl1122
- * @deprecated As of 4.3.2+ BanData has been deprecated as a way to display bans. Use Key integration instead.
+ * @deprecated New implementations should not be created as better plugin data integration is
+ * being created.
  */
 @Deprecated
 public interface BanData {
