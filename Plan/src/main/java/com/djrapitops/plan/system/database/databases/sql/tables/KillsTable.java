@@ -1,8 +1,10 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -115,6 +117,43 @@ public class KillsTable extends UserIDTable {
                     long date = set.getLong(Col.DATE.get());
                     String weapon = set.getString(Col.WEAPON.get());
                     session.getPlayerKills().add(new PlayerKill(victim, weapon, date));
+                }
+                return null;
+            }
+        });
+    }
+
+    public void addDeathsToSessions(UUID uuid, Map<Integer, Session> sessions) {
+        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
+        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as killer_uuid";
+        String sql = "SELECT " +
+                Col.SESSION_ID + ", " +
+                Col.DATE + ", " +
+                Col.WEAPON + ", " +
+                usersUUIDColumn +
+                " FROM " + tableName +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.KILLER_ID +
+                " WHERE " + Col.VICTIM_ID + "=" + usersTable.statementSelectID;
+
+        query(new QueryStatement<Object>(sql, 50000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+
+            @Override
+            public Object processResults(ResultSet set) throws SQLException {
+                while (set.next()) {
+                    int sessionID = set.getInt(Col.SESSION_ID.get());
+                    Session session = sessions.get(sessionID);
+                    if (session == null) {
+                        continue;
+                    }
+                    String uuidS = set.getString("killer_uuid");
+                    UUID killer = UUID.fromString(uuidS);
+                    long date = set.getLong(Col.DATE.get());
+                    String weapon = set.getString(Col.WEAPON.get());
+                    session.getUnsafe(SessionKeys.PLAYER_DEATHS).add(new PlayerDeath(killer, weapon, date));
                 }
                 return null;
             }

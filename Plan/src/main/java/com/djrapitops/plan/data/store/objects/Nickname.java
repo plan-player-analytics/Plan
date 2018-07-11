@@ -24,6 +24,7 @@ public class Nickname implements DateHolder {
         return name;
     }
 
+    @Override
     public long getDate() {
         return date;
     }

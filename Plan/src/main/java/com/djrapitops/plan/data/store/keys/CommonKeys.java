@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.store.keys;
 
+import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.Key;
@@ -33,6 +34,7 @@ public class CommonKeys {
     public static final Key<WorldTimes> WORLD_TIMES = new Key<>(WorldTimes.class, "world_times");
     public static final PlaceholderKey<Long> LAST_SEEN = new PlaceholderKey<>(Long.class, "lastSeen");
 
+    public static final Key<List<PlayerDeath>> PLAYER_DEATHS = new Key<>(new Type<List<PlayerDeath>>() {}, "player_deaths");
     public static final Key<List<PlayerKill>> PLAYER_KILLS = new Key<>(new Type<List<PlayerKill>>() {}, "player_kills");
     public static final Key<Integer> PLAYER_KILL_COUNT = new Key<>(Integer.class, "player_kill_count");
     public static final Key<Integer> MOB_KILL_COUNT = new Key<>(Integer.class, "mob_kill_count");

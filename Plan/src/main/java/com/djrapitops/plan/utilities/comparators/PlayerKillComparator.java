@@ -1,17 +1,10 @@
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.data.container.PlayerKill;
-
-import java.util.Comparator;
-
 /**
- * @author Fuzzlemann
+ * Compares PlayerKills so that most recent is first.
+ *
+ * @author Rsl1122
  */
-public class PlayerKillComparator implements Comparator<PlayerKill> {
-
-    @Override
-    public int compare(PlayerKill o1, PlayerKill o2) {
-        return Long.compare(o1.getDate(), o2.getDate());
-    }
+public class PlayerKillComparator extends DateHolderRecentComparator {
 
 }

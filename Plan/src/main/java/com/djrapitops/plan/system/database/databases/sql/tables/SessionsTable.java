@@ -225,6 +225,7 @@ public class SessionsTable extends UserIDTable {
         Map<Integer, Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toMap(Session::getSessionID, Function.identity()));
 
         db.getKillsTable().addKillsToSessions(uuid, allSessions);
+        db.getKillsTable().addDeathsToSessions(uuid, allSessions);
         db.getWorldTimesTable().addWorldTimesToSessions(uuid, allSessions);
         return sessions;
     }

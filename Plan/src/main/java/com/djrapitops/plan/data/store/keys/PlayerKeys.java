@@ -1,6 +1,7 @@
 package com.djrapitops.plan.data.store.keys;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.Key;
@@ -40,6 +41,7 @@ public class PlayerKeys {
     public static final Key<WorldTimes> WORLD_TIMES = CommonKeys.WORLD_TIMES;
 
     public static final Key<List<PlayerKill>> PLAYER_KILLS = CommonKeys.PLAYER_KILLS;
+    public static final Key<List<PlayerDeath>> PLAYER_DEATHS = CommonKeys.PLAYER_DEATHS;
     public static final Key<Integer> PLAYER_KILL_COUNT = CommonKeys.PLAYER_KILL_COUNT;
     public static final Key<Integer> MOB_KILL_COUNT = CommonKeys.MOB_KILL_COUNT;
     public static final Key<Integer> DEATH_COUNT = CommonKeys.DEATH_COUNT;

@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.store.mutators;
 
+import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
@@ -63,6 +64,13 @@ public class SessionsMutator {
     public List<PlayerKill> toPlayerKillList() {
         return sessions.stream()
                 .map(session -> session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    public List<PlayerDeath> toPlayerDeathList() {
+        return sessions.stream()
+                .map(session -> session.getValue(SessionKeys.PLAYER_DEATHS).orElse(new ArrayList<>()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
@@ -177,5 +185,9 @@ public class SessionsMutator {
             Long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
             return (after <= start && start <= before) || (after <= end && end <= before);
         };
+    }
+
+    public int toPlayerDeathCount() {
+        return toPlayerDeathList().size();
     }
 }

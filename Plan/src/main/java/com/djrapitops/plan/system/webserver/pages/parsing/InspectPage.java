@@ -11,6 +11,7 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.PerServerDataMutator;
+import com.djrapitops.plan.data.store.mutators.PvpInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
@@ -34,9 +35,7 @@ import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
-import com.djrapitops.plan.utilities.html.tables.GeoInfoTable;
-import com.djrapitops.plan.utilities.html.tables.NicknameTable;
-import com.djrapitops.plan.utilities.html.tables.PlayerSessionTable;
+import com.djrapitops.plan.utilities.html.tables.*;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -159,6 +158,38 @@ public class InspectPage implements Page {
         SessionsMutator weekSessionsMutator = sessionsMutator.filterSessionsBetween(weekAgo, now);
         SessionsMutator monthSessionsMutator = sessionsMutator.filterSessionsBetween(monthAgo, now);
 
+        sessionsAndPlaytime(replacer, sessionsMutator, daySessionsMutator, weekSessionsMutator, monthSessionsMutator);
+
+        String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
+        WorldTimes worldTimes = container.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
+
+        WorldPie worldPie = new WorldPie(worldTimes);
+
+        replacer.put("worldPieSeries", worldPie.toHighChartsSeries());
+        replacer.put("gmSeries", worldPie.toHighChartsDrilldown());
+
+        replacer.put("punchCardSeries", punchCardData);
+
+        pvpAndPve(replacer, sessionsMutator, weekSessionsMutator, monthSessionsMutator);
+
+        ActivityIndex activityIndex = container.getActivityIndex(now);
+
+        replacer.put("activityIndexNumber", activityIndex.getFormattedValue());
+        replacer.put("activityIndexColor", activityIndex.getColor());
+        replacer.put("activityIndex", activityIndex.getGroup());
+
+        replacer.put("playerStatus", HtmlStructure.playerStatus(online,
+                container.getValue(PlayerKeys.BANNED).orElse(false),
+                container.getValue(PlayerKeys.OPERATOR).orElse(false)));
+
+        if (!InfoSystem.getInstance().getConnectionSystem().isServerAvailable()) {
+            replacer.put("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
+        }
+
+        return replacer.apply(FileUtil.getStringFromResource("web/player.html"));
+    }
+
+    private void sessionsAndPlaytime(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator daySessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {
         long playtime = sessionsMutator.toPlaytime();
         long playtimeDay = daySessionsMutator.toPlaytime();
         long playtimeWeek = weekSessionsMutator.toPlaytime();
@@ -223,39 +254,41 @@ public class InspectPage implements Page {
         replacer.put("sessionCountDay", sessionCountDay);
         replacer.put("sessionCountWeek", sessionCountWeek);
         replacer.put("sessionCountMonth", sessionCountMonth);
+    }
 
-        String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
-        WorldTimes worldTimes = container.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
+    private void pvpAndPve(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {
+        String playerKillsTable = new KillsTable(sessionsMutator.toPlayerKillList()).parseHtml();
+        String playerDeathTable = new DeathsTable(sessionsMutator.toPlayerDeathList()).parseHtml();
 
-        WorldPie worldPie = new WorldPie(worldTimes);
+        PvpInfoMutator pvpInfoMutator = PvpInfoMutator.forMutator(sessionsMutator);
+        PvpInfoMutator pvpInfoMutatorMonth = PvpInfoMutator.forMutator(monthSessionsMutator);
+        PvpInfoMutator pvpInfoMutatorWeek = PvpInfoMutator.forMutator(weekSessionsMutator);
 
-        replacer.put("worldPieSeries", worldPie.toHighChartsSeries());
-        replacer.put("gmSeries", worldPie.toHighChartsDrilldown());
+        replacer.put("tablePlayerKills", playerKillsTable);
+        replacer.put("tablePlayerDeaths", playerDeathTable);
 
-        replacer.put("punchCardSeries", punchCardData);
+        replacer.put("playerKillCount", pvpInfoMutator.playerKills());
+        replacer.put("mobKillCount", pvpInfoMutator.mobKills());
+        replacer.put("playerDeathCount", pvpInfoMutator.playerCausedDeaths());
+        replacer.put("mobDeathCount", pvpInfoMutator.mobCausedDeaths());
+        replacer.put("deathCount", pvpInfoMutator.deaths());
+        replacer.put("KDR", FormatUtils.cutDecimals(pvpInfoMutator.killDeathRatio()));
+        replacer.put("mobKDR", FormatUtils.cutDecimals(pvpInfoMutator.mobKillDeathRatio()));
 
-        long playerKillCount = allSessions.stream().map(Session::getPlayerKills).mapToLong(Collection::size).sum();
-        long mobKillCount = allSessions.stream().mapToLong(Session::getMobKills).sum();
-        long deathCount = allSessions.stream().mapToLong(Session::getDeaths).sum();
+        replacer.put("playerKillCountMonth", pvpInfoMutatorMonth.playerKills());
+        replacer.put("mobKillCountMonth", pvpInfoMutatorMonth.mobKills());
+        replacer.put("playerDeathCountMonth", pvpInfoMutatorMonth.playerCausedDeaths());
+        replacer.put("mobDeathCountMonth", pvpInfoMutatorMonth.mobCausedDeaths());
+        replacer.put("deathCountMonth", pvpInfoMutatorMonth.deaths());
+        replacer.put("KDRMonth", FormatUtils.cutDecimals(pvpInfoMutatorMonth.killDeathRatio()));
+        replacer.put("mobKDRMonth", FormatUtils.cutDecimals(pvpInfoMutatorMonth.mobKillDeathRatio()));
 
-        replacer.put("playerKillCount", playerKillCount);
-        replacer.put("mobKillCount", mobKillCount);
-        replacer.put("deathCount", deathCount);
-
-        ActivityIndex activityIndex = container.getActivityIndex(now);
-
-        replacer.put("activityIndexNumber", activityIndex.getFormattedValue());
-        replacer.put("activityIndexColor", activityIndex.getColor());
-        replacer.put("activityIndex", activityIndex.getGroup());
-
-        replacer.put("playerStatus", HtmlStructure.playerStatus(online,
-                container.getValue(PlayerKeys.BANNED).orElse(false),
-                container.getValue(PlayerKeys.OPERATOR).orElse(false)));
-
-        if (!InfoSystem.getInstance().getConnectionSystem().isServerAvailable()) {
-            replacer.put("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
-        }
-
-        return replacer.apply(FileUtil.getStringFromResource("web/player.html"));
+        replacer.put("playerKillCountWeek", pvpInfoMutatorWeek.playerKills());
+        replacer.put("mobKillCountWeek", pvpInfoMutatorWeek.mobKills());
+        replacer.put("playerDeathCountWeek", pvpInfoMutatorWeek.playerCausedDeaths());
+        replacer.put("mobDeathCountWeek", pvpInfoMutatorWeek.mobCausedDeaths());
+        replacer.put("deathCountWeek", pvpInfoMutatorWeek.deaths());
+        replacer.put("KDRWeek", FormatUtils.cutDecimals(pvpInfoMutatorWeek.killDeathRatio()));
+        replacer.put("mobKDRWeek", FormatUtils.cutDecimals(pvpInfoMutatorWeek.mobKillDeathRatio()));
     }
 }

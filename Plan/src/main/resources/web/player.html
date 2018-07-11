@@ -120,6 +120,12 @@
                     </a>
                 </li>
                 <li>
+                    <a class="nav-button" href="javascript:void(0)">
+                        <i class="material-icons">nature_people</i>
+                        <span>PvP & PvE</span>
+                    </a>
+                </li>
+                <li>
                     <a href="javascript:void(0);" class="menu-toggle">
                         <i class="material-icons">extension</i>
                         <span>Plugins</span>
@@ -286,7 +292,7 @@
                                             <p><i class="col-red fa fa-crosshairs"></i> Player Kills: ${playerKillCount}
                                             </p>
                                             <p><i class="col-green fa fa-crosshairs"></i> Mob Kills: ${mobKillCount}</p>
-                                            <p><i class="col-red far fa-frown"></i> Deaths: ${deathCount}</p>
+                                            <p><i class="fa fa-skull"></i> Deaths: ${deathCount}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -633,9 +639,140 @@
                 </div>
             </div>
             <!-- #END# Tab Overview -->
+            <div id="tab-versus" class="tab">
+                <div class="row clearfix">
+                    <!-- Information -->
+                    <!-- Overall -->
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="card">
+                            <div class="body bg-white">
+                                <div class="m-b--35 font-bold">OVERVIEW</div>
+                                <ul class="dashboard-stat-list">
+                                    <li><i class="col-red fa fa-crosshairs"></i> KDR <span
+                                            class="pull-right"><b>${KDR}</b></span></li>
+                                    <li><i class="col-red fa fa-crosshairs"></i> Player Kills <span
+                                            class="pull-right">${playerKillCount}</span></li>
+                                    <li><i class="col-red fa fa-skull"></i> Player caused Deaths <span
+                                            class="pull-right">${playerDeathCount}</span></li>
+                                    <li></li>
+                                    <li><i class="col-green fa fa-crosshairs"></i> Mob KDR <span
+                                            class="pull-right"><b>${mobKDR}</b></span></li>
+                                    <li><i class="col-green fa fa-crosshairs"></i> Mob Kills <span
+                                            class="pull-right">${mobKillCount}</span></li>
+                                    <li><i class="col-green fa fa-skull"></i> Mob caused Deaths <span
+                                            class="pull-right">${mobDeathCount}</span></li>
+                                    <li></li>
+                                    <li><i class="fa fa-skull"></i> Deaths <span
+                                            class="pull-right">${deathCount}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #END# Overall -->
+                    <!-- Last 30 Days -->
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="card">
+                            <div class="body bg-white">
+                                <div class="m-b--35 font-bold">LAST 30 DAYS</div>
+                                <ul class="dashboard-stat-list">
+                                    <li><i class="col-red fa fa-crosshairs"></i> KDR <span
+                                            class="pull-right"><b>${KDRMonth}</b></span></li>
+                                    <li><i class="col-red fa fa-crosshairs"></i> Player Kills <span
+                                            class="pull-right">${playerKillCountMonth}</span></li>
+                                    <li><i class="col-red fa fa-skull"></i> Player caused Deaths <span
+                                            class="pull-right">${playerDeathCountMonth}</span></li>
+                                    <li></li>
+                                    <li><i class="col-green fa fa-crosshairs"></i> Mob KDR <span
+                                            class="pull-right"><b>${mobKDRMonth}</b></span></li>
+                                    <li><i class="col-green fa fa-crosshairs"></i> Mob Kills <span
+                                            class="pull-right">${mobKillCountMonth}</span></li>
+                                    <li><i class="col-green fa fa-skull"></i> Mob caused Deaths <span
+                                            class="pull-right">${mobDeathCountMonth}</span></li>
+                                    <li></li>
+                                    <li><i class="fa fa-skull"></i> Deaths <span
+                                            class="pull-right">${deathCountMonth}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #END# Last 30 Days -->
+                    <!-- Last 7d -->
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="card">
+                            <div class="body bg-white">
+                                <div class="font-bold m-b--35">LAST 7 DAYS</div>
+                                <ul class="dashboard-stat-list">
+                                    <li><i class="col-red fa fa-crosshairs"></i> KDR <span
+                                            class="pull-right"><b>${KDRWeek}</b></span></li>
+                                    <li><i class="col-red fa fa-crosshairs"></i> Player Kills <span
+                                            class="pull-right">${playerKillCountWeek}</span></li>
+                                    <li><i class="col-red fa fa-skull"></i> Player caused Deaths <span
+                                            class="pull-right">${playerDeathCountWeek}</span></li>
+                                    <li></li>
+                                    <li><i class="col-green fa fa-crosshairs"></i> Mob KDR <span
+                                            class="pull-right"><b>${mobKDRWeek}</b></span></li>
+                                    <li><i class="col-green fa fa-crosshairs"></i> Mob Kills <span
+                                            class="pull-right">${mobKillCountWeek}</span></li>
+                                    <li><i class="col-green fa fa-skull"></i> Mob caused Deaths <span
+                                            class="pull-right">${mobDeathCountWeek}</span></li>
+                                    <li></li>
+                                    <li><i class="fa fa-skull"></i> Deaths <span
+                                            class="pull-right">${deathCountWeek}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #END# Last 7d -->
+                    <!-- #END# Information -->
+                </div>
+                <div class="row clearfix">
+                    <!-- Tables -->
+                    <!-- Kill info -->
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <h2><i class="col-red fa fa-crosshairs"></i> Player Kills</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                ${tablePlayerKills}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #END# Kill info -->
+                    <!-- Death info -->
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-8 col-sm-8 col-lg-8">
+                                        <h2><i class="col-red fa fa-skull"></i> Player caused Deaths</h2>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-lg-4">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Player caused Deaths"
+                                           data-content="Table of Player caused deaths calculated from Plan kill data."
+                                        >help_outline</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                ${tablePlayerDeaths}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #END# Death info -->
+                    <!-- #END# Tables -->
+                </div>
+            </div>
+            <!-- #END# Tab PVP -->
             ${pluginsTabs}
             <!-- #END# Tabs Plugins -->
-            <div class="tab"></div>
             <div class="tab"></div>
             <div class="tab"></div>
             <div class="tab"></div>

@@ -37,6 +37,7 @@ public class Session extends DataContainer implements DateHolder {
         putRawData(SessionKeys.START, sessionStart);
         putRawData(SessionKeys.WORLD_TIMES, new WorldTimes(world, gm));
         putRawData(SessionKeys.PLAYER_KILLS, new ArrayList<>());
+        putRawData(SessionKeys.PLAYER_DEATHS, new ArrayList<>());
         putSupplier(SessionKeys.MOB_KILL_COUNT, () -> mobKills);
         putSupplier(SessionKeys.DEATH_COUNT, () -> deaths);
         putSupplier(SessionKeys.AFK_TIME, () -> afkTime);
@@ -70,6 +71,7 @@ public class Session extends DataContainer implements DateHolder {
         putRawData(SessionKeys.END, sessionEnd);
         putRawData(SessionKeys.WORLD_TIMES, new WorldTimes(new HashMap<>()));
         putRawData(SessionKeys.PLAYER_KILLS, new ArrayList<>());
+        putRawData(SessionKeys.PLAYER_DEATHS, new ArrayList<>());
         putSupplier(SessionKeys.MOB_KILL_COUNT, () -> mobKills);
         putSupplier(SessionKeys.DEATH_COUNT, () -> deaths);
         putSupplier(SessionKeys.AFK_TIME, () -> afkTime);

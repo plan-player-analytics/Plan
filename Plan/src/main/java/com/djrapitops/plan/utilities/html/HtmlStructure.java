@@ -9,6 +9,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.ServerProperties;
+import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -98,7 +99,7 @@ public class HtmlStructure {
         ServerProperties properties = ServerInfo.getServerProperties();
         int maxPlayers = properties.getMaxPlayers();
         int online = properties.getOnlinePlayers();
-        String refresh = "-";
+        String refresh = FormatUtils.formatTimeStampClock(System.currentTimeMillis());
 
         Server server = ServerInfo.getServer();
 
@@ -141,7 +142,7 @@ public class HtmlStructure {
                 "<p><i class=\"col-deep-orange far fa-compass\"></i> Type " +
                 "<span class=\"pull-right\">" + serverType + "</span></p></div>" +
                 "<div class=\"col-md-4\">" +
-                "<p><i class=\"far fa-clock\"></i> Last Refresh" +
+                "<p><i class=\"far fa-clock\"></i> Last Updated" +
                 "<span class=\"pull-right\"><b>" + refresh + "</b></span></p>" +
                 "<br>" +
                 "<a href=\"" + address + "\"><button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-light-green waves-effect\">" +
