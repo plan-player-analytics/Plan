@@ -44,7 +44,7 @@ public class SpongePlayerListener {
         GameProfile profile = event.getProfile();
         UUID uuid = profile.getUniqueId();
         boolean banned = isBanned(profile);
-        Processing.submit(new BanAndOpProcessor(uuid, banned, false));
+        Processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
     }
 
     @Listener(order = Order.POST)
@@ -125,7 +125,8 @@ public class SpongePlayerListener {
 
         SpongeAFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
-        Processing.submit(new BanAndOpProcessor(uuid, isBanned(player.getProfile()), false));
+        boolean banned = isBanned(player.getProfile());
+        Processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
         Processing.submit(new EndSessionProcessor(uuid, time));
         Processing.submit(new NetworkPageUpdateProcessor());
         Processing.submit(new PlayerPageUpdateProcessor(uuid));

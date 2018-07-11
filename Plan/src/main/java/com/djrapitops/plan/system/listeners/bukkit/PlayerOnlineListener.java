@@ -41,7 +41,7 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             boolean op = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
-            Processing.submit(new BanAndOpProcessor(uuid, banned, op));
+            Processing.submit(new BanAndOpProcessor(uuid, () -> banned, op));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -122,7 +122,7 @@ public class PlayerOnlineListener implements Listener {
 
         AFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
-        Processing.submit(new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()));
+        Processing.submit(new BanAndOpProcessor(uuid, player::isBanned, player.isOp()));
         Processing.submit(new EndSessionProcessor(uuid, time));
         Processing.submit(new NetworkPageUpdateProcessor());
         Processing.submit(new PlayerPageUpdateProcessor(uuid));
