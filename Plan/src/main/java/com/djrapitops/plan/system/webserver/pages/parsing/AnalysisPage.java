@@ -78,10 +78,13 @@ public class AnalysisPage implements Page {
         );
         placeholderReplacer.addAllPlaceholdersFrom(analysisContainer, FormatUtils::cutDecimals,
                 AVG_TPS_MONTH, AVG_TPS_WEEK, AVG_TPS_DAY,
-                AVG_CPU_MONTH, AVG_CPU_WEEK, AVG_CPU_DAY,
                 AVG_RAM_MONTH, AVG_RAM_WEEK, AVG_RAM_DAY,
                 AVG_ENTITY_MONTH, AVG_ENTITY_WEEK, AVG_ENTITY_DAY,
                 AVG_CHUNK_MONTH, AVG_CHUNK_WEEK, AVG_CHUNK_DAY
+        );
+        placeholderReplacer.addAllPlaceholdersFrom(analysisContainer,
+                value -> value != -1 ? FormatUtils.cutDecimals(value) : "Unavailable",
+                AVG_CPU_MONTH, AVG_CPU_WEEK, AVG_CPU_DAY
         );
 
         try {
