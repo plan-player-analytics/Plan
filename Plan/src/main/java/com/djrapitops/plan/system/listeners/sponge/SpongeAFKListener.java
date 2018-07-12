@@ -57,6 +57,10 @@ public class SpongeAFKListener {
         UUID uuid = player.getUniqueId();
         long time = System.currentTimeMillis();
         AFK_TRACKER.performedAction(uuid, time);
+        boolean isAfkCommand = event.getCommand().toLowerCase().startsWith("afk");
+        if (isAfkCommand) {
+            AFK_TRACKER.usedAfkCommand(uuid, System.currentTimeMillis());
+        }
     }
 
     @Listener(order = Order.POST)

@@ -49,6 +49,11 @@ public class AFKListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         event(event);
+        boolean isAfkCommand = event.getMessage().substring(1).toLowerCase().startsWith("afk");
+        if (isAfkCommand) {
+            UUID uuid = event.getPlayer().getUniqueId();
+            AFK_TRACKER.usedAfkCommand(uuid, System.currentTimeMillis());
+        }
     }
 
 }

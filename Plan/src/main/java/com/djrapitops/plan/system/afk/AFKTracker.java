@@ -5,10 +5,7 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Keeps track how long player has been afk during a session
@@ -17,35 +14,49 @@ import java.util.UUID;
  */
 public class AFKTracker {
 
+    private final Set<UUID> usedAFKCommand;
     private final Map<UUID, Long> lastMovement;
     private final long afkThresholdMs;
 
     public AFKTracker() {
+        usedAFKCommand = new HashSet<>();
         lastMovement = new HashMap<>();
         afkThresholdMs = Settings.AFK_THRESHOLD_MINUTES.getNumber() * TimeAmount.MINUTE.ms();
+    }
+
+    public void usedAfkCommand(UUID uuid, long time) {
+        usedAFKCommand.add(uuid);
+        lastMovement.put(uuid, time - afkThresholdMs);
     }
 
     public void performedAction(UUID uuid, long time) {
         Long lastMoved = lastMovement.getOrDefault(uuid, time);
         lastMovement.put(uuid, time);
 
-        if (time - lastMoved < afkThresholdMs) {
-            // Threshold not crossed, no action required.
-            return;
-        }
+        try {
+            if (time - lastMoved < afkThresholdMs) {
+                // Threshold not crossed, no action required.
+                return;
+            }
 
-        long timeAFK = time - lastMoved;
+            long removeAfkCommandEffect = usedAFKCommand.contains(uuid) ? afkThresholdMs : 0;
+            long timeAFK = time - lastMoved - removeAfkCommandEffect;
 
-        Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
-        if (!cachedSession.isPresent()) {
-            return;
+
+            Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
+            if (!cachedSession.isPresent()) {
+                return;
+            }
+            Session session = cachedSession.get();
+            session.addAFKTime(timeAFK);
+        } finally {
+            usedAFKCommand.remove(uuid);
         }
-        Session session = cachedSession.get();
-        session.addAFKTime(timeAFK);
     }
 
     public void loggedOut(UUID uuid, long time) {
         performedAction(uuid, time);
         lastMovement.remove(uuid);
+        usedAFKCommand.remove(uuid);
     }
 }
