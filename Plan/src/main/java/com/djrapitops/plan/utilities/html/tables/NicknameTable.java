@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.Nickname;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
@@ -33,6 +34,8 @@ public class NicknameTable extends TableContainer {
     }
 
     private void addValues(List<Nickname> nicknames, Map<UUID, String> serverNames) {
+        nicknames.sort(new DateHolderRecentComparator());
+
         Formatter<DateHolder> formatter = Formatters.year();
         for (Nickname nickname : nicknames) {
             UUID serverUUID = nickname.getServerUUID();

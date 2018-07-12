@@ -7,12 +7,11 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.utilities.comparators.PlayerKillComparator;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,15 +31,13 @@ public class KillsTable extends TableContainer {
     }
 
     private void addValues(List<PlayerKill> playerKills) {
-        playerKills.sort(new PlayerKillComparator());
-        Collections.reverse(playerKills);
-
+        playerKills.sort(new DateHolderRecentComparator());
         Formatter<DateHolder> timestamp = Formatters.year();
 
         int i = 0;
         DataCache dataCache = DataCache.getInstance();
         for (PlayerKill kill : playerKills) {
-            if (i >= 20) {
+            if (i >= 40) {
                 break;
             }
 

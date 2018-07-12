@@ -12,7 +12,6 @@ import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,14 +32,12 @@ public class DeathsTable extends TableContainer {
 
     private void addValues(List<PlayerDeath> playerPlayerDeaths) {
         playerPlayerDeaths.sort(new DateHolderRecentComparator());
-        Collections.reverse(playerPlayerDeaths);
-
         Formatter<DateHolder> timestamp = Formatters.year();
 
         int i = 0;
         DataCache dataCache = DataCache.getInstance();
         for (PlayerDeath death : playerPlayerDeaths) {
-            if (i >= 20) {
+            if (i >= 40) {
                 break;
             }
 

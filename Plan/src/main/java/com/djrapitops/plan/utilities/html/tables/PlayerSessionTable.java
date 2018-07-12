@@ -3,12 +3,15 @@ package com.djrapitops.plan.utilities.html.tables;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.html.Html;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +24,13 @@ public class PlayerSessionTable extends TableContainer {
     private final String playerName;
     private final List<Session> sessions;
 
+    public static PlayerSessionTable forContainer(DataContainer container) {
+        return new PlayerSessionTable(
+                container.getValue(PlayerKeys.NAME).orElse("Unknown"),
+                container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>())
+        );
+    } 
+    
     public PlayerSessionTable(String playerName, List<Session> sessions) {
         super("Player", "Start", "Length", "World");
         this.playerName = playerName;
