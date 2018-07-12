@@ -202,6 +202,18 @@ public class AnalysisContainer extends DataContainer {
                 return 0;
             }
         });
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK, () ->
+                getUnsafe(newWeek).filterRetained(
+                        getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO),
+                        getUnsafe(AnalysisKeys.ANALYSIS_TIME)
+                ).count()
+        );
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH, () ->
+                getUnsafe(newMonth).filterRetained(
+                        getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
+                        getUnsafe(AnalysisKeys.ANALYSIS_TIME)
+                ).count()
+        );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY_PERC, () -> {
             try {
                 Integer playersNewDay = getUnsafe(AnalysisKeys.PLAYERS_NEW_DAY);
@@ -210,6 +222,18 @@ public class AnalysisContainer extends DataContainer {
                 return "Not enough data";
             }
         });
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK_PERC, () -> {
+                    Integer playersNewWeek = getUnsafe(AnalysisKeys.PLAYERS_NEW_WEEK);
+                    return playersNewWeek != 0 ? Formatters.percentage().apply(
+                            1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
+                }
+        );
+        putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH_PERC, () -> {
+                    Integer playersNewMonth = getUnsafe(AnalysisKeys.PLAYERS_NEW_MONTH);
+                    return playersNewMonth != 0 ? Formatters.percentage().apply(
+                            1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth) : "-";
+                }
+        );
     }
 
     private void addSessionSuppliers() {
@@ -270,30 +294,6 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVG_PLAYERS_DAY, () -> getUnsafe(sessionsDay).toUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_MONTH, () -> getUnsafe(sessionsMonth).toUniqueJoinsPerDay());
-        putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK, () ->
-                getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).filterRetained(
-                        getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO),
-                        getUnsafe(AnalysisKeys.ANALYSIS_TIME)
-                ).count()
-        );
-        putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH, () ->
-                getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).filterRetained(
-                        getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
-                        getUnsafe(AnalysisKeys.ANALYSIS_TIME)
-                ).count()
-        );
-        putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK_PERC, () -> {
-                    Integer playersNewWeek = getUnsafe(AnalysisKeys.PLAYERS_NEW_WEEK);
-                    return playersNewWeek != 0 ? Formatters.percentage().apply(
-                            1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
-                }
-        );
-        putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH_PERC, () -> {
-                    Integer playersNewMonth = getUnsafe(AnalysisKeys.PLAYERS_NEW_MONTH);
-                    return playersNewMonth != 0 ? Formatters.percentage().apply(
-                            1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth) : "-";
-                }
-        );
     }
 
     private void addGraphSuppliers() {

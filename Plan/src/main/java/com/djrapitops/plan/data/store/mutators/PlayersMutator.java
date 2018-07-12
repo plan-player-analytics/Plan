@@ -69,7 +69,8 @@ public class PlayersMutator {
                     long backLimit = Math.max(after, player.getValue(PlayerKeys.REGISTERED).orElse(0L));
                     long half = backLimit + ((before - backLimit) / 2L);
                     SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
-                    return !sessionsMutator.playedBetween(backLimit, half) && !sessionsMutator.playedBetween(half, before);
+                    return sessionsMutator.playedBetween(backLimit, half) &&
+                            sessionsMutator.playedBetween(half, before);
                 }
         );
     }
