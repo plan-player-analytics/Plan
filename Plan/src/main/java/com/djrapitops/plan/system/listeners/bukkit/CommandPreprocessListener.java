@@ -37,7 +37,7 @@ public class CommandPreprocessListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        boolean hasIgnorePermission = event.getPlayer().hasPermission(Permissions.IGNORE_COMMANDUSE.getPermission());
+        boolean hasIgnorePermission = event.getPlayer().hasPermission(Permissions.IGNORE_COMMAND_USE.getPermission());
         if (event.isCancelled() || hasIgnorePermission) {
             return;
         }

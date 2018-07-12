@@ -79,6 +79,9 @@ permissions:
   plan.ignore.commanduse:
     description: Commands used by this player are not saved
     default: false
+  plan.ignore.afk:
+    description: AFK time by this player is ignored
+    default: false
   plan.manage:
     description: Manage the database, clear, move, combine.
     default: op

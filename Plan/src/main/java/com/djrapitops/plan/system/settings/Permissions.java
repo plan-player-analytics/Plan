@@ -25,7 +25,8 @@ public enum Permissions {
     MANAGE("plan.manage"),
     MANAGE_WEB("plan.webmanage"),
 
-    IGNORE_COMMANDUSE("plan.ignore.commanduse");
+    IGNORE_COMMAND_USE("plan.ignore.commanduse"),
+    IGNORE_AFK("plan.ignore.afk");
 
     private final String permission;
 

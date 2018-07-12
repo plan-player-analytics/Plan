@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.system.afk.AFKTracker;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -29,10 +30,7 @@ public class SpongeAFKListener {
 
     private void event(TargetPlayerEvent event) {
         try {
-            UUID uuid = event.getTargetEntity().getUniqueId();
-            long time = System.currentTimeMillis();
-
-            AFK_TRACKER.performedAction(uuid, time);
+            performedAction(event.getTargetEntity());
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -40,26 +38,32 @@ public class SpongeAFKListener {
 
     @Listener(order = Order.POST)
     public void onMove(MoveEntityEvent event, @First Player player) {
-        UUID uuid = player.getUniqueId();
-        long time = System.currentTimeMillis();
-        AFK_TRACKER.performedAction(uuid, time);
+        performedAction(player);
     }
 
     @Listener(order = Order.POST)
     public void onPlayerChat(MessageChannelEvent.Chat event, @First Player player) {
+        performedAction(player);
+    }
+
+    private void performedAction(Player player) {
         UUID uuid = player.getUniqueId();
         long time = System.currentTimeMillis();
+
+        if (player.hasPermission(Permissions.IGNORE_AFK.getPermission())) {
+            AFK_TRACKER.hasIgnorePermission(uuid);
+        }
+
         AFK_TRACKER.performedAction(uuid, time);
     }
 
     @Listener(order = Order.POST)
     public void onPlayerCommand(SendCommandEvent event, @First Player player) {
-        UUID uuid = player.getUniqueId();
-        long time = System.currentTimeMillis();
-        AFK_TRACKER.performedAction(uuid, time);
+        performedAction(player);
+        
         boolean isAfkCommand = event.getCommand().toLowerCase().startsWith("afk");
         if (isAfkCommand) {
-            AFK_TRACKER.usedAfkCommand(uuid, System.currentTimeMillis());
+            AFK_TRACKER.usedAfkCommand(player.getUniqueId(), System.currentTimeMillis());
         }
     }
 

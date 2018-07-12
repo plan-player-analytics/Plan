@@ -24,6 +24,10 @@ public class AFKTracker {
         afkThresholdMs = Settings.AFK_THRESHOLD_MINUTES.getNumber() * TimeAmount.MINUTE.ms();
     }
 
+    public void hasIgnorePermission(UUID uuid) {
+        lastMovement.put(uuid, -1L);
+    }
+
     public void usedAfkCommand(UUID uuid, long time) {
         usedAFKCommand.add(uuid);
         lastMovement.put(uuid, time - afkThresholdMs);
@@ -31,6 +35,9 @@ public class AFKTracker {
 
     public void performedAction(UUID uuid, long time) {
         Long lastMoved = lastMovement.getOrDefault(uuid, time);
+        if (lastMoved == -1) {
+            return;
+        }
         lastMovement.put(uuid, time);
 
         try {
@@ -41,7 +48,6 @@ public class AFKTracker {
 
             long removeAfkCommandEffect = usedAFKCommand.contains(uuid) ? afkThresholdMs : 0;
             long timeAFK = time - lastMoved - removeAfkCommandEffect;
-
 
             Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
             if (!cachedSession.isPresent()) {
