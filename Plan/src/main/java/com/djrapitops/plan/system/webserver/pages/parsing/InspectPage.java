@@ -19,7 +19,6 @@ import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -87,12 +86,12 @@ public class InspectPage implements Page {
         replacer.put("version", MiscUtils.getPlanVersion());
         replacer.put("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
-        String online = "Offline";
+        boolean online = false;
         Optional<Session> activeSession = SessionCache.getCachedSession(uuid);
         if (activeSession.isPresent()) {
             Session session = activeSession.get();
             session.setSessionID(Integer.MAX_VALUE);
-            online = serverNames.get(serverUUID);
+            online = true;
             container.putRawData(PlayerKeys.ACTIVE_SESSION, session);
         }
 
@@ -182,9 +181,12 @@ public class InspectPage implements Page {
                 container.getValue(PlayerKeys.BANNED).orElse(false),
                 container.getValue(PlayerKeys.OPERATOR).orElse(false)));
 
-        if (!InfoSystem.getInstance().getConnectionSystem().isServerAvailable()) {
-            replacer.put("networkName", Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_"));
-        }
+        String serverName = serverNames.get(serverUUID);
+        replacer.put("networkName",
+                serverName.equalsIgnoreCase("bungee")
+                        ? Settings.BUNGEE_NETWORK_NAME.toString()
+                        : serverName
+        );
 
         return replacer.apply(FileUtil.getStringFromResource("web/player.html"));
     }

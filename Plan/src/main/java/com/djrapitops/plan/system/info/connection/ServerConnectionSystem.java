@@ -57,16 +57,12 @@ public class ServerConnectionSystem extends ConnectionSystem {
         }
 
         Server server = null;
-        if (infoRequest instanceof CacheRequest) {
+        if (infoRequest instanceof CacheRequest ||
+                infoRequest instanceof GenerateInspectPageRequest) {
             server = mainServer;
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
             server = bukkitServers.get(serverUUID);
-        } else if (infoRequest instanceof GenerateInspectPageRequest) {
-            Optional<UUID> serverUUID = getServerWherePlayerIsOnline((GenerateInspectPageRequest) infoRequest);
-            if (serverUUID.isPresent()) {
-                server = bukkitServers.getOrDefault(serverUUID.get(), ServerInfo.getServer());
-            }
         }
         if (server == null) {
             throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());

@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -33,13 +34,6 @@ public class SessionCache {
         return dataCache;
     }
 
-    /**
-     * Used to get the Map of active sessions.
-     * <p>
-     * Used for testing.
-     *
-     * @return key:value UUID:Session
-     */
     public static Map<UUID, Session> getActiveSessions() {
         return activeSessions;
     }
@@ -48,28 +42,9 @@ public class SessionCache {
         activeSessions.clear();
     }
 
-    public void cacheSession(UUID uuid, Session session) {
-        activeSessions.put(uuid, session);
-    }
-
-    public void endSession(UUID uuid, long time) {
-        try {
-            Session session = activeSessions.get(uuid);
-            if (session == null) {
-                return;
-            }
-            session.endSession(time);
-            Database.getActive().save().session(uuid, session);
-        } catch (DBOpException e) {
-            Log.toLog(this.getClass(), e);
-        } finally {
-            activeSessions.remove(uuid);
-        }
-    }
-
     public static void refreshActiveSessionsState() {
         for (Session session : activeSessions.values()) {
-            session.getWorldTimes().updateState(System.currentTimeMillis());
+            session.getUnsafe(SessionKeys.WORLD_TIMES).updateState(System.currentTimeMillis());
         }
     }
 
@@ -77,14 +52,42 @@ public class SessionCache {
      * Used to get the Session of the player in the sessionCache.
      *
      * @param uuid UUID of the player.
-     * @return Session or null if not cached.
+     * @return Optional with the session inside it if found.
      */
     public static Optional<Session> getCachedSession(UUID uuid) {
-        Session session = activeSessions.get(uuid);
-        if (session != null) {
-            return Optional.of(session);
-        }
-        return Optional.empty();
+        return Optional.ofNullable(activeSessions.get(uuid));
     }
 
+    public static boolean isOnline(UUID uuid) {
+        return getCachedSession(uuid).isPresent();
+    }
+
+    public void cacheSession(UUID uuid, Session session) {
+        if (getCachedSession(uuid).isPresent()) {
+            endSession(uuid, System.currentTimeMillis());
+        }
+        activeSessions.put(uuid, session);
+    }
+
+    public void endSession(UUID uuid, long time) {
+        Session session = activeSessions.get(uuid);
+        if (session == null) {
+            return;
+        }
+        if (session.getUnsafe(SessionKeys.START) > time) {
+            return;
+        }
+        try {
+            session.endSession(time);
+            Database.getActive().save().session(uuid, session);
+        } catch (DBOpException e) {
+            Log.toLog(this.getClass(), e);
+        } finally {
+            removeSessionFromCache(uuid);
+        }
+    }
+
+    protected void removeSessionFromCache(UUID uuid) {
+        activeSessions.remove(uuid);
+    }
 }

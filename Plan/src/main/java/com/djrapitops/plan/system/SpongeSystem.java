@@ -29,8 +29,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
  */
 public class SpongeSystem extends PlanSystem implements ServerSystem {
 
-    private boolean firstInstall = false;
-
     public SpongeSystem(PlanSponge plugin) {
         setTestSystem(this);
 

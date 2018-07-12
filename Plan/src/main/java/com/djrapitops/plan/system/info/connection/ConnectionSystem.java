@@ -4,19 +4,13 @@
  */
 package com.djrapitops.plan.system.info.connection;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
-import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;
@@ -92,23 +86,6 @@ public abstract class ConnectionSystem implements SubSystem {
     public abstract String getMainAddress();
 
     public abstract void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException;
-
-    protected Optional<UUID> getServerWherePlayerIsOnline(GenerateInspectPageRequest infoRequest) {
-        UUID playerUUID = infoRequest.getPlayerUUID();
-
-        if (Check.isBukkitAvailable() && Plan.getInstance().getServer().getPlayer(playerUUID) != null) {
-            return Optional.of(ServerInfo.getServerUUID());
-        }
-
-        try {
-            return Database.getActive().transfer().getServerPlayerIsOnlineOn(playerUUID);
-        } catch (UnsupportedTransferDatabaseException e) {
-            /* Do nothing */
-        } catch (DBOpException e) {
-            Log.toLog(this.getClass(), e);
-        }
-        return Optional.empty();
-    }
 
     private Map<String, InfoRequest> loadDataRequests() {
         Map<String, InfoRequest> requests = new HashMap<>();

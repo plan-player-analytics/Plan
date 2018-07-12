@@ -72,6 +72,11 @@ public class DataCache extends SessionCache implements SubSystem {
     /**
      * Used to get the player name in the cache.
      *
+     * It is recommended to use
+     * {@link com.djrapitops.plan.data.store.keys.AnalysisKeys#PLAYER_NAMES} and
+     * {@link com.djrapitops.plan.data.store.keys.PlayerKeys#NAME} when possible
+     * because this method will call database if a name is not found.
+     *
      * @param uuid UUID of the player.
      * @return name or null if not cached.
      */

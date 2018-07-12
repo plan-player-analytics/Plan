@@ -20,7 +20,11 @@ public class CacheSystem implements SubSystem {
     private final GeolocationCache geolocationCache;
 
     public CacheSystem(PlanSystem system) {
-        dataCache = new DataCache(system);
+        this(new DataCache(system));
+    }
+
+    protected CacheSystem(DataCache dataCache) {
+        this.dataCache = dataCache;
         geolocationCache = new GeolocationCache();
     }
 

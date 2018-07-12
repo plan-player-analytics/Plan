@@ -165,18 +165,14 @@ public class HtmlStructure {
                 "})</script>";
     }
 
-    public static String playerStatus(String online, boolean banned, boolean op) {
-        boolean offline = "offline".equalsIgnoreCase(online);
-
+    public static String playerStatus(boolean online, boolean banned, boolean op) {
         StringBuilder html = new StringBuilder("<p>");
-        if (offline) {
+        if (online) {
+            html.append(Icon.called("circle").of(Color.GREEN))
+                    .append(" Online");
+        } else {
             html.append(Icon.called("circle").of(Color.RED))
                     .append(" Offline");
-        } else {
-            html.append(Icon.called("circle").of(Color.GREEN))
-                    .append(" Online (")
-                    .append(online)
-                    .append(")");
         }
         html.append("</p>");
         if (op) {
