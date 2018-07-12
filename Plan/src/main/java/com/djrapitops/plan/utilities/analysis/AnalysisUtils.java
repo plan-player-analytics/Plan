@@ -22,36 +22,6 @@ public class AnalysisUtils {
         /* static method class.*/
     }
 
-    @Deprecated
-    public static long getNewPlayers(List<Long> registered, long scale, long now) {
-        long newPlayers = 0;
-        if (!registered.isEmpty()) {
-            newPlayers = registered.stream()
-                    .filter(Objects::nonNull)
-                    .filter(reg -> reg > now - scale)
-                    .count();
-        }
-        // Filters out register dates before scale
-        return newPlayers;
-    }
-
-    @Deprecated
-    public static int getUniquePlayers(Map<UUID, List<Session>> sessions, long after) {
-        Set<UUID> uuids = new HashSet<>();
-
-        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
-            UUID uuid = entry.getKey();
-            for (Session session : entry.getValue()) {
-                if (session.getSessionStart() >= after) {
-                    uuids.add(uuid);
-                    break;
-                }
-            }
-        }
-
-        return uuids.size();
-    }
-
     /**
      * Transforms the session start list into a list of int arrays.
      * <p>

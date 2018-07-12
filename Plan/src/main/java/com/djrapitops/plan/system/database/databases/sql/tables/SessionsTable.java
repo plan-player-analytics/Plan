@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -28,6 +29,9 @@ public class SessionsTable extends UserIDTable {
 
     public static final String TABLE_NAME = "plan_sessions";
 
+    private final ServerTable serverTable;
+    private String insertStatement;
+
     public SessionsTable(SQLDB db) {
         super(TABLE_NAME, db);
         serverTable = db.getServerTable();
@@ -44,9 +48,6 @@ public class SessionsTable extends UserIDTable {
                 + "?, ?, ?, ?, ?, "
                 + serverTable.statementSelectServerID + ")";
     }
-
-    private final ServerTable serverTable;
-    private String insertStatement;
 
     @Override
     public void createTable() throws DBInitException {
@@ -83,8 +84,8 @@ public class SessionsTable extends UserIDTable {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setLong(2, session.getSessionStart());
-                statement.setLong(3, session.getSessionEnd());
+                statement.setLong(2, session.getUnsafe(SessionKeys.START));
+                statement.setLong(3, session.getValue(SessionKeys.END).orElse(System.currentTimeMillis()));
             }
 
             @Override
@@ -112,8 +113,8 @@ public class SessionsTable extends UserIDTable {
             throw new IllegalStateException("Session was not Saved!");
         }
 
-        db.getWorldTimesTable().saveWorldTimes(uuid, sessionID, session.getWorldTimes());
-        db.getKillsTable().savePlayerKills(uuid, sessionID, session.getPlayerKills());
+        db.getWorldTimesTable().saveWorldTimes(uuid, sessionID, session.getUnsafe(SessionKeys.WORLD_TIMES));
+        db.getKillsTable().savePlayerKills(uuid, sessionID, session.getUnsafe(SessionKeys.PLAYER_KILLS));
     }
 
     /**
@@ -129,11 +130,11 @@ public class SessionsTable extends UserIDTable {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setLong(2, session.getSessionStart());
-                statement.setLong(3, session.getSessionEnd());
-                statement.setInt(4, session.getDeaths());
-                statement.setInt(5, session.getMobKills());
-                statement.setLong(6, session.getAfkLength());
+                statement.setLong(2, session.getUnsafe(SessionKeys.START));
+                statement.setLong(3, session.getUnsafe(SessionKeys.END));
+                statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
+                statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
+                statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
                 statement.setString(7, ServerInfo.getServerUUID().toString());
             }
         });
@@ -222,7 +223,9 @@ public class SessionsTable extends UserIDTable {
 
     public Map<UUID, List<Session>> getSessions(UUID uuid) {
         Map<UUID, List<Session>> sessions = getSessionInformation(uuid);
-        Map<Integer, Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toMap(Session::getSessionID, Function.identity()));
+        Map<Integer, Session> allSessions = sessions.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toMap(s -> s.getUnsafe(SessionKeys.DB_ID), Function.identity()));
 
         db.getKillsTable().addKillsToSessions(uuid, allSessions);
         db.getKillsTable().addDeathsToSessions(uuid, allSessions);
@@ -432,11 +435,6 @@ public class SessionsTable extends UserIDTable {
      */
     public int getSessionCount(UUID uuid, UUID serverUUID) {
         return getSessionCount(uuid, serverUUID, 0L);
-    }
-
-    @Deprecated
-    public String getColumnID() {
-        return Col.ID.get();
     }
 
     public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) {
@@ -650,11 +648,11 @@ public class SessionsTable extends UserIDTable {
 
                         for (Session session : sessions) {
                             statement.setString(1, uuid.toString());
-                            statement.setLong(2, session.getSessionStart());
-                            statement.setLong(3, session.getSessionEnd());
-                            statement.setInt(4, session.getDeaths());
-                            statement.setInt(5, session.getMobKills());
-                            statement.setLong(6, session.getAfkLength());
+                            statement.setLong(2, session.getUnsafe(SessionKeys.START));
+                            statement.setLong(3, session.getUnsafe(SessionKeys.END));
+                            statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
+                            statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
+                            statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
                             statement.setString(7, serverUUID.toString());
                             statement.addBatch();
                         }
@@ -715,15 +713,15 @@ public class SessionsTable extends UserIDTable {
             }
             Session savedSession = savedSessionsByStart.get(start).get(0);
             sessionEntry.getValue().forEach(
-                    session -> session.setSessionID(savedSession.getSessionID())
+                    session -> session.setSessionID(savedSession.getUnsafe(SessionKeys.DB_ID))
             );
         }
     }
 
     private Map<Long, List<Session>> turnToMapByStart(List<Session> sessions) {
-        Map<Long, List<Session>> sessionsByStart = new HashMap<>();
+        Map<Long, List<Session>> sessionsByStart = new TreeMap<>();
         for (Session session : sessions) {
-            long start = session.getSessionStart();
+            long start = session.getUnsafe(SessionKeys.START);
             List<Session> sorted = sessionsByStart.getOrDefault(start, new ArrayList<>());
             sorted.add(session);
             sessionsByStart.put(start, sorted);

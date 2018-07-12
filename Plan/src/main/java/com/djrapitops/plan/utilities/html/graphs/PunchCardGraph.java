@@ -6,6 +6,7 @@
 package com.djrapitops.plan.utilities.html.graphs;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 
 import java.util.Collection;
@@ -74,7 +75,7 @@ public class PunchCardGraph implements HighChart {
     private static List<Long> getSessionStarts(Collection<Session> data) {
         return data.stream()
                 .filter(Objects::nonNull)
-                .map(Session::getSessionStart)
+                .map(s -> s.getUnsafe(SessionKeys.START))
                 .sorted()
                 .collect(Collectors.toList());
     }

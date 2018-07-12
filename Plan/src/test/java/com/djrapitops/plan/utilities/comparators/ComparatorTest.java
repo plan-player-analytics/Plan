@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.settings.locale.Message;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
@@ -37,12 +38,12 @@ public class ComparatorTest {
     public void sessionDataComparator() {
         List<Session> sessions = RandomData.randomSessions();
 
-        List<Long> expected = sessions.stream().map(Session::getSessionStart)
+        List<Long> expected = sessions.stream().map(s -> s.getUnsafe(SessionKeys.START))
                 .sorted(Long::compare).collect(Collectors.toList());
         Collections.reverse(expected);
 
         sessions.sort(new SessionStartComparator());
-        List<Long> result = sessions.stream().map(Session::getSessionStart).collect(Collectors.toList());
+        List<Long> result = sessions.stream().map(s -> s.getUnsafe(SessionKeys.START)).collect(Collectors.toList());
 
         assertEquals(expected, result);
     }

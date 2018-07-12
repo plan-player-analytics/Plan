@@ -8,7 +8,6 @@ import com.djrapitops.plan.system.database.databases.operation.TransferOperation
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * TransferOperations for MySQL Database.
@@ -19,11 +18,6 @@ public class SQLTransferOps extends SQLOps implements TransferOperations {
 
     public SQLTransferOps(SQLDB db) {
         super(db);
-    }
-
-    @Override
-    public Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID) {
-        return transferTable.getServerPlayerIsOnline(playerUUID);
     }
 
     @Override

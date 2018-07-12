@@ -81,7 +81,6 @@ public class ShutdownHook extends Thread {
                 db.init();
             }
             try {
-                Log.debug("Shutdown: Saving a session: " + session.getSessionStart());
                 db.save().session(uuid, session);
             } catch (DBOpException e) {
                 Log.toLog(this.getClass(), e);

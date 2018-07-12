@@ -91,22 +91,6 @@ public class UsersTable extends UserIDTable {
     }
 
     /**
-     * @return the name of the column that inherits the ID.
-     */
-    @Deprecated
-    public String getColumnID() {
-        return Col.ID.get();
-    }
-
-    /**
-     * @return the name of the column that inherits the UUID.
-     */
-    @Deprecated
-    public String getColumnUUID() {
-        return Col.UUID.get();
-    }
-
-    /**
      * Get UUID of a player.
      *
      * @param playerName Name of a player
@@ -289,11 +273,6 @@ public class UsersTable extends UserIDTable {
                 return matchingNames;
             }
         });
-    }
-
-    @Deprecated
-    public String getColumnName() {
-        return Col.USER_NAME.get();
     }
 
     public Map<UUID, UserInfo> getUsers() {

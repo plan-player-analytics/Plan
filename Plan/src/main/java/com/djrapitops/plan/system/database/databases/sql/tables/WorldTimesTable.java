@@ -3,6 +3,7 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
@@ -123,7 +124,7 @@ public class WorldTimesTable extends UserIDTable {
                     gmMap.put(gms[3], set.getLong(Col.SPECTATOR.get()));
                     GMTimes gmTimes = new GMTimes(gmMap);
 
-                    session.getWorldTimes().setGMTimesForWorld(worldName, gmTimes);
+                    session.getUnsafe(SessionKeys.WORLD_TIMES).setGMTimesForWorld(worldName, gmTimes);
                 }
                 return null;
             }
@@ -293,7 +294,7 @@ public class WorldTimesTable extends UserIDTable {
         for (UUID serverUUID : map.keySet()) {
             for (List<Session> sessions : map.get(serverUUID).values()) {
                 for (Session session : sessions) {
-                    WorldTimes worldTimes = worldTimesBySessionID.get(session.getSessionID());
+                    WorldTimes worldTimes = worldTimesBySessionID.get(session.getUnsafe(SessionKeys.DB_ID));
                     if (worldTimes != null) {
                         session.setWorldTimes(worldTimes);
                     }
@@ -310,7 +311,7 @@ public class WorldTimesTable extends UserIDTable {
                 .map(Map::values)
                 .flatMap(Collection::stream)
                 .flatMap(Collection::stream)
-                .map(Session::getWorldTimes)
+                .map(s -> s.getUnsafe(SessionKeys.WORLD_TIMES))
                 .map(WorldTimes::getWorldTimes)
                 .map(Map::keySet)
                 .flatMap(Collection::stream)
@@ -331,9 +332,10 @@ public class WorldTimesTable extends UserIDTable {
                         List<Session> sessions = entry.getValue();
                         // Every Session
                         for (Session session : sessions) {
-                            int sessionID = session.getSessionID();
+                            int sessionID = session.getUnsafe(SessionKeys.DB_ID);
                             // Every WorldTimes
-                            for (Map.Entry<String, GMTimes> worldTimesEntry : session.getWorldTimes().getWorldTimes().entrySet()) {
+                            for (Map.Entry<String, GMTimes> worldTimesEntry : session.getUnsafe(SessionKeys.WORLD_TIMES)
+                                    .getWorldTimes().entrySet()) {
                                 String worldName = worldTimesEntry.getKey();
                                 GMTimes gmTimes = worldTimesEntry.getValue();
                                 statement.setString(1, uuid.toString());

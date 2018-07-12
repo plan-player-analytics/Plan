@@ -141,52 +141,12 @@ public class Session extends DataContainer implements DateHolder {
         return getUnsafe(SessionKeys.START);
     }
 
-    /**
-     * Get the start of the session.
-     *
-     * @return Epoch millisecond the session started.
-     */
-    @Deprecated
-    public long getSessionStart() {
-        return getUnsafe(SessionKeys.START);
-    }
-
-    /**
-     * Get the end of the session.
-     *
-     * @return Epoch millisecond the session ended.
-     */
-    @Deprecated
-    public long getSessionEnd() {
-        return getValue(SessionKeys.END).orElse(-1L);
-    }
-
-    @Deprecated
-    public WorldTimes getWorldTimes() {
-        return getValue(SessionKeys.WORLD_TIMES).orElse(null);
-    }
-
     public void setWorldTimes(WorldTimes worldTimes) {
         putRawData(SessionKeys.WORLD_TIMES, worldTimes);
     }
 
-    @Deprecated
-    public List<PlayerKill> getPlayerKills() {
-        return getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>());
-    }
-
     public void setPlayerKills(List<PlayerKill> playerKills) {
         putRawData(SessionKeys.PLAYER_KILLS, playerKills);
-    }
-
-    @Deprecated
-    public int getMobKills() {
-        return mobKills;
-    }
-
-    @Deprecated
-    public int getDeaths() {
-        return deaths;
     }
 
     public boolean isFetchedFromDB() {
@@ -195,27 +155,6 @@ public class Session extends DataContainer implements DateHolder {
 
     public void addAFKTime(long timeAFK) {
         afkTime += timeAFK;
-    }
-
-    @Deprecated
-    public long getAfkLength() {
-        return afkTime;
-    }
-
-    @Deprecated
-    public long getActiveLength() {
-        return getLength() - getAfkLength();
-    }
-
-    /**
-     * Used to get the ID of the session in the Database.
-     *
-     * @return ID if present.
-     * @throws NullPointerException if Session was not fetched from DB. Check {@code isFetchedFromDB} first.
-     */
-    @Deprecated
-    public int getSessionID() {
-        return getValue(SessionKeys.DB_ID).orElseThrow(() -> new NullPointerException("Session not fetched from DB."));
     }
 
     public void setSessionID(int sessionID) {

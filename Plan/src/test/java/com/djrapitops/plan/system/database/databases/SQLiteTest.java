@@ -15,10 +15,7 @@ import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
-import com.djrapitops.plan.data.store.keys.AnalysisKeys;
-import com.djrapitops.plan.data.store.keys.NetworkKeys;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.data.store.keys.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -359,7 +356,7 @@ public class SQLiteTest {
 
         long expectedLength = 10000L;
         assertEquals(expectedLength, session.getLength());
-        assertEquals(expectedLength, session.getWorldTimes().getTotal());
+        assertEquals(expectedLength, session.getUnsafe(SessionKeys.WORLD_TIMES).getTotal());
 
         SessionsTable sessionsTable = db.getSessionsTable();
         sessionsTable.saveSession(playerUUID, session);
@@ -786,7 +783,7 @@ public class SQLiteTest {
         sessions.put(1, session);
         worldTimesTable.addWorldTimesToSessions(playerUUID, sessions);
 
-        assertEquals(worldTimes, session.getWorldTimes());
+        assertEquals(worldTimes, session.getUnsafe(SessionKeys.WORLD_TIMES));
     }
 
     @Test
@@ -833,7 +830,7 @@ public class SQLiteTest {
 
         Map<UUID, Map<UUID, List<Session>>> allSessions = sessionsTable.getAllSessions(true);
 
-        assertEquals(worldTimes, allSessions.get(serverUUID).get(playerUUID).get(0).getWorldTimes());
+        assertEquals(worldTimes, allSessions.get(serverUUID).get(playerUUID).get(0).getUnsafe(SessionKeys.WORLD_TIMES));
     }
 
     @Test

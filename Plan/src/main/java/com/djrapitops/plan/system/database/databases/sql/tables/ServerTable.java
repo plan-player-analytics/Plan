@@ -43,11 +43,6 @@ public class ServerTable extends Table {
                 Col.INSTALLED,
                 Col.MAX_PLAYERS);
     }
-    
-    @Deprecated
-    public String getColumnID() {
-        return Col.SERVER_ID.get();
-    }
 
     public final String statementSelectServerID;
     public final String statementSelectServerNameID;
@@ -314,11 +309,6 @@ public class ServerTable extends Table {
                 return uuids;
             }
         });
-    }
-
-    @Deprecated
-    public String getColumnUUID() {
-        return Col.SERVER_UUID.get();
     }
 
     public void insertAllServers(List<Server> allServer) {

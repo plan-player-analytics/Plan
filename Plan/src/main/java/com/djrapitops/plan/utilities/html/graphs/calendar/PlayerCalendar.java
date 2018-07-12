@@ -8,6 +8,7 @@ import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -93,11 +94,11 @@ public class PlayerCalendar {
             String length = timeFormatter.apply(session.getLength());
 
             series.append(",{title: 'Session: ").append(length)
-                    .append("',start:").append(session.getSessionStart())
-                    .append(",end:").append(session.getSessionEnd())
+                    .append("',start:").append(session.getUnsafe(SessionKeys.START))
+                    .append(",end:").append(session.getUnsafe(SessionKeys.END))
                     .append("}");
 
-            for (PlayerKill kill : session.getPlayerKills()) {
+            for (PlayerKill kill : session.getUnsafe(SessionKeys.PLAYER_KILLS)) {
                 long time = kill.getDate();
 
                 series.append(",{title: 'Killed: ").append(kill.getVictim())

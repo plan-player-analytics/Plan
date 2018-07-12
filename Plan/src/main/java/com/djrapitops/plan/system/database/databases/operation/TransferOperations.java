@@ -5,7 +5,6 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Operations for transferring data via Database to another server.
@@ -21,9 +20,6 @@ public interface TransferOperations {
     void storeConfigSettings(String encodedSettingString);
 
     // Get
-
-    @Deprecated
-    Optional<UUID> getServerPlayerIsOnlineOn(UUID playerUUID);
 
     Optional<String> getEncodedConfigSettings();
 }
