@@ -136,7 +136,7 @@ public class SessionAccordion extends AbstractAccordion {
                     .append(worldHtmlID).append("gmseries")
                     .append(");");
 
-            String leftBottom = new KillsTable(session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>())).parseHtml();
+            String leftBottom = new KillsTable(session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()), null).parseHtml();
 
             String link = PlanAPI.getInstance().getPlayerInspectPageLink(playerName);
             String rightBottom = "<a target=\"_blank\" href=\"" + link + "\"><button href=\"" + link +
@@ -207,7 +207,7 @@ public class SessionAccordion extends AbstractAccordion {
                     .append(worldHtmlID).append("gmseries")
                     .append(");");
 
-            String leftBottom = new KillsTable(session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>())).parseHtml();
+            String leftBottom = new KillsTable(session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()), null).parseHtml();
 
             addElement(new AccordionElement(htmlID, title)
                     .setColor(Theme.getValue(ThemeVal.PARSED_SESSION_ACCORDION))

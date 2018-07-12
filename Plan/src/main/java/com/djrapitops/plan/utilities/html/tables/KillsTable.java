@@ -20,9 +20,13 @@ import java.util.List;
 public class KillsTable extends TableContainer {
 
     public KillsTable(List<PlayerKill> playerKills) {
+        this(playerKills, "red");
+    }
+
+    public KillsTable(List<PlayerKill> playerKills, String color) {
         super(Icon.called("clock").of(Family.REGULAR) + " Time", "Killed", "With");
-        setColor("red");
-        
+        setColor(color);
+
         if (playerKills.isEmpty()) {
             addRow("No Kills");
         } else {
