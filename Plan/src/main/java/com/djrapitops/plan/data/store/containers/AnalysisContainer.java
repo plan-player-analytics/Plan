@@ -188,6 +188,17 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_WEEK, () -> getUnsafe(newWeek).averageNewPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_MONTH, () -> getUnsafe(newMonth).averageNewPerDay());
 
+        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_SERIES, () ->
+                new AbstractLineGraph(MutatorFunctions.toPoints(
+                        getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).uniqueJoinsPerDay())
+                ).toHighChartsSeries()
+        );
+        putSupplier(AnalysisKeys.NEW_PLAYERS_SERIES, () ->
+                new AbstractLineGraph(MutatorFunctions.toPoints(
+                        getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay())
+                ).toHighChartsSeries()
+        );
+
         Key<Integer> retentionDay = new Key<>(Integer.class, "RETENTION_DAY");
         // compareAndFindThoseLikelyToBeRetained can throw exception.
         putSupplier(retentionDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).compareAndFindThoseLikelyToBeRetained(

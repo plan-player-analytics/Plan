@@ -18,6 +18,10 @@ public class DateHoldersMutator<T extends DateHolder> {
     public TreeMap<Long, List<T>> groupByStartOfDay() {
         TreeMap<Long, List<T>> map = new TreeMap<>();
 
+        if (dateHolders.isEmpty()) {
+            return map;
+        }
+
         long twentyFourHours = 24L * TimeAmount.HOUR.ms();
         for (T holder : dateHolders) {
             long date = holder.getDate();
@@ -28,11 +32,16 @@ public class DateHoldersMutator<T extends DateHolder> {
             map.put(startOfDate, list);
         }
 
-        // Add missing in-between dates
-        for (long date = map.firstKey(); date < map.lastKey(); date += twentyFourHours) {
-            map.putIfAbsent(date, new ArrayList<>());
+        // Empty map firstKey attempt causes NPE if not checked.
+        if (!map.isEmpty()) {
+            // Add missing in-between dates
+            long start = map.firstKey();
+            long now = System.currentTimeMillis();
+            long end = now - (now % twentyFourHours);
+            for (long date = map.firstKey(); date < end; date += twentyFourHours) {
+                map.putIfAbsent(date, new ArrayList<>());
+            }
         }
-
         return map;
     }
 

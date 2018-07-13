@@ -74,7 +74,8 @@ public class AnalysisPage implements Page {
                 TPS_SERIES, CPU_SERIES, RAM_SERIES,
                 ENTITY_SERIES, CHUNK_SERIES, PUNCHCARD_SERIES,
                 WORLD_MAP_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES,
-                ACTIVITY_PIE_SERIES, CALENDAR_SERIES
+                ACTIVITY_PIE_SERIES, CALENDAR_SERIES,
+                UNIQUE_PLAYERS_SERIES, NEW_PLAYERS_SERIES
         );
         placeholderReplacer.addAllPlaceholdersFrom(analysisContainer, FormatUtils::cutDecimals,
                 AVG_TPS_MONTH, AVG_TPS_WEEK, AVG_TPS_DAY,

@@ -121,6 +121,7 @@ public class HtmlExport extends SpecificExport {
                 "web/js/helpers.js",
                 "web/js/script.js",
                 "web/js/charts/activityPie.js",
+                "web/js/charts/lineGraph.js",
                 "web/js/charts/stackGraph.js",
                 "web/js/charts/performanceGraph.js",
                 "web/js/charts/playerGraph.js",

@@ -1119,6 +1119,7 @@
 <script src="js/charts/punchCard.js"></script>
 <script src="js/charts/healthGauge.js"></script>
 <script src="js/charts/activityPie.js"></script>
+<script src="js/charts/lineGraph.js"></script>
 <script src="js/charts/stackGraph.js"></script>
 <script src="js/charts/worldPie.js"></script>
 <script src="js/charts/performanceGraph.js"></script>
@@ -1141,6 +1142,7 @@
     var v = {
         colors: {
             playersOnline: '${playersGraphColor}',
+            newPlayers: '#8BC34A',
             tpsLow: '${tpsLowColor}',
             tpsMed: '${tpsMediumColor}',
             tpsHigh: '${tpsHighColor}',
@@ -1159,6 +1161,8 @@
         },
         data: {
             playersOnline: ${playersOnlineSeries},
+            uniquePlayers: ${uniquePlayersSeries},
+            newPlayers: ${newPlayersSeries},
             tps: ${tpsSeries},
             cpu: ${cpuSeries},
             ram: ${ramSeries},
@@ -1180,6 +1184,8 @@
     var s = {
         name: {
             playersOnline: 'Players Online',
+            uniquePlayers: 'Unique Players',
+            newPlayers: 'New Players',
             tps: 'TPS',
             cpu: 'CPU Usage (%)',
             ram: 'RAM Usage (MB)',
@@ -1219,6 +1225,20 @@
             data: v.data.playersOnline,
             color: v.colors.playersOnline,
             yAxis: 0
+        },
+        uniquePlayers: {
+            name: s.name.uniquePlayers,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.uniquePlayers,
+            color: v.colors.playersOnline
+        },
+        newPlayers: {
+            name: s.name.newPlayers,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.newPlayers,
+            color: v.colors.newPlayers
         },
         tps: {
             name: s.name.tps,
@@ -1346,6 +1366,7 @@
 
         // Chart draw scripts
         activityPie('activityPie', series.activityPie);
+        lineChart('uniqueChart', [series.uniquePlayers, series.newPlayers]);
         stackChart('activityStackGraph', series.activityStackCategories, series.activityStack, 'Players');
         worldPie('worldPie', series.worldPie, series.worldPieDrillDown);
         playersChart('playerChartDay', series.playersOnline, 3);

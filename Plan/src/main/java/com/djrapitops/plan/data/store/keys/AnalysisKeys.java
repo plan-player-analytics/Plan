@@ -127,6 +127,8 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> ACTIVITY_STACK_CATEGORIES = CommonPlaceholderKeys.ACTIVITY_STACK_CATEGORIES;
     public static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = CommonPlaceholderKeys.ACTIVITY_PIE_SERIES;
     public static final PlaceholderKey<String> CALENDAR_SERIES = new PlaceholderKey<>(String.class, "calendarSeries");
+    public static final PlaceholderKey<String> UNIQUE_PLAYERS_SERIES = new PlaceholderKey<>(String.class, "uniquePlayersSeries");
+    public static final PlaceholderKey<String> NEW_PLAYERS_SERIES = new PlaceholderKey<>(String.class, "newPlayersSeries");
     // Variables used only during analysis
     public static final Key<SessionsMutator> SESSIONS_MUTATOR = CommonKeys.SESSIONS_MUTATOR;
     public static final Key<TPSMutator> TPS_MUTATOR = CommonKeys.TPS_MUTATOR;
