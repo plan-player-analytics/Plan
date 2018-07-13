@@ -142,7 +142,10 @@ public class AnalysisKeys {
     public static final Key<Map<UUID, String>> PLAYER_NAMES = new Key<>(new Type<Map<UUID, String>>() {}, "PLAYER_NAMES");
     public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = CommonKeys.ACTIVITY_DATA;
     public static final Key<Set<UUID>> BAN_DATA = new Key<>(new Type<Set<UUID>>() {}, "BAN_DATA");
-
+    public static final Key<TreeMap<Long, Integer>> UNIQUE_PLAYERS_PER_DAY = new Key<>(new Type<TreeMap<Long, Integer>>() {}, "UNIQUE_PLAYERS_PER_DAY");
+    public static final Key<TreeMap<Long, Integer>> NEW_PLAYERS_PER_DAY = new Key<>(new Type<TreeMap<Long, Integer>>() {}, "NEW_PLAYERS_PER_DAY");
+    
+    
     private AnalysisKeys() {
         /* Static variable class */
     }

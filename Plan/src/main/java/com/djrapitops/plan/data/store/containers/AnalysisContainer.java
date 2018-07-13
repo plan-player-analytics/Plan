@@ -188,14 +188,16 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_WEEK, () -> getUnsafe(newWeek).averageNewPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_MONTH, () -> getUnsafe(newMonth).averageNewPerDay());
 
+        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).uniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.NEW_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay());
         putSupplier(AnalysisKeys.UNIQUE_PLAYERS_SERIES, () ->
                 new AbstractLineGraph(MutatorFunctions.toPoints(
-                        getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).uniqueJoinsPerDay())
+                        getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY))
                 ).toHighChartsSeries()
         );
         putSupplier(AnalysisKeys.NEW_PLAYERS_SERIES, () ->
                 new AbstractLineGraph(MutatorFunctions.toPoints(
-                        getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay())
+                        getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY))
                 ).toHighChartsSeries()
         );
 
@@ -323,7 +325,11 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.WORLD_MAP_SERIES, () ->
                 new WorldMap(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).getGeolocations()).toHighChartsSeries()
         );
-        putSupplier(AnalysisKeys.CALENDAR_SERIES, () -> new ServerCalendar(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).toCalendarSeries());
+        putSupplier(AnalysisKeys.CALENDAR_SERIES, () -> new ServerCalendar(
+                getUnsafe(AnalysisKeys.PLAYERS_MUTATOR),
+                getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY),
+                getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY)
+        ).toCalendarSeries());
 
         putSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
         Key<ActivityStackGraph> activityStackGraph = new Key<>(ActivityStackGraph.class, "ACTIVITY_STACK_GRAPH");

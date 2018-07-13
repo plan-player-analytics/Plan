@@ -5,9 +5,8 @@
 package com.djrapitops.plan.utilities.html.graphs.calendar;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
@@ -22,23 +21,16 @@ import java.util.*;
  */
 public class ServerCalendar {
 
-    private final List<Long> registerDates;
-    private final Map<UUID, List<Session>> sessions;
+    private final PlayersMutator mutator;
+    private final TreeMap<Long, Integer> uniquePerDay;
+    private final TreeMap<Long, Integer> newPerDay;
 
-    public ServerCalendar(List<Long> registerDates, Map<UUID, List<Session>> sessions) {
-        this.registerDates = registerDates;
-        this.sessions = sessions;
-    }
-
-    public ServerCalendar(PlayersMutator mutator) {
-        registerDates = new ArrayList<>();
-        sessions = new HashMap<>();
-
-        for (PlayerContainer container : mutator.all()) {
-            UUID uuid = container.getUnsafe(PlayerKeys.UUID);
-            registerDates.add(container.getValue(PlayerKeys.REGISTERED).orElse(0L));
-            sessions.put(uuid, container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()));
-        }
+    public ServerCalendar(PlayersMutator mutator,
+                          TreeMap<Long, Integer> uniquePerDay,
+                          TreeMap<Long, Integer> newPerDay) {
+        this.mutator = mutator;
+        this.uniquePerDay = uniquePerDay;
+        this.newPerDay = newPerDay;
     }
 
     public String toCalendarSeries() {
@@ -55,8 +47,12 @@ public class ServerCalendar {
         Map<String, Integer> registeredByDay = getRegisteredByDay();
 
         for (Map.Entry<String, Integer> entry : registeredByDay.entrySet()) {
-            String day = entry.getKey();
             Integer newPlayers = entry.getValue();
+            if (newPlayers <= 0) {
+                continue;
+            }
+            
+            String day = entry.getKey();
 
             series.append(",{title: 'New: ").append(newPlayers)
                     .append("',start:'").append(day)
@@ -67,15 +63,22 @@ public class ServerCalendar {
     }
 
     private void appendSessionRelatedData(StringBuilder series) {
-        Map<String, Map<UUID, List<Session>>> sessionsByDay = getSessionsByDay();
+        SessionsMutator sessionsMutator = new SessionsMutator(mutator.getSessions());
+        TreeMap<Long, List<Session>> byStartOfDay = sessionsMutator.toDateHoldersMutator().groupByStartOfDay();
 
-        for (Map.Entry<String, Map<UUID, List<Session>>> entry : sessionsByDay.entrySet()) {
-            String day = entry.getKey();
+        for (Map.Entry<Long, Integer> entry : uniquePerDay.entrySet()) {
+            if (entry.getValue() <= 0) {
+                continue;
+            }
 
-            Map<UUID, List<Session>> sessionsPerUsers = entry.getValue();
-            long sessionCount = sessionsPerUsers.values().stream().mapToLong(Collection::size).sum();
-            long playtime = sessionsPerUsers.values().stream().flatMap(Collection::stream).mapToLong(Session::getLength).sum();
-            long uniquePlayers = sessionsPerUsers.size();
+            Long key = entry.getKey();
+            String day = FormatUtils.formatTimeStampISO8601NoClock(key);
+            List<Session> sessions = byStartOfDay.getOrDefault(key, new ArrayList<>());
+
+            SessionsMutator dayMutator = new SessionsMutator(sessions);
+            long sessionCount = dayMutator.count();
+            long playtime = dayMutator.toPlaytime();
+            long uniquePlayers = entry.getValue();
 
             series.append(",{title: 'Playtime: ").append(Formatters.timeAmount().apply(playtime))
                     .append("',start:'").append(day)
@@ -93,33 +96,11 @@ public class ServerCalendar {
         }
     }
 
-    private Map<String, Map<UUID, List<Session>>> getSessionsByDay() {
-        Map<String, Map<UUID, List<Session>>> sessionsByDay = new HashMap<>();
-        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
-            UUID player = entry.getKey();
-            List<Session> sessions = entry.getValue();
-
-            for (Session session : sessions) {
-                String day = Formatters.iso8601NoClock().apply(session);
-
-                Map<UUID, List<Session>> sessionsPerUserOfDay = sessionsByDay.getOrDefault(day, new HashMap<>());
-                List<Session> sessionsOfUser = sessionsPerUserOfDay.getOrDefault(player, new ArrayList<>());
-                sessionsOfUser.add(session);
-                sessionsPerUserOfDay.put(player, sessionsOfUser);
-                sessionsByDay.put(day, sessionsPerUserOfDay);
-            }
-        }
-        return sessionsByDay;
-    }
-
     private Map<String, Integer> getRegisteredByDay() {
         Map<String, Integer> registeredByDay = new HashMap<>();
-        for (Long registered : registerDates) {
-            String day = FormatUtils.formatTimeStampISO8601NoClock(registered);
-
-            int registeredPerDay = registeredByDay.getOrDefault(day, 0);
-            registeredPerDay += 1;
-            registeredByDay.put(day, registeredPerDay);
+        for (Map.Entry<Long, Integer> entry : newPerDay.entrySet()) {
+            String day = FormatUtils.formatTimeStampISO8601NoClock(entry.getKey());
+            registeredByDay.put(day, entry.getValue());
         }
         return registeredByDay;
     }
