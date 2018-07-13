@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.icon.Icons;
@@ -83,7 +84,8 @@ public class SessionAccordion extends AbstractAccordion {
         Map<UUID, String> playerNames = playerNamesSupplier.get();
         Formatter<Long> timeFormatter = Formatters.timeAmount();
         Formatter<DateHolder> timeStampFormatter = Formatters.year();
-
+        sessions.sort(new DateHolderRecentComparator());
+        
         int i = 0;
         for (Session session : sessions) {
             if (i >= maxSessions) {
@@ -155,6 +157,7 @@ public class SessionAccordion extends AbstractAccordion {
         Map<UUID, String> serverNames = serverNamesSupplier.get();
         Formatter<Long> timeFormatter = Formatters.timeAmount();
         Formatter<DateHolder> timeStampFormatter = Formatters.year();
+        sessions.sort(new DateHolderRecentComparator());
 
         int i = 0;
         for (Session session : sessions) {
