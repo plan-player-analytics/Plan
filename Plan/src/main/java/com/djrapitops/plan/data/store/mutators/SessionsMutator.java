@@ -6,12 +6,10 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.CommonKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -49,6 +47,10 @@ public class SessionsMutator {
         return new SessionsMutator(sessions.stream()
                 .filter(getBetweenPredicate(after, before))
                 .collect(Collectors.toList()));
+    }
+
+    public DateHoldersMutator<Session> toDateHoldersMutator() {
+        return new DateHoldersMutator<>(sessions);
     }
 
     public WorldTimes toTotalWorldTimes() {
@@ -141,30 +143,29 @@ public class SessionsMutator {
         return sessionLengths.get(sessionLengths.size() / 2);
     }
 
-    public int toUniqueJoinsPerDay() {
-        Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
-        Function<Long, Integer> function = Formatters.dayOfYear();
+    public int toAverageUniqueJoinsPerDay() {
+        return MutatorFunctions.average(uniqueJoinsPerDay());
+    }
 
-        for (Session session : sessions) {
-            Optional<UUID> uuidValue = session.getValue(SessionKeys.UUID);
-            if (!uuidValue.isPresent()) {
-                continue;
-            }
-            UUID uuid = uuidValue.get();
-            int day = function.apply(session.getUnsafe(SessionKeys.START));
+    public TreeMap<Long, Integer> uniqueJoinsPerDay() {
+        TreeMap<Long, List<Session>> byStartOfDay = toDateHoldersMutator().groupByStartOfDay();
 
-            uniqueJoins.computeIfAbsent(day, computedDay -> new HashSet<>());
-            uniqueJoins.get(day).add(uuid);
+        TreeMap<Long, Integer> uniqueJoins = new TreeMap<>();
+        for (Map.Entry<Long, List<Session>> entry : byStartOfDay.entrySet()) {
+            uniqueJoins.put(
+                    entry.getKey(),
+                    new SessionsMutator(entry.getValue()).toUniquePlayers()
+            );
         }
 
-        int total = (int) uniqueJoins.values().stream().mapToInt(Set::size).count();
-        int numberOfDays = uniqueJoins.size();
+        return uniqueJoins;
+    }
 
-        if (numberOfDays == 0) {
-            return 0;
-        }
-
-        return total / numberOfDays;
+    public int toUniquePlayers() {
+        return (int) sessions.stream()
+                .map(session -> session.getUnsafe(SessionKeys.UUID))
+                .distinct()
+                .count();
     }
 
     public int count() {

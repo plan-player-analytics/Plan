@@ -18,6 +18,7 @@ import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Server Health analysis mutator.
@@ -59,8 +60,9 @@ public class HealthInformation extends AbstractHealthInfo {
         PlayersOnlineResolver onlineResolver = analysisContainer.getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER);
 
         double avgOnlineOnRegister = newPlayersMonth.registerDates().stream()
-                .mapToInt(date -> onlineResolver.getOnlineOn(date).orElse(-1))
-                .filter(value -> value != -1)
+                .map(onlineResolver::getOnlineOn)
+                .filter(Optional::isPresent)
+                .mapToInt(Optional::get)
                 .average().orElse(0);
         if (avgOnlineOnRegister >= 1) {
             notes.add("<p>" + Html.GREEN_THUMB.parse() + " New Players have players to play with when they join ("

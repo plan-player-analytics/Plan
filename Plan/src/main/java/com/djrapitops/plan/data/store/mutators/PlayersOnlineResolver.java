@@ -2,7 +2,10 @@ package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 
 /**
  * Resolves dates into players online numbers with a help of a NavigableMap.
@@ -11,22 +14,19 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class PlayersOnlineResolver {
-
-    private final NavigableMap<Long, Integer> onlineNumberMap;
+public class PlayersOnlineResolver extends TreeMap<Long, Integer> {
 
     public PlayersOnlineResolver(TPSMutator mutator) {
         List<Point> points = mutator.playersOnlinePoints();
-        onlineNumberMap = new TreeMap<>();
         for (Point point : points) {
             double date = point.getX();
             double value = point.getY();
-            onlineNumberMap.put((long) date, (int) value);
+            put((long) date, (int) value);
         }
     }
 
     public Optional<Integer> getOnlineOn(long date) {
-        Map.Entry<Long, Integer> entry = onlineNumberMap.floorEntry(date);
+        Map.Entry<Long, Integer> entry = floorEntry(date);
         if (entry == null) {
             return Optional.empty();
         }
@@ -34,7 +34,7 @@ public class PlayersOnlineResolver {
     }
 
     public boolean isServerOnline(long date, long timeLimit) {
-        Long lastEntry = onlineNumberMap.floorKey(date);
+        Long lastEntry = floorKey(date);
         return date - lastEntry < timeLimit;
     }
 }

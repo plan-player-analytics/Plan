@@ -168,13 +168,13 @@ public class AnalysisContainer extends DataContainer {
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
         putSupplier(uniqueDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
-                .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+                .filterPlayedBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
         putSupplier(uniqueWeek, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
-                .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+                .filterPlayedBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
         putSupplier(uniqueMonth, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
-                .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
+                .filterPlayedBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
 
         putSupplier(AnalysisKeys.PLAYERS_NEW_DAY, () -> getUnsafe(newDay).count());
@@ -183,10 +183,10 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.PLAYERS_DAY, () -> getUnsafe(uniqueDay).count());
         putSupplier(AnalysisKeys.PLAYERS_WEEK, () -> getUnsafe(uniqueWeek).count());
         putSupplier(AnalysisKeys.PLAYERS_MONTH, () -> getUnsafe(uniqueMonth).count());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_DAY, () -> getUnsafe(uniqueDay).newPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_WEEK, () -> getUnsafe(uniqueWeek).newPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_MONTH, () -> getUnsafe(uniqueMonth).newPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).averageNewPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_DAY, () -> getUnsafe(newDay).averageNewPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_WEEK, () -> getUnsafe(newWeek).averageNewPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_NEW_MONTH, () -> getUnsafe(newMonth).averageNewPerDay());
 
         Key<Integer> retentionDay = new Key<>(Integer.class, "RETENTION_DAY");
         // compareAndFindThoseLikelyToBeRetained can throw exception.
@@ -290,10 +290,10 @@ public class AnalysisContainer extends DataContainer {
         );
 
         putSupplier(AnalysisKeys.PUNCHCARD_SERIES, () -> new PunchCardGraph(getUnsafe(sessionsMonth).all()).toHighChartsSeries());
-        putSupplier(AnalysisKeys.AVG_PLAYERS, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toUniqueJoinsPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_DAY, () -> getUnsafe(sessionsDay).toUniqueJoinsPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toUniqueJoinsPerDay());
-        putSupplier(AnalysisKeys.AVG_PLAYERS_MONTH, () -> getUnsafe(sessionsMonth).toUniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageUniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_DAY, () -> getUnsafe(sessionsDay).toAverageUniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toAverageUniqueJoinsPerDay());
+        putSupplier(AnalysisKeys.AVG_PLAYERS_MONTH, () -> getUnsafe(sessionsMonth).toAverageUniqueJoinsPerDay());
     }
 
     private void addGraphSuppliers() {

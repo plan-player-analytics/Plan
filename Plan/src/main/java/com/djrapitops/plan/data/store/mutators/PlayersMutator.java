@@ -7,13 +7,12 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -128,22 +127,22 @@ public class PlayersMutator {
         return players.size();
     }
 
-    public int newPerDay() {
-        List<Long> registerDates = registerDates();
-        int total = 0;
-        Function<Long, Integer> formatter = Formatters.dayOfYear();
-        Set<Integer> days = new HashSet<>();
-        for (Long date : registerDates) {
-            int day = formatter.apply(date);
-            days.add(day);
-            total++;
-        }
-        int numberOfDays = days.size();
+    public int averageNewPerDay() {
+        return MutatorFunctions.average(newPerDay());
+    }
 
-        if (numberOfDays == 0) {
-            return 0;
+    public TreeMap<Long, Integer> newPerDay() {
+        List<DateObj> registerDates = registerDates().stream()
+                .map(value -> new DateObj<>(value, value))
+                .collect(Collectors.toList());
+        TreeMap<Long, List<DateObj>> byDay = new DateHoldersMutator<>(registerDates).groupByStartOfDay();
+        TreeMap<Long, Integer> byDayCounts = new TreeMap<>();
+
+        for (Map.Entry<Long, List<DateObj>> entry : byDay.entrySet()) {
+            byDayCounts.put(entry.getKey(), entry.getValue().size());
         }
-        return total / numberOfDays;
+
+        return byDayCounts;
     }
 
     /**
