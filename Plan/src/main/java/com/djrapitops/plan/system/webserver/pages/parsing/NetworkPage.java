@@ -37,6 +37,7 @@ public class NetworkPage implements Page {
                     PLAYERS_DAY, PLAYERS_WEEK, PLAYERS_MONTH,
                     PLAYERS_NEW_DAY, PLAYERS_NEW_WEEK, PLAYERS_NEW_MONTH,
                     WORLD_MAP_SERIES, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR,
+                    COUNTRY_CATEGORIES, COUNTRY_SERIES,
                     HEALTH_INDEX, HEALTH_NOTES,
                     ACTIVITY_PIE_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES
             );

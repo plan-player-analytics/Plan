@@ -42,6 +42,8 @@ public class NetworkKeys {
     public static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = CommonPlaceholderKeys.ACTIVITY_STACK_SERIES;
     public static final PlaceholderKey<String> ACTIVITY_STACK_CATEGORIES = CommonPlaceholderKeys.ACTIVITY_STACK_CATEGORIES;
     public static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = CommonPlaceholderKeys.ACTIVITY_PIE_SERIES;
+    public static final PlaceholderKey<String> COUNTRY_CATEGORIES = CommonPlaceholderKeys.COUNTRY_CATEGORIES;
+    public static final PlaceholderKey<String> COUNTRY_SERIES = CommonPlaceholderKeys.COUNTRY_SERIES;
     public static final PlaceholderKey<Double> HEALTH_INDEX = CommonPlaceholderKeys.HEALTH_INDEX;
     public static final PlaceholderKey<String> HEALTH_NOTES = CommonPlaceholderKeys.HEALTH_NOTES;
 

@@ -22,7 +22,9 @@ class CommonPlaceholderKeys {
     static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = new PlaceholderKey<>(String.class, "activityStackSeries");
     static final PlaceholderKey<String> ACTIVITY_STACK_CATEGORIES = new PlaceholderKey<>(String.class, "activityStackCategories");
     static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = new PlaceholderKey<>(String.class, "activityPieSeries");
-
+    public static final PlaceholderKey<String> COUNTRY_CATEGORIES = new PlaceholderKey<>(String.class, "countryCategories");
+    public static final PlaceholderKey<String> COUNTRY_SERIES = new PlaceholderKey<>(String.class, "countrySeries");
+    
     static final PlaceholderKey<String> HEALTH_NOTES = new PlaceholderKey<>(String.class, "healthNotes");
     static final PlaceholderKey<Double> HEALTH_INDEX = new PlaceholderKey<>(Double.class, "healthIndex");
 

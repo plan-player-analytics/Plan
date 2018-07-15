@@ -16,6 +16,7 @@ import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
 import com.djrapitops.plan.utilities.html.graphs.WorldMap;
+import com.djrapitops.plan.utilities.html.graphs.bar.GeolocationBarGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -99,6 +100,11 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.WORLD_MAP_SERIES, () ->
                 new WorldMap(PlayersMutator.forContainer(bungeeContainer)).toHighChartsSeries()
         );
+        Key<GeolocationBarGraph> geolocationBarChart = new Key<>(GeolocationBarGraph.class, "GEOLOCATION_BAR_CHART");
+        putSupplier(geolocationBarChart, () -> new GeolocationBarGraph(getUnsafe(NetworkKeys.PLAYERS_MUTATOR)));
+        putSupplier(NetworkKeys.COUNTRY_CATEGORIES, () -> getUnsafe(geolocationBarChart).toHighChartsCategories());
+        putSupplier(NetworkKeys.COUNTRY_SERIES, () -> getUnsafe(geolocationBarChart).toHighChartsSeries());
+
         putSupplier(NetworkKeys.PLAYERS_ONLINE_SERIES, () ->
                 new OnlineActivityGraph(TPSMutator.forContainer(bungeeContainer)).toHighChartsSeries()
         );
