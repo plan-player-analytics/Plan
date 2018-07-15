@@ -6,10 +6,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.containers.*;
-import com.djrapitops.plan.data.store.keys.PerServerKeys;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.keys.ServerKeys;
-import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.keys.*;
 import com.djrapitops.plan.data.store.mutators.PerServerMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
@@ -30,7 +27,9 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public NetworkContainer getNetworkContainer() {
-        return new NetworkContainer(getBungeeServerContainer());
+        NetworkContainer networkContainer = new NetworkContainer(getBungeeServerContainer());
+        networkContainer.putSupplier(NetworkKeys.BUKKIT_SERVERS, () -> getBukkitServers().values());
+        return networkContainer;
     }
 
     private ServerContainer getBungeeServerContainer() {

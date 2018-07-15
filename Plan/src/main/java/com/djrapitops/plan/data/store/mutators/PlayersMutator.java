@@ -78,6 +78,13 @@ public class PlayersMutator {
         return filterBy(player -> player.getActivityIndex(date).getValue() >= limit);
     }
 
+    public PlayersMutator filterPlayedOnServer(UUID serverUUID) {
+        return filterBy(player -> !SessionsMutator.forContainer(player)
+                .filterPlayedOnServer(serverUUID)
+                .all().isEmpty()
+        );
+    }
+
     public List<PlayerContainer> all() {
         return players;
     }

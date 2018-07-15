@@ -38,9 +38,6 @@ public enum Html {
      */
     @Deprecated
     FA_COLORED_ICON("<i class=\"col-${0} fa fa-${1}\"></i>"),
-    GREEN_THUMB("<i class=\"fa fa-thumbs-up g\"></i>"),
-    YELLOW_FLAG("<i class=\"fa fa-flag o\"></i>"),
-    RED_WARN("<i class=\"fa fa-exclamation-circle r\"></i>"),
     SPAN("${0}</span>"),
     BUTTON("<a class=\"button\" href=\"${0}\">${1}</a>"),
     BUTTON_CLASS("class=\"button\""),

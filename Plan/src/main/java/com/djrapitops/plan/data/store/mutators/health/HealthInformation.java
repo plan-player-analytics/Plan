@@ -14,7 +14,7 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
@@ -65,11 +65,11 @@ public class HealthInformation extends AbstractHealthInfo {
                 .mapToInt(Optional::get)
                 .average().orElse(0);
         if (avgOnlineOnRegister >= 1) {
-            notes.add("<p>" + Html.GREEN_THUMB.parse() + " New Players have players to play with when they join ("
-                    + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)</p>");
+            addNote(Icons.GREEN_THUMB + " New Players have players to play with when they join ("
+                    + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)");
         } else {
-            notes.add("<p>" + Html.YELLOW_FLAG.parse() + " New Players may not have players to play with when they join ("
-                    + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)</p>");
+            addNote(Icons.YELLOW_FLAG + " New Players may not have players to play with when they join ("
+                    + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)");
             serverHealth -= 5;
         }
 
@@ -79,11 +79,11 @@ public class HealthInformation extends AbstractHealthInfo {
         if (playersNewMonth != 0) {
             double retainPercentage = playersRetainedMonth / playersNewMonth;
             if (retainPercentage >= 0.25) {
-                notes.add("<p>" + Html.GREEN_THUMB.parse() + " " + Formatters.percentage().apply(retainPercentage)
-                        + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")</p>");
+                addNote(Icons.GREEN_THUMB + " " + Formatters.percentage().apply(retainPercentage)
+                        + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
             } else {
-                notes.add("<p>" + Html.YELLOW_FLAG.parse() + " " + Formatters.percentage().apply(retainPercentage)
-                        + "% of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")</p>");
+                addNote(Icons.YELLOW_FLAG + " " + Formatters.percentage().apply(retainPercentage)
+                        + "% of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
             }
         }
     }
@@ -95,49 +95,44 @@ public class HealthInformation extends AbstractHealthInfo {
         double aboveThreshold = tpsMutator.percentageTPSAboveLowThreshold();
         long tpsSpikeMonth = analysisContainer.getValue(AnalysisKeys.TPS_SPIKE_MONTH).orElse(0);
 
-        String avgLowThresholdString = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        String avgLowThresholdString = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         if (aboveThreshold >= 0.96) {
-            avgLowThresholdString += Html.GREEN_THUMB.parse();
+            avgLowThresholdString += Icons.GREEN_THUMB;
         } else if (aboveThreshold >= 0.9) {
-            avgLowThresholdString += Html.YELLOW_FLAG.parse();
+            avgLowThresholdString += Icons.YELLOW_FLAG;
             serverHealth *= 0.9;
         } else {
-            avgLowThresholdString += Html.RED_WARN.parse();
+            avgLowThresholdString += Icons.RED_WARN;
             serverHealth *= 0.6;
         }
         avgLowThresholdString += " Average TPS was above Low Threshold "
                 + FormatUtils.cutDecimals(aboveThreshold * 100.0) + "% of the time";
 
+        int threshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
         if (tpsSpikeMonth <= 5) {
-            notes.add("<p>" + Html.GREEN_THUMB.parse()
-                    + " Average TPS dropped below Low Threshold (" + Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber() + ")" +
-                    " " + tpsSpikeMonth + " times<br>" +
-                    avgLowThresholdString + "</p>");
+            addNote(Icons.GREEN_THUMB + " Average TPS dropped below Low Threshold (" + threshold + ")" +
+                    " " + tpsSpikeMonth + " times" +
+                    avgLowThresholdString);
         } else if (tpsSpikeMonth <= 25) {
-            notes.add("<p>" + Html.YELLOW_FLAG.parse()
-                    + " Average TPS dropped below Low Threshold (" + Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber() + ")" +
-                    " " + tpsSpikeMonth + " times<br>" +
-                    avgLowThresholdString + "</p>");
+            addNote(Icons.YELLOW_FLAG + " Average TPS dropped below Low Threshold (" + threshold + ")" +
+                    " " + tpsSpikeMonth + " times" +
+                    avgLowThresholdString);
             serverHealth *= 0.95;
         } else {
-            notes.add("<p>" + Html.RED_WARN.parse()
-                    + " Average TPS dropped below Low Threshold (" + Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber() + ")" +
-                    " " + tpsSpikeMonth + " times<br>" +
-                    avgLowThresholdString + "</p>");
+            addNote(Icons.RED_WARN + " Average TPS dropped below Low Threshold (" + threshold + ")" +
+                    " " + tpsSpikeMonth + " times" +
+                    avgLowThresholdString);
             serverHealth *= 0.8;
         }
 
         Formatter<Long> formatter = Formatters.timeAmount();
         if (serverDownTime <= TimeAmount.DAY.ms()) {
-            notes.add("<p>" + Html.GREEN_THUMB.parse() + " Total Server downtime (No Data) was "
-                    + formatter.apply(serverDownTime) + "</p>");
+            addNote(Icons.GREEN_THUMB + " Total Server downtime (No Data) was " + formatter.apply(serverDownTime));
         } else if (serverDownTime <= TimeAmount.WEEK.ms()) {
-            notes.add("<p>" + Html.YELLOW_FLAG.parse() + " Total Server downtime (No Data) was "
-                    + formatter.apply(serverDownTime) + "</p>");
+            addNote(Icons.YELLOW_FLAG + " Total Server downtime (No Data) was " + formatter.apply(serverDownTime));
             serverHealth *= (TimeAmount.WEEK.ms() - serverDownTime) * 1.0 / TimeAmount.WEEK.ms();
         } else {
-            notes.add("<p>" + Html.RED_WARN.parse() + " Total Server downtime (No Data) was "
-                    + formatter.apply(serverDownTime) + "</p>");
+            addNote(Icons.RED_WARN + " Total Server downtime (No Data) was " + formatter.apply(serverDownTime));
             serverHealth *= (TimeAmount.MONTH.ms() - serverDownTime) * 1.0 / TimeAmount.MONTH.ms();
         }
     }

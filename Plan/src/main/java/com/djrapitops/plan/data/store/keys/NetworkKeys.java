@@ -2,12 +2,11 @@ package com.djrapitops.plan.data.store.keys;
 
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.PlaceholderKey;
+import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.system.info.server.Server;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Key objects for {@link com.djrapitops.plan.data.store.containers.NetworkContainer}.
@@ -52,6 +51,7 @@ public class NetworkKeys {
     public static final Key<Long> REFRESH_TIME_MONTH_AGO = new Key<>(Long.class, "REFRESH_TIME_MONTH_AGO");
     public static final Key<PlayersMutator> PLAYERS_MUTATOR = CommonKeys.PLAYERS_MUTATOR;
 
+    public static final Key<Collection<Server>> BUKKIT_SERVERS = new Key<>(new Type<Collection<Server>>() {}, "BUKKIT_SERVERS");
     public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = CommonKeys.ACTIVITY_DATA;
 
     private NetworkKeys() {

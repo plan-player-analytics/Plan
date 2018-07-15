@@ -43,10 +43,22 @@ public class SessionsMutator {
         return sessions;
     }
 
-    public SessionsMutator filterSessionsBetween(long after, long before) {
+    public SessionsMutator filterBy(Predicate<Session> predicate) {
         return new SessionsMutator(sessions.stream()
-                .filter(getBetweenPredicate(after, before))
+                .filter(predicate)
                 .collect(Collectors.toList()));
+    }
+
+    public SessionsMutator filterSessionsBetween(long after, long before) {
+        return filterBy(getBetweenPredicate(after, before));
+    }
+
+    public SessionsMutator filterPlayedOnServer(UUID serverUUID) {
+        return filterBy(session ->
+                session.getValue(SessionKeys.SERVER_UUID)
+                        .map(uuid -> uuid.equals(serverUUID))
+                        .orElse(false)
+        );
     }
 
     public DateHoldersMutator<Session> toDateHoldersMutator() {
@@ -191,4 +203,6 @@ public class SessionsMutator {
     public int toPlayerDeathCount() {
         return toPlayerDeathList().size();
     }
+
+
 }

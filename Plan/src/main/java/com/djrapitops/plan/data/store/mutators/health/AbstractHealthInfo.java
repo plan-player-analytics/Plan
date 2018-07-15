@@ -5,12 +5,14 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
 
 public abstract class AbstractHealthInfo {
+
+    protected final String subNote = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
     protected final List<String> notes;
     protected final long now;
@@ -69,13 +71,13 @@ public abstract class AbstractHealthInfo {
 
         String remainNote = "";
         if (activeFWAGNum != 0) {
-            remainNote = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            remainNote = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
             if (percRemain > 50) {
-                remainNote += Html.GREEN_THUMB.parse();
+                remainNote += Icons.GREEN_THUMB;
             } else if (percRemain > 20) {
-                remainNote += Html.YELLOW_FLAG.parse();
+                remainNote += Icons.YELLOW_FLAG;
             } else {
-                remainNote += Html.RED_WARN.parse();
+                remainNote += Icons.RED_WARN;
                 serverHealth -= 2.5;
             }
 
@@ -83,22 +85,14 @@ public abstract class AbstractHealthInfo {
                     + remain + "/" + activeFWAGNum + ")";
         }
         if (change > 0) {
-            notes.add(
-                    "<p>" + Html.GREEN_THUMB.parse() + " Number of regular players has increased (+" + change + ")<br>" +
-                            remainNote + "</p>");
+            addNote(Icons.GREEN_THUMB + " Number of regular players has increased (+" + change + ")" + remainNote);
         } else if (change == 0) {
-            notes.add(
-                    "<p>" + Html.GREEN_THUMB.parse() + " Number of regular players has stayed the same (+" + change + ")<br>" +
-                            remainNote + "</p>");
+            addNote(Icons.GREEN_THUMB + " Number of regular players has stayed the same (+" + change + ")" + remainNote);
         } else if (change > -20) {
-            notes.add(
-                    "<p>" + Html.YELLOW_FLAG.parse() + " Number of regular players has decreased (" + change + ")<br>" +
-                            remainNote + "</p>");
+            addNote(Icons.YELLOW_FLAG + " Number of regular players has decreased (" + change + ")" + remainNote);
             serverHealth -= 5;
         } else {
-            notes.add(
-                    "<p>" + Html.RED_WARN.parse() + " Number of regular players has decreased (" + change + ")<br>" +
-                            remainNote + "</p>");
+            addNote(Icons.RED_WARN + " Number of regular players has decreased (" + change + ")" + remainNote);
             serverHealth -= 10;
         }
     }
@@ -122,18 +116,18 @@ public abstract class AbstractHealthInfo {
             String avgLastTwoWeeksString = Formatters.timeAmount().apply(avgLastTwoWeeks);
             String avgFourToTwoWeeksString = Formatters.timeAmount().apply(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
-                notes.add("<p>" + Html.GREEN_THUMB.parse() + " Active players seem to have things to do (Played "
+                addNote(Icons.GREEN_THUMB + " Active players seem to have things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ", last two weeks vs weeks 2-4)</p>");
+                        + ", last two weeks vs weeks 2-4)");
             } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeAmount.HOUR.ms() * 2L) {
-                notes.add("<p>" + Html.RED_WARN.parse() + " Active players might be running out of things to do (Played "
+                addNote(Icons.RED_WARN + " Active players might be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ", last two weeks vs weeks 2-4)</p>");
+                        + ", last two weeks vs weeks 2-4)");
                 serverHealth -= 5;
             } else {
-                notes.add("<p>" + Html.YELLOW_FLAG.parse() + " Active players might be running out of things to do (Played "
+                addNote(Icons.YELLOW_FLAG + " Active players might be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ", last two weeks vs weeks 2-4)</p>");
+                        + ", last two weeks vs weeks 2-4)");
             }
         }
     }
@@ -146,5 +140,9 @@ public abstract class AbstractHealthInfo {
         regularNewCompareSet.removeAll(activeFWAG);
         regularNewCompareSet.removeAll(veryActiveFWAG);
         return regularNewCompareSet.size();
+    }
+
+    protected void addNote(String note) {
+        notes.add("<p>" + note + "</p>");
     }
 }
