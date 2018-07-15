@@ -102,7 +102,7 @@ public class PlayersMutator {
 
         for (PlayerContainer player : players) {
             Optional<GeoInfo> mostRecent = GeoInfoMutator.forContainer(player).mostRecent();
-            mostRecent.ifPresent(geoInfo -> geolocations.add(geoInfo.getGeolocation()));
+            geolocations.add(mostRecent.map(GeoInfo::getGeolocation).orElse("Unknown"));
         }
 
         return geolocations;

@@ -22,6 +22,7 @@ import com.djrapitops.plan.utilities.analysis.ServerBanDataReader;
 import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
 import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
 import com.djrapitops.plan.utilities.html.graphs.WorldMap;
+import com.djrapitops.plan.utilities.html.graphs.bar.GeolocationBarGraph;
 import com.djrapitops.plan.utilities.html.graphs.calendar.ServerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.line.*;
 import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
@@ -325,6 +326,11 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.WORLD_MAP_SERIES, () ->
                 new WorldMap(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).getGeolocations()).toHighChartsSeries()
         );
+        Key<GeolocationBarGraph> geolocationBarChart = new Key<>(GeolocationBarGraph.class, "GEOLOCATION_BAR_CHART");
+        putSupplier(geolocationBarChart, () -> new GeolocationBarGraph(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)));
+        putSupplier(AnalysisKeys.COUNTRY_CATEGORIES, () -> getUnsafe(geolocationBarChart).toHighChartsCategories());
+        putSupplier(AnalysisKeys.COUNTRY_SERIES, () -> getUnsafe(geolocationBarChart).toHighChartsSeries());
+        
         putSupplier(AnalysisKeys.CALENDAR_SERIES, () -> new ServerCalendar(
                 getUnsafe(AnalysisKeys.PLAYERS_MUTATOR),
                 getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY),

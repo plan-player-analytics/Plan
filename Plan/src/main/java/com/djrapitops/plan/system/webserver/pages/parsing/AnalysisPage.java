@@ -157,7 +157,8 @@ public class AnalysisPage implements Page {
                 ENTITY_SERIES, CHUNK_SERIES, PUNCHCARD_SERIES,
                 WORLD_MAP_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES,
                 ACTIVITY_PIE_SERIES, CALENDAR_SERIES,
-                UNIQUE_PLAYERS_SERIES, NEW_PLAYERS_SERIES
+                UNIQUE_PLAYERS_SERIES, NEW_PLAYERS_SERIES,
+                COUNTRY_CATEGORIES, COUNTRY_SERIES
         );
         Benchmark.stop(DEBUG, DEBUG + " Chart Series");
     }
