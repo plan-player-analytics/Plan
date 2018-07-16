@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.store.keys;
 
+import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
@@ -28,6 +29,7 @@ public class CommonKeys {
     public static final Key<UUID> SERVER_UUID = new Key<>(UUID.class, "server_uuid");
     public static final Key<String> NAME = new Key<>(String.class, "name");
     public static final PlaceholderKey<Long> REGISTERED = new PlaceholderKey<>(Long.class, "registered");
+    public static final Key<List<Ping>> PING = new Key<>(new Type<List<Ping>>() {}, "ping");
 
     public static final Key<List<Session>> SESSIONS = new Key<>(new Type<List<Session>>() {}, "sessions");
     public static final Key<WorldTimes> WORLD_TIMES = new Key<>(WorldTimes.class, "world_times");

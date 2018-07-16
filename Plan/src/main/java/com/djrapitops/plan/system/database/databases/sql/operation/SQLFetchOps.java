@@ -1,10 +1,7 @@
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.containers.*;
 import com.djrapitops.plan.data.store.keys.*;
 import com.djrapitops.plan.data.store.mutators.PerServerMutator;
@@ -101,6 +98,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         List<UserInfo> serverUserInfo = userInfoTable.getServerUserInfo(serverUUID);
         Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
         Map<UUID, List<GeoInfo>> geoInfo = geoInfoTable.getAllGeoInfo();
+        Map<UUID, List<Ping>> allPings = pingTable.getAllPings();
 
         Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -110,7 +108,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
         Map<UUID, List<UserInfo>> serverUserInfos = Collections.singletonMap(serverUUID, serverUserInfo);
         Map<UUID, Map<UUID, List<Session>>> serverSessions = Collections.singletonMap(serverUUID, sessions);
-        Map<UUID, PerServerContainer> perServerInfo = getPerServerData(serverSessions, serverUserInfos);
+        Map<UUID, PerServerContainer> perServerInfo = getPerServerData(serverSessions, serverUserInfos, allPings);
 
         for (UserInfo userInfo : serverUserInfo) {
             PlayerContainer container = new PlayerContainer();
@@ -120,9 +118,10 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             container.putRawData(PlayerKeys.REGISTERED, userInfo.getRegistered());
             container.putRawData(PlayerKeys.NAME, userInfo.getName());
             container.putRawData(PlayerKeys.KICK_COUNT, timesKicked.get(uuid));
-            container.putSupplier(PlayerKeys.GEO_INFO, () -> geoInfo.get(uuid));
+            container.putRawData(PlayerKeys.GEO_INFO, geoInfo.get(uuid));
+            container.putRawData(PlayerKeys.PING, allPings.get(uuid));
             container.putSupplier(PlayerKeys.NICKNAMES, () -> nicknamesTable.getNicknameInformation(uuid));
-            container.putSupplier(PlayerKeys.PER_SERVER, () -> perServerInfo.get(uuid));
+            container.putRawData(PlayerKeys.PER_SERVER, perServerInfo.get(uuid));
 
             container.putRawData(PlayerKeys.BANNED, userInfo.isBanned());
             container.putRawData(PlayerKeys.OPERATOR, userInfo.isOperator());
@@ -163,10 +162,11 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         Map<UUID, UserInfo> users = usersTable.getUsers();
         Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
         Map<UUID, List<GeoInfo>> geoInfo = geoInfoTable.getAllGeoInfo();
+        Map<UUID, List<Ping>> allPings = pingTable.getAllPings();
 
         Map<UUID, Map<UUID, List<Session>>> sessions = sessionsTable.getAllSessions(false);
         Map<UUID, List<UserInfo>> allUserInfo = userInfoTable.getAllUserInfo();
-        Map<UUID, PerServerContainer> perServerInfo = getPerServerData(sessions, allUserInfo);
+        Map<UUID, PerServerContainer> perServerInfo = getPerServerData(sessions, allUserInfo, allPings);
 
         for (UserInfo userInfo : users.values()) {
             PlayerContainer container = new PlayerContainer();
@@ -176,9 +176,10 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             container.putRawData(PlayerKeys.REGISTERED, userInfo.getRegistered());
             container.putRawData(PlayerKeys.NAME, userInfo.getName());
             container.putRawData(PlayerKeys.KICK_COUNT, timesKicked.get(uuid));
-            container.putSupplier(PlayerKeys.GEO_INFO, () -> geoInfo.get(uuid));
+            container.putRawData(PlayerKeys.GEO_INFO, geoInfo.get(uuid));
+            container.putRawData(PlayerKeys.PING, allPings.get(uuid));
             container.putSupplier(PlayerKeys.NICKNAMES, () -> nicknamesTable.getNicknameInformation(uuid));
-            container.putSupplier(PlayerKeys.PER_SERVER, () -> perServerInfo.get(uuid));
+            container.putRawData(PlayerKeys.PER_SERVER, perServerInfo.get(uuid));
 
             container.putSupplier(PlayerKeys.SESSIONS, () -> {
                 List<Session> playerSessions = PerServerMutator.forContainer(container).flatMapSessions();
@@ -198,7 +199,11 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         return containers;
     }
 
-    private Map<UUID, PerServerContainer> getPerServerData(Map<UUID, Map<UUID, List<Session>>> sessions, Map<UUID, List<UserInfo>> allUserInfo) {
+    private Map<UUID, PerServerContainer> getPerServerData(
+            Map<UUID, Map<UUID, List<Session>>> sessions,
+            Map<UUID, List<UserInfo>> allUserInfo,
+            Map<UUID, List<Ping>> allPings
+    ) {
         Map<UUID, PerServerContainer> perServerContainers = new HashMap<>();
 
         for (Map.Entry<UUID, List<UserInfo>> entry : allUserInfo.entrySet()) {
@@ -240,6 +245,23 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
                 container.putSupplier(PerServerKeys.PLAYER_KILL_COUNT, () -> container.getUnsafe(PerServerKeys.PLAYER_KILLS).size());
                 container.putSupplier(PerServerKeys.MOB_KILL_COUNT, () -> SessionsMutator.forContainer(container).toMobKillCount());
                 container.putSupplier(PerServerKeys.DEATH_COUNT, () -> SessionsMutator.forContainer(container).toDeathCount());
+                perServerContainer.put(serverUUID, container);
+                perServerContainers.put(uuid, perServerContainer);
+            }
+        }
+
+        for (Map.Entry<UUID, List<Ping>> entry : allPings.entrySet()) {
+            UUID uuid = entry.getKey();
+            for (Ping ping : entry.getValue()) {
+                UUID serverUUID = ping.getServerUUID();
+                PerServerContainer perServerContainer = perServerContainers.getOrDefault(uuid, new PerServerContainer());
+                DataContainer container = perServerContainer.getOrDefault(serverUUID, new DataContainer());
+
+                if (!container.supports(PerServerKeys.PING)) {
+                    container.putRawData(PerServerKeys.PING, new ArrayList<>());
+                }
+                container.getUnsafe(PerServerKeys.PING).add(ping);
+
                 perServerContainer.put(serverUUID, container);
                 perServerContainers.put(uuid, perServerContainer);
             }
