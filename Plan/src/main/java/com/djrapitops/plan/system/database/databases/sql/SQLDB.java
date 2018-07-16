@@ -221,7 +221,7 @@ public abstract class SQLDB extends Database {
     public Table[] getAllTables() {
         return new Table[]{
                 serverTable, usersTable, userInfoTable, geoInfoTable,
-                nicknamesTable, sessionsTable, killsTable,
+                nicknamesTable, sessionsTable, killsTable, pingTable,
                 commandUseTable, tpsTable, worldTable,
                 worldTimesTable, securityTable, transferTable
         };
@@ -235,7 +235,7 @@ public abstract class SQLDB extends Database {
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
                 transferTable, geoInfoTable, nicknamesTable, killsTable,
-                worldTimesTable, sessionsTable, worldTable,
+                worldTimesTable, sessionsTable, worldTable, pingTable,
                 userInfoTable, usersTable, commandUseTable,
                 tpsTable, securityTable, serverTable
         };

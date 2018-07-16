@@ -1431,7 +1431,7 @@
         healthGauge('healthGauge', [v.data.healthIndex]);
         onlineActivityCalendar('#calendar', v.data.calendar, v.values.firstDay);
         horizontalBarChart('countryBarChart', v.data.countryCategories, [series.country], 'Players');
-        lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
+        lineChart('pingGraph', [series.playersOnline, series.avgPing, series.maxPing, series.minPing]);
         ${sessionTabGraphViewFunctions}
 
         /**/
