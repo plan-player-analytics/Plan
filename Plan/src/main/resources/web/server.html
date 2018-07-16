@@ -819,7 +819,7 @@
                                            tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
                                            data-container="body" data-html="true"
                                            data-original-title="Performance Charts"
-                                           data-content="Charts of different performance metrics, recorded by TPS task.
+                                           data-content="Charts of different performance metrics, recorded by TPS task & Ping task.
                                                    <br><br>TPS task starts 50 seconds after Plan enables and records Maximum player count & Average of other metrics for each minute.
                                                    <br><br>Any dataset can be hidden by clicking the name in the legend.
                                                    <br><br>Note: Due to JVM performance restraints CPU usage may be unavailable on some Machines."
@@ -835,6 +835,9 @@
                                             <li role="presentation"><a href="#world" data-toggle="tab"><i
                                                     class="fa fa-map"></i>
                                                 WORLD LOAD</a></li>
+                                            <li role="presentation"><a href="#ping" data-toggle="tab"><i
+                                                    class="fa fa-signal"></i>
+                                                PING</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -852,6 +855,9 @@
                                     </div>
                                     <div role="tabpanel" class="tab-pane fade" id="world">
                                         <div id="worldGraph" style="height: 500px;"></div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="ping">
+                                        <div id="pingGraph" style="height: 500px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -1160,7 +1166,10 @@
             chunks: '#b58310',
             geolocationsLow: '${worldMapColLow}',
             geolocationsHigh: '${worldMapColHigh}',
-            punchCard: '#222'
+            punchCard: '#222',
+            maxPing: '${maxPingColor}',
+            minPing: '${minPingColor}',
+            avgPing: '${avgPingColor}'
         },
         values: {
             tpsMed: ${tpsMedium},
@@ -1186,7 +1195,10 @@
             healthIndex: ${healthIndex},
             calendar: ${calendarSeries},
             countryCategories: ${countryCategories},
-            country: ${countrySeries}
+            country: ${countrySeries},
+            avgPing: ${avgPingSeries},
+            maxPing: ${maxPingSeries},
+            minPing: ${minPingSeries}
         }
     };
 
@@ -1200,7 +1212,10 @@
             cpu: 'CPU Usage (%)',
             ram: 'RAM Usage (MB)',
             entities: 'Loaded Entities',
-            chunks: 'Loaded Chunks'
+            chunks: 'Loaded Chunks',
+            maxPing: 'Highest Ping',
+            minPing: 'Lowest Ping',
+            avgPing: 'Average Ping'
         },
         tooltip: {
             twoDecimals: {
@@ -1235,6 +1250,27 @@
             data: v.data.playersOnline,
             color: v.colors.playersOnline,
             yAxis: 0
+        },
+        avgPing: {
+            name: s.name.avgPing,
+            type: s.type.spline,
+            tooltip: s.tooltip.twoDecimals,
+            data: v.data.avgPing,
+            color: v.colors.avgPing
+        },
+        maxPing: {
+            name: s.name.maxPing,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.maxPing,
+            color: v.colors.maxPing
+        },
+        minPing: {
+            name: s.name.minPing,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.minPing,
+            color: v.colors.minPing
         },
         uniquePlayers: {
             name: s.name.uniquePlayers,
@@ -1395,6 +1431,7 @@
         healthGauge('healthGauge', [v.data.healthIndex]);
         onlineActivityCalendar('#calendar', v.data.calendar, v.values.firstDay);
         horizontalBarChart('countryBarChart', v.data.countryCategories, [series.country], 'Players');
+        lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
         ${sessionTabGraphViewFunctions}
 
         /**/

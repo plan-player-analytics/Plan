@@ -50,7 +50,8 @@ public class AnalysisPage implements Page {
 
                 WORLD_PIE_COLORS, GM_PIE_COLORS, ACTIVITY_PIE_COLORS,
                 PLAYERS_GRAPH_COLOR, TPS_HIGH_COLOR, TPS_MEDIUM_COLOR,
-                TPS_LOW_COLOR, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR
+                TPS_LOW_COLOR, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR,
+                AVG_PING_COLOR, MAX_PING_COLOR, MIN_PING_COLOR
         );
         playersTable(placeholderReplacer);
         sessionStructures(placeholderReplacer);
@@ -158,7 +159,8 @@ public class AnalysisPage implements Page {
                 WORLD_MAP_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES,
                 ACTIVITY_PIE_SERIES, CALENDAR_SERIES,
                 UNIQUE_PLAYERS_SERIES, NEW_PLAYERS_SERIES,
-                COUNTRY_CATEGORIES, COUNTRY_SERIES
+                COUNTRY_CATEGORIES, COUNTRY_SERIES,
+                AVG_PING_SERIES, MAX_PING_SERIES, MIN_PING_SERIES
         );
         Benchmark.stop(DEBUG, DEBUG + " Chart Series");
     }

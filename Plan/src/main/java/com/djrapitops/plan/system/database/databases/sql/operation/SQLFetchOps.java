@@ -60,6 +60,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         container.putSupplier(ServerKeys.PLAYER_COUNT, () -> container.getUnsafe(ServerKeys.PLAYERS).size());
 
         container.putSupplier(ServerKeys.TPS, () -> tpsTable.getTPSData(serverUUID));
+        container.putSupplier(ServerKeys.PING, () -> PlayersMutator.forContainer(container).pings());
         container.putSupplier(ServerKeys.ALL_TIME_PEAK_PLAYERS, () -> {
             Optional<TPS> allTimePeak = tpsTable.getAllTimePeak(serverUUID);
             if (allTimePeak.isPresent()) {

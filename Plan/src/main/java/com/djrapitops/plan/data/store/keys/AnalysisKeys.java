@@ -41,8 +41,12 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> TPS_HIGH_COLOR = new PlaceholderKey<>(String.class, "tpsHighColor");
     public static final PlaceholderKey<String> TPS_MEDIUM_COLOR = new PlaceholderKey<>(String.class, "tpsMediumColor");
     public static final PlaceholderKey<String> TPS_LOW_COLOR = new PlaceholderKey<>(String.class, "tpsLowColor");
+    public static final PlaceholderKey<String> AVG_PING_COLOR = new PlaceholderKey<>(String.class, "avgPingColor");
+    public static final PlaceholderKey<String> MIN_PING_COLOR = new PlaceholderKey<>(String.class, "minPingColor");
+    public static final PlaceholderKey<String> MAX_PING_COLOR = new PlaceholderKey<>(String.class, "maxPingColor");
     public static final PlaceholderKey<String> WORLD_MAP_HIGH_COLOR = CommonPlaceholderKeys.WORLD_MAP_HIGH_COLOR;
     public static final PlaceholderKey<String> WORLD_MAP_LOW_COLOR = CommonPlaceholderKeys.WORLD_MAP_LOW_COLOR;
+
     // Tables & other structures
     public static final PlaceholderKey<String> PLAYERS_TABLE = new PlaceholderKey<>(String.class, "tablePlayerlist");
     public static final PlaceholderKey<String> SESSION_ACCORDION_HTML = new PlaceholderKey<>(String.class, "accordionSessions");
@@ -129,6 +133,9 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> CALENDAR_SERIES = new PlaceholderKey<>(String.class, "calendarSeries");
     public static final PlaceholderKey<String> UNIQUE_PLAYERS_SERIES = new PlaceholderKey<>(String.class, "uniquePlayersSeries");
     public static final PlaceholderKey<String> NEW_PLAYERS_SERIES = new PlaceholderKey<>(String.class, "newPlayersSeries");
+    public static final PlaceholderKey<String> AVG_PING_SERIES = new PlaceholderKey<>(String.class, "avgPingSeries");
+    public static final PlaceholderKey<String> MAX_PING_SERIES = new PlaceholderKey<>(String.class, "maxPingSeries");
+    public static final PlaceholderKey<String> MIN_PING_SERIES = new PlaceholderKey<>(String.class, "minPingSeries");
     public static final PlaceholderKey<String> COUNTRY_CATEGORIES = CommonPlaceholderKeys.COUNTRY_CATEGORIES;
     public static final PlaceholderKey<String> COUNTRY_SERIES = CommonPlaceholderKeys.COUNTRY_SERIES;
     // Variables used only during analysis

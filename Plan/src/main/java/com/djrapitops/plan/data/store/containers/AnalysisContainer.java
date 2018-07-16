@@ -119,6 +119,9 @@ public class AnalysisContainer extends DataContainer {
         putRawData(AnalysisKeys.WORLD_MAP_LOW_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_LOW));
         putRawData(AnalysisKeys.WORLD_MAP_HIGH_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_HIGH));
         putRawData(AnalysisKeys.WORLD_PIE_COLORS, Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+        putRawData(AnalysisKeys.AVG_PING_COLOR, Theme.getValue(ThemeVal.GRAPH_AVG_PING));
+        putRawData(AnalysisKeys.MAX_PING_COLOR, Theme.getValue(ThemeVal.GRAPH_MAX_PING));
+        putRawData(AnalysisKeys.MIN_PING_COLOR, Theme.getValue(ThemeVal.GRAPH_MIN_PING));
     }
 
     private void addPlayerSuppliers() {
@@ -330,7 +333,15 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(geolocationBarChart, () -> new GeolocationBarGraph(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)));
         putSupplier(AnalysisKeys.COUNTRY_CATEGORIES, () -> getUnsafe(geolocationBarChart).toHighChartsCategories());
         putSupplier(AnalysisKeys.COUNTRY_SERIES, () -> getUnsafe(geolocationBarChart).toHighChartsSeries());
-        
+
+        Key<PingGraph> pingGraph = new Key<>(PingGraph.class, "PING_GRAPH");
+        putSupplier(pingGraph, () -> new PingGraph(
+                PingMutator.forContainer(serverContainer).mutateToByMinutePings().all()
+        ));
+        putSupplier(AnalysisKeys.AVG_PING_SERIES, () -> getUnsafe(pingGraph).toAvgSeries());
+        putSupplier(AnalysisKeys.MAX_PING_SERIES, () -> getUnsafe(pingGraph).toMaxSeries());
+        putSupplier(AnalysisKeys.MIN_PING_SERIES, () -> getUnsafe(pingGraph).toMinSeries());
+
         putSupplier(AnalysisKeys.CALENDAR_SERIES, () -> new ServerCalendar(
                 getUnsafe(AnalysisKeys.PLAYERS_MUTATOR),
                 getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY),

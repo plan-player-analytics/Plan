@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.store.keys;
 
+import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
@@ -34,6 +35,7 @@ public class ServerKeys {
     public static final Key<Integer> PLAYER_COUNT = new Key<>(Integer.class, "player_count");
 
     public static final Key<List<Session>> SESSIONS = CommonKeys.SESSIONS;
+    public static final Key<List<Ping>> PING = CommonKeys.PING;
     public static final Key<WorldTimes> WORLD_TIMES = CommonKeys.WORLD_TIMES;
 
     public static final Key<List<PlayerKill>> PLAYER_KILLS = CommonKeys.PLAYER_KILLS;

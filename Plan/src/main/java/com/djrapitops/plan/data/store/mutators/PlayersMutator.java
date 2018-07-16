@@ -245,4 +245,11 @@ public class PlayersMutator {
         return players.stream()
                 .filter(player -> player.getValue(PlayerKeys.OPERATOR).orElse(false)).collect(Collectors.toList());
     }
+
+    public List<Ping> pings() {
+        return players.stream()
+                .map(player -> player.getValue(PlayerKeys.PING).orElse(new ArrayList<>()))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
 }
