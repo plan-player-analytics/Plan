@@ -15,22 +15,31 @@ public class DateHoldersMutator<T extends DateHolder> {
         this.dateHolders = dateHolders;
     }
 
-    public TreeMap<Long, List<T>> groupByStartOfDay() {
+    public TreeMap<Long, List<T>> groupByStartOfMinute() {
+        return groupByStartOfSections(TimeAmount.MINUTE.ms());
+    }
+
+    private TreeMap<Long, List<T>> groupByStartOfSections(long sectionLength) {
         TreeMap<Long, List<T>> map = new TreeMap<>();
 
         if (dateHolders.isEmpty()) {
             return map;
         }
 
-        long twentyFourHours = 24L * TimeAmount.HOUR.ms();
         for (T holder : dateHolders) {
             long date = holder.getDate();
-            long startOfDate = date - (date % twentyFourHours);
+            long startOfMinute = date - (date % sectionLength);
 
-            List<T> list = map.getOrDefault(startOfDate, new ArrayList<>());
+            List<T> list = map.getOrDefault(startOfMinute, new ArrayList<>());
             list.add(holder);
-            map.put(startOfDate, list);
+            map.put(startOfMinute, list);
         }
+        return map;
+    }
+
+    public TreeMap<Long, List<T>> groupByStartOfDay() {
+        long twentyFourHours = 24L * TimeAmount.HOUR.ms();
+        TreeMap<Long, List<T>> map = groupByStartOfSections(twentyFourHours);
 
         // Empty map firstKey attempt causes NPE if not checked.
         if (!map.isEmpty()) {
