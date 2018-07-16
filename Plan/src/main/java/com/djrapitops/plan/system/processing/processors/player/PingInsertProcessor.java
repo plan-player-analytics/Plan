@@ -15,7 +15,7 @@ import java.util.OptionalInt;
 import java.util.UUID;
 
 /**
- * Processes 60s average of a Ping list.
+ * Processes 60s values of a Ping list.
  * <p>
  * Ping list contains 30 values as ping is updated every 2 seconds.
  *
@@ -24,16 +24,16 @@ import java.util.UUID;
 public class PingInsertProcessor implements CriticalRunnable {
 
     private final UUID uuid;
-    private final List<Ping> pingList;
+    private final List<DateObj<Integer>> pingList;
 
-    public PingInsertProcessor(UUID uuid, List<Ping> pingList) {
+    public PingInsertProcessor(UUID uuid, List<DateObj<Integer>> pingList) {
         this.uuid = uuid;
         this.pingList = pingList;
     }
 
     @Override
     public void run() {
-        List<Ping> history = pingList;
+        List<DateObj<Integer>> history = pingList;
         long lastDate = history.get(history.size() - 1).getDate();
         OptionalInt max = history.stream()
                 .mapToInt(DateObj::getValue)
@@ -44,9 +44,22 @@ public class PingInsertProcessor implements CriticalRunnable {
             return;
         }
 
+        int minValue = history.stream()
+                .mapToInt(DateObj::getValue)
+                .filter(i -> i != -1)
+                .min().orElse(-1);
+
+        double avgValue = history.stream()
+                .mapToInt(DateObj::getValue)
+                .filter(i -> i != -1)
+                .average().orElse(-1);
+
         int maxValue = max.getAsInt();
 
-        Ping ping = new Ping(lastDate, maxValue, ServerInfo.getServerUUID());
+        Ping ping = new Ping(lastDate, ServerInfo.getServerUUID(),
+                minValue,
+                maxValue,
+                avgValue);
 
         Database.getActive().save().ping(uuid, ping);
     }

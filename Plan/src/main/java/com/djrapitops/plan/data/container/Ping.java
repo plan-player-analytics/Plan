@@ -4,20 +4,34 @@ import com.djrapitops.plan.data.store.objects.DateObj;
 
 import java.util.UUID;
 
-public class Ping extends DateObj<Integer> {
+public class Ping extends DateObj<Double> {
 
-    private UUID serverUUID;
+    private final UUID serverUUID;
+    private final double average;
+    private final int min;
+    private final int max;
 
-    public Ping(long date, Integer value, UUID serverUUID) {
-        super(date, value);
+    public Ping(long date, UUID serverUUID, int min, int max, double average) {
+        super(date, average);
         this.serverUUID = serverUUID;
-    }
-
-    public Ping(long date, Integer value) {
-        super(date, value);
+        this.average = average;
+        this.min = min;
+        this.max = max;
     }
 
     public UUID getServerUUID() {
         return serverUUID;
+    }
+
+    public double getAverage() {
+        return average;
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public int getMax() {
+        return max;
     }
 }

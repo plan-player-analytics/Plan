@@ -23,7 +23,7 @@
  */
 package com.djrapitops.plan.system.tasks.server;
 
-import com.djrapitops.plan.data.container.Ping;
+import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.PingInsertProcessor;
 import com.djrapitops.plan.utilities.java.Reflection;
@@ -86,7 +86,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
         pingField = localPing;
     }
 
-    private final Map<UUID, List<Ping>> playerHistory = new HashMap<>();
+    private final Map<UUID, List<DateObj<Integer>>> playerHistory = new HashMap<>();
 
     private static boolean isPingMethodAvailable() {
         try {
@@ -106,7 +106,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 int ping = getPing(player);
-                history.add(new Ping(time, ping));
+                history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
                     Processing.submit(new PingInsertProcessor(uuid, new ArrayList<>(history)));
                     history.clear();

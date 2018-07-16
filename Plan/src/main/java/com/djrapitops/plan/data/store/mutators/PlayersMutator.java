@@ -1,6 +1,7 @@
 package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
@@ -106,6 +107,25 @@ public class PlayersMutator {
         }
 
         return geolocations;
+    }
+
+    public Map<String, List<Ping>> getPingPerCountry(UUID serverUUID) {
+        Map<String, List<Ping>> pingPerCountry = new HashMap<>();
+        for (PlayerContainer player : players) {
+            Optional<GeoInfo> mostRecent = GeoInfoMutator.forContainer(player).mostRecent();
+            if (!mostRecent.isPresent()) {
+                continue;
+            }
+            List<Ping> pings = player.getValue(PlayerKeys.PING).orElse(new ArrayList<>());
+            String country = mostRecent.get().getGeolocation();
+            List<Ping> countryPings = pingPerCountry.getOrDefault(country, new ArrayList<>());
+            pings.stream()
+                    .filter(ping -> ping.getServerUUID().equals(serverUUID))
+                    .forEach(countryPings::add);
+            pingPerCountry.put(country, countryPings);
+        }
+
+        return pingPerCountry;
     }
 
     public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date) {

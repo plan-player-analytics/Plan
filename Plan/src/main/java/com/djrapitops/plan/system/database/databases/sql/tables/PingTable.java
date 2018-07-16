@@ -30,7 +30,9 @@ public class PingTable extends UserIDTable {
                 Col.USER_ID + ", " +
                 Col.SERVER_ID + ", " +
                 Col.DATE + ", " +
-                Col.MAX_PING +
+                Col.MIN_PING + ", " +
+                Col.MAX_PING + ", " +
+                Col.AVG_PING +
                 ") VALUES (" +
                 usersTable.statementSelectID + ", " +
                 serverTable.statementSelectServerID + ", ?, ?)";
@@ -44,6 +46,8 @@ public class PingTable extends UserIDTable {
                 .column(Col.SERVER_ID, Sql.INT).notNull()
                 .column(Col.DATE, Sql.LONG).notNull()
                 .column(Col.MAX_PING, Sql.INT).notNull()
+                .column(Col.MIN_PING, Sql.INT).notNull()
+                .column(Col.AVG_PING, Sql.DOUBLE).notNull()
                 .primaryKey(usingMySQL, Col.ID)
                 .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
                 .foreignKey(Col.SERVER_ID, ServerTable.TABLE_NAME, ServerTable.Col.SERVER_ID)
@@ -70,7 +74,9 @@ public class PingTable extends UserIDTable {
                 statement.setString(1, uuid.toString());
                 statement.setString(2, ServerInfo.getServerUUID().toString());
                 statement.setLong(3, ping.getDate());
-                statement.setInt(4, ping.getValue());
+                statement.setInt(4, ping.getMin());
+                statement.setInt(5, ping.getMax());
+                statement.setDouble(6, ping.getAverage());
             }
         });
     }
@@ -92,9 +98,13 @@ public class PingTable extends UserIDTable {
 
                 while (set.next()) {
                     pings.add(new Ping(
-                            set.getLong(Col.DATE.get()),
-                            set.getInt(Col.MAX_PING.get()),
-                            serverUUIDs.get(set.getInt(Col.SERVER_ID.get()))));
+                                    set.getLong(Col.DATE.get()),
+                                    serverUUIDs.get(set.getInt(Col.SERVER_ID.get())),
+                                    set.getInt(Col.MIN_PING.get()),
+                                    set.getInt(Col.MAX_PING.get()),
+                                    set.getDouble(Col.AVG_PING.get())
+                            )
+                    );
                 }
 
                 return pings;
@@ -110,6 +120,8 @@ public class PingTable extends UserIDTable {
         String sql = "SELECT " +
                 Col.DATE + ", " +
                 Col.MAX_PING + ", " +
+                Col.MIN_PING + ", " +
+                Col.AVG_PING + ", " +
                 usersUUIDColumn + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
@@ -124,10 +136,15 @@ public class PingTable extends UserIDTable {
                     UUID uuid = UUID.fromString(set.getString("uuid"));
                     UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
                     long date = set.getLong(Col.DATE.get());
+                    double avgPing = set.getDouble(Col.AVG_PING.get());
+                    int minPing = set.getInt(Col.MIN_PING.get());
                     int maxPing = set.getInt(Col.MAX_PING.get());
 
                     List<Ping> pings = userPings.getOrDefault(uuid, new ArrayList<>());
-                    pings.add(new Ping(date, maxPing, serverUUID));
+                    pings.add(new Ping(date, serverUUID,
+                            minPing,
+                            maxPing,
+                            avgPing));
                     userPings.put(uuid, pings);
                 }
 
@@ -146,12 +163,16 @@ public class PingTable extends UserIDTable {
                     for (Ping ping : pings) {
                         UUID serverUUID = ping.getServerUUID();
                         long date = ping.getDate();
-                        int maxPing = ping.getValue();
+                        int minPing = ping.getMin();
+                        int maxPing = ping.getMax();
+                        double avgPing = ping.getAverage();
 
                         statement.setString(1, uuid.toString());
                         statement.setString(2, serverUUID.toString());
                         statement.setLong(3, date);
-                        statement.setInt(4, maxPing);
+                        statement.setInt(4, minPing);
+                        statement.setInt(5, maxPing);
+                        statement.setDouble(6, avgPing);
                         statement.addBatch();
                     }
                 }
@@ -164,7 +185,9 @@ public class PingTable extends UserIDTable {
         USER_ID(UserIDTable.Col.USER_ID.get()),
         SERVER_ID("server_id"),
         DATE("date"),
-        MAX_PING("max_ping");
+        MAX_PING("max_ping"),
+        AVG_PING("avg_ping"),
+        MIN_PING("min_ping");
 
         private final String name;
 
