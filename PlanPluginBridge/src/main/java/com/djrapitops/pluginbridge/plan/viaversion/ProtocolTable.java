@@ -46,14 +46,6 @@ public class ProtocolTable extends Table {
         );
     }
 
-    public void saveProtocolVersion(UUID uuid, int version) {
-        if (exists(uuid)) {
-            updateProtocolVersion(uuid, version);
-        } else {
-            insertProtocolVersion(uuid, version);
-        }
-    }
-
     public int getProtocolVersion(UUID uuid) {
         String sql = "SELECT " + columnProtocolVersion + " FROM " + tableName + " WHERE " + columnUUID + "=?";
 
@@ -89,26 +81,8 @@ public class ProtocolTable extends Table {
         });
     }
 
-    private boolean exists(UUID uuid) {
-        return getProtocolVersion(uuid) != -1;
-    }
-
-    private void updateProtocolVersion(UUID uuid, int version) {
-        String sql = "UPDATE " + tableName + " SET "
-                + columnProtocolVersion + "=? "
-                + " WHERE (" + columnUUID + "=?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, version);
-                statement.setString(2, uuid.toString());
-            }
-        });
-    }
-
-    private void insertProtocolVersion(UUID uuid, int version) {
-        String sql = "INSERT INTO " + tableName + " ("
+    public void saveProtocolVersion(UUID uuid, int version) {
+        String sql = "REPLACE INTO " + tableName + " ("
                 + columnUUID + ", "
                 + columnProtocolVersion
                 + ") VALUES (?, ?)";
