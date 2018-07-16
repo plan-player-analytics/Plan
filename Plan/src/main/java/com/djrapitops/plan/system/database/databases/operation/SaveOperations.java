@@ -5,10 +5,7 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.data.container.GeoInfo;
-import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.container.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.info.server.Server;
 
@@ -70,4 +67,6 @@ public interface SaveOperations {
     void serverInfoForThisServer(Server server);
 
     void webUser(WebUser webUser);
+
+    void ping(UUID uuid, Ping ping);
 }

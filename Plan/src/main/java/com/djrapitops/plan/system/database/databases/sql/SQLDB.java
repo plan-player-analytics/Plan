@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,7 @@ public abstract class SQLDB extends Database {
     private final WorldTimesTable worldTimesTable;
     private final ServerTable serverTable;
     private final TransferTable transferTable;
+    private final PingTable pingTable;
 
     private final SQLBackupOps backupOps;
     private final SQLCheckOps checkOps;
@@ -79,6 +81,7 @@ public abstract class SQLDB extends Database {
         worldTable = new WorldTable(this);
         worldTimesTable = new WorldTimesTable(this);
         transferTable = new TransferTable(this);
+        pingTable = new PingTable(this);
 
         backupOps = new SQLBackupOps(this);
         checkOps = new SQLCheckOps(this);
@@ -263,6 +266,7 @@ public abstract class SQLDB extends Database {
         tpsTable.clean();
         transferTable.clean();
         geoInfoTable.clean();
+        pingTable.clean();
 
         long now = System.currentTimeMillis();
         long keepActiveAfter = now - TimeAmount.DAY.ms() * Settings.KEEP_INACTIVE_PLAYERS_DAYS.getNumber();
@@ -420,6 +424,10 @@ public abstract class SQLDB extends Database {
         return transferTable;
     }
 
+    public PingTable getPingTable() {
+        return pingTable;
+    }
+
     public boolean isUsingMySQL() {
         return usingMySQL;
     }
@@ -462,5 +470,18 @@ public abstract class SQLDB extends Database {
     @Override
     public TransferOperations transfer() {
         return transferOps;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SQLDB sqldb = (SQLDB) o;
+        return usingMySQL == sqldb.usingMySQL && getName().equals(sqldb.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(usingMySQL, getName());
     }
 }

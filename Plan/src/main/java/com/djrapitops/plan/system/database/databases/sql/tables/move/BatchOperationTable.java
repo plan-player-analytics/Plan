@@ -84,6 +84,14 @@ public class BatchOperationTable extends Table {
         copyNicknames(toDB);
         copySessions(toDB);
         copyUserInfo(toDB);
+        copyPings(toDB);
+    }
+
+    private void copyPings(BatchOperationTable toDB) {
+        if (toDB.equals(this)) {
+            return;
+        }
+        toDB.db.getPingTable().insertAllPings(db.getPingTable().getAllPings());
     }
 
     public void copyCommandUse(BatchOperationTable toDB) {
