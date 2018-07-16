@@ -589,6 +589,7 @@ public class SQLiteTest {
         assertTrue(db.getWorldTable().getAllWorlds().isEmpty());
         assertTrue(tpsTable.getTPSData().isEmpty());
         assertTrue(db.getServerTable().getBukkitServers().isEmpty());
+        assertTrue(db.getPingTable().getAllPings().isEmpty());
         assertTrue(securityTable.getUsers().isEmpty());
     }
 
@@ -601,6 +602,7 @@ public class SQLiteTest {
         GeoInfoTable geoInfoTable = database.getGeoInfoTable();
         TPSTable tpsTable = database.getTpsTable();
         SecurityTable securityTable = database.getSecurityTable();
+        PingTable pingTable = database.getPingTable();
 
         saveUserOne(database);
         saveUserTwo(database);
@@ -643,6 +645,11 @@ public class SQLiteTest {
         for (TPS tps : expected) {
             tpsTable.insertTPS(tps);
         }
+
+        pingTable.insertPing(playerUUID, new Ping(
+                System.currentTimeMillis(), TestConstants.SERVER_UUID,
+                r.nextInt(), r.nextInt(), r.nextDouble()
+        ));
 
         securityTable.addNewUser(new WebUser("Test", "RandomGarbageBlah", 0));
         System.out.println("Done!\n");
@@ -747,8 +754,10 @@ public class SQLiteTest {
 
         saveAllData(db);
 
+        System.out.println("Running backup..");
         db.backup().backup(backup);
-
+        System.out.println("Backup Complete!");
+        
         UserInfoTable userInfoTable = backup.getUserInfoTable();
         UsersTable usersTable = backup.getUsersTable();
         SessionsTable sessionsTable = backup.getSessionsTable();

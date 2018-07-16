@@ -278,6 +278,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
         container.putAll(usersTable.getUserInformation(uuid));
         container.putSupplier(PlayerKeys.GEO_INFO, () -> geoInfoTable.getGeoInfo(uuid));
+        container.putSupplier(PlayerKeys.PING, () -> pingTable.getPing(uuid));
         container.putSupplier(PlayerKeys.NICKNAMES, () -> nicknamesTable.getNicknameInformation(uuid));
         container.putSupplier(PlayerKeys.PER_SERVER, () -> getPerServerData(uuid));
 
