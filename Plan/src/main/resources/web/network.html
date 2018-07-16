@@ -473,7 +473,14 @@
                                 </div>
                             </div>
                             <div class="body">
-                                <div id="worldMap" class="dashboard-flot-chart"></div>
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                        <div id="countryBarChart" class="dashboard-flot-chart"></div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                                        <div id="worldMap" class="dashboard-flot-chart"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -511,6 +518,7 @@
 <script src="../js/charts/activityPie.js"></script>
 <script src="../js/charts/stackGraph.js"></script>
 <script src="../js/charts/worldMap.js"></script>
+<script src="../js/charts/horizontalBarGraph.js"></script>
 
 <!-- Chart Data -->
 <script>
@@ -533,7 +541,9 @@
             geolocations: ${geoMapSeries},
             activityStack: ${activityStackSeries},
             activityStackCategories: ${activityStackCategories},
-            healthIndex: ${healthIndex}
+            healthIndex: ${healthIndex},
+            countryCategories: ${countryCategories},
+            country: ${countrySeries}
         }
     };
     // HighCharts Series
@@ -558,6 +568,11 @@
             name: 'Players',
             colorByPoint: true,
             data: v.data.activityPie
+        },
+        country: {
+            color: '#4CAF50',
+            name: 'Players',
+            data: v.data.country
         },
         activityStack: v.data.activityStack,
         activityStackCategories: v.data.activityStackCategories
@@ -590,6 +605,7 @@
         stackChart('activityStackGraph', series.activityStackCategories, series.activityStack, 'Players');
         healthGauge('healthGauge', [v.data.healthIndex]);
         worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, series.geolocations);
+        horizontalBarChart('countryBarChart', v.data.countryCategories, [series.country], 'Players');
 
         function openFunc(i) {
             return function () {
