@@ -5,7 +5,7 @@ before_install:
   - pwd
   - cd PlanPluginBridge
   - ls
-  - mvn install:install-file -Dfile=./PlanPluginBridge-4.3.0.jar -DpomFile=./pom.xml
+  - mvn install:install-file -Dfile=./PlanPluginBridge-4.4.0.jar -DpomFile=./pom.xml
   - cd ../Plan
   - ls
 install:
