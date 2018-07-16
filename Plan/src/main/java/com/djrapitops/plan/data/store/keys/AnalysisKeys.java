@@ -52,6 +52,7 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> SESSION_ACCORDION_HTML = new PlaceholderKey<>(String.class, "accordionSessions");
     public static final PlaceholderKey<String> SESSION_ACCORDION_FUNCTIONS = new PlaceholderKey<>(String.class, "sessionTabGraphViewFunctions");
     public static final PlaceholderKey<String> SESSION_TABLE = new PlaceholderKey<>(String.class, "tableBodySessions");
+    public static final PlaceholderKey<String> PING_TABLE = new PlaceholderKey<>(String.class, "tablePing");
     public static final PlaceholderKey<String> RECENT_LOGINS = new PlaceholderKey<>(String.class, "listRecentLogins");
     public static final PlaceholderKey<String> COMMAND_USAGE_TABLE = new PlaceholderKey<>(String.class, "tableCommandUsage");
     public static final PlaceholderKey<String> HEALTH_NOTES = CommonPlaceholderKeys.HEALTH_NOTES;

@@ -85,7 +85,7 @@ public class AnalysisPage implements Page {
         placeholderReplacer.addAllPlaceholdersFrom(analysisContainer,
                 SESSION_ACCORDION_HTML, SESSION_ACCORDION_FUNCTIONS,
                 SESSION_TABLE, RECENT_LOGINS,
-                COMMAND_USAGE_TABLE);
+                COMMAND_USAGE_TABLE, PING_TABLE);
         Benchmark.stop(DEBUG, DEBUG + " Session Structures");
     }
 

@@ -31,6 +31,7 @@ import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCre
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 import com.djrapitops.plan.utilities.html.tables.CommandUseTable;
+import com.djrapitops.plan.utilities.html.tables.PingTable;
 import com.djrapitops.plan.utilities.html.tables.PlayersTable;
 import com.djrapitops.plan.utilities.html.tables.ServerSessionTable;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -150,6 +151,12 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.OPERATORS, () -> serverContainer.getValue(ServerKeys.OPERATORS).map(List::size).orElse(0));
         putSupplier(AnalysisKeys.PLAYERS_TABLE, () ->
                 PlayersTable.forServerPage(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).all()).parseHtml()
+        );
+        putSupplier(AnalysisKeys.PING_TABLE, () ->
+                new PingTable(
+                        getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
+                                .getPingPerCountry(serverContainer.getUnsafe(ServerKeys.SERVER_UUID))
+                ).parseHtml()
         );
 
         newAndUniquePlayerCounts();
