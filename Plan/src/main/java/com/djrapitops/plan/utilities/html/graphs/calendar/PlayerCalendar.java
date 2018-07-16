@@ -95,7 +95,8 @@ public class PlayerCalendar {
 
             series.append(",{title: 'Session: ").append(length)
                     .append("',start:").append(session.getUnsafe(SessionKeys.START))
-                    .append(",end:").append(session.getUnsafe(SessionKeys.END))
+                    .append(",end:").append(session.getValue(SessionKeys.END)
+                    .orElse(System.currentTimeMillis()))
                     .append("}");
 
             for (PlayerKill kill : session.getUnsafe(SessionKeys.PLAYER_KILLS)) {

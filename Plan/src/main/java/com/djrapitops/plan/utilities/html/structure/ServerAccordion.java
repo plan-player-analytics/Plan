@@ -68,7 +68,6 @@ public class ServerAccordion extends AbstractAccordion {
             DataContainer container = entry.getValue();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
             WorldTimes worldTimes = container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
-
             SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
 
             boolean banned = container.getValue(PerServerKeys.BANNED).orElse(false);

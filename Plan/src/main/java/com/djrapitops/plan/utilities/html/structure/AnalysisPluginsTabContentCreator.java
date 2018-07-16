@@ -105,7 +105,7 @@ public class AnalysisPluginsTabContentCreator {
             PlanPlugin plugin = PlanPlugin.getInstance();
             StaticHolder.saveInstance(AnalysisPluginsTabContentCreator.class, plugin.getClass());
             try {
-                Benchmark.start("Analysis", "Analysis: Source " + source.getSourcePlugin());
+                Benchmark.start("Analysis: Source " + source.getSourcePlugin());
 
                 source.setAnalysisData(analysisContainer);
                 AnalysisContainer container = source.getServerData(uuids, new AnalysisContainer());

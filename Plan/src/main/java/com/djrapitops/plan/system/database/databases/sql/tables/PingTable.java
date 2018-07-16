@@ -35,7 +35,7 @@ public class PingTable extends UserIDTable {
                 Col.AVG_PING +
                 ") VALUES (" +
                 usersTable.statementSelectID + ", " +
-                serverTable.statementSelectServerID + ", ?, ?)";
+                serverTable.statementSelectServerID + ", ?, ?, ?, ?)";
     }
 
     @Override
@@ -198,6 +198,11 @@ public class PingTable extends UserIDTable {
         @Override
         public String get() {
             return name;
+        }
+
+        @Override
+        public String toString() {
+            return get();
         }
     }
 

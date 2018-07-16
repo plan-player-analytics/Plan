@@ -6,7 +6,6 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +28,6 @@ public class TPSMutator {
     }
 
     public static TPSMutator forContainer(DataContainer container) {
-        if (!container.supports(ServerKeys.TPS)) {
-            Log.warn(container.getClass().getSimpleName() + " does not support TPS key.");
-        }
         return new TPSMutator(container.getValue(ServerKeys.TPS).orElse(new ArrayList<>()));
     }
 

@@ -93,7 +93,7 @@ public class QInspectCommand extends CommandNode {
         }).runTaskAsynchronously();
     }
 
-    private void sendMessages(ISender sender, PlayerContainer container) {
+    private void sendMessages(ISender sender, PlayerContainer player) {
         long now = System.currentTimeMillis();
 
         ColorScheme colorScheme = plugin.getColorScheme();
@@ -104,15 +104,15 @@ public class QInspectCommand extends CommandNode {
         Formatter<DateHolder> timestamp = Formatters.year();
         Formatter<Long> length = Formatters.timeAmount();
 
-        sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + container.getValue(PlayerKeys.NAME).orElse("Unknown"));
+        sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + player.getValue(PlayerKeys.NAME).orElse("Unknown"));
 
-        ActivityIndex activityIndex = container.getActivityIndex(now);
-        Long registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
-        Long lastSeen = container.getValue(PlayerKeys.LAST_SEEN).orElse(0L);
-        List<GeoInfo> geoInfo = container.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());
+        ActivityIndex activityIndex = player.getActivityIndex(now);
+        Long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
+        Long lastSeen = player.getValue(PlayerKeys.LAST_SEEN).orElse(0L);
+        List<GeoInfo> geoInfo = player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());
         Optional<GeoInfo> mostRecentGeoInfo = new GeoInfoMutator(geoInfo).mostRecent();
         String loginLocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().getGeolocation() : "-";
-        SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
+        SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
 
         sender.sendMessage(colM + "  Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getGroup());
         sender.sendMessage(colM + "  Registered: " + colS + timestamp.apply(() -> registered));
@@ -120,7 +120,7 @@ public class QInspectCommand extends CommandNode {
         sender.sendMessage(colM + "  Logged in from: " + colS + loginLocation);
         sender.sendMessage(colM + "  Playtime: " + colS + length.apply(sessionsMutator.toPlaytime()));
         sender.sendMessage(colM + "  Longest Session: " + colS + length.apply(sessionsMutator.toLongestSessionLength()));
-        sender.sendMessage(colM + "  Times Kicked: " + colS + container.getValue(PlayerKeys.KICK_COUNT).orElse(0));
+        sender.sendMessage(colM + "  Times Kicked: " + colS + player.getValue(PlayerKeys.KICK_COUNT).orElse(0));
         sender.sendMessage("");
         sender.sendMessage(colM + "  Player Kills : " + colS + sessionsMutator.toPlayerKillCount());
         sender.sendMessage(colM + "  Mob Kills : " + colS + sessionsMutator.toMobKillCount());
