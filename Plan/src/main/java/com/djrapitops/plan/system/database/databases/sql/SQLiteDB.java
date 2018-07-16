@@ -11,6 +11,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.File;
 import java.sql.*;
+import java.util.Objects;
 
 /**
  * @author Rsl1122
@@ -135,5 +136,20 @@ public class SQLiteDB extends SQLDB {
             MiscUtils.close(connection);
         }
         super.close();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        SQLiteDB sqLiteDB = (SQLiteDB) o;
+        return Objects.equals(dbName, sqLiteDB.dbName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), dbName);
     }
 }

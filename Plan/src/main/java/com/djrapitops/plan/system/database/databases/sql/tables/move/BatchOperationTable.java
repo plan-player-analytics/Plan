@@ -87,7 +87,7 @@ public class BatchOperationTable extends Table {
         copyPings(toDB);
     }
 
-    private void copyPings(BatchOperationTable toDB) {
+    public void copyPings(BatchOperationTable toDB) {
         if (toDB.equals(this)) {
             return;
         }

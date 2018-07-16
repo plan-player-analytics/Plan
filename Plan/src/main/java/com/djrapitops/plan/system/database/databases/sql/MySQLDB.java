@@ -8,6 +8,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * @author Rsl1122
@@ -72,5 +73,20 @@ public class MySQLDB extends SQLDB {
             Log.toLog(this.getClass(), e);
         }
         super.close();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        MySQLDB mySQLDB = (MySQLDB) o;
+        return Objects.equals(dataSource, mySQLDB.dataSource);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), dataSource);
     }
 }
