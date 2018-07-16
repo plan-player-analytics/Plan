@@ -121,16 +121,15 @@ public class TPSTable extends Table {
 
         String sql = "DELETE FROM " + tableName +
                 " WHERE (" + Col.DATE + "<?)" +
-                " AND (" + Col.PLAYERS_ONLINE + "" +
-                " != ?)";
+                " AND (" + Col.PLAYERS_ONLINE + " != ?)";
 
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, pValue);
-                // More than 2 Months ago.
-                long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
-                statement.setLong(2, System.currentTimeMillis() - fiveWeeks);
+                // More than 3 Months ago.
+                long threeMonths = TimeAmount.MONTH.ms() * 3L;
+                statement.setLong(1, System.currentTimeMillis() - threeMonths);
+                statement.setInt(2, pValue);
             }
         });
     }
