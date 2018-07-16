@@ -14,8 +14,8 @@ public class PingTable extends TableContainer {
         super(
                 Icon.called("globe") + " Country",
                 Icon.called("signal") + " Average Ping",
-                Icon.called("signal") + " Maximum Ping",
-                Icon.called("signal") + " Minimum Ping"
+                Icon.called("signal") + " Worst Ping",
+                Icon.called("signal") + " Best Ping"
         );
         setColor("amber");
 

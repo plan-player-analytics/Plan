@@ -37,7 +37,7 @@ public class PingInsertProcessor implements CriticalRunnable {
         long lastDate = history.get(history.size() - 1).getDate();
         OptionalInt max = history.stream()
                 .mapToInt(DateObj::getValue)
-                .filter(i -> i != -1)
+                .filter(i -> i >= 0)
                 .max();
 
         if (!max.isPresent()) {
@@ -46,12 +46,12 @@ public class PingInsertProcessor implements CriticalRunnable {
 
         int minValue = history.stream()
                 .mapToInt(DateObj::getValue)
-                .filter(i -> i != -1)
+                .filter(i -> i >= 0)
                 .min().orElse(-1);
 
         double avgValue = history.stream()
                 .mapToInt(DateObj::getValue)
-                .filter(i -> i != -1)
+                .filter(i -> i >= 0)
                 .average().orElse(-1);
 
         int maxValue = max.getAsInt();

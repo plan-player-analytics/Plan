@@ -56,7 +56,8 @@ public class PingTable extends UserIDTable {
 
     public void clean() {
         String sql = "DELETE FROM " + tableName +
-                " WHERE (" + Col.DATE + "<?)";
+                " WHERE (" + Col.DATE + "<?)" +
+                " OR (" + Col.MIN_PING + "<0)";
 
         execute(new ExecStatement(sql) {
             @Override

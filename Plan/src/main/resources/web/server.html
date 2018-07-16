@@ -1064,7 +1064,27 @@
                 </div>
                 <div class="row clearfix">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        ${tablePing}
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-8 col-sm-8 col-lg-8">
+                                        <h2><i class="fa fa-wifi"></i> Connection Information</h2>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-lg-4">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Connection Information"
+                                           data-content="Ping gathered by Ping task - Ping data is stored for 2 weeks.<br><br>
+                                           Geolocations are not directly linked to ping data, so player's ping is placed under the most recent login location."
+                                        >help_outline</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                ${tablePing}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- #END# Geolocations -->
@@ -1436,7 +1456,7 @@
         healthGauge('healthGauge', [v.data.healthIndex]);
         onlineActivityCalendar('#calendar', v.data.calendar, v.values.firstDay);
         horizontalBarChart('countryBarChart', v.data.countryCategories, [series.country], 'Players');
-        lineChart('pingGraph', [series.playersOnline, series.avgPing, series.maxPing, series.minPing]);
+        lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
         ${sessionTabGraphViewFunctions}
 
         /**/

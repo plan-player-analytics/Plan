@@ -26,7 +26,7 @@ public class PingMutator {
     public PingMutator filterBy(Predicate<Ping> predicate) {
         return new PingMutator(pings.stream().filter(predicate).collect(Collectors.toList()));
     }
-    
+
     public PingMutator filterByServer(UUID serverUUID) {
         return filterBy(ping -> serverUUID.equals(ping.getServerUUID()));
     }
@@ -52,6 +52,9 @@ public class PingMutator {
         int max = -1;
         for (Ping ping : pings) {
             Integer value = ping.getMax();
+            if (value < 0) {
+                continue;
+            }
             if (value > max) {
                 max = value;
             }
@@ -64,6 +67,9 @@ public class PingMutator {
         int min = -1;
         for (Ping ping : pings) {
             Integer value = ping.getMin();
+            if (value < 0) {
+                continue;
+            }
             if (value < min || min == -1) {
                 min = value;
             }
@@ -73,6 +79,8 @@ public class PingMutator {
     }
 
     public double average() {
-        return pings.stream().mapToDouble(Ping::getAverage).average().orElse(-1);
+        return pings.stream().mapToDouble(Ping::getAverage)
+                .filter(value -> value >= 0)
+                .average().orElse(-1);
     }
 }
