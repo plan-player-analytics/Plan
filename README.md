@@ -1,4 +1,4 @@
-# ![Player Analytics](https://puu.sh/t8vin.png)
+# ![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
 
 [![Build Status](https://travis-ci.org/Rsl1122/Plan-PlayerAnalytics.svg?branch=master)](https://travis-ci.org/Rsl1122/Plan-PlayerAnalytics)
 [![Discord](https://img.shields.io/discord/364107873267089409.svg?logo=discord)](https://discord.gg/yXKmjzT)  
