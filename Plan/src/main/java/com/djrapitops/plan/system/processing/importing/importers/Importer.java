@@ -9,6 +9,7 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -17,6 +18,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.importing.ServerImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportRefiner;
+import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -116,7 +118,7 @@ public abstract class Importer {
         Benchmark.stop(benchmarkName);
     }
 
-    private void processUserData() throws DBException {
+    private void processUserData() {
         String benchmarkName = "Processing User Data";
         String getDataBenchmarkName = "Getting User Data";
         String insertDataIntoCollectionsBenchmarkName = "Insert User Data into Collections";
@@ -146,7 +148,7 @@ public abstract class Importer {
 
         Map<UUID, UserInfo> users = new HashMap<>();
         List<UserInfo> userInfo = new ArrayList<>();
-        Map<UUID, List<String>> nickNames = new HashMap<>();
+        Map<UUID, List<Nickname>> nickNames = new HashMap<>();
         Map<UUID, List<Session>> sessions = new HashMap<>();
         Map<UUID, List<GeoInfo>> geoInfo = new HashMap<>();
         Map<UUID, Integer> timesKicked = new HashMap<>();
@@ -215,7 +217,7 @@ public abstract class Importer {
         int mobKills = userImportData.getMobKills();
         int deaths = userImportData.getDeaths();
 
-        Session session = new Session(0, 0L, 0L, mobKills, deaths, 0);
+        Session session = new Session(0, userImportData.getUuid(), ServerInfo.getServerUUID(), 0L, 0L, mobKills, deaths, 0);
 
         session.setPlayerKills(userImportData.getKills());
         session.setWorldTimes(new WorldTimes(userImportData.getWorldTimes()));
@@ -230,7 +232,7 @@ public abstract class Importer {
                 .map(ip -> {
                     String geoLoc = GeolocationCache.getCountry(ip);
                     try {
-                        return new GeoInfo(ip, geoLoc, date);
+                        return new GeoInfo(ip, geoLoc, date, new SHA256Hash(ip).create());
                     } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
                         throw new IllegalArgumentException(e);
                     }

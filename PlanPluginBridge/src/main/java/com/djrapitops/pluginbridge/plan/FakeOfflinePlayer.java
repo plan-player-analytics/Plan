@@ -5,6 +5,8 @@
  */
 package com.djrapitops.pluginbridge.plan;
 
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -24,6 +26,10 @@ public class FakeOfflinePlayer implements OfflinePlayer {
     public FakeOfflinePlayer(UUID uuid, String name) {
         this.uuid = uuid;
         this.name = name;
+    }
+
+    public FakeOfflinePlayer(PlayerContainer player) {
+        this(player.getValue(PlayerKeys.UUID).orElse(null), player.getValue(PlayerKeys.NAME).orElse("Notch"));
     }
 
     @Override

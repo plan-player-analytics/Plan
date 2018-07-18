@@ -9,7 +9,6 @@ public class SQLOps {
 
     protected final UsersTable usersTable;
     protected final UserInfoTable userInfoTable;
-    protected final ActionsTable actionsTable;
     protected final KillsTable killsTable;
     protected final NicknamesTable nicknamesTable;
     protected final SessionsTable sessionsTable;
@@ -21,13 +20,13 @@ public class SQLOps {
     protected final WorldTimesTable worldTimesTable;
     protected final ServerTable serverTable;
     protected final TransferTable transferTable;
+    protected final PingTable pingTable;
 
     public SQLOps(SQLDB db) {
         this.db = db;
 
         usersTable = db.getUsersTable();
         userInfoTable = db.getUserInfoTable();
-        actionsTable = db.getActionsTable();
         killsTable = db.getKillsTable();
         nicknamesTable = db.getNicknamesTable();
         sessionsTable = db.getSessionsTable();
@@ -39,5 +38,6 @@ public class SQLOps {
         worldTimesTable = db.getWorldTimesTable();
         serverTable = db.getServerTable();
         transferTable = db.getTransferTable();
+        pingTable = db.getPingTable();
     }
 }

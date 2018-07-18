@@ -23,7 +23,7 @@ import org.spongepowered.api.plugin.Plugin;
 import java.io.File;
 import java.io.InputStream;
 
-@Plugin(id = "plan", name = "Plan", version = "4.3.2", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
+@Plugin(id = "plan", name = "Plan", version = "4.4.0", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Inject
@@ -114,7 +114,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Override
     public String getVersion() {
-        return "4.3.2";
+        return "4.4.0";
     }
 
     public SpongeSystem getSystem() {

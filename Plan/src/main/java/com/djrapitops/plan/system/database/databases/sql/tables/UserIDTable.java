@@ -42,7 +42,7 @@ public abstract class UserIDTable extends Table {
         usersTable = db.getUsersTable();
     }
 
-    public void removeUser(UUID uuid) throws SQLException {
+    public void removeUser(UUID uuid) {
         String sql = "DELETE FROM " + tableName + " WHERE (" + Col.USER_ID + "=" + usersTable.statementSelectID + ")";
 
         execute(new ExecStatement(sql) {

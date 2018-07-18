@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -8,6 +8,9 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
 import java.util.Collection;
@@ -24,8 +27,7 @@ public class ASkyBlockData extends PluginData {
 
     public ASkyBlockData(ASkyBlockAPI api) {
         super(ContainerSize.THIRD, "ASkyBlock");
-        super.setPluginIcon("street-view");
-        super.setIconColor("light-blue");
+        setPluginIcon(Icon.called("street-view").of(Color.LIGHT_BLUE).build());
         this.api = api;
     }
 
@@ -36,11 +38,11 @@ public class ASkyBlockData extends PluginData {
             int level = api.getIslandLevel(uuid);
             int resetsLeft = api.getResetsLeft(uuid);
 
-            inspectContainer.addValue(getWithIcon("Island Name", "street-view", "green"), islandName);
-            inspectContainer.addValue(getWithIcon("Island Level", "street-view", "amber"), level);
-            inspectContainer.addValue(getWithIcon("Island Resets Left", "refresh", "green"), resetsLeft);
+            inspectContainer.addValue(getWithIcon("Island Name", Icon.called("street-view").of(Color.GREEN)), islandName);
+            inspectContainer.addValue(getWithIcon("Island Level", Icon.called("street-view").of(Color.AMBER)), level);
+            inspectContainer.addValue(getWithIcon("Island Resets Left", Icon.called("refresh").of(Color.GREEN)), resetsLeft);
         } else {
-            inspectContainer.addValue(getWithIcon("Island Name", "street-view", "green"), "No Island");
+            inspectContainer.addValue(getWithIcon("Island Name", Icon.called("street-view").of(Color.GREEN)), "No Island");
         }
 
         return inspectContainer;
@@ -51,8 +53,8 @@ public class ASkyBlockData extends PluginData {
         int islandCount = api.getIslandCount();
         String islandWorldName = api.getIslandWorld().getName();
 
-        analysisContainer.addValue(getWithIcon("Island World", "map-o", "green"), islandWorldName);
-        analysisContainer.addValue(getWithIcon("Island Count", "street-view", "green"), islandCount);
+        analysisContainer.addValue(getWithIcon("Island World", Icon.called("map").of(Family.REGULAR).of(Color.GREEN)), islandWorldName);
+        analysisContainer.addValue(getWithIcon("Island Count", Icon.called("street-view").of(Color.GREEN)), islandCount);
 
         return analysisContainer;
     }

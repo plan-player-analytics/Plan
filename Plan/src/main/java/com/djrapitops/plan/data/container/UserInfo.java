@@ -54,7 +54,7 @@ public class UserInfo {
         return banned;
     }
 
-    public boolean isOpped() {
+    public boolean isOperator() {
         return opped;
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -8,6 +8,8 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
 
 import java.util.Collection;
@@ -25,8 +27,7 @@ public class SuperbVoteData extends PluginData {
 
     public SuperbVoteData(VoteStorage store) {
         super(ContainerSize.THIRD, "SuperbVote");
-        super.setPluginIcon("check");
-        super.setIconColor("teal");
+        setPluginIcon(Icon.called("check").of(Color.TEAL).build());
         this.store = store;
     }
 
@@ -34,7 +35,7 @@ public class SuperbVoteData extends PluginData {
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         int votes = store.getVotes(uuid).getVotes();
 
-        inspectContainer.addValue(getWithIcon("Votes", "check", "teal"), votes);
+        inspectContainer.addValue(getWithIcon("Votes", Icon.called("check").of(Color.TEAL)), votes);
 
         return inspectContainer;
     }
@@ -49,9 +50,9 @@ public class SuperbVoteData extends PluginData {
             total += votesCount;
         }
 
-        analysisContainer.addValue(getWithIcon("Total Votes", "check", "teal"), total);
+        analysisContainer.addValue(getWithIcon("Total Votes", Icon.called("check").of(Color.TEAL)), total);
 
-        analysisContainer.addPlayerTableValues(getWithIcon("Votes", "check"), votes);
+        analysisContainer.addPlayerTableValues(getWithIcon("Votes", Icon.called("check")), votes);
 
         return analysisContainer;
     }

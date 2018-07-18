@@ -6,8 +6,11 @@ package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 
 import java.util.List;
 
@@ -29,13 +32,16 @@ public class GeoInfoTable extends TableContainer {
     }
 
     private void addValues(List<GeoInfo> geoInfo) {
+        geoInfo.sort(new DateHolderRecentComparator());
+        
         boolean displayIP = Settings.DISPLAY_PLAYER_IPS.isTrue();
+        Formatter<DateHolder> formatter = Formatters.year();
+
         for (GeoInfo info : geoInfo) {
-            long date = info.getLastUsed();
             addRow(
                     displayIP ? info.getIp() : "Hidden (Config)",
                     info.getGeolocation(),
-                    date != 0 ? FormatUtils.formatTimeStampYear(date) : "-"
+                    formatter.apply(info)
             );
         }
     }

@@ -10,6 +10,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.pluginbridge.plan.Bridge;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class responsible for hooking to other plugins and managing the %plugins%
@@ -85,6 +86,13 @@ public class HookHandler implements SubSystem {
      */
     public List<PluginData> getAdditionalDataSources() {
         return additionalDataSources;
+    }
+
+    public List<BanData> getBanDataSources() {
+        return additionalDataSources.stream()
+                .filter(p -> p instanceof BanData)
+                .map(p -> (BanData) p)
+                .collect(Collectors.toList());
     }
 
     public Map<PluginData, InspectContainer> getInspectContainersFor(UUID uuid) {

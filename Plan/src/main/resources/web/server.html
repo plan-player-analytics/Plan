@@ -34,6 +34,11 @@
 
     <!-- Jquery Core Js -->
     <script src="plugins/jquery/jquery.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 </head>
 
 <body class="theme-red">
@@ -393,20 +398,20 @@
                                 <div class="m-b--35 font-bold">USER INFORMATION</div>
                                 <ul class="dashboard-stat-list">
                                     <li>
-                                        <i class="col-teal fa fa-clock-o"></i> Playtime
+                                        <i class="col-teal far fa-clock"></i> Playtime
                                         <small>(TOTAL)</small>
                                         <span class="pull-right">
                                             ${playtimeTotal}
                                         </span>
                                     </li>
                                     <li>
-                                        <i class="col-teal fa fa-clock-o"></i> Playtime
+                                        <i class="col-teal far fa-clock"></i> Playtime
                                         <small>(AVG.)</small>
                                         <span class="pull-right">
                                             ${playtimeAverage}
                                         </span>
                                     </li>
-                                    <li><i class="col-teal fa fa-calendar-check-o"></i> Sessions<span
+                                    <li><i class="col-teal far fa-calendar-check"></i> Sessions<span
                                             class="pull-right">
                                             <b>${sessionCount}</b>
                                         </span></li>
@@ -418,7 +423,7 @@
                                             <b>${mobKillCount}</b>
                                         </span></li>
                                     <li>
-                                        <i class="col-red fa fa-frown-o"></i> Deaths<span class="pull-right">
+                                        <i class="fa fa-skull"></i> Deaths<span class="pull-right">
                                             <b>${deaths}</b>
                                         </span>
                                     </li>
@@ -463,7 +468,8 @@
                                            data-container="body" data-html="true"
                                            data-original-title="Player Online Activity"
                                            data-content="Chart of Player Counts, recorded by TPS task.
-                                               <br><br>TPS task starts 50 seconds after Plan enables and records Maximum player count for each minute."
+                                               <br><br>TPS task starts 50 seconds after Plan enables and records Maximum player count for each minute.
+                                               <br><br><b>Unique Players:</b> Calculated from sessions, new players are calculated from register dates. Same data is available on the Calendar."
                                         >help_outline</a>
                                         <ul class="nav nav-tabs tab-nav-right" role="tablist">
                                             <li role="presentation" class="active"><a href="#playersOnline"
@@ -509,7 +515,7 @@
                                         <ul class="nav nav-tabs tab-nav-right" role="tablist">
                                             <li role="presentation" class="active"><a href="#calendarTab"
                                                                                       data-toggle="tab"><i
-                                                    class="fa fa-calendar"></i> CALENDAR</a></li>
+                                                    class="far fa-calendar"></i> CALENDAR</a></li>
                                             <li role="presentation"><a href="#punchCardTab" data-toggle="tab"><i
                                                     class="fa fa-braille"></i> PUNCHCARD</a></li>
                                         </ul>
@@ -672,7 +678,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-red fa fa-life-ring"></i> Last 30 Days</h2>
+                                        <h2><i class="col-red far fa-life-ring"></i> Last 30 Days</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -758,7 +764,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-teal fa fa-calendar"></i> Most Recent Sessions</h2>
+                                        <h2><i class="col-teal far fa-calendar"></i> Most Recent Sessions</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -780,7 +786,7 @@
                             <div class="header">
                                 <div class="row clearfix">
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
-                                        <h2><i class="col-teal fa fa-clock-o"></i> World Playtime</h2>
+                                        <h2><i class="col-teal far fa-clock"></i> World Playtime</h2>
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-lg-6">
                                         <a href="javascript:void(0)" class="help material-icons pull-right"
@@ -814,7 +820,7 @@
                                            tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
                                            data-container="body" data-html="true"
                                            data-original-title="Performance Charts"
-                                           data-content="Charts of different performance metrics, recorded by TPS task.
+                                           data-content="Charts of different performance metrics, recorded by TPS task & Ping task.
                                                    <br><br>TPS task starts 50 seconds after Plan enables and records Maximum player count & Average of other metrics for each minute.
                                                    <br><br>Any dataset can be hidden by clicking the name in the legend.
                                                    <br><br>Note: Due to JVM performance restraints CPU usage may be unavailable on some Machines."
@@ -824,12 +830,15 @@
                                                                                       data-toggle="tab"><i
                                                     class="fa fa-cogs"></i> ALL</a></li>
                                             <li role="presentation"><a href="#tps" data-toggle="tab"><i
-                                                    class="fa fa-dashboard"></i> TPS</a></li>
+                                                    class="fa fa-tachometer-alt"></i> TPS</a></li>
                                             <li role="presentation"><a href="#resource" data-toggle="tab"><i
                                                     class="fa fa-microchip"></i> CPU & RAM</a></li>
                                             <li role="presentation"><a href="#world" data-toggle="tab"><i
                                                     class="fa fa-map"></i>
                                                 WORLD LOAD</a></li>
+                                            <li role="presentation"><a href="#ping" data-toggle="tab"><i
+                                                    class="fa fa-signal"></i>
+                                                PING</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -847,6 +856,9 @@
                                     </div>
                                     <div role="tabpanel" class="tab-pane fade" id="world">
                                         <div id="worldGraph" style="height: 500px;"></div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="ping">
+                                        <div id="pingGraph" style="height: 500px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -867,12 +879,12 @@
                                         <span class="pull-right"><b>${tpsSpikeMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-orange fa fa-dashboard"></i> TPS
+                                        <i class="col-orange fa fa-tachometer-alt"></i> TPS
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${tpsAverageMonth}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-amber fa fa-dashboard"></i> CPU Usage
+                                        <i class="col-amber fa fa-tachometer-alt"></i> CPU Usage
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${cpuAverageMonth}</b></span>
                                     </li>
@@ -907,12 +919,12 @@
                                         <span class="pull-right"><b>${tpsSpikeWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-orange fa fa-dashboard"></i> TPS
+                                        <i class="col-orange fa fa-tachometer-alt"></i> TPS
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${tpsAverageWeek}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-amber fa fa-dashboard"></i> CPU Usage
+                                        <i class="col-amber fa fa-tachometer-alt"></i> CPU Usage
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${cpuAverageWeek}</b></span>
                                     </li>
@@ -947,12 +959,12 @@
                                         <span class="pull-right"><b>${tpsSpikeDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-orange fa fa-dashboard"></i> TPS
+                                        <i class="col-orange fa fa-tachometer-alt"></i> TPS
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${tpsAverageDay}</b></span>
                                     </li>
                                     <li>
-                                        <i class="col-amber fa fa-dashboard"></i> CPU Usage
+                                        <i class="col-amber fa fa-tachometer-alt"></i> CPU Usage
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${cpuAverageDay}</b></span>
                                     </li>
@@ -1039,7 +1051,39 @@
                                 </div>
                             </div>
                             <div class="body">
-                                <div id="worldMap" class="dashboard-flot-chart"></div>
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                        <div id="countryBarChart" class="dashboard-flot-chart"></div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                                        <div id="worldMap" class="dashboard-flot-chart"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="header">
+                                <div class="row clearfix">
+                                    <div class="col-xs-8 col-sm-8 col-lg-8">
+                                        <h2><i class="fa fa-wifi"></i> Connection Information</h2>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-lg-4">
+                                        <a href="javascript:void(0)" class="help material-icons pull-right"
+                                           tabindex="0" data-trigger="focus" data-toggle="popover" data-placement="left"
+                                           data-container="body" data-html="true"
+                                           data-original-title="Connection Information"
+                                           data-content="Ping gathered by Ping task - Ping data is stored for 2 weeks.<br><br>
+                                           Geolocations are not directly linked to ping data, so player's ping is placed under the most recent login location."
+                                        >help_outline</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                ${tablePing}
                             </div>
                         </div>
                     </div>
@@ -1063,17 +1107,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table table-striped">
-                                <thead class="bg-lime">
-                                <tr>
-                                    <th><i class="fa fa-terminal"></i> Command</th>
-                                    <th><i class="fa fa-list-ol"></i> Times Used</th>
-                                </tr>
-                                </thead>
-                                <tbody class="scrollbar">
-                                ${tableBodyCommands}
-                                </tbody>
-                            </table>
+                            ${tableCommandUsage}
                         </div>
                     </div>
                 </div>
@@ -1111,9 +1145,6 @@
 <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 
-<!-- Font Awesome -->
-<script src="plugins/font-awesome/fa-script.js"></script>
-
 <!-- Header, Sidenav & Skin changer -->
 <script src="js/admin.js"></script>
 
@@ -1127,6 +1158,7 @@
 <script src="js/charts/punchCard.js"></script>
 <script src="js/charts/healthGauge.js"></script>
 <script src="js/charts/activityPie.js"></script>
+<script src="js/charts/lineGraph.js"></script>
 <script src="js/charts/stackGraph.js"></script>
 <script src="js/charts/worldPie.js"></script>
 <script src="js/charts/performanceGraph.js"></script>
@@ -1135,6 +1167,7 @@
 <script src="js/charts/worldGraph.js"></script>
 <script src="js/charts/worldMap.js"></script>
 <script src="js/charts/onlineActivityCalendar.js"></script>
+<script src="js/charts/horizontalBarGraph.js"></script>
 
 <!-- Chart Data -->
 <script>
@@ -1142,13 +1175,14 @@
         lang: {noData: "No Data to Display"},
         time: {
             timezoneOffset: ${timeZone} * 60
-        }
+    }
     })
 
     // Replaced Variables
     var v = {
         colors: {
             playersOnline: '${playersGraphColor}',
+            newPlayers: '#8BC34A',
             tpsLow: '${tpsLowColor}',
             tpsMed: '${tpsMediumColor}',
             tpsHigh: '${tpsHighColor}',
@@ -1158,7 +1192,10 @@
             chunks: '#b58310',
             geolocationsLow: '${worldMapColLow}',
             geolocationsHigh: '${worldMapColHigh}',
-            punchCard: '#222'
+            punchCard: '#222',
+            maxPing: '${maxPingColor}',
+            minPing: '${minPingColor}',
+            avgPing: '${avgPingColor}'
         },
         values: {
             tpsMed: ${tpsMedium},
@@ -1167,6 +1204,8 @@
         },
         data: {
             playersOnline: ${playersOnlineSeries},
+            uniquePlayers: ${uniquePlayersSeries},
+            newPlayers: ${newPlayersSeries},
             tps: ${tpsSeries},
             cpu: ${cpuSeries},
             ram: ${ramSeries},
@@ -1180,7 +1219,12 @@
             activityStack: ${activityStackSeries},
             activityStackCategories: ${activityStackCategories},
             healthIndex: ${healthIndex},
-            calendar: ${calendarSeries}
+            calendar: ${calendarSeries},
+            countryCategories: ${countryCategories},
+            country: ${countrySeries},
+            avgPing: ${avgPingSeries},
+            maxPing: ${maxPingSeries},
+            minPing: ${minPingSeries}
         }
     };
 
@@ -1188,11 +1232,16 @@
     var s = {
         name: {
             playersOnline: 'Players Online',
+            uniquePlayers: 'Unique Players',
+            newPlayers: 'New Players',
             tps: 'TPS',
             cpu: 'CPU Usage (%)',
             ram: 'RAM Usage (MB)',
             entities: 'Loaded Entities',
-            chunks: 'Loaded Chunks'
+            chunks: 'Loaded Chunks',
+            maxPing: 'Worst Ping',
+            minPing: 'Best Ping',
+            avgPing: 'Average Ping'
         },
         tooltip: {
             twoDecimals: {
@@ -1227,6 +1276,41 @@
             data: v.data.playersOnline,
             color: v.colors.playersOnline,
             yAxis: 0
+        },
+        avgPing: {
+            name: s.name.avgPing,
+            type: s.type.spline,
+            tooltip: s.tooltip.twoDecimals,
+            data: v.data.avgPing,
+            color: v.colors.avgPing
+        },
+        maxPing: {
+            name: s.name.maxPing,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.maxPing,
+            color: v.colors.maxPing
+        },
+        minPing: {
+            name: s.name.minPing,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.minPing,
+            color: v.colors.minPing
+        },
+        uniquePlayers: {
+            name: s.name.uniquePlayers,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.uniquePlayers,
+            color: v.colors.playersOnline
+        },
+        newPlayers: {
+            name: s.name.newPlayers,
+            type: s.type.spline,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.newPlayers,
+            color: v.colors.newPlayers
         },
         tps: {
             name: s.name.tps,
@@ -1323,6 +1407,11 @@
             color: v.colors.punchCard,
             data: v.data.punchCard
         },
+        country: {
+            color: '#4CAF50',
+            name: 'Players',
+            data: v.data.country
+        },
         activityStack: v.data.activityStack,
         activityStackCategories: v.data.activityStackCategories
     };
@@ -1333,6 +1422,10 @@
     $(function () {
 
         $('.player-table').DataTable({
+            responsive: true,
+            "order": [[5, "desc"]]
+        });
+        $('.player-plugin-table').DataTable({
             responsive: true
         });
 
@@ -1354,6 +1447,7 @@
 
         // Chart draw scripts
         activityPie('activityPie', series.activityPie);
+        lineChart('uniqueChart', [series.uniquePlayers, series.newPlayers]);
         stackChart('activityStackGraph', series.activityStackCategories, series.activityStack, 'Players');
         worldPie('worldPie', series.worldPie, series.worldPieDrillDown);
         playersChart('playerChartDay', series.playersOnline, 3);
@@ -1366,6 +1460,8 @@
         punchCard('punchCard', series.punchCard);
         healthGauge('healthGauge', [v.data.healthIndex]);
         onlineActivityCalendar('#calendar', v.data.calendar, v.values.firstDay);
+        horizontalBarChart('countryBarChart', v.data.countryCategories, [series.country], 'Players');
+        lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
         ${sessionTabGraphViewFunctions}
 
         /**/

@@ -4,8 +4,6 @@
  */
 package com.djrapitops.plan.api.exceptions.connection;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
-
 /**
  * Thrown when DBException occurs during InfoRequest#placeIntoDatabase.
  *
@@ -13,7 +11,7 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
  */
 public class TransferDatabaseException extends WebException {
 
-    public TransferDatabaseException(DBException cause) {
+    public TransferDatabaseException(Exception cause) {
         super(cause);
     }
 }

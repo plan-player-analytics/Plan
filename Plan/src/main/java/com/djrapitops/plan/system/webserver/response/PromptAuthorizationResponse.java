@@ -4,7 +4,7 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.system.webserver.auth.FailReason;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 
 /**
  * @author Rsl1122
@@ -18,7 +18,7 @@ public class PromptAuthorizationResponse extends ErrorResponse {
             + "<br>If you have forgotten your password, ask a staff member to delete your old user and re-register.";
 
     private PromptAuthorizationResponse() {
-        super.setTitle(Html.FONT_AWESOME_ICON.parse("lock") + " 401 Unauthorized");
+        super.setTitle(Icon.called("lock").build() + " 401 Unauthorized");
     }
 
     public static PromptAuthorizationResponse getBasicAuthResponse() {

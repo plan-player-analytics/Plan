@@ -9,7 +9,7 @@ import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.database.ServerDBSystem;
-import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
+import com.djrapitops.plan.system.info.request.GenerateInspectPluginsTabRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import org.junit.*;
@@ -116,6 +116,6 @@ public class BungeeBukkitConnectionTest {
         enable();
 
         System.out.println("Sending request");
-        bungeeSystem.getInfoSystem().getConnectionSystem().sendWideInfoRequest(new GenerateInspectPageRequest(TestConstants.PLAYER_ONE_UUID));
+        bungeeSystem.getInfoSystem().getConnectionSystem().sendWideInfoRequest(new GenerateInspectPluginsTabRequest(TestConstants.PLAYER_ONE_UUID));
     }
 }

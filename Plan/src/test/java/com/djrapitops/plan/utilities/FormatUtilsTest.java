@@ -1,6 +1,5 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plugin.api.TimeAmount;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -10,6 +9,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import utilities.RandomData;
 import utilities.Teardown;
 import utilities.mocks.SystemMockUtil;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import static org.junit.Assert.*;
 
@@ -27,20 +29,6 @@ public class FormatUtilsTest {
         SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
         Teardown.resetSettingsTempValues();
-    }
-
-    @Test
-    public void testFormatTimeAmount() {
-        String expResult = "1s";
-        String result = FormatUtils.formatTimeAmount(TimeAmount.SECOND.ms());
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testFormatTimeAmountMonths() {
-        long time = TimeAmount.DAY.ms() * 40L;
-        assertEquals("1 month, 10d ", FormatUtils.formatTimeAmount(time));
     }
 
     @Test
@@ -77,15 +65,24 @@ public class FormatUtilsTest {
     }
 
     @Test
-    public void testFormatIP() {
-        String ip = "1.2.3.4";
-        String ip2 = "1.2.3.26";
-        String ip3 = "1.2.3.235";
+    public void testFormatIP() throws UnknownHostException {
+        InetAddress ip = InetAddress.getByName("1.2.3.4");
+        InetAddress ip2 = InetAddress.getByName("1.2.3.26");
+        InetAddress ip3 = InetAddress.getByName("1.2.3.235");
         String expected = "1.2.xx.xx";
 
         assertEquals(expected, FormatUtils.formatIP(ip));
         assertEquals(expected, FormatUtils.formatIP(ip2));
         assertEquals(expected, FormatUtils.formatIP(ip3));
     }
+
+    @Test
+    public void testFormatIPv6() throws UnknownHostException {
+        InetAddress ip = InetAddress.getByName("1234:1234:1234:1234:1234:1234:1234:1234%0");
+        String expected = "1234:1234:1234:xx..";
+
+        assertEquals(expected, FormatUtils.formatIP(ip));
+    }
+
 
 }

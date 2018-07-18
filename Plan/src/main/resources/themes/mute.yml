@@ -52,6 +52,10 @@ GraphColors:
   ServerPreferencePie: '"#2A89A5", "#709B31", "#0075FE", "#865186", "#459A8F", "#A3A344", "#5F3F9E", "#C27B33", "#4A8567", "#5F7291"'
   WorldMap_High: "#386F21"
   WorldMap_Low: "#EEFFEE"
+  Ping:
+    Max: '#ffa000'
+    Avg: '#ffc107'
+    Min: '#ffd54f'
 
 # Leave blank "" for white
 ParsedElements:

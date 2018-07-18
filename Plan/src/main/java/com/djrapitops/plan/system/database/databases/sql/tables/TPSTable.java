@@ -68,7 +68,7 @@ public class TPSTable extends Table {
         );
     }
 
-    public List<TPS> getTPSData(UUID serverUUID) throws SQLException {
+    public List<TPS> getTPSData(UUID serverUUID) {
         String sql = Select.all(tableName)
                 .where(Col.SERVER_ID + "=" + serverTable.statementSelectServerID)
                 .toString();
@@ -104,16 +104,14 @@ public class TPSTable extends Table {
     /**
      * @return @throws SQLException
      */
-    public List<TPS> getTPSData() throws SQLException {
+    public List<TPS> getTPSData() {
         return getTPSData(ServerInfo.getServerUUID());
     }
 
     /**
      * Clean the TPS Table of old data.
-     *
-     * @throws SQLException DB Error
      */
-    public void clean() throws SQLException {
+    public void clean() {
         Optional<TPS> allTimePeak = getAllTimePeak();
         int p = -1;
         if (allTimePeak.isPresent()) {
@@ -123,21 +121,20 @@ public class TPSTable extends Table {
 
         String sql = "DELETE FROM " + tableName +
                 " WHERE (" + Col.DATE + "<?)" +
-                " AND (" + Col.PLAYERS_ONLINE + "" +
-                " != ?)";
+                " AND (" + Col.PLAYERS_ONLINE + " != ?)";
 
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, pValue);
-                // More than 2 Months ago.
-                long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
-                statement.setLong(2, System.currentTimeMillis() - fiveWeeks);
+                // More than 3 Months ago.
+                long threeMonths = TimeAmount.MONTH.ms() * 3L;
+                statement.setLong(1, System.currentTimeMillis() - threeMonths);
+                statement.setInt(2, pValue);
             }
         });
     }
 
-    public void insertTPS(TPS tps) throws SQLException {
+    public void insertTPS(TPS tps) {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -153,7 +150,7 @@ public class TPSTable extends Table {
         });
     }
 
-    public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws SQLException {
+    public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) {
         String sql = Select.all(tableName)
                 .where(Col.SERVER_ID + "=" + serverTable.statementSelectServerID)
                 .and(Col.PLAYERS_ONLINE + "= (SELECT MAX(" + Col.PLAYERS_ONLINE + ") FROM " + tableName + ")")
@@ -188,19 +185,19 @@ public class TPSTable extends Table {
         });
     }
 
-    public Optional<TPS> getAllTimePeak(UUID serverUUID) throws SQLException {
+    public Optional<TPS> getAllTimePeak(UUID serverUUID) {
         return getPeakPlayerCount(serverUUID, 0);
     }
 
-    public Optional<TPS> getAllTimePeak() throws SQLException {
+    public Optional<TPS> getAllTimePeak() {
         return getPeakPlayerCount(0);
     }
 
-    public Optional<TPS> getPeakPlayerCount(long afterDate) throws SQLException {
+    public Optional<TPS> getPeakPlayerCount(long afterDate) {
         return getPeakPlayerCount(ServerInfo.getServerUUID(), afterDate);
     }
 
-    public Map<UUID, List<TPS>> getAllTPS() throws SQLException {
+    public Map<UUID, List<TPS>> getAllTPS() {
         String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
         String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
@@ -242,7 +239,7 @@ public class TPSTable extends Table {
         });
     }
 
-    public List<TPS> getNetworkOnlineData() throws SQLException {
+    public List<TPS> getNetworkOnlineData() {
         Optional<Server> bungeeInfo = serverTable.getBungeeInfo();
         if (!bungeeInfo.isPresent()) {
             return new ArrayList<>();
@@ -279,7 +276,7 @@ public class TPSTable extends Table {
         });
     }
 
-    public void insertAllTPS(Map<UUID, List<TPS>> allTPS) throws SQLException {
+    public void insertAllTPS(Map<UUID, List<TPS>> allTPS) {
         if (Verify.isEmpty(allTPS)) {
             return;
         }

@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.tasks.server;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -41,13 +40,7 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
      * @return the TPS
      */
     private TPS calculateTPS(long diff, long now) {
-        OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
-        int availableProcessors = operatingSystemMXBean.getAvailableProcessors();
-        double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
-
-        if (averageCPUUsage < 0) { // If unavailable, getSystemLoadAverage() returns -1
-            averageCPUUsage = -1;
-        }
+        double averageCPUUsage = getCPUUsage();
 
         Runtime runtime = Runtime.getRuntime();
 
@@ -62,6 +55,23 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
         entityCount = getEntityCount();
 
         return getTPS(diff, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline);
+    }
+
+    private double getCPUUsage() {
+        double averageCPUUsage;
+
+        OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+        if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
+            com.sun.management.OperatingSystemMXBean nativeOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
+            averageCPUUsage = nativeOsBean.getSystemCpuLoad();
+        } else {
+            int availableProcessors = osBean.getAvailableProcessors();
+            averageCPUUsage = osBean.getSystemLoadAverage() / availableProcessors;
+        }
+        if (averageCPUUsage < 0) { // If unavailable, getSystemLoadAverage() returns -1
+            averageCPUUsage = -1;
+        }
+        return averageCPUUsage * 100.0;
     }
 
     /**

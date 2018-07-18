@@ -61,7 +61,7 @@ public abstract class InfoSystem implements SubSystem {
         try {
             sendRequest(infoRequest);
         } catch (ConnectionFailException e) {
-            connectionSystem.sendWideInfoRequest(infoRequest);
+            runLocally(infoRequest);
         }
     }
 

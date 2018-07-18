@@ -36,7 +36,7 @@ public class TabsElement {
                     .append(navText).append("</a></li>");
             content.append("<div role=\"tabpanel\" class=\"tab-pane fade").append(first ? " in active" : "")
                     .append("\" id=\"").append(id).append("\">")
-                    .append(contentHtml).append("</div></div>");
+                    .append(contentHtml).append("</div>");
             first = false;
         }
         content.append("</div>");

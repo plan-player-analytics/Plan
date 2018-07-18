@@ -9,9 +9,13 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
@@ -28,8 +32,7 @@ public class FactionsData extends PluginData {
 
     public FactionsData() {
         super(ContainerSize.TAB, "Factions");
-        super.setPluginIcon("map");
-        super.setIconColor("deep-purple");
+        setPluginIcon(Icon.called("map").of(Color.DEEP_PURPLE).build());
     }
 
     @Override
@@ -47,15 +50,15 @@ public class FactionsData extends PluginData {
                 String factionLeader = faction.getLeader().getName();
                 String factionLeaderLink = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(factionLeader), factionLeader);
 
-                inspectContainer.addValue(getWithIcon("Faction", "flag", "deep-purple"), factionName);
-                inspectContainer.addValue(getWithIcon("Leader", "user", "purple"), factionLeaderLink);
+                inspectContainer.addValue(getWithIcon("Faction", Icon.called("flag").of(Color.DEEP_PURPLE)), factionName);
+                inspectContainer.addValue(getWithIcon("Leader", Icon.called("user").of(Color.PURPLE)), factionLeaderLink);
             }
         }
 
         double power = mPlayer.getPower();
         double maxPower = mPlayer.getPowerMax();
         String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
-        inspectContainer.addValue(getWithIcon("Power", "bolt", "purple"), powerString);
+        inspectContainer.addValue(getWithIcon("Power", Icon.called("bolt").of(Color.PURPLE)), powerString);
 
         return inspectContainer;
     }
@@ -64,10 +67,14 @@ public class FactionsData extends PluginData {
     public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
         List<Faction> factions = getTopFactions();
 
-        analysisContainer.addValue(getWithIcon("Number of Factions", "flag", "deep-purple"), factions.size());
+        analysisContainer.addValue(getWithIcon("Number of Factions", Icon.called("flag").of(Color.DEEP_PURPLE)), factions.size());
 
         if (!factions.isEmpty()) {
-            analysisContainer.addHtml("factionAccordion", FactionAccordionCreator.createAccordion(factions));
+            FactionsAccordion factionsAccordion = new FactionsAccordion(
+                    factions,
+                    analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
+            );
+            analysisContainer.addHtml("factionAccordion", factionsAccordion.toHtml());
 
             Map<UUID, String> userFactions = new HashMap<>();
             for (UUID uuid : uuids) {

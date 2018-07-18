@@ -1,17 +1,16 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package com.djrapitops.pluginbridge.plan.vault;
 
-import com.djrapitops.plan.data.ServerProfile;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.utilities.analysis.Analysis;
-import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import net.milkbowl.vault.permission.Permission;
 import org.apache.commons.lang3.StringUtils;
@@ -50,16 +49,13 @@ public class VaultPermData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
-        ServerProfile serverProfile = Analysis.getServerProfile();
-
-        List<FakeOfflinePlayer> profiles = collection.stream()
-                .map(serverProfile::getPlayer)
-                .filter(Verify::notNull)
-                .map(profile -> new FakeOfflinePlayer(profile.getUuid(), profile.getName()))
+        List<FakeOfflinePlayer> offlinePlayers = analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR)
+                .map(PlayersMutator::all).orElse(new ArrayList<>())
+                .stream().map(FakeOfflinePlayer::new)
                 .collect(Collectors.toList());
 
         Map<UUID, String> groups = new HashMap<>();
-        for (FakeOfflinePlayer p : profiles) {
+        for (FakeOfflinePlayer p : offlinePlayers) {
             String group = StringUtils.capitalize(permSys.getPrimaryGroup(null, p));
             groups.put(p.getUniqueId(), group);
         }

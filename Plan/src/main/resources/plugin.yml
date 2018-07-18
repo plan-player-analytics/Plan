@@ -1,7 +1,7 @@
 name: Plan
 author: Rsl1122
 main: com.djrapitops.plan.Plan
-version: 4.3.2
+version: 4.4.0
 softdepend:
 - EssentialsX
 - Towny
@@ -78,6 +78,9 @@ permissions:
     default: op
   plan.ignore.commanduse:
     description: Commands used by this player are not saved
+    default: false
+  plan.ignore.afk:
+    description: AFK time by this player is ignored
     default: false
   plan.manage:
     description: Manage the database, clear, move, combine.

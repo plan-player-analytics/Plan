@@ -11,12 +11,14 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.File;
 import java.sql.*;
+import java.util.Objects;
 
 /**
  * @author Rsl1122
  */
 public class SQLiteDB extends SQLDB {
 
+    private final File databaseFile;
     private final String dbName;
     private Connection connection;
     private ITask connectionPingTask;
@@ -29,7 +31,12 @@ public class SQLiteDB extends SQLDB {
     }
 
     public SQLiteDB(String dbName) {
-        this.dbName = dbName;
+        this(new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db"));
+    }
+
+    public SQLiteDB(File databaseFile) {
+        dbName = databaseFile.getName();
+        this.databaseFile = databaseFile;
     }
 
     /**
@@ -38,14 +45,14 @@ public class SQLiteDB extends SQLDB {
     @Override
     public void setupDataSource() throws DBInitException {
         try {
-            connection = getNewConnection(dbName);
+            connection = getNewConnection(databaseFile);
         } catch (SQLException e) {
             throw new DBInitException(e);
         }
         startConnectionPingTask();
     }
 
-    public Connection getNewConnection(String dbName) throws SQLException {
+    public Connection getNewConnection(File dbFile) throws SQLException {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
@@ -53,7 +60,7 @@ public class SQLiteDB extends SQLDB {
             return null; // Should never happen.
         }
 
-        String dbFilePath = new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db").getAbsolutePath();
+        String dbFilePath = dbFile.getAbsolutePath();
 
         Connection newConnection = getConnectionFor(dbFilePath);
         Log.debug("SQLite " + dbName + ": Opened a new Connection");
@@ -87,7 +94,7 @@ public class SQLiteDB extends SQLDB {
                     } catch (SQLException e) {
                         Log.debug("Something went wrong during Ping task.");
                         try {
-                            connection = getNewConnection(dbName);
+                            connection = getNewConnection(databaseFile);
                         } catch (SQLException e1) {
                             Log.toLog(this.getClass(), e1);
                             Log.error("SQLite connection maintaining task had to be closed due to exception.");
@@ -122,7 +129,7 @@ public class SQLiteDB extends SQLDB {
     @Override
     public Connection getConnection() throws SQLException {
         if (connection == null) {
-            connection = getNewConnection(dbName);
+            connection = getNewConnection(databaseFile);
         }
         return connection;
     }
@@ -135,5 +142,20 @@ public class SQLiteDB extends SQLDB {
             MiscUtils.close(connection);
         }
         super.close();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        SQLiteDB sqLiteDB = (SQLiteDB) o;
+        return Objects.equals(dbName, sqLiteDB.dbName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), dbName);
     }
 }

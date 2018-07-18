@@ -18,8 +18,6 @@ import utilities.TestConstants;
 import utilities.TestErrorManager;
 import utilities.mocks.SystemMockUtil;
 
-import java.sql.SQLException;
-
 import static org.junit.Assert.assertEquals;
 
 public class NetworkSettingsTest {
@@ -33,10 +31,10 @@ public class NetworkSettingsTest {
         Teardown.resetSettingsTempValues();
         StaticHolder.saveInstance(NetworkSettingsTest.class, Plan.class);
 
+        SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
+                .enableConfigSystem();
         db = new SQLiteDB();
-        SystemMockUtil.setUp(temporaryFolder.getRoot())
-                .enableConfigSystem()
-                .enableDatabaseSystem(db)
+        mockUtil.enableDatabaseSystem(db)
                 .enableServerInfoSystem();
 
         Log.setErrorManager(new TestErrorManager());
@@ -53,7 +51,7 @@ public class NetworkSettingsTest {
     }
 
     @Before
-    public void setUp() throws DBException, SQLException {
+    public void setUp() {
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));

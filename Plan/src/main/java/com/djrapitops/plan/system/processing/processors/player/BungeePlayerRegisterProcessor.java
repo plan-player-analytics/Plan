@@ -4,11 +4,9 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;
 
@@ -39,8 +37,6 @@ public class BungeePlayerRegisterProcessor implements CriticalRunnable {
                 return;
             }
             database.save().registerNewUser(uuid, registered, name);
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
         } finally {
             for (Runnable process : afterProcess) {
                 Processing.submit(process);

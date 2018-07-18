@@ -5,7 +5,6 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.World;
@@ -46,7 +45,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
     private TPS calculateTPS(long diff, long now) {
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         int availableProcessors = operatingSystemMXBean.getAvailableProcessors();
-        double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
+        double averageCPUUsage = operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0;
 
         if (averageCPUUsage < 0) { // If unavailable, getSystemLoadAverage() returns -1
             averageCPUUsage = -1;

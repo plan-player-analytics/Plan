@@ -9,6 +9,8 @@ import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.connection.WebFailException;
 import com.djrapitops.plan.system.info.connection.BungeeConnectionSystem;
+import com.djrapitops.plan.system.info.request.CacheRequest;
+import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.parsing.NetworkPage;
@@ -29,8 +31,13 @@ public class BungeeInfoSystem extends InfoSystem {
 
     @Override
     public void runLocally(InfoRequest infoRequest) throws WebException {
-        // runLocally is called when ConnectionSystem has no servers.
-        throw new NoServersException("No servers were available to process this request (Local attempt): " + infoRequest.getClass().getSimpleName());
+        if (infoRequest instanceof CacheRequest ||
+                infoRequest instanceof GenerateInspectPageRequest) {
+            infoRequest.runLocally();
+        } else {
+            // runLocally is called when ConnectionSystem has no servers.
+            throw new NoServersException("No servers were available to process this request (Local attempt): " + infoRequest.getClass().getSimpleName());
+        }
     }
 
     @Override

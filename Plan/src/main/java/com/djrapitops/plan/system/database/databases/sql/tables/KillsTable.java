@@ -1,8 +1,10 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -70,7 +72,7 @@ public class KillsTable extends UserIDTable {
     }
 
     @Override
-    public void removeUser(UUID uuid) throws SQLException {
+    public void removeUser(UUID uuid) {
         String sql = "DELETE FROM " + tableName +
                 " WHERE " + Col.KILLER_ID + " = " + usersTable.statementSelectID +
                 " OR " + Col.VICTIM_ID + " = " + usersTable.statementSelectID;
@@ -84,7 +86,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) throws SQLException {
+    public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as victim_uuid";
         String sql = "SELECT " +
@@ -114,14 +116,51 @@ public class KillsTable extends UserIDTable {
                     UUID victim = UUID.fromString(uuidS);
                     long date = set.getLong(Col.DATE.get());
                     String weapon = set.getString(Col.WEAPON.get());
-                    session.getPlayerKills().add(new PlayerKill(victim, weapon, date));
+                    session.getUnsafe(SessionKeys.PLAYER_KILLS).add(new PlayerKill(victim, weapon, date));
                 }
                 return null;
             }
         });
     }
 
-    public void savePlayerKills(UUID uuid, int sessionID, List<PlayerKill> playerKills) throws SQLException {
+    public void addDeathsToSessions(UUID uuid, Map<Integer, Session> sessions) {
+        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
+        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as killer_uuid";
+        String sql = "SELECT " +
+                Col.SESSION_ID + ", " +
+                Col.DATE + ", " +
+                Col.WEAPON + ", " +
+                usersUUIDColumn +
+                " FROM " + tableName +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.KILLER_ID +
+                " WHERE " + Col.VICTIM_ID + "=" + usersTable.statementSelectID;
+
+        query(new QueryStatement<Object>(sql, 50000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+
+            @Override
+            public Object processResults(ResultSet set) throws SQLException {
+                while (set.next()) {
+                    int sessionID = set.getInt(Col.SESSION_ID.get());
+                    Session session = sessions.get(sessionID);
+                    if (session == null) {
+                        continue;
+                    }
+                    String uuidS = set.getString("killer_uuid");
+                    UUID killer = UUID.fromString(uuidS);
+                    long date = set.getLong(Col.DATE.get());
+                    String weapon = set.getString(Col.WEAPON.get());
+                    session.getUnsafe(SessionKeys.PLAYER_DEATHS).add(new PlayerDeath(killer, weapon, date));
+                }
+                return null;
+            }
+        });
+    }
+
+    public void savePlayerKills(UUID uuid, int sessionID, List<PlayerKill> playerKills) {
         if (Verify.isEmpty(playerKills)) {
             return;
         }
@@ -131,7 +170,7 @@ public class KillsTable extends UserIDTable {
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (PlayerKill kill : playerKills) {
                     UUID victim = kill.getVictim();
-                    long date = kill.getTime();
+                    long date = kill.getDate();
                     String weapon = kill.getWeapon();
                     if (Verify.containsNull(victim, uuid)) {
                         continue;
@@ -149,7 +188,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, List<PlayerKill>> getPlayerKills() throws SQLException {
+    public Map<UUID, List<PlayerKill>> getPlayerKills() {
         String usersVictimIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersKillerIDColumn = "a." + UsersTable.Col.ID;
         String usersVictimUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as victim_uuid";
@@ -181,7 +220,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public Map<Integer, List<PlayerKill>> getAllPlayerKillsBySessionID() throws SQLException {
+    public Map<Integer, List<PlayerKill>> getAllPlayerKillsBySessionID() {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as victim_uuid";
         String sql = "SELECT " +
@@ -214,12 +253,12 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) throws SQLException {
+    public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
         Map<Integer, List<PlayerKill>> playerKillsBySessionID = getAllPlayerKillsBySessionID();
         for (UUID serverUUID : map.keySet()) {
             for (List<Session> sessions : map.get(serverUUID).values()) {
                 for (Session session : sessions) {
-                    List<PlayerKill> playerKills = playerKillsBySessionID.get(session.getSessionID());
+                    List<PlayerKill> playerKills = playerKillsBySessionID.get(session.getUnsafe(SessionKeys.DB_ID));
                     if (playerKills != null) {
                         session.setPlayerKills(playerKills);
                     }
@@ -228,7 +267,7 @@ public class KillsTable extends UserIDTable {
         }
     }
 
-    public void savePlayerKills(Map<UUID, Map<UUID, List<Session>>> allSessions) throws SQLException {
+    public void savePlayerKills(Map<UUID, Map<UUID, List<Session>>> allSessions) {
         if (Verify.isEmpty(allSessions)) {
             return;
         }
@@ -244,11 +283,11 @@ public class KillsTable extends UserIDTable {
                         List<Session> sessions = entry.getValue();
                         // Every session
                         for (Session session : sessions) {
-                            int sessionID = session.getSessionID();
+                            int sessionID = session.getUnsafe(SessionKeys.DB_ID);
                             // Every kill
-                            for (PlayerKill kill : session.getPlayerKills()) {
+                            for (PlayerKill kill : session.getUnsafe(SessionKeys.PLAYER_KILLS)) {
                                 UUID victim = kill.getVictim();
-                                long date = kill.getTime();
+                                long date = kill.getDate();
                                 String weapon = kill.getWeapon();
                                 statement.setString(1, killer.toString());
                                 statement.setString(2, victim.toString());
@@ -265,7 +304,7 @@ public class KillsTable extends UserIDTable {
         });
     }
 
-    public void alterTableV16() throws SQLException {
+    public void alterTableV16() {
         addColumns(Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
 
         Map<Integer, Integer> sessionIDServerIDRelation = sessionsTable.getIDServerIDRelation();

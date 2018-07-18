@@ -8,6 +8,7 @@ import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.BungeeAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.cache.BungeeCacheSystem;
 import com.djrapitops.plan.system.database.BungeeDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
@@ -37,6 +38,7 @@ public class BungeeSystem extends PlanSystem {
         fileSystem = new FileSystem(plugin);
         configSystem = new BungeeConfigSystem();
         databaseSystem = new BungeeDBSystem();
+        cacheSystem = new BungeeCacheSystem(this);
         listenerSystem = new BungeeListenerSystem(plugin);
         taskSystem = new BungeeTaskSystem(plugin);
 

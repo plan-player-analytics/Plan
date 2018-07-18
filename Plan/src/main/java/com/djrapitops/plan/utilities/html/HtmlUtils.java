@@ -2,10 +2,6 @@ package com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
-import org.apache.commons.text.StringSubstitutor;
-
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * @author Rsl1122
@@ -17,19 +13,6 @@ public class HtmlUtils {
      */
     private HtmlUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    /**
-     * Replaces ${placeholder} placeholders.
-     *
-     * @param html       Html to replace placeholders from
-     * @param replaceMap Placeholders and values
-     * @return Html with placeholders replaced
-     */
-    public static String replacePlaceholders(String html, Map<String, Serializable> replaceMap) {
-        StringSubstitutor sub = new StringSubstitutor(replaceMap);
-        sub.setEnableSubstitutionInVariables(true);
-        return sub.replace(html);
     }
 
     /**

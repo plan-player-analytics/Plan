@@ -4,18 +4,26 @@
  */
 package com.djrapitops.plan.utilities.html.structure;
 
-import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.containers.PerServerContainer;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.keys.PerServerKeys;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.utilities.Format;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -27,47 +35,59 @@ public class ServerAccordion extends AbstractAccordion {
 
     private final StringBuilder viewScript;
 
-    public ServerAccordion(PlayerProfile profile, Map<UUID, String> serverNames) {
+    private final Map<UUID, String> serverNames;
+    private PerServerContainer perServer;
+
+    public ServerAccordion(PlayerContainer container, Map<UUID, String> serverNames) {
         super("server_accordion");
 
         viewScript = new StringBuilder();
 
-        Map<UUID, WorldTimes> worldTimesPerServer = profile.getWorldTimesPerServer();
-        if (worldTimesPerServer.isEmpty()) {
+        this.serverNames = serverNames;
+        Optional<PerServerContainer> perServerData = container.getValue(PlayerKeys.PER_SERVER);
+        if (perServerData.isPresent()) {
+            perServer = perServerData.get();
+        } else {
             return;
         }
 
-        addElements(profile, serverNames, worldTimesPerServer);
+        addElements();
     }
 
     public String toViewScript() {
         return viewScript.toString();
     }
 
-    private void addElements(PlayerProfile profile, Map<UUID, String> serverNames, Map<UUID, WorldTimes> worldTimesPerServer) {
+    private void addElements() {
         int i = 0;
-        for (Map.Entry<UUID, WorldTimes> entry : worldTimesPerServer.entrySet()) {
+
+        Formatter<Long> timeFormatter = Formatters.timeAmount();
+
+        for (Map.Entry<UUID, DataContainer> entry : perServer.entrySet()) {
             UUID serverUUID = entry.getKey();
+            DataContainer container = entry.getValue();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
-            WorldTimes worldTimes = entry.getValue();
+            WorldTimes worldTimes = container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
+            SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
 
-            List<Session> sessions = profile.getSessions(serverUUID);
-            long playtime = PlayerProfile.getPlaytime(sessions.stream());
-            long afkTime = PlayerProfile.getAFKTime(sessions.stream());
-            int sessionCount = sessions.size();
-            long avgSession = MathUtils.averageLong(playtime, sessionCount);
-            long sessionMedian = PlayerProfile.getSessionMedian(sessions.stream());
-            long longestSession = PlayerProfile.getLongestSession(sessions.stream());
+            boolean banned = container.getValue(PerServerKeys.BANNED).orElse(false);
+            boolean operator = container.getValue(PerServerKeys.OPERATOR).orElse(false);
+            long registered = container.getValue(PerServerKeys.REGISTERED).orElse(0L);
 
-            long mobKills = PlayerProfile.getMobKillCount(sessions.stream());
-            long playerKills = PlayerProfile.getPlayerKills(sessions.stream()).count();
-            long deaths = PlayerProfile.getDeathCount(sessions.stream());
+            long playtime = sessionsMutator.toPlaytime();
+            long afkTime = sessionsMutator.toAfkTime();
+            int sessionCount = sessionsMutator.count();
+            long sessionMedian = sessionsMutator.toMedianSessionLength();
+            long longestSession = sessionsMutator.toLongestSessionLength();
 
-            String play = FormatUtils.formatTimeAmount(playtime);
-            String afk = FormatUtils.formatTimeAmount(afkTime);
-            String avg = sessionCount != 0 ? FormatUtils.formatTimeAmount(avgSession) : "-";
-            String median = sessionCount != 0 ? FormatUtils.formatTimeAmount(sessionMedian) : "-";
-            String longest = sessionCount != 0 ? FormatUtils.formatTimeAmount(longestSession) : "-";
+            long mobKills = sessionsMutator.toMobKillCount();
+            long playerKills = sessionsMutator.toPlayerKillCount();
+            long deaths = sessionsMutator.toDeathCount();
+
+            String play = timeFormatter.apply(playtime);
+            String afk = timeFormatter.apply(afkTime);
+            String median = timeFormatter.apply(sessionMedian);
+            String longest = timeFormatter.apply(longestSession);
 
             String sanitizedServerName = new Format(serverName)
                     .removeSymbols()
@@ -81,15 +101,19 @@ public class ServerAccordion extends AbstractAccordion {
             String title = serverName + "<span class=\"pull-right\">" + play + "</span>";
 
             String leftSide = new AccordionElementContentBuilder()
-                    .addRowBold("teal", "calendar-check-o", "Sessions", sessionCount)
-                    .addRowBold("green", "clock-o", "Server Playtime", play)
-                    .addRowBold("grey", "clock-o", "Time AFK", afk)
-                    .addRowBold("teal", "clock-o", "Longest Session", longest)
-                    .addRowBold("teal", "clock-o", "Session Median", median)
+                    .addRowBold(Icons.OPERATOR, "Operator", operator ? "Yes" : "No")
+                    .addRowBold(Icons.BANNED, "Banned", banned ? "Yes" : "No")
+                    .addRowBold(Icon.called("user-plus").of(Color.LIGHT_GREEN), "Registered", Formatters.year().apply(() -> registered))
                     .addBreak()
-                    .addRowBold("red", "crosshairs", "Player Kills", playerKills)
-                    .addRowBold("green", "crosshairs", "Mob Kills", mobKills)
-                    .addRowBold("red", "frown-o", "Deaths", deaths)
+                    .addRowBold(Icons.SESSION_COUNT, "Sessions", sessionCount)
+                    .addRowBold(Icons.PLAYTIME, "Server Playtime", play)
+                    .addRowBold(Icons.AFK_LENGTH, "Time AFK", afk)
+                    .addRowBold(Icons.SESSION_LENGTH, "Longest Session", longest)
+                    .addRowBold(Icons.SESSION_LENGTH, "Session Median", median)
+                    .addBreak()
+                    .addRowBold(Icons.PLAYER_KILLS, "Player Kills", playerKills)
+                    .addRowBold(Icons.MOB_KILLS, "Mob Kills", mobKills)
+                    .addRowBold(Icons.DEATHS, "Deaths", deaths)
                     .toHtml();
 
             String rightSide = "<div id=\"" + worldId + "\" class=\"dashboard-donut-chart\"></div>" +

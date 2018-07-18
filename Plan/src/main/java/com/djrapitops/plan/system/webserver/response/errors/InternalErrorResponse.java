@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.webserver.response.errors;
 
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 
 /**
  * @author Rsl1122
@@ -11,7 +12,7 @@ public class InternalErrorResponse extends ErrorResponse {
     public InternalErrorResponse(String cause, Throwable e) {
         super.setHeader("HTTP/1.1 500 Internal Error");
 
-        super.setTitle(Html.FONT_AWESOME_ICON.parse("bug") + " 500 Internal Error occurred");
+        super.setTitle(Icon.called("bug") + " 500 Internal Error occurred");
 
         StringBuilder paragraph = new StringBuilder();
         paragraph.append("Please report this issue here: ");

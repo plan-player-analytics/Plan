@@ -1,77 +1,102 @@
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.store.containers.DataContainer;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
- * Object for storing various information about a player's play session.
- * <p>
- * Includes:
- * <ul>
- * <li>World and GameMode playtimes</li>
- * <li>Player and Mob kills</li>
- * <li>Deaths</li>
- * </ul>
- * <p>
- * Following data can be derived from Sessions in the database (Between any time span):
- * <ul>
- * <li>Playtime</li>
- * <li>LoginTimes</li>
- * </ul>
+ * DataContainer for information about a player's play session.
  *
  * @author Rsl1122
+ * @see SessionKeys for Key objects.
  */
-public class Session {
+public class Session extends DataContainer implements DateHolder {
 
-    private final long sessionStart;
-    private Integer sessionID;
-    private WorldTimes worldTimes;
-    private long sessionEnd;
-    private List<PlayerKill> playerKills;
     private int mobKills;
     private int deaths;
-
     private long afkTime;
 
     /**
-     * Creates a new session with given start and end of -1.
+     * Creates a new session.
      *
-     * @param sessionStart Epoch millisecond the session was started.
+     * @param uuid         UUID of the Player.
+     * @param sessionStart Epoch ms the session started.
+     * @param world        Starting world.
+     * @param gm           Starting GameMode.
      */
-    public Session(long sessionStart, String world, String gm) {
-        this.worldTimes = new WorldTimes(world, gm);
-        this.sessionStart = sessionStart;
-        this.sessionEnd = -1;
-        playerKills = new ArrayList<>();
+    public Session(UUID uuid, long sessionStart, String world, String gm) {
         mobKills = 0;
         deaths = 0;
         afkTime = 0;
+
+        putRawData(SessionKeys.UUID, uuid);
+        putRawData(SessionKeys.START, sessionStart);
+        putRawData(SessionKeys.WORLD_TIMES, new WorldTimes(world, gm));
+        putRawData(SessionKeys.PLAYER_KILLS, new ArrayList<>());
+        putRawData(SessionKeys.PLAYER_DEATHS, new ArrayList<>());
+        putSupplier(SessionKeys.MOB_KILL_COUNT, () -> mobKills);
+        putSupplier(SessionKeys.DEATH_COUNT, () -> deaths);
+        putSupplier(SessionKeys.AFK_TIME, () -> afkTime);
+
+        putSupplier(SessionKeys.PLAYER_KILL_COUNT, getUnsafe(SessionKeys.PLAYER_KILLS)::size);
+        putSupplier(SessionKeys.LENGTH, () ->
+                getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
+        putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
+        putSupplier(SessionKeys.SERVER_UUID, ServerInfo::getServerUUID);
     }
 
-    public Session(int id, long sessionStart, long sessionEnd, int mobKills, int deaths, long afkTime) {
-        this.sessionID = id;
-        this.sessionStart = sessionStart;
-        this.sessionEnd = sessionEnd;
-        this.worldTimes = new WorldTimes(new HashMap<>());
-        this.playerKills = new ArrayList<>();
+    /**
+     * Recreates a Session found in the database.
+     * <p>
+     * WorldTimes and Player kills need to be set separately.
+     *
+     * @param id           ID in the database (Used for fetching world times and player kills.
+     * @param uuid         UUID of the Player.
+     * @param serverUUID   UUID of the Server.
+     * @param sessionStart Epoch ms the session started.
+     * @param sessionEnd   Epoch ms the session ended.
+     * @param mobKills     Mobs killed during the session.
+     * @param deaths       Death count during the session.
+     * @param afkTime      Time spent AFK during the session.
+     */
+    public Session(int id, UUID uuid, UUID serverUUID, long sessionStart, long sessionEnd, int mobKills, int deaths, long afkTime) {
+        putRawData(SessionKeys.DB_ID, id);
+        putRawData(SessionKeys.UUID, uuid);
+        putRawData(SessionKeys.SERVER_UUID, serverUUID);
+        putRawData(SessionKeys.START, sessionStart);
+        putRawData(SessionKeys.END, sessionEnd);
+        putRawData(SessionKeys.WORLD_TIMES, new WorldTimes(new HashMap<>()));
+        putRawData(SessionKeys.PLAYER_KILLS, new ArrayList<>());
+        putRawData(SessionKeys.PLAYER_DEATHS, new ArrayList<>());
+        putSupplier(SessionKeys.MOB_KILL_COUNT, () -> mobKills);
+        putSupplier(SessionKeys.DEATH_COUNT, () -> deaths);
+        putSupplier(SessionKeys.AFK_TIME, () -> afkTime);
+
         this.mobKills = mobKills;
         this.deaths = deaths;
         this.afkTime = afkTime;
+
+        putSupplier(SessionKeys.PLAYER_KILL_COUNT, () -> getUnsafe(SessionKeys.PLAYER_KILLS).size());
+        putSupplier(SessionKeys.LENGTH, () ->
+                getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
+        putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
     }
 
     /**
      * Ends the session with given end point.
      * <p>
-     * (Changes the end to the parameter.).
+     * Updates world times to the latest value.
      *
      * @param endOfSession Epoch millisecond the session ended.
      */
     public void endSession(long endOfSession) {
-        sessionEnd = endOfSession;
+        putRawData(SessionKeys.END, endOfSession);
+        WorldTimes worldTimes = getValue(SessionKeys.WORLD_TIMES)
+                .orElseThrow(() -> new IllegalStateException("World times have not been defined"));
         worldTimes.updateState(endOfSession);
     }
 
@@ -83,10 +108,14 @@ public class Session {
      * @param time  Epoch ms of the event.
      */
     public void changeState(String world, String gm, long time) {
+        WorldTimes worldTimes = getValue(SessionKeys.WORLD_TIMES)
+                .orElseThrow(() -> new IllegalStateException("World times is not defined"));
         worldTimes.updateState(world, gm, time);
     }
 
     public void playerKilled(PlayerKill kill) {
+        List<PlayerKill> playerKills = getValue(SessionKeys.PLAYER_KILLS)
+                .orElseThrow(() -> new IllegalStateException("Player kills is not defined."));
         playerKills.add(kill);
     }
 
@@ -104,82 +133,32 @@ public class Session {
      * @return Long in ms.
      */
     public long getLength() {
-        if (sessionEnd == -1) {
-            return System.currentTimeMillis() - sessionStart;
-        }
-        return sessionEnd - sessionStart;
+        return getValue(SessionKeys.LENGTH).orElse(0L);
     }
 
-    /**
-     * Get the start of the session.
-     *
-     * @return Epoch millisecond the session started.
-     */
-    public long getSessionStart() {
-        return sessionStart;
-    }
-
-    /**
-     * Get the end of the session.
-     *
-     * @return Epoch millisecond the session ended.
-     */
-    public long getSessionEnd() {
-        return sessionEnd;
-    }
-
-    public WorldTimes getWorldTimes() {
-        return worldTimes;
+    @Override
+    public long getDate() {
+        return getUnsafe(SessionKeys.START);
     }
 
     public void setWorldTimes(WorldTimes worldTimes) {
-        this.worldTimes = worldTimes;
-    }
-
-    public List<PlayerKill> getPlayerKills() {
-        return playerKills;
+        putRawData(SessionKeys.WORLD_TIMES, worldTimes);
     }
 
     public void setPlayerKills(List<PlayerKill> playerKills) {
-        this.playerKills = playerKills;
-    }
-
-    public int getMobKills() {
-        return mobKills;
-    }
-
-    public int getDeaths() {
-        return deaths;
+        putRawData(SessionKeys.PLAYER_KILLS, playerKills);
     }
 
     public boolean isFetchedFromDB() {
-        return sessionID != null;
+        return supports(SessionKeys.DB_ID);
     }
 
     public void addAFKTime(long timeAFK) {
         afkTime += timeAFK;
     }
 
-    public long getAfkLength() {
-        return afkTime;
-    }
-
-    public long getActiveLength() {
-        return getLength() - getAfkLength();
-    }
-
-    /**
-     * Used to get the ID of the session in the Database.
-     *
-     * @return ID if present.
-     * @throws NullPointerException if Session was not fetched from DB. Check {@code isFetchedFromDB} first.
-     */
-    public int getSessionID() {
-        return sessionID != null ? sessionID : -1;
-    }
-
     public void setSessionID(int sessionID) {
-        this.sessionID = sessionID;
+        putRawData(SessionKeys.DB_ID, sessionID);
     }
 
     @Override
@@ -187,28 +166,17 @@ public class Session {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Session session = (Session) o;
-        return sessionStart == session.sessionStart &&
-                sessionEnd == session.sessionEnd &&
+        return getUnsafe(SessionKeys.START).equals(session.getUnsafe(SessionKeys.START)) &&
+                getValue(SessionKeys.END).orElse(-1L).equals(session.getValue(SessionKeys.END).orElse(-1L)) &&
                 mobKills == session.mobKills &&
                 deaths == session.deaths &&
-                Objects.equals(worldTimes, session.worldTimes) &&
-                Objects.equals(playerKills, session.playerKills);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(sessionStart, sessionID, worldTimes, sessionEnd, playerKills, mobKills, deaths);
-    }
-
-    @Override
-    public String toString() {
-        return "Session{" +
-                "sessionStart=" + sessionStart + ", " +
-                "sessionID=" + sessionID + ", " +
-                "worldTimes=" + worldTimes + ", " +
-                "sessionEnd=" + sessionEnd + ", " +
-                "playerKills=" + playerKills + ", " +
-                "mobKills=" + mobKills + ", " +
-                "deaths=" + deaths + '}';
+                Objects.equals(
+                        getValue(SessionKeys.WORLD_TIMES).orElse(null),
+                        session.getValue(SessionKeys.WORLD_TIMES).orElse(null)
+                ) &&
+                Objects.equals(
+                        getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()),
+                        session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>())
+                );
     }
 }

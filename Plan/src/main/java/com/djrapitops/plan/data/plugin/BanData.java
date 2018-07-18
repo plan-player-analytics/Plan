@@ -11,7 +11,10 @@ import java.util.UUID;
  * Interface for PluginData objects that affect Ban state of players.
  *
  * @author Rsl1122
+ * @deprecated New implementations should not be created as better plugin data integration is
+ * being created.
  */
+@Deprecated
 public interface BanData {
 
     boolean isBanned(UUID uuid);

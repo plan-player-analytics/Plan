@@ -8,8 +8,7 @@ import org.spongepowered.api.scheduler.Task;
 public class SpongeTaskSystem extends ServerTaskSystem {
 
     public SpongeTaskSystem(PlanSponge plugin) {
-        super(plugin);
-        tpsCountTimer = new SpongeTPSCountTimer(plugin);
+        super(plugin, new SpongeTPSCountTimer(plugin));
     }
 
     @Override

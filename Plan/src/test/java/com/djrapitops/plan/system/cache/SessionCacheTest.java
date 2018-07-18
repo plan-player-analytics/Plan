@@ -32,7 +32,7 @@ public class SessionCacheTest {
     @Before
     public void setUp() {
         sessionCache = new SessionCache(null);
-        session = new Session(12345L, "World1", "SURVIVAL");
+        session = new Session(uuid, 12345L, "World1", "SURVIVAL");
         sessionCache.cacheSession(uuid, session);
     }
 
