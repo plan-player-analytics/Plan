@@ -9,10 +9,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.mutators.ActivityIndex;
-import com.djrapitops.plan.data.store.mutators.PerServerMutator;
-import com.djrapitops.plan.data.store.mutators.PvpInfoMutator;
-import com.djrapitops.plan.data.store.mutators.SessionsMutator;
+import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
@@ -77,7 +74,7 @@ public class InspectPage implements Page {
         }
     }
 
-    public String parse(PlayerContainer container, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
+    public String parse(PlayerContainer player, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
         long now = System.currentTimeMillis();
 
         PlaceholderReplacer replacer = new PlaceholderReplacer();
@@ -92,20 +89,20 @@ public class InspectPage implements Page {
             Session session = activeSession.get();
             session.setSessionID(Integer.MAX_VALUE);
             online = true;
-            container.putRawData(PlayerKeys.ACTIVE_SESSION, session);
+            player.putRawData(PlayerKeys.ACTIVE_SESSION, session);
         }
 
-        String playerName = container.getValue(PlayerKeys.NAME).orElse("Unknown");
-        int timesKicked = container.getValue(PlayerKeys.KICK_COUNT).orElse(0);
+        String playerName = player.getValue(PlayerKeys.NAME).orElse("Unknown");
+        int timesKicked = player.getValue(PlayerKeys.KICK_COUNT).orElse(0);
 
-        replacer.addAllPlaceholdersFrom(container, Formatters.yearLongValue(),
+        replacer.addAllPlaceholdersFrom(player, Formatters.yearLongValue(),
                 PlayerKeys.REGISTERED, PlayerKeys.LAST_SEEN
         );
 
         replacer.put("playerName", playerName);
         replacer.put("kickCount", timesKicked);
 
-        PerServerContainer perServerContainer = container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer());
+        PerServerContainer perServerContainer = player.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer());
         PerServerMutator perServerMutator = new PerServerMutator(perServerContainer);
 
         Map<UUID, WorldTimes> worldTimesPerServer = perServerMutator.worldTimesPerServer();
@@ -118,12 +115,17 @@ public class InspectPage implements Page {
         replacer.put("favoriteServer", favoriteServer);
 
         replacer.put("tableBodyNicknames", new NicknameTable(
-                container.getValue(PlayerKeys.NICKNAMES).orElse(new ArrayList<>()), serverNames)
+                player.getValue(PlayerKeys.NICKNAMES).orElse(new ArrayList<>()), serverNames)
                 .parseBody());
-        replacer.put("tableBodyIPs", new GeoInfoTable(container.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
+        replacer.put("tableBodyIPs", new GeoInfoTable(player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
 
-        List<Session> allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
-        SessionsMutator sessionsMutator = SessionsMutator.forContainer(container);
+        PingMutator pingMutator = PingMutator.forContainer(player);
+        replacer.put("avgPing", FormatUtils.cutDecimals(pingMutator.average()) + " ms");
+        replacer.put("minPing", pingMutator.min() + " ms");
+        replacer.put("maxPing", pingMutator.max() + " ms");
+
+        List<Session> allSessions = player.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
+        SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
         allSessions.sort(new SessionStartComparator());
 
         String sessionAccordionViewScript = "";
@@ -139,9 +141,9 @@ public class InspectPage implements Page {
             }
         }
 
-        ServerAccordion serverAccordion = new ServerAccordion(container, serverNames);
+        ServerAccordion serverAccordion = new ServerAccordion(player, serverNames);
 
-        PlayerCalendar playerCalendar = new PlayerCalendar(container);
+        PlayerCalendar playerCalendar = new PlayerCalendar(player);
 
         replacer.put("calendarSeries", playerCalendar.toCalendarSeries());
         replacer.put("firstDay", 1);
@@ -160,7 +162,7 @@ public class InspectPage implements Page {
         sessionsAndPlaytime(replacer, sessionsMutator, daySessionsMutator, weekSessionsMutator, monthSessionsMutator);
 
         String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
-        WorldTimes worldTimes = container.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
+        WorldTimes worldTimes = player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
 
         WorldPie worldPie = new WorldPie(worldTimes);
 
@@ -171,15 +173,15 @@ public class InspectPage implements Page {
 
         pvpAndPve(replacer, sessionsMutator, weekSessionsMutator, monthSessionsMutator);
 
-        ActivityIndex activityIndex = container.getActivityIndex(now);
+        ActivityIndex activityIndex = player.getActivityIndex(now);
 
         replacer.put("activityIndexNumber", activityIndex.getFormattedValue());
         replacer.put("activityIndexColor", activityIndex.getColor());
         replacer.put("activityIndex", activityIndex.getGroup());
 
         replacer.put("playerStatus", HtmlStructure.playerStatus(online,
-                container.getValue(PlayerKeys.BANNED).orElse(false),
-                container.getValue(PlayerKeys.OPERATOR).orElse(false)));
+                player.getValue(PlayerKeys.BANNED).orElse(false),
+                player.getValue(PlayerKeys.OPERATOR).orElse(false)));
 
         String serverName = serverNames.get(serverUUID);
         replacer.put("networkName",

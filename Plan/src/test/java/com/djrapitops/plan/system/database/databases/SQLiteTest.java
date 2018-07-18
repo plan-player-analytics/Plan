@@ -65,11 +65,13 @@ public class SQLiteTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        new TestDatabaseCreator();
+
         System.out.println("--- Test Class Setup     ---");
+        SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
+                .enableConfigSystem();
         db = new SQLiteDB();
-        SystemMockUtil.setUp(temporaryFolder.getRoot())
-                .enableConfigSystem()
-                .enableDatabaseSystem(db)
+        mockUtil.enableDatabaseSystem(db)
                 .enableServerInfoSystem();
         StaticHolder.saveInstance(SQLDB.class, Plan.class);
         StaticHolder.saveInstance(SQLiteTest.class, Plan.class);
@@ -757,7 +759,7 @@ public class SQLiteTest {
         System.out.println("Running backup..");
         db.backup().backup(backup);
         System.out.println("Backup Complete!");
-        
+
         UserInfoTable userInfoTable = backup.getUserInfoTable();
         UsersTable usersTable = backup.getUsersTable();
         SessionsTable sessionsTable = backup.getSessionsTable();
