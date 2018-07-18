@@ -65,8 +65,6 @@ public class SQLiteTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        new TestDatabaseCreator();
-
         System.out.println("--- Test Class Setup     ---");
         SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
