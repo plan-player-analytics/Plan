@@ -11,6 +11,7 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -19,6 +20,7 @@ import com.djrapitops.plan.utilities.html.graphs.WorldMap;
 import com.djrapitops.plan.utilities.html.graphs.bar.GeolocationBarGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -88,7 +90,11 @@ public class NetworkContainer extends DataContainer {
         putRawData(NetworkKeys.VERSION, PlanPlugin.getInstance().getVersion());
         putSupplier(NetworkKeys.TIME_ZONE, MiscUtils::getTimeZoneOffsetHours);
 
-        putSupplier(NetworkKeys.NETWORK_NAME, () -> bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan"));
+        putSupplier(NetworkKeys.NETWORK_NAME, () ->
+                Check.isBungeeAvailable() ?
+                        Settings.BUNGEE_NETWORK_NAME.toString() :
+                        bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan")
+        );
         putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties()::getOnlinePlayers);
         putRawData(NetworkKeys.WORLD_MAP_LOW_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_LOW));
         putRawData(NetworkKeys.WORLD_MAP_HIGH_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_HIGH));

@@ -185,7 +185,7 @@ public class InspectPage implements Page {
 
         String serverName = serverNames.get(serverUUID);
         replacer.put("networkName",
-                serverName.equalsIgnoreCase("bungee")
+                serverName.equalsIgnoreCase("bungeecord")
                         ? Settings.BUNGEE_NETWORK_NAME.toString()
                         : serverName
         );
