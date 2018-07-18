@@ -1422,6 +1422,10 @@
     $(function () {
 
         $('.player-table').DataTable({
+            responsive: true,
+            "order": [[5, "desc"]]
+        });
+        $('.player-plugin-table').DataTable({
             responsive: true
         });
 
