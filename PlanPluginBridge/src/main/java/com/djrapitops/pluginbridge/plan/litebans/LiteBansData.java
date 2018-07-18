@@ -42,11 +42,13 @@ public class LiteBansData extends PluginData implements BanData {
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
 
+        inspectContainer.addValue(Icon.called("balance-scale").of(Color.RED) +
+                "Hover over 'What' column entry for offence reasons", "");
+
         String what = getWithIcon("Effect", Icon.called("times-circle").of(Family.REGULAR));
-        String by = getWithIcon("Banned By", Icon.called("gavel"));
-        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
+        String by = getWithIcon("By", Icon.called("gavel"));
         String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
-        TableContainer table = new TableContainer(what, by, reason, date);
+        TableContainer table = new TableContainer(what, by, date);
         table.setColor("red");
 
         try {
@@ -61,9 +63,8 @@ public class LiteBansData extends PluginData implements BanData {
                     long expiry = ban.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     table.addRow(
-                            "Ban",
+                            "<span title=\"" + ban.getReason() + "\">Ban</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(ban.getBannedBy()), ban.getBannedBy()),
-                            ban.getReason(),
                             expires
                     );
                 }
@@ -71,9 +72,8 @@ public class LiteBansData extends PluginData implements BanData {
                     long expiry = mute.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     table.addRow(
-                            "Mute",
+                            "<span title=\"" + mute.getReason() + "\">Mute</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mute.getBannedBy()), mute.getBannedBy()),
-                            mute.getReason(),
                             expires
                     );
                 }
@@ -81,9 +81,8 @@ public class LiteBansData extends PluginData implements BanData {
                     long expiry = warn.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     table.addRow(
-                            "Warning",
+                            "<span title=\"" + warn.getReason() + "\">Warning</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(warn.getBannedBy()), warn.getBannedBy()),
-                            warn.getReason(),
                             expires
                     );
                 }
@@ -91,9 +90,8 @@ public class LiteBansData extends PluginData implements BanData {
                     long expiry = kick.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     table.addRow(
-                            "Kick",
+                            "<span title=\"" + kick.getReason() + "\">Kick</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(kick.getBannedBy()), kick.getBannedBy()),
-                            kick.getReason(),
                             expires
                     );
                 }
