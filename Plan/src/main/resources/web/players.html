@@ -291,7 +291,8 @@
     $(function () {
 
         $('.player-table').DataTable({
-            responsive: true
+            responsive: true,
+            "order": [[5, "desc"]]
         });
 
         var navButtons = document.getElementsByClassName("nav-button");

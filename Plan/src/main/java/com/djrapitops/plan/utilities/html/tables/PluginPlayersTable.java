@@ -42,6 +42,11 @@ public class PluginPlayersTable extends TableContainer {
         }
     }
 
+    @Override
+    public String parseHtml() {
+        return super.parseHtml().replace("player-table", "player-plugin-table");
+    }
+
     private static String[] getHeaders(Set<String> columnNames) {
         List<String> header = new ArrayList<>(columnNames);
         Collections.sort(header);

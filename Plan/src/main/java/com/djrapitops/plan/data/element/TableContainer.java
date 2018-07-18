@@ -52,7 +52,7 @@ public class TableContainer {
         this.values.add(values);
     }
 
-    public final String parseHtml() {
+    public String parseHtml() {
         return getTableHeader() +
                 parseHeader() +
                 parseBody() +
