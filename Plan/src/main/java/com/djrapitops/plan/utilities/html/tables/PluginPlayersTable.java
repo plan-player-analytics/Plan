@@ -32,7 +32,7 @@ public class PluginPlayersTable extends TableContainer {
 
         this.players = players;
 
-        useJqueryDataTables();
+        useJqueryDataTables("player-plugin-table");
 
         if (players.isEmpty()) {
             addRow("No Players");
@@ -40,11 +40,6 @@ public class PluginPlayersTable extends TableContainer {
             Map<UUID, String[]> rows = getRows(pluginDataSet);
             addValues(rows);
         }
-    }
-
-    @Override
-    public String parseHtml() {
-        return super.parseHtml().replace("player-table", "player-plugin-table");
     }
 
     private static String[] getHeaders(Set<String> columnNames) {

@@ -39,7 +39,7 @@ public class PlayersTable extends TableContainer {
         );
         this.players = players;
         this.maxPlayers = maxPlayers;
-        useJqueryDataTables();
+        useJqueryDataTables("player-table");
 
         setFormatter(2, Formatters.timeAmount());
         setFormatter(4, Formatters.yearLongValue());

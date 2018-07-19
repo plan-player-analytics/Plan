@@ -24,7 +24,7 @@ public class TableContainer {
     protected final Formatter[] formatters;
     private List<Serializable[]> values;
 
-    private boolean jqueryDatatable;
+    private String jqueryDatatable;
 
     private String color;
 
@@ -56,7 +56,7 @@ public class TableContainer {
         return getTableHeader() +
                 parseHeader() +
                 parseBody() +
-                "</table>" + (jqueryDatatable ? "</div>" : "");
+                "</table>" + (jqueryDatatable != null ? "</div>" : "");
     }
 
     public final String parseBody() {
@@ -112,17 +112,28 @@ public class TableContainer {
     }
 
     /**
-     * Make use of JQuery Datatables plugin.
+     * Make use of jQuery Data-tables plugin.
+     * <p>
+     * Use this with custom tables.
      * <p>
      * If this is called, result of {@code parseHtml()} should be wrapped with {@code Html.PANEL.parse(Html.PANEL_BODY.parse(result))}
      */
     public void useJqueryDataTables() {
-        this.jqueryDatatable = true;
+        this.jqueryDatatable = "player-plugin-table";
+    }
+
+    /**
+     * Make use of jQuery Data-tables plugin.
+     *
+     * @param sortType "player-table" or "player-plugin-table"
+     */
+    public void useJqueryDataTables(String sortType) {
+        jqueryDatatable = sortType;
     }
 
     private String getTableHeader() {
-        if (jqueryDatatable) {
-            return "<div class=\"table-responsive\">" + Html.TABLE_JQUERY.parse();
+        if (jqueryDatatable != null) {
+            return "<div class=\"table-responsive\">" + Html.TABLE_JQUERY.parse(jqueryDatatable);
         } else {
             return Html.TABLE_SCROLL.parse();
         }
