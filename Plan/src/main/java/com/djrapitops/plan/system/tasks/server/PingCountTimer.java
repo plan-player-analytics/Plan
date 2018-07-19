@@ -27,6 +27,7 @@ import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.PingInsertProcessor;
 import com.djrapitops.plan.utilities.java.Reflection;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -106,6 +107,10 @@ public class PingCountTimer extends AbsRunnable implements Listener {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 int ping = getPing(player);
+                if (ping < -1 || ping > TimeAmount.SECOND.ms() * 8L) {
+                    // Don't accept bad values
+                    return;
+                }
                 history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
                     Processing.submit(new PingInsertProcessor(uuid, new ArrayList<>(history)));
@@ -155,7 +160,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
                     addPlayer(player);
                 }
             }
-        }).runTaskLater(PING_INTERVAL * 2);
+        }).runTaskLater(TimeAmount.SECOND.ticks() * 10L);
     }
 
     @EventHandler

@@ -14,6 +14,7 @@ import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Coord;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.TownBlock;
 
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +34,8 @@ public class TownsAccordion extends AbstractAccordion {
         super("towny_accordion");
         this.towns = towns;
         this.playersMutator = playersMutator;
+
+        addElements();
     }
 
     private void addElements() {
@@ -50,7 +53,8 @@ public class TownsAccordion extends AbstractAccordion {
 
             List<Resident> residents = town.getResidents();
             int residentCount = residents.size();
-            String landCount = town.getPurchasedBlocks() + " / " + town.getTotalBlocks();
+            long claimedBlocks = town.getTownBlocks().stream().filter(TownBlock::hasTown).count();
+            String landCount = claimedBlocks + " / " + town.getTotalBlocks();
 
             Set<String> members = new HashSet<>();
             for (Resident resident : residents) {

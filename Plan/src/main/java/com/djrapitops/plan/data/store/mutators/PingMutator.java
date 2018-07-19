@@ -52,7 +52,7 @@ public class PingMutator {
         int max = -1;
         for (Ping ping : pings) {
             Integer value = ping.getMax();
-            if (value < 0) {
+            if (value < 0 || 8000 < value) {
                 continue;
             }
             if (value > max) {
@@ -67,7 +67,7 @@ public class PingMutator {
         int min = -1;
         for (Ping ping : pings) {
             Integer value = ping.getMin();
-            if (value < 0) {
+            if (value < 0 || 8000 < value) {
                 continue;
             }
             if (value < min || min == -1) {
@@ -80,7 +80,7 @@ public class PingMutator {
 
     public double average() {
         return pings.stream().mapToDouble(Ping::getAverage)
-                .filter(value -> value >= 0)
+                .filter(value -> value >= 0 && value <= 8000)
                 .average().orElse(-1);
     }
 }
