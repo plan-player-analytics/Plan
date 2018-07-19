@@ -120,9 +120,12 @@ public class InspectPage implements Page {
         replacer.put("tableBodyIPs", new GeoInfoTable(player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
 
         PingMutator pingMutator = PingMutator.forContainer(player);
-        replacer.put("avgPing", FormatUtils.cutDecimals(pingMutator.average()) + " ms");
-        replacer.put("minPing", pingMutator.min() + " ms");
-        replacer.put("maxPing", pingMutator.max() + " ms");
+        double averagePing = pingMutator.average();
+        int minPing = pingMutator.min();
+        int maxPing = pingMutator.max();
+        replacer.put("avgPing", averagePing != -1 ? FormatUtils.cutDecimals(averagePing) + " ms" : "Unavailable");
+        replacer.put("minPing", minPing != -1 ? minPing + " ms" : "Unavailable");
+        replacer.put("maxPing", maxPing != -1 ? maxPing + " ms" : "Unavailable");
 
         List<Session> allSessions = player.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
