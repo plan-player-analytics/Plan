@@ -1,5 +1,5 @@
 temporaryTestFolder/
-Plan.iml
+*.iml
 PlanPluginBridge.iml
 .sonar/
 
@@ -79,7 +79,6 @@ local.properties
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 .idea/
-*.iml
 classes/
 
 ## File-based project format:
@@ -161,33 +160,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-
-### NotepadPP ###
-# Notepad++ backups #
-*.bak
-
-
-### Windows ###
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
 
 ### Java ###
 *.class
