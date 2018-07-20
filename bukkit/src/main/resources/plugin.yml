@@ -1,0 +1,115 @@
+name: Plan
+author: Rsl1122
+main: com.djrapitops.plan.bukkit.PlanBukkit
+version: 4.4.1
+softdepend:
+- EssentialsX
+- Towny
+- Vault
+- Factions
+- AdvancedAchievements
+- McMMO
+- Jobs
+- ASkyBlock
+- GriefPrevention
+- LiteBans
+- SuperbVote
+- ViaVersion
+- BanManager
+- ProtocolSupport
+- Kingdoms
+- RedProtect
+
+commands:
+  plan:
+    usage: /<command> <name>
+    description: base command
+  inspect:
+    usage: /plan inspect <name>
+    description: inspect player data
+  qinspect:
+    usage: /plan qinspect <name>
+    description: inspect player data &  view in chatbox
+  analyze:
+    usage: /plan analyze
+    description: analyze all players' data
+  qanalyze:
+    usage: /plan qanalyze
+    description: analyze all players' data & view in chatbox
+  reload:
+    usage: /plan reload
+    description: reload plugin config
+  search:
+    usage: /plan <search terms> -p add -p to make not search playername
+    description: search data of multiple players with search terms
+  manage:
+    usage: /plan manage <manage subcommand>
+    description: manage the database
+  
+permissions:
+  plan.?:
+    description: Help command
+    default: true
+  plan.inspect:
+    description: Allows you to check your player data. 
+    default: true
+  plan.inspect.other:
+    description: Allows you to check other players' player data.
+    default: op
+  plan.qinspect:
+    description: Allows you to check your player data.
+    default: op
+  plan.qinspect.other:
+    description: Allows you to check other players' player data.
+  plan.analyze:
+    description: Allows you to check analysed data about all players.
+    default: op
+  plan.qanalyze:
+    description: Allows you to check analysed data about all players.
+    default: op
+  plan.reload:
+    description: Allows to reload plugin config
+    default: op
+  plan.search:
+    description: Allows search
+    default: op
+  plan.info:
+    description: Allows to view info
+    default: op
+  plan.ignore.commanduse:
+    description: Commands used by this player are not saved
+    default: false
+  plan.ignore.afk:
+    description: AFK time by this player is ignored
+    default: false
+  plan.manage:
+    description: Manage the database, clear, move, combine.
+    default: op
+  plan.webmanage:
+    description: Manage the webusers, delete, list, check
+    default: op;
+  
+  plan.basic:
+    children:
+      plan.?: true
+      plan.inspect: true  
+      plan.qinspect: true
+  plan.advanced:
+    childer:
+      plan.basic: true
+      plan.info: true
+      plan.qanalyze: true
+  plan.staff:
+    children:
+      plan.search: true
+      plan.advanced: true
+      plan.analyze: true
+      plan.inspect.other: true
+      plan.qinspect.other: true
+      plan.webmanage: true
+      plan.reload: true
+  plan.*:
+    children:
+      plan.manage: true
+      plan.staff: true
+      apf.notify: true

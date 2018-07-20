@@ -1,0 +1,63 @@
+# Default Theme bar color when user has not chosen a color
+DefaultColor: "teal"
+
+Font:
+  # Location of the FontStyleSheet, eg. https://fonts.googleapis.com/css?family=Quicksand:300,400
+  FontStyleSheet: https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext
+  # Name of the Font for CSS eg "'Quicksand', sans-serif"
+  FontFamily: '"Roboto", sans-serif'
+
+# Color codes for each theme element color
+# These affect icons & backgrounds of all elements of this color.
+Colors:
+  red: "#767676"
+  pink: "#626262"
+  purple: "#595959"
+  deep-purple: "#555555"
+  indigo: "#575757"
+  blue: "#7D7D7D"
+  light-blue: "#7F7F7F"
+  cyan: "#868686"
+  teal: "#676767"
+  green: "#868686"
+  light-green: "#A4A4A4"
+  lime: "#C4C4C4"
+  yellow: "#DCDCDC"
+  amber: "#BEBEBE"
+  orange: "#A5A5A5"
+  deep-orange: "#838383"
+  brown: "#5E5E5E"
+  grey: "#9E9E9E"
+  blue-grey: "#757575"
+  black: "#000000"
+  Extra:
+    White: "#fff"
+
+# Useful tool for html colors
+# https://www.w3schools.com/colors/colors_picker.asp
+GraphColors:
+  PunchCard: "#222"
+  PlayersOnline: "#7A7A7A"
+  TPS:
+    High: "#555555"
+    Medium: "#BEBEBE"
+    Low: "#656565"
+  CPU: "#C9C9C9"
+  RAM: "#A1A1A1"
+  Chunks: "#848484"
+  Entities: "#8C8C8C"
+  WorldPie: '"#707070", "#828282", "#595959", "#676767", "#7F7F7F", "#989898", "#535353", "#888888", "#6F6F6F", "#707070"'
+  GMDrilldown: '"#535353", "#888888", "#6F6F6F", "#707070"'
+  ActivityPie: '"#8C8C8C", "#A4A4A4", "#C4C4C4", "#BEBEBE", "#757575"'
+  ServerPreferencePie: '"#707070", "#828282", "#595959", "#676767", "#7F7F7F", "#989898", "#535353", "#888888", "#6F6F6F", "#707070"'
+  WorldMap_High: "#555555"
+  WorldMap_Low: "#DDDDDD"
+  Ping:
+    Max: '#707070'
+    Avg: '#828282'
+    Min: '#595959'
+
+# Leave blank "" for white
+ParsedElements:
+  SessionAccordion: "teal"
+  ServerAccordion: "light-green"
