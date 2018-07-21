@@ -1,0 +1,118 @@
+Analysis - Third Party                    || Analyse | Analyse des sources de données supplémentaires (tierce partie).
+Analysis FAIL - Fetch Exception           || Analyse | Échec de l’extraction des données pour l’analyse, une exception s'est produite.
+Analysis FAIL - No Data                   || Analyse | L'analyse a échoué, aucune donnée dans la base de données.
+Analysis FAIL - No Players                || Analyse | L'analyse a échoué, aucun joueur connu.
+Analysis - Fetch Phase                    || Analyse | Récupération des données..
+Analysis - Fetch Phase Start              || Analyse | Vérification des joueurs disponibles..
+Analysis - Complete                       || Analyse | Analyse terminée. (En ${0}ms) ${1}
+Analysis - Begin Analysis                 || Analyse | Données récupérées (${0} utilisateurs, en ${1}ms), début Analyse des données..
+Analysis - Start                          || Analyse | Début de l'analyse des données utilisateur..
+>Constant - CMD Footer                    || §f»
+>Constant - List Ball                     || §7 •§2
+Cmd FAIL - No Data View                   || §e[Plan] Aucun moyen de voir les données disponibles.
+Cmd FAIL - No Permission                  || §c[Plan] Vous n'avez pas la permission requise.
+Cmd FAIL - Requires Arguments             || §c[Plan] La commande nécessite des arguments. ${0}
+Cmd FAIL - Require only one Argument      || §c[Plan] La commande nécessite un argument.
+Cmd FAIL - Timeout                        || §c[Plan] ${0} La commande a expiré ! Vérifiez avec '/plan status' et la console.
+Cmd FAIL - Unknown Username               || §c[Plan] Joueur introuvable dans la base de données.
+Cmd FAIL - Unseen Username                || §c[Plan] Ce joueur n'a pas joué sur ce serveur.
+Cmd FAIL - Invalid Username               || §c[Plan] Ce joueur n'existe pas.
+Cmd Header - Analysis                     || §f»§2 Player Analytics - Résultats de l’analyse
+Cmd Header - Info                         || §f»§2 Player Analytics - Info
+Cmd Header - Inspect                      || §f»§2 Player Analytics - Résultats de l’inspection
+Cmd Header - Search                       || §f»§2 Player Analytics - Résultats de la recherche: 
+In Depth Help - /plan analyze ?           || §2Commande d’analyse\§f  Utilisé pour actualiser le cache d'analyse et accéder à la page de résultats\§7  /plan status peut être utilisé pour vérifier le statut de l'analyse pendant son exécution.\§7  Alias: analyze, analyse, analysis, a
+In Depth Help - /plan inspect ?           || §2Commande d’inspection\§f  Utilisé pour obtenir un lien vers la page d'inspection d’un utilisateur.\§7  Votre propre page d'inspection peut être consultée avec /plan inspect\§7  Alias: /plan <nom>
+In Depth Help - /plan list ?              || §2Commande de listing\§f  Utilisé pour obtenir un lien vers la page des joueurs.\§7  La page des joueurs contient des liens vers toutes les pages d'inspection mises en cache.\§7  Alias: /plan pl
+In Depth Help - /plan manage ?            || §2Commande de gestion\§f  Utilisé pour gérer la base de données du plugin.\§7  Alias: /plan m\§7  /plan m - Liste des sous-commandes\§7  /plan m <sous-commande> ? - aide approfondie
+In Depth Help - /plan manage clear ?      || §2Gestion: Commande d’effacement.\§f  Utilisé pour supprimer TOUTES les données dans la base de données active.\§7  Le plugin doit être rechargé après l’effacement terminé.\§7  Alias: /plan pl
+In Depth Help - /plan manage dump ?       || §2Gestion: Commande de listage\§f  Utilisé pour lister des données importantes pour le rapport de bug à hastebin.
+In Depth Help - /plan manage hotswap ?    || §2Gestion: Commande de Hotswap\§f  Utilisé pour modifier la base de données en cours d'utilisation.\§7  Ne change pas la base de données si la connexion échoue.
+In Depth Help - /plan manage import ?     || §2Gestion: Commande d'importation\§f  Utilisé pour importer des données d'autres sources\§7  L'analyse sera désactivée pendant l'importation.
+In Depth Help - /plan manage remove ?     || §2Gestion: Commande de suppression\§f  Utilisé pour supprimer les données de l'utilisateur de la base de données active.
+In Depth Help - /plan ?                   || §2/plan - Commande principale\§f  Utilisé pour accéder à toutes les sous-commandes et aide\§7  /plan - Liste des sous-commandes\§7  /plan <sous-commande> ? - aide approfondie
+In Depth Help - /plan qanalyze ?          || §2Commande d'analyse rapide\§f  Utilisé pour obtenir des informations en jeu sur l'analyse.\§7  A moins d'informations que la page Web d'analyse complète.\§7  Alias: qanalyze, ganalyse, qanalysis, qa
+In Depth Help - /plan qinspect ?          || §2Commande d'inspection rapide\§f  Utilisé pour obtenir des informations d'inspection en jeu.\§7  A moins d'informations que la page Web d'inspection complète.\§7  Alias: /plan qi
+In Depth Help - /plan search ?            || §2Commande de recherche\§f  Utilisé pour obtenir une liste des noms de joueurs qui correspondent à l'argument donné.\§7  Exemple: /plan search 123 - Trouve tous les utilisateurs avec 123 dans leur nom.
+In Depth Help - /plan webuser ?           || §2Commande de gestion des utilisateurs Web\§f  Utilisé pour gérer les utilisateurs Web du plugin\§7  Les utilisateurs ont un niveau de permission:\§f   0 - Accès à toutes les pages\§f   1 - Accès à /players et toutes les pages d'inspection\§f   2 - Accès à sa propre page d'inspection\§7  Alias: /plan web
+In Depth Help - /plan webuser register ?  || §2Commande Web Register\§f  Utilisé pour enregistrer un nouvel utilisateur pour le serveur Web.\§7  L'inscription d'un utilisateur pour un autre joueur nécessite la permission plan.webmanage.\§7  Les mots de passe sont hachés avec PBKDF2 (64,000 itérations de SHA1) en utilisant un sel cryptographiquement aléatoire.
+Analysis NOTIFY - Temporary Disable       || §eL'analyse a été temporairement désactivée en raison d’un charge trop importante, faites /plan status pour plus d'informations.
+Cmd - Click Me                            || Cliquez ici
+Cmd - Fetch Data                          || §f»§2 Récupération des données dans le cache..
+Cmd - Link                                || §7 • §2Lien: §f
+Cmd - No Results                          || §7 • §2Aucun résultat pour §7${0}§2.
+Cmd - Reload Success                      || §a[Plan] Recharge terminée.
+Cmd - Results                             || §7 Joueurs correspondants: §f
+Cmd - Searching                           || §f»§2Recherche..
+Cmd - Usage /plan analyze                 || Voir l'analyse du serveur
+Cmd - Usage /plan help                    || Afficher la liste des commandes.
+Cmd - Usage /plan info                    || Vérifier la version de of Plan
+Cmd - Usage /plan inspect                 || Inspecter les données du joueur
+Cmd - Usage /plan list                    || Liste à tous les joueurs mis en cache
+Cmd - Usage /plan manage                  || Commande de gestion de base de données
+Cmd - Usage /plan manage backup           || Sauvegarder une base de données dans un fichier .db
+Cmd - Usage /plan manage clean            || Effacer les anciennes données de la base de données
+Cmd - Usage /plan manage clear            || Effacer TOUTES les données de la base de données
+Cmd - Usage /plan manage dump             || Créez un journal Hastebin pour les développeurs pour faciliter le rapport de bug
+Cmd - Usage /plan manage hotswap          || Hot Swap à une autre base de données et redémarrer le plugin
+Cmd - Usage /plan manage import           || Importer des données depuis les plugins pris en charge vers la base de données active.
+Cmd - Usage /plan manage move             || Copier les données d'une base de données à une autre et remplacer les valeurs
+Cmd - Usage /plan manage remove           || Supprimer les données des joueurs de la base de données active.
+Cmd - Usage /plan manage restore          || Restaurer une base de données à partir d'un fichier de sauvegarde
+Cmd - Usage /plan qanalyze                || Voir l'analyse du serveur sous forme de texte
+Cmd - Usage /plan qinspect                || Inspecter les données du joueur sous forme de texte
+Cmd - Usage /plan reload                  || Redémarrer le plugin (Recharge la configuration)
+Cmd - Usage /plan search                  || Rechercher un joueur
+Cmd - Usage /plan webuser                 || Gérer les utilisateurs Web
+Cmd - Usage /plan webuser check           || Vérifiez un utilisateur Web et son niveau de permission.
+Cmd - Usage /plan webuser delete          || Supprimer un utilisateur Web
+Cmd - Usage /plan webuser level           || Informations sur les niveaux de permission.
+Cmd - Usage /plan webuser register        || Enregistrer un utilisateur pour le serveur Web
+Disable                                   || Player Analytics Désactivé.
+Disable - Save                            || Sauvegarde des données mises en cache..
+Disable - WebServer                       || Arrêt du serveur Web..
+Enable                                    || Player Analytics Activé.
+Enable - Boot Analysis 30s Notify         || Analyse | Analyse de démarrage dans 30 secondes..
+Enable - Boot Analysis Notify             || Analyse | Démarrage l'analyse de démarrage..
+Enable Db FAIL - Disable Info             || L'initialisation de la base de données a échoué, désactivation de Plan.
+Enable - Db Info                          || ${0}-connexion à la base de données établie.
+Enable - Db                               || Initialisation de la base de données..
+Enable FAIL-Db                            || ${0}-Connexion à la base de données échouée: ${1}
+Enable FAIL - Wrong Db Type               || Ce type de base de données n'existe pas.
+Enable Notify - ChatListener              || §eÉcouteur de chat désactivé, information de pseudo inexacte.
+Enable Notify - Disabled CommandListener  || §eÉcouteur d'utilisation des commandes désactivé.
+Enable Notify - Disabled DeathListener    || §eÉcouteur de morts désactivé, morts de joueur et de mob non enregistrées..
+Enable Notify-Empty IP                    || §eL’IP dans server.properties est vide et AlternativeServerIP n'est pas utilisé, des liens incorrects seront donnés !
+Enable Notify - No data view              || §eServeur Web désactivé mais AlternativeIP non utilisé, aucun moyen d'afficher les données !
+Enable - WebServer                        || Initialisation du serveur Web..
+Enable - WebServer Info                   || Serveur Web en cours d'exécution sur le PORT ${0}
+Html - Active                             || Le joueur est actif
+Html - Banned                             || | <span class="darkred">Banni</span>
+Html - Inactive                           || Le joueur est inactif
+Html - No Extra Plugins                   || <p>Aucun plugin supplémentaire enregistré.</p>
+Html - Offline                            || | <span class="darkred">Hors ligne</span>
+Html - Online                             || | <span class="darkgreen">En ligne</span>
+Html - OP                                 || , Opérateur (Op)
+Html - Table No Kills                     || Pas de kills
+Manage FAIL - Confirm Action              || §c[Plan] Ajoutez -a pour confirmer l'exécution ! ${0}
+Manage FAIL - Faulty DB Connection        || §c[Plan] Une des bases de données n'a pas été initialisée correctement.
+Manage FAIL - Backup File Not Found       || §c[Plan] Le fichier de sauvegarde n'existe pas !
+Manage FAIL - Incorrect DB                || §c[Plan] Base de données incorrecte ! (sqlite/mysql accepté): 
+Manage FAIL - Incorrect Plugin            || §c[Plan] Plugin non supporté: 
+Manage FAIL - Empty DB                    || §c[Plan] La base de données n'a pas de données de joueur !
+Manage FAIL - Unenabled Plugin            || §c[Plan] Le plugin n'est pas activé: 
+Manage FAIL - Same DB                     || §c[Plan] Impossible de passer à la même base de données !
+Manage - Clear Success                    || §a[Plan] Toutes les données ont été effacées avec succès!
+Manage - Remind Config Change             || §e[Plan] N'oubliez pas de basculer vers la nouvelle base de données et de recharger le plugin
+Manage - Copy Success                     || §a[Plan] Toutes les données ont été copiées avec succès !
+Manage - Process Fail                     || §c[Plan] Quelque chose s'est mal passé pendant le traitement des données !
+Manage - Import                           || §f» §2 Importation de données..
+Manage - Move Success                     || §a[Plan] Toutes les données ont été déplacées avec succès !
+Manage - Remove Success                   || §f» §2Les données de §f${0}§2 ont été supprimées de la base de données §f${1}§2.
+Manage - Start                            || »§7 Traitement des données..
+Manage - Success                          || §f» §2 Succès !
+Manage NOTIFY - Overwrite                 || Les données dans la base de données ${0} seront écrasées !
+Manage NOTIFY - Partial Overwrite         || Quelques données dans la base de données ${0} seront écrasées !
+Manage NOTIFY - Remove                    || Les données dans la base de données ${0} seront supprimées !
+Manage NOTIFY - Rewrite                   || Les données dans la base de données ${0} seront réécrites !
+WARN - Too Small Queue Size               || La taille de la file d'attente est trop petite ! (${0}), changez le réglage à un nombre plus élevé ! (Actuellement ${1})

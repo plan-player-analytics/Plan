@@ -1,0 +1,17 @@
+[
+    {
+        "modid": "plan",
+        "name": "Plan",
+        "version": "4.4.1",
+        "description": "Player Analytics Plugin by Rsl1122",
+        "authorList": [
+            "Rsl1122"
+        ],
+        "dependencies": [
+            "spongeapi@7.0.0"
+        ],
+        "requiredMods": [
+            "spongeapi@7.0.0"
+        ]
+    }
+]

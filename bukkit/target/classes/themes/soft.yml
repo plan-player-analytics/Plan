@@ -1,0 +1,63 @@
+# Default Theme bar color when user has not chosen a color
+DefaultColor: "light-green"
+
+Font:
+  # Location of the FontStyleSheet, eg. https://fonts.googleapis.com/css?family=Quicksand:300,400
+  FontStyleSheet: https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext
+  # Name of the Font for CSS eg "'Quicksand', sans-serif"
+  FontFamily: '"Roboto", sans-serif'
+
+# Color codes for each theme element color
+# These affect icons & backgrounds of all elements of this color.
+Colors:
+  red: "#F43D2C"
+  pink: "#C41744"
+  purple: "#791C70"
+  deep-purple: "#4C286F"
+  indigo: "#2F376F"
+  blue: "#3293D5"
+  light-blue: "#1CA9DD"
+  cyan: "#27BFC8"
+  teal: "#007B63"
+  green: "#69B54C"
+  light-green: "#BAD364"
+  lime: "#EFEF84"
+  yellow: "#FFFAA8"
+  amber: "#FFDF5C"
+  orange: "#FFB527"
+  deep-orange: "#FE5A1F"
+  brown: "#623F2F"
+  grey: "#C1B5A9"
+  blue-grey: "#617372"
+  black: "#000000"
+  Extra:
+    White: "#fff"
+
+# Useful tool for html colors
+# https://www.w3schools.com/colors/colors_picker.asp
+GraphColors:
+  PunchCard: "#0A0908"
+  PlayersOnline: "#298ADA"
+  TPS:
+    High: "#1C5601"
+    Medium: "#F5E461"
+    Low: "#9F352F"
+  CPU: "#F7ECA4"
+  RAM: "#AFD93F"
+  Chunks: "#BF870F"
+  Entities: "#BC76EA"
+  WorldPie: '"#00869B", "#79AC00", "#25455D", "#8D3472", "#33A887", "#C5BC24", "#492176", "#EA7C00", "#307F4C", "#516681"'
+  GMDrilldown: '"#8D3472", "#33A887", "#C5BC24", "#492176"'
+  ActivityPie: '"#69B54C", "#BAD364", "#EFEF84", "#FFDF5C", "#617372"'
+  ServerPreferencePie: '"#00869B", "#79AC00", "#25455D", "#8D3472", "#33A887", "#C5BC24", "#492176", "#EA7C00", "#307F4C", "#516681"'
+  WorldMap_High: "#267f00"
+  WorldMap_Low: "#EEFFEE"
+  Ping:
+    Max: '#ffa000'
+    Avg: '#ffc107'
+    Min: '#ffd54f'
+
+# Leave blank "" for white
+ParsedElements:
+  SessionAccordion: "teal"
+  ServerAccordion: "light-green"

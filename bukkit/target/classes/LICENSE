@@ -1,0 +1,124 @@
+Player Analytics (Plan) License v.2.0.0
+
+Copyright (C) Risto Lahtela / Rsl1122
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+
+0. Definitions
+
+With 'Software' this license refers to the following:
+Player Analytics (Plan) Bukkit plugin
+(https://github.com/Rsl1122/Plan-PlayerAnalytics),
+Modified versions the software
+& the source code that is publicly available on Plan’s GitHub repository.
+This does not include the Markdown (.md) files available in the repository.
+
+‘Java Runtime Environment’
+A Runtime Environment which allows Java Bytecode to run, mostly Oracle JRE.
+But this also includes other Runtime Environments like OpenJDK / JRE (http://openjdk.java.net)
+
+‘Java Virtual Machine’
+The virtual machine included in the Java Runtime Environment.
+
+‘GitHub’
+(https://www.github.com)
+
+‘Minecraft’
+ A game by Mojang AB (https://www.mojang.com).
+(https://www.minecraft.net)
+
+‘Minecraft Server software’
+The software to operate a server for Minecraft, mostly Bukkit or its forks.
+Original Minecraft Server independent software like Glowstone (https://www.glowstone.net) are falling under this definition as well.
+
+‘Plan’s Spigot plugin page’
+(https://www.spigotmc.org/resources/plan-player-analytics.32536)
+
+‘Minecraft EULA’
+(https://help.mojang.com/customer/en/portal/articles/1590522-minecraft-commercial-use)
+
+‘Plan’s GitHub repository’
+(https://www.github.com/Rsl1122/Plan-PlayerAnalytics)
+
+‘Fork’
+Refers to a copy made of Plan’s GitHub repository which is using the Fork System of GitHub.
+
+'End User'
+A person running the software on a Java Virtual Machine environment.
+
+‘Original Source Code’
+Refers to the source code that is available on Plan’s GitHub repository.
+
+‘Original Author’
+Rsl1122 / Risto Lahtela
+
+1. Use & Distribution
+
+
+This license grants the end user the rights to run the software & make modifications to its HTML components, Java Keystore, locale files
+& configuration files in the scope that the plugin allows without decompiling the .class files inside the jar.
+
+Distribution and modification of source code is allowed under the circumstances that such code is publicly available, the original 
+author is mentioned & the original author is made aware of the modified code. A fork counts as a notification about modified code. 
+A removal of the Fork display is not allowed under any circumstances except if the original author grants a written permission for 
+this exact action.
+
+All versions downloaded from the Plan’s Spigot plugin page & .jar packages compiled 
+from the original source code can be used as a dependency and only as a dependency in another project, commercial or not.
+
+
+You may not distribute or sell modified, or unmodified versions of compiled source code without a direct written permission of 
+the original author.
+Such permissions are granted separately for Distribution & Selling. 
+
+When distributing a modified, or unmodified copy of the software you grant the right for the original author to post a takedown 
+notice, upon which the modified software must be removed from distribution.
+If the conditions of the license are breached, the software breaking the license must be removed from distribution.
+
+2. Commercial use
+
+When using parts of the software with Minecraft Server software, the use must comply with EULA provided by Mojang.
+If a project requires the end user to obtain a copy of the software, a link must be provided to obtain the software from the author 
+or Spigot.
+
+3. Modification
+
+
+Modification on the code is allowed, as long as the section 1 of this license is not violated.
+
+4. Usage of part of the code in another program
+
+This part of the license is about copying code directly from the source code or decompiled .class files.
+
+Usage of a part of code in another non-commercial program is allowed if following conditions apply:
+    a. The program falls under this license
+    b. This license is accepted by the person using the code inside their program
+    c. The use does not break the conditions of this license
+    d. The use is not a clear copyright infringement
+ OR
+    a. It can be proven that it is possible to come to the same solution independently in a reasonable time frame of one hour with 
+    no prior access to the software.
+  OR
+     a. The original author grants written permission for the use.
+
+5. Revised versions of this License
+
+The author may publish revised and/or new versions of this License from time to time. Such new versions will be similar in spirit 
+to the old version, but may differ in detail to address new problems or concerns.
+
+6. Disclaimer of Warranty.
+
+THERE IS NO WARRANTY FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE SOFTWARE "AS IS" 
+WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH YOU.  
+SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+7. Limitation of Liability.
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS THE SOFTWARE AS PERMITTED ABOVE, BE LIABLE TO YOU FOR 
+DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE SOFTWARE 
+(INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE 
+OF THE SOFTWARE TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH 
+DAMAGES.

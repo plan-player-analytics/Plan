@@ -1,0 +1,148 @@
+# -----------------------------------------------------
+# Plan Bukkit Configuration file
+# More information about each setting:
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Bukkit-Configuration
+# -----------------------------------------------------
+Server:
+  ServerName: 'Plan'
+
+# -----------------------------------------------------
+# More information about Locale
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Localization
+# -----------------------------------------------------
+Plugin:
+  Debug: false
+  Locale: default
+  WriteNewLocaleFileOnEnable: false
+  Bungee-Override:
+    StandaloneMode: false
+    CopyBungeeConfig: true
+  Allow-Update-Command: true
+  Notify-About-DEV-Releases: false
+  KeepLogsForXDays: 7
+
+# -----------------------------------------------------
+# More information about SSL Certificate Settings:
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
+# -----------------------------------------------------
+WebServer:
+  Port: 8804
+  # InternalIP usually does not need to be changed, only change it if you know what you're doing!
+  # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
+  InternalIP: 0.0.0.0
+  Security:
+    SSL-Certificate:
+      KeyStorePath: 'SSLCertificate.keystore'
+      KeyPass: 'default'
+      StorePass: 'default'
+      Alias: 'alias'
+  # For those that want to serve Html from their own WebServer instead.
+  # Set up Html Export (https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/External-WebServer-Use)
+  # ATTENTION: On BungeeCord systems it is not possible to disable the WebServer on the plugin due to connection requirements.
+  # If the WebServer is disabled with this setting BungeeCord systems will cease to function.
+  DisableWebServer: false
+  ExternalWebServerAddress: "https://www.example.address"
+# -----------------------------------------------------
+Database:
+  Type: SQLite
+  MySQL:
+    Host: localhost
+    Port: 3306
+    User: root
+    Password: minecraft
+    Database: Plan
+    # Launch options to append after driver address, for example
+    LaunchOptions: "?rewriteBatchedStatements=true&useSSL=false"
+# -----------------------------------------------------
+Commands:
+  AlternativeIP:
+    Enabled: false
+    Link: your.domain.here:%port%
+  Colors:
+    Main: '&2'
+    Secondary: '&7'
+    Highlight: '&f'
+
+Analysis:
+  AutoRefreshPeriod: 60
+  Active:
+    # Minutes a player should play per week to be considered active
+    PlaytimeThreshold: 30
+    # How many days player should join per week to be considered active
+    LoginThreshold: 2
+  LogProgress: true
+  Export:
+    Enabled: false
+    DestinationFolder: 'Analysis Results'
+Data:
+  # How many minutes player has to stay still to be considered AFK
+  AFKThresholdMinutes: 3
+  Commands:
+    LogUnknownCommands: false
+    CombineCommandAliases: true
+  Geolocations: true
+  KeepInactivePlayerDataForDays: 180
+# -----------------------------------------------------
+Customization:
+  UseServerTime: true
+  Display:
+    SessionsAsTable: false
+    LargestWorldPercInSessionTitle: false
+    # By Default WorldPie is ordered alphabetically, colors are still determined alphabetically.
+    OrderWorldPieByPercentage: false
+    MaxSessions: 50
+    MaxPlayers: 2500
+    MaxPlayersPlayersPage: 25000
+    PlayerTableFooter: true
+    PlayerIPs: true
+    GapsInGraphData: false
+  Formatting:
+    DecimalPoints: '#.##'
+    # Dates settings use Java SimpleDateFormat.
+    # You can find the patterns & examples here:
+    # https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+    Dates:
+      # RecentDays replaces date with Today, Yesterday, Wednesday etc.
+      RecentDays: true
+        # Non-regex pattern to replace
+        DatePattern: 'MMM d YYYY'
+      Full: 'MMM d YYYY, HH:mm:ss'
+      NoSeconds: 'MMM d YYYY, HH:mm'
+      JustClock: 'HH:mm:ss'
+    TimeAmount:
+      Year: '1 year, '
+      Years: '%years% years, '
+      Month: '1 month, '
+      Months: '%months% months, '
+      Day: '1d '
+      Days: '%days%d '
+      Hours: '%hours%h '
+      Minutes: '%minutes%m '
+      Seconds: '%seconds%s'
+      Zero: '0s'
+  WorldAliases:
+    world: world
+
+# -----------------------------------------------------
+# More information about Themes:
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Themes
+#
+# Since 4.1.0 colors are set in theme.yml
+# -----------------------------------------------------
+Theme:
+  Base: Default
+  Graphs:
+    TPS:
+      High-Threshold: 18
+      Medium-Threshold: 10
+# -----------------------------------------------------
+Plugins:
+  Factions:
+    HideFactions:
+      - ExampleFaction
+  Towny:
+    HideTowns:
+      - ExampleTown
+  BuyCraft:
+    # http://help.buycraft.net/article/36-where-to-find-the-secret-key
+    Secret: "-"
