@@ -1,10 +1,10 @@
 package com.djrapitops.plan.sponge.database;
 
-import com.djrapitops.plan.common.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.common.system.database.DBSystem;
-import com.djrapitops.plan.common.system.database.databases.sql.SQLiteDB;
-import com.djrapitops.plan.common.system.settings.Settings;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.sponge.database.databases.sql.SpongeMySQLDB;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
+import com.djrapitops.plan.system.settings.Settings;
 
 public class SpongeDatabaseSystem extends DBSystem {
     @Override

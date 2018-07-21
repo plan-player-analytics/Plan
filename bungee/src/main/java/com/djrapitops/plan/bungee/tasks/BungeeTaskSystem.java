@@ -5,12 +5,12 @@
 package com.djrapitops.plan.bungee.tasks;
 
 import com.djrapitops.plan.bungee.PlanBungee;
-import com.djrapitops.plan.common.system.settings.Settings;
 import com.djrapitops.plan.bungee.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.bungee.tasks.bungee.EnableConnectionTask;
-import com.djrapitops.plan.common.system.tasks.TaskSystem;
-import com.djrapitops.plan.common.system.tasks.server.NetworkPageRefreshTask;
-import com.djrapitops.plan.common.utilities.file.export.HtmlExport;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.tasks.TaskSystem;
+import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
+import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.TimeAmount;
 
 /**

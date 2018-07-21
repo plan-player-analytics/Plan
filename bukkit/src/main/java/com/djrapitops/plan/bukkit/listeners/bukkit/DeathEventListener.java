@@ -1,9 +1,9 @@
 package com.djrapitops.plan.bukkit.listeners.bukkit;
 
-import com.djrapitops.plan.common.data.container.Session;
-import com.djrapitops.plan.common.system.cache.SessionCache;
-import com.djrapitops.plan.common.system.processing.Processing;
 import com.djrapitops.plan.bukkit.processing.processors.player.KillProcessor;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Format;
 import org.bukkit.Material;

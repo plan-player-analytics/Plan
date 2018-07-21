@@ -1,7 +1,7 @@
 package com.djrapitops.plan.sponge.listeners.sponge;
 
-import com.djrapitops.plan.common.system.afk.AFKTracker;
-import com.djrapitops.plan.common.system.settings.Permissions;
+import com.djrapitops.plan.system.afk.AFKTracker;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -60,7 +60,7 @@ public class SpongeAFKListener {
     @Listener(order = Order.POST)
     public void onPlayerCommand(SendCommandEvent event, @First Player player) {
         performedAction(player);
-        
+
         boolean isAfkCommand = event.getCommand().toLowerCase().startsWith("afk");
         if (isAfkCommand) {
             AFK_TRACKER.usedAfkCommand(player.getUniqueId(), System.currentTimeMillis());

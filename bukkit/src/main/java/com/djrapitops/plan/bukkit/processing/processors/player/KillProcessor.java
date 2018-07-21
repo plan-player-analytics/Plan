@@ -1,9 +1,9 @@
 package com.djrapitops.plan.bukkit.processing.processors.player;
 
-import com.djrapitops.plan.common.data.container.PlayerKill;
-import com.djrapitops.plan.common.data.container.Session;
-import com.djrapitops.plan.common.system.cache.SessionCache;
-import com.djrapitops.plan.common.system.processing.CriticalRunnable;
+import com.djrapitops.plan.data.container.PlayerKill;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.processing.CriticalRunnable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 

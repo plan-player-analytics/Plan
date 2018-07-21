@@ -4,22 +4,22 @@
  */
 package com.djrapitops.plan.bukkit;
 
+import com.djrapitops.plan.ShutdownHook;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.bukkit.api.PlanBukkitAPI;
 import com.djrapitops.plan.bukkit.database.BukkitDatabaseSystem;
-import com.djrapitops.plan.common.api.exceptions.EnableException;
-import com.djrapitops.plan.common.ShutdownHook;
-import com.djrapitops.plan.common.data.plugin.HookHandler;
-import com.djrapitops.plan.common.system.PlanSystem;
-import com.djrapitops.plan.common.system.ServerSystem;
-import com.djrapitops.plan.common.system.file.FileSystem;
-import com.djrapitops.plan.common.system.info.ServerInfoSystem;
 import com.djrapitops.plan.bukkit.info.BukkitServerInfo;
 import com.djrapitops.plan.bukkit.listeners.BukkitListenerSystem;
-import com.djrapitops.plan.common.system.settings.PlanErrorManager;
-import com.djrapitops.plan.common.system.settings.config.ServerConfigSystem;
-import com.djrapitops.plan.common.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.bukkit.tasks.BukkitTaskSystem;
-import com.djrapitops.plan.common.system.update.VersionCheckSystem;
+import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.ServerSystem;
+import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.info.ServerInfoSystem;
+import com.djrapitops.plan.system.settings.PlanErrorManager;
+import com.djrapitops.plan.system.settings.config.ServerConfigSystem;
+import com.djrapitops.plan.system.settings.network.NetworkSettings;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 

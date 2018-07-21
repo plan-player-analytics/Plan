@@ -1,6 +1,6 @@
 package com.djrapitops.plan.bukkit.info.server;
 
-import com.djrapitops.plan.common.system.info.server.ServerProperties;
+import com.djrapitops.plan.system.info.server.ServerProperties;
 import org.bukkit.Server;
 
 import java.util.function.Supplier;

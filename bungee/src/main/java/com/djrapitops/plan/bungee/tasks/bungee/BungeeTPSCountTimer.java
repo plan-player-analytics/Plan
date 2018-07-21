@@ -1,9 +1,9 @@
 package com.djrapitops.plan.bungee.tasks.bungee;
 
 import com.djrapitops.plan.bungee.PlanBungee;
-import com.djrapitops.plan.common.data.container.TPS;
-import com.djrapitops.plan.common.data.container.builders.TPSBuilder;
-import com.djrapitops.plan.common.system.tasks.TPSCountTimer;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.builders.TPSBuilder;
+import com.djrapitops.plan.system.tasks.TPSCountTimer;
 
 public class BungeeTPSCountTimer extends TPSCountTimer<PlanBungee> {
 

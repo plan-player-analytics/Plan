@@ -8,7 +8,7 @@ import com.djrapitops.plan.bukkit.PlanBukkit;
 import com.djrapitops.plan.bukkit.tasks.server.BukkitTPSCountTimer;
 import com.djrapitops.plan.bukkit.tasks.server.PaperTPSCountTimer;
 import com.djrapitops.plan.bukkit.tasks.server.PingCountTimer;
-import com.djrapitops.plan.common.system.tasks.ServerTaskSystem;
+import com.djrapitops.plan.system.tasks.ServerTaskSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;

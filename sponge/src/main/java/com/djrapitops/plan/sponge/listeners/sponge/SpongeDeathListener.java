@@ -1,9 +1,9 @@
 package com.djrapitops.plan.sponge.listeners.sponge;
 
-import com.djrapitops.plan.common.data.container.Session;
-import com.djrapitops.plan.common.system.cache.SessionCache;
-import com.djrapitops.plan.common.system.processing.Processing;
-import com.djrapitops.plan.common.system.processing.processors.player.SpongeKillProcessor;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.player.SpongeKillProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Format;
 import org.spongepowered.api.data.key.Keys;

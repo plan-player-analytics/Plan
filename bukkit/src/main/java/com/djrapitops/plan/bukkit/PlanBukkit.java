@@ -19,16 +19,16 @@
  */
 package com.djrapitops.plan.bukkit;
 
-import com.djrapitops.plan.common.PlanHelper;
-import com.djrapitops.plan.common.api.exceptions.EnableException;
-import com.djrapitops.plan.common.PlanPlugin;
-import com.djrapitops.plan.common.command.PlanCommand;
-import com.djrapitops.plan.common.system.processing.importing.ImporterManager;
-import com.djrapitops.plan.bukkit.processing.importing.importers.OfflinePlayerImporter;
-import com.djrapitops.plan.common.system.settings.locale.Locale;
-import com.djrapitops.plan.common.system.settings.locale.Msg;
+import com.djrapitops.plan.PlanHelper;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.bukkit.metrics.BStats;
-import com.djrapitops.plan.common.system.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.bukkit.processing.importing.importers.OfflinePlayerImporter;
+import com.djrapitops.plan.command.PlanCommand;
+import com.djrapitops.plan.system.processing.importing.ImporterManager;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;

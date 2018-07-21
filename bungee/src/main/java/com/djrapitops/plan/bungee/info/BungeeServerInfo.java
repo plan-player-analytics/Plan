@@ -4,15 +4,15 @@
  */
 package com.djrapitops.plan.bungee.info;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.bungee.PlanBungee;
 import com.djrapitops.plan.bungee.info.server.BungeeServerProperties;
-import com.djrapitops.plan.common.api.exceptions.EnableException;
-import com.djrapitops.plan.common.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.common.system.database.databases.Database;
-import com.djrapitops.plan.common.system.info.server.Server;
-import com.djrapitops.plan.common.system.info.server.ServerInfo;
-import com.djrapitops.plan.common.system.info.server.ServerProperties;
-import com.djrapitops.plan.common.system.webserver.WebServerSystem;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.ServerProperties;
+import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.Optional;

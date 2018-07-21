@@ -2,7 +2,7 @@ package com.djrapitops.plan.bungee.listeners;
 
 import com.djrapitops.plan.bungee.PlanBungee;
 import com.djrapitops.plan.bungee.listeners.bungee.PlayerOnlineListener;
-import com.djrapitops.plan.common.system.listeners.ListenerSystem;
+import com.djrapitops.plan.system.listeners.ListenerSystem;
 
 public class BungeeListenerSystem extends ListenerSystem {
 

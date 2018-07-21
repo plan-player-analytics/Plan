@@ -4,20 +4,20 @@
  */
 package com.djrapitops.plan.bungee.info;
 
-import com.djrapitops.plan.common.api.exceptions.ParseException;
-import com.djrapitops.plan.common.api.exceptions.connection.NoServersException;
-import com.djrapitops.plan.common.api.exceptions.connection.WebException;
-import com.djrapitops.plan.common.api.exceptions.connection.WebFailException;
-import com.djrapitops.plan.common.system.info.InfoSystem;
-import com.djrapitops.plan.common.system.info.connection.BungeeConnectionSystem;
-import com.djrapitops.plan.common.system.info.request.CacheRequest;
-import com.djrapitops.plan.common.system.info.request.GenerateInspectPageRequest;
-import com.djrapitops.plan.common.system.info.request.InfoRequest;
-import com.djrapitops.plan.common.system.info.server.ServerInfo;
-import com.djrapitops.plan.common.system.webserver.pages.parsing.NetworkPage;
-import com.djrapitops.plan.common.system.webserver.response.cache.PageId;
-import com.djrapitops.plan.common.system.webserver.response.cache.ResponseCache;
-import com.djrapitops.plan.common.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plan.api.exceptions.ParseException;
+import com.djrapitops.plan.api.exceptions.connection.NoServersException;
+import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.api.exceptions.connection.WebFailException;
+import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.connection.BungeeConnectionSystem;
+import com.djrapitops.plan.system.info.request.CacheRequest;
+import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
+import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.webserver.pages.parsing.NetworkPage;
+import com.djrapitops.plan.system.webserver.response.cache.PageId;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 
 /**
  * InfoSystem for Bungee.

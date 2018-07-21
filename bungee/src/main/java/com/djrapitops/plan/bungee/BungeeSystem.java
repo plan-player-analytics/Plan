@@ -5,22 +5,22 @@
 package com.djrapitops.plan.bungee;
 
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.bungee.api.PlanBungeeAPI;
-import com.djrapitops.plan.bungee.info.BungeeServerInfo;
-import com.djrapitops.plan.common.api.exceptions.EnableException;
-import com.djrapitops.plan.common.data.plugin.HookHandler;
-import com.djrapitops.plan.common.system.PlanSystem;
-import com.djrapitops.plan.common.system.cache.BungeeCacheSystem;
-import com.djrapitops.plan.common.system.database.BungeeDBSystem;
-import com.djrapitops.plan.common.system.database.DBSystem;
-import com.djrapitops.plan.common.system.file.FileSystem;
 import com.djrapitops.plan.bungee.info.BungeeInfoSystem;
+import com.djrapitops.plan.bungee.info.BungeeServerInfo;
 import com.djrapitops.plan.bungee.listeners.BungeeListenerSystem;
-import com.djrapitops.plan.common.system.settings.PlanErrorManager;
-import com.djrapitops.plan.common.system.settings.config.BungeeConfigSystem;
-import com.djrapitops.plan.common.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.bungee.tasks.BungeeTaskSystem;
-import com.djrapitops.plan.common.system.update.VersionCheckSystem;
+import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.cache.BungeeCacheSystem;
+import com.djrapitops.plan.system.database.BungeeDBSystem;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.settings.PlanErrorManager;
+import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
+import com.djrapitops.plan.system.settings.network.NetworkSettings;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 /**

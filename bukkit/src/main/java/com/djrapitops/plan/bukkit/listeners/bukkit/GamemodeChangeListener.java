@@ -1,8 +1,8 @@
 package com.djrapitops.plan.bukkit.listeners.bukkit;
 
-import com.djrapitops.plan.common.data.container.Session;
-import com.djrapitops.plan.common.system.cache.SessionCache;
-import com.djrapitops.plan.common.system.settings.WorldAliasSettings;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

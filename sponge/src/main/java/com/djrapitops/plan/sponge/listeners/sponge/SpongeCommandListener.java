@@ -1,9 +1,9 @@
 package com.djrapitops.plan.sponge.listeners.sponge;
 
-import com.djrapitops.plan.common.system.processing.Processing;
-import com.djrapitops.plan.common.system.processing.processors.CommandProcessor;
-import com.djrapitops.plan.common.system.settings.Permissions;
-import com.djrapitops.plan.common.system.settings.Settings;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.CommandProcessor;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandMapping;

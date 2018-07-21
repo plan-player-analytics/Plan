@@ -1,11 +1,11 @@
 package com.djrapitops.plan.bungee.command;
 
 import com.djrapitops.plan.bungee.PlanBungee;
-import com.djrapitops.plan.common.command.commands.*;
-import com.djrapitops.plan.common.command.commands.manage.ManageConDebugCommand;
-import com.djrapitops.plan.common.system.settings.Permissions;
-import com.djrapitops.plan.common.system.settings.locale.Locale;
-import com.djrapitops.plan.common.system.settings.locale.Msg;
+import com.djrapitops.plan.command.commands.*;
+import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;

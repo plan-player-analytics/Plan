@@ -1,7 +1,7 @@
 package com.djrapitops.plan.bukkit.tasks.server;
 
 import com.djrapitops.plan.bukkit.PlanBukkit;
-import com.djrapitops.plan.common.data.container.TPS;
+import com.djrapitops.plan.data.container.TPS;
 import org.bukkit.World;
 
 public class PaperTPSCountTimer extends BukkitTPSCountTimer {

@@ -1,8 +1,8 @@
 package com.djrapitops.plan.sponge.tasks;
 
-import com.djrapitops.plan.common.system.tasks.ServerTaskSystem;
 import com.djrapitops.plan.sponge.PlanSponge;
 import com.djrapitops.plan.sponge.tasks.server.SpongeTPSCountTimer;
+import com.djrapitops.plan.system.tasks.ServerTaskSystem;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
 

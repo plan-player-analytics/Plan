@@ -23,10 +23,10 @@
  */
 package com.djrapitops.plan.bukkit.tasks.server;
 
-import com.djrapitops.plan.common.data.store.objects.DateObj;
-import com.djrapitops.plan.common.system.processing.Processing;
-import com.djrapitops.plan.common.system.processing.processors.player.PingInsertProcessor;
 import com.djrapitops.plan.bukkit.utils.java.Reflection;
+import com.djrapitops.plan.data.store.objects.DateObj;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.player.PingInsertProcessor;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;

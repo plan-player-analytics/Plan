@@ -4,15 +4,14 @@
  */
 package com.djrapitops.plan.bungee;
 
+import com.djrapitops.plan.PlanHelper;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.bungee.command.PlanBungeeCommand;
-import com.djrapitops.plan.common.PlanHelper;
-import com.djrapitops.plan.common.PlanPlugin;
-import com.djrapitops.plan.common.api.exceptions.EnableException;
-import com.djrapitops.plan.common.system.settings.locale.Locale;
-import com.djrapitops.plan.common.system.settings.locale.Msg;
-import com.djrapitops.plan.common.system.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.system.settings.locale.Locale;
+import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.BungeePlugin;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;

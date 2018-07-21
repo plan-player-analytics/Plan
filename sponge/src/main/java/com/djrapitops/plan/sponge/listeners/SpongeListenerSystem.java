@@ -1,8 +1,8 @@
 package com.djrapitops.plan.sponge.listeners;
 
-import com.djrapitops.plan.common.system.listeners.ListenerSystem;
 import com.djrapitops.plan.sponge.PlanSponge;
 import com.djrapitops.plan.sponge.listeners.sponge.*;
+import com.djrapitops.plan.system.listeners.ListenerSystem;
 import org.spongepowered.api.Sponge;
 
 public class SpongeListenerSystem extends ListenerSystem {

@@ -1,8 +1,8 @@
 package com.djrapitops.plan.sponge.database.databases.sql;
 
-import com.djrapitops.plan.common.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.common.system.database.databases.sql.MySQLDB;
-import com.djrapitops.plan.common.system.settings.Settings;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.sql.SqlService;

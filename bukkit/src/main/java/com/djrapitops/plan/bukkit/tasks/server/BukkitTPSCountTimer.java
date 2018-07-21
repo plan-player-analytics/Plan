@@ -1,8 +1,8 @@
 package com.djrapitops.plan.bukkit.tasks.server;
 
 import com.djrapitops.plan.bukkit.PlanBukkit;
-import com.djrapitops.plan.common.data.container.TPS;
-import com.djrapitops.plan.common.system.tasks.TPSCountTimer;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 

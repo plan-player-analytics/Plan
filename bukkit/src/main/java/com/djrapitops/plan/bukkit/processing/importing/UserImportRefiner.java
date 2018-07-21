@@ -5,7 +5,7 @@
 package com.djrapitops.plan.bukkit.processing.importing;
 
 import com.djrapitops.plan.bukkit.PlanBukkit;
-import com.djrapitops.plan.common.system.processing.importing.UserImportData;
+import com.djrapitops.plan.system.processing.importing.UserImportData;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.api.utility.log.Log;

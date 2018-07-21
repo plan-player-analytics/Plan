@@ -1,6 +1,6 @@
 package com.djrapitops.plan.sponge.info.server;
 
-import com.djrapitops.plan.common.system.info.server.ServerProperties;
+import com.djrapitops.plan.system.info.server.ServerProperties;
 import org.spongepowered.api.Game;
 
 import java.net.InetSocketAddress;

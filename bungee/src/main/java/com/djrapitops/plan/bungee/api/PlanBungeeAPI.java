@@ -5,10 +5,10 @@
 package com.djrapitops.plan.bungee.api;
 
 
+import com.djrapitops.plan.api.CommonAPI;
 import com.djrapitops.plan.bungee.BungeeSystem;
-import com.djrapitops.plan.common.api.CommonAPI;
-import com.djrapitops.plan.common.data.plugin.PluginData;
-import com.djrapitops.plan.common.system.database.databases.operation.FetchOperations;
+import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 
 import java.util.UUID;
 

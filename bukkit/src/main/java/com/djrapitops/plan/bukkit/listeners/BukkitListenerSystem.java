@@ -2,7 +2,7 @@ package com.djrapitops.plan.bukkit.listeners;
 
 import com.djrapitops.plan.bukkit.PlanBukkit;
 import com.djrapitops.plan.bukkit.listeners.bukkit.*;
-import com.djrapitops.plan.common.system.listeners.ListenerSystem;
+import com.djrapitops.plan.system.listeners.ListenerSystem;
 import org.bukkit.event.HandlerList;
 
 public class BukkitListenerSystem extends ListenerSystem {

@@ -9,17 +9,17 @@ function serverPie(id, serverSeries) {
         title: {text: ''},
         plotOptions: {
             pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                enabled: false
-              },
-              showInLegend: true
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
             }
         },
         tooltip: {
-            formatter: function() {
-                return '<b>'+this.point.name+':</b> ' + formatTimeAmount(this.y) + ' ('+this.percentage.toFixed(2)+'%)';
+            formatter: function () {
+                return '<b>' + this.point.name + ':</b> ' + formatTimeAmount(this.y) + ' (' + this.percentage.toFixed(2) + '%)';
             }
         },
         series: [serverSeries]

@@ -4,11 +4,11 @@
  */
 package com.djrapitops.plan.bungee.listeners.bungee;
 
-import com.djrapitops.plan.common.data.container.Session;
-import com.djrapitops.plan.common.system.cache.SessionCache;
-import com.djrapitops.plan.common.system.processing.Processing;
-import com.djrapitops.plan.common.system.processing.processors.player.BungeePlayerRegisterProcessor;
-import com.djrapitops.plan.common.system.processing.processors.player.IPUpdateProcessor;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.player.BungeePlayerRegisterProcessor;
+import com.djrapitops.plan.system.processing.processors.player.IPUpdateProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;

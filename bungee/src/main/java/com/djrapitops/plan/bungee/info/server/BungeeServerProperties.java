@@ -1,7 +1,7 @@
 package com.djrapitops.plan.bungee.info.server;
 
-import com.djrapitops.plan.common.system.info.server.ServerProperties;
-import com.djrapitops.plan.common.system.settings.Settings;
+import com.djrapitops.plan.system.info.server.ServerProperties;
+import com.djrapitops.plan.system.settings.Settings;
 import net.md_5.bungee.api.ProxyServer;
 
 import java.util.function.Supplier;

@@ -1,10 +1,10 @@
 package com.djrapitops.plan.bukkit.listeners.bukkit;
 
 import com.djrapitops.plan.bukkit.PlanBukkit;
-import com.djrapitops.plan.common.system.processing.Processing;
-import com.djrapitops.plan.common.system.processing.processors.CommandProcessor;
-import com.djrapitops.plan.common.system.settings.Permissions;
-import com.djrapitops.plan.common.system.settings.Settings;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.CommandProcessor;
+import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.command.Command;
 import org.bukkit.event.EventHandler;

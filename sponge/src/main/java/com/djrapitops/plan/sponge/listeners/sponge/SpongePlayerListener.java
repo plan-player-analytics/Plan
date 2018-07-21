@@ -1,11 +1,11 @@
 package com.djrapitops.plan.sponge.listeners.sponge;
 
-import com.djrapitops.plan.common.data.container.Session;
-import com.djrapitops.plan.common.system.cache.SessionCache;
-import com.djrapitops.plan.common.system.processing.Processing;
-import com.djrapitops.plan.common.system.processing.processors.info.NetworkPageUpdateProcessor;
-import com.djrapitops.plan.common.system.processing.processors.info.PlayerPageUpdateProcessor;
-import com.djrapitops.plan.common.system.processing.processors.player.*;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
+import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
+import com.djrapitops.plan.system.processing.processors.player.*;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;

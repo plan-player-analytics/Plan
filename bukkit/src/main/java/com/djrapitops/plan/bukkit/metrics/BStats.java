@@ -1,10 +1,10 @@
 package com.djrapitops.plan.bukkit.metrics;
 
 import com.djrapitops.plan.bukkit.PlanBukkit;
-import com.djrapitops.plan.common.system.database.databases.Database;
-import com.djrapitops.plan.common.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.common.system.settings.Settings;
-import com.djrapitops.plan.common.system.webserver.WebServer;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 

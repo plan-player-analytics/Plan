@@ -1,7 +1,7 @@
 package com.djrapitops.plan.bukkit.listeners.bukkit;
 
-import com.djrapitops.plan.common.system.processing.Processing;
-import com.djrapitops.plan.common.system.processing.processors.player.NameProcessor;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.player.NameProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
