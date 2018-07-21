@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.djrapitops</groupId>
+    <artifactId>Plan</artifactId>
+    <version>4.3.0-SNAPSHOT</version>
+
+    <modules>
+        <module>common</module>
+        <module>bungee</module>
+        <module>bukkit</module>
+        <module>sponge</module>
+    </modules>
+
+    <name>Plan-PlayerAnalytics</name>
+
+    <description>Artifact for reducing requirements for manually installing artifacts for another project, Plan
+    </description>
+    <url>https://github.com/Rsl1122/Plan-PlayerAnalytics/tree/master/PlanPluginBridge</url>
+
+    <licenses>
+        <license>
+            <name>Player Analytics (Plan) License v.2.0.0</name>
+            <url>https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Risto Lahtela (Rsl1122)</name>
+            <email>djrapitops@hotmail.com</email>
+            <organization>None</organization>
+            <organizationUrl>https://github.com/Rsl1122</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/Rsl1122/Plan-PlayerAnalytics.git</connection>
+        <developerConnection>scm:git:ssh://github.com:Rsl1122/Plan-PlayerAnalytics.git</developerConnection>
+        <url>https://github.com/Rsl1122/Plan-PlayerAnalytics</url>
+    </scm>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <skipTests>true</skipTests>
+        <maven.test.skip>true</maven.test.skip>
+        <release.version>4.3.0-SNAPSHOT</release.version>
+        <full.version>${release.version}</full.version>
+        <compiler.version>3.7.0</compiler.version>
+        <shade.version>3.1.0</shade.version>
+    </properties>
+</project>
