@@ -11,6 +11,7 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 
 ### Links
 - [Spigot, Resource page](https://www.spigotmc.org/resources/plan-player-analytics.32536/)
+- [Sponge Ore Page](https://ore.spongepowered.org/Rsl1122/Plan)
 - [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues)
 - [License](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE)
 
