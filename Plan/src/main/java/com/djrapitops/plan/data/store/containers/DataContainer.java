@@ -30,6 +30,9 @@ public class DataContainer extends HashMap<Key, Supplier> {
     }
 
     public <T> void putSupplier(Key<T> key, Supplier<T> supplier) {
+        if (supplier == null) {
+            return;
+        }
         super.put(key, new CachingSupplier<>(supplier));
     }
 
@@ -73,7 +76,7 @@ public class DataContainer extends HashMap<Key, Supplier> {
     }
 
     public <T> T getUnsafe(Key<T> key) {
-        Supplier supplier = get(key);
+        Supplier supplier = super.get(key);
         if (supplier == null) {
             throw new IllegalArgumentException("Unsupported Key: " + key.getKeyName());
         }
