@@ -30,10 +30,12 @@ public class BukkitTaskSystem extends ServerTaskSystem {
     @Override
     public void enable() {
         super.enable();
-        PingCountTimer pingCountTimer = new PingCountTimer();
-        ((Plan) plugin).registerListener(pingCountTimer);
-        RunnableFactory.createNew("PingCountTimer", pingCountTimer)
-                .runTaskTimer(20L, PingCountTimer.PING_INTERVAL);
+        if (Check.isSpigotAvailable()) {
+            PingCountTimer pingCountTimer = new PingCountTimer();
+            ((Plan) plugin).registerListener(pingCountTimer);
+            RunnableFactory.createNew("PingCountTimer", pingCountTimer)
+                    .runTaskTimer(20L, PingCountTimer.PING_INTERVAL);
+        }
     }
 
     @Override
