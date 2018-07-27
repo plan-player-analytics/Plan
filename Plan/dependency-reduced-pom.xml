@@ -82,6 +82,13 @@
                 <exclude>org.apache.logging.**</exclude>
               </excludes>
             </relocation>
+              <relocation>
+                  <pattern>com.zaxxer</pattern>
+                  <shadedPattern>plan.com.zaxxer</shadedPattern>
+                  <excludes>
+                      <exclude>org.apache.logging.**</exclude>
+                  </excludes>
+              </relocation>
           </relocations>
         </configuration>
       </plugin>
@@ -179,10 +186,6 @@
         <exclusion>
           <artifactId>bungeecord-chat</artifactId>
           <groupId>net.md-5</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>slf4j-api</artifactId>
-          <groupId>org.slf4j</groupId>
         </exclusion>
         <exclusion>
           <artifactId>asm</artifactId>
@@ -327,10 +330,6 @@
         <exclusion>
           <artifactId>flow-noise</artifactId>
           <groupId>com.flowpowered</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>slf4j-api</artifactId>
-          <groupId>org.slf4j</groupId>
         </exclusion>
         <exclusion>
           <artifactId>jsr305</artifactId>

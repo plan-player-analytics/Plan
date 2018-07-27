@@ -7,7 +7,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.File;
 import java.sql.*;
@@ -39,9 +38,6 @@ public class SQLiteDB extends SQLDB {
         this.databaseFile = databaseFile;
     }
 
-    /**
-     * Setups the {@link BasicDataSource}
-     */
     @Override
     public void setupDataSource() throws DBInitException {
         try {

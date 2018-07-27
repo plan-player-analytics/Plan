@@ -3,7 +3,8 @@ package com.djrapitops.plan.system.database.databases.sql;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
-import org.apache.commons.dbcp2.BasicDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -21,13 +22,11 @@ public class MySQLDB extends SQLDB {
     }
 
     /**
-     * Setups the {@link BasicDataSource}
+     * Setups the {@link HikariDataSource}
      */
     @Override
     public void setupDataSource() throws DBInitException {
-        BasicDataSource dataSource = new BasicDataSource();
-        this.dataSource = dataSource;
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        HikariConfig config = new HikariConfig();
 
         String host = Settings.DB_HOST.toString();
         String port = Integer.toString(Settings.DB_PORT.getNumber());
@@ -37,17 +36,22 @@ public class MySQLDB extends SQLDB {
             Log.error("Launch Options were faulty, using default (?rewriteBatchedStatements=true&useSSL=false)");
             launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
         }
-
-        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
+        config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
         String username = Settings.DB_USER.toString();
         String password = Settings.DB_PASS.toString();
 
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        config.setUsername(username);
+        config.setPassword(password);
 
-        dataSource.setInitialSize(1);
-        dataSource.setMaxTotal(8);
+        config.setPoolName("Plan Connection Pool");
+        config.setDriverClassName("com.mysql.jdbc.Driver");
+
+        config.setAutoCommit(true);
+        config.setReadOnly(false);
+        config.setMaximumPoolSize(8);
+
+        this.dataSource = new HikariDataSource(config);
     }
 
     /**
@@ -65,12 +69,8 @@ public class MySQLDB extends SQLDB {
 
     @Override
     public void close() {
-        try {
-            if (dataSource instanceof BasicDataSource) {
-                ((BasicDataSource) dataSource).close();
-            }
-        } catch (SQLException e) {
-            Log.toLog(this.getClass(), e);
+        if (dataSource instanceof HikariDataSource) {
+            ((HikariDataSource) dataSource).close();
         }
         super.close();
     }

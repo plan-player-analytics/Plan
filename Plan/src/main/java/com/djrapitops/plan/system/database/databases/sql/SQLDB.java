@@ -15,7 +15,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -241,9 +240,6 @@ public abstract class SQLDB extends Database {
         };
     }
 
-    /**
-     * Setups the {@link BasicDataSource}
-     */
     public abstract void setupDataSource() throws DBInitException;
 
     @Override

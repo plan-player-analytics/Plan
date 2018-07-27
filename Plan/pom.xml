@@ -87,19 +87,9 @@
         </dependency>
         <!--         Connection Pool -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-            <version>2.4.2</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.1.0</version>
         </dependency>
 
         <!-- Mockito (Test Dependency) -->
@@ -207,6 +197,13 @@
                         <relocation>
                             <pattern>com.fasterxml</pattern>
                             <shadedPattern>plan.com.fasterxml</shadedPattern>
+                            <excludes>
+                                <exclude>org.apache.logging.**</exclude>
+                            </excludes>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.zaxxer</pattern>
+                            <shadedPattern>plan.com.zaxxer</shadedPattern>
                             <excludes>
                                 <exclude>org.apache.logging.**</exclude>
                             </excludes>
