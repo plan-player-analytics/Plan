@@ -5,12 +5,10 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -123,15 +121,6 @@ public class DebugPageResponse extends ErrorResponse {
 
         Database database = Database.getActive();
         content.append("**Database:** ").append(database.getName());
-
-        if (database instanceof SQLDB) {
-            try {
-                content.append(" schema v").append(((SQLDB) database).getVersion());
-            } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
-            }
-        }
-
         content.append("<br><br>");
 
         RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();

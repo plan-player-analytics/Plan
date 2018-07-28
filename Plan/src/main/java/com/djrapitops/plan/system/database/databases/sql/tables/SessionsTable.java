@@ -729,10 +729,6 @@ public class SessionsTable extends UserIDTable {
         return sessionsByStart;
     }
 
-    public void alterTableV15() {
-        addColumns(Col.AFK_TIME + " bigint NOT NULL DEFAULT 0");
-    }
-
     public Map<Integer, Integer> getIDServerIDRelation() {
         String sql = "SELECT " +
                 Col.ID + ", " +

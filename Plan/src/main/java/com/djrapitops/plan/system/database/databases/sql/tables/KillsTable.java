@@ -31,10 +31,11 @@ import java.util.*;
  */
 public class KillsTable extends UserIDTable {
 
+    public static final String TABLE_NAME = "plan_kills";
     private final ServerTable serverTable;
 
     public KillsTable(SQLDB db) {
-        super("plan_kills", db);
+        super(TABLE_NAME, db);
         sessionsTable = db.getSessionsTable();
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " ("
@@ -299,29 +300,6 @@ public class KillsTable extends UserIDTable {
                             }
                         }
                     }
-                }
-            }
-        });
-    }
-
-    public void alterTableV16() {
-        addColumns(Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
-
-        Map<Integer, Integer> sessionIDServerIDRelation = sessionsTable.getIDServerIDRelation();
-
-        String sql = "UPDATE " + tableName + " SET " +
-                Col.SERVER_ID + "=?" +
-                " WHERE " + Col.SESSION_ID + "=?";
-
-        executeBatch(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                for (Map.Entry<Integer, Integer> entry : sessionIDServerIDRelation.entrySet()) {
-                    Integer sessionID = entry.getKey();
-                    Integer serverID = entry.getValue();
-                    statement.setInt(1, serverID);
-                    statement.setInt(2, sessionID);
-                    statement.addBatch();
                 }
             }
         });

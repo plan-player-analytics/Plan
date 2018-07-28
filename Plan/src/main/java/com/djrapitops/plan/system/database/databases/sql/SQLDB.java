@@ -1,20 +1,22 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.operation.*;
+import com.djrapitops.plan.system.database.databases.sql.patches.*;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
-import com.djrapitops.plan.system.database.databases.sql.tables.move.Version8TransferTable;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,7 +43,6 @@ public abstract class SQLDB extends Database {
     private final GeoInfoTable geoInfoTable;
     private final CommandUseTable commandUseTable;
     private final TPSTable tpsTable;
-    private final VersionTable versionTable;
     private final SecurityTable securityTable;
     private final WorldTable worldTable;
     private final WorldTimesTable worldTimesTable;
@@ -64,7 +65,6 @@ public abstract class SQLDB extends Database {
     public SQLDB() {
         usingMySQL = getName().equals("MySQL");
 
-        versionTable = new VersionTable(this);
         serverTable = new ServerTable(this);
         securityTable = new SecurityTable(this);
 
@@ -135,67 +135,45 @@ public abstract class SQLDB extends Database {
      */
     public void setupDatabase() throws DBInitException {
         try {
-            boolean newDatabase = versionTable.isNewDatabase();
-
-            versionTable.createTable();
             createTables();
 
-            if (newDatabase) {
-                Log.info("New Database created.");
-                versionTable.setVersion(19);
-            }
+            Patch[] patches = new Patch[]{
+                    new Version10Patch(this),
+                    new GeoInfoLastUsedPatch(this),
+                    new TransferPartitionPatch(this),
+                    new SessionAFKTimePatch(this),
+                    new KillsServerIDPatch(this),
+                    new WorldTimesSeverIDPatch(this),
+                    new WorldsServerIDPatch(this),
+                    new IPHashPatch(this),
+                    new IPAnonPatch(this),
+                    new NicknameLastSeenPatch(this),
+                    new VersionTableRemovalPatch(this)
+            };
 
-            int version = versionTable.getVersion();
-
-            final SQLDB db = this;
-            if (version < 10) {
-                RunnableFactory.createNew("DB v8 -> v10 Task", new AbsRunnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            new Version8TransferTable(db).alterTablesToV10();
-                        } catch (DBInitException | DBOpException e) {
-                            Log.toLog(this.getClass(), e);
+            RunnableFactory.createNew("Database Patch", new AbsRunnable() {
+                @Override
+                public void run() {
+                    try {
+                        boolean applied = false;
+                        for (Patch patch : patches) {
+                            if (!patch.hasBeenApplied()) {
+                                String patchName = patch.getClass().getSimpleName();
+                                Log.info("Applying Patch: " + patchName + "..");
+                                patch.apply();
+                                applied = true;
+                            }
                         }
+                        Log.info(applied ? "All database patches applied successfully." : "All database patches already applied.");
+                    } catch (Exception e) {
+                        Log.error("----------------------------------------------------");
+                        Log.error("Database Patching failed, plugin has to be disabled. Please report this issue");
+                        Log.error("----------------------------------------------------");
+                        Log.toLog(this.getClass(), e);
+                        PlanPlugin.getInstance().onDisable();
                     }
-                }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
-            }
-            if (version < 11) {
-                serverTable.alterTableV11();
-                versionTable.setVersion(11);
-            }
-            if (version < 12) {
-                geoInfoTable.alterTableV12();
-                versionTable.setVersion(12);
-            }
-            if (version < 13) {
-                geoInfoTable.alterTableV13();
-                versionTable.setVersion(13);
-            }
-            if (version < 14) {
-                transferTable.alterTableV14();
-                versionTable.setVersion(14);
-            }
-            if (version < 15) {
-                sessionsTable.alterTableV15();
-                versionTable.setVersion(15);
-            }
-            if (version < 16) {
-                killsTable.alterTableV16();
-                worldTimesTable.alterTableV16();
-                versionTable.setVersion(16);
-            }
-            if (version < 17) {
-                geoInfoTable.alterTableV17();
-                versionTable.setVersion(17);
-            }
-            if (version < 18) {
-                geoInfoTable.alterTableV18();
-                // version set in the runnable in above method
-            }
-            if (version < 19) {
-                nicknamesTable.alterTableV19();
-            }
+                }
+            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
         } catch (DBOpException e) {
             throw new DBInitException("Failed to set-up Database", e);
         }
@@ -248,14 +226,6 @@ public abstract class SQLDB extends Database {
         if (dbCleanTask != null) {
             dbCleanTask.cancel();
         }
-    }
-
-    public int getVersion() {
-        return versionTable.getVersion();
-    }
-
-    public void setVersion(int version) {
-        versionTable.setVersion(version);
     }
 
     private void clean() {
@@ -337,6 +307,28 @@ public abstract class SQLDB extends Database {
             throw DBOpException.forCause(statement.getSql(), e);
         } finally {
             commit(connection);
+        }
+    }
+
+    public boolean execute(String sql) {
+        return execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) {
+
+            }
+        });
+    }
+
+    public void executeUnsafe(String... statements) {
+        Verify.nullCheck(statements);
+        for (String statement : statements) {
+            try {
+                execute(statement);
+            } catch (DBOpException e) {
+                if (Settings.DEV_MODE.isTrue()) {
+                    Log.toLog(this.getClass(), e);
+                }
+            }
         }
     }
 

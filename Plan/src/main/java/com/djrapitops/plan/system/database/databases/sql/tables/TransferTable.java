@@ -30,13 +30,14 @@ import java.util.Optional;
  */
 public class TransferTable extends Table {
 
+    public static final String TABLE_NAME = "plan_transfer";
     private final String insertStatementNoParts;
 
     private final ServerTable serverTable;
     private final String selectStatement;
 
     public TransferTable(SQLDB db) {
-        super("plan_transfer", db);
+        super(TABLE_NAME, db);
 
         serverTable = db.getServerTable();
         insertStatementNoParts = "REPLACE INTO " + tableName + " (" +
@@ -68,10 +69,6 @@ public class TransferTable extends Table {
                 .foreignKey(Col.SENDER_ID, serverTable.toString(), ServerTable.Col.SERVER_ID)
                 .toString()
         );
-    }
-
-    public void alterTableV14() {
-        addColumns(Col.PART + " bigint NOT NULL DEFAULT 0");
     }
 
     public void clean() {
