@@ -23,6 +23,7 @@ public enum CmdHelpLang implements Lang {
     SETUP("Command Help - /planbungee setup", "Toggle set-up mode"),
     CON("Command Help - /planbungee con", "Debug Bungee-Server connections"),
     DISABLE("Command Help - /planbungee disable", "Disable the plugin temporarily"),
+    UPDATE("Command Help - /plan update", "Get change log link or update plugin"),
 
     MANAGE_MOVE("Command Help - /plan manage move", "Move data between Databases"),
     MANAGE_BACKUP("Command Help - /plan manage backup", "Backup a Database"),

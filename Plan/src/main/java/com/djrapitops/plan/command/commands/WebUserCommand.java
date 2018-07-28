@@ -6,8 +6,8 @@ import com.djrapitops.plan.command.commands.webuser.WebDeleteCommand;
 import com.djrapitops.plan.command.commands.webuser.WebLevelCommand;
 import com.djrapitops.plan.command.commands.webuser.WebListUsersCommand;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -28,7 +28,7 @@ public class WebUserCommand extends TreeCmdNode {
         Locale locale = plugin.getSystem().getLocaleSystem().getLocale();
 
         setShortHelp(locale.getString(CmdHelpLang.WEB));
-        setInDepthHelp(locale.get(Msg.CMD_HELP_WEB).toArray());
+        setInDepthHelp(locale.getArray(DeepHelpLang.WEB));
         setNodeGroups(
                 new CommandNode[]{
                         register,

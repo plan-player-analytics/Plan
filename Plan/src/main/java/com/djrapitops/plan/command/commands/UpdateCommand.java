@@ -12,6 +12,8 @@ import com.djrapitops.plan.system.info.request.UpdateRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.update.VersionInfo;
@@ -44,14 +46,8 @@ public class UpdateCommand extends CommandNode {
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
         setArguments("[-u]/[cancel]");
-        setShortHelp("Get change log link or update plugin.");
-        setInDepthHelp(
-                "/plan update",
-                "  Used to update the plugin on the next shutdown\n",
-                "  /plan update - get change log link",
-                "  /plan update -u - Schedule update to happen on all network servers that are online next time they reboot.",
-                "  /plan update cancel - Cancel scheduled update on servers that haven't rebooted yet."
-        );
+        setShortHelp(locale.getString(CmdHelpLang.UPDATE));
+        setInDepthHelp(locale.getArray(DeepHelpLang.UPDATE));
     }
 
     @Override

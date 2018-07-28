@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
@@ -31,9 +32,9 @@ public class ManageSetupCommand extends CommandNode {
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setShortHelp(locale.getString(CmdHelpLang.MANAGE_SETUP));
         setArguments("<BungeeAddress>");
-        setInDepthHelp(locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray());
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_SETUP));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_SETUP));
     }
 
     @Override

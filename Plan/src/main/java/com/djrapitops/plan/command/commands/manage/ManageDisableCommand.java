@@ -5,6 +5,7 @@ import com.djrapitops.plan.system.listeners.bukkit.PlayerOnlineListener;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -28,8 +29,9 @@ public class ManageDisableCommand extends CommandNode {
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setShortHelp(locale.getString(CmdHelpLang.MANAGE_DISABLE));
         setArguments("<feature>");
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_DISABLE));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_DISABLE));
     }
 
     @Override

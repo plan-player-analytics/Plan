@@ -3,7 +3,7 @@ package com.djrapitops.plan.command;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.command.CommandNode;
@@ -28,7 +28,7 @@ public class PlanCommand extends TreeCmdNode {
 
         Locale locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setInDepthHelp(locale.getArray(Msg.CMD_HELP_PLAN));
+        setInDepthHelp(locale.getArray(DeepHelpLang.PLAN));
 
         RegisterCommand registerCommand = new RegisterCommand(plugin);
         setNodeGroups(
@@ -36,7 +36,7 @@ public class PlanCommand extends TreeCmdNode {
                         new InspectCommand(plugin),
                         new QInspectCommand(plugin),
                         new SearchCommand(plugin),
-                        new ListCommand(plugin),
+                        new ListPlayersCommand(plugin),
                         new AnalyzeCommand(plugin),
                         new NetworkCommand(plugin),
                         new ListServersCommand(plugin)

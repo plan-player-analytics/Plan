@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
@@ -40,7 +41,7 @@ public class AnalyzeCommand extends CommandNode {
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
         setShortHelp(locale.getString(CmdHelpLang.ANALYZE));
-        setInDepthHelp(locale.get(Msg.CMD_HELP_ANALYZE).toArray());
+        setInDepthHelp(locale.getArray(DeepHelpLang.ANALYZE));
         setArguments("[server/id]");
     }
 

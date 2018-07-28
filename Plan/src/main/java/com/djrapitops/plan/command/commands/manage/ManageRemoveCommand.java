@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -34,9 +35,9 @@ public class ManageRemoveCommand extends CommandNode {
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setShortHelp(locale.getString(CmdHelpLang.MANAGE_REMOVE));
         setArguments("<player>", "[-a]");
-        setInDepthHelp(locale.get(Msg.CMD_HELP_MANAGE_REMOVE).toArray());
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_REMOVE));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_REMOVE));
     }
 
     @Override

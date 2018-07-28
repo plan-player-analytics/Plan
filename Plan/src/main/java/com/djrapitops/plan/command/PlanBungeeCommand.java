@@ -4,7 +4,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -21,27 +21,20 @@ import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
  */
 public class PlanBungeeCommand extends TreeCmdNode {
 
-    /**
-     * CommandExecutor class Constructor.
-     * <p>
-     * Initializes Subcommands
-     *
-     * @param plugin Current instance of Plan
-     */
     public PlanBungeeCommand(PlanPlugin plugin) {
         super("planbungee", Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
         super.setColorScheme(plugin.getColorScheme());
 
         Locale locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setInDepthHelp(locale.getArray(Msg.CMD_HELP_PLAN));
+        setInDepthHelp(locale.getArray(DeepHelpLang.PLAN));
 
         RegisterCommand registerCommand = new RegisterCommand(plugin);
         setNodeGroups(
                 new CommandNode[]{
                         new NetworkCommand(plugin),
                         new ListServersCommand(plugin),
-                        new ListCommand(plugin),
+                        new ListPlayersCommand(plugin),
                 },
                 new CommandNode[]{
                         registerCommand,

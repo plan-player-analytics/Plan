@@ -4,6 +4,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -23,11 +24,12 @@ public class ReloadCommand extends CommandNode {
 
     public ReloadCommand(PlanPlugin plugin) {
         super("reload", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
+        this.plugin = plugin;
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
         setShortHelp(locale.getString(CmdHelpLang.RELOAD));
-        this.plugin = plugin;
+        setInDepthHelp(locale.getArray(DeepHelpLang.RELOAD));
     }
 
     @Override

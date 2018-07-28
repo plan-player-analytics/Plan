@@ -5,6 +5,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -17,17 +18,17 @@ import com.djrapitops.plugin.command.ISender;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class ListCommand extends CommandNode {
+public class ListPlayersCommand extends CommandNode {
 
     private final Locale locale;
 
-    public ListCommand(PlanPlugin plugin) {
+    public ListPlayersCommand(PlanPlugin plugin) {
         super("players|pl|playerlist|list", Permissions.INSPECT_OTHER.getPermission(), CommandType.CONSOLE);
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
         setShortHelp(locale.getString(CmdHelpLang.PLAYERS));
-        setInDepthHelp(locale.getArray((Msg.CMD_HELP_LIST)));
+        setInDepthHelp(locale.getArray(DeepHelpLang.PLAYERS));
     }
 
     @Override

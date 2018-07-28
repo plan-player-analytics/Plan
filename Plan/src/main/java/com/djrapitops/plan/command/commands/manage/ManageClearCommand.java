@@ -8,6 +8,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -32,10 +33,9 @@ public class ManageClearCommand extends CommandNode {
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setShortHelp(locale.getString(CmdHelpLang.MANAGE_CLEAR));
         setArguments("<DB>", "[-a]");
-        setInDepthHelp(locale.get(Msg.CMD_HELP_MANAGE_CLEAR).toArray());
-
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_CLEAR));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CLEAR));
     }
 
     @Override

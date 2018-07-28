@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.InspectCacheRequestProcessor;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -39,7 +40,7 @@ public class InspectCommand extends CommandNode {
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
         setShortHelp(locale.getString(CmdHelpLang.INSPECT));
-        setInDepthHelp(locale.get(Msg.CMD_HELP_INSPECT).toArray());
+        setInDepthHelp(locale.getArray(DeepHelpLang.INSPECT));
     }
 
     @Override

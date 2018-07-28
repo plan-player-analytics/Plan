@@ -4,6 +4,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.Importer;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -31,9 +32,9 @@ public class ManageImportCommand extends CommandNode {
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setShortHelp(locale.getString(CmdHelpLang.MANAGE_IMPORT));
         setArguments("<plugin>/list", "[import args]");
-        setInDepthHelp(locale.get(Msg.CMD_HELP_MANAGE_IMPORT).toArray());
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_IMPORT));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_IMPORT));
     }
 
     @Override

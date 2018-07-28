@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -32,7 +33,8 @@ public class ListServersCommand extends CommandNode {
 
         this.locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setShortHelp(locale.getString(CmdHelpLang.NETWORK));
+        setShortHelp(locale.getString(CmdHelpLang.SERVERS));
+        setInDepthHelp(locale.getArray(DeepHelpLang.SERVERS));
     }
 
     @Override

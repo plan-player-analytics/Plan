@@ -1757,7 +1757,7 @@
         if (!locales[name] && (typeof module !== 'undefined') &&
                 module && module.exports) {
             try {
-                oldLocale = globalLocale._abbr;
+                oldLocale = globallocale._abbr;
                 require('./locale/' + name);
                 // because defineLocale currently also sets the global locale, we
                 // want to undo that for lazy loaded locales
@@ -1786,7 +1786,7 @@
             }
         }
 
-        return globalLocale._abbr;
+        return globallocale._abbr;
     }
 
     function defineLocale (name, config) {
@@ -3638,7 +3638,7 @@
         return string;
     }
 
-    var prototype__proto = Locale.prototype;
+    var prototype__proto = locale.prototype;
 
     prototype__proto.calendar        = locale_calendar__calendar;
     prototype__proto.longDateFormat  = longDateFormat;

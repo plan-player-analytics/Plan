@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;
@@ -43,9 +44,9 @@ public class RegisterCommand extends CommandNode {
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setShortHelp(locale.getString(CmdHelpLang.WEB_REGISTER));
         setArguments("<password>", "[name]", "[lvl]");
-        setInDepthHelp(locale.get(Msg.CMD_HELP_WEB_REGISTER).toArray());
+        setShortHelp(locale.getString(CmdHelpLang.WEB_REGISTER));
+        setInDepthHelp(locale.getArray(DeepHelpLang.WEB_REGISTER));
         if (Check.isBukkitAvailable()) {
             setupFilter();
         }

@@ -15,6 +15,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -54,7 +55,7 @@ public class QInspectCommand extends CommandNode {
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
         setShortHelp(locale.getString(CmdHelpLang.QINSPECT));
-        setInDepthHelp(locale.get(Msg.CMD_HELP_QINSPECT).toArray());
+        setInDepthHelp(locale.getArray(DeepHelpLang.QINSPECT));
         this.plugin = plugin;
 
     }

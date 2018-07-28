@@ -5,6 +5,7 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -34,9 +35,9 @@ public class SearchCommand extends CommandNode {
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setShortHelp(locale.getString(CmdHelpLang.SEARCH));
         setArguments("<text>");
-        setInDepthHelp(locale.get(Msg.CMD_HELP_SEARCH).toArray());
+        setShortHelp(locale.getString(CmdHelpLang.SEARCH));
+        setInDepthHelp(locale.getArray(DeepHelpLang.SEARCH));
     }
 
     @Override

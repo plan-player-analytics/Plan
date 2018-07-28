@@ -3,8 +3,8 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.manage.*;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -24,7 +24,7 @@ public class ManageCommand extends TreeCmdNode {
         Locale locale = plugin.getSystem().getLocaleSystem().getLocale();
 
         setShortHelp(locale.getString(CmdHelpLang.MANAGE));
-        setInDepthHelp(locale.getArray(Msg.CMD_HELP_MANAGE));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE));
         super.setColorScheme(plugin.getColorScheme());
         setNodeGroups(
                 new CommandNode[]{
