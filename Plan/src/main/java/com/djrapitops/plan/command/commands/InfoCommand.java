@@ -39,15 +39,14 @@ public class InfoCommand extends CommandNode {
         String mColor = cs.getMainColor();
         String sColor = cs.getSecondaryColor();
         String tColor = cs.getTertiaryColor();
-        String ball = locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString();
 
         String upToDate = VersionCheckSystem.isNewVersionAvailable() ? "Update Available" : "Up to date";
         String[] messages = {
                 locale.get(Msg.CMD_HEADER_INFO).toString(),
-                ball + mColor + " Version: " + sColor + plugin.getVersion(),
-                ball + mColor + " Up to date: " + sColor + upToDate,
-                ball + mColor + " Active Database: " + tColor + Database.getActive().getConfigName(),
-                ball + mColor + " Connected to Bungee: " + tColor + (ConnectionSystem.getInstance().isServerAvailable() ? "Yes" : "No"),
+                mColor + "  Version: " + sColor + plugin.getVersion(),
+                mColor + "  Up to date: " + sColor + upToDate,
+                mColor + "  Active Database: " + tColor + Database.getActive().getConfigName(),
+                mColor + "  Connected to Bungee: " + tColor + (ConnectionSystem.getInstance().isServerAvailable() ? "Yes" : "No"),
                 locale.get(Msg.CMD_CONSTANT_FOOTER).toString()
         };
         sender.sendMessage(messages);

@@ -29,8 +29,7 @@ import utilities.mocks.objects.MockUtils;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * @author Rsl1122
@@ -75,10 +74,9 @@ public class MiscUtilsTest {
         String[] args = new String[]{"Rsl1122", "Test"};
         ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
 
-        String expResult = "";
         String result = MiscUtils.getPlayerName(args, sender);
 
-        assertEquals(expResult, result);
+        assertNull(result);
     }
 
     @Test

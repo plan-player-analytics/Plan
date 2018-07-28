@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -48,18 +49,18 @@ public class ManageMoveCommand extends CommandNode {
         String fromDB = args[0].toLowerCase();
         boolean isCorrectDB = Verify.equalsOne(fromDB, "sqlite", "mysql");
         Verify.isTrue(isCorrectDB,
-                () -> new IllegalArgumentException(locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB));
+                () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, fromDB)));
 
         String toDB = args[1].toLowerCase();
         isCorrectDB = Verify.equalsOne(toDB, "sqlite", "mysql");
         Verify.isTrue(isCorrectDB,
-                () -> new IllegalArgumentException(locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB));
+                () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, toDB)));
 
         Verify.isFalse(fromDB.equalsIgnoreCase(toDB),
-                () -> new IllegalArgumentException(locale.get(Msg.MANAGE_FAIL_SAME_DB).toString()));
+                () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB)));
 
         if (!Verify.contains("-a", args)) {
-            sender.sendMessage(locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(locale.get(Msg.MANAGE_NOTIFY_OVERWRITE).parse(args[0])));
+            sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_OVERWRITE, toDB)));
             return;
         }
 
@@ -69,7 +70,7 @@ public class ManageMoveCommand extends CommandNode {
 
             runMoveTask(fromDatabase, toDatabase, sender);
         } catch (Exception e) {
-            sender.sendMessage(locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+            sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
 
@@ -78,19 +79,19 @@ public class ManageMoveCommand extends CommandNode {
             @Override
             public void run() {
                 try {
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_START).parse());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
                     fromDatabase.backup().backup(toDatabase);
 
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_MOVE_SUCCESS).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
 
                     boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(Database.getActive().getConfigName());
                     if (movingToCurrentDB) {
-                        sender.sendMessage(locale.get(Msg.MANAGE_INFO_CONFIG_REMINDER).toString());
+                        sender.sendMessage(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getConfigName()));
                     }
                 } catch (Exception e) {
                     Log.toLog(this.getClass(), e);
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                 } finally {
                     this.cancel();
                 }

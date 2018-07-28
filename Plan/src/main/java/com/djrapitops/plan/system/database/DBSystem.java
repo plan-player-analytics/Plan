@@ -10,13 +10,15 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * System that holds the active databases.
@@ -25,10 +27,13 @@ import java.util.Set;
  */
 public abstract class DBSystem implements SubSystem {
 
+    protected final Supplier<Locale> locale;
+
     protected Database db;
     protected Set<Database> databases;
 
-    public DBSystem() {
+    public DBSystem(Supplier<Locale> locale) {
+        this.locale = locale;
         databases = new HashSet<>();
     }
 
@@ -39,14 +44,15 @@ public abstract class DBSystem implements SubSystem {
     }
 
     public static Database getActiveDatabaseByName(String dbName) throws DBInitException {
-        for (Database database : getInstance().getDatabases()) {
+        DBSystem system = getInstance();
+        for (Database database : system.getDatabases()) {
             String dbConfigName = database.getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
                 database.init();
                 return database;
             }
         }
-        throw new DBInitException(locale.get(Msg.ENABLE_FAIL_WRONG_DB) + " " + dbName);
+        throw new DBInitException(system.locale.get().getString(PluginLang.ENABLE_FAIL_WRONG_DB, dbName));
     }
 
     protected abstract void initDatabase() throws DBInitException;
@@ -74,10 +80,9 @@ public abstract class DBSystem implements SubSystem {
     public void enable() throws EnableException {
         try {
             Benchmark.start("Init Database");
-            Log.info(locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
             db.scheduleClean(1L);
-            Log.info(locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
+            Log.info(locale.get().getString(PluginLang.ENABLED_DATABASE, db.getName()));
             Benchmark.stop("Enable", "Init Database");
         } catch (DBInitException e) {
             Throwable cause = e.getCause();

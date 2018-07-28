@@ -8,6 +8,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -47,37 +48,41 @@ public class ManageRestoreCommand extends CommandNode {
         Verify.isTrue(args.length >= 2,
                 () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
 
-        String db = args[1].toLowerCase();
-        boolean isCorrectDB = Verify.equalsOne(db, "sqlite", "mysql");
-        Verify.isTrue(isCorrectDB,
-                () -> new IllegalArgumentException(locale.get(Msg.MANAGE_FAIL_INCORRECT_DB).toString()));
+        String backupDbName = args[0];
 
-        if (!Verify.contains("-a", args)) {
-            sender.sendMessage(locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(locale.get(Msg.MANAGE_NOTIFY_REWRITE).parse(args[1])));
-            return;
-        }
+        String dbName = args[1].toLowerCase();
+        boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql");
+        Verify.isTrue(isCorrectDB,
+                () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
         try {
-            final Database database = DBSystem.getActiveDatabaseByName(db);
+            Database database = DBSystem.getActiveDatabaseByName(dbName);
+            Verify.isFalse(backupDbName.contains("database") && database instanceof SQLiteDB,
+                    () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB)));
 
-            runRestoreTask(args, sender, database);
+            if (!Verify.contains("-a", args)) {
+                sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_OVERWRITE, database.getName())));
+                return;
+            }
+
+            runRestoreTask(backupDbName, sender, database);
         } catch (Exception e) {
-            sender.sendMessage(locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+            sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
 
-    private void runRestoreTask(String[] args, ISender sender, final Database database) {
+    private void runRestoreTask(String backupDbName, ISender sender, final Database database) {
         RunnableFactory.createNew(new AbsRunnable("RestoreTask") {
             @Override
             public void run() {
                 try {
-                    String backupDBName = args[0];
+                    String backupDBName = backupDbName;
                     boolean containsDBFileExtension = backupDBName.endsWith(".db");
 
                     File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (containsDBFileExtension ? "" : ".db"));
 
                     if (!backupDBFile.exists()) {
-                        sender.sendMessage(locale.get(Msg.MANAGE_FAIL_FILE_NOT_FOUND) + " " + args[0]);
+                        sender.sendMessage(locale.getString(ManageLang.FAIL_FILE_NOT_FOUND, backupDBFile.getAbsolutePath()));
                         return;
                     }
 
@@ -88,14 +93,14 @@ public class ManageRestoreCommand extends CommandNode {
                     SQLiteDB backupDB = new SQLiteDB(backupDBName);
                     backupDB.init();
 
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_START).parse());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
                     database.backup().restore(backupDB);
 
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
                 } catch (Exception e) {
                     Log.toLog(this.getClass(), e);
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                 } finally {
                     this.cancel();
                 }

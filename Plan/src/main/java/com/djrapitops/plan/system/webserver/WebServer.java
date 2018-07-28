@@ -4,7 +4,8 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.StaticHolder;
@@ -29,11 +30,14 @@ import java.security.cert.CertificateException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * @author Rsl1122
  */
 public class WebServer implements SubSystem {
+
+    private final Supplier<Locale> locale;
 
     private int port;
     private boolean enabled = false;
@@ -43,6 +47,10 @@ public class WebServer implements SubSystem {
 
     private RequestHandler requestHandler;
     private ResponseHandler responseHandler;
+
+    public WebServer(Supplier<Locale> locale) {
+        this.locale = locale;
+    }
 
     public static WebServer getInstance() {
         WebServer webServer = WebServerSystem.getInstance().getWebServer();
@@ -89,7 +97,6 @@ public class WebServer implements SubSystem {
             return;
         }
 
-        Log.info(locale.get(Msg.ENABLE_WEBSERVER).toString());
         try {
             usingHttps = startHttpsServer();
 
@@ -106,7 +113,7 @@ public class WebServer implements SubSystem {
 
             enabled = true;
 
-            Log.info(locale.get(Msg.ENABLE_WEBSERVER_INFO).parse(server.getAddress().getPort()) + " (" + getAccessAddress() + ")");
+            Log.info(locale.get().getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), getAccessAddress()));
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Log.toLog(this.getClass(), e);
             enabled = false;
@@ -185,7 +192,7 @@ public class WebServer implements SubSystem {
     @Override
     public void disable() {
         if (server != null) {
-            Log.info(locale.get(Msg.DISABLE_WEBSERVER).toString());
+            Log.info(locale.get().getString(PluginLang.DISABLED_WEB_SERVER));
             server.stop(0);
         }
         enabled = false;

@@ -5,6 +5,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -43,7 +44,7 @@ public class WebDeleteCommand extends CommandNode {
         Database database = Database.getActive();
         String user = args[0];
 
-        RunnableFactory.createNew(new AbsRunnable("Webuser Delete Task: " + user) {
+        RunnableFactory.createNew("Webuser Delete Task: " + user, new AbsRunnable() {
             @Override
             public void run() {
                 try {
@@ -52,10 +53,10 @@ public class WebDeleteCommand extends CommandNode {
                         return;
                     }
                     database.remove().webUser(user);
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_SUCCESS).parse());
-                } catch (Exception ex) {
-                    Log.toLog(this.getClass(), ex);
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).parse());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+                } catch (Exception e) {
+                    Log.toLog(this.getClass(), e);
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                 } finally {
                     this.cancel();
                 }

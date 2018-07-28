@@ -3,10 +3,7 @@ package com.djrapitops.plan.system.locale;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
-import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
-import com.djrapitops.plan.system.locale.lang.Lang;
-import com.djrapitops.plan.system.locale.lang.PluginLang;
+import com.djrapitops.plan.system.locale.lang.*;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -26,11 +23,16 @@ public class LocaleSystem implements SubSystem {
 
     private Locale locale;
 
+    public LocaleSystem() {
+        this.locale = new Locale();
+    }
+
     public static Map<String, Lang> getIdentifiers() {
         Lang[][] lang = new Lang[][]{
                 CmdHelpLang.values(),
                 DeepHelpLang.values(),
-                PluginLang.values()
+                PluginLang.values(),
+                ManageLang.values()
         };
 
         return Arrays.stream(lang)

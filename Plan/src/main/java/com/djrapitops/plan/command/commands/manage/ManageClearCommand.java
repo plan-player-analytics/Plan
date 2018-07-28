@@ -9,6 +9,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -47,10 +48,10 @@ public class ManageClearCommand extends CommandNode {
 
         boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
         Verify.isTrue(isCorrectDB,
-                () -> new IllegalArgumentException(locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName));
+                () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
         if (!Verify.contains("-a", args)) {
-            sender.sendMessage(locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(args[0])));
+            sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_REMOVAL, dbName)));
             return;
         }
 
@@ -58,7 +59,7 @@ public class ManageClearCommand extends CommandNode {
             Database database = DBSystem.getActiveDatabaseByName(dbName);
             runClearTask(sender, database);
         } catch (DBInitException e) {
-            sender.sendMessage(locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+            sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
 
@@ -67,18 +68,13 @@ public class ManageClearCommand extends CommandNode {
             @Override
             public void run() {
                 try {
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_START).parse());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
                     database.remove().everything();
 
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
                 } catch (DBOpException e) {
-                    if (e.isFatal()) {
-                        sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).toString()
-                                + " Error was fatal, so all information may not have been removed.");
-                    } else {
-                        sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).toString());
-                    }
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                     Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();

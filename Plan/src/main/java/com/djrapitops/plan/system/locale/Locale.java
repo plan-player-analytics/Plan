@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.settings.Settings;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -19,7 +20,11 @@ public class Locale extends HashMap<Lang, Message> {
     }
 
     public static Locale fromSetting() throws IOException {
-        return forLangCodeString(Settings.LOCALE.toString());
+        String locale = Settings.LOCALE.toString();
+        if (locale.equalsIgnoreCase("default")) {
+            return new Locale();
+        }
+        return forLangCodeString(locale);
     }
 
     public static Locale forLangCodeString(String code) throws IOException {
@@ -47,7 +52,7 @@ public class Locale extends HashMap<Lang, Message> {
         return get(key).toString();
     }
 
-    public String getString(Lang key, String... values) {
+    public String getString(Lang key, Serializable... values) {
         return get(key).parse(values);
     }
 
@@ -55,7 +60,7 @@ public class Locale extends HashMap<Lang, Message> {
         return get(key).toArray();
     }
 
-    public String[] getArray(Lang key, String... values) {
+    public String[] getArray(Lang key, Serializable... values) {
         return get(key).toArray(values);
     }
 }

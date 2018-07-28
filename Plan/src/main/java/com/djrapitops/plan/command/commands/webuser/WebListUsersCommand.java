@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.comparators.WebUserComparator;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -53,9 +54,9 @@ public class WebListUsersCommand extends CommandNode {
                         sender.sendMessage("  " + user.getPermLevel() + " : " + user.getName());
                     }
                     sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
-                } catch (Exception ex) {
-                    Log.toLog(this.getClass(), ex);
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).parse());
+                } catch (Exception e) {
+                    Log.toLog(this.getClass(), e);
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                 } finally {
                     this.cancel();
                 }

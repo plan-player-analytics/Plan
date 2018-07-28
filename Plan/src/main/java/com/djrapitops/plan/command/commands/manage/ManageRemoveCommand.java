@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -74,18 +75,18 @@ public class ManageRemoveCommand extends CommandNode {
                     }
 
                     if (!Verify.contains("-a", args)) {
-                        sender.sendMessage(locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(database.getName())));
+                        sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_REMOVAL, database.getName())));
                         return;
                     }
 
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_START).parse());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
                     database.remove().player(uuid);
 
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, Database.getActive().getConfigName()));
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
                 } catch (DBOpException e) {
                     Log.toLog(this.getClass(), e);
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                 } finally {
                     this.cancel();
                 }

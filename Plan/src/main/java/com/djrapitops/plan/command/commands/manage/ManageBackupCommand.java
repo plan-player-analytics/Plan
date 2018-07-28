@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -55,15 +56,13 @@ public class ManageBackupCommand extends CommandNode {
 
             boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql");
             Verify.isTrue(isCorrectDB,
-                    () -> new IllegalArgumentException(locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName));
+                    () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
             Database database = DBSystem.getActiveDatabaseByName(dbName);
 
-            Verify.nullCheck(database, NullPointerException::new);
-
             runBackupTask(sender, args, database);
-        } catch (DBInitException | NullPointerException e) {
-            sender.sendMessage(locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+        } catch (DBInitException e) {
+            sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
 
@@ -73,12 +72,12 @@ public class ManageBackupCommand extends CommandNode {
             public void run() {
                 try {
                     Log.debug("Backup", "Start");
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_START).parse());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
                     createNewBackup(args[0], database);
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
                 } catch (Exception e) {
                     Log.toLog(ManageBackupCommand.class, e);
-                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                 } finally {
                     Log.logDebug("Backup");
                     this.cancel();

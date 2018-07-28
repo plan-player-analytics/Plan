@@ -14,6 +14,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.ServerInfoSystem;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.ServerConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
@@ -21,6 +22,8 @@ import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
+
+import java.util.function.Supplier;
 
 /**
  * Represents PlanSystem for Plan.
@@ -34,14 +37,16 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
 
         Log.setErrorManager(new PlanErrorManager());
 
+        Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
+
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
         fileSystem = new FileSystem(plugin);
         configSystem = new ServerConfigSystem();
-        databaseSystem = new ServerDBSystem();
+        databaseSystem = new ServerDBSystem(localeSupplier);
         listenerSystem = new BukkitListenerSystem(plugin);
         taskSystem = new BukkitTaskSystem(plugin);
 
-        infoSystem = new ServerInfoSystem();
+        infoSystem = new ServerInfoSystem(localeSupplier);
         serverInfo = new BukkitServerInfo(plugin);
 
         hookHandler = new HookHandler();

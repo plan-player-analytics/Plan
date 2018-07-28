@@ -58,7 +58,7 @@ public abstract class PlanSystem implements SubSystem {
 
     public PlanSystem() {
         processing = new Processing();
-        webServerSystem = new WebServerSystem();
+        webServerSystem = new WebServerSystem(() -> getLocaleSystem().getLocale());
         localeSystem = new LocaleSystem();
         cacheSystem = new CacheSystem(this);
     }

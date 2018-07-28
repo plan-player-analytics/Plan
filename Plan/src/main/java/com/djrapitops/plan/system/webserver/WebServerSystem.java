@@ -7,8 +7,11 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plugin.api.Benchmark;
+
+import java.util.function.Supplier;
 
 /**
  * WebServer subsystem for managing WebServer initialization.
@@ -19,8 +22,8 @@ public class WebServerSystem implements SubSystem {
 
     private WebServer webServer;
 
-    public WebServerSystem() {
-        webServer = new WebServer();
+    public WebServerSystem(Supplier<Locale> locale) {
+        webServer = new WebServer(locale);
     }
 
     public static WebServerSystem getInstance() {
