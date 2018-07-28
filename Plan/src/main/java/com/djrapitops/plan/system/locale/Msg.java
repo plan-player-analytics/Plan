@@ -1,11 +1,14 @@
-package com.djrapitops.plan.system.settings.locale;
+package com.djrapitops.plan.system.locale;
+
+import com.djrapitops.plan.system.locale.lang.Lang;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public enum Msg {
+@Deprecated
+public enum Msg implements Lang {
 
     ENABLED("Enable"),
     ENABLE_DB_INIT("Enable - Db"),
@@ -142,9 +145,16 @@ public enum Msg {
     HTML_TABLE_NO_KILLS("Html - Table No Kills"),;
 
     private final String identifier;
+    private String defaultValue;
 
     Msg(String identifier) {
         this.identifier = identifier;
+        defaultValue = "";
+    }
+
+    Msg(String identifier, String defaultValue) {
+        this.identifier = identifier;
+        this.defaultValue = defaultValue;
     }
 
     public static Map<String, Msg> getIdentifiers() {
@@ -153,5 +163,9 @@ public enum Msg {
 
     public String getIdentifier() {
         return identifier;
+    }
+
+    public String getDefault() {
+        return defaultValue;
     }
 }

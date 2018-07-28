@@ -36,16 +36,16 @@ public class WebServerSystem implements SubSystem {
     public void enable() throws EnableException {
         Benchmark.start("WebServer Initialization");
         webServer.enable();
-        Benchmark.stop("Enable", "WebServer Initialization");
         ResponseHandler responseHandler = webServer.getResponseHandler();
         responseHandler.registerWebAPIPages();
         responseHandler.registerDefaultPages();
+        Benchmark.stop("Enable", "WebServer Initialization");
     }
 
     @Override
     public void disable() {
         ResponseCache.clearCache();
-        webServer.stop();
+        webServer.disable();
     }
 
     public WebServer getWebServer() {

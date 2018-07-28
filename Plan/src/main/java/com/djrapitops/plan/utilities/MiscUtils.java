@@ -4,8 +4,6 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandUtils;
@@ -55,8 +53,8 @@ public class MiscUtils {
      *
      * @param args   Arguments of a command, must not be empty if console sender.
      * @param sender Command sender
-     * @param perm   Permission to use when checking. No permission will notify user.
-     * @return The name of the player (first argument or sender)
+     * @param perm   Permission to use when checking.
+     * @return The name of the player (first argument or sender) or null if sender has no permission.
      */
     public static String getPlayerName(String[] args, ISender sender, Permissions perm) {
         String playerName = "";
@@ -69,7 +67,7 @@ public class MiscUtils {
             } else if (args[0].equalsIgnoreCase(sender.getName())) {
                 playerName = sender.getName();
             } else {
-                sender.sendMessage(Locale.get(Msg.CMD_FAIL_NO_PERMISSION).toString());
+                return null;
             }
         } else {
             playerName = sender.getName();

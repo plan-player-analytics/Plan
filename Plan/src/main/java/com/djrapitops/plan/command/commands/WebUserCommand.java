@@ -5,9 +5,10 @@ import com.djrapitops.plan.command.commands.webuser.WebCheckCommand;
 import com.djrapitops.plan.command.commands.webuser.WebDeleteCommand;
 import com.djrapitops.plan.command.commands.webuser.WebLevelCommand;
 import com.djrapitops.plan.command.commands.webuser.WebListUsersCommand;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;
@@ -22,16 +23,19 @@ public class WebUserCommand extends TreeCmdNode {
 
     public WebUserCommand(PlanPlugin plugin, RegisterCommand register, CommandNode parent) {
         super("webuser|web", Permissions.MANAGE_WEB.getPerm(), CommandType.CONSOLE, parent);
-        setShortHelp(Locale.get(Msg.CMD_USG_WEB).toString());
         super.setColorScheme(plugin.getColorScheme());
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_WEB).toArray());
+
+        Locale locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.WEB));
+        setInDepthHelp(locale.get(Msg.CMD_HELP_WEB).toArray());
         setNodeGroups(
                 new CommandNode[]{
                         register,
                         new WebLevelCommand(plugin),
                         new WebListUsersCommand(plugin),
-                        new WebCheckCommand(),
-                        new WebDeleteCommand()
+                        new WebCheckCommand(plugin),
+                        new WebDeleteCommand(plugin)
                 }
         );
     }

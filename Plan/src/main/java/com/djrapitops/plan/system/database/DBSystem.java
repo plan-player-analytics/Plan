@@ -10,8 +10,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -39,20 +38,15 @@ public abstract class DBSystem implements SubSystem {
         return dbSystem;
     }
 
-    @Override
-    public void enable() throws EnableException {
-        try {
-            Benchmark.start("Init Database");
-            Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
-            initDatabase();
-            db.scheduleClean(1L);
-            Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
-            Benchmark.stop("Enable", "Init Database");
-        } catch (DBInitException e) {
-            Throwable cause = e.getCause();
-            String message = cause == null ? e.getMessage() : cause.getMessage();
-            throw new EnableException((db != null ? db.getName() : "Database") + " init failure: " + message, cause);
+    public static Database getActiveDatabaseByName(String dbName) throws DBInitException {
+        for (Database database : getInstance().getDatabases()) {
+            String dbConfigName = database.getConfigName();
+            if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
+                database.init();
+                return database;
+            }
         }
+        throw new DBInitException(locale.get(Msg.ENABLE_FAIL_WRONG_DB) + " " + dbName);
     }
 
     protected abstract void initDatabase() throws DBInitException;
@@ -76,15 +70,20 @@ public abstract class DBSystem implements SubSystem {
         return db;
     }
 
-    public static Database getActiveDatabaseByName(String dbName) throws DBInitException {
-        for (Database database : getInstance().getDatabases()) {
-            String dbConfigName = database.getConfigName();
-            if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
-                database.init();
-                return database;
-            }
+    @Override
+    public void enable() throws EnableException {
+        try {
+            Benchmark.start("Init Database");
+            Log.info(locale.get(Msg.ENABLE_DB_INIT).toString());
+            initDatabase();
+            db.scheduleClean(1L);
+            Log.info(locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
+            Benchmark.stop("Enable", "Init Database");
+        } catch (DBInitException e) {
+            Throwable cause = e.getCause();
+            String message = cause == null ? e.getMessage() : cause.getMessage();
+            throw new EnableException((db != null ? db.getName() : "Database") + " init failure: " + message, cause);
         }
-        throw new DBInitException(Locale.get(Msg.ENABLE_FAIL_WRONG_DB) + " " + dbName);
     }
 
     public void setActiveDatabase(Database db) throws DBException {

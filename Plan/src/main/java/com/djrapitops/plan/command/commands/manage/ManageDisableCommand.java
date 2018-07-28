@@ -1,9 +1,11 @@
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.listeners.bukkit.PlayerOnlineListener;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -18,19 +20,22 @@ import java.util.Arrays;
  * @since 4.0.4
  */
 public class ManageDisableCommand extends CommandNode {
-    /**
-     * Class Constructor.
-     */
-    public ManageDisableCommand() {
+
+    private final Locale locale;
+
+    public ManageDisableCommand(PlanPlugin plugin) {
         super("disable", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
-        setShortHelp("Disable a feature temporarily");
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_DISABLE));
         setArguments("<feature>");
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+                () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
 
         switch (args[0].toLowerCase()) {
             case "kickcount":

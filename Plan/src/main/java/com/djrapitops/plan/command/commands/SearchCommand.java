@@ -1,9 +1,11 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -25,18 +27,23 @@ import java.util.List;
  */
 public class SearchCommand extends CommandNode {
 
-    public SearchCommand() {
+    private final Locale locale;
+
+    public SearchCommand(PlanPlugin plugin) {
         super("search", Permissions.SEARCH.getPermission(), CommandType.PLAYER_OR_ARGS);
-        setShortHelp(Locale.get(Msg.CMD_USG_SEARCH).toString());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.SEARCH));
         setArguments("<text>");
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_SEARCH).toArray());
+        setInDepthHelp(locale.get(Msg.CMD_HELP_SEARCH).toArray());
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        Verify.isTrue(args.length >= 1, () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+        Verify.isTrue(args.length >= 1, () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
 
-        sender.sendMessage(Locale.get(Msg.CMD_INFO_SEARCHING).toString());
+        sender.sendMessage(locale.get(Msg.CMD_INFO_SEARCHING).toString());
 
         runSearchTask(args, sender);
     }
@@ -50,15 +57,15 @@ public class SearchCommand extends CommandNode {
 
                     boolean empty = Verify.isEmpty(names);
 
-                    sender.sendMessage(Locale.get(Msg.CMD_HEADER_SEARCH) + args[0] + " (" + (empty ? 0 : names.size()) + ")");
+                    sender.sendMessage(locale.get(Msg.CMD_HEADER_SEARCH) + args[0] + " (" + (empty ? 0 : names.size()) + ")");
                     // Results
                     if (empty) {
-                        sender.sendMessage(Locale.get(Msg.CMD_INFO_NO_RESULTS).parse(Arrays.toString(args)));
+                        sender.sendMessage(locale.get(Msg.CMD_INFO_NO_RESULTS).parse(Arrays.toString(args)));
                     } else {
-                        sender.sendMessage(Locale.get(Msg.CMD_INFO_RESULTS).toString() + FormatUtils.collectionToStringNoBrackets(names));
+                        sender.sendMessage(locale.get(Msg.CMD_INFO_RESULTS).toString() + FormatUtils.collectionToStringNoBrackets(names));
                     }
 
-                    sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+                    sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
                 } catch (DBOpException e) {
                     sender.sendMessage("§cDatabase error occurred: " + e.getMessage());
                     Log.toLog(this.getClass(), e);

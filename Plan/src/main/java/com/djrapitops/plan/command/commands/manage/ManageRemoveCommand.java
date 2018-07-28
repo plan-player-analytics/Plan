@@ -1,10 +1,12 @@
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -25,19 +27,29 @@ import java.util.UUID;
  */
 public class ManageRemoveCommand extends CommandNode {
 
-    public ManageRemoveCommand() {
+    private final Locale locale;
+
+    public ManageRemoveCommand(PlanPlugin plugin) {
         super("remove|delete", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
-        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_REMOVE).toString());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_REMOVE));
         setArguments("<player>", "[-a]");
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_REMOVE).toArray());
+        setInDepthHelp(locale.get(Msg.CMD_HELP_MANAGE_REMOVE).toArray());
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+                () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
 
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
+
+        if (playerName == null) {
+            sender.sendMessage(locale.getString(Msg.CMD_FAIL_NO_PERMISSION));
+            return;
+        }
 
         runRemoveTask(playerName, sender, args);
     }
@@ -50,29 +62,29 @@ public class ManageRemoveCommand extends CommandNode {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
 
                     if (uuid == null) {
-                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString());
+                        sender.sendMessage(locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString());
                         return;
                     }
 
                     Database database = Database.getActive();
                     if (!database.check().isPlayerRegistered(uuid)) {
-                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
+                        sender.sendMessage(locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
                         return;
                     }
 
                     if (!Verify.contains("-a", args)) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(database.getName())));
+                        sender.sendMessage(locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(database.getName())));
                         return;
                     }
 
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
+                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_START).parse());
 
                     database.remove().player(uuid);
 
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, Database.getActive().getConfigName()));
+                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, Database.getActive().getConfigName()));
                 } catch (DBOpException e) {
                     Log.toLog(this.getClass(), e);
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();
                 }

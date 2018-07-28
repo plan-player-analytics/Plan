@@ -1,5 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -7,10 +8,11 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -30,22 +32,26 @@ import java.util.UUID;
  */
 public class AnalyzeCommand extends CommandNode {
 
-    public AnalyzeCommand() {
+    private final Locale locale;
+
+    public AnalyzeCommand(PlanPlugin plugin) {
         super("analyze|analyse|analysis|a", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
-        setShortHelp(Locale.get(Msg.CMD_USG_ANALYZE).parse());
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_ANALYZE).toArray());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.ANALYZE));
+        setInDepthHelp(locale.get(Msg.CMD_HELP_ANALYZE).toArray());
         setArguments("[server/id]");
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
+        sender.sendMessage(locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
 
         Processing.submitNonCritical(() -> {
             try {
                 Server server = getServer(args).orElseGet(ServerInfo::getServer);
                 UUID serverUUID = server.getUuid();
-
 
                 InfoSystem.getInstance().generateAnalysisPage(serverUUID);
                 sendWebUserNotificationIfNecessary(sender);
@@ -60,17 +66,17 @@ public class AnalyzeCommand extends CommandNode {
     private void sendLink(Server server, ISender sender) {
         String target = "/server/" + server.getName();
         String url = ConnectionSystem.getAddress() + target;
-        String message = Locale.get(Msg.CMD_INFO_LINK).toString();
-        sender.sendMessage(Locale.get(Msg.CMD_HEADER_ANALYZE).toString());
+        String message = locale.get(Msg.CMD_INFO_LINK).toString();
+        sender.sendMessage(locale.get(Msg.CMD_HEADER_ANALYZE).toString());
         // Link
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
             sender.sendMessage(message + url);
         } else {
             sender.sendMessage(message);
-            sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+            sender.sendLink("   ", locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
         }
-        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+        sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 
     private void sendWebUserNotificationIfNecessary(ISender sender) {

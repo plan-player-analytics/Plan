@@ -4,9 +4,8 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Check;
@@ -76,11 +75,6 @@ public class WebServer implements SubSystem {
         }
     }
 
-    @Override
-    public void disable() {
-        stop();
-    }
-
     /**
      * Starts up the WebServer in a new Thread Pool.
      */
@@ -95,7 +89,7 @@ public class WebServer implements SubSystem {
             return;
         }
 
-        Log.info(Locale.get(Msg.ENABLE_WEBSERVER).toString());
+        Log.info(locale.get(Msg.ENABLE_WEBSERVER).toString());
         try {
             usingHttps = startHttpsServer();
 
@@ -112,7 +106,7 @@ public class WebServer implements SubSystem {
 
             enabled = true;
 
-            Log.info(Locale.get(Msg.ENABLE_WEBSERVER_INFO).parse(server.getAddress().getPort()) + " (" + getAccessAddress() + ")");
+            Log.info(locale.get(Msg.ENABLE_WEBSERVER_INFO).parse(server.getAddress().getPort()) + " (" + getAccessAddress() + ")");
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Log.toLog(this.getClass(), e);
             enabled = false;
@@ -188,9 +182,10 @@ public class WebServer implements SubSystem {
     /**
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
-    public void stop() {
+    @Override
+    public void disable() {
         if (server != null) {
-            Log.info(Locale.get(Msg.DISABLE_WEBSERVER).toString());
+            Log.info(locale.get(Msg.DISABLE_WEBSERVER).toString());
             server.stop(0);
         }
         enabled = false;

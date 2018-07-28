@@ -1,9 +1,10 @@
 package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -18,10 +19,14 @@ import com.djrapitops.plugin.settings.ColorScheme;
 public class WebLevelCommand extends CommandNode {
 
     private final PlanPlugin plugin;
+    private final Locale locale;
 
     public WebLevelCommand(PlanPlugin plugin) {
         super("level", Permissions.MANAGE_WEB.getPerm(), CommandType.CONSOLE);
-        setShortHelp(Locale.get(Msg.CMD_USG_WEB_LEVEL).toString());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.WEB_LEVEL));
         this.plugin = plugin;
     }
 
@@ -29,8 +34,8 @@ public class WebLevelCommand extends CommandNode {
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         ColorScheme cs = plugin.getColorScheme();
         String sCol = cs.getSecondaryColor();
-        String cmdBall = Locale.get(Msg.CMD_CONSTANT_LIST_BALL).parse();
-        String cmdFooter = Locale.get(Msg.CMD_CONSTANT_FOOTER).parse();
+        String cmdBall = locale.get(Msg.CMD_CONSTANT_LIST_BALL).parse();
+        String cmdFooter = locale.get(Msg.CMD_CONSTANT_FOOTER).parse();
 
         String[] messages = new String[]{
                 cmdFooter,

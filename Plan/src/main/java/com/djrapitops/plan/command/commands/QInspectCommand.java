@@ -12,9 +12,10 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -39,6 +40,7 @@ import java.util.UUID;
 public class QInspectCommand extends CommandNode {
 
     private final PlanPlugin plugin;
+    private final Locale locale;
 
     /**
      * Class Constructor.
@@ -48,8 +50,11 @@ public class QInspectCommand extends CommandNode {
     public QInspectCommand(PlanPlugin plugin) {
         super("qinspect", Permissions.QUICK_INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
         setArguments("<player>");
-        setShortHelp(Locale.get(Msg.CMD_USG_QINSPECT).toString());
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_QINSPECT).toArray());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.QINSPECT));
+        setInDepthHelp(locale.get(Msg.CMD_HELP_QINSPECT).toArray());
         this.plugin = plugin;
 
     }
@@ -57,6 +62,11 @@ public class QInspectCommand extends CommandNode {
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
+
+        if (playerName == null) {
+            sender.sendMessage(locale.getString(Msg.CMD_FAIL_NO_PERMISSION));
+            return;
+        }
 
         runInspectTask(playerName, sender);
     }
@@ -68,13 +78,13 @@ public class QInspectCommand extends CommandNode {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     if (uuid == null) {
-                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString());
+                        sender.sendMessage(locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString());
                         return;
                     }
 
                     PlayerContainer container = Database.getActive().fetch().getPlayerContainer(uuid);
                     if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
-                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
+                        sender.sendMessage(locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
                         return;
                     }
 
@@ -104,7 +114,7 @@ public class QInspectCommand extends CommandNode {
         Formatter<DateHolder> timestamp = Formatters.year();
         Formatter<Long> length = Formatters.timeAmount();
 
-        sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + player.getValue(PlayerKeys.NAME).orElse("Unknown"));
+        sender.sendMessage(locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + player.getValue(PlayerKeys.NAME).orElse("Unknown"));
 
         ActivityIndex activityIndex = player.getActivityIndex(now);
         Long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
@@ -126,6 +136,6 @@ public class QInspectCommand extends CommandNode {
         sender.sendMessage(colM + "  Mob Kills : " + colS + sessionsMutator.toMobKillCount());
         sender.sendMessage(colM + "  Deaths : " + colS + sessionsMutator.toDeathCount());
 
-        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+        sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 }

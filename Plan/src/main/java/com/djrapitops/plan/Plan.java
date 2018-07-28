@@ -22,10 +22,10 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.system.BukkitSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.OfflinePlayerImporter;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStats;
 import com.djrapitops.plugin.BukkitPlugin;
@@ -48,6 +48,7 @@ import java.util.logging.Logger;
 public class Plan extends BukkitPlugin implements PlanPlugin {
 
     private BukkitSystem system;
+    private Locale locale;
 
     /**
      * Used to get the plugin-instance singleton.
@@ -58,11 +59,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         return (Plan) StaticHolder.getInstance(Plan.class);
     }
 
-    /**
-     * OnEnable method.
-     * <p>
-     * - Enables the plugin's subsystems.
-     */
     @Override
     public void onEnable() {
         super.onEnable();
@@ -70,6 +66,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             Benchmark.start("Enable");
             system = new BukkitSystem(this);
             system.enable();
+            locale = system.getLocaleSystem().getLocale();
 
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 
@@ -79,7 +76,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             Log.debug("Verbose debug messages are enabled.");
             Benchmark.stop("Enable", "Enable");
             Log.logDebug("Enable");
-            Log.info(Locale.get(Msg.ENABLED).toString());
+            Log.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
             Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
@@ -109,7 +106,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     public void onDisable() {
         system.disable();
 
-        Log.info(Locale.get(Msg.DISABLED).toString());
+        Log.info(locale.getString(PluginLang.DISABLED));
         Benchmark.pluginDisabled(Plan.class);
         DebugLog.pluginDisabled(Plan.class);
     }

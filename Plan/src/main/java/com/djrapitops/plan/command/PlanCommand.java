@@ -2,10 +2,10 @@ package com.djrapitops.plan.command;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.*;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;
@@ -25,17 +25,20 @@ public class PlanCommand extends TreeCmdNode {
         super("plan", "", CommandType.CONSOLE, null);
         super.setDefaultCommand("inspect");
         super.setColorScheme(plugin.getColorScheme());
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_PLAN).toArray());
 
-        RegisterCommand registerCommand = new RegisterCommand();
+        Locale locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setInDepthHelp(locale.getArray(Msg.CMD_HELP_PLAN));
+
+        RegisterCommand registerCommand = new RegisterCommand(plugin);
         setNodeGroups(
                 new CommandNode[]{
-                        new InspectCommand(),
+                        new InspectCommand(plugin),
                         new QInspectCommand(plugin),
-                        new SearchCommand(),
-                        new ListCommand(),
-                        new AnalyzeCommand(),
-                        new NetworkCommand(),
+                        new SearchCommand(plugin),
+                        new ListCommand(plugin),
+                        new AnalyzeCommand(plugin),
+                        new NetworkCommand(plugin),
                         new ListServersCommand(plugin)
                 },
                 new CommandNode[]{
@@ -47,7 +50,7 @@ public class PlanCommand extends TreeCmdNode {
                         new ReloadCommand(plugin),
                         new ManageCommand(plugin, this),
                         new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
-                        (Settings.DEV_MODE.isTrue() ? new DevCommand() : null),
+                        (Settings.DEV_MODE.isTrue() ? new DevCommand(plugin) : null),
 //                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
                 }
         );

@@ -1,5 +1,6 @@
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -7,6 +8,8 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.CheckConnectionRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
@@ -26,9 +29,14 @@ import java.util.UUID;
  */
 public class ManageConDebugCommand extends CommandNode {
 
-    public ManageConDebugCommand() {
+    private final Locale locale;
+
+    public ManageConDebugCommand(PlanPlugin plugin) {
         super("con", Permissions.MANAGE.getPermission(), CommandType.ALL);
-        setShortHelp("Debug Bukkit-Bungee Connections");
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(plugin instanceof PlanBungee ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
     }
 
     @Override

@@ -1,12 +1,14 @@
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -22,17 +24,22 @@ import com.djrapitops.plugin.utilities.Verify;
  */
 public class ManageSetupCommand extends CommandNode {
 
-    public ManageSetupCommand() {
+    private final Locale locale;
+
+    public ManageSetupCommand(PlanPlugin plugin) {
         super("setup", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
-        setShortHelp("Set-Up Bungee connection");
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_SETUP));
         setArguments("<BungeeAddress>");
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray());
+        setInDepthHelp(locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray());
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+                () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
 
         if (!WebServerSystem.isWebServerEnabled()) {
             sender.sendMessage("§cWebServer is not enabled on this server! Make sure it enables on boot!");

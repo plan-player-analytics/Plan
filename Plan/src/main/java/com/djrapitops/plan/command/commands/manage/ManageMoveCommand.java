@@ -1,10 +1,12 @@
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -25,32 +27,37 @@ import java.util.Arrays;
  */
 public class ManageMoveCommand extends CommandNode {
 
-    public ManageMoveCommand() {
+    private final Locale locale;
+
+    public ManageMoveCommand(PlanPlugin plugin) {
         super("move", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
-        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_MOVE).toString());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_MOVE));
         setArguments("<fromDB>", "<toDB>", "[-a]");
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 2,
-                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+                () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
 
         String fromDB = args[0].toLowerCase();
         boolean isCorrectDB = Verify.equalsOne(fromDB, "sqlite", "mysql");
         Verify.isTrue(isCorrectDB,
-                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB));
+                () -> new IllegalArgumentException(locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB));
 
         String toDB = args[1].toLowerCase();
         isCorrectDB = Verify.equalsOne(toDB, "sqlite", "mysql");
         Verify.isTrue(isCorrectDB,
-                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB));
+                () -> new IllegalArgumentException(locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + fromDB));
 
         Verify.isFalse(fromDB.equalsIgnoreCase(toDB),
-                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_SAME_DB).toString()));
+                () -> new IllegalArgumentException(locale.get(Msg.MANAGE_FAIL_SAME_DB).toString()));
 
         if (!Verify.contains("-a", args)) {
-            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_OVERWRITE).parse(args[0])));
+            sender.sendMessage(locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(locale.get(Msg.MANAGE_NOTIFY_OVERWRITE).parse(args[0])));
             return;
         }
 
@@ -60,7 +67,7 @@ public class ManageMoveCommand extends CommandNode {
 
             runMoveTask(fromDatabase, toDatabase, sender);
         } catch (Exception e) {
-            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+            sender.sendMessage(locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
         }
     }
 
@@ -69,19 +76,19 @@ public class ManageMoveCommand extends CommandNode {
             @Override
             public void run() {
                 try {
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
+                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_START).parse());
 
                     fromDatabase.backup().backup(toDatabase);
 
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_MOVE_SUCCESS).toString());
+                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_MOVE_SUCCESS).toString());
 
                     boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(Database.getActive().getConfigName());
                     if (movingToCurrentDB) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CONFIG_REMINDER).toString());
+                        sender.sendMessage(locale.get(Msg.MANAGE_INFO_CONFIG_REMINDER).toString());
                     }
                 } catch (Exception e) {
                     Log.toLog(this.getClass(), e);
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    sender.sendMessage(locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();
                 }

@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
+import com.djrapitops.plan.system.locale.LocaleSystem;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
@@ -36,6 +37,7 @@ public abstract class PlanSystem implements SubSystem {
     // Initialized in this class
     private Processing processing;
     protected final WebServerSystem webServerSystem;
+    protected final LocaleSystem localeSystem;
     protected CacheSystem cacheSystem;
 
     // These need to be initialized in the sub class.
@@ -57,6 +59,7 @@ public abstract class PlanSystem implements SubSystem {
     public PlanSystem() {
         processing = new Processing();
         webServerSystem = new WebServerSystem();
+        localeSystem = new LocaleSystem();
         cacheSystem = new CacheSystem(this);
     }
 
@@ -83,6 +86,7 @@ public abstract class PlanSystem implements SubSystem {
         SubSystem[] systems = new SubSystem[]{
                 fileSystem,
                 configSystem,
+                localeSystem,
                 versionCheckSystem,
                 databaseSystem,
                 webServerSystem,
@@ -111,6 +115,7 @@ public abstract class PlanSystem implements SubSystem {
                 webServerSystem,
                 infoSystem,
                 serverInfo,
+                localeSystem,
                 configSystem,
                 fileSystem,
                 versionCheckSystem
@@ -199,5 +204,9 @@ public abstract class PlanSystem implements SubSystem {
 
     static void setTestSystem(PlanSystem testSystem) {
         PlanSystem.testSystem = testSystem;
+    }
+
+    public LocaleSystem getLocaleSystem() {
+        return localeSystem;
     }
 }

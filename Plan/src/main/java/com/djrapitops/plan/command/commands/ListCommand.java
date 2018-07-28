@@ -1,9 +1,11 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
@@ -17,10 +19,15 @@ import com.djrapitops.plugin.command.ISender;
  */
 public class ListCommand extends CommandNode {
 
-    public ListCommand() {
+    private final Locale locale;
+
+    public ListCommand(PlanPlugin plugin) {
         super("players|pl|playerlist|list", Permissions.INSPECT_OTHER.getPermission(), CommandType.CONSOLE);
-        setShortHelp(Locale.get(Msg.CMD_USG_LIST).toString());
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_LIST).toArray());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.PLAYERS));
+        setInDepthHelp(locale.getArray((Msg.CMD_HELP_LIST)));
     }
 
     @Override
@@ -29,18 +36,18 @@ public class ListCommand extends CommandNode {
     }
 
     private void sendListMsg(ISender sender) {
-        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
+        sender.sendMessage(locale.getString(Msg.CMD_CONSTANT_FOOTER));
 
         // Link
         String url = ConnectionSystem.getAddress() + "/players/";
-        String message = Locale.get(Msg.CMD_INFO_LINK).toString();
+        String message = locale.getString(Msg.CMD_INFO_LINK);
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
             sender.sendMessage(message + url);
         } else {
             sender.sendMessage(message);
-            sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+            sender.sendLink("   ", locale.getString(Msg.CMD_INFO_CLICK_ME), url);
         }
-        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+        sender.sendMessage(locale.getString(Msg.CMD_CONSTANT_FOOTER));
     }
 }

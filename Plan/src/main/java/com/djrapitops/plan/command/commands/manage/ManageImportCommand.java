@@ -1,10 +1,12 @@
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.Importer;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -22,17 +24,22 @@ import java.util.Arrays;
  */
 public class ManageImportCommand extends CommandNode {
 
-    public ManageImportCommand() {
+    private final Locale locale;
+
+    public ManageImportCommand(PlanPlugin plugin) {
         super("import", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
-        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_IMPORT).toString());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_IMPORT));
         setArguments("<plugin>/list", "[import args]");
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_IMPORT).toArray());
+        setInDepthHelp(locale.get(Msg.CMD_HELP_MANAGE_IMPORT).toArray());
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+                () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
 
         String importArg = args[0];
 

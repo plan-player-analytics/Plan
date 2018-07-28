@@ -1,11 +1,11 @@
 package com.djrapitops.plan.command;
 
-import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;
@@ -28,27 +28,30 @@ public class PlanBungeeCommand extends TreeCmdNode {
      *
      * @param plugin Current instance of Plan
      */
-    public PlanBungeeCommand(PlanBungee plugin) {
+    public PlanBungeeCommand(PlanPlugin plugin) {
         super("planbungee", Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
         super.setColorScheme(plugin.getColorScheme());
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_PLAN).toArray());
 
-        RegisterCommand registerCommand = new RegisterCommand();
+        Locale locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setInDepthHelp(locale.getArray(Msg.CMD_HELP_PLAN));
+
+        RegisterCommand registerCommand = new RegisterCommand(plugin);
         setNodeGroups(
                 new CommandNode[]{
-                        new NetworkCommand(),
+                        new NetworkCommand(plugin),
                         new ListServersCommand(plugin),
-                        new ListCommand(),
+                        new ListCommand(plugin),
                 },
                 new CommandNode[]{
                         registerCommand,
                         new WebUserCommand(plugin, registerCommand, this),
                 },
                 new CommandNode[]{
-                        new ManageConDebugCommand(),
-                        new BungeeSetupToggleCommand(),
+                        new ManageConDebugCommand(plugin),
+                        new BungeeSetupToggleCommand(plugin),
                         new ReloadCommand(plugin),
-                        new DisableCommand(),
+                        new DisableCommand(plugin),
                         new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
 //                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
                 }

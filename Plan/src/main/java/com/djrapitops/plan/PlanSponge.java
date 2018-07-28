@@ -3,8 +3,8 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.system.SpongeSystem;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.StaticHolder;
@@ -33,6 +33,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     @ConfigDir(sharedRoot = false)
     private File dataFolder;
     private SpongeSystem system;
+    private Locale locale;
 
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
@@ -54,6 +55,9 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         system = new SpongeSystem(this);
         try {
             system.enable();
+            locale = system.getLocaleSystem().getLocale();
+
+            Log.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
             Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
@@ -77,7 +81,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             system.disable();
         }
 
-        Log.info(Locale.get(Msg.DISABLED).toString());
+        Log.info(locale.getString(PluginLang.DISABLED));
         Benchmark.pluginDisabled(PlanSponge.class);
         DebugLog.pluginDisabled(PlanSponge.class);
     }

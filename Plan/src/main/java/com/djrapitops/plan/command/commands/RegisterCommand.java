@@ -1,10 +1,12 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -33,18 +35,22 @@ public class RegisterCommand extends CommandNode {
 
     private final String notEnoughArgsMsg;
     private final String hashErrorMsg;
+    private final Locale locale;
 
-    public RegisterCommand() {
+    public RegisterCommand(PlanPlugin plugin) {
         // No Permission Requirement
         super("register", "", CommandType.PLAYER_OR_ARGS);
-        setShortHelp(Locale.get(Msg.CMD_USG_WEB_REGISTER).toString());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.WEB_REGISTER));
         setArguments("<password>", "[name]", "[lvl]");
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_WEB_REGISTER).toArray());
+        setInDepthHelp(locale.get(Msg.CMD_HELP_WEB_REGISTER).toArray());
         if (Check.isBukkitAvailable()) {
             setupFilter();
         }
 
-        notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + Arrays.toString(getArguments()));
+        notEnoughArgsMsg = locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + Arrays.toString(getArguments()));
         hashErrorMsg = "§cPassword hash error.";
     }
 
@@ -86,7 +92,7 @@ public class RegisterCommand extends CommandNode {
         } else if (sender.hasPermission(Permissions.MANAGE_WEB.getPermission())) {
             consoleRegister(args, sender, notEnoughArgsMsg);
         } else {
-            sender.sendMessage(Locale.get(Msg.CMD_FAIL_NO_PERMISSION).parse());
+            sender.sendMessage(locale.get(Msg.CMD_FAIL_NO_PERMISSION).parse());
         }
     }
 

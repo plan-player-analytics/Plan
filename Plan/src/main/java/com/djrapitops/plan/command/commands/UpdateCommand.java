@@ -1,5 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
@@ -9,9 +10,9 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.UpdateCancelRequest;
 import com.djrapitops.plan.system.info.request.UpdateRequest;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.update.VersionInfo;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
@@ -35,8 +36,13 @@ import java.util.UUID;
  */
 public class UpdateCommand extends CommandNode {
 
-    public UpdateCommand() {
+    private final Locale locale;
+
+    public UpdateCommand(PlanPlugin plugin) {
         super("update", Permissions.MANAGE.getPermission(), CommandType.ALL);
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
         setArguments("[-u]/[cancel]");
         setShortHelp("Get change log link or update plugin.");
         setInDepthHelp(
@@ -73,7 +79,7 @@ public class UpdateCommand extends CommandNode {
                 sender.sendMessage(message + url);
             } else {
                 sender.sendMessage(message);
-                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+                sender.sendLink("   ", locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
             }
             return;
         }
