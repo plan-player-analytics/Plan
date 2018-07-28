@@ -62,12 +62,6 @@ public class ServerTable extends Table {
         );
     }
 
-    public void alterTableV11() {
-        if (usingMySQL) {
-            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + Col.MAX_PLAYERS + " INTEGER NOT NULL DEFAULT -1");
-        }
-    }
-
     private void updateServerInfo(Server info) {
         String sql = Update.values(tableName,
                 Col.SERVER_UUID,

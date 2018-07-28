@@ -1,10 +1,7 @@
-/*
- * License is provided in the jar as LICENSE also here:
- * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
- */
-package com.djrapitops.plan.system.database.databases.sql.tables.move;
+package com.djrapitops.plan.system.database.databases.sql.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -12,24 +9,31 @@ import com.djrapitops.plugin.api.Benchmark;
 
 import java.util.Optional;
 
-/**
- * Class used for executing transfer queries when the database has version 8.
- * <p>
- * Changes the DB Schema to 10.
- *
- * @author Rsl1122
- */
-public class Version8TransferTable extends TransferTable {
+public class Version10Patch extends Patch {
 
-    private final int serverID;
+    private Integer serverID;
 
-    public Version8TransferTable(SQLDB db) {
+    public Version10Patch(SQLDB db) {
         super(db);
-        Optional<Integer> serverID = db.getServerTable().getServerID(ServerInfo.getServerUUID());
-        if (!serverID.isPresent()) {
-            throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
+    }
+
+    @Override
+    public boolean hasBeenApplied() {
+        return !hasTable("plan_gamemodetimes");
+    }
+
+    @Override
+    public void apply() {
+        try {
+            Optional<Integer> serverID = db.getServerTable().getServerID(ServerInfo.getServerUUID());
+            if (!serverID.isPresent()) {
+                throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
+            }
+            this.serverID = serverID.get();
+            alterTablesToV10();
+        } catch (DBInitException e) {
+            throw new DBOpException(e.getMessage(), e);
         }
-        this.serverID = serverID.get();
     }
 
     public void alterTablesToV10() throws DBInitException {
@@ -52,8 +56,6 @@ public class Version8TransferTable extends TransferTable {
         dropTable("temp_nicks");
         dropTable("temp_kills");
         dropTable("temp_users");
-
-        db.setVersion(10);
         Benchmark.stop("Schema copy from 8 to 10");
     }
 
@@ -85,24 +87,24 @@ public class Version8TransferTable extends TransferTable {
                 ") SELECT " +
                 "id, uuid, registered, name" +
                 " FROM " + tempTableName;
-        execute(statement);
+        db.execute(statement);
         statement = "INSERT INTO plan_user_info " +
                 "(" +
                 "user_id, registered, opped, banned, server_id" +
                 ") SELECT " +
                 "id, registered, opped, banned, '" + serverID + "'" +
                 " FROM " + tempTableName;
-        execute(statement);
+        db.execute(statement);
         statement = "INSERT INTO plan_nicknames " +
                 "(" +
                 "user_id, nickname, server_id" +
                 ") SELECT " +
                 "user_id, nickname, '" + serverID + "'" +
                 " FROM " + tempNickTableName;
-        execute(statement);
+        db.execute(statement);
         try {
             if (usingMySQL) {
-                execute("SET foreign_key_checks = 0");
+                db.execute("SET foreign_key_checks = 0");
             }
             statement = "INSERT INTO plan_kills " +
                     "(" +
@@ -110,10 +112,10 @@ public class Version8TransferTable extends TransferTable {
                     ") SELECT " +
                     "killer_id, victim_id, weapon, date, '0'" +
                     " FROM " + tempKillsTableName;
-            execute(statement);
+            db.execute(statement);
         } finally {
             if (usingMySQL) {
-                execute("SET foreign_key_checks = 1");
+                db.execute("SET foreign_key_checks = 1");
             }
         }
     }
@@ -132,7 +134,7 @@ public class Version8TransferTable extends TransferTable {
                 ") SELECT " +
                 "command, times_used, '" + serverID + "'" +
                 " FROM " + tempTableName;
-        execute(statement);
+        db.execute(statement);
 
         dropTable(tempTableName);
     }
@@ -151,7 +153,7 @@ public class Version8TransferTable extends TransferTable {
                 ") SELECT " +
                 "date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, '" + serverID + "'" +
                 " FROM " + tempTableName;
-        execute(statement);
+        db.execute(statement);
 
         dropTable(tempTableName);
     }
