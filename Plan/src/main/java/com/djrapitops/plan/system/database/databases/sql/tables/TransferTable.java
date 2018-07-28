@@ -18,7 +18,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Table that is in charge of transferring data between network servers.
@@ -75,7 +74,7 @@ public class TransferTable extends Table {
         addColumns(Col.PART + " bigint NOT NULL DEFAULT 0");
     }
 
-    public void clean() throws SQLException {
+    public void clean() {
         String sql = "DELETE FROM " + tableName +
                 " WHERE " + Col.EXPIRY + " < ?" +
                 " AND " + Col.INFO_TYPE + " != ?";
@@ -100,34 +99,7 @@ public class TransferTable extends Table {
         });
     }
 
-    @Deprecated
-    public Optional<UUID> getServerPlayerIsOnline(UUID playerUUID) throws SQLException {
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
-        String sql = "SELECT " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SENDER_ID +
-                " WHERE " + Col.EXTRA_VARIABLES + "=?" +
-                " ORDER BY " + Col.EXPIRY + " LIMIT 1";
-
-        return query(new QueryStatement<Optional<UUID>>(sql, 1) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-            }
-
-            @Override
-            public Optional<UUID> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(UUID.fromString(set.getString("s_uuid")));
-                }
-                return Optional.empty();
-            }
-        });
-    }
-
-    public void storeConfigSettings(String encodedSettingString) throws SQLException {
+    public void storeConfigSettings(String encodedSettingString) {
         execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -140,7 +112,7 @@ public class TransferTable extends Table {
         });
     }
 
-    public Optional<String> getConfigSettings() throws SQLException {
+    public Optional<String> getConfigSettings() {
         return query(new QueryStatement<Optional<String>>(selectStatement, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

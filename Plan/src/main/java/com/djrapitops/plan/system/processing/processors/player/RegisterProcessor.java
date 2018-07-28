@@ -4,14 +4,9 @@
  */
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
-import com.djrapitops.plan.data.Actions;
-import com.djrapitops.plan.data.container.Action;
-import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
@@ -25,16 +20,12 @@ public class RegisterProcessor implements CriticalRunnable {
 
     private final UUID uuid;
     private final long registered;
-    private final long time;
-    private final int playersOnline;
     private final String name;
     private final Runnable[] afterProcess;
 
-    public RegisterProcessor(UUID uuid, long registered, long time, String name, int playersOnline, Runnable... afterProcess) {
+    public RegisterProcessor(UUID uuid, long registered, String name, Runnable... afterProcess) {
         this.uuid = uuid;
         this.registered = registered;
-        this.time = time;
-        this.playersOnline = playersOnline;
         this.name = name;
         this.afterProcess = afterProcess;
     }
@@ -50,13 +41,6 @@ public class RegisterProcessor implements CriticalRunnable {
             if (!db.check().isPlayerRegisteredOnThisServer(uuid)) {
                 db.save().registerNewUserOnThisServer(uuid, registered);
             }
-            if (db.fetch().getActions(uuid).size() > 0) {
-                return;
-            }
-            SessionCache.getInstance().markFirstSession(uuid);
-            db.save().action(uuid, new Action(time, Actions.FIRST_SESSION, "Online: " + playersOnline + " Players"));
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
         } finally {
             for (Runnable runnable : afterProcess) {
                 Processing.submit(runnable);

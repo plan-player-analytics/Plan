@@ -4,14 +4,13 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.operation;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,200 +27,112 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     }
 
     @Override
-    public void insertTPS(Map<UUID, List<TPS>> ofServers) throws DBException {
-        try {
-            tpsTable.insertAllTPS(ofServers);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void insertTPS(Map<UUID, List<TPS>> ofServers) {
+        tpsTable.insertAllTPS(ofServers);
     }
 
     @Override
-    public void insertCommandUsage(Map<UUID, Map<String, Integer>> ofServers) throws DBException {
-        try {
-            commandUseTable.insertCommandUsage(ofServers);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void insertCommandUsage(Map<UUID, Map<String, Integer>> ofServers) {
+        commandUseTable.insertCommandUsage(ofServers);
     }
 
     @Override
-    public void insertUsers(Map<UUID, UserInfo> ofServers) throws DBException {
-        try {
-            usersTable.insertUsers(ofServers);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void insertUsers(Map<UUID, UserInfo> ofServers) {
+        usersTable.insertUsers(ofServers);
     }
 
     @Override
-    public void insertSessions(Map<UUID, Map<UUID, List<Session>>> ofServers, boolean containsExtraData) throws DBException {
-        try {
-            sessionsTable.insertSessions(ofServers, containsExtraData);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void insertSessions(Map<UUID, Map<UUID, List<Session>>> ofServers, boolean containsExtraData) {
+        sessionsTable.insertSessions(ofServers, containsExtraData);
     }
 
     @Override
-    public void kickAmount(Map<UUID, Integer> ofUsers) throws DBException {
-        try {
-            usersTable.updateKicked(ofUsers);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void kickAmount(Map<UUID, Integer> ofUsers) {
+        usersTable.updateKicked(ofUsers);
     }
 
     @Override
-    public void insertUserInfo(Map<UUID, List<UserInfo>> ofServers) throws DBException {
-        try {
-            userInfoTable.insertUserInfo(ofServers);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void insertUserInfo(Map<UUID, List<UserInfo>> ofServers) {
+        userInfoTable.insertUserInfo(ofServers);
     }
 
     @Override
-    public void insertNicknames(Map<UUID, Map<UUID, List<String>>> ofServers) throws DBException {
-        try {
-            nicknamesTable.insertNicknames(ofServers);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void insertNicknames(Map<UUID, Map<UUID, List<Nickname>>> ofServers) {
+        nicknamesTable.insertNicknames(ofServers);
     }
 
     @Override
-    public void insertAllGeoInfo(Map<UUID, List<GeoInfo>> ofUsers) throws DBException {
-        try {
-            geoInfoTable.insertAllGeoInfo(ofUsers);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void insertAllGeoInfo(Map<UUID, List<GeoInfo>> ofUsers) {
+        geoInfoTable.insertAllGeoInfo(ofUsers);
     }
 
     @Override
-    public void banStatus(UUID uuid, boolean banned) throws DBException {
-        try {
-            userInfoTable.updateBanStatus(uuid, banned);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void banStatus(UUID uuid, boolean banned) {
+        userInfoTable.updateBanStatus(uuid, banned);
     }
 
     @Override
-    public void opStatus(UUID uuid, boolean op) throws DBException {
-        try {
-            userInfoTable.updateOpStatus(uuid, op);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void opStatus(UUID uuid, boolean op) {
+        userInfoTable.updateOpStatus(uuid, op);
     }
 
     @Override
-    public void registerNewUser(UUID uuid, long registered, String name) throws DBException {
-        try {
-            usersTable.registerUser(uuid, registered, name);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void registerNewUser(UUID uuid, long registered, String name) {
+        usersTable.registerUser(uuid, registered, name);
     }
 
     @Override
-    public void action(UUID uuid, Action action) throws DBException {
-        try {
-            actionsTable.insertAction(uuid, action);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void geoInfo(UUID uuid, GeoInfo geoInfo) {
+        geoInfoTable.saveGeoInfo(uuid, geoInfo);
     }
 
     @Override
-    public void geoInfo(UUID uuid, GeoInfo geoInfo) throws DBException {
-        try {
-            geoInfoTable.saveGeoInfo(uuid, geoInfo);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void playerWasKicked(UUID uuid) {
+        usersTable.kicked(uuid);
     }
 
     @Override
-    public void playerWasKicked(UUID uuid) throws DBException {
-        try {
-            usersTable.kicked(uuid);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void playerName(UUID uuid, String playerName) {
+        usersTable.updateName(uuid, playerName);
     }
 
     @Override
-    public void playerName(UUID uuid, String playerName) throws DBException {
-        try {
-            usersTable.updateName(uuid, playerName);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void playerDisplayName(UUID uuid, Nickname nickname) {
+        nicknamesTable.saveUserName(uuid, nickname);
     }
 
     @Override
-    public void playerDisplayName(UUID uuid, String displayName) throws DBException {
-        try {
-            nicknamesTable.saveUserName(uuid, displayName);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void registerNewUserOnThisServer(UUID uuid, long registered) {
+        userInfoTable.registerUserInfo(uuid, registered);
     }
 
     @Override
-    public void registerNewUserOnThisServer(UUID uuid, long registered) throws DBException {
-        try {
-            userInfoTable.registerUserInfo(uuid, registered);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void commandUsed(String commandName) {
+        commandUseTable.commandUsed(commandName);
     }
 
     @Override
-    public void commandUsed(String commandName) throws DBException {
-        try {
-            commandUseTable.commandUsed(commandName);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void insertTPSforThisServer(TPS tps) {
+        tpsTable.insertTPS(tps);
     }
 
     @Override
-    public void insertTPSforThisServer(TPS tps) throws DBException {
-        try {
-            tpsTable.insertTPS(tps);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void session(UUID uuid, Session session) {
+        sessionsTable.saveSession(uuid, session);
     }
 
     @Override
-    public void session(UUID uuid, Session session) throws DBException {
-        try {
-            sessionsTable.saveSession(uuid, session);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void serverInfoForThisServer(Server server) {
+        serverTable.saveCurrentServerInfo(server);
     }
 
     @Override
-    public void serverInfoForThisServer(Server server) throws DBException {
-        try {
-            serverTable.saveCurrentServerInfo(server);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void webUser(WebUser webUser) {
+        securityTable.addNewUser(webUser);
     }
 
     @Override
-    public void webUser(WebUser webUser) throws DBException {
-        try {
-            securityTable.addNewUser(webUser);
-        } catch (SQLException e) {
-            throw SQLErrorUtil.getExceptionFor(e);
-        }
+    public void ping(UUID uuid, Ping ping) {
+        pingTable.insertPing(uuid, ping);
     }
 }

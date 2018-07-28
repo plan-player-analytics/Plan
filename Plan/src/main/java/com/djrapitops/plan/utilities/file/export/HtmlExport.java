@@ -5,7 +5,7 @@
 package com.djrapitops.plan.utilities.file.export;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -39,22 +39,14 @@ public class HtmlExport extends SpecificExport {
     }
 
     public static void exportServer(UUID serverUUID) {
-        try {
-            Optional<String> serverName = Database.getActive().fetch().getServerName(serverUUID);
-            serverName.ifPresent(s -> RunnableFactory.createNew(new AnalysisExport(serverUUID, s)).runTaskAsynchronously());
-        } catch (DBException e) {
-            Log.toLog(HtmlExport.class.getClass().getName(), e);
-        }
+        Optional<String> serverName = Database.getActive().fetch().getServerName(serverUUID);
+        serverName.ifPresent(s -> RunnableFactory.createNew(new AnalysisExport(serverUUID, s)).runTaskAsynchronously());
     }
 
     public static void exportPlayer(UUID playerUUID) {
-        try {
-            String playerName = Database.getActive().fetch().getPlayerName(playerUUID);
-            if (playerName != null) {
-                RunnableFactory.createNew(new PlayerExport(playerUUID, playerName)).runTaskAsynchronously();
-            }
-        } catch (DBException e) {
-            Log.toLog(HtmlExport.class.getClass().getName(), e);
+        String playerName = Database.getActive().fetch().getPlayerName(playerUUID);
+        if (playerName != null) {
+            RunnableFactory.createNew(new PlayerExport(playerUUID, playerName)).runTaskAsynchronously();
         }
     }
 
@@ -72,7 +64,7 @@ public class HtmlExport extends SpecificExport {
             exportAvailableServerPages();
             exportAvailablePlayers();
             exportPlayersPage();
-        } catch (IOException | DBException e) {
+        } catch (IOException | DBOpException e) {
             Log.toLog(this.getClass(), e);
         } finally {
             try {
@@ -99,13 +91,13 @@ public class HtmlExport extends SpecificExport {
         export(exportFile, lines);
     }
 
-    private void exportAvailablePlayers() throws DBException, IOException {
+    private void exportAvailablePlayers() throws IOException {
         for (Map.Entry<UUID, UserInfo> entry : Database.getActive().fetch().getUsers().entrySet()) {
             exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
         }
     }
 
-    private void exportAvailableServerPages() throws IOException, DBException {
+    private void exportAvailableServerPages() throws IOException {
         Map<UUID, String> serverNames = Database.getActive().fetch().getServerNames();
 
         for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
@@ -129,6 +121,8 @@ public class HtmlExport extends SpecificExport {
                 "web/js/helpers.js",
                 "web/js/script.js",
                 "web/js/charts/activityPie.js",
+                "web/js/charts/lineGraph.js",
+                "web/js/charts/horizontalBarGraph.js",
                 "web/js/charts/stackGraph.js",
                 "web/js/charts/performanceGraph.js",
                 "web/js/charts/playerGraph.js",
@@ -161,7 +155,6 @@ public class HtmlExport extends SpecificExport {
 
     private void exportPlugins() {
         String[] resources = new String[]{
-                "web/plugins/font-awesome/fa-script.js",
                 "web/plugins/bootstrap/css/bootstrap.css",
                 "web/plugins/node-waves/waves.css",
                 "web/plugins/node-waves/waves.js",

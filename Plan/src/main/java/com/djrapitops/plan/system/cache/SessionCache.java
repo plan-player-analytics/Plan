@@ -1,7 +1,8 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -20,7 +21,6 @@ import java.util.UUID;
  */
 public class SessionCache {
 
-    private static final Map<UUID, Integer> firstSessionInformation = new HashMap<>();
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
     protected final PlanSystem system;
 
@@ -34,13 +34,6 @@ public class SessionCache {
         return dataCache;
     }
 
-    /**
-     * Used to get the Map of active sessions.
-     * <p>
-     * Used for testing.
-     *
-     * @return key:value UUID:Session
-     */
     public static Map<UUID, Session> getActiveSessions() {
         return activeSessions;
     }
@@ -49,28 +42,9 @@ public class SessionCache {
         activeSessions.clear();
     }
 
-    public void cacheSession(UUID uuid, Session session) {
-        activeSessions.put(uuid, session);
-    }
-
-    public void endSession(UUID uuid, long time) {
-        try {
-            Session session = activeSessions.get(uuid);
-            if (session == null) {
-                return;
-            }
-            session.endSession(time);
-            Database.getActive().save().session(uuid, session);
-        } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
-        } finally {
-            activeSessions.remove(uuid);
-        }
-    }
-
     public static void refreshActiveSessionsState() {
         for (Session session : activeSessions.values()) {
-            session.getWorldTimes().updateState(System.currentTimeMillis());
+            session.getUnsafe(SessionKeys.WORLD_TIMES).updateState(System.currentTimeMillis());
         }
     }
 
@@ -78,50 +52,42 @@ public class SessionCache {
      * Used to get the Session of the player in the sessionCache.
      *
      * @param uuid UUID of the player.
-     * @return Session or null if not cached.
+     * @return Optional with the session inside it if found.
      */
     public static Optional<Session> getCachedSession(UUID uuid) {
-        Session session = activeSessions.get(uuid);
-        if (session != null) {
-            return Optional.of(session);
+        return Optional.ofNullable(activeSessions.get(uuid));
+    }
+
+    public static boolean isOnline(UUID uuid) {
+        return getCachedSession(uuid).isPresent();
+    }
+
+    public void cacheSession(UUID uuid, Session session) {
+        if (getCachedSession(uuid).isPresent()) {
+            endSession(uuid, System.currentTimeMillis());
         }
-        return Optional.empty();
+        activeSessions.put(uuid, session);
     }
 
-    /**
-     * Used for marking first Session Actions to be saved.
-     *
-     * @param uuid UUID of the new player.
-     */
-    public void markFirstSession(UUID uuid) {
-        firstSessionInformation.put(uuid, 0);
+    public void endSession(UUID uuid, long time) {
+        Session session = activeSessions.get(uuid);
+        if (session == null) {
+            return;
+        }
+        if (session.getUnsafe(SessionKeys.START) > time) {
+            return;
+        }
+        try {
+            session.endSession(time);
+            Database.getActive().save().session(uuid, session);
+        } catch (DBOpException e) {
+            Log.toLog(this.getClass(), e);
+        } finally {
+            removeSessionFromCache(uuid);
+        }
     }
 
-    /**
-     * Check if a session is player's first session on the server.
-     *
-     * @param uuid UUID of the player
-     * @return true / false
-     */
-    public boolean isFirstSession(UUID uuid) {
-        return firstSessionInformation.containsKey(uuid);
-    }
-
-    public void endFirstSessionActionTracking(UUID uuid) {
-        firstSessionInformation.remove(uuid);
-    }
-
-    public void firstSessionMessageSent(UUID uuid) {
-        Integer msgCount = firstSessionInformation.getOrDefault(uuid, 0);
-        msgCount++;
-        firstSessionInformation.put(uuid, msgCount);
-    }
-
-    public int getFirstSessionMsgCount(UUID uuid) {
-        return firstSessionInformation.getOrDefault(uuid, 0);
-    }
-
-    public Map<UUID, Integer> getFirstSessionMsgCounts() {
-        return firstSessionInformation;
+    protected void removeSessionFromCache(UUID uuid) {
+        activeSessions.remove(uuid);
     }
 }

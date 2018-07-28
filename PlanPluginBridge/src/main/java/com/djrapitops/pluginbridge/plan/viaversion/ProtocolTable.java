@@ -46,15 +46,7 @@ public class ProtocolTable extends Table {
         );
     }
 
-    public void saveProtocolVersion(UUID uuid, int version) throws SQLException {
-        if (exists(uuid)) {
-            updateProtocolVersion(uuid, version);
-        } else {
-            insertProtocolVersion(uuid, version);
-        }
-    }
-
-    public int getProtocolVersion(UUID uuid) throws SQLException {
+    public int getProtocolVersion(UUID uuid) {
         String sql = "SELECT " + columnProtocolVersion + " FROM " + tableName + " WHERE " + columnUUID + "=?";
 
         return query(new QueryStatement<Integer>(sql) {
@@ -74,7 +66,7 @@ public class ProtocolTable extends Table {
         });
     }
 
-    public Map<UUID, Integer> getProtocolVersions() throws SQLException {
+    public Map<UUID, Integer> getProtocolVersions() {
         return query(new QueryAllStatement<Map<UUID, Integer>>(Select.all(tableName).toString(), 5000) {
             @Override
             public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
@@ -89,26 +81,8 @@ public class ProtocolTable extends Table {
         });
     }
 
-    private boolean exists(UUID uuid) throws SQLException {
-        return getProtocolVersion(uuid) != -1;
-    }
-
-    private void updateProtocolVersion(UUID uuid, int version) throws SQLException {
-        String sql = "UPDATE " + tableName + " SET "
-                + columnProtocolVersion + "=? "
-                + " WHERE (" + columnUUID + "=?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, version);
-                statement.setString(2, uuid.toString());
-            }
-        });
-    }
-
-    private void insertProtocolVersion(UUID uuid, int version) throws SQLException {
-        String sql = "INSERT INTO " + tableName + " ("
+    public void saveProtocolVersion(UUID uuid, int version) {
+        String sql = "REPLACE INTO " + tableName + " ("
                 + columnUUID + ", "
                 + columnProtocolVersion
                 + ") VALUES (?, ?)";

@@ -4,6 +4,9 @@
  */
 package com.djrapitops.plan.utilities.html.structure;
 
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Icon;
+
 import java.io.Serializable;
 
 /**
@@ -20,18 +23,32 @@ public class AccordionElementContentBuilder {
         this.html = new StringBuilder();
     }
 
+    @Deprecated
     public AccordionElementContentBuilder addRowBold(String color, String icon, String text, Serializable value) {
-        html.append("<p><i class=\"col-")
-                .append(color).append(" fa fa-").append(icon)
-                .append("\"></i> ").append(text);
+        return addRowBold(Icon.called(icon).of(Color.matchString(color)), text, value);
+    }
+
+    public AccordionElementContentBuilder addRowBold(Icon.Builder iconBuilder, String text, Serializable value) {
+        return addRowBold(iconBuilder.build(), text, value);
+    }
+
+    public AccordionElementContentBuilder addRowBold(Icon icon, String text, Serializable value) {
+        html.append("<p>").append(icon).append(" ").append(text);
         html.append("<span class=\"pull-right\"><b>").append(value).append("</b></span></p>");
         return this;
     }
 
+    @Deprecated
     public AccordionElementContentBuilder addRow(String color, String icon, String text, Serializable value) {
-        html.append("<p><i class=\"col-")
-                .append(color).append(" fa fa-").append(icon)
-                .append("\"></i> ").append(text);
+        return addRow(Icon.called(icon).of(Color.matchString(color)), text, value);
+    }
+
+    public AccordionElementContentBuilder addRow(Icon.Builder iconBuilder, String text, Serializable value) {
+        return addRow(iconBuilder.build(), text, value);
+    }
+
+    public AccordionElementContentBuilder addRow(Icon icon, String text, Serializable value) {
+        html.append("<p>").append(icon).append(" ").append(text);
         html.append("<span class=\"pull-right\">").append(value).append("</span></p>");
         return this;
     }

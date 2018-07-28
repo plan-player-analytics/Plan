@@ -58,9 +58,8 @@ public class WorldTable extends Table {
      * Used to get the available world names.
      *
      * @return List of all world names in the database.
-     * @throws SQLException Database error occurs.
      */
-    public List<String> getAllWorlds() throws SQLException {
+    public List<String> getAllWorlds() {
         String sql = "SELECT * FROM " + tableName;
 
         return query(new QueryAllStatement<List<String>>(sql) {
@@ -76,7 +75,7 @@ public class WorldTable extends Table {
         });
     }
 
-    public Map<UUID, List<String>> getWorldsPerServer() throws SQLException {
+    public Map<UUID, List<String>> getWorldsPerServer() {
         Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
         String sql = "SELECT * FROM " + tableName;
 
@@ -96,7 +95,7 @@ public class WorldTable extends Table {
         });
     }
 
-    public Map<Integer, UUID> getServerUUIDByWorldID() throws SQLException {
+    public Map<Integer, UUID> getServerUUIDByWorldID() {
         Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
         String sql = "SELECT DISTINCT " +
                 Col.ID + ", " +
@@ -117,11 +116,11 @@ public class WorldTable extends Table {
         });
     }
 
-    public List<String> getWorlds() throws SQLException {
+    public List<String> getWorlds() {
         return getWorlds(ServerInfo.getServerUUID());
     }
 
-    public List<String> getWorlds(UUID serverUUID) throws SQLException {
+    public List<String> getWorlds(UUID serverUUID) {
         String sql = "SELECT * FROM " + tableName +
                 " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
 
@@ -144,7 +143,7 @@ public class WorldTable extends Table {
         });
     }
 
-    public void saveWorlds(Collection<String> worlds) throws SQLException {
+    public void saveWorlds(Collection<String> worlds) {
         saveWorlds(worlds, ServerInfo.getServerUUID());
     }
 
@@ -154,9 +153,8 @@ public class WorldTable extends Table {
      * Already saved names will not be saved.
      *
      * @param worlds List of world names.
-     * @throws SQLException Database error occurs.
      */
-    public void saveWorlds(Collection<String> worlds, UUID serverUUID) throws SQLException {
+    public void saveWorlds(Collection<String> worlds, UUID serverUUID) {
         Verify.nullCheck(worlds);
         Set<String> worldsToSave = new HashSet<>(worlds);
 
@@ -183,7 +181,7 @@ public class WorldTable extends Table {
         });
     }
 
-    public Set<String> getWorldNames(UUID serverUUID) throws SQLException {
+    public Set<String> getWorldNames(UUID serverUUID) {
         String sql = "SELECT DISTINCT " + Col.NAME + " FROM " + tableName +
                 " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
         return query(new QueryStatement<Set<String>>(sql, 100) {
@@ -208,11 +206,10 @@ public class WorldTable extends Table {
      *
      * @param serverUUID UUID of the Server
      * @return World names known for that server
-     * @throws SQLException If DB Error occurs
      * @deprecated Use getWorldNames instead, this method is slower.
      */
     @Deprecated
-    public Set<String> getWorldNamesOld(UUID serverUUID) throws SQLException {
+    public Set<String> getWorldNamesOld(UUID serverUUID) {
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
         SessionsTable sessionsTable = db.getSessionsTable();
 
@@ -247,7 +244,7 @@ public class WorldTable extends Table {
         });
     }
 
-    public void alterTableV16() throws SQLException {
+    public void alterTableV16() {
         addColumns(Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
 
         List<UUID> serverUUIDs = serverTable.getServerUUIDs();
@@ -268,7 +265,7 @@ public class WorldTable extends Table {
         execute("DELETE FROM " + tableName + " WHERE " + Col.SERVER_ID + "=0");
     }
 
-    private void updateWorldTimesTableWorldIDs() throws SQLException {
+    private void updateWorldTimesTableWorldIDs() {
         List<WorldObj> worldObjects = getWorldObjects();
         Map<WorldObj, List<WorldObj>> oldToNewMap =
                 worldObjects.stream()
@@ -302,7 +299,7 @@ public class WorldTable extends Table {
         });
     }
 
-    public Map<Integer, List<Integer>> getWorldIDsByServerIDs() throws SQLException {
+    public Map<Integer, List<Integer>> getWorldIDsByServerIDs() {
         String sql = "SELECT " +
                 Col.ID + ", " +
                 Col.SERVER_ID +
@@ -324,7 +321,7 @@ public class WorldTable extends Table {
         });
     }
 
-    public List<WorldObj> getWorldObjects() throws SQLException {
+    public List<WorldObj> getWorldObjects() {
         String sql = "SELECT * FROM " + tableName;
         return query(new QueryAllStatement<List<WorldObj>>(sql, 100) {
             @Override

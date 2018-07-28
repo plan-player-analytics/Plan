@@ -6,7 +6,6 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
@@ -40,15 +39,11 @@ public class ServerConnectionSystem extends ConnectionSystem {
     private void refreshServerMap() {
         Processing.submitNonCritical(() -> {
             if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
-                try {
-                    Database database = Database.getActive();
-                    Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
-                    bungeeInformation.ifPresent(server -> mainServer = server);
-                    bukkitServers = database.fetch().getBukkitServers();
-                    latestServerMapRefresh = System.currentTimeMillis();
-                } catch (DBException e) {
-                    Log.toLog(this.getClass(), e);
-                }
+                Database database = Database.getActive();
+                Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
+                bungeeInformation.ifPresent(server -> mainServer = server);
+                bukkitServers = database.fetch().getBukkitServers();
+                latestServerMapRefresh = System.currentTimeMillis();
             }
         });
     }
@@ -62,16 +57,12 @@ public class ServerConnectionSystem extends ConnectionSystem {
         }
 
         Server server = null;
-        if (infoRequest instanceof CacheRequest) {
+        if (infoRequest instanceof CacheRequest ||
+                infoRequest instanceof GenerateInspectPageRequest) {
             server = mainServer;
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
             server = bukkitServers.get(serverUUID);
-        } else if (infoRequest instanceof GenerateInspectPageRequest) {
-            Optional<UUID> serverUUID = getServerWherePlayerIsOnline((GenerateInspectPageRequest) infoRequest);
-            if (serverUUID.isPresent()) {
-                server = bukkitServers.getOrDefault(serverUUID.get(), ServerInfo.getServer());
-            }
         }
         if (server == null) {
             throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());

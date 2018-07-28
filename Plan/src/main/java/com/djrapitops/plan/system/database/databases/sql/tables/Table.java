@@ -1,10 +1,13 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.base.Objects;
 
@@ -13,6 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
+ * Abstract representation of a SQL database table.
+ *
  * @author Rsl1122
  */
 public abstract class Table {
@@ -38,12 +43,12 @@ public abstract class Table {
     protected void createTable(String sql) throws DBInitException {
         try {
             execute(sql);
-        } catch (SQLException e) {
+        } catch (DBOpException e) {
             throw new DBInitException("Failed to create table: " + tableName, e);
         }
     }
 
-    protected void renameTable(String to) throws SQLException {
+    protected void renameTable(String to) {
         String sql = usingMySQL ?
                 "RENAME TABLE " + tableName + " TO " + to :
                 "ALTER TABLE " + tableName + " RENAME TO " + to;
@@ -55,7 +60,9 @@ public abstract class Table {
      *
      * @return SQL Connection
      * @throws SQLException DB Error
+     * @deprecated Use db.getConnection - db is protected variable.
      */
+    @Deprecated
     protected Connection getConnection() throws SQLException {
         return db.getConnection();
     }
@@ -64,20 +71,20 @@ public abstract class Table {
      * Get the Database Schema version from VersionTable.
      *
      * @return Database Schema version.
-     * @throws SQLException DB Error
+     * @deprecated Use db.getVersion - db is protected variable.
      */
-    public int getVersion() throws SQLException {
+    @Deprecated
+    public int getVersion() {
         return db.getVersion();
     }
 
     /**
      * Executes an SQL Statement
      *
-     * @param statementString Statement to setUp
-     * @return What setUp returns.
-     * @throws SQLException DB error
+     * @param statementString Statement to execute in the database.
+     * @return true if rows were updated.
      */
-    protected boolean execute(String statementString) throws SQLException {
+    protected boolean execute(String statementString) {
         return execute(new ExecStatement(statementString) {
             @Override
             public void prepare(PreparedStatement statement) {
@@ -87,7 +94,7 @@ public abstract class Table {
     }
 
     /**
-     * Used to setUp queries while possible SQLExceptions are suppressed.
+     * Used to execute statements while possible exceptions are suppressed.
      *
      * @param statements SQL statements to setUp
      */
@@ -96,8 +103,10 @@ public abstract class Table {
         for (String statement : statements) {
             try {
                 execute(statement);
-            } catch (SQLException ignored) {
-                /* Ignored */
+            } catch (DBOpException e) {
+                if (Settings.DEV_MODE.isTrue()) {
+                    Log.toLog(this.getClass(), e);
+                }
             }
         }
     }
@@ -118,7 +127,7 @@ public abstract class Table {
     /**
      * Removes all data from the table.
      */
-    public void removeAllData() throws SQLException {
+    public void removeAllData() {
         execute("DELETE FROM " + tableName);
     }
 
@@ -158,7 +167,11 @@ public abstract class Table {
                 Objects.equal(db, table.db);
     }
 
-    protected void commit(Connection connection) throws SQLException {
+    /**
+     * @deprecated Use db.commit - db is a protected variable.
+     */
+    @Deprecated
+    protected void commit(Connection connection) {
         db.commit(connection);
     }
 
@@ -167,45 +180,15 @@ public abstract class Table {
         return Objects.hashCode(tableName, db, usingMySQL);
     }
 
-    public SQLDB getDb() {
-        return db;
+    protected boolean execute(ExecStatement statement) {
+        return db.execute(statement);
     }
 
-    protected boolean execute(ExecStatement statement) throws SQLException {
-        Connection connection = null;
-        try {
-            connection = getConnection();
-            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
-                return statement.execute(preparedStatement);
-            }
-        } finally {
-            commit(connection);
-            db.returnToPool(connection);
-        }
+    protected void executeBatch(ExecStatement statement) {
+        db.executeBatch(statement);
     }
 
-    protected void executeBatch(ExecStatement statement) throws SQLException {
-        Connection connection = null;
-        try {
-            connection = getConnection();
-            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
-                statement.executeBatch(preparedStatement);
-            }
-        } finally {
-            commit(connection);
-            db.returnToPool(connection);
-        }
-    }
-
-    protected <T> T query(QueryStatement<T> statement) throws SQLException {
-        Connection connection = null;
-        try {
-            connection = getConnection();
-            try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
-                return statement.executeQuery(preparedStatement);
-            }
-        } finally {
-            db.returnToPool(connection);
-        }
+    protected <T> T query(QueryStatement<T> statement) {
+        return db.query(statement);
     }
 }

@@ -1,4 +1,4 @@
-# ![Player Analytics](https://puu.sh/t8vin.png)
+# ![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
 
 [![Build Status](https://travis-ci.org/Rsl1122/Plan-PlayerAnalytics.svg?branch=master)](https://travis-ci.org/Rsl1122/Plan-PlayerAnalytics)
 [![Discord](https://img.shields.io/discord/364107873267089409.svg?logo=discord)](https://discord.gg/yXKmjzT)  
@@ -11,6 +11,7 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 
 ### Links
 - [Spigot, Resource page](https://www.spigotmc.org/resources/plan-player-analytics.32536/)
+- [Sponge Ore Page](https://ore.spongepowered.org/Rsl1122/Plan)
 - [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues)
 - [License](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE)
 

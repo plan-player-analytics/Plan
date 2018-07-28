@@ -5,6 +5,8 @@
  */
 package com.djrapitops.plan.data.container;
 
+import com.djrapitops.plan.data.store.objects.DateHolder;
+
 import java.util.Objects;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Objects;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class TPS {
+public class TPS implements DateHolder {
 
     private final long date;
     private final double ticksPerSecond;
@@ -44,11 +46,7 @@ public class TPS {
         this.chunksLoaded = chunksLoaded;
     }
 
-    /**
-     * Get the time of the average calculation.
-     *
-     * @return epoch ms.
-     */
+    @Override
     public long getDate() {
         return date;
     }

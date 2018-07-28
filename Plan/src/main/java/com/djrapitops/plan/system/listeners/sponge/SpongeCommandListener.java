@@ -24,7 +24,7 @@ public class SpongeCommandListener {
 
     @Listener(order = Order.POST)
     public void onPlayerCommand(SendCommandEvent event, @First Player player) {
-        boolean hasIgnorePermission = player.hasPermission(Permissions.IGNORE_COMMANDUSE.getPermission());
+        boolean hasIgnorePermission = player.hasPermission(Permissions.IGNORE_COMMAND_USE.getPermission());
         if (event.isCancelled() || hasIgnorePermission) {
             return;
         }

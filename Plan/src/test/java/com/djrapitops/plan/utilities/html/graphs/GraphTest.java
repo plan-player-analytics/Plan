@@ -4,8 +4,8 @@
  */
 package com.djrapitops.plan.utilities.html.graphs;
 
-import com.djrapitops.plan.data.calculation.ActivityIndex;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.graphs.line.*;
 import com.djrapitops.plan.utilities.html.graphs.stack.AbstractStackGraph;

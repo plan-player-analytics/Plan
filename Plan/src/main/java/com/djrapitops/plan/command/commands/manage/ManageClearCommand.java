@@ -1,8 +1,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.FatalDBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -66,12 +65,13 @@ public class ManageClearCommand extends CommandNode {
                     database.remove().everything();
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
-                } catch (FatalDBException e) {
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString()
-                            + " Error was fatal, so all information may not have been removed.");
-                    Log.toLog(this.getClass(), e);
-                } catch (DBException e) {
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                } catch (DBOpException e) {
+                    if (e.isFatal()) {
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString()
+                                + " Error was fatal, so all information may not have been removed.");
+                    } else {
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    }
                     Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();

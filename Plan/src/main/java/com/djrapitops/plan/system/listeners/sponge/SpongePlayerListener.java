@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
@@ -21,6 +20,7 @@ import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ProviderRegistration;
 import org.spongepowered.api.service.ban.BanService;
 
+import java.net.InetAddress;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,7 +44,7 @@ public class SpongePlayerListener {
         GameProfile profile = event.getProfile();
         UUID uuid = profile.getUniqueId();
         boolean banned = isBanned(profile);
-        Processing.submit(new BanAndOpProcessor(uuid, banned, false));
+        Processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
     }
 
     @Listener(order = Order.POST)
@@ -92,18 +92,16 @@ public class SpongePlayerListener {
             gm = gameMode.get().getName().toUpperCase();
         }
 
-        String ip = player.getConnection().getAddress().getAddress().getHostAddress();
+        InetAddress address = player.getConnection().getAddress().getAddress();
 
         String playerName = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
 
-        int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
-
-        SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
+        SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
 
         Processing.submit(
-                new RegisterProcessor(uuid, time, time, playerName, playersOnline,
-                        new IPUpdateProcessor(uuid, ip, time),
+                new RegisterProcessor(uuid, time, playerName,
+                        new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)
                 )
@@ -127,16 +125,10 @@ public class SpongePlayerListener {
 
         SpongeAFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
-        Processing.submit(new BanAndOpProcessor(uuid, isBanned(player.getProfile()), false));
+        boolean banned = isBanned(player.getProfile());
+        Processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
         Processing.submit(new EndSessionProcessor(uuid, time));
         Processing.submit(new NetworkPageUpdateProcessor());
-
-        SessionCache sessionCache = SessionCache.getInstance();
-        if (sessionCache.isFirstSession(uuid)) {
-            int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
-            Processing.submit(new FirstLeaveProcessor(uuid, time, messagesSent));
-        }
-
         Processing.submit(new PlayerPageUpdateProcessor(uuid));
     }
 }

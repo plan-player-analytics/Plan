@@ -7,7 +7,9 @@ package com.djrapitops.plan.system.tasks;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.tasks.server.BukkitTPSCountTimer;
 import com.djrapitops.plan.system.tasks.server.PaperTPSCountTimer;
+import com.djrapitops.plan.system.tasks.server.PingCountTimer;
 import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
 
 /**
@@ -18,10 +20,20 @@ import org.bukkit.Bukkit;
 public class BukkitTaskSystem extends ServerTaskSystem {
 
     public BukkitTaskSystem(Plan plugin) {
-        super(plugin);
-        tpsCountTimer = Check.isPaperAvailable()
-                ? new PaperTPSCountTimer(plugin)
-                : new BukkitTPSCountTimer(plugin);
+        super(plugin,
+                Check.isPaperAvailable()
+                        ? new PaperTPSCountTimer(plugin)
+                        : new BukkitTPSCountTimer(plugin)
+        );
+    }
+
+    @Override
+    public void enable() {
+        super.enable();
+        PingCountTimer pingCountTimer = new PingCountTimer();
+        ((Plan) plugin).registerListener(pingCountTimer);
+        RunnableFactory.createNew("PingCountTimer", pingCountTimer)
+                .runTaskTimer(20L, PingCountTimer.PING_INTERVAL);
     }
 
     @Override

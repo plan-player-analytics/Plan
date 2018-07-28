@@ -3,15 +3,13 @@ package com.djrapitops.plan.utilities.html.graphs.pie;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WorldPie extends AbstractPieChartWithDrilldown {
 
@@ -49,12 +47,39 @@ public class WorldPie extends AbstractPieChartWithDrilldown {
         return slices;
     }
 
+    private Map<String, GMTimes> getGMTimesPerAlias() {
+        Map<String, String> aliases = WorldAliasSettings.getAliases();
+
+        Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();
+
+        String[] gms = GMTimes.getGMKeyArray();
+
+        for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
+            String worldName = entry.getKey();
+            GMTimes gmTimes = entry.getValue();
+
+            if (!aliases.containsKey(worldName)) {
+                aliases.put(worldName, worldName);
+                WorldAliasSettings.addWorld(worldName);
+            }
+
+            String alias = aliases.get(worldName);
+
+            GMTimes aliasGMTimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
+            for (String gm : gms) {
+                aliasGMTimes.addTime(gm, gmTimes.getTime(gm));
+            }
+            gmTimesPerAlias.put(alias, aliasGMTimes);
+        }
+        return gmTimesPerAlias;
+    }
+
     @Override
     public String toHighChartsDrilldown() {
         StringBuilder drilldownBuilder = new StringBuilder();
         int i = 0;
 
-        Map<String, GMTimes> gmTimesAliasMap = AnalysisUtils.getGMTimesPerAlias(worldTimes);
+        Map<String, GMTimes> gmTimesAliasMap = getGMTimesPerAlias();
         if (gmTimesAliasMap.isEmpty()) {
             return "[]";
         }

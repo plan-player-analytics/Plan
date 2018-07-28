@@ -27,11 +27,6 @@ public class AbstractPieChart implements HighChart {
         this.slices = slices;
     }
 
-    @Deprecated
-    public static String createSeries(List<PieSlice> slices) {
-        return new AbstractPieChart(slices).toHighChartsSeries();
-    }
-
     @Override
     public String toHighChartsSeries() {
         StringBuilder seriesBuilder = new StringBuilder("[");

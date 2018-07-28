@@ -1,16 +1,19 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
 package com.djrapitops.pluginbridge.plan.aac;
 
-import com.djrapitops.plugin.utilities.Format;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plugin.utilities.Format;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,8 +32,7 @@ public class AdvancedAntiCheatData extends PluginData {
 
     public AdvancedAntiCheatData(HackerTable table) {
         super(ContainerSize.THIRD, "AdvancedAntiCheat");
-        super.setPluginIcon("heart");
-        super.setIconColor("red");
+        super.setPluginIcon(Icon.called("heart").of(Color.RED).build());
         this.table = table;
     }
 
@@ -38,12 +40,15 @@ public class AdvancedAntiCheatData extends PluginData {
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
         List<HackObject> hackObjects = table.getHackObjects(uuid);
 
-        inspectContainer.addValue(getWithIcon("Times Kicked for Possible Hacking", "exclamation-triangle", "red"), hackObjects.size());
+        inspectContainer.addValue(
+                getWithIcon("Times Kicked for Possible Hacking", Icon.called("exclamation-triangle").of(Color.RED)),
+                hackObjects.size()
+        );
 
         TableContainer hackTable = new TableContainer(
-                getWithIcon("Kicked", "calendar"),
-                getWithIcon("Hack", "exclamation-triangle"),
-                getWithIcon("Violation Level", "gavel")
+                getWithIcon("Kicked", Icon.called("calendar").of(Family.REGULAR)),
+                getWithIcon("Hack", Icon.called("exclamation-triangle")),
+                getWithIcon("Violation Level", Icon.called("gavel"))
         );
         hackTable.setColor("red");
 
@@ -64,7 +69,7 @@ public class AdvancedAntiCheatData extends PluginData {
         Map<UUID, Integer> violations = hackObjects.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().size()));
 
-        analysisContainer.addPlayerTableValues(getWithIcon("Kicked for Hacking", "exclamation-triangle"), violations);
+        analysisContainer.addPlayerTableValues(getWithIcon("Kicked for Hacking", Icon.called("exclamation-triangle")), violations);
 
         return analysisContainer;
     }

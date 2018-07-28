@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.entity.Player;
@@ -18,6 +17,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 /**
@@ -41,7 +41,7 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             boolean op = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
-            Processing.submit(new BanAndOpProcessor(uuid, banned, op));
+            Processing.submit(new BanAndOpProcessor(uuid, () -> banned, op));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -89,18 +89,16 @@ public class PlayerOnlineListener implements Listener {
         String world = player.getWorld().getName();
         String gm = player.getGameMode().name();
 
-        String ip = player.getAddress().getAddress().getHostAddress();
+        InetAddress address = player.getAddress().getAddress();
 
         String playerName = player.getName();
         String displayName = player.getDisplayName();
 
-        int playersOnline = TaskSystem.getInstance().getTpsCountTimer().getLatestPlayersOnline();
-
-        SessionCache.getInstance().cacheSession(uuid, new Session(time, world, gm));
+        SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
 
         Processing.submit(
-                new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
-                        new IPUpdateProcessor(uuid, ip, time),
+                new RegisterProcessor(uuid, player.getFirstPlayed(), playerName,
+                        new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)
                 )
@@ -124,16 +122,9 @@ public class PlayerOnlineListener implements Listener {
 
         AFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
-        Processing.submit(new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()));
+        Processing.submit(new BanAndOpProcessor(uuid, player::isBanned, player.isOp()));
         Processing.submit(new EndSessionProcessor(uuid, time));
         Processing.submit(new NetworkPageUpdateProcessor());
-
-        SessionCache sessionCache = SessionCache.getInstance();
-        if (sessionCache.isFirstSession(uuid)) {
-            int messagesSent = sessionCache.getFirstSessionMsgCount(uuid);
-            Processing.submit(new FirstLeaveProcessor(uuid, time, messagesSent));
-        }
-
         Processing.submit(new PlayerPageUpdateProcessor(uuid));
     }
 }

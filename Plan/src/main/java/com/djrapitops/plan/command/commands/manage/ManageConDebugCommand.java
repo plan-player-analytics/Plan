@@ -2,7 +2,6 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.CheckConnectionRequest;
@@ -11,7 +10,6 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -44,24 +42,19 @@ public class ManageConDebugCommand extends CommandNode {
     }
 
     private void testServers(ISender sender) {
-        try {
-            List<Server> servers = Database.getActive().fetch().getServers();
+        List<Server> servers = Database.getActive().fetch().getServers();
 
-            if (servers.isEmpty()) {
-                sender.sendMessage("§cNo Servers found in the database.");
+        if (servers.isEmpty()) {
+            sender.sendMessage("§cNo Servers found in the database.");
+        }
+
+        String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        UUID thisServer = ServerInfo.getServerUUID();
+        for (Server server : servers) {
+            if (thisServer.equals(server.getUuid())) {
+                continue;
             }
-
-            String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
-            UUID thisServer = ServerInfo.getServerUUID();
-            for (Server server : servers) {
-                if (thisServer.equals(server.getUuid())) {
-                    continue;
-                }
-                testServer(sender, accessAddress, server);
-            }
-
-        } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
+            testServer(sender, accessAddress, server);
         }
     }
 

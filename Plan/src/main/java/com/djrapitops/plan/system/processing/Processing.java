@@ -38,16 +38,22 @@ public class Processing implements SubSystem {
 
     public static void submitNonCritical(Runnable runnable) {
         saveInstance(runnable);
-        CompletableFuture.supplyAsync(() -> runnable, getInstance().nonCriticalExecutor)
-                .thenAccept(Runnable::run)
-                .handle(Processing::exceptionHandler);
+        ExecutorService executor = getInstance().nonCriticalExecutor;
+        if (executor.isShutdown()) {
+            return;
+        }
+        CompletableFuture.supplyAsync(() -> {
+            runnable.run();
+            return true;
+        }, executor).handle(Processing::exceptionHandler);
     }
 
     public static void submitCritical(Runnable runnable) {
         saveInstance(runnable);
-        CompletableFuture.supplyAsync(() -> runnable, getInstance().criticalExecutor)
-                .thenAccept(Runnable::run)
-                .handle(Processing::exceptionHandler);
+        CompletableFuture.supplyAsync(() -> {
+            runnable.run();
+            return true;
+        }, getInstance().criticalExecutor).handle(Processing::exceptionHandler);
     }
 
     public static void submitNonCritical(Runnable... runnables) {
@@ -72,15 +78,17 @@ public class Processing implements SubSystem {
 
     public static <T> Future<T> submitNonCritical(Callable<T> task) {
         saveInstance(task);
-        return CompletableFuture.supplyAsync(() -> task, getInstance().nonCriticalExecutor)
-                .thenApply(tCallable -> {
-                    try {
-                        return tCallable.call();
-                    } catch (Exception e) {
-                        throw new IllegalStateException(e);
-                    }
-                })
-                .handle(Processing::exceptionHandler);
+        ExecutorService executor = getInstance().nonCriticalExecutor;
+        if (executor.isShutdown()) {
+            return null;
+        }
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return task.call();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }, getInstance().nonCriticalExecutor).handle(Processing::exceptionHandler);
     }
 
     private static <T> T exceptionHandler(T t, Throwable throwable) {
@@ -92,15 +100,13 @@ public class Processing implements SubSystem {
 
     public static <T> Future<T> submitCritical(Callable<T> task) {
         saveInstance(task);
-        return CompletableFuture.supplyAsync(() -> task, getInstance().criticalExecutor)
-                .thenApply(tCallable -> {
-                    try {
-                        return tCallable.call();
-                    } catch (Exception e) {
-                        throw new IllegalStateException(e);
-                    }
-                })
-                .handle(Processing::exceptionHandler);
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return task.call();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }, getInstance().criticalExecutor).handle(Processing::exceptionHandler);
     }
 
     public static Processing getInstance() {

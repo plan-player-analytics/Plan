@@ -5,19 +5,22 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
 import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.BanData;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,19 +35,20 @@ public class LiteBansData extends PluginData implements BanData {
 
     public LiteBansData(LiteBansDatabaseQueries db) {
         super(ContainerSize.TAB, "LiteBans");
-        super.setIconColor("red");
-        super.setPluginIcon("ban");
+        setPluginIcon(Icon.called("ban").of(Color.RED).build());
         this.db = db;
     }
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
 
-        String what = getWithIcon("Effect", "times-circle-o");
-        String by = getWithIcon("Banned By", "gavel");
-        String reason = getWithIcon("Reason", "balance-scale");
-        String date = getWithIcon("Expires", "calendar-times-o");
-        TableContainer table = new TableContainer(what, date, by, reason);
+        inspectContainer.addValue(Icon.called("balance-scale").of(Color.RED) +
+                "Hover over 'What' column entry for offence reasons", "");
+
+        String what = getWithIcon("Effect", Icon.called("times-circle").of(Family.REGULAR));
+        String by = getWithIcon("By", Icon.called("gavel"));
+        String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
+        TableContainer table = new TableContainer(what, by, date);
         table.setColor("red");
 
         try {
@@ -59,9 +63,8 @@ public class LiteBansData extends PluginData implements BanData {
                     long expiry = ban.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     table.addRow(
-                            "Ban",
+                            "<span title=\"" + ban.getReason() + "\">Ban</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(ban.getBannedBy()), ban.getBannedBy()),
-                            ban.getReason(),
                             expires
                     );
                 }
@@ -69,9 +72,8 @@ public class LiteBansData extends PluginData implements BanData {
                     long expiry = mute.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     table.addRow(
-                            "Mute",
+                            "<span title=\"" + mute.getReason() + "\">Mute</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mute.getBannedBy()), mute.getBannedBy()),
-                            mute.getReason(),
                             expires
                     );
                 }
@@ -79,9 +81,8 @@ public class LiteBansData extends PluginData implements BanData {
                     long expiry = warn.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     table.addRow(
-                            "Warning",
+                            "<span title=\"" + warn.getReason() + "\">Warning</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(warn.getBannedBy()), warn.getBannedBy()),
-                            warn.getReason(),
                             expires
                     );
                 }
@@ -89,14 +90,13 @@ public class LiteBansData extends PluginData implements BanData {
                     long expiry = kick.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     table.addRow(
-                            "Kick",
+                            "<span title=\"" + kick.getReason() + "\">Kick</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(kick.getBannedBy()), kick.getBannedBy()),
-                            kick.getReason(),
                             expires
                     );
                 }
             }
-        } catch (SQLException ex) {
+        } catch (DBOpException ex) {
             Log.toLog(this.getClass().getName(), ex);
             table.addRow("Error: " + ex);
         }
@@ -106,7 +106,7 @@ public class LiteBansData extends PluginData implements BanData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         TableContainer banTable = getBanTable();
         TableContainer muteTable = getMuteTable();
         TableContainer warningTable = getWarningTable();
@@ -114,22 +114,22 @@ public class LiteBansData extends PluginData implements BanData {
 
         Html spacing = Html.PANEL_BODY;
         String[] navAndHtml = new TabsElement(
-                new TabsElement.Tab(getWithIcon("Bans", "ban"), spacing.parse(banTable.parseHtml())),
-                new TabsElement.Tab(getWithIcon("Mutes", "bell-slash-o"), spacing.parse(muteTable.parseHtml())),
-                new TabsElement.Tab(getWithIcon("Warnings", "exclamation-triangle"), spacing.parse(warningTable.parseHtml())),
-                new TabsElement.Tab(getWithIcon("Kicks", "user-times"), spacing.parse(kickTable.parseHtml()))
+                new TabsElement.Tab(getWithIcon("Bans", Icon.called("ban")), spacing.parse(banTable.parseHtml())),
+                new TabsElement.Tab(getWithIcon("Mutes", Icon.called("bell-slash").of(Family.REGULAR)), spacing.parse(muteTable.parseHtml())),
+                new TabsElement.Tab(getWithIcon("Warnings", Icon.called("exclamation-triangle")), spacing.parse(warningTable.parseHtml())),
+                new TabsElement.Tab(getWithIcon("Kicks", Icon.called("user-times")), spacing.parse(kickTable.parseHtml()))
         ).toHtml();
         analysisContainer.addHtml("Tables", navAndHtml[0] + navAndHtml[1]);
 
         return analysisContainer;
     }
 
-    private TableContainer getBanTable() throws SQLException {
-        String banned = getWithIcon("Banned", "ban");
-        String by = getWithIcon("Banned By", "gavel");
-        String reason = getWithIcon("Reason", "balance-scale");
-        String date = getWithIcon("Expires", "calendar-times-o");
-        String active = getWithIcon("Active", "hourglass");
+    private TableContainer getBanTable() {
+        String banned = getWithIcon("Banned", Icon.called("ban"));
+        String by = getWithIcon("Banned By", Icon.called("gavel"));
+        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
+        String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
+        String active = getWithIcon("Active", Icon.called("hourglass"));
 
         TableContainer banTable = new TableContainer(banned, by, reason, date, active);
         banTable.useJqueryDataTables();
@@ -137,12 +137,12 @@ public class LiteBansData extends PluginData implements BanData {
         return banTable;
     }
 
-    private TableContainer getMuteTable() throws SQLException {
-        String muted = getWithIcon("Muted", "bell-slash-o");
-        String by = getWithIcon("Muted By", "gavel");
-        String reason = getWithIcon("Reason", "balance-scale");
-        String date = getWithIcon("Expires", "calendar-times-o");
-        String active = getWithIcon("Active", "hourglass");
+    private TableContainer getMuteTable() {
+        String muted = getWithIcon("Muted", Icon.called("bell-slash").of(Family.REGULAR));
+        String by = getWithIcon("Muted By", Icon.called("gavel"));
+        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
+        String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
+        String active = getWithIcon("Active", Icon.called("hourglass"));
 
         TableContainer muteTable = new TableContainer(muted, by, reason, date, active);
         muteTable.useJqueryDataTables();
@@ -150,12 +150,12 @@ public class LiteBansData extends PluginData implements BanData {
         return muteTable;
     }
 
-    private TableContainer getWarningTable() throws SQLException {
-        String warned = getWithIcon("Warned", "exclamation-triangle");
-        String by = getWithIcon("Warned By", "gavel");
-        String reason = getWithIcon("Reason", "balance-scale");
-        String date = getWithIcon("Expires", "calendar-times-o");
-        String active = getWithIcon("Active", "hourglass");
+    private TableContainer getWarningTable() {
+        String warned = getWithIcon("Warned", Icon.called("exclamation-triangle"));
+        String by = getWithIcon("Warned By", Icon.called("gavel"));
+        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
+        String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
+        String active = getWithIcon("Active", Icon.called("hourglass"));
 
         TableContainer warnTable = new TableContainer(warned, by, reason, date, active);
         warnTable.useJqueryDataTables();
@@ -163,12 +163,12 @@ public class LiteBansData extends PluginData implements BanData {
         return warnTable;
     }
 
-    private TableContainer getKickTable() throws SQLException {
-        String kicked = getWithIcon("Kicked", "user-times");
-        String by = getWithIcon("Kicked By", "gavel");
-        String reason = getWithIcon("Reason", "balance-scale");
-        String date = getWithIcon("Expires", "calendar-times-o");
-        String active = getWithIcon("Active", "hourglass");
+    private TableContainer getKickTable() {
+        String kicked = getWithIcon("Kicked", Icon.called("user-times"));
+        String by = getWithIcon("Kicked By", Icon.called("gavel"));
+        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
+        String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
+        String active = getWithIcon("Active", Icon.called("hourglass"));
 
         TableContainer kickTable = new TableContainer(kicked, by, reason, date, active);
         kickTable.useJqueryDataTables();
@@ -180,9 +180,10 @@ public class LiteBansData extends PluginData implements BanData {
         if (objects.isEmpty()) {
             table.addRow("No Data");
         } else {
+            Map<UUID, String> playerNames = analysisData.getValue(AnalysisKeys.PLAYER_NAMES).orElse(new HashMap<>());
             for (LiteBansDBObj object : objects) {
                 UUID uuid = object.getUuid();
-                String name = DataCache.getInstance().getName(uuid);
+                String name = playerNames.getOrDefault(uuid, "Unknown to Plan");
                 long expiry = object.getExpiry();
                 String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
 
@@ -200,9 +201,9 @@ public class LiteBansData extends PluginData implements BanData {
     @Override
     public boolean isBanned(UUID uuid) {
         try {
-            return !db.getBans(uuid).isEmpty();
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+            return db.getBans(uuid).stream().anyMatch(LiteBansDBObj::isActive);
+        } catch (DBOpException e) {
+            Log.toLog(this.getClass(), e);
         }
         return false;
     }
@@ -210,15 +211,14 @@ public class LiteBansData extends PluginData implements BanData {
     @Override
     public Collection<UUID> filterBanned(Collection<UUID> collection) {
         try {
-            List<LiteBansDBObj> bans = db.getBans();
-            Set<UUID> banned = new HashSet<>();
-            for (LiteBansDBObj ban : bans) {
-                banned.add(ban.getUuid());
-            }
+            Set<UUID> banned = db.getBans().stream()
+                    .filter(LiteBansDBObj::isActive)
+                    .map(LiteBansDBObj::getUuid)
+                    .collect(Collectors.toSet());
 
             return collection.stream().filter(banned::contains).collect(Collectors.toSet());
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+        } catch (DBOpException e) {
+            Log.toLog(this.getClass(), e);
         }
         return new HashSet<>();
     }

@@ -1,7 +1,9 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.system.afk.AFKTracker;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,8 +29,13 @@ public class AFKListener implements Listener {
 
     private void event(PlayerEvent event) {
         try {
-            UUID uuid = event.getPlayer().getUniqueId();
+            Player player = event.getPlayer();
+            UUID uuid = player.getUniqueId();
             long time = System.currentTimeMillis();
+
+            if (player.hasPermission(Permissions.IGNORE_AFK.getPermission())) {
+                AFK_TRACKER.hasIgnorePermission(uuid);
+            }
 
             AFK_TRACKER.performedAction(uuid, time);
         } catch (Exception e) {
@@ -49,6 +56,11 @@ public class AFKListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         event(event);
+        boolean isAfkCommand = event.getMessage().substring(1).toLowerCase().startsWith("afk");
+        if (isAfkCommand) {
+            UUID uuid = event.getPlayer().getUniqueId();
+            AFK_TRACKER.usedAfkCommand(uuid, System.currentTimeMillis());
+        }
     }
 
 }

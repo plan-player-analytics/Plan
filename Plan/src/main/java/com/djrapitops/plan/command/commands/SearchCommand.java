@@ -1,9 +1,11 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -57,6 +59,9 @@ public class SearchCommand extends CommandNode {
                     }
 
                     sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+                } catch (DBOpException e) {
+                    sender.sendMessage("§cDatabase error occurred: " + e.getMessage());
+                    Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();
                 }

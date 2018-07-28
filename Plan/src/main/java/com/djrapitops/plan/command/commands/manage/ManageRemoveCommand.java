@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
@@ -70,7 +70,7 @@ public class ManageRemoveCommand extends CommandNode {
                     database.remove().player(uuid);
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, Database.getActive().getConfigName()));
-                } catch (DBException e) {
+                } catch (DBOpException e) {
                     Log.toLog(this.getClass(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {

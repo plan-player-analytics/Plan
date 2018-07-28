@@ -36,7 +36,7 @@ public abstract class PlanSystem implements SubSystem {
     // Initialized in this class
     private Processing processing;
     protected final WebServerSystem webServerSystem;
-    protected final CacheSystem cacheSystem;
+    protected CacheSystem cacheSystem;
 
     // These need to be initialized in the sub class.
     protected VersionCheckSystem versionCheckSystem;

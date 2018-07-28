@@ -23,6 +23,10 @@ public abstract class TaskSystem implements SubSystem {
 
     protected TPSCountTimer tpsCountTimer;
 
+    public TaskSystem(TPSCountTimer tpsCountTimer) {
+        this.tpsCountTimer = tpsCountTimer;
+    }
+
     public static TaskSystem getInstance() {
         return PlanSystem.getInstance().getTaskSystem();
     }

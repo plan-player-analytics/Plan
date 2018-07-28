@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plan.utilities.analysis.Analysis;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -46,12 +45,12 @@ public class AnalyzeCommand extends CommandNode {
             try {
                 Server server = getServer(args).orElseGet(ServerInfo::getServer);
                 UUID serverUUID = server.getUuid();
-                if (!ServerInfo.getServerUUID().equals(serverUUID) || !Analysis.isAnalysisBeingRun()) {
-                    InfoSystem.getInstance().generateAnalysisPage(serverUUID);
-                }
+
+
+                InfoSystem.getInstance().generateAnalysisPage(serverUUID);
                 sendWebUserNotificationIfNecessary(sender);
                 sendLink(server, sender);
-            } catch (DBException | WebException e) {
+            } catch (DBOpException | WebException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
                 Log.toLog(this.getClass(), e);
             }
@@ -74,7 +73,7 @@ public class AnalyzeCommand extends CommandNode {
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 
-    private void sendWebUserNotificationIfNecessary(ISender sender) throws DBException {
+    private void sendWebUserNotificationIfNecessary(ISender sender) {
         if (WebServerSystem.getInstance().getWebServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {
 
             boolean senderHasWebUser = Database.getActive().check().doesWebUserExists(sender.getName());
@@ -84,7 +83,7 @@ public class AnalyzeCommand extends CommandNode {
         }
     }
 
-    private Optional<Server> getServer(String[] args) throws DBException {
+    private Optional<Server> getServer(String[] args) {
         if (args.length >= 1 && ConnectionSystem.getInstance().isServerAvailable()) {
             Map<UUID, Server> bukkitServers = Database.getActive().fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);

@@ -5,10 +5,11 @@
 package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -35,7 +36,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
             try {
                 bukkitServers = Database.getActive().fetch().getBukkitServers();
                 latestServerMapRefresh = System.currentTimeMillis();
-            } catch (DBException e) {
+            } catch (DBOpException e) {
                 Log.toLog(this.getClass(), e);
             }
         }
@@ -51,12 +52,8 @@ public class BungeeConnectionSystem extends ConnectionSystem {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
             server = bukkitServers.get(serverUUID);
         } else if (infoRequest instanceof GenerateInspectPageRequest) {
-            Optional<UUID> serverUUID = getServerWherePlayerIsOnline((GenerateInspectPageRequest) infoRequest);
-            if (serverUUID.isPresent()) {
-                server = bukkitServers.getOrDefault(serverUUID.get(), getOneBukkitServer());
-            } else {
-                server = getOneBukkitServer();
-            }
+            // Run locally
+            server = ServerInfo.getServer();
         }
         if (server == null) {
             throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());

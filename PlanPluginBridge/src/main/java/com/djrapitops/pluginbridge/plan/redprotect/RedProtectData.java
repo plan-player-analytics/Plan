@@ -11,6 +11,9 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.html.icon.Color;
+import com.djrapitops.plan.utilities.html.icon.Family;
+import com.djrapitops.plan.utilities.html.icon.Icon;
 import org.bukkit.Location;
 
 import java.util.Collection;
@@ -26,45 +29,37 @@ public class RedProtectData extends PluginData {
 
     public RedProtectData() {
         super(ContainerSize.THIRD, "RedProtect");
-        super.setPluginIcon("map-o");
-        super.setIconColor("shield");
+        setPluginIcon(Icon.called("shield-alt").of(Color.RED).build());
     }
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         Set<Region> regions = RedProtect.get().getAPI().getPlayerRegions(uuid.toString());
 
-        inspectContainer.addValue(getWithIcon("Regions", "map-marker", "red"), regions.size());
+        addRegionData(inspectContainer, regions);
+
+        return inspectContainer;
+    }
+
+    private void addRegionData(InspectContainer inspectContainer, Set<Region> regions) {
+        inspectContainer.addValue(getWithIcon("Regions", Icon.called("map-marker").of(Color.RED)), regions.size());
 
         TableContainer regionTable = new TableContainer(
-                getWithIcon("Region", "map-marker"),
-                getWithIcon("World", "map"),
-                getWithIcon("Area", "map-o")
+                getWithIcon("Region", Icon.called("map-marker")),
+                getWithIcon("World", Icon.called("map")),
+                getWithIcon("Area", Icon.called("map").of(Family.REGULAR))
         );
         long areaTotal = getTotalAndAddRows(regions, regionTable);
 
-        inspectContainer.addValue(getWithIcon("Total Area", "map-o", "red"), areaTotal);
+        inspectContainer.addValue(getWithIcon("Total Area", Icon.called("map").of(Family.REGULAR).of(Color.RED)), areaTotal);
         inspectContainer.addTable("regionTable", regionTable);
-
-        return inspectContainer;
     }
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         Set<Region> regions = RedProtect.get().getAPI().getAllRegions();
 
-        analysisContainer.addValue(getWithIcon("All Regions", "map-marker", "red"), regions.size());
-
-        TableContainer regionTable = new TableContainer(
-                getWithIcon("Region", "map-marker"),
-                getWithIcon("World", "map"),
-                getWithIcon("Area", "map-o")
-        );
-
-        long areaTotal = getTotalAndAddRows(regions, regionTable);
-
-        analysisContainer.addValue(getWithIcon("Total Area", "map-o", "red"), areaTotal);
-        analysisContainer.addTable("regionTable", regionTable);
+        addRegionData(analysisContainer, regions);
         return analysisContainer;
     }
 

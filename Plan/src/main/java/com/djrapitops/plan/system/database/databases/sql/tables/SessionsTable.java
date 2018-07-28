@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
@@ -28,6 +29,9 @@ public class SessionsTable extends UserIDTable {
 
     public static final String TABLE_NAME = "plan_sessions";
 
+    private final ServerTable serverTable;
+    private String insertStatement;
+
     public SessionsTable(SQLDB db) {
         super(TABLE_NAME, db);
         serverTable = db.getServerTable();
@@ -44,9 +48,6 @@ public class SessionsTable extends UserIDTable {
                 + "?, ?, ?, ?, ?, "
                 + serverTable.statementSelectServerID + ")";
     }
-
-    private final ServerTable serverTable;
-    private String insertStatement;
 
     @Override
     public void createTable() throws DBInitException {
@@ -73,7 +74,7 @@ public class SessionsTable extends UserIDTable {
      * @param session session inserted.
      * @return ID of the inserted session or -1 if session has not been inserted.
      */
-    private int getSessionID(UUID uuid, Session session) throws SQLException {
+    private int getSessionID(UUID uuid, Session session) {
         String sql = "SELECT " + Col.ID + " FROM " + tableName +
                 " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID +
                 " AND " + Col.SESSION_START + "=?" +
@@ -83,8 +84,8 @@ public class SessionsTable extends UserIDTable {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setLong(2, session.getSessionStart());
-                statement.setLong(3, session.getSessionEnd());
+                statement.setLong(2, session.getUnsafe(SessionKeys.START));
+                statement.setLong(3, session.getValue(SessionKeys.END).orElse(System.currentTimeMillis()));
             }
 
             @Override
@@ -104,17 +105,16 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid    UUID of the player.
      * @param session Session of the player that has ended ({@code endSession} has been called)
-     * @throws SQLException DB Error
      */
-    public void saveSession(UUID uuid, Session session) throws SQLException {
+    public void saveSession(UUID uuid, Session session) {
         saveSessionInformation(uuid, session);
         int sessionID = getSessionID(uuid, session);
         if (sessionID == -1) {
             throw new IllegalStateException("Session was not Saved!");
         }
 
-        db.getWorldTimesTable().saveWorldTimes(uuid, sessionID, session.getWorldTimes());
-        db.getKillsTable().savePlayerKills(uuid, sessionID, session.getPlayerKills());
+        db.getWorldTimesTable().saveWorldTimes(uuid, sessionID, session.getUnsafe(SessionKeys.WORLD_TIMES));
+        db.getKillsTable().savePlayerKills(uuid, sessionID, session.getUnsafe(SessionKeys.PLAYER_KILLS));
     }
 
     /**
@@ -124,18 +124,17 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid    UUID of the player.
      * @param session Session of the player that has ended ({@code endSession} has been called)
-     * @throws SQLException DB Error
      */
-    private void saveSessionInformation(UUID uuid, Session session) throws SQLException {
+    private void saveSessionInformation(UUID uuid, Session session) {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setLong(2, session.getSessionStart());
-                statement.setLong(3, session.getSessionEnd());
-                statement.setInt(4, session.getDeaths());
-                statement.setInt(5, session.getMobKills());
-                statement.setLong(6, session.getAfkLength());
+                statement.setLong(2, session.getUnsafe(SessionKeys.START));
+                statement.setLong(3, session.getUnsafe(SessionKeys.END));
+                statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
+                statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
+                statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
                 statement.setString(7, ServerInfo.getServerUUID().toString());
             }
         });
@@ -149,9 +148,8 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid UUID of the player
      * @return Map with Sessions that don't contain Kills or WorldTimes.
-     * @throws SQLException DB Error
      */
-    private Map<UUID, List<Session>> getSessionInformation(UUID uuid) throws SQLException {
+    private Map<UUID, List<Session>> getSessionInformation(UUID uuid) {
         Map<Integer, UUID> serverUUIDs = serverTable.getServerUUIDsByID();
         String sql = Select.from(tableName, "*")
                 .where(Col.USER_ID + "=" + usersTable.statementSelectID)
@@ -181,7 +179,7 @@ public class SessionsTable extends UserIDTable {
                     int deaths = set.getInt(Col.DEATHS.get());
                     int mobKills = set.getInt(Col.MOB_KILLS.get());
                     List<Session> sessions = sessionsByServer.getOrDefault(serverUUID, new ArrayList<>());
-                    sessions.add(new Session(id, start, end, mobKills, deaths, timeAFK));
+                    sessions.add(new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
                     sessionsByServer.put(serverUUID, sessions);
                 }
                 return sessionsByServer;
@@ -196,9 +194,8 @@ public class SessionsTable extends UserIDTable {
      * @param serverUUID UUID of the server. @see ServerTable
      * @param afterDate  Epoch ms (Playtime after this date is calculated)
      * @return Milliseconds played after given epoch ms on the server. 0 if player or server not found.
-     * @throws SQLException DB Error
      */
-    public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
+    public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) {
         String sql = "SELECT" +
                 " (SUM(" + Col.SESSION_END + ") - SUM(" + Col.SESSION_START + ")) as playtime" +
                 " FROM " + tableName +
@@ -224,11 +221,14 @@ public class SessionsTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, List<Session>> getSessions(UUID uuid) throws SQLException {
+    public Map<UUID, List<Session>> getSessions(UUID uuid) {
         Map<UUID, List<Session>> sessions = getSessionInformation(uuid);
-        Map<Integer, Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toMap(Session::getSessionID, Function.identity()));
+        Map<Integer, Session> allSessions = sessions.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toMap(s -> s.getUnsafe(SessionKeys.DB_ID), Function.identity()));
 
         db.getKillsTable().addKillsToSessions(uuid, allSessions);
+        db.getKillsTable().addDeathsToSessions(uuid, allSessions);
         db.getWorldTimesTable().addWorldTimesToSessions(uuid, allSessions);
         return sessions;
     }
@@ -238,9 +238,8 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid UUID of the player.
      * @return Milliseconds played on THIS server. 0 if player or server not found.
-     * @throws SQLException DB Error
      */
-    public long getPlaytime(UUID uuid) throws SQLException {
+    public long getPlaytime(UUID uuid) {
         return getPlaytime(uuid, ServerInfo.getServerUUID());
     }
 
@@ -250,9 +249,8 @@ public class SessionsTable extends UserIDTable {
      * @param uuid      UUID of the player.
      * @param afterDate Epoch ms (Playtime after this date is calculated)
      * @return Milliseconds played on THIS server. 0 if player or server not found.
-     * @throws SQLException DB Error
      */
-    public long getPlaytime(UUID uuid, long afterDate) throws SQLException {
+    public long getPlaytime(UUID uuid, long afterDate) {
         return getPlaytime(uuid, ServerInfo.getServerUUID(), afterDate);
     }
 
@@ -262,9 +260,8 @@ public class SessionsTable extends UserIDTable {
      * @param uuid       UUID of the player.
      * @param serverUUID UUID of the server. @see ServerTable
      * @return Milliseconds played on the server. 0 if player or server not found.
-     * @throws SQLException DB Error
      */
-    public long getPlaytime(UUID uuid, UUID serverUUID) throws SQLException {
+    public long getPlaytime(UUID uuid, UUID serverUUID) {
         return getPlaytime(uuid, serverUUID, 0L);
     }
 
@@ -274,9 +271,8 @@ public class SessionsTable extends UserIDTable {
      * @param uuid      UUID of the Player.
      * @param afterDate Epoch ms (Playtime after this date is calculated)
      * @return key - ServerName, value ms played
-     * @throws SQLException DB Error
      */
-    public Map<String, Long> getPlaytimeByServer(UUID uuid, long afterDate) throws SQLException {
+    public Map<String, Long> getPlaytimeByServer(UUID uuid, long afterDate) {
         Map<Integer, String> serverNames = serverTable.getServerNamesByID();
         String sql = "SELECT " +
                 "(SUM(" + Col.SESSION_END + ") - SUM(" + Col.SESSION_START + ")) as playtime, " +
@@ -310,9 +306,8 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid UUID of the Player.
      * @return key - ServerName, value ms played
-     * @throws SQLException DB Error
      */
-    public Map<String, Long> getPlaytimeByServer(UUID uuid) throws SQLException {
+    public Map<String, Long> getPlaytimeByServer(UUID uuid) {
         return getPlaytimeByServer(uuid, 0L);
     }
 
@@ -322,9 +317,8 @@ public class SessionsTable extends UserIDTable {
      * @param serverUUID UUID of the server.
      * @param afterDate  Epoch ms (Playtime after this date is calculated)
      * @return Milliseconds played  after given epoch ms on the server. 0 if server not found.
-     * @throws SQLException DB Error
      */
-    public long getPlaytimeOfServer(UUID serverUUID, long afterDate) throws SQLException {
+    public long getPlaytimeOfServer(UUID serverUUID, long afterDate) {
         String sql = "SELECT" +
                 " (SUM(" + Col.SESSION_END + ") - SUM(" + Col.SESSION_START + ")) as playtime" +
                 " FROM " + tableName +
@@ -352,9 +346,8 @@ public class SessionsTable extends UserIDTable {
      * Used to get the Total Playtime of THIS Server.
      *
      * @return Milliseconds played on the server. 0 if server not found.
-     * @throws SQLException DB Error
      */
-    public long getPlaytimeOfServer() throws SQLException {
+    public long getPlaytimeOfServer() {
         return getPlaytimeOfServer(ServerInfo.getServerUUID());
     }
 
@@ -363,9 +356,8 @@ public class SessionsTable extends UserIDTable {
      *
      * @param serverUUID UUID of the server.
      * @return Milliseconds played on the server. 0 if server not found.
-     * @throws SQLException DB Error
      */
-    public long getPlaytimeOfServer(UUID serverUUID) throws SQLException {
+    public long getPlaytimeOfServer(UUID serverUUID) {
         return getPlaytimeOfServer(serverUUID, 0L);
     }
 
@@ -374,9 +366,8 @@ public class SessionsTable extends UserIDTable {
      *
      * @param afterDate Epoch ms (Playtime after this date is calculated)
      * @return Milliseconds played  after given epoch ms on the server. 0 if server not found.
-     * @throws SQLException DB Error
      */
-    public long getPlaytimeOfServer(long afterDate) throws SQLException {
+    public long getPlaytimeOfServer(long afterDate) {
         return getPlaytimeOfServer(ServerInfo.getServerUUID(), afterDate);
     }
 
@@ -387,9 +378,8 @@ public class SessionsTable extends UserIDTable {
      * @param serverUUID UUID of the server.
      * @param afterDate  Epoch ms (Session count after this date is calculated)
      * @return How many sessions player has. 0 if player or server not found.
-     * @throws SQLException DB Error
      */
-    public int getSessionCount(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
+    public int getSessionCount(UUID uuid, UUID serverUUID, long afterDate) {
         String sql = "SELECT" +
                 " COUNT(*) as logintimes" +
                 " FROM " + tableName +
@@ -420,9 +410,8 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid UUID of the player.
      * @return How many sessions player has. 0 if player or server not found.
-     * @throws SQLException DB Error
      */
-    public int getSessionCount(UUID uuid) throws SQLException {
+    public int getSessionCount(UUID uuid) {
         return getSessionCount(uuid, 0L);
     }
 
@@ -432,9 +421,8 @@ public class SessionsTable extends UserIDTable {
      * @param uuid      UUID of the player.
      * @param afterDate Epoch ms (Session count after this date is calculated)
      * @return How many sessions player has. 0 if player or server not found.
-     * @throws SQLException DB Error
      */
-    public int getSessionCount(UUID uuid, long afterDate) throws SQLException {
+    public int getSessionCount(UUID uuid, long afterDate) {
         return getSessionCount(uuid, ServerInfo.getServerUUID(), afterDate);
     }
 
@@ -444,18 +432,12 @@ public class SessionsTable extends UserIDTable {
      * @param uuid       UUID of the player.
      * @param serverUUID UUID of the server.
      * @return How many sessions player has. 0 if player or server not found.
-     * @throws SQLException DB Error
      */
-    public int getSessionCount(UUID uuid, UUID serverUUID) throws SQLException {
+    public int getSessionCount(UUID uuid, UUID serverUUID) {
         return getSessionCount(uuid, serverUUID, 0L);
     }
 
-    @Deprecated
-    public String getColumnID() {
-        return Col.ID.get();
-    }
-
-    public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) throws SQLException {
+    public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String sql = "SELECT " +
@@ -490,7 +472,7 @@ public class SessionsTable extends UserIDTable {
                     long timeAFK = set.getLong(Col.AFK_TIME.get());
 
                     List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
-                    sessions.add(new Session(set.getInt(Col.ID.get()), start, end, mobKills, deaths, timeAFK));
+                    sessions.add(new Session(set.getInt(Col.ID.get()), uuid, serverUUID, start, end, mobKills, deaths, timeAFK));
                     sessionsByUser.put(uuid, sessions);
                 }
                 return sessionsByUser;
@@ -498,12 +480,12 @@ public class SessionsTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, List<Session>> getSessionInfoOfServer() throws SQLException {
+    public Map<UUID, List<Session>> getSessionInfoOfServer() {
         return getSessionInfoOfServer(ServerInfo.getServerUUID());
     }
 
     // TODO Write tests for this method
-    public long getLastSeen(UUID uuid) throws SQLException {
+    public long getLastSeen(UUID uuid) {
         String sql = "SELECT" +
                 " MAX(" + Col.SESSION_END + ") as last_seen" +
                 " FROM " + tableName +
@@ -525,7 +507,7 @@ public class SessionsTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, Long> getLastSeenForAllPlayers() throws SQLException {
+    public Map<UUID, Long> getLastSeenForAllPlayers() {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String sql = "SELECT" +
@@ -549,7 +531,7 @@ public class SessionsTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, Map<UUID, List<Session>>> getAllSessions(boolean getKillsAndWorldTimes) throws SQLException {
+    public Map<UUID, Map<UUID, List<Session>>> getAllSessions(boolean getKillsAndWorldTimes) {
         Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
         Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
 
@@ -584,7 +566,7 @@ public class SessionsTable extends UserIDTable {
 
                     long timeAFK = set.getLong(Col.AFK_TIME.get());
 
-                    Session session = new Session(id, start, end, mobKills, deaths, timeAFK);
+                    Session session = new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK);
                     sessions.add(session);
 
                     sessionsByUser.put(uuid, sessions);
@@ -599,7 +581,7 @@ public class SessionsTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, Map<UUID, List<Session>>> getSessionInLastMonth() throws SQLException {
+    public Map<UUID, Map<UUID, List<Session>>> getSessionInLastMonth() {
         Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
         Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
 
@@ -640,7 +622,7 @@ public class SessionsTable extends UserIDTable {
 
                     long timeAFK = set.getLong(Col.AFK_TIME.get());
 
-                    Session session = new Session(id, start, end, mobKills, deaths, timeAFK);
+                    Session session = new Session(id, uuid, serverUUID, start, end, mobKills, deaths, timeAFK);
                     sessions.add(session);
 
                     sessionsByUser.put(uuid, sessions);
@@ -651,7 +633,7 @@ public class SessionsTable extends UserIDTable {
         });
     }
 
-    public void insertSessions(Map<UUID, Map<UUID, List<Session>>> allSessions, boolean saveKillsAndWorldTimes) throws SQLException {
+    public void insertSessions(Map<UUID, Map<UUID, List<Session>>> allSessions, boolean saveKillsAndWorldTimes) {
         if (Verify.isEmpty(allSessions)) {
             return;
         }
@@ -666,11 +648,11 @@ public class SessionsTable extends UserIDTable {
 
                         for (Session session : sessions) {
                             statement.setString(1, uuid.toString());
-                            statement.setLong(2, session.getSessionStart());
-                            statement.setLong(3, session.getSessionEnd());
-                            statement.setInt(4, session.getDeaths());
-                            statement.setInt(5, session.getMobKills());
-                            statement.setLong(6, session.getAfkLength());
+                            statement.setLong(2, session.getUnsafe(SessionKeys.START));
+                            statement.setLong(3, session.getUnsafe(SessionKeys.END));
+                            statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
+                            statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
+                            statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
                             statement.setString(7, serverUUID.toString());
                             statement.addBatch();
                         }
@@ -731,15 +713,15 @@ public class SessionsTable extends UserIDTable {
             }
             Session savedSession = savedSessionsByStart.get(start).get(0);
             sessionEntry.getValue().forEach(
-                    session -> session.setSessionID(savedSession.getSessionID())
+                    session -> session.setSessionID(savedSession.getUnsafe(SessionKeys.DB_ID))
             );
         }
     }
 
     private Map<Long, List<Session>> turnToMapByStart(List<Session> sessions) {
-        Map<Long, List<Session>> sessionsByStart = new HashMap<>();
+        Map<Long, List<Session>> sessionsByStart = new TreeMap<>();
         for (Session session : sessions) {
-            long start = session.getSessionStart();
+            long start = session.getUnsafe(SessionKeys.START);
             List<Session> sorted = sessionsByStart.getOrDefault(start, new ArrayList<>());
             sorted.add(session);
             sessionsByStart.put(start, sorted);
@@ -751,7 +733,7 @@ public class SessionsTable extends UserIDTable {
         addColumns(Col.AFK_TIME + " bigint NOT NULL DEFAULT 0");
     }
 
-    public Map<Integer, Integer> getIDServerIDRelation() throws SQLException {
+    public Map<Integer, Integer> getIDServerIDRelation() {
         String sql = "SELECT " +
                 Col.ID + ", " +
                 Col.SERVER_ID +

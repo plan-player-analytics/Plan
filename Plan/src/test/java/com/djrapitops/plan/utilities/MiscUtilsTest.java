@@ -6,6 +6,7 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
@@ -125,7 +126,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void testGetMatchingNames() throws Exception {
+    public void testGetMatchingNames() {
         String exp1 = "TestName";
         String exp2 = "TestName2";
 
@@ -145,15 +146,15 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void testGetMatchingNickNames() throws Exception {
+    public void testGetMatchingNickNames() {
         UUID uuid = UUID.randomUUID();
         String userName = RandomData.randomString(10);
         db.getUsersTable().registerUser(uuid, 0L, userName);
         db.getUsersTable().registerUser(TestConstants.PLAYER_ONE_UUID, 1L, "Not random");
 
         String nickname = "2" + RandomData.randomString(10);
-        db.getNicknamesTable().saveUserName(uuid, nickname);
-        db.getNicknamesTable().saveUserName(TestConstants.PLAYER_ONE_UUID, "No nick");
+        db.getNicknamesTable().saveUserName(uuid, new Nickname(nickname, System.currentTimeMillis(), TestConstants.SERVER_UUID));
+        db.getNicknamesTable().saveUserName(TestConstants.PLAYER_ONE_UUID, new Nickname("No nick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
 
         String search = "2";
 

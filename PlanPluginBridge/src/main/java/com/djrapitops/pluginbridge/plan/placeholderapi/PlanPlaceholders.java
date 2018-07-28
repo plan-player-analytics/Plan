@@ -1,25 +1,22 @@
 package com.djrapitops.pluginbridge.plan.placeholderapi;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.data.PlayerProfile;
-import com.djrapitops.plan.data.ServerProfile;
-import com.djrapitops.plan.data.calculation.ActivityIndex;
-import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.GeoInfo;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
+import com.djrapitops.plan.data.store.containers.ServerContainer;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.data.store.mutators.*;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.analysis.Analysis;
-import com.djrapitops.plan.utilities.analysis.MathUtils;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
 import java.io.Serializable;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 
 /**
  * Placeholders of Plan.
@@ -79,19 +76,13 @@ public class PlanPlaceholders extends PlaceholderExpansion {
         switch (identifier.toLowerCase()) {
             case "address":
                 return PlanSystem.getInstance().getWebServerSystem().getWebServer().getAccessAddress();
-            case "analysis_refresh":
-                Optional<Long> refreshDate = Analysis.getRefreshDate();
-                if (refreshDate.isPresent()) {
-                    return FormatUtils.formatTimeStampClock(refreshDate.get());
-                }
-                return "Not yet run";
             default:
                 return null;
         }
     }
 
     private Serializable getServerValue(String identifier) {
-        Callable<ServerProfile> serverProfile = Analysis::getServerProfile;
+        ServerContainer serverContainer = Database.getActive().fetch().getServerContainer(ServerInfo.getServerUUID());
 
         long now = System.currentTimeMillis();
         long dayAgo = now - TimeAmount.DAY.ms();
@@ -99,41 +90,38 @@ public class PlanPlaceholders extends PlaceholderExpansion {
         long monthAgo = now - TimeAmount.MONTH.ms();
 
         try {
+            PlayersMutator playersMutator = PlayersMutator.forContainer(serverContainer);
             switch (identifier.toLowerCase()) {
                 case "players_total":
-                    return serverProfile.call().getPlayerCount();
+                    return playersMutator.count();
                 case "players_new_day":
-                    return serverProfile.call().getPlayersWhoRegistered(0, dayAgo).count();
+                    return playersMutator.filterRegisteredBetween(dayAgo, now).count();
                 case "players_new_week":
-                    return serverProfile.call().getPlayersWhoRegistered(0, weekAgo).count();
+                    return playersMutator.filterRegisteredBetween(weekAgo, now).count();
                 case "players_new_month":
-                    return serverProfile.call().getPlayersWhoRegistered(0, monthAgo).count();
+                    return playersMutator.filterRegisteredBetween(monthAgo, now).count();
                 case "players_unique_day":
-                    return serverProfile.call().getPlayersWhoPlayedBetween(0, dayAgo).count();
+                    return playersMutator.filterPlayedBetween(dayAgo, now).count();
                 case "players_unique_week":
-                    return serverProfile.call().getPlayersWhoPlayedBetween(0, weekAgo).count();
+                    return playersMutator.filterPlayedBetween(weekAgo, now).count();
                 case "players_unique_month":
-                    return serverProfile.call().getPlayersWhoPlayedBetween(0, monthAgo).count();
+                    return playersMutator.filterPlayedBetween(monthAgo, now).count();
                 case "playtime_total":
-                    return FormatUtils.formatTimeAmount(serverProfile.call().getTotalPlaytime());
+                    return Formatters.timeAmount().apply(new SessionsMutator(playersMutator.getSessions()).toPlaytime());
                 case "session_avg":
-                    return FormatUtils.formatTimeAmount(
-                            PlayerProfile.getSessionAverage(serverProfile.call().getAllSessions().stream())
-                    );
+                    return Formatters.timeAmount().apply(new SessionsMutator(playersMutator.getSessions()).toAverageSessionLength());
                 case "session_count":
-                    return serverProfile.call().getAllSessions().size();
+                    return playersMutator.getSessions().size();
                 case "kills_players":
-                    return PlayerProfile.getPlayerKills(serverProfile.call().getAllSessions().stream()).count();
+                    return new SessionsMutator(playersMutator.getSessions()).toPlayerKillCount();
                 case "kills_mobs":
-                    return PlayerProfile.getMobKillCount(serverProfile.call().getAllSessions().stream());
+                    return new SessionsMutator(playersMutator.getSessions()).toMobKillCount();
                 case "deaths_total":
-                    return PlayerProfile.getDeathCount(serverProfile.call().getAllSessions().stream());
+                    return new SessionsMutator(playersMutator.getSessions()).toDeathCount();
                 case "tps_day":
-                    return FormatUtils.cutDecimals(
-                            MathUtils.averageDouble(serverProfile.call().getTPSData(0, dayAgo).map(TPS::getTicksPerSecond))
-                    );
+                    return TPSMutator.forContainer(serverContainer).filterDataBetween(dayAgo, now).averageTPS();
                 case "tps_drops_week":
-                    return ServerProfile.getLowSpikeCount(serverProfile.call().getTPSData(0, weekAgo).collect(Collectors.toList()));
+                    return TPSMutator.forContainer(serverContainer).filterDataBetween(weekAgo, now).lowTpsSpikeCount();
                 default:
                     break;
             }
@@ -145,7 +133,7 @@ public class PlanPlaceholders extends PlaceholderExpansion {
 
     private Serializable getPlayerValue(Player player, String identifier) {
         UUID uuid = player.getUniqueId();
-        Callable<PlayerProfile> profile = () -> Database.getActive().fetch().getPlayerProfile(uuid);
+        PlayerContainer playerContainer = Database.getActive().fetch().getPlayerContainer(uuid);
 
         long now = System.currentTimeMillis();
         long dayAgo = now - TimeAmount.DAY.ms();
@@ -153,30 +141,31 @@ public class PlanPlaceholders extends PlaceholderExpansion {
         long monthAgo = now - TimeAmount.MONTH.ms();
 
         try {
+            SessionsMutator sessionsMutator = SessionsMutator.forContainer(playerContainer);
             switch (identifier.toLowerCase()) {
                 case "playtime":
-                    return FormatUtils.formatTimeAmount(profile.call().getPlaytime(0, now));
+                    return Formatters.timeAmount().apply(sessionsMutator.toPlaytime());
                 case "playtime_day":
-                    return FormatUtils.formatTimeAmount(profile.call().getPlaytime(dayAgo, now));
+                    return Formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(dayAgo, now).toPlaytime());
                 case "playtime_week":
-                    return FormatUtils.formatTimeAmount(profile.call().getPlaytime(weekAgo, now));
+                    return Formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(weekAgo, now).toPlaytime());
                 case "playtime_month":
-                    return FormatUtils.formatTimeAmount(profile.call().getPlaytime(monthAgo, now));
+                    return Formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(monthAgo, now).toPlaytime());
                 case "geolocation":
-                    return profile.call().getMostRecentGeoInfo().getGeolocation();
+                    return GeoInfoMutator.forContainer(playerContainer).mostRecent().map(GeoInfo::getGeolocation).orElse("Unknown");
                 case "activity_index":
-                    ActivityIndex activityIndex = profile.call().getActivityIndex(now);
+                    ActivityIndex activityIndex = playerContainer.getActivityIndex(now);
                     return activityIndex.getValue() + " (" + activityIndex.getGroup() + ")";
                 case "registered":
-                    return FormatUtils.formatTimeAmount(profile.call().getRegistered());
+                    return Formatters.yearLongValue().apply(playerContainer.getValue(PlayerKeys.REGISTERED).orElse(0L));
                 case "last_seen":
-                    return FormatUtils.formatTimeAmount(profile.call().getLastSeen());
+                    return Formatters.yearLongValue().apply(playerContainer.getValue(PlayerKeys.LAST_SEEN).orElse(0L));
                 case "player_kills":
-                    return profile.call().getPlayerKills().count();
+                    return sessionsMutator.toPlayerKillCount();
                 case "mob_kills":
-                    return profile.call().getMobKillCount();
+                    return sessionsMutator.toMobKillCount();
                 case "deaths":
-                    return profile.call().getDeathCount();
+                    return sessionsMutator.toDeathCount();
                 default:
                     break;
             }

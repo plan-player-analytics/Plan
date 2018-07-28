@@ -4,16 +4,19 @@
  */
 package com.djrapitops.plan.utilities.html.structure;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.analysis.Analysis;
+import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 import com.djrapitops.plan.utilities.html.tables.PluginPlayersTable;
+import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Creates Plugin section contents for Analysis page.
@@ -22,10 +25,16 @@ import java.util.Map;
  */
 public class AnalysisPluginsTabContentCreator {
 
-    public static String[] createContent(Map<PluginData, AnalysisContainer> containers) {
-        if (containers.isEmpty()) {
+    public static String[] createContent(
+            PlayersMutator mutator,
+            com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer
+    ) {
+        if (mutator.all().isEmpty()) {
             return new String[]{"<li><a>No Data</a></li>", ""};
         }
+
+        List<UUID> uuids = mutator.uuids();
+        Map<PluginData, AnalysisContainer> containers = analyzeAdditionalPluginData(uuids, analysisContainer);
 
         List<PluginData> order = new ArrayList<>(containers.keySet());
         order.sort(new PluginDataNameComparator());
@@ -73,15 +82,45 @@ public class AnalysisPluginsTabContentCreator {
                 "<div class=\"card\">" +
                 "<div class=\"header\"><h2><i class=\"fa fa-users\"></i> Plugin Data</h2></div>" +
                 "<div class=\"body\">" +
-                new PluginPlayersTable(containers, Analysis.getServerProfile().getPlayers()).parseHtml() +
+                new PluginPlayersTable(containers, mutator.all()).parseHtml() +
                 "</div></div></div>" +
-                "</div></div></div>";
+                "</div></div>";
 
         return new String[]{
                 (displayGeneralTab ? "<li><a class=\"nav-button\" href=\"javascript:void(0)\">General</a></li>" : "")
                         + "<li><a class=\"nav-button\" href=\"javascript:void(0)\">Player Data</a></li>" + nav.toString(),
                 (displayGeneralTab ? generalTab.toString() : "") + playerListTab + otherTabs.toString()
         };
+    }
+
+    private static Map<PluginData, AnalysisContainer> analyzeAdditionalPluginData(
+            Collection<UUID> uuids,
+            com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer
+    ) {
+        Map<PluginData, AnalysisContainer> containers = new HashMap<>();
+
+        List<PluginData> sources = HookHandler.getInstance().getAdditionalDataSources();
+
+        sources.parallelStream().forEach(source -> {
+            PlanPlugin plugin = PlanPlugin.getInstance();
+            StaticHolder.saveInstance(AnalysisPluginsTabContentCreator.class, plugin.getClass());
+            try {
+                Benchmark.start("Analysis: Source " + source.getSourcePlugin());
+
+                source.setAnalysisData(analysisContainer);
+                AnalysisContainer container = source.getServerData(uuids, new AnalysisContainer());
+                if (container != null && !container.isEmpty()) {
+                    containers.put(source, container);
+                }
+
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
+                Log.error("A PluginData-source caused an exception: " + source.getSourcePlugin());
+                Log.toLog(AnalysisPluginsTabContentCreator.class, e);
+            } finally {
+                Benchmark.stop("Analysis", "Analysis: Source " + source.getSourcePlugin());
+            }
+        });
+        return containers;
     }
 
     public static void appendThird(PluginData pluginData, InspectContainer container, StringBuilder generalTab) {

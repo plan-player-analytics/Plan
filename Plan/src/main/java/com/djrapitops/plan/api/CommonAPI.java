@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.api;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -38,7 +38,7 @@ public abstract class CommonAPI implements PlanAPI {
     public Map<UUID, String> getKnownPlayerNames() {
         try {
             return fetchFromPlanDB().getPlayerNames();
-        } catch (DBException e) {
+        } catch (DBOpException e) {
             Log.toLog(this.getClass(), e);
             return new HashMap<>();
         }

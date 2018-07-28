@@ -48,6 +48,7 @@ public class PlanBungeeCommand extends TreeCmdNode {
                         new ManageConDebugCommand(),
                         new BungeeSetupToggleCommand(),
                         new ReloadCommand(plugin),
+                        new DisableCommand(),
                         new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
 //                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
                 }
