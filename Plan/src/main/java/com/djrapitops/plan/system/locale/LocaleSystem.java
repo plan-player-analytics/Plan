@@ -34,7 +34,11 @@ public class LocaleSystem implements SubSystem {
                 DeepHelpLang.values(),
                 PluginLang.values(),
                 ManageLang.values(),
-                GenericLang.values()
+                GenericLang.values(),
+                CommonHtmlLang.values(),
+                PlayerPageLang.values(),
+                ServerPageLang.values(),
+                NetworkPageLang.values()
         };
 
         return Arrays.stream(lang)
@@ -59,8 +63,8 @@ public class LocaleSystem implements SubSystem {
 
     private void writeNewDefaultLocale(File localeFile) {
         try {
-            new LocaleFileWriter(Locale.forLangCode(LangCode.EN)).writeToFile(localeFile);
-        } catch (IOException e) {
+            new LocaleFileWriter(new Locale()).writeToFile(localeFile);
+        } catch (IOException | IllegalStateException e) {
             Log.error("Failed to write new Locale file at " + localeFile.getAbsolutePath());
             Log.toLog(this.getClass().getName(), e);
         }

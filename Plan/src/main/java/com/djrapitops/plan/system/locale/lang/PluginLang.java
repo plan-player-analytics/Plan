@@ -43,7 +43,7 @@ public enum PluginLang implements Lang {
 
     DB_APPLY_PATCH("Database - Apply Patch", "Applying Patch: ${0}.."),
     DB_APPLIED_PATCHES("Database - Patches Applied", "All database patches applied successfully."),
-    DB_APPLIED_PATCHES_ALREADY("Database - Patches Applied", "All database patches already applied."),
+    DB_APPLIED_PATCHES_ALREADY("Database - Patches Applied Already", "All database patches already applied."),
     DB_NOTIFY_CLEAN("Database Notify - Clean", "Removed data of ${0} players."),
     DB_NOTIFY_SQLITE_WAL("Database Notify - SQLite No WAL", "SQLite WAL mode not supported on this server version, using default. This may or may not affect performance."),
     DB_MYSQL_LAUNCH_OPTIONS_FAIL("Database MySQL - Launch Options Error", "Launch Options were faulty, using default (${0})");

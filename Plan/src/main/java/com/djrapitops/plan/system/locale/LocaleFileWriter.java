@@ -30,20 +30,30 @@ public class LocaleFileWriter {
 
     public void writeToFile(File file) throws IOException {
         // Find longest identifier
-        if (locale.isEmpty()) {
-            throw new IllegalStateException("Locale has no values");
-        }
-        Optional<String> key = locale.keySet().stream()
-                .map(Lang::getIdentifier)
+        Optional<String> key = LocaleSystem.getIdentifiers().keySet().stream()
                 .min(new StringLengthComparator());
         if (!key.isPresent()) {
-            throw new IllegalStateException("Locale has not been loaded.");
+            throw new IllegalStateException("LocaleSystem defines no Identifiers.");
         }
-        final int length = key.get().length() + 2;
+
+        for (Lang lang : LocaleSystem.getIdentifiers().values()) {
+            if (!locale.containsKey(lang)) {
+                locale.put(lang, new Message(lang.getDefault()));
+            }
+        }
+
+        int length = key.get().length() + 2;
         List<String> lines = locale.entrySet().stream()
                 .sorted(new LocaleEntryComparator())
-                .map(entry -> getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + entry.getValue().toString())
+                .map(entry -> {
+                    String value = entry.getValue() != null ? entry.getValue().toString() : entry.getKey().getDefault();
+                    return getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + value;
+                })
                 .collect(Collectors.toList());
+        if (!file.exists()) {
+            Files.createFile(file.toPath());
+        }
+
         Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
 
         Config config = ConfigSystem.getConfig();
