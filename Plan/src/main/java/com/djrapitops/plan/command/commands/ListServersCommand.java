@@ -5,8 +5,8 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -44,12 +44,12 @@ public class ListServersCommand extends CommandNode {
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
         try {
-            sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).toString() + mCol + " Servers");
+            sender.sendMessage(locale.getString(CommandLang.HEADER_SERVERS));
             List<Server> servers = Database.getActive().fetch().getServers();
             for (Server server : servers) {
                 sender.sendMessage("  " + tCol + server.getId() + sCol + " : " + server.getName() + " : " + server.getWebAddress());
             }
-            sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+            sender.sendMessage(">");
         } catch (DBOpException e) {
             sender.sendMessage("§cDatabase Exception occurred.");
             Log.toLog(this.getClass(), e);

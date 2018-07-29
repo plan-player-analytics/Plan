@@ -9,7 +9,7 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
@@ -51,18 +51,18 @@ public class InspectCacheRequestProcessor implements Runnable {
 
     // TODO Move to InspectCommand somehow.
     private void sendInspectMsg(ISender sender, String playerName) {
-        sender.sendMessage(locale.get(Msg.CMD_HEADER_INSPECT) + " " + playerName);
+        sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
         // Link
         String url = ConnectionSystem.getInstance().getMainAddress() + "/player/" + playerName;
-        String message = locale.get(Msg.CMD_INFO_LINK).toString();
+        String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
-            sender.sendMessage(message + url);
+            sender.sendMessage(linkPrefix + url);
         } else {
-            sender.sendMessage(message);
-            sender.sendLink("   ", locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+            sender.sendMessage(linkPrefix);
+            sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
         }
 
-        sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+        sender.sendMessage(">");
     }
 }

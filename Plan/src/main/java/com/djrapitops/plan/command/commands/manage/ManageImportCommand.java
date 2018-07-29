@@ -2,8 +2,8 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.Importer;
@@ -40,7 +40,7 @@ public class ManageImportCommand extends CommandNode {
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, "1+", Arrays.toString(this.getArguments()))));
 
         String importArg = args[0];
 

@@ -11,8 +11,8 @@ import com.djrapitops.plan.system.info.request.UpdateCancelRequest;
 import com.djrapitops.plan.system.info.request.UpdateRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -75,7 +75,7 @@ public class UpdateCommand extends CommandNode {
                 sender.sendMessage(message + url);
             } else {
                 sender.sendMessage(message);
-                sender.sendLink("   ", locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+                sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
             }
             return;
         }

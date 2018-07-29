@@ -6,12 +6,14 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.Verify;
+
+import java.util.Arrays;
 
 /**
  * Command used for testing functions that are too difficult to unit test.
@@ -33,7 +35,8 @@ public class DevCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String cmd, String[] args) {
-        Verify.isTrue(args.length >= 1, () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+        Verify.isTrue(args.length >= 1,
+                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
         sender.sendMessage("No features currently implemented in the command.");
     }

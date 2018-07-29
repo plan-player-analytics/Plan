@@ -4,8 +4,8 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -40,7 +40,7 @@ public class WebCheckCommand extends CommandNode {
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
         Database database = Database.getActive();
         String user = args[0];
@@ -50,11 +50,11 @@ public class WebCheckCommand extends CommandNode {
             public void run() {
                 try {
                     if (!database.check().doesWebUserExists(user)) {
-                        sender.sendMessage("§c[Plan] User Doesn't exist.");
+                        sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));
                         return;
                     }
                     WebUser info = database.fetch().getWebUser(user);
-                    sender.sendMessage(info.getName() + ": Permission level: " + info.getPermLevel());
+                    sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, info.getName(), info.getPermLevel()));
                 } catch (Exception e) {
                     Log.toLog(this.getClass(), e);
                     sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));

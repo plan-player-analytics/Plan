@@ -4,8 +4,8 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.comparators.WebUserComparator;
@@ -41,7 +41,7 @@ public class WebListUsersCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        RunnableFactory.createNew(new AbsRunnable("Webuser List Task") {
+        RunnableFactory.createNew(new AbsRunnable("Web user List Task") {
             @Override
             public void run() {
                 try {
@@ -49,11 +49,11 @@ public class WebListUsersCommand extends CommandNode {
                     String mCol = cs.getMainColor();
                     List<WebUser> users = Database.getActive().fetch().getWebUsers();
                     users.sort(new WebUserComparator());
-                    sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).parse() + mCol + " WebUsers (" + users.size() + ")");
+                    sender.sendMessage(locale.getString(CommandLang.HEADER_WEB_USERS, users.size()));
                     for (WebUser user : users) {
-                        sender.sendMessage("  " + user.getPermLevel() + " : " + user.getName());
+                        sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, user.getName(), user.getPermLevel()));
                     }
-                    sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
+                    sender.sendMessage(">");
                 } catch (Exception e) {
                     Log.toLog(this.getClass(), e);
                     sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));

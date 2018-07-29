@@ -4,14 +4,14 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.GenericLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.settings.ColorScheme;
 
 /**
  * This SubCommand is used to view the version and the database type in use.
@@ -35,19 +35,20 @@ public class InfoCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        ColorScheme cs = plugin.getColorScheme();
-        String mColor = cs.getMainColor();
-        String sColor = cs.getSecondaryColor();
-        String tColor = cs.getTertiaryColor();
+        String yes = locale.getString(GenericLang.YES);
+        String no = locale.getString(GenericLang.NO);
 
-        String upToDate = VersionCheckSystem.isNewVersionAvailable() ? "Update Available" : "Up to date";
+        String updateAvailable = VersionCheckSystem.isNewVersionAvailable() ? yes : no;
+        String connectedToBungee = ConnectionSystem.getInstance().isServerAvailable() ? yes : no;
         String[] messages = {
-                locale.get(Msg.CMD_HEADER_INFO).toString(),
-                mColor + "  Version: " + sColor + plugin.getVersion(),
-                mColor + "  Up to date: " + sColor + upToDate,
-                mColor + "  Active Database: " + tColor + Database.getActive().getConfigName(),
-                mColor + "  Connected to Bungee: " + tColor + (ConnectionSystem.getInstance().isServerAvailable() ? "Yes" : "No"),
-                locale.get(Msg.CMD_CONSTANT_FOOTER).toString()
+                locale.getString(CommandLang.HEADER_INFO),
+                "",
+                locale.getString(CommandLang.INFO_VERSION, plugin.getVersion()),
+                locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
+                locale.getString(CommandLang.INFO_DATABASE, Database.getActive().getName()),
+                locale.getString(CommandLang.INFO_BUNGEE_CONNECTION, connectedToBungee),
+                "",
+                ">"
         };
         sender.sendMessage(messages);
     }

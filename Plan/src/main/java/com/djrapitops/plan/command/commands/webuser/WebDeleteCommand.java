@@ -3,8 +3,8 @@ package com.djrapitops.plan.command.commands.webuser;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -39,7 +39,7 @@ public class WebDeleteCommand extends CommandNode {
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
         Database database = Database.getActive();
         String user = args[0];

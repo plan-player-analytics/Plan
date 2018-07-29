@@ -4,8 +4,8 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.InspectCacheRequestProcessor;
@@ -48,7 +48,7 @@ public class InspectCommand extends CommandNode {
         String playerName = MiscUtils.getPlayerName(args, sender);
 
         if (playerName == null) {
-            sender.sendMessage(locale.getString(Msg.CMD_FAIL_NO_PERMISSION));
+            sender.sendMessage(locale.getString(CommandLang.FAIL_NO_PERMISSION));
         }
 
         runInspectTask(playerName, sender);
@@ -61,13 +61,13 @@ public class InspectCommand extends CommandNode {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     if (uuid == null) {
-                        sender.sendMessage(locale.getString(Msg.CMD_FAIL_USERNAME_NOT_VALID));
+                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
                         return;
                     }
 
                     Database activeDB = Database.getActive();
                     if (!activeDB.check().isPlayerRegistered(uuid)) {
-                        sender.sendMessage(locale.getString(Msg.CMD_FAIL_USERNAME_NOT_KNOWN));
+                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                         return;
                     }
 
@@ -92,7 +92,7 @@ public class InspectCommand extends CommandNode {
             boolean senderHasWebUser = activeDB.check().doesWebUserExists(sender.getName());
 
             if (!senderHasWebUser) {
-                sender.sendMessage("§e[Plan] You might not have a web user, use /plan register <password>");
+                sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
             }
         }
     }

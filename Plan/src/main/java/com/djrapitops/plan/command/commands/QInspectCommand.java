@@ -13,9 +13,10 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.GenericLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -23,7 +24,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
@@ -40,7 +40,6 @@ import java.util.UUID;
  */
 public class QInspectCommand extends CommandNode {
 
-    private final PlanPlugin plugin;
     private final Locale locale;
 
     /**
@@ -56,8 +55,6 @@ public class QInspectCommand extends CommandNode {
 
         setShortHelp(locale.getString(CmdHelpLang.QINSPECT));
         setInDepthHelp(locale.getArray(DeepHelpLang.QINSPECT));
-        this.plugin = plugin;
-
     }
 
     @Override
@@ -65,7 +62,7 @@ public class QInspectCommand extends CommandNode {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
 
         if (playerName == null) {
-            sender.sendMessage(locale.getString(Msg.CMD_FAIL_NO_PERMISSION));
+            sender.sendMessage(locale.getString(CommandLang.FAIL_NO_PERMISSION));
             return;
         }
 
@@ -79,13 +76,13 @@ public class QInspectCommand extends CommandNode {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     if (uuid == null) {
-                        sender.sendMessage(locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString());
+                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
                         return;
                     }
 
                     PlayerContainer container = Database.getActive().fetch().getPlayerContainer(uuid);
                     if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
-                        sender.sendMessage(locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
+                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                         return;
                     }
 
@@ -107,36 +104,34 @@ public class QInspectCommand extends CommandNode {
     private void sendMessages(ISender sender, PlayerContainer player) {
         long now = System.currentTimeMillis();
 
-        ColorScheme colorScheme = plugin.getColorScheme();
-
-        String colM = colorScheme.getMainColor();
-        String colS = colorScheme.getSecondaryColor();
-        String colT = colorScheme.getTertiaryColor();
         Formatter<DateHolder> timestamp = Formatters.year();
         Formatter<Long> length = Formatters.timeAmount();
 
-        sender.sendMessage(locale.get(Msg.CMD_HEADER_INSPECT).toString() + ": " + colT + player.getValue(PlayerKeys.NAME).orElse("Unknown"));
+        String playerName = player.getValue(PlayerKeys.NAME).orElse(locale.getString(GenericLang.UNKNOWN));
 
         ActivityIndex activityIndex = player.getActivityIndex(now);
         Long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
         Long lastSeen = player.getValue(PlayerKeys.LAST_SEEN).orElse(0L);
         List<GeoInfo> geoInfo = player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());
         Optional<GeoInfo> mostRecentGeoInfo = new GeoInfoMutator(geoInfo).mostRecent();
-        String loginLocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().getGeolocation() : "-";
+        String geolocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().getGeolocation() : "-";
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
 
-        sender.sendMessage(colM + "  Activity Index: " + colS + activityIndex.getFormattedValue() + " | " + activityIndex.getGroup());
-        sender.sendMessage(colM + "  Registered: " + colS + timestamp.apply(() -> registered));
-        sender.sendMessage(colM + "  Last Seen: " + colS + timestamp.apply(() -> lastSeen));
-        sender.sendMessage(colM + "  Logged in from: " + colS + loginLocation);
-        sender.sendMessage(colM + "  Playtime: " + colS + length.apply(sessionsMutator.toPlaytime()));
-        sender.sendMessage(colM + "  Longest Session: " + colS + length.apply(sessionsMutator.toLongestSessionLength()));
-        sender.sendMessage(colM + "  Times Kicked: " + colS + player.getValue(PlayerKeys.KICK_COUNT).orElse(0));
-        sender.sendMessage("");
-        sender.sendMessage(colM + "  Player Kills : " + colS + sessionsMutator.toPlayerKillCount());
-        sender.sendMessage(colM + "  Mob Kills : " + colS + sessionsMutator.toMobKillCount());
-        sender.sendMessage(colM + "  Deaths : " + colS + sessionsMutator.toDeathCount());
-
-        sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+        String[] messages = new String[]{
+                locale.getString(CommandLang.HEADER_INSPECT, playerName),
+                locale.getString(CommandLang.QINSPECT_ACTIVITY_INDEX, activityIndex.getFormattedValue(), activityIndex.getGroup()),
+                locale.getString(CommandLang.QINSPECT_REGISTERED, timestamp.apply(() -> registered)),
+                locale.getString(CommandLang.QINSPECT_LAST_SEEN, timestamp.apply(() -> lastSeen)),
+                locale.getString(CommandLang.QINSPECT_GEOLOCATION, geolocation),
+                locale.getString(CommandLang.QINSPECT_PLAYTIME, length.apply(sessionsMutator.toPlaytime())),
+                locale.getString(CommandLang.QINSPECT_LONGEST_SESSION, length.apply(sessionsMutator.toLongestSessionLength())),
+                locale.getString(CommandLang.QINSPECT_TIMES_KICKED, player.getValue(PlayerKeys.KICK_COUNT).orElse(0)),
+                "",
+                locale.getString(CommandLang.QINSPECT_PLAYER_KILLS, sessionsMutator.toPlayerKillCount()),
+                locale.getString(CommandLang.QINSPECT_MOB_KILLS, sessionsMutator.toMobKillCount()),
+                locale.getString(CommandLang.QINSPECT_DEATHS, sessionsMutator.toDeathCount()),
+                ">"
+        };
+        sender.sendMessage(messages);
     }
 }

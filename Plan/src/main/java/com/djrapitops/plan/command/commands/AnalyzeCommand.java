@@ -9,9 +9,10 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
@@ -47,7 +48,7 @@ public class AnalyzeCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        sender.sendMessage(locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
+        sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
         Processing.submitNonCritical(() -> {
             try {
@@ -67,17 +68,17 @@ public class AnalyzeCommand extends CommandNode {
     private void sendLink(Server server, ISender sender) {
         String target = "/server/" + server.getName();
         String url = ConnectionSystem.getAddress() + target;
-        String message = locale.get(Msg.CMD_INFO_LINK).toString();
-        sender.sendMessage(locale.get(Msg.CMD_HEADER_ANALYZE).toString());
+        String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
+        sender.sendMessage(locale.getString(CommandLang.HEADER_ANALYSIS));
         // Link
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
-            sender.sendMessage(message + url);
+            sender.sendMessage(linkPrefix + url);
         } else {
-            sender.sendMessage(message);
-            sender.sendLink("   ", locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+            sender.sendMessage(linkPrefix);
+            sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
         }
-        sender.sendMessage(locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+        sender.sendMessage(">");
     }
 
     private void sendWebUserNotificationIfNecessary(ISender sender) {
@@ -85,7 +86,7 @@ public class AnalyzeCommand extends CommandNode {
 
             boolean senderHasWebUser = Database.getActive().check().doesWebUserExists(sender.getName());
             if (!senderHasWebUser) {
-                sender.sendMessage("§e[Plan] You might not have a web user, use /plan register <password>");
+                sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
             }
         }
     }

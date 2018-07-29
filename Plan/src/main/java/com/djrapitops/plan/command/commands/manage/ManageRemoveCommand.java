@@ -4,8 +4,8 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -19,6 +19,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -44,12 +45,12 @@ public class ManageRemoveCommand extends CommandNode {
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
 
         if (playerName == null) {
-            sender.sendMessage(locale.getString(Msg.CMD_FAIL_NO_PERMISSION));
+            sender.sendMessage(locale.getString(CommandLang.FAIL_NO_PERMISSION));
             return;
         }
 
@@ -64,13 +65,13 @@ public class ManageRemoveCommand extends CommandNode {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
 
                     if (uuid == null) {
-                        sender.sendMessage(locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString());
+                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
                         return;
                     }
 
                     Database database = Database.getActive();
                     if (!database.check().isPlayerRegistered(uuid)) {
-                        sender.sendMessage(locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
+                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                         return;
                     }
 

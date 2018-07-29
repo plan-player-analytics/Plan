@@ -29,10 +29,12 @@ public class LocaleSystem implements SubSystem {
 
     public static Map<String, Lang> getIdentifiers() {
         Lang[][] lang = new Lang[][]{
+                CommandLang.values(),
                 CmdHelpLang.values(),
                 DeepHelpLang.values(),
                 PluginLang.values(),
-                ManageLang.values()
+                ManageLang.values(),
+                GenericLang.values()
         };
 
         return Arrays.stream(lang)

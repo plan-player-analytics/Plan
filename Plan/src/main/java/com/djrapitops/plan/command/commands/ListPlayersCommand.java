@@ -3,8 +3,8 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.Msg;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
@@ -37,18 +37,18 @@ public class ListPlayersCommand extends CommandNode {
     }
 
     private void sendListMsg(ISender sender) {
-        sender.sendMessage(locale.getString(Msg.CMD_CONSTANT_FOOTER));
+        sender.sendMessage(locale.getString(CommandLang.HEADER_PLAYERS));
 
         // Link
         String url = ConnectionSystem.getAddress() + "/players/";
-        String message = locale.getString(Msg.CMD_INFO_LINK);
+        String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
-            sender.sendMessage(message + url);
+            sender.sendMessage(linkPrefix + url);
         } else {
-            sender.sendMessage(message);
-            sender.sendLink("   ", locale.getString(Msg.CMD_INFO_CLICK_ME), url);
+            sender.sendMessage(linkPrefix);
+            sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
         }
-        sender.sendMessage(locale.getString(Msg.CMD_CONSTANT_FOOTER));
+        sender.sendMessage(">");
     }
 }
