@@ -20,12 +20,12 @@ public class CacheSystem implements SubSystem {
     private final GeolocationCache geolocationCache;
 
     public CacheSystem(PlanSystem system) {
-        this(new DataCache(system));
+        this(new DataCache(system), system);
     }
 
-    protected CacheSystem(DataCache dataCache) {
+    protected CacheSystem(DataCache dataCache, PlanSystem system) {
         this.dataCache = dataCache;
-        geolocationCache = new GeolocationCache();
+        geolocationCache = new GeolocationCache(() -> system.getLocaleSystem().getLocale());
     }
 
     public static CacheSystem getInstance() {
@@ -38,7 +38,6 @@ public class CacheSystem implements SubSystem {
     public void enable() throws EnableException {
         dataCache.enable();
         geolocationCache.enable();
-
     }
 
     @Override

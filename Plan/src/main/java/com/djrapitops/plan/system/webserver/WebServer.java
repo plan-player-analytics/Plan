@@ -73,12 +73,12 @@ public class WebServer implements SubSystem {
 
         if (!isEnabled()) {
             if (Check.isBungeeAvailable()) {
-                throw new EnableException("WebServer did not initialize!");
+                throw new EnableException(locale.get().getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_BUNGEE));
             }
             if (Settings.WEBSERVER_DISABLED.isTrue()) {
-                Log.warn("WebServer was not initialized. (WebServer.DisableWebServer: true)");
+                Log.warn(locale.get().getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
             } else {
-                Log.error("WebServer was not initialized successfully. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
+                Log.error(locale.get().getString(PluginLang.WEB_SERVER_FAIL_PORT_BIND, port));
             }
         }
     }
@@ -103,7 +103,7 @@ public class WebServer implements SubSystem {
             Log.debug(usingHttps ? "Https Start Successful." : "Https Start Failed.");
 
             if (!usingHttps) {
-                Log.infoColor("§eUser Authorization Disabled! (Not possible over http)");
+                Log.infoColor("§e" + locale.get().getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
                 server = HttpServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
             }
             server.createContext("/", requestHandler);
@@ -137,6 +137,10 @@ public class WebServer implements SubSystem {
             keystore.load(fIn, storepass);
             Certificate cert = keystore.getCertificate(alias);
 
+            if (cert == null) {
+                throw new IllegalStateException("Certificate with Alias: " + alias + " was not found in the Keystore.");
+            }
+
             Log.info("Found Certificate: " + cert.getType());
 
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
@@ -163,17 +167,20 @@ public class WebServer implements SubSystem {
                 }
             });
             startSuccessful = true;
+        } catch (IllegalStateException e) {
+            Log.error(e.getMessage());
+            Log.toLog(this.getClass(), e);
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            Log.error("WebServer: SSL Context Initialization Failed.");
+            Log.error(locale.get().getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
             Log.toLog(this.getClass(), e);
         } catch (FileNotFoundException e) {
-            Log.infoColor("§eWebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
-            Log.info("No Certificate -> Using Http server for Visualization.");
+            Log.infoColor("§e" + locale.get().getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
+            Log.info(locale.get().getString(PluginLang.WEB_SERVER_NOTIFY_HTTP));
         } catch (IOException e) {
             Log.error("WebServer: " + e);
             Log.toLog(this.getClass(), e);
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
-            Log.error("WebServer: SSL Certificate loading Failed.");
+            Log.error(locale.get().getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
             Log.toLog(this.getClass(), e);
         }
         return startSuccessful;
