@@ -4,19 +4,25 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 public class Processing implements SubSystem {
+
+    private final Supplier<Locale> locale;
 
     private final ExecutorService nonCriticalExecutor;
     private final ExecutorService criticalExecutor;
 
-    public Processing() {
+    public Processing(Supplier<Locale> locale) {
+        this.locale = locale;
         nonCriticalExecutor = Executors.newFixedThreadPool(6);
         criticalExecutor = Executors.newFixedThreadPool(2);
         saveInstance(nonCriticalExecutor);
@@ -129,7 +135,7 @@ public class Processing implements SubSystem {
     public void disable() {
         nonCriticalExecutor.shutdown();
         List<Runnable> criticalTasks = criticalExecutor.shutdownNow();
-        Log.info("Processing critical unprocessed tasks. (" + criticalTasks.size() + ")");
+        Log.info(locale.get().getString(PluginLang.DISABLED_PROCESSING, criticalTasks.size()));
         for (Runnable runnable : criticalTasks) {
             try {
                 runnable.run();
@@ -137,6 +143,6 @@ public class Processing implements SubSystem {
                 Log.toLog(this.getClass(), e);
             }
         }
-        Log.info("Processing complete.");
+        Log.info(locale.get().getString(PluginLang.DISABLED_PROCESSING_COMPLETE));
     }
 }

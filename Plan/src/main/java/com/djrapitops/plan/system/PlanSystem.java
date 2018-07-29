@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.LocaleSystem;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
@@ -22,6 +23,8 @@ import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
+
+import java.util.function.Supplier;
 
 /**
  * PlanSystem contains everything Plan needs to run.
@@ -57,8 +60,10 @@ public abstract class PlanSystem implements SubSystem {
     protected PlanAPI planAPI;
 
     public PlanSystem() {
-        processing = new Processing();
-        webServerSystem = new WebServerSystem(() -> getLocaleSystem().getLocale());
+        Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
+
+        processing = new Processing(localeSupplier);
+        webServerSystem = new WebServerSystem(localeSupplier);
         localeSystem = new LocaleSystem();
         cacheSystem = new CacheSystem(this);
     }

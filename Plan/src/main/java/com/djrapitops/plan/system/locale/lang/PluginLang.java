@@ -31,6 +31,8 @@ public enum PluginLang implements Lang {
 
     DISABLED("Disable", "Player Analytics Disabled."),
     DISABLED_WEB_SERVER("Disable - WebServer", "Webserver has been disabled."),
+    DISABLED_PROCESSING("Disable - Processing", "Processing critical unprocessed tasks. (${0})"),
+    DISABLED_PROCESSING_COMPLETE("Disable - Processing Complete", "Processing complete."),
 
     VERSION_NEWEST("Version - Latest", "You're using the latest version."),
     VERSION_AVAILABLE("Version - New", "New Release (${0}) is available ${1}"),
