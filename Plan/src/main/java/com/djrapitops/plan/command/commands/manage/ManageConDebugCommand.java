@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -14,6 +13,7 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -37,7 +37,7 @@ public class ManageConDebugCommand extends CommandNode {
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
-        setShortHelp(locale.getString(plugin instanceof PlanBungee ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
+        setShortHelp(locale.getString(Check.isBungeeAvailable() ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
     }
 
