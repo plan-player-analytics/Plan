@@ -22,7 +22,7 @@ public enum CommandLang implements Lang {
     WEB_USER_REGISTER_NOTIFY("Cmd Notify - WebUser register", "Registered new user: '${0}' Perm level: ${1}"),
     WEB_USER_LIST("Web User Listing", "  §2${0} §7: §f${1}"),
     NO_WEB_USER_NOTIFY("Cmd Notify - No WebUser", "You might not have a web user, use /plan register <password>"),
-    WEB_PERMISSION_LEVELS("Cmd Web - Permission Levels", ">\\§70: Access all pages\\§71: Access '/players' and all inspect pages\\§72: Access inspect page with the same username as the webuser\\§73+: No permissions"),
+    WEB_PERMISSION_LEVELS("Cmd Web - Permission Levels", ">\\§70: Access all pages\\§71: Access '/players' and all player pages\\§72: Access player page with the same username as the webuser\\§73+: No permissions"),
 
     CONNECT_SUCCESS("Cmd Setup - Success", "§aConnection successful, Plan may restart in a few seconds.."),
     CONNECT_FORBIDDEN("Cmd Setup - Forbidden", "§eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it."),
@@ -35,7 +35,7 @@ public enum CommandLang implements Lang {
     CONNECT_URL_MISTAKE("Cmd Setup - Url mistake", "§cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address."),
 
     LINK_CLICK_ME("Cmd - Click Me", "Click me"),
-    LINK_PREFIX("Cmd - Link", "  §2Link: "),
+    LINK_PREFIX("Cmd - Link", "  §2Link: §f"),
 
     HEADER_SEARCH("Cmd Header - Search", "> §2${0} Results for §f${1}§2:"),
     HEADER_ANALYSIS("Cmd Header - Analysis", "> §2Analysis Results"),

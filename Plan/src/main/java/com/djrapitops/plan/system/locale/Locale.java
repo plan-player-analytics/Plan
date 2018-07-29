@@ -14,6 +14,7 @@ import java.util.HashMap;
  *
  * @author Rsl1122
  */
+// TODO Turn into TreeMap that sorts longest first
 public class Locale extends HashMap<Lang, Message> {
 
     public Locale() {

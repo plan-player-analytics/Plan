@@ -38,7 +38,7 @@ public enum ServerPageLang implements Lang {
     CHUNKS("Chunks"),
     AVG("AVG"),
     PLAYER_LIST("Player List"),
-    NAME("Name"),
+    NAME(" Name"),
     REGISTERED_TEXT("Registered"),
     GEOLOCATION_TEXT("Geolocation"),
     COUNTRY("Country"),

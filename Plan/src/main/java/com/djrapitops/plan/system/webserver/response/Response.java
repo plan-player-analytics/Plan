@@ -87,7 +87,7 @@ public abstract class Response {
         responseHeaders.set("Content-Encoding", "gzip");
         exchange.sendResponseHeaders(getCode(), 0);
 
-        String content = locale.replaceMatchingLanguage(getContent());
+        String content = this instanceof JavaScriptResponse ? getContent() : locale.replaceMatchingLanguage(getContent());
 
         try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
              ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {

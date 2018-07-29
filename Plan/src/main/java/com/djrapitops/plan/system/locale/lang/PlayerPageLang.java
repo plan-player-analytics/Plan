@@ -36,7 +36,7 @@ public enum PlayerPageLang implements Lang {
     GEOLOCATION("Geolocation"),
     LAST_CONNECTED("Last Connected"),
     LOCAL_MACHINE("Local Machine"),
-    CALENDAR_TEXT("Calendar"),
+    CALENDAR_TEXT(" Calendar"),
     MOST_RECENT("Most Recent"),
     WORLD(" World"),
     PREFERENCE("Preference"),
@@ -47,9 +47,9 @@ public enum PlayerPageLang implements Lang {
     OVERVIEW("OVERVIEW"),
     PLAYER_CAUSED_DEATHS("Player caused Deaths"),
     MOB_CAUSED_DEATHS("Mob caused Deaths"),
-    TIME("Time"),
+    TIME(" Time"),
     KILLED("Killed"),
-    WITH("With"),
+    WITH(" With"),
     KILLED_BY("Killed by");
 
     private final String defaultValue;
