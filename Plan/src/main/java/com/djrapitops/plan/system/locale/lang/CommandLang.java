@@ -26,7 +26,7 @@ public enum CommandLang implements Lang {
 
     CONNECT_SUCCESS("Cmd Setup - Success", "§aConnection successful, Plan may restart in a few seconds.."),
     CONNECT_FORBIDDEN("Cmd Setup - Forbidden", "§eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it."),
-    CONNECT_BAD_REQUEST("Cmd Setup - Bad Request", "§eConnection succeeded, but Receiving server was a Bukkit server. Use Bungee address instead."),
+    CONNECT_BAD_REQUEST("Cmd Setup - Bad Request", "§eConnection succeeded, but Receiving server was not a Bungee server. Use Bungee address instead."),
     CONNECT_UNAUTHORIZED("Cmd Setup - Unauthorized", "§eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support"),
     CONNECT_FAIL("Cmd Setup - Generic Fail", "§eConnection failed: ${0}"),
     CONNECT_INTERNAL_ERROR("Cmd Setup - Internal Error", "§eConnection succeeded. ${0}, check possible ErrorLog on receiving server's debug page."),
