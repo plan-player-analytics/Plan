@@ -141,7 +141,7 @@ public class WebServer implements SubSystem {
                 throw new IllegalStateException("Certificate with Alias: " + alias + " was not found in the Keystore.");
             }
 
-            Log.info("Found Certificate: " + cert.getType());
+            Log.info("Certificate: " + cert.getType());
 
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             keyManagerFactory.init(keystore, keypass);
@@ -227,5 +227,9 @@ public class WebServer implements SubSystem {
 
     public ResponseHandler getResponseHandler() {
         return responseHandler;
+    }
+
+    Supplier<Locale> getLocaleSupplier() {
+        return locale;
     }
 }

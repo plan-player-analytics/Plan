@@ -63,4 +63,18 @@ public class Locale extends HashMap<Lang, Message> {
     public String[] getArray(Lang key, Serializable... values) {
         return get(key).toArray(values);
     }
+
+    public String replaceMatchingLanguage(String from) {
+        if (isEmpty()) {
+            return from;
+        }
+        for (Entry<Lang, Message> entry : entrySet()) {
+            String defaultValue = entry.getKey().getDefault();
+            String replacement = entry.getValue().toString();
+
+            from = from.replace(defaultValue, replacement);
+        }
+
+        return from;
+    }
 }

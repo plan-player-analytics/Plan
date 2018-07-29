@@ -1,5 +1,6 @@
 package com.djrapitops.plan.system.webserver.response;
 
+import com.djrapitops.plan.system.locale.Locale;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -81,13 +82,15 @@ public abstract class Response {
         this.responseHeaders = responseHeaders;
     }
 
-    public void send(HttpExchange exchange) throws IOException {
+    public void send(HttpExchange exchange, Locale locale) throws IOException {
         responseHeaders.set("Content-Type", type);
         responseHeaders.set("Content-Encoding", "gzip");
         exchange.sendResponseHeaders(getCode(), 0);
 
+        String content = locale.replaceMatchingLanguage(getContent());
+
         try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
-             ByteArrayInputStream bis = new ByteArrayInputStream(getContent().getBytes())) {
+             ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
             byte[] buffer = new byte[2048];
             int count;
             while ((count = bis.read(buffer)) != -1) {

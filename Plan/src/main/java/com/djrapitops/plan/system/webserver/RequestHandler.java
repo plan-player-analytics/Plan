@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.webserver;
 
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.auth.BasicAuthentication;
@@ -17,6 +18,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * HttpHandler for WebServer request management.
@@ -25,10 +27,12 @@ import java.util.List;
  */
 public class RequestHandler implements HttpHandler {
 
+    private final Supplier<Locale> locale;
     private final ResponseHandler responseHandler;
 
     RequestHandler(WebServer webServer) {
         responseHandler = new ResponseHandler(webServer);
+        locale = webServer.getLocaleSupplier();
     }
 
     @Override
@@ -49,7 +53,7 @@ public class RequestHandler implements HttpHandler {
             }
 
             response.setResponseHeaders(responseHeaders);
-            response.send(exchange);
+            response.send(exchange, locale.get());
         } catch (Exception e) {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
