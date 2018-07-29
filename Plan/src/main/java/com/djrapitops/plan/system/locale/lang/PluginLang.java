@@ -29,7 +29,14 @@ public enum PluginLang implements Lang {
     WEB_SERVER_NOTIFY_HTTP_USER_AUTH("WebServer - Notify HTTP User Auth", "WebServer: User Authorization Disabled! (Not secure over HTTP)"),
 
     DISABLED("Disable", "Player Analytics Disabled."),
-    DISABLED_WEB_SERVER("Disable - WebServer", "Webserver has been disabled.");
+    DISABLED_WEB_SERVER("Disable - WebServer", "Webserver has been disabled."),
+
+    VERSION_NEWEST("Version - Latest", "You're using the latest version."),
+    VERSION_AVAILABLE("Version - New", "New Release (${0}) is available ${1}"),
+    VERSION_AVAILABLE_SPIGOT("Version - New (old)", "New Version is available at ${0}"),
+    VERSION_AVAILABLE_DEV("Version - DEV", " This is a DEV release."),
+    VERSION_FAIL_READ_VERSIONS("Version FAIL - Read versions.txt", "Version information could not be loaded from Github/versions.txt"),
+    VERSION_FAIL_READ_OLD("Version FAIL - Read info (old)", "Failed to check newest version number");
 
     private final String identifier;
     private final String defaultValue;

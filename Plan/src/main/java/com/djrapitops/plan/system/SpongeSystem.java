@@ -39,7 +39,7 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
 
         Log.setErrorManager(new PlanErrorManager());
 
-        versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
+        versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
         configSystem = new SpongeConfigSystem();
         databaseSystem = new ServerDBSystem(localeSupplier);

@@ -39,7 +39,7 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
 
         Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
 
-        versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
+        versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
         configSystem = new ServerConfigSystem();
         databaseSystem = new ServerDBSystem(localeSupplier);
