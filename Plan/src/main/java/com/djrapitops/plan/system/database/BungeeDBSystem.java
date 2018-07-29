@@ -23,7 +23,7 @@ public class BungeeDBSystem extends DBSystem {
 
     @Override
     protected void initDatabase() throws DBInitException {
-        db = new MySQLDB();
+        db = new MySQLDB(locale);
         databases.add(db);
         db.init();
     }

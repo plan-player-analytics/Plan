@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.database.databases;
 
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
+import com.djrapitops.plan.system.locale.Locale;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -18,12 +19,12 @@ public class MySQLTest {
 
     @Test
     public void testMySQLGetConfigName() {
-        assertEquals("mysql", new MySQLDB().getConfigName());
+        assertEquals("mysql", new MySQLDB(Locale::new).getConfigName());
     }
 
     @Test
     public void testMySQLGetName() {
-        assertEquals("MySQL", new MySQLDB().getName());
+        assertEquals("MySQL", new MySQLDB(Locale::new).getName());
     }
 
 }

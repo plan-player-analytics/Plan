@@ -18,6 +18,7 @@ public enum PluginLang implements Lang {
 
     ENABLE_FAIL_DB("Enable FAIL - Database", "${0}-Database Connection failed: ${1}"),
     ENABLE_FAIL_WRONG_DB("Enable FAIL - Wrong Database Type", "${0} is not a supported Database"),
+    ENABLE_FAIL_DB_PATCH("Enable FAIL - Database Patch", "Database Patching failed, plugin has to be disabled. Please report this issue"),
     ENABLE_FAIL_NO_WEB_SERVER_BUNGEE("Enable FAIL - WebServer (Bungee)", "WebServer did not initialize!"),
     ENABLE_FAIL_GEODB_WRITE("Enable FAIL - GeoDB Write", "Something went wrong saving the downloaded GeoLite2 Geolocation database"),
 
@@ -36,7 +37,14 @@ public enum PluginLang implements Lang {
     VERSION_AVAILABLE_SPIGOT("Version - New (old)", "New Version is available at ${0}"),
     VERSION_AVAILABLE_DEV("Version - DEV", " This is a DEV release."),
     VERSION_FAIL_READ_VERSIONS("Version FAIL - Read versions.txt", "Version information could not be loaded from Github/versions.txt"),
-    VERSION_FAIL_READ_OLD("Version FAIL - Read info (old)", "Failed to check newest version number");
+    VERSION_FAIL_READ_OLD("Version FAIL - Read info (old)", "Failed to check newest version number"),
+
+    DB_APPLY_PATCH("Database - Apply Patch", "Applying Patch: ${0}.."),
+    DB_APPLIED_PATCHES("Database - Patches Applied", "All database patches applied successfully."),
+    DB_APPLIED_PATCHES_ALREADY("Database - Patches Applied", "All database patches already applied."),
+    DB_NOTIFY_CLEAN("Database Notify - Clean", "Removed data of ${0} players."),
+    DB_NOTIFY_SQLITE_WAL("Database Notify - SQLite No WAL", "SQLite WAL mode not supported on this server version, using default. This may or may not affect performance."),
+    DB_MYSQL_LAUNCH_OPTIONS_FAIL("Database MySQL - Launch Options Error", "Launch Options were faulty, using default (${0})");
 
     private final String identifier;
     private final String defaultValue;

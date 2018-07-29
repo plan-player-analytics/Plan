@@ -97,7 +97,7 @@ public class ManageBackupCommand extends CommandNode {
         try {
             String timeStamp = Formatters.iso8601NoClock().apply(System::currentTimeMillis);
             String fileName = dbName + "-backup-" + timeStamp;
-            backupDB = new SQLiteDB(fileName);
+            backupDB = new SQLiteDB(fileName, () -> locale);
             Collection<UUID> uuids = copyFromDB.fetch().getSavedUUIDs();
             if (uuids.isEmpty()) {
                 return;

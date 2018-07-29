@@ -90,7 +90,7 @@ public class ManageRestoreCommand extends CommandNode {
                         backupDBName = backupDBName.substring(0, backupDBName.length() - 3);
                     }
 
-                    SQLiteDB backupDB = new SQLiteDB(backupDBName);
+                    SQLiteDB backupDB = new SQLiteDB(backupDBName, () -> locale);
                     backupDB.init();
 
                     sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));

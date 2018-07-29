@@ -27,8 +27,8 @@ public class ServerDBSystem extends DBSystem {
 
     @Override
     protected void initDatabase() throws DBInitException {
-        databases.add(Check.isSpongeAvailable() ? new SpongeMySQLDB() : new MySQLDB());
-        databases.add(new SQLiteDB());
+        databases.add(Check.isSpongeAvailable() ? new SpongeMySQLDB(locale) : new MySQLDB(locale));
+        databases.add(new SQLiteDB(locale));
 
         String dbType = Settings.DB_TYPE.toString().toLowerCase().trim();
         db = getActiveDatabaseByName(dbType);

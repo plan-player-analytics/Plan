@@ -24,6 +24,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
@@ -68,7 +69,7 @@ public class SQLiteTest {
         System.out.println("--- Test Class Setup     ---");
         SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
-        db = new SQLiteDB();
+        db = new SQLiteDB(Locale::new);
         mockUtil.enableDatabaseSystem(db)
                 .enableServerInfoSystem();
         StaticHolder.saveInstance(SQLDB.class, Plan.class);
@@ -748,7 +749,7 @@ public class SQLiteTest {
     @Test
     public void testBackupAndRestore() throws DBException, UnsupportedEncodingException, NoSuchAlgorithmException {
         System.out.println("- Creating Backup Database -");
-        SQLiteDB backup = new SQLiteDB("debug-backup" + System.currentTimeMillis());
+        SQLiteDB backup = new SQLiteDB("debug-backup" + System.currentTimeMillis(), Locale::new);
         backup.init();
         System.out.println("- Backup Database Created  -");
 

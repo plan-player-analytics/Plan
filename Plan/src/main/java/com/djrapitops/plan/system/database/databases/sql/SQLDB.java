@@ -10,6 +10,8 @@ import com.djrapitops.plan.system.database.databases.sql.patches.*;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +37,8 @@ import java.util.stream.Collectors;
  * @since 2.0.0
  */
 public abstract class SQLDB extends Database {
+
+    protected final Supplier<Locale> locale;
 
     private final UsersTable usersTable;
     private final UserInfoTable userInfoTable;
@@ -62,7 +67,8 @@ public abstract class SQLDB extends Database {
     private final boolean usingMySQL;
     private ITask dbCleanTask;
 
-    public SQLDB() {
+    public SQLDB(Supplier<Locale> locale) {
+        this.locale = locale;
         usingMySQL = getName().equals("MySQL");
 
         serverTable = new ServerTable(this);
@@ -159,15 +165,17 @@ public abstract class SQLDB extends Database {
                         for (Patch patch : patches) {
                             if (!patch.hasBeenApplied()) {
                                 String patchName = patch.getClass().getSimpleName();
-                                Log.info("Applying Patch: " + patchName + "..");
+                                Log.info(locale.get().getString(PluginLang.DB_APPLY_PATCH, patchName));
                                 patch.apply();
                                 applied = true;
                             }
                         }
-                        Log.info(applied ? "All database patches applied successfully." : "All database patches already applied.");
+                        Log.info(locale.get().getString(
+                                applied ? PluginLang.DB_APPLIED_PATCHES : PluginLang.DB_APPLIED_PATCHES_ALREADY
+                        ));
                     } catch (Exception e) {
                         Log.error("----------------------------------------------------");
-                        Log.error("Database Patching failed, plugin has to be disabled. Please report this issue");
+                        Log.error(locale.get().getString(PluginLang.ENABLE_FAIL_DB_PATCH));
                         Log.error("----------------------------------------------------");
                         Log.toLog(this.getClass(), e);
                         PlanPlugin.getInstance().onDisable();
@@ -246,7 +254,7 @@ public abstract class SQLDB extends Database {
         }
         int removed = inactivePlayers.size();
         if (removed > 0) {
-            Log.info("Removed data of " + removed + " players.");
+            Log.info(locale.get().getString(PluginLang.DB_NOTIFY_CLEAN, removed));
         }
     }
 

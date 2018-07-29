@@ -1,6 +1,8 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.zaxxer.hikari.HikariConfig;
@@ -10,6 +12,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * @author Rsl1122
@@ -18,7 +21,8 @@ public class MySQLDB extends SQLDB {
 
     protected DataSource dataSource;
 
-    public MySQLDB() {
+    public MySQLDB(Supplier<Locale> locale) {
+        super(locale);
     }
 
     /**
@@ -33,8 +37,8 @@ public class MySQLDB extends SQLDB {
         String database = Settings.DB_DATABASE.toString();
         String launchOptions = Settings.DB_LAUNCH_OPTIONS.toString();
         if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
-            Log.error("Launch Options were faulty, using default (?rewriteBatchedStatements=true&useSSL=false)");
             launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
+            Log.error(locale.get().getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
         }
         config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
