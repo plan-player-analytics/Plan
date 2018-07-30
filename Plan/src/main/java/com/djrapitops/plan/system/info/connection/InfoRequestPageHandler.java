@@ -7,11 +7,12 @@ package com.djrapitops.plan.system.info.connection;
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.pages.PageHandler;
-import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
+import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class InfoRequestPageHandler extends PageHandler {
 
         try {
             if (target.isEmpty()) {
-                return DefaultResponses.NOT_FOUND.get();
+                return new NotFoundResponse(request.getLocale().getString(ErrorPageLang.UNKNOWN_PAGE_404));
             }
 
             if (!request.getRequestMethod().equals("POST")) {

@@ -8,6 +8,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
@@ -44,7 +45,7 @@ public class BungeeSetupToggleCommand extends CommandNode {
         } else {
             connectionSystem.setSetupAllowed(true);
         }
-        String msg = !setupAllowed ? "§aSet-up is now Allowed" : "§cSet-up is now Forbidden";
+        String msg = locale.getString(!setupAllowed ? CommandLang.SETUP_ALLOWED : CommandLang.CONNECT_FORBIDDEN);
         sender.sendMessage(msg);
     }
 }

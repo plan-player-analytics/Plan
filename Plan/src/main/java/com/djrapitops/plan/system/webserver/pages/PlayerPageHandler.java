@@ -10,9 +10,10 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
-import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
@@ -33,14 +34,15 @@ public class PlayerPageHandler extends PageHandler {
     @Override
     public Response getResponse(Request request, List<String> target) throws WebException {
         if (target.isEmpty()) {
-            return DefaultResponses.NOT_FOUND.get();
+            return new NotFoundResponse(request.getLocale().getString(ErrorPageLang.UNKNOWN_PAGE_404));
         }
 
         String playerName = target.get(0);
         UUID uuid = UUIDUtility.getUUIDOf(playerName);
+        Locale locale = request.getLocale();
 
         if (uuid == null) {
-            return notFound("Player UUID was not found in the database.");
+            return notFound(locale.getString(ErrorPageLang.UUID_404));
         }
         try {
             if (Database.getActive().check().isPlayerRegistered(uuid)) {
@@ -49,9 +51,9 @@ public class PlayerPageHandler extends PageHandler {
                     InfoSystem.getInstance().generateAndCachePlayerPage(uuid);
                     response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
                 }
-                return response != null ? response : notFound("No Bukkit servers online to perform the request.");
+                return response != null ? response : notFound(locale.getString(ErrorPageLang.NO_SERVERS_404));
             } else {
-                return notFound("Player has not played on this server.");
+                return notFound(locale.getString(ErrorPageLang.NOT_PLAYED_404));
             }
         } catch (NoServersException e) {
             ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> new NotFoundResponse(e.getMessage()));

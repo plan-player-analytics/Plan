@@ -13,13 +13,22 @@ public enum ManageLang implements Lang {
     PROGRESS_FAIL("Manage - Fail", "> §cSomething went wrong: ${0}"),
 
     CONFIRMATION("Manage - Fail, Confirmation", "> §cAdd '-a' argument to confirm execution: ${0}"),
+    IMPORTERS("Manage - List Importers", "Importers: "),
+
+    CON_NO_SERVERS("Manage - Fail, No Servers", "§cNo Servers found in the database."),
+    CON_EXCEPTION("Manage - Fail, Unexpected Exception", "§eOdd Exception: ${0}"),
+    CON_UNAUTHORIZED("Manage - Fail, Unauthorized", "§eFail reason: Unauthorized. Server might be using different database."),
+    CON_GENERIC_FAIL("Manage - Fail, Connection Exception", "§eFail reason: "),
+    CON_EXTERNAL_URL("Manage - Notify External Url", "§eNon-local address, check that port is open"),
+    CON_OLD_VERSION("Manage - Fail, Old version", "§eFail reason: Older Plan version on receiving server"),
 
     CONFIRM_OVERWRITE("Manage - Confirm Overwrite", "Data in ${0} will be overwritten!"),
     CONFIRM_REMOVAL("Manage - Confirm Removal", "Data in ${0} will be removed!"),
 
     FAIL_SAME_DB("Manage - Fail Same Database", "> §cCan not operate on to and from the same database!"),
     FAIL_INCORRECT_DB("Manage - Fail Incorrect Database", "> §c'${0}' is not a supported database."),
-    FAIL_FILE_NOT_FOUND("Manage - Fail File not found", "> §cNo File found at ${0}");
+    FAIL_FILE_NOT_FOUND("Manage - Fail File not found", "> §cNo File found at ${0}"),
+    FAIL_IMPORTER_NOT_FOUND("Manage - Fail No Importer", "§eImporter '${0}' doesn't exist");
 
     private final String identifier;
     private final String defaultValue;

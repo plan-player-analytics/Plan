@@ -4,13 +4,15 @@
  */
 package com.djrapitops.plan.system.webserver.auth;
 
+import com.djrapitops.plan.system.locale.lang.Lang;
+
 /**
  * Reason for WebUserAuthException.
  *
  * @author Rsl1122
  * @see com.djrapitops.plan.api.exceptions.WebUserAuthException
  */
-public enum FailReason {
+public enum FailReason implements Lang {
     USER_AND_PASS_NOT_SPECIFIED("User and Password not specified"),
     USER_DOES_NOT_EXIST("User does not exist"),
     USER_PASS_MISMATCH("User and Password did not match"),
@@ -24,5 +26,15 @@ public enum FailReason {
 
     public String getReason() {
         return reason;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return "HTML - " + name();
+    }
+
+    @Override
+    public String getDefault() {
+        return getReason();
     }
 }

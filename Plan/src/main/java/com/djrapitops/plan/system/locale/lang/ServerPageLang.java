@@ -13,14 +13,17 @@ public enum ServerPageLang implements Lang {
     REGULAR("REGULAR"),
     TOTAL_PLAYERS("Total Players"),
     UNIQUE_PLAYERS_TEXT("Unique Players"),
-    NEW_PLAYERS("New Players"),
+    NEW_PLAYERS_TEXT("New Players"),
+    PER_DAY("/ Day"),
     LAST_PEAK("Last Peak"),
     ALL_TIME_PEAK("All Time Peak"),
     SERVER_INFORMATION("SERVER INFORMATION"),
     USER_INFORMATION("USER INFORMATION"),
     RECENT_LOGINS("RECENT LOGINS"),
+    ONLINE_ACTIVITY("ONLINE ACTIVITY"),
     UNIQUE_PLAYERS("UNIQUE PLAYERS"),
     CALENDAR("CALENDAR"),
+    PUNCHCARD("PUNCHCARD"),
     UNIQUE_CALENDAR("Unique:"),
     NEW_CALENDAR("New:"),
     NEW_RETENTION("New Player Retention"),
@@ -31,7 +34,9 @@ public enum ServerPageLang implements Lang {
     CURRENT_PLAYERBASE("Current Playerbase"),
     WORLD_PLAYTIME("World Playtime"),
     WORLD_LOAD("WORLD LOAD"),
+    ALL("ALL"),
     LOW_TPS_SPIKES("Low TPS Spikes"),
+    USAGE(" Usage"),
     LOADED_ENTITIES("Loaded Entities"),
     LOADED_CHUNKS("Loaded Chunks"),
     ENTITIES("Entities"),
@@ -44,7 +49,9 @@ public enum ServerPageLang implements Lang {
     COUNTRY("Country"),
     COMMNAND_USAGE("Command Usage"),
     USED_COMMANDS("Used Commands"),
-    UNIQUE_TEXT("Unique");
+    UNIQUE_TEXT("Unique"),
+    COMMAND(" Command"),
+    TIMES_USED("Times Used");
 
     private final String defaultValue;
 

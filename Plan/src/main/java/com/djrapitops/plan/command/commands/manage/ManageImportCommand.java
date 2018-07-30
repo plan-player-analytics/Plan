@@ -5,6 +5,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.Importer;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -45,7 +46,7 @@ public class ManageImportCommand extends CommandNode {
         String importArg = args[0];
 
         if (importArg.equals("list")) {
-            sender.sendMessage("Importers: ");
+            sender.sendMessage(locale.getString(ManageLang.IMPORTERS));
             ImporterManager.getImporters().stream()
                     .map(Importer::getNames)
                     .map(list -> list.get(0))
@@ -55,7 +56,7 @@ public class ManageImportCommand extends CommandNode {
 
         Importer importer = ImporterManager.getImporter(importArg);
         if (importer == null) {
-            sender.sendMessage("§eImporter '" + importArg + "' doesn't exist");
+            sender.sendMessage(locale.getString(ManageLang.FAIL_IMPORTER_NOT_FOUND, importArg));
             return;
         }
 

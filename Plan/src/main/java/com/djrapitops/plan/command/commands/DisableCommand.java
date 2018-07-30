@@ -3,6 +3,7 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -24,9 +25,6 @@ public class DisableCommand extends CommandNode {
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         PlanPlugin.getInstance().onDisable();
-        sender.sendMessage(
-                "§aPlan systems are now disabled. " +
-                        "You can still use /planbungee reload to restart the plugin."
-        );
+        sender.sendMessage(locale.getString(CommandLang.DISABLE_DISABLED));
     }
 }

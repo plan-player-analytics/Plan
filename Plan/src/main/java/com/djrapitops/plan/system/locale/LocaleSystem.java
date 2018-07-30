@@ -5,6 +5,7 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.locale.lang.*;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.webserver.auth.FailReason;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.File;
@@ -38,7 +39,9 @@ public class LocaleSystem implements SubSystem {
                 CommonHtmlLang.values(),
                 PlayerPageLang.values(),
                 ServerPageLang.values(),
-                NetworkPageLang.values()
+                NetworkPageLang.values(),
+                ErrorPageLang.values(),
+                FailReason.values()
         };
 
         return Arrays.stream(lang)
@@ -63,7 +66,7 @@ public class LocaleSystem implements SubSystem {
 
     private void writeNewDefaultLocale(File localeFile) {
         try {
-            new LocaleFileWriter(new Locale()).writeToFile(localeFile);
+            new LocaleFileWriter(localeFile.exists() ? Locale.fromFile(localeFile) : locale).writeToFile(localeFile);
         } catch (IOException | IllegalStateException e) {
             Log.error("Failed to write new Locale file at " + localeFile.getAbsolutePath());
             Log.toLog(this.getClass().getName(), e);
