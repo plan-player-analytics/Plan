@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.zip.GZIPOutputStream;
 
@@ -87,10 +88,12 @@ public abstract class Response {
         responseHeaders.set("Content-Encoding", "gzip");
         exchange.sendResponseHeaders(getCode(), 0);
 
-        String content = this instanceof JavaScriptResponse ? getContent() : locale.replaceMatchingLanguage(getContent());
+        String content = this instanceof JavaScriptResponse
+                ? getContent()
+                : locale.replaceMatchingLanguage(getContent());
 
         try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
-             ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
+             ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))) {
             byte[] buffer = new byte[2048];
             int count;
             while ((count = bis.read(buffer)) != -1) {
