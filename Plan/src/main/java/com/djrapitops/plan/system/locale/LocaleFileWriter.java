@@ -1,18 +1,14 @@
 package com.djrapitops.plan.system.locale;
 
 import com.djrapitops.plan.system.locale.lang.Lang;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
 import com.djrapitops.plan.utilities.comparators.StringLengthComparator;
-import com.djrapitops.plugin.api.config.Config;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -22,43 +18,48 @@ import java.util.stream.Collectors;
  */
 public class LocaleFileWriter {
 
-    private final Locale locale;
+    private Locale locale;
 
     public LocaleFileWriter(Locale locale) {
         this.locale = locale;
     }
 
     public void writeToFile(File file) throws IOException {
-        // Find longest identifier
-        Optional<String> key = LocaleSystem.getIdentifiers().keySet().stream()
-                .min(new StringLengthComparator());
-        if (!key.isPresent()) {
-            throw new IllegalStateException("LocaleSystem defines no Identifiers.");
-        }
+        // Find longest identifier length for spacing
+        int length = LocaleSystem.getIdentifiers().keySet().stream()
+                .min(new StringLengthComparator())
+                .map(String::length).orElse(0) + 2;
 
-        for (Lang lang : LocaleSystem.getIdentifiers().values()) {
-            if (!locale.containsKey(lang)) {
-                locale.put(lang, new Message(lang.getDefault()));
-            }
-        }
+        addMissingLang();
 
-        int length = key.get().length() + 2;
-        List<String> lines = locale.entrySet().stream()
+        List<String> lines = createLines(length);
+
+        write(file, lines);
+    }
+
+    private void write(File file, List<String> lines) throws IOException {
+        if (!file.exists()) {
+            Files.createFile(file.toPath());
+        }
+        Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
+    }
+
+    private List<String> createLines(int length) {
+        return locale.entrySet().stream()
                 .sorted(new LocaleEntryComparator())
                 .map(entry -> {
                     String value = entry.getValue() != null ? entry.getValue().toString() : entry.getKey().getDefault();
                     return getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + value;
                 })
                 .collect(Collectors.toList());
-        if (!file.exists()) {
-            Files.createFile(file.toPath());
+    }
+
+    private void addMissingLang() {
+        for (Lang lang : LocaleSystem.getIdentifiers().values()) {
+            if (!locale.containsKey(lang)) {
+                locale.put(lang, new Message(lang.getDefault()));
+            }
         }
-
-        Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
-
-        Config config = ConfigSystem.getConfig();
-        config.set(Settings.WRITE_NEW_LOCALE.getPath(), false);
-        config.save();
     }
 
     private String getSpacedIdentifier(String identifier, int length) {

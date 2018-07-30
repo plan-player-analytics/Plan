@@ -8,13 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents loaded language information.
  *
  * @author Rsl1122
  */
-// TODO Turn into TreeMap that sorts longest first
 public class Locale extends HashMap<Lang, Message> {
 
     public Locale() {
@@ -42,10 +43,11 @@ public class Locale extends HashMap<Lang, Message> {
 
     @Override
     public Message get(Object key) {
-        if (key instanceof Lang) {
-            return getOrDefault(key, new Message(((Lang) key).getDefault()));
+        Message storedValue = super.get(key);
+        if (key instanceof Lang && storedValue == null) {
+            return new Message(((Lang) key).getDefault());
         } else {
-            return super.get(key);
+            return storedValue;
         }
     }
 
@@ -69,13 +71,20 @@ public class Locale extends HashMap<Lang, Message> {
         if (isEmpty()) {
             return from;
         }
-        for (Entry<Lang, Message> entry : entrySet()) {
+
+        String replaced = from;
+
+        // Longest first so that entries that contain each other don't partially replace.
+        List<Entry<Lang, Message>> entries = entrySet().stream().sorted(
+                (one, two) -> Integer.compare(two.getKey().getIdentifier().length(), one.getKey().getIdentifier().length())
+        ).collect(Collectors.toList());
+
+        for (Entry<Lang, Message> entry : entries) {
             String defaultValue = entry.getKey().getDefault();
             String replacement = entry.getValue().toString();
 
-            from = from.replace(defaultValue, replacement);
+            replaced = replaced.replace(defaultValue, replacement);
         }
-
-        return from;
+        return replaced;
     }
 }
