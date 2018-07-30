@@ -1,43 +1,43 @@
-Cmd - Click Me                                  || Click me
+Cmd - Click Me                                  || Klik hier
 Cmd - Link                                      ||   §2Link: §f
-Cmd Disable - Disabled                          || §aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin.
-Cmd FAIL - Invalid Username                     || §cUser does not have an UUID.
-Cmd FAIL - No Feature                           || §eDefine a feature to disable! (currently supports ${0})
-Cmd FAIL - No Permission                        || §cYou do not have the required permission.
-Cmd FAIL - Require only one Argument            || §cSingle Argument required ${1}
-Cmd FAIL - Requires Arguments                   || §cArguments required (${0}) ${1}
-Cmd FAIL - Unknown Username                     || §cUser has not been seen on this server
-Cmd FAIL - WebUser does not exists              || §cUser does not exists!
-Cmd FAIL - WebUser exists                       || §cUser already exists!
-Cmd Header - Analysis                           || > §2Analysis Results
+Cmd Disable - Disabled                          || §aPlan is uitgeschakeld. Je kan /planbungee reload gebruiken om de plugin opnieuw te starten.
+Cmd FAIL - Invalid Username                     || §cGebruiker heeft geen UUID.
+Cmd FAIL - No Feature                           || §eGeef het kenmerk om uit te schakelen! (ondersteunt op het moment ${0})
+Cmd FAIL - No Permission                        || §cJe hebt geen toestemming om dat te doen.
+Cmd FAIL - Require only one Argument            || §cEen argument nodig ${1}
+Cmd FAIL - Requires Arguments                   || §cMeerdere argumenten nodig (${0}) ${1}
+Cmd FAIL - Unknown Username                     || §cGebruiker is niet gezien op de server
+Cmd FAIL - WebUser does not exists              || §cGebruiker bestaat niet!
+Cmd FAIL - WebUser exists                       || §cGebruiker bestaat al!
+Cmd Header - Analysis                           || > §2Test Resultaten
 Cmd Header - Info                               || > §2Player Analytics
-Cmd Header - Inspect                            || > §2Player: §f${0}
-Cmd Header - Network                            || > §2Network Page
-Cmd Header - Players                            || > §2Players
-Cmd Header - Search                             || > §2${0} Results for §f${1}§2:
+Cmd Header - Inspect                            || > §2Speler: §f${0}
+Cmd Header - Network                            || > §2Netwerk Pagina
+Cmd Header - Players                            || > §2Spelers
+Cmd Header - Search                             || > §2${0} Resultaten voor §f${1}§2:
 Cmd Header - Servers                            || > §2Servers
-Cmd Header - Web Users                          || > §2${0} Web Users
-Cmd Info - Bungee Connection                    ||   §2Connected to Bungee: §f${0}
-Cmd Info - Database                             ||   §2Active Database: §f${0}
-Cmd Info - Reload Complete                      || §aReload Complete
-Cmd Info - Reload Failed                        || §cSomething went wrong during reload of the plugin, a restart is recommended.
-Cmd Info - Update                               ||   §2Update Available: §f${0}
-Cmd Info - Version                              ||   §2Version: §f${0}
-Cmd Notify - No WebUser                         || You might not have a web user, use /plan register <password>
-Cmd Notify - WebUser register                   || Registered new user: '${0}' Perm level: ${1}
-Cmd Qinspect - Activity Index                   ||   §2Activity Index: §f${0} | ${1}
-Cmd Qinspect - Deaths                           ||   §2Deaths: §f${0}
-Cmd Qinspect - Geolocation                      ||   §2Logged in from: §f${0}
-Cmd Qinspect - Last Seen                        ||   §2Last Seen: §f${0}
-Cmd Qinspect - Longest Session                  ||   §2Longest Session: §f${0}
+Cmd Header - Web Users                          || > §2${0} Web Gebruikers
+Cmd Info - Bungee Connection                    ||   §2Verbonden met Bungee: §f${0}
+Cmd Info - Database                             ||   §2Actieve Database: §f${0}
+Cmd Info - Reload Complete                      || §aReload Compleet
+Cmd Info - Reload Failed                        || §cEr is iets mis gegaan tijdens de reload, een restart is aanbevolen.
+Cmd Info - Update                               ||   §2Update Beschikbaar: §f${0}
+Cmd Info - Version                              ||   §2Versie: §f${0}
+Cmd Notify - No WebUser                         || Het is mogelijk dat je geen web gebruiker hebt, gebruik /plan register <wachtwoord>
+Cmd Notify - WebUser register                   || Nieuwe gebruiker geregristreerd: '${0}' Toegangslevel: ${1}
+Cmd Qinspect - Activity Index                   ||   §2Activiteiten index: §f${0} | ${1}
+Cmd Qinspect - Deaths                           ||   §2Sterfgevallen: §f${0}
+Cmd Qinspect - Geolocation                      ||   §2Locatie: §f${0}
+Cmd Qinspect - Last Seen                        ||   §2Laatst gezien op: §f${0}
+Cmd Qinspect - Longest Session                  ||   §2Langste sessie: §f${0}
 Cmd Qinspect - Mob Kills                        ||   §2Mob Kills: §f${0}
 Cmd Qinspect - Player Kills                     ||   §2Player Kills: §f${0}
-Cmd Qinspect - Playtime                         ||   §2Playtime: §f${0}
-Cmd Qinspect - Registered                       ||   §2Registered: §f${0}
-Cmd Qinspect - Times Kicked                     ||   §2Times Kicked: §f${0}
-Cmd Setup - Allowed                             || §aSet-up is now Allowed
-Cmd Setup - Bad Request                         || §eConnection succeeded, but Receiving server was not a Bungee server. Use Bungee address instead.
-Cmd Setup - Disallowed                          || §cSet-up is now Forbidden
+Cmd Qinspect - Playtime                         ||   §2Speeltijd: §f${0}
+Cmd Qinspect - Registered                       ||   §2Geregristreerd op: §f${0}
+Cmd Qinspect - Times Kicked                     ||   §2Aantal keren gekicked: §f${0}
+Cmd Setup - Allowed                             || §aSet-up is nu toegestaan
+Cmd Setup - Bad Request                         || §eConnectie is goed, maar de server is geen Bungee server. Gebruik een Bungee adres.
+Cmd Setup - Disallowed                          || §cSet-up is niet toegestaan.
 Cmd Setup - Forbidden                           || §eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it.
 Cmd Setup - Gateway Error                       || §eConnection succeeded, but Bungee failed to connect to this server (Did current web server restart?). Use /plan m con & /planbungee con to debug.
 Cmd Setup - Generic Fail                        || §eConnection failed: ${0}
