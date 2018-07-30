@@ -1,314 +1,313 @@
-Cmd - Click Me                                  || Click me
-Cmd - Link                                      ||   §2Link: §f
-Cmd Disable - Disabled                          || §aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin.
-Cmd FAIL - Invalid Username                     || §cUser does not have an UUID.
-Cmd FAIL - No Feature                           || §eDefine a feature to disable! (currently supports ${0})
-Cmd FAIL - No Permission                        || §cYou do not have the required permission.
-Cmd FAIL - Require only one Argument            || §cSingle Argument required ${1}
-Cmd FAIL - Requires Arguments                   || §cArguments required (${0}) ${1}
-Cmd FAIL - Unknown Username                     || §cUser has not been seen on this server
-Cmd FAIL - WebUser does not exists              || §cUser does not exists!
-Cmd FAIL - WebUser exists                       || §cUser already exists!
-Cmd Header - Analysis                           || > §2Analysis Results
+Cmd - Click Me                                  || Klikkaa minua
+Cmd - Link                                      ||   §2Linkki: §f
+Cmd Disable - Disabled                          || §aPlan on nyt poissa päältä. Voit käyttää /planbungee reload komentoa uudelleenkäynnistykseen.
+Cmd FAIL - Invalid Username                     || §cPelaajalla ei löytynyt UUID:ta.
+Cmd FAIL - No Feature                           || §eValitse sammutettava osa! (tällähetkellä tuetut: ${0})
+Cmd FAIL - No Permission                        || §cSinulla ei ole lupaa.
+Cmd FAIL - Require only one Argument            || §cAnna ainakin yksi muuttuja ${1}
+Cmd FAIL - Requires Arguments                   || §cMääritä enemmän muuttujia (${0}) ${1}
+Cmd FAIL - Unknown Username                     || §cPleaajaa ei ole nähty tällä palvelimella.
+Cmd FAIL - WebUser does not exists              || §cKäyttäjää ei ole olemassa!
+Cmd FAIL - WebUser exists                       || §cKäyttäjä on jo olemassa!
+Cmd Header - Analysis                           || > §2Analyysin tulokset
 Cmd Header - Info                               || > §2Player Analytics
-Cmd Header - Inspect                            || > §2Player: §f${0}
-Cmd Header - Network                            || > §2Network Page
-Cmd Header - Players                            || > §2Players
-Cmd Header - Search                             || > §2${0} Results for §f${1}§2:
-Cmd Header - Servers                            || > §2Servers
-Cmd Header - Web Users                          || > §2${0} Web Users
-Cmd Info - Bungee Connection                    ||   §2Connected to Bungee: §f${0}
-Cmd Info - Database                             ||   §2Active Database: §f${0}
-Cmd Info - Reload Complete                      || §aReload Complete
-Cmd Info - Reload Failed                        || §cSomething went wrong during reload of the plugin, a restart is recommended.
-Cmd Info - Update                               ||   §2Update Available: §f${0}
-Cmd Info - Version                              ||   §2Version: §f${0}
-Cmd Notify - No WebUser                         || You might not have a web user, use /plan register <password>
-Cmd Notify - WebUser register                   || Registered new user: '${0}' Perm level: ${1}
-Cmd Qinspect - Activity Index                   ||   §2Activity Index: §f${0} | ${1}
-Cmd Qinspect - Deaths                           ||   §2Deaths: §f${0}
-Cmd Qinspect - Geolocation                      ||   §2Logged in from: §f${0}
-Cmd Qinspect - Last Seen                        ||   §2Last Seen: §f${0}
-Cmd Qinspect - Longest Session                  ||   §2Longest Session: §f${0}
-Cmd Qinspect - Mob Kills                        ||   §2Mob Kills: §f${0}
-Cmd Qinspect - Player Kills                     ||   §2Player Kills: §f${0}
-Cmd Qinspect - Playtime                         ||   §2Playtime: §f${0}
-Cmd Qinspect - Registered                       ||   §2Registered: §f${0}
-Cmd Qinspect - Times Kicked                     ||   §2Times Kicked: §f${0}
-Cmd Setup - Allowed                             || §aSet-up is now Allowed
-Cmd Setup - Bad Request                         || §eConnection succeeded, but Receiving server was not a Bungee server. Use Bungee address instead.
-Cmd Setup - Disallowed                          || §cSet-up is now Forbidden
-Cmd Setup - Forbidden                           || §eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it.
-Cmd Setup - Gateway Error                       || §eConnection succeeded, but Bungee failed to connect to this server (Did current web server restart?). Use /plan m con & /planbungee con to debug.
-Cmd Setup - Generic Fail                        || §eConnection failed: ${0}
-Cmd Setup - Internal Error                      || §eConnection succeeded. ${0}, check possible ErrorLog on receiving server's debug page.
-Cmd Setup - Success                             || §aConnection successful, Plan may restart in a few seconds..
-Cmd Setup - Unauthorized                        || §eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support
-Cmd Setup - Url mistake                         || §cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address.
-Cmd Setup - WebServer not Enabled               || §cWebServer is not enabled on this server! Make sure it enables on boot!
-Cmd SUCCESS - Feature disabled                  || §aDisabled '${0}' temporarily until next plugin reload.
-Cmd SUCCESS - WebUser register                  || §aAdded a new user (${0}) successfully!
-Cmd Update - Cancel Success                     || §aCancel operation performed.
-Cmd Update - Cancelled                          || §cUpdate cancelled.
-Cmd Update - Change log                         || Change Log v${0}:
-Cmd Update - Fail Cacnel                        || §cUpdate failed on a server, cancelling update on all servers..
-Cmd Update - Fail Force Notify                  || §e${0} failed to update, -force specified, continuing update.
-Cmd Update - Fail Not Online                    || §cNot all servers were online or accessible, you can still update available servers using /plan update -u -force
-Cmd Update - Notify Cancel                      || §aYou can cancel the update on servers that haven't rebooted yet with /plan update cancel.
-Cmd Update - Online Check                       || Checking that all servers are online..
-Cmd Update - Scheduled                          || §a${0} scheduled for update.
-Cmd Update - Url mismatch                       || §cVersion download url did not start with ${0} and might not be trusted. You can download this version manually here (Direct download):
-Cmd Web - Permission Levels                     || >\§70: Access all pages\§71: Access '/players' and all player pages\§72: Access player page with the same username as the webuser\§73+: No permissions
-Command Help - /plan analyze                    || View the Server Page
-Command Help - /plan dev                        || Development mode command
-Command Help - /plan help                       || Show command list
-Command Help - /plan info                       || Check the version of Plan
-Command Help - /plan inspect                    || View a Player Page
-Command Help - /plan manage                     || Manage Plan Database
-Command Help - /plan manage backup              || Backup a Database
-Command Help - /plan manage clear               || Clear a Database
-Command Help - /plan manage con                 || Debug Server-Bungee connections
-Command Help - /plan manage disable             || Disable a feature temporarily
-Command Help - /plan manage hotswap             || Change Database quickly
-Command Help - /plan manage import              || Import data from elsewhere
-Command Help - /plan manage move                || Move data between Databases
-Command Help - /plan manage remove              || Remove Player's data
-Command Help - /plan manage restore             || Restore a previous Backup
-Command Help - /plan manage setup               || Set-up Server-Bungee connection
-Command Help - /plan network                    || View the Network Page
-Command Help - /plan players                    || View the Players Page
-Command Help - /plan qinspect                   || View Player info in game
-Command Help - /plan register                   || Register a Web User
-Command Help - /plan reload                     || Restart Plan
-Command Help - /plan search                     || Search for a player name
-Command Help - /plan servers                    || List servers in Database
-Command Help - /plan update                     || Get change log link or update plugin
-Command Help - /plan web check                  || Inspect a Web User
-Command Help - /plan web delete                 || Delete a Web User
-Command Help - /plan web level                  || Information about permission levels
-Command Help - /plan web list                   || List Web Users
-Command Help - /plan webuser                    || Manage Web Users
-Command Help - /planbungee con                  || Debug Bungee-Server connections
-Command Help - /planbungee disable              || Disable the plugin temporarily
-Command Help - /planbungee setup                || Toggle set-up mode
-Database - Apply Patch                          || Applying Patch: ${0}..
-Database - Patches Applied                      || All database patches applied successfully.
-Database - Patches Applied Already              || All database patches already applied.
-Database MySQL - Launch Options Error           || Launch Options were faulty, using default (${0})
-Database Notify - Clean                         || Removed data of ${0} players.
-Database Notify - SQLite No WAL                 || SQLite WAL mode not supported on this server version, using default. This may or may not affect performance.
-Disable                                         || Player Analytics Disabled.
-Disable - Processing                            || Processing critical unprocessed tasks. (${0})
-Disable - Processing Complete                   || Processing complete.
-Disable - WebServer                             || Webserver has been disabled.
-Enable                                          || Player Analytics Enabled.
-Enable - Database                               || ${0}-database connection established.
-Enable - Notify Address Confirmation            || Make sure that this address points to THIS Server: ${0}
-Enable - Notify Empty IP                        || IP in server.properties is empty & AlternativeIP is not in use. Incorrect links will be given!
-Enable - Notify Geolocations disabled           || Geolocation gathering is not active. (Data.Geolocations: false)
-Enable - Notify Geolocations Internet Required  || Plan Requires internet access on first run to download GeoLite2 Geolocation database.
-Enable - Notify Webserver disabled              || WebServer was not initialized. (WebServer.DisableWebServer: true)
-Enable - WebServer                              || Webserver running on PORT ${0} (${1})
-Enable FAIL - Database                          || ${0}-Database Connection failed: ${1}
-Enable FAIL - Database Patch                    || Database Patching failed, plugin has to be disabled. Please report this issue
-Enable FAIL - GeoDB Write                       || Something went wrong saving the downloaded GeoLite2 Geolocation database
-Enable FAIL - WebServer (Bungee)                || WebServer did not initialize!
-Enable FAIL - Wrong Database Type               || ${0} is not a supported Database
-HTML - ACTIVITY_INDEX                           || Activity Index
-HTML - ALL                                      || ALL
-HTML - ALL_TIME_PEAK                            || All Time Peak
-HTML - AVERAGE_PING                             || Average Ping
+Cmd Header - Inspect                            || > §2Pelaaja: §f${0}
+Cmd Header - Network                            || > §2Verkoston Sivu
+Cmd Header - Players                            || > §2Pelaajat
+Cmd Header - Search                             || > §2${0} Tulosta haulle §f${1}§2:
+Cmd Header - Servers                            || > §2Palvelimet
+Cmd Header - Web Users                          || > §2${0} Web Käyttäjät
+Cmd Info - Bungee Connection                    ||   §2Yhdistetty BungeeCord:iin: §f${0}
+Cmd Info - Database                             ||   §2Aktiivinen Tietokanta: §f${0}
+Cmd Info - Reload Complete                      || §aUudelleenlataus onnistui!
+Cmd Info - Reload Failed                        || §cUudelleenlatauksessa esiintyi ongelmia. Käynnistystä uudelleen suositellaan.
+Cmd Info - Update                               ||   §2Päivitys saatavilla: §f${0}
+Cmd Info - Version                              ||   §2Versio: §f${0}
+Cmd Notify - No WebUser                         || Sinulla ei ehkä ole Web Käyttäjää, käytä /plan register <salasana>-komentoa
+Cmd Notify - WebUser register                   || Rekisteröitiin uusi Web Käyttäjä: '${0}' Lupa taso: ${1}
+Cmd Qinspect - Activity Index                   ||   §2Aktiivisuus Indeksi: §f${0} | ${1}
+Cmd Qinspect - Deaths                           ||   §2Kuolemat: §f${0}
+Cmd Qinspect - Geolocation                      ||   §2Kirjautui sisään maasta: §f${0}
+Cmd Qinspect - Last Seen                        ||   §2Viimeksi nähty: §f${0}
+Cmd Qinspect - Longest Session                  ||   §2Pisin istunto: §f${0}
+Cmd Qinspect - Mob Kills                        ||   §2Otusten Tappoja: §f${0}
+Cmd Qinspect - Player Kills                     ||   §2Pelaajien Tappoja: §f${0}
+Cmd Qinspect - Playtime                         ||   §2Peliaika: §f${0}
+Cmd Qinspect - Registered                       ||   §2Rekisteröitynyt: §f${0}
+Cmd Qinspect - Times Kicked                     ||   §2Potkittu Pellolle: §f${0}
+Cmd Setup - Allowed                             || §aYhteydenotto on nyt sallittu.
+Cmd Setup - Bad Request                         || §eYhteys onnistui, mutta Vastaanottava palvelin ei ollut BungeeCord. Käytä BungeeCord:in osoitetta.
+Cmd Setup - Disallowed                          || §cYhteydenotto on nyt kielletty.
+Cmd Setup - Forbidden                           || §eYhteys onnistui, mutta BungeeCord:n set-up tila oli poissa käytöstä - käytä '/planbungee setup' laittaaksesi sen päälle.
+Cmd Setup - Gateway Error                       || §eYhteys onnistui, mutta BungeeCord ei saanut yhteyttä tähän palvelimeen (Käynnistyikö Web palvelin uudelleen?). Käytä /plan m con & /planbungee con tutkiaksesi ongelmia.
+Cmd Setup - Generic Fail                        || §eYhteys ei onnistunut: ${0}
+Cmd Setup - Internal Error                      || §eYhteys onnistui. ${0}, tarkista mahdollinen virheloki vastaanottavalla palvelimella.
+Cmd Setup - Success                             || §aYhteys onnistui, Plan saattaa käynnistyä uudelleen muutaman sekunnin kuluttua..
+Cmd Setup - Unauthorized                        || §eYhteys onnistui, mutta Vastaanottava palvelin ei hyväksynyt tätä palvelinta. Pyydä apua Discordissa.
+Cmd Setup - Url mistake                         || §cVarmista käyttäväsi kokonaista osoitetta (http:// tai https:// alkuinen) - Tarkista osoite BungeeCord:in käynnistyslokista.
+Cmd Setup - WebServer not Enabled               || §cWeb Palevlin ei ole käynnissä tällä palvelimella! Varmista että se käynnistyy pelin mukana!
+Cmd SUCCESS - Feature disabled                  || §aSammutettiin '${0}' toistaiseksi, kunnes Plan ladataan uudelleen.
+Cmd SUCCESS - WebUser register                  || §aLisättiin uusi Web Käyttäjä (${0})!
+Cmd Update - Cancel Success                     || §aPeruutettu.
+Cmd Update - Cancelled                          || §cPäivitys peruutettu.
+Cmd Update - Change log                         || Muutosloki v${0}:
+Cmd Update - Fail Cacnel                        || §cPäivitys epäonnistui palvelimella, peruutetaan päivitys kaikilla palvelimilla..
+Cmd Update - Fail Force Notify                  || §e${0} ei voitu päivittää, -force käytössä, jatketaan päivitystä.
+Cmd Update - Fail Not Online                    || §cKaikki palvelimet eivät olleet saatavilla, voit silti päivittää käyttämällä komentoa /plan update -u -force
+Cmd Update - Notify Cancel                      || §aVoit peruuttaa päivityksen palvelimilla, joita ei ole käynnistetty uudelleen, komennolla /plan update cancel.
+Cmd Update - Online Check                       || Varmistetaan että palvelimet ovat päällä..
+Cmd Update - Scheduled                          || §a${0} astettu päivittymään.
+Cmd Update - Url mismatch                       || §cVersio URL ei alkanut ${0} joten siihen ei voi ehkä luottaa. Voit ladata sen manuaalisesti täältä (Suora lataus):
+Cmd Web - Permission Levels                     || >\§70: Pääsy kaikille sivuille\§71: Pääsy '/players' ja pelaajien sivuille\§72: Pääsy pelaajan sivulle, jolla on sama nimi kuin Web Käyttäjällä\§73+: Ei pääsyä
+Command Help - /plan analyze                    || Katso Palvelimen sivua
+Command Help - /plan dev                        || Kehitys komento
+Command Help - /plan help                       || Komentojen lista
+Command Help - /plan info                       || Tarkista Plan versio
+Command Help - /plan inspect                    || Katso Pelaajan sivua
+Command Help - /plan manage                     || Hallitse Plan tietokantaa
+Command Help - /plan manage backup              || Varmuuskopioi tietokanta
+Command Help - /plan manage clear               || Tyhjennä tietokanta
+Command Help - /plan manage con                 || Tutki Palvelin-BungeeCord yhteys ongelmia
+Command Help - /plan manage disable             || Sammuta osa toistaiseksi
+Command Help - /plan manage hotswap             || Vaihda tietokantaa lennosta
+Command Help - /plan manage import              || Tuo tietoa muualta
+Command Help - /plan manage move                || Siirrä tietoa tietokantojen välillä
+Command Help - /plan manage remove              || Poista pelaajan tiedot
+Command Help - /plan manage restore             || Palauta teitokannan varmuuskopio
+Command Help - /plan manage setup               || Muodosta Palvelin-BungeeCord yhteys
+Command Help - /plan network                    || Katso Verkoston sivua
+Command Help - /plan players                    || Katso Pelaajat sivua
+Command Help - /plan qinspect                   || Katso pelaajan tietoja pelissä
+Command Help - /plan register                   || Rekisteröi Web Käyttäjä
+Command Help - /plan reload                     || Käynnistä Plan uudelleen
+Command Help - /plan search                     || Etsi pelaajan nimeä
+Command Help - /plan servers                    || Listaa tietokannassa olevat palvelimet 
+Command Help - /plan update                     || Muutosloki linkki tai Plan:in päivitys
+Command Help - /plan web check                  || Tarkista Web Käyttäjän tiedot
+Command Help - /plan web delete                 || Poista Web Käyttäjä
+Command Help - /plan web level                  || Tietoa Web lupatasoista
+Command Help - /plan web list                   || Listaa Web Käyttäjät
+Command Help - /plan webuser                    || Halliste Web Käyttäjiä
+Command Help - /planbungee con                  || Tutki BungeeCord-Palvelin yhteys ongelmia
+Command Help - /planbungee disable              || Sammuta Plan toistaiseksi
+Command Help - /planbungee setup                || Vaihda asennustilaa
+Database - Apply Patch                          || Muutetaan Tietokantaa: ${0}..
+Database - Patches Applied                      || Tietokannan muutokset suoritettu onnistuneesti.
+Database - Patches Applied Already              || Kaikki tietokannan muutokset oli jo tehty.
+Database MySQL - Launch Options Error           || LauchOptions-asetus oli virheellinen, käytetään oletusta (${0})
+Database Notify - Clean                         || Poistetiin ${0}n pelaajan tiedot.
+Database Notify - SQLite No WAL                 || SQLite WAL tilaa ei tueta tällä versiolla, Käytetään perustilaa. Tämä voi vaikuttaa suorituskykyyn.
+Disable                                         || Player Analytics Sammutettu.
+Disable - Processing                            || Suoritetaan kriittisiä suorittamattomia toimintoja. (${0})
+Disable - Processing Complete                   || Suoritus valmis.
+Disable - WebServer                             || Web palvelin on sammutettu.
+Enable                                          || Player Analytics Käynnistetty.
+Enable - Database                               || ${0}-tietokanta yhteys luotu.
+Enable - Notify Address Confirmation            || Varmista että tämä osoite osoittaa TÄHÄN palvelimeen: ${0}
+Enable - Notify Empty IP                        || IP server.properties tiedostossa on tyhjä & AlternativeIP ei ole käytössä. Linkit ovat virheellisiä!
+Enable - Notify Geolocations disabled           || Sijaintien keräys ei ole päällä. (Data.Geolocations: false)
+Enable - Notify Geolocations Internet Required  || Plan Vaatii internetin ensimmäisellä käynnistyskerralla GeoLite2 tietokannan lataamiseen.
+Enable - Notify Webserver disabled              || Web Palvelinta ei käynnistetty. (WebServer.DisableWebServer: true)
+Enable - WebServer                              || Web Palvelin pyörii PORTILLA ${0} (${1})
+Enable FAIL - Database                          || ${0}-Tietokanta yhteys epäonnistui: ${1}
+Enable FAIL - Database Patch                    || Tietokannan muutokset epäonnistuivat, Plan jouduttiin sulkemaan. Ilmoita tästä ongelmasta
+Enable FAIL - GeoDB Write                       || Jokin meni pieleen tallentaessa GeoLite2 tietokantaa
+Enable FAIL - WebServer (Bungee)                || Web Palvelin ei käynnistynyt!
+Enable FAIL - Wrong Database Type               || ${0} ei ole tuettu Tietokanta
+HTML - ACTIVITY_INDEX                           || Aktiivisuus Indeksi
+HTML - ALL                                      || KAIKKI
+HTML - ALL_TIME_PEAK                            || Paras Huippu
+HTML - AVERAGE_PING                             || Keskimääräinen Ping
 HTML - AVG                                      || AVG
-HTML - BANNED                                   || Banned
-HTML - BEST_PING                                || Best Ping
-HTML - CALENDAR                                 || CALENDAR
-HTML - CALENDAR_TEXT                            ||  Calendar
-HTML - CHUNKS                                   || Chunks
-HTML - COMMAND                                  ||  Command
-HTML - COMMNAND_USAGE                           || Command Usage
-HTML - CONNECTION_INFORMATION                   || Connection Information
-HTML - COUNTRY                                  || Country
-HTML - CURRENT_PLAYERBASE                       || Current Playerbase
-HTML - DEATHS                                   || Deaths
-HTML - ENTITIES                                 || Entities
-HTML - ERROR                                    || Authentication failed due to error
-HTML - FAVORITE_SERVER                          || Favorite Server
-HTML - GEOLOCATION                              || Geolocation
-HTML - GEOLOCATION_TEXT                         || Geolocation
-HTML - HEALTH_ESTIMATE                          || Health Estimate
-HTML - INDEX_ACTIVE                             || Active
-HTML - INDEX_INACTIVE                           || Inactive
-HTML - INDEX_IRREGULAR                          || Irregular
-HTML - INDEX_REGULAR                            || Regular
-HTML - INDEX_VERY_ACTIVE                        || Very Active
-HTML - IP_ADDRESS                               || IP-address
-HTML - KILLED                                   || Killed
-HTML - KILLED_BY                                || Killed by
-HTML - LAST_24_HOURS                            || LAST 24 HOURS
-HTML - LAST_30_DAYS                             || LAST 30 DAYS
-HTML - LAST_30_DAYS_TEXT                        || Last 30 Days
-HTML - LAST_7_DAYS                              || LAST 7 DAYS
-HTML - LAST_CONNECTED                           || Last Connected
-HTML - LAST_PEAK                                || Last Peak
-HTML - LAST_SEEN                                || LAST SEEN
-HTML - LAST_SEEN_TEXT                           || Last Seen
-HTML - LOADED_CHUNKS                            || Loaded Chunks
-HTML - LOADED_ENTITIES                          || Loaded Entities
-HTML - LOCAL_MACHINE                            || Local Machine
-HTML - LONGEST                                  || Longest
-HTML - LOW_TPS_SPIKES                           || Low TPS Spikes
-HTML - MOB_CAUSED_DEATHS                        || Mob caused Deaths
-HTML - MOB_KDR                                  || Mob KDR
-HTML - MOB_KILLS                                || Mob Kills
-HTML - MOST_RECENT_SESSIONS                     || Most Recent Sessions
-HTML - NAME                                     ||  Name
-HTML - NAV_COMMAND_USAGE                        || Command Usage
-HTML - NAV_GEOLOCATIONS                         || Geolocations
-HTML - NAV_INFORMATION                          || Information
-HTML - NAV_NETWORK_PLAYERS                      || Network Players
-HTML - NAV_ONLINE_ACTIVITY                      || Online Activity
-HTML - NAV_OVERVIEW                             || Overview
-HTML - NAV_PERFORMANCE                          || Performance
-HTML - NAV_PLAYERS                              || Players
-HTML - NAV_PLUGINS                              || Plugins
-HTML - NAV_SESSIONS                             || Sessions
-HTML - NAV_SEVER_HEALTH                         || Server Health
-HTML - NETWORK                                  || Network
-HTML - NETWORK_INFORMATION                      || NETWORK INFORMATION
-HTML - NEW                                      || NEW
-HTML - NEW_CALENDAR                             || New:
-HTML - NEW_PLAYERS_TEXT                         || New Players
-HTML - NEW_RETENTION                            || New Player Retention
-HTML - NEW_TEXT                                 || New
-HTML - NICKNAME                                 || Nickname
-HTML - NO_KILLS                                 || No Kills
-HTML - NO_PLAYER_CAUSED_DEATHS                  || No Player caused Deaths
-HTML - OFFLINE                                  ||  Offline
-HTML - ONLINE                                   ||  Online
-HTML - ONLINE_ACTIVITY                          || ONLINE ACTIVITY
-HTML - OPERATOR                                 || Operator
-HTML - OVERVIEW                                 || OVERVIEW
-HTML - PER_DAY                                  || / Day
-HTML - PLAYER_CAUSED_DEATHS                     || Player caused Deaths
-HTML - PLAYER_KILLS                             || Player Kills
-HTML - PLAYER_LIST                              || Player List
-HTML - PLAYERBASE_DEVELOPMENT                   || Playerbase Development
-HTML - PLAYERS                                  || PLAYERS
-HTML - PLAYERS_ONLINE                           || PLAYERS ONLINE
-HTML - PLAYERS_ONLINE_TEXT                      || Players Online
-HTML - PLAYERS_TEXT                             || Players
-HTML - PLAYTIME                                 || Playtime
-HTML - PLEASE_WAIT                              || Please wait...
-HTML - PREDICETED_RETENTION                     || Predicted Retention
-HTML - PUNCH_CARD                               || Punchcard
-HTML - PUNCHCARD                                || PUNCHCARD
-HTML - RECENT_LOGINS                            || RECENT LOGINS
-HTML - REGISTERED                               || REGISTERED
-HTML - REGISTERED_TEXT                          || Registered
-HTML - REGULAR                                  || REGULAR
-HTML - SEEN_NICKNAMES                           || Seen Nicknames
-HTML - SERVER                                   || Server
-HTML - SERVER_ANALYSIS                          || Server Analysis
-HTML - SERVER_HEALTH_ESTIMATE                   || Server Health Estimate
-HTML - SERVER_INFORMATION                       || SERVER INFORMATION
-HTML - SERVER_PREFERENCE                        || Server Preference
-HTML - SERVERS                                  || Servers
-HTML - SESSION                                  || Session
-HTML - SESSION_ENDED                            || Session Ended
-HTML - SESSION_LENGTH                           || Session Lenght
-HTML - SESSION_MEDIAN                           || Session Median
-HTML - SESSIONS                                 || Sessions
-HTML - TIME                                     ||  Time
-HTML - TIMES_KICKED                             || Times Kicked
-HTML - TIMES_USED                               || Times Used
-HTML - TOTAL_ACTIVE_TEXT                        || Total Active
-HTML - TOTAL_AFK                                || Total AFK
-HTML - TOTAL_PLAYERS                            || Total Players
-HTML - TOTAL_PLAYTIME                           || Total Playtime
-HTML - UNIQUE                                   || UNIQUE
-HTML - UNIQUE_CALENDAR                          || Unique:
-HTML - UNIQUE_PLAYERS                           || UNIQUE PLAYERS
-HTML - UNIQUE_PLAYERS_TEXT                      || Unique Players
-HTML - UNIQUE_TEXT                              || Unique
-HTML - USAGE                                    ||  Usage
-HTML - USED_COMMANDS                            || Used Commands
-HTML - USER_AND_PASS_NOT_SPECIFIED              || User and Password not specified
-HTML - USER_DOES_NOT_EXIST                      || User does not exist
-HTML - USER_INFORMATION                         || USER INFORMATION
-HTML - USER_PASS_MISMATCH                       || User and Password did not match
-HTML - WITH                                     || <th>With
-HTML - WORLD                                    ||  World
-HTML - WORLD_LOAD                               || WORLD LOAD
-HTML - WORLD_PLAYTIME                           || World Playtime
-HTML - WORST_PING                               || Worst Ping
-HTML ERRORS - ACCESS_DENIED_403                 || Access Denied
-HTML ERRORS - ANALYSIS_REFRESH                  || Analysis is being refreshed..
-HTML ERRORS - ANALYSIS_REFRESH_LONG             || Analysis is being run, refresh the page after a few seconds..
-HTML ERRORS - AUTH_FAIL_TIPS_401                || - Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register.
-HTML ERRORS - AUTHENTICATION_FAIlED_401         || Authentication Failed.
-HTML ERRORS - FORBIDDEN_403                     || Forbidden
-HTML ERRORS - NO_SERVERS_404                    || No Servers online to perform the request.
-HTML ERRORS - NOT_FOUND_404                     || Not Found
-HTML ERRORS - NOT_PLAYED_404                    || Player has not played on this server.
-HTML ERRORS - PAGE_NOT_FOUND_404                || Page does not exist.
-HTML ERRORS - UNAUTHORIZED_401                  || Unauthorized
-HTML ERRORS - UNKNOWN_PAGE_404                  || Make sure you're accessing a link given by a command, Examples:</p><p>/player/PlayerName<br>/server/ServerName</p>
-HTML ERRORS - UUID_404                          || Player UUID was not found in the database.
-In Depth Help - /plan ?                         || > §2Main Command\  Access to subcommands and help\  §2/plan §fList subcommands\  §2/plan <subcommand> ? §fIn depth help
-In Depth Help - /plan analyze ?                 || > §2Analysis Command\  Refreshes server page and displays link to the web page.
-In Depth Help - /plan inspect ?                 || > §2Inspect Command\  Refreshes player page and displays link to the web page.
-In Depth Help - /plan manage ?                  || > §2Manage Command\  Manage MySQL and SQLite database of Plan.\  §2/plan m §fList subcommands\  §2/plan m <subcommand> ? §fIn depth help
-In Depth Help - /plan manage backup ?           || > §2Backup Subcommand\  Creates a new SQLite database (.db file) with contents of currently active database in the Plan plugin folder.
-In Depth Help - /plan manage clear ?            || > §2Clear Subcommand\  Removes everything in the active database. Use with caution.
-In Depth Help - /plan manage con ?              || > §2Connection Debug Subcommand\  Used to debug connections in the network.\  Sends a request to each server in the database.
-In Depth Help - /plan manage disable ?          || > §2Disable Subcommand\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
-In Depth Help - /plan manage import ?           || > §2Import Subcommand\  Import data from other sources.\  Accepted Arguments:\    §2offline §fBukkit player data, only register date and name.
-In Depth Help - /plan manage move ?             || > §2Move Subcommand\  Move data from SQLite to MySQL or other way around.\  Target database is cleared before transfer.
-In Depth Help - /plan manage remove ?           || > §2Remove Subcommand\  Remove player's data from the active database.
-In Depth Help - /plan manage restore ?          || > §2Restore Subcommand\  Restore a previous backup SQLite database (.db file)\  You can also restore database.db from another server to MySQL.\  Target database is cleared before transfer.
-In Depth Help - /plan manage setup ?            || > §2Setup Subcommand\  Set-up a connection between Bungee and this server for network functionality.\  BungeeAddress can be found in the enable log on console when Plan enables on Bungee.
-In Depth Help - /plan network ?                 || > §2Network Command\  Displays link to the network page.\  If not on a network, this page displays the server page.
-In Depth Help - /plan players ?                 || > §2Players Command\  Displays link to the players page.
-In Depth Help - /plan qinspect ?                || > §2Quick Inspect Command\  Displays some information about the player in game.
-In Depth Help - /plan reload ?                  || > §2Reload Command\  Restarts the plugin using onDisable and onEnable.\  §bDoes not support swapping jar on the fly
-In Depth Help - /plan search ?                  || > §2Search Command\  Get a list of Player names that match the given argument.\§7  Example: /plan search 123 - Finds all users with 123 in their name.
-In Depth Help - /plan servers ?                 || > §2Servers Command\  Displays list of Plan servers in the Database.\  Can be used to debug issues with database registration on a network.
-In Depth Help - /plan update ?                  || > §2Update Command\  Used to update the plugin on the next shutdown\  /plan update - Changelog link\  /plan update -u - Schedule update to happen on all network servers that are online, next time they reboot.\  /plan update cancel - Cancel scheduled update on servers that haven't rebooted yet.
-In Depth Help - /plan web ?                     || < §2Web User Manage Command.\  §2/plan web §fList subcommands\  §2/plan web <subcommand> ? §fIn Depth help
-In Depth Help - /plan web register ?            || > §2Register Subcommand\  Registers a new Web User.\  Registering a user for another player requires plan.webmanage permission.\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt.
-In Depth Help - /planbungee disable ?           || > §2Disable Command\  Runs onDisable on PlanBungee.\  Plugin can be enabled with /planbungee reload afterwards.\  §bDoes not support swapping jar on the fly
-In Depth Help - /planbungee setup ?             || > §2Set-up toggle Command\  Toggles set-up mode on Bungee.\  Safeguard against unauthorized MySQL snooping with another server.
-Manage - Confirm Overwrite                      || Data in ${0} will be overwritten!
-Manage - Confirm Removal                        || Data in ${0} will be removed!
-Manage - Fail                                   || > §cSomething went wrong: ${0}
-Manage - Fail File not found                    || > §cNo File found at ${0}
-Manage - Fail Incorrect Database                || > §c'${0}' is not a supported database.
-Manage - Fail No Importer                       || §eImporter '${0}' doesn't exist
-Manage - Fail Same Database                     || > §cCan not operate on to and from the same database!
-Manage - Fail, Confirmation                     || > §cAdd '-a' argument to confirm execution: ${0}
-Manage - Fail, Connection Exception             || §eFail reason: 
-Manage - Fail, No Servers                       || §cNo Servers found in the database.
-Manage - Fail, Old version                      || §eFail reason: Older Plan version on receiving server
-Manage - Fail, Unauthorized                     || §eFail reason: Unauthorized. Server might be using different database.
-Manage - Fail, Unexpected Exception             || §eOdd Exception: ${0}
-Manage - List Importers                         || Importers: 
-Manage - Notify External Url                    || §eNon-local address, check that port is open
-Manage - Remind HotSwap                         || §eRemember to swap to the new database (/plan m hotswap ${0}) & reload the plugin.
-Manage - Start                                  || > §2Processing data..
-Manage - Success                                || > §aSuccess!
-Negative                                        || No
-Positive                                        || Yes
-Unknown                                         || Unknown
-Version - DEV                                   ||  This is a DEV release.
-Version - Latest                                || You're using the latest version.
-Version - New                                   || New Release (${0}) is available ${1}
-Version - New (old)                             || New Version is available at ${0}
-Version FAIL - Read info (old)                  || Failed to check newest version number
-Version FAIL - Read versions.txt                || Version information could not be loaded from Github/versions.txt
+HTML - BANNED                                   || Pannassa
+HTML - BEST_PING                                || Paras Ping
+HTML - CALENDAR                                 || KALENTERI
+HTML - CALENDAR_TEXT                            ||  Kalenteri
+HTML - CHUNKS                                   || Chunkit
+HTML - COMMAND                                  ||  Komento
+HTML - COMMNAND_USAGE                           || Komentojen Käyttö
+HTML - CONNECTION_INFORMATION                   || Yhteydet
+HTML - COUNTRY                                  || Maa
+HTML - CURRENT_PLAYERBASE                       || Nykyiset pelaajat
+HTML - DEATHS                                   || Kuolemat
+HTML - ENTITIES                                 || Entiteetit
+HTML - ERROR                                    || Autentisointi epäonnistui virheen vuoksi
+HTML - FAVORITE_SERVER                          || Lempipalvelin
+HTML - GEOLOCATION                              || Sijainti
+HTML - GEOLOCATION_TEXT                         || Sijainti
+HTML - HEALTH_ESTIMATE                          || Terveysarvio
+HTML - INDEX_ACTIVE                             || Aktiivinen
+HTML - INDEX_INACTIVE                           || Inaktiivinen
+HTML - INDEX_IRREGULAR                          || Epäsäännöllinen
+HTML - INDEX_REGULAR                            || Säännöllinen
+HTML - INDEX_VERY_ACTIVE                        || Todella Aktiivinen
+HTML - IP_ADDRESS                               || IP-osoite
+HTML - KILLED                                   || Tappanut
+HTML - KILLED_BY                                || Tappanut
+HTML - LAST_24_HOURS                            || VIIMEISET 24 TUNTIA
+HTML - LAST_30_DAYS                             || VIIMEISET 30 PÄIVÄÄ
+HTML - LAST_30_DAYS_TEXT                        || Viimeiset 30 Päivää
+HTML - LAST_7_DAYS                              || VIIMEISET 7 PÄIVÄÄ
+HTML - LAST_CONNECTED                           || Viimeisin yhteys
+HTML - LAST_PEAK                                || Viimeisin huippu
+HTML - LAST_SEEN                                || NÄHTY VIIMEKSI
+HTML - LAST_SEEN_TEXT                           || Nähty Viimeksi
+HTML - LOADED_CHUNKS                            || Ladatut Chunkit
+HTML - LOADED_ENTITIES                          || Ladatut Entiteetit
+HTML - LOCAL_MACHINE                            || Paikallinen laite
+HTML - LONGEST                                  || Pisin
+HTML - LOW_TPS_SPIKES                           || Matalat TPS Harjat
+HTML - MOB_CAUSED_DEATHS                        || Otusten aiheuttamat Kuolemat
+HTML - MOB_KILLS                                || Tapetut Otukset
+HTML - MOST_RECENT_SESSIONS                     || Viimeisimmät Istunnot
+HTML - NAME                                     ||  Nimi
+HTML - NAV_COMMAND_USAGE                        || Komentojen Käyttö
+HTML - NAV_GEOLOCATIONS                         || Sijainnit
+HTML - NAV_INFORMATION                          || Tiedot
+HTML - NAV_NETWORK_PLAYERS                      || Verkoston Pelaajat
+HTML - NAV_ONLINE_ACTIVITY                      || Aktiivisuus
+HTML - NAV_OVERVIEW                             || Yhteenveto
+HTML - NAV_PERFORMANCE                          || Suorituskyky
+HTML - NAV_PLAYERS                              || Pelaajat
+HTML - NAV_PLUGINS                              || Lisäosat
+HTML - NAV_SESSIONS                             || Istunnot
+HTML - NAV_SEVER_HEALTH                         || Palvelimen Terveys
+HTML - NETWORK                                  || Verkosto
+HTML - NETWORK_INFORMATION                      || VERKOSTON TIEDOT
+HTML - NEW                                      || UUDET
+HTML - NEW_CALENDAR                             || Uudet:
+HTML - NEW_PLAYERS_TEXT                         || Uudet Pelaajat
+HTML - NEW_RETENTION                            || Uusien Pelaajien pysyvyys
+HTML - NEW_TEXT                                 || Uudet
+HTML - NICKNAME                                 || Lempinimi
+HTML - NO_KILLS                                 || Ei Tappoja
+HTML - NO_PLAYER_CAUSED_DEATHS                  || Ei Pelaajien auheuttamia kuolemia
+HTML - OFFLINE                                  ||  Ei Paikalla
+HTML - ONLINE                                   ||  Paikalla
+HTML - ONLINE_ACTIVITY                          || AKTIIVISUUS
+HTML - OPERATOR                                 || Operaattori
+HTML - OVERVIEW                                 || YHTEENVETO
+HTML - PER_DAY                                  || / Päivä
+HTML - PLAYER_CAUSED_DEATHS                     || Pelaajien aiheuttamat Kuolemat
+HTML - PLAYER_KILLS                             || Tapetut Pelaajat
+HTML - PLAYER_LIST                              || Pelaajalista
+HTML - PLAYERBASE_DEVELOPMENT                   || Pelaajakunnan kehitys
+HTML - PLAYERS                                  || PELAAJAT
+HTML - PLAYERS_ONLINE                           || PELAAJIA PAIKALLA
+HTML - PLAYERS_ONLINE_TEXT                      || Pelaajia Paikalla
+HTML - PLAYERS_TEXT                             || Pelaajia
+HTML - PLAYTIME                                 || Peliaika
+HTML - PLEASE_WAIT                              || Odota Hetki...
+HTML - PREDICETED_RETENTION                     || Pysyvyyden Ennuste
+HTML - PUNCH_CARD                               || Reikäkortti
+HTML - PUNCHCARD                                || REIKÄKORTTI
+HTML - RECENT_LOGINS                            || VIIMEAIKAISET KIRJAUTUMISET
+HTML - REGISTERED                               || REKISTERÖITYNYT
+HTML - REGISTERED_TEXT                          || Rekisteröitynyt
+HTML - REGULAR                                  || SÄÄNNÖLLISET
+HTML - SEEN_NICKNAMES                           || Nähdyt Lempinimet
+HTML - SERVER                                   || Palvelin
+HTML - SERVER_ANALYSIS                          || Palvelimen Analyysi
+HTML - SERVER_HEALTH_ESTIMATE                   || Palvelimen Terveysarvio
+HTML - SERVER_INFORMATION                       || PALVELIMEN TIEDOT
+HTML - SERVER_PREFERENCE                        || Palvelinten mieleisyys
+HTML - SERVERS                                  || Palvelimet
+HTML - SESSION                                  || Istunto
+HTML - SESSION_ENDED                            || Istunto Päättyi
+HTML - SESSION_LENGTH                           || Istunnon Pituus
+HTML - SESSION_MEDIAN                           || Istuntojen Mediaani
+HTML - SESSIONS                                 || Istunnot
+HTML - TIME                                     ||  Aika
+HTML - TIMES_KICKED                             || Potkimis Kerrat
+HTML - TIMES_USED                               || Käyttökerrat
+HTML - TOTAL_ACTIVE                             || Aktiivinen Peliaika
+HTML - TOTAL_AFK                                || AFK
+HTML - TOTAL_PLAYERS                            || Kaikki Pelaajat
+HTML - TOTAL_PLAYTIME                           || Peliaika
+HTML - UNIQUE                                   || UNIIKIT
+HTML - UNIQUE_CALENDAR                          || Uniikit:
+HTML - UNIQUE_PLAYERS                           || UNIIKIT PELAAJAT
+HTML - UNIQUE_PLAYERS_TEXT                      || Uniikit Pelaajat
+HTML - UNIQUE_TEXT                              || Uniikit
+HTML - USAGE                                    ||  Käyttö
+HTML - USED_COMMANDS                            || Käytetyt Komennot
+HTML - USER_AND_PASS_NOT_SPECIFIED              || Käyttäjää ja salasana vaaditaan.
+HTML - USER_DOES_NOT_EXIST                      || Käyttäjää ei ole olemassa
+HTML - USER_INFORMATION                         || KÄYTTÄJIEN TIEDOT
+HTML - USER_PASS_MISMATCH                       || Käyttäjä ja salasana ei täsmää
+HTML - WITH                                     || <th>Millä
+HTML - WORLD                                    ||  Maailma
+HTML - WORLD_LOAD                               || MAAILMAN VARAUS
+HTML - WORLD_PLAYTIME                           || Maailman Peliaika
+HTML - WORST_PING                               || Huonoin Ping
+HTML ERRORS - ACCESS_DENIED_403                 || Pääsy Kielletty
+HTML ERRORS - ANALYSIS_REFRESH                  || Analyysiä suoritetaan..
+HTML ERRORS - ANALYSIS_REFRESH_LONG             || Analyysiä suoritetaan, sivu päivittyy hetken kuluttua..
+HTML ERRORS - AUTH_FAIL_TIPS_401                || - Varmista että olet rekisteröinyt käyttäjän komennolla <b>/plan register</b><br>- Tarkista että käyttäjänimi ja salaasana ovat oikein<br>- Nimi ja salasana ovat CASE SENSITIVE<br><br>Jos unohdit salasanasi, pyydä valvojia poistamaan käyttäjäsi ja uudelleenrekisteröidy.
+HTML ERRORS - AUTHENTICATION_FAIlED_401         || Autentikaatio ei onnistunut.
+HTML ERRORS - FORBIDDEN_403                     || Kielletty
+HTML ERRORS - NO_SERVERS_404                    || Ei palvelimia jolla toiminto voitaisiin suorittaa.
+HTML ERRORS - NOT_FOUND_404                     || Ei löytynyt
+HTML ERRORS - NOT_PLAYED_404                    || Pelaaja ei ole pelannut palvelimella.
+HTML ERRORS - PAGE_NOT_FOUND_404                || Sivua ei ole olemassa.
+HTML ERRORS - UNAUTHORIZED_401                  || Ei Autentikoitu
+HTML ERRORS - UNKNOWN_PAGE_404                  || Varmista menneeesi komennon antamaan osoitteeseen, Esim:</p><p>/player/PelaajanNimi<br>/server/PalvelimenNimi</p>
+HTML ERRORS - UUID_404                          || Pelaajan UUID:ta ei löytynyt tietokannasta.
+In Depth Help - /plan ?                         || > §2Pääkomento\  Käytä alikomentoja ja apua\  §2/plan §fListaa alikomennot\  §2/plan <alikomento> ? §fYksityiskohtainen apu
+In Depth Help - /plan analyze ?                 || > §2Analyysi Komento\  Päivittää palvelin sivun ja näyttää linkin sivustolle.
+In Depth Help - /plan inspect ?                 || > §2Tutkimus Komento\  Päivittää pelaajan sivun ja näyttää linkin sivustolle
+In Depth Help - /plan manage ?                  || > §2Hallinto Komento\  Hallitse Plan MySQL and SQLite tietokantoja.\  §2/plan m §fListaa alikomennot\  §2/plan m <alikomento> ? §fYksityiskohtainen apu
+In Depth Help - /plan manage backup ?           || > §2Varmuuskopio Alikomento\  Luo uuden SQLite tietokannan (.db file) nykyisen tietokannan tiedoilla Plan plugins kansioon..
+In Depth Help - /plan manage clear ?            || > §2Poisto Alikomento\  Poistaa kaiken aktiivisesta tietokannasta. Käytä varoen
+In Depth Help - /plan manage con ?              || > §2Yhteyksien tutkimus Alikomento\  Käytetään yhteys ongelmien tutkimiseen verkostoissa.\  Lähettää viestin jokaiselle palvelimelle tietokannassa.
+In Depth Help - /plan manage disable ?          || > §2Sammutus Alikomento\  Voi poistaa osia käytöstä tilapäisesti.\  Hyväksytyt muuttujat:\    §2kickcount §fSulkee potkimisten laskun, mikäli /kickall komentoa käytetään sammutus makrossa.
+In Depth Help - /plan manage import ?           || > §2Tuonti Alikomento\  Tuo tietoa muualta.\  Hyväksytyt muuttujat:\    §2offline §fBukkitin pelaajatiedot, rekisteröitymispäivä ja nimi.
+In Depth Help - /plan manage move ?             || > §2Siirto Alikomento\  Siirrä tietoa SQLite ja MySQL tietokantojen välillä.\  Kohde tietokanta tyhjennetään ennen siirtoa.
+In Depth Help - /plan manage remove ?           || > §2Poisto Alikomento\  Poistaa pelaajan tiedot aktiivisesta tietokannasta.
+In Depth Help - /plan manage restore ?          || > §2Palautus Alikomento\  Palauta edellinen varmuuskopio SQLite tietokanta (.db tiedosto)\  Voit myös palauttaa database.db tiedoston toiselta palvelimelta MySQL-tietokantan.\  Kohde tietokanta tyhjennetään ennen siirtoa.
+In Depth Help - /plan manage setup ?            || > §2Asennus Alikomento\  Muodosta yhteys BungeeCordin ja tämän palvelimen välille.\  BungeeAddress löytyy BungeeCordin käynnistyslokista
+In Depth Help - /plan network ?                 || > §2Verkosto Komento\  Näyttää linkin verkosto sivulle.\  Jos palvelin ei ole verkostossa, näyttää tämä sivu palvelimen sivun.
+In Depth Help - /plan players ?                 || > §2Pelaajat Komento\  Näyttää linkin pelaajan sivulle.
+In Depth Help - /plan qinspect ?                || > §2Pika-tutkimus Komento\  Näyttää tietoja pelaajasta pelin sisällä.
+In Depth Help - /plan reload ?                  || > §2Uudelleenlataus Komento\  Käynnistää Plan:in uudelleen.\  §bEi tue jar:in vaihtoa lennosta
+In Depth Help - /plan search ?                  || > §2Haku Komento\  Hae pelaajannimiä jollain hakusanalla.\§7  Esim: /plan search 123 - Etsii kaikki pelaajat joilla on 123 nimessään.
+In Depth Help - /plan servers ?                 || > §2Palvelimet Komento\  Näyttää tietokannassa olevat Plan palvelimet.\  Voidaan käyttää yhteys ongelmien tutkimiseen.
+In Depth Help - /plan update ?                  || > §2Päivitys Komento\  Päivittää Plan:in seuraavan käynnistyksen yhteydessä\  /plan update - Muutosloki linkki\  /plan update -u - Ajoita päivitys kaikissa päällä olevissa palvelimissa seuraavalle käynnistyskerralle.\  /plan update cancel - Peruuta ajoitettu päivitys palvelimilla jotka eivät ole vielä käynnistyneet uudelleen.
+In Depth Help - /plan web ?                     || < §2Web Käyttäjähallinto Komento.\  §2/plan web §fList alikomentos\  §2/plan web <alikomento> ? §fYksityiskohtainen apu
+In Depth Help - /plan web register ?            || > §2Rekisteröinti Alikomento\  Rekisteröi uuden Web Käyttäjän.\  Toiselle pelaajalle käyttäjän rekisteröinti vaatii plan.webmanage permission.\  Salasanat salataan PBKDF2 (64,000 iterations of SHA1) algoritmilla.
+In Depth Help - /planbungee disable ?           || > §2Sammutus Komento\  Sammuttaa PlanBungee:n.\  /planbungee reload käynnistää Plan:in uudelleen.\  §bEi tue jar:in vaihtoa lennossa
+In Depth Help - /planbungee setup ?             || > §2Asennustilan vaihto Komento\  Vaihtaa asennustilaa Bungee:lla.\  Turvatoimi MySQL haistelulle toisella Plan palvelimella.
+Manage - Confirm Overwrite                      || Tiedot ${0}:ssa ylikirjoitetaan!
+Manage - Confirm Removal                        || Tiedot ${0}:ssa poistetaan!
+Manage - Fail                                   || > §cJokin meni vikaan: ${0}
+Manage - Fail File not found                    || > §cTiedostoa ei löytynyt ${0}
+Manage - Fail Incorrect Database                || > §c'${0}' ei ole tuettu tietokanta.
+Manage - Fail No Importer                       || §eTuojaa '${0}' ei ole olemassa
+Manage - Fail Same Database                     || > §cEi voi käyttää samaa tietokantaa molempiin asioihin!
+Manage - Fail, Confirmation                     || > §cLisää '-a' vahvistaaksesi: ${0}
+Manage - Fail, Connection Exception             || §eEpäonnistumisen syy: 
+Manage - Fail, No Servers                       || §cEi Palvelimia tietokannassa.
+Manage - Fail, Old version                      || §eSyy: Vanhempi versio vastaanottavalla palvelimella
+Manage - Fail, Unauthorized                     || §eSyy: Ei authentikoitu, palvelin voi käyttää toista tietokantaa
+Manage - Fail, Unexpected Exception             || §eKummallinen Virhe: ${0}
+Manage - List Importers                         || Tuojat: 
+Manage - Notify External Url                    || §eEi-lokaali osoite, tarkista että portti on auki
+Manage - Remind HotSwap                         || §eMuista vaihtaa tietokantaa (/plan m hotswap ${0}) & käynnistä Plan uudelleen.
+Manage - Start                                  || > §2Prosessoidaan tietoa..
+Manage - Success                                || > §aOnnistui!
+Negative                                        || Ei
+Positive                                        || Kyllä
+Unknown                                         || Tuntematon
+Version - DEV                                   ||  Tämä on KEHITYS julkaisu.
+Version - Latest                                || Käytät uusinta versiota.
+Version - New                                   || Uusi Julkaisu (${0}) on saatavilla ${1}
+Version - New (old)                             || Uusi Versio on saatavilla ${0}
+Version FAIL - Read info (old)                  || Uuden version tarkistus epäonnistui
+Version FAIL - Read versions.txt                || Uuden version tarkistus epäonnistui Github/versions.txt:ta
 Web User Listing                                ||   §2${0} §7: §f${1}
-WebServer - Notify HTTP                         || WebServer: No Certificate -> Using HTTP-server for Visualization.
-WebServer - Notify HTTP User Auth               || WebServer: User Authorization Disabled! (Not secure over HTTP)
-WebServer - Notify no Cert file                 || WebServer: Certificate KeyStore File not Found: ${0}
-WebServer FAIL - Port Bind                      || WebServer was not initialized successfully. Is the port (${0}) in use?
-WebServer FAIL - SSL Context                    || WebServer: SSL Context Initialization Failed.
-WebServer FAIL - Store Load                     || WebServer: SSL Certificate loading Failed.
+WebServer - Notify HTTP                         || Web Palvelin: Ei Sertifikaattia -> Käytetään HTTP-Palvelinta.
+WebServer - Notify HTTP User Auth               || Web Palvelin: Käyttäjien varmennus ei käytössä! (Ei turvallista HTTP-protokollalla)
+WebServer - Notify no Cert file                 || Web Palvelin: Sertifikaatti AvainKirjasto tiedostoa ei löytynyt: ${0}
+WebServer FAIL - Port Bind                      || Web Palvelin ei käynnistynyt. Onko portti (${0}) käytössä?
+WebServer FAIL - SSL Context                    || Web Palvelin: SSL Kontekstin käynnistys ei onnistunut.
+WebServer FAIL - Store Load                     || Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.
