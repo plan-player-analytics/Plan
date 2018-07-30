@@ -80,6 +80,22 @@ public class MySQLDB extends SQLDB {
     }
 
     @Override
+    public void returnToPool(Connection connection) {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            Log.toLog(this.getClass(), e);
+        }
+    }
+
+    @Override
+    public void commit(Connection connection) {
+        returnToPool(connection);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -90,7 +106,6 @@ public class MySQLDB extends SQLDB {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), dataSource);
     }
 }

@@ -69,7 +69,7 @@ public abstract class SQLDB extends Database {
 
     public SQLDB(Supplier<Locale> locale) {
         this.locale = locale;
-        usingMySQL = getName().equals("MySQL");
+        usingMySQL = this instanceof MySQLDB;
 
         serverTable = new ServerTable(this);
         securityTable = new SecurityTable(this);
@@ -260,34 +260,9 @@ public abstract class SQLDB extends Database {
 
     public abstract Connection getConnection() throws SQLException;
 
-    /**
-     * Commits changes to the .db file when using SQLite Database.
-     * <p>
-     * MySQL has Auto Commit enabled.
-     */
-    public void commit(Connection connection) {
-        try {
-            if (!usingMySQL) {
-                connection.commit();
-            }
-        } catch (SQLException e) {
-            if (!e.getMessage().contains("cannot commit")) {
-                Log.toLog(this.getClass(), e);
-            }
-        } finally {
-            returnToPool(connection);
-        }
-    }
+    public abstract void commit(Connection connection);
 
-    public void returnToPool(Connection connection) {
-        try {
-            if (usingMySQL && connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            Log.toLog(this.getClass(), e);
-        }
-    }
+    public abstract void returnToPool(Connection connection);
 
     /**
      * Reverts transaction when using SQLite Database.

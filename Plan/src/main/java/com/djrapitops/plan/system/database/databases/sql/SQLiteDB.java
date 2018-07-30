@@ -142,6 +142,22 @@ public class SQLiteDB extends SQLDB {
     }
 
     @Override
+    public void commit(Connection connection) {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            if (!e.getMessage().contains("cannot commit")) {
+                Log.toLog(this.getClass(), e);
+            }
+        }
+    }
+
+    @Override
+    public void returnToPool(Connection connection) {
+        // Connection pool not in use, no action required.
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -152,7 +168,6 @@ public class SQLiteDB extends SQLDB {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), dbName);
     }
 }
