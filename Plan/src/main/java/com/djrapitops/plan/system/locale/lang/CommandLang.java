@@ -35,7 +35,7 @@ public enum CommandLang implements Lang {
     CONNECT_URL_MISTAKE("Cmd Setup - Url mistake", "§cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address."),
 
     SETUP_ALLOWED("Cmd Setup - Allowed", "§aSet-up is now Allowed"),
-    SETUP_FORBIDDEN("Cmd Setup - Forbidden", "§cSet-up is now Forbidden"),
+    SETUP_FORBIDDEN("Cmd Setup - Disallowed", "§cSet-up is now Forbidden"),
 
     LINK_CLICK_ME("Cmd - Click Me", "Click me"),
     LINK_PREFIX("Cmd - Link", "  §2Link: §f"),
