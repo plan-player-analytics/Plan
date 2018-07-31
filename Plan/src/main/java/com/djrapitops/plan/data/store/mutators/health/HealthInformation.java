@@ -77,13 +77,13 @@ public class HealthInformation extends AbstractHealthInfo {
         long playersRetainedMonth = analysisContainer.getValue(AnalysisKeys.PLAYERS_RETAINED_MONTH).orElse(0);
 
         if (playersNewMonth != 0) {
-            double retainPercentage = playersRetainedMonth / playersNewMonth;
+            double retainPercentage = playersRetainedMonth * 1.0 / playersNewMonth;
             if (retainPercentage >= 0.25) {
                 addNote(Icons.GREEN_THUMB + " " + Formatters.percentage().apply(retainPercentage)
                         + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
             } else {
                 addNote(Icons.YELLOW_FLAG + " " + Formatters.percentage().apply(retainPercentage)
-                        + "% of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
+                        + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
             }
         }
     }
