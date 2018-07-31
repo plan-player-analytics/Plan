@@ -13,7 +13,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
@@ -27,7 +26,6 @@ import java.util.List;
  */
 public class WebListUsersCommand extends CommandNode {
 
-    private final PlanPlugin plugin;
     private final Locale locale;
 
     public WebListUsersCommand(PlanPlugin plugin) {
@@ -36,7 +34,6 @@ public class WebListUsersCommand extends CommandNode {
         locale = plugin.getSystem().getLocaleSystem().getLocale();
 
         setShortHelp(locale.getString(CmdHelpLang.WEB_LIST));
-        this.plugin = plugin;
     }
 
     @Override
@@ -45,8 +42,6 @@ public class WebListUsersCommand extends CommandNode {
             @Override
             public void run() {
                 try {
-                    ColorScheme cs = plugin.getColorScheme();
-                    String mCol = cs.getMainColor();
                     List<WebUser> users = Database.getActive().fetch().getWebUsers();
                     users.sort(new WebUserComparator());
                     sender.sendMessage(locale.getString(CommandLang.HEADER_WEB_USERS, users.size()));

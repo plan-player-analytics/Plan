@@ -123,9 +123,10 @@ public class InspectPage implements Page {
         double averagePing = pingMutator.average();
         int minPing = pingMutator.min();
         int maxPing = pingMutator.max();
-        replacer.put("avgPing", averagePing != -1 ? FormatUtils.cutDecimals(averagePing) + " ms" : "Unavailable");
-        replacer.put("minPing", minPing != -1 ? minPing + " ms" : "Unavailable");
-        replacer.put("maxPing", maxPing != -1 ? maxPing + " ms" : "Unavailable");
+        String unavailable = "Unavailable";
+        replacer.put("avgPing", averagePing != -1 ? FormatUtils.cutDecimals(averagePing) + " ms" : unavailable);
+        replacer.put("minPing", minPing != -1 ? minPing + " ms" : unavailable);
+        replacer.put("maxPing", maxPing != -1 ? maxPing + " ms" : unavailable);
 
         List<Session> allSessions = player.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);

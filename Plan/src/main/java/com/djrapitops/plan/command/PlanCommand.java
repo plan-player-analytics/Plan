@@ -31,28 +31,27 @@ public class PlanCommand extends TreeCmdNode {
         setInDepthHelp(locale.getArray(DeepHelpLang.PLAN));
 
         RegisterCommand registerCommand = new RegisterCommand(plugin);
-        setNodeGroups(
-                new CommandNode[]{
-                        new InspectCommand(plugin),
-                        new QInspectCommand(plugin),
-                        new SearchCommand(plugin),
-                        new ListPlayersCommand(plugin),
-                        new AnalyzeCommand(plugin),
-                        new NetworkCommand(plugin),
-                        new ListServersCommand(plugin)
-                },
-                new CommandNode[]{
-                        new WebUserCommand(plugin, registerCommand, this),
-                        registerCommand
-                },
-                new CommandNode[]{
-                        new InfoCommand(plugin),
-                        new ReloadCommand(plugin),
-                        new ManageCommand(plugin, this),
-                        new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
-                        (Settings.DEV_MODE.isTrue() ? new DevCommand(plugin) : null),
+        CommandNode[] analyticsGroup = {
+                new InspectCommand(plugin),
+                new QInspectCommand(plugin),
+                new SearchCommand(plugin),
+                new ListPlayersCommand(plugin),
+                new AnalyzeCommand(plugin),
+                new NetworkCommand(plugin),
+                new ListServersCommand(plugin)
+        };
+        CommandNode[] webGroup = {
+                new WebUserCommand(plugin, registerCommand, this),
+                registerCommand
+        };
+        CommandNode[] manageGroup = {
+                new InfoCommand(plugin),
+                new ReloadCommand(plugin),
+                new ManageCommand(plugin, this),
+                new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
+                (Settings.DEV_MODE.isTrue() ? new DevCommand(plugin) : null),
 //                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
-                }
-        );
+        };
+        setNodeGroups(analyticsGroup, webGroup, manageGroup);
     }
 }

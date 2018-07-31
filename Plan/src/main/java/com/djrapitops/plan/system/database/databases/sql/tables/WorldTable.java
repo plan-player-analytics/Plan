@@ -198,49 +198,6 @@ public class WorldTable extends Table {
         });
     }
 
-    /**
-     * Used to get world names for this server.
-     *
-     * @param serverUUID UUID of the Server
-     * @return World names known for that server
-     * @deprecated Use getWorldNames instead, this method is slower.
-     */
-    @Deprecated
-    public Set<String> getWorldNamesOld(UUID serverUUID) {
-        WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        SessionsTable sessionsTable = db.getSessionsTable();
-
-        String statementSelectServerID = serverTable.statementSelectServerID;
-
-        String worldIDColumn = worldTimesTable + "." + WorldTimesTable.Col.WORLD_ID;
-        String worldSessionIDColumn = worldTimesTable + "." + WorldTimesTable.Col.SESSION_ID;
-        String sessionIDColumn = sessionsTable + "." + SessionsTable.Col.ID;
-        String sessionServerIDColumn = sessionsTable + "." + SessionsTable.Col.SERVER_ID;
-
-        String sql = "SELECT DISTINCT " +
-                Col.NAME + " FROM " +
-                tableName +
-                " INNER JOIN " + worldTimesTable + " on " + worldIDColumn + "=" + tableName + "." + Col.ID +
-                " INNER JOIN " + sessionsTable + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
-                " WHERE " + statementSelectServerID + "=" + sessionServerIDColumn;
-
-        return query(new QueryStatement<Set<String>>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Set<String> processResults(ResultSet set) throws SQLException {
-                Set<String> worldNames = new HashSet<>();
-                while (set.next()) {
-                    worldNames.add(set.getString(Col.NAME.get()));
-                }
-                return worldNames;
-            }
-        });
-    }
-
     public Map<Integer, List<Integer>> getWorldIDsByServerIDs() {
         String sql = "SELECT " +
                 Col.ID + ", " +

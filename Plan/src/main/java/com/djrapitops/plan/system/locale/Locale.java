@@ -18,9 +18,6 @@ import java.util.stream.Collectors;
  */
 public class Locale extends HashMap<Lang, Message> {
 
-    public Locale() {
-    }
-
     public static Locale fromSetting() throws IOException {
         String locale = Settings.LOCALE.toString();
         if (locale.equalsIgnoreCase("default")) {

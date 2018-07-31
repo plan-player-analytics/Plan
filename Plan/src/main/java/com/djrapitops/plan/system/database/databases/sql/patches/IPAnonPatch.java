@@ -49,7 +49,11 @@ public class IPAnonPatch extends Patch {
     @Override
     public void apply() {
         Map<UUID, List<GeoInfo>> allGeoInfo = db.getGeoInfoTable().getAllGeoInfo();
+        anonymizeIPs(allGeoInfo);
+        groupHashedIPs();
+    }
 
+    private void anonymizeIPs(Map<UUID, List<GeoInfo>> allGeoInfo) {
         String sql = "UPDATE " + GeoInfoTable.TABLE_NAME + " SET " +
                 GeoInfoTable.Col.IP + "=?, " +
                 GeoInfoTable.Col.IP_HASH + "=? " +
@@ -61,11 +65,12 @@ public class IPAnonPatch extends Patch {
                 for (List<GeoInfo> geoInfos : allGeoInfo.values()) {
                     for (GeoInfo geoInfo : geoInfos) {
                         try {
-                            if (geoInfo.getIp().endsWith(".xx.xx")) {
+                            String oldIP = geoInfo.getIp();
+                            if (oldIP.endsWith(".xx.xx") || oldIP.endsWith("xx..")) {
                                 continue;
                             }
                             GeoInfo updatedInfo = new GeoInfo(
-                                    InetAddress.getByName(geoInfo.getIp()),
+                                    InetAddress.getByName(oldIP),
                                     geoInfo.getGeolocation(),
                                     geoInfo.getDate()
                             );
@@ -82,6 +87,9 @@ public class IPAnonPatch extends Patch {
                 }
             }
         });
+    }
+
+    private void groupHashedIPs() {
         try {
             new Version18TransferTable(db).alterTableV18();
         } catch (DBInitException e) {

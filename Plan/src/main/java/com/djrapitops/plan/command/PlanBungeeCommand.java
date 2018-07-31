@@ -30,24 +30,27 @@ public class PlanBungeeCommand extends TreeCmdNode {
         setInDepthHelp(locale.getArray(DeepHelpLang.PLAN));
 
         RegisterCommand registerCommand = new RegisterCommand(plugin);
-        setNodeGroups(
-                new CommandNode[]{
-                        new NetworkCommand(plugin),
-                        new ListServersCommand(plugin),
-                        new ListPlayersCommand(plugin),
-                },
-                new CommandNode[]{
-                        registerCommand,
-                        new WebUserCommand(plugin, registerCommand, this),
-                },
-                new CommandNode[]{
-                        new ManageConDebugCommand(plugin),
-                        new BungeeSetupToggleCommand(plugin),
-                        new ReloadCommand(plugin),
-                        new DisableCommand(plugin),
-                        new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
+        CommandNode[] analyticsGroup = {
+                new NetworkCommand(plugin),
+                new ListServersCommand(plugin),
+                new ListPlayersCommand(plugin),
+        };
+        CommandNode[] webGroup = {
+                registerCommand,
+                new WebUserCommand(plugin, registerCommand, this),
+        };
+        CommandNode[] manageGroup = {
+                new ManageConDebugCommand(plugin),
+                new BungeeSetupToggleCommand(plugin),
+                new ReloadCommand(plugin),
+                new DisableCommand(plugin),
+                new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
 //                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
-                }
+        };
+        setNodeGroups(
+                analyticsGroup,
+                webGroup,
+                manageGroup
         );
     }
 }

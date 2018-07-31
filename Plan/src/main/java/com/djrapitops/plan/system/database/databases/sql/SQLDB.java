@@ -297,7 +297,7 @@ public abstract class SQLDB extends Database {
         return execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) {
-
+                // Statement is ready for execution.
             }
         });
     }

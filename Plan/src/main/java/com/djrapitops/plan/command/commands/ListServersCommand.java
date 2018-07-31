@@ -40,7 +40,6 @@ public class ListServersCommand extends CommandNode {
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         ColorScheme colorScheme = plugin.getColorScheme();
-        String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
         try {

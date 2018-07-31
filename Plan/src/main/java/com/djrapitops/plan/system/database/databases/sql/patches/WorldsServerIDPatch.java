@@ -4,6 +4,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
+import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.WorldTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.WorldTimesTable;
 
@@ -51,7 +52,7 @@ public class WorldsServerIDPatch extends Patch {
 
         Map<UUID, Set<String>> worldsPerServer = new HashMap<>();
         for (UUID serverUUID : serverUUIDs) {
-            worldsPerServer.put(serverUUID, worldTable.getWorldNamesOld(serverUUID));
+            worldsPerServer.put(serverUUID, getWorldNamesOld(serverUUID));
         }
 
         for (Map.Entry<UUID, Set<String>> entry : worldsPerServer.entrySet()) {
@@ -63,6 +64,41 @@ public class WorldsServerIDPatch extends Patch {
 
         updateWorldTimesTableWorldIDs();
         db.executeUnsafe("DELETE FROM " + WorldTable.TABLE_NAME + " WHERE " + WorldTable.Col.SERVER_ID + "=0");
+    }
+
+    private Set<String> getWorldNamesOld(UUID serverUUID) {
+        WorldTimesTable worldTimesTable = db.getWorldTimesTable();
+        SessionsTable sessionsTable = db.getSessionsTable();
+
+        String statementSelectServerID = db.getServerTable().statementSelectServerID;
+
+        String worldIDColumn = worldTimesTable + "." + WorldTimesTable.Col.WORLD_ID;
+        String worldSessionIDColumn = worldTimesTable + "." + WorldTimesTable.Col.SESSION_ID;
+        String sessionIDColumn = sessionsTable + "." + SessionsTable.Col.ID;
+        String sessionServerIDColumn = sessionsTable + "." + SessionsTable.Col.SERVER_ID;
+
+        String sql = "SELECT DISTINCT " +
+                WorldTable.Col.NAME + " FROM " +
+                WorldTable.TABLE_NAME +
+                " INNER JOIN " + worldTimesTable + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + "." + WorldTable.Col.ID +
+                " INNER JOIN " + sessionsTable + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
+                " WHERE " + statementSelectServerID + "=" + sessionServerIDColumn;
+
+        return query(new QueryStatement<Set<String>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Set<String> processResults(ResultSet set) throws SQLException {
+                Set<String> worldNames = new HashSet<>();
+                while (set.next()) {
+                    worldNames.add(set.getString(WorldTable.Col.NAME.get()));
+                }
+                return worldNames;
+            }
+        });
     }
 
     private void updateWorldTimesTableWorldIDs() {

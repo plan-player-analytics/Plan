@@ -25,11 +25,11 @@ public class Version10Patch extends Patch {
     @Override
     public void apply() {
         try {
-            Optional<Integer> serverID = db.getServerTable().getServerID(ServerInfo.getServerUUID());
-            if (!serverID.isPresent()) {
+            Optional<Integer> fetchedServerID = db.getServerTable().getServerID(ServerInfo.getServerUUID());
+            if (!fetchedServerID.isPresent()) {
                 throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
             }
-            this.serverID = serverID.get();
+            serverID = fetchedServerID.get();
             alterTablesToV10();
         } catch (DBInitException e) {
             throw new DBOpException(e.getMessage(), e);
@@ -82,24 +82,18 @@ public class Version10Patch extends Patch {
         userInfoTable.createTable();
 
         String statement = "INSERT INTO plan_users " +
-                "(" +
-                "id, uuid, registered, name" +
-                ") SELECT " +
-                "id, uuid, registered, name" +
+                "(id, uuid, registered, name)" +
+                " SELECT id, uuid, registered, name" +
                 " FROM " + tempTableName;
         db.execute(statement);
         statement = "INSERT INTO plan_user_info " +
-                "(" +
-                "user_id, registered, opped, banned, server_id" +
-                ") SELECT " +
-                "id, registered, opped, banned, '" + serverID + "'" +
+                "(user_id, registered, opped, banned, server_id)" +
+                " SELECT id, registered, opped, banned, '" + serverID + "'" +
                 " FROM " + tempTableName;
         db.execute(statement);
         statement = "INSERT INTO plan_nicknames " +
-                "(" +
-                "user_id, nickname, server_id" +
-                ") SELECT " +
-                "user_id, nickname, '" + serverID + "'" +
+                "(user_id, nickname, server_id)" +
+                " SELECT user_id, nickname, '" + serverID + "'" +
                 " FROM " + tempNickTableName;
         db.execute(statement);
         try {
@@ -107,10 +101,8 @@ public class Version10Patch extends Patch {
                 db.execute("SET foreign_key_checks = 0");
             }
             statement = "INSERT INTO plan_kills " +
-                    "(" +
-                    "killer_id, victim_id, weapon, date, session_id" +
-                    ") SELECT " +
-                    "killer_id, victim_id, weapon, date, '0'" +
+                    "(killer_id, victim_id, weapon, date, session_id)" +
+                    " SELECT killer_id, victim_id, weapon, date, '0'" +
                     " FROM " + tempKillsTableName;
             db.execute(statement);
         } finally {
@@ -129,10 +121,8 @@ public class Version10Patch extends Patch {
         commandUseTable.createTable();
 
         String statement = "INSERT INTO plan_commandusages " +
-                "(" +
-                "command, times_used, server_id" +
-                ") SELECT " +
-                "command, times_used, '" + serverID + "'" +
+                "(command, times_used, server_id)" +
+                " SELECT command, times_used, '" + serverID + "'" +
                 " FROM " + tempTableName;
         db.execute(statement);
 
@@ -148,10 +138,8 @@ public class Version10Patch extends Patch {
         tpsTable.createTable();
 
         String statement = "INSERT INTO plan_tps " +
-                "(" +
-                "date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, server_id" +
-                ") SELECT " +
-                "date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, '" + serverID + "'" +
+                "(date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, server_id)" +
+                " SELECT date, tps, players_online, cpu_usage, ram_usage, entities, chunks_loaded, '" + serverID + "'" +
                 " FROM " + tempTableName;
         db.execute(statement);
 

@@ -179,4 +179,9 @@ public class Session extends DataContainer implements DateHolder {
                         session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>())
                 );
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), mobKills, deaths, afkTime);
+    }
 }
