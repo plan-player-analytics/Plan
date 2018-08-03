@@ -1,9 +1,9 @@
-Cmd - Click Me                                  || Klick hier
+Cmd - Click Me                                  || Klicke hier
 Cmd - Link                                      ||   §2Link: §f
 Cmd Disable - Disabled                          || §aPlan ist nun deaktiviert. Nutze /planbungee reload um das Plugin neu zu starten.
 Cmd FAIL - Invalid Username                     || §cDieser Benutzer besitzt keine UUID.
 Cmd FAIL - No Feature                           || §eWelches Feature soll deaktiviert werden? (momentan unterstützt: ${0})
-Cmd FAIL - No Permission                        || §cDafür fehlt dir die Permission.
+Cmd FAIL - No Permission                        || §cDafür fehlt dir die Berechtigung.
 Cmd FAIL - Require only one Argument            || §cNur ein Argument erforderlich ${1}
 Cmd FAIL - Requires Arguments                   || §cArgumente erforderlich (${0}) ${1}
 Cmd FAIL - Unknown Username                     || §cDieser Benutzer war noch nie auf dem Server.
@@ -58,7 +58,7 @@ Cmd Update - Notify Cancel                      || §aDu kannst das Update auf S
 Cmd Update - Online Check                       || Überprüfe, ob alle Server online sind.
 Cmd Update - Scheduled                          || §aUpdate für ${0} geplant.
 Cmd Update - Url mismatch                       || §cDie Download-URL beginnt nicht mit ${0} und ist evtl. nicht vertrauenswürdig. Du kannst diese Version manuell hier downloaden (direkter Download):
-Cmd Web - Permission Levels                     || >\§70: Zugriff auf alle Seiten\§71: Zugriff auf '/players' Und alle Spielerseiten\§72: Zugriff auf alle Spielerseiten mit dem gleichen Username wie der Web-Account\§73+: Keine Rechte
+Cmd Web - Permission Levels                     || >\§70: Zugriff auf alle Seiten\§71: Zugriff auf '/players' Und alle Spielerseiten\§72: Zugriff auf alle Spielerseiten mit dem gleichen Username wie der Web-Account\§73+: Keine Berechtigung
 Command Help - /plan analyze                    || Server-Übersicht
 Command Help - /plan dev                        || Entwicklungsmodus-Befehl
 Command Help - /plan help                       || Zeigt eine Befehlsliste
@@ -275,7 +275,7 @@ In Depth Help - /plan search ?                  || > §2Such-Befehl\  Erstellt e
 In Depth Help - /plan servers ?                 || > §2Server-Command\  Zeigt eine Liste mit allen Servern in der datenbank.\  Kann verwendet werden, um Probleme mit Registrierungen in der Datenbank in einem Netzwerk zu beheben.
 In Depth Help - /plan update ?                  || > §2Update-Befehl\  Updatet das Plugin beim nächsten Restart\  /plan update - Link zum Änderungsprotokoll\  /plan update -u - Plant das Update auf allen Servern im Netzwerk, die online sind, wenn sie das nächste Mal restarten.\  /plan update cancel - Bricht das geplante Update ab, solange der Server noch nicht restartet wurde.
 In Depth Help - /plan web ?                     || > §2Account-Verwaltungs-Befehl.\  §2/plan web §fListe Unterbefehle\  §2/plan web <unterbefehl> ? §fAusfürliche Hilfe
-In Depth Help - /plan web register ?            || > §2Registrierungs-Unterbefehl\  Registriert einen neuen Account.\  Um einen Account für einen anderen Usernamen als den eigenen zu erstellen wird plan.webmanage Permission benötigt.\  Passwörter werden mit PBKDF2 (64,000 iterations of SHA1) gehashed dazu wird ein cryptographically-random salt verwendet.
+In Depth Help - /plan web register ?            || > §2Registrierungs-Unterbefehl\  Registriert einen neuen Account.\  Um einen Account für einen anderen Usernamen als den eigenen zu erstellen wird plan.webmanage Berechtigung benötigt.\  Passwörter werden mit PBKDF2 (64,000 iterations of SHA1) gehashed dazu wird ein cryptographically-random salt verwendet.
 In Depth Help - /planbungee disable ?           || > §2Deaktivierungs-Befehl\  Führt onDisable auf PlanBungee aus.\  Plugin kann mit /planbungee reload wieder geladen werden.\  §bDabei kann NICHT die jar ausgetauscht werden.
 In Depth Help - /planbungee setup ?             || > §2Set-up-Umschalt-Befehl\  Schaltet den Set-Up Modus auf dem Bungee an oder aus.\  Stellt sicher, dass keine unautorisierte MySQL bei einem anderen Server ausschnüffelt.
 Manage - Confirm Overwrite                      || Daten in ${0} werden überschrieben!
