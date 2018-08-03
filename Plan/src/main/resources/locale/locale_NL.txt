@@ -36,27 +36,27 @@ Cmd Qinspect - Playtime                         ||   §2Speeltijd: §f${0}
 Cmd Qinspect - Registered                       ||   §2Geregristreerd op: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Aantal keren gekicked: §f${0}
 Cmd Setup - Allowed                             || §aSet-up is nu toegestaan
-Cmd Setup - Bad Request                         || §eConnectie is goed, maar de server is geen Bungee server. Gebruik een Bungee adres.
+Cmd Setup - Bad Request                         || §eVerbinding is goed, maar de server is geen Bungee server. Gebruik een Bungee adres.
 Cmd Setup - Disallowed                          || §cSet-up is niet toegestaan.
-Cmd Setup - Forbidden                           || §eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it.
-Cmd Setup - Gateway Error                       || §eConnection succeeded, but Bungee failed to connect to this server (Did current web server restart?). Use /plan m con & /planbungee con to debug.
-Cmd Setup - Generic Fail                        || §eConnection failed: ${0}
-Cmd Setup - Internal Error                      || §eConnection succeeded. ${0}, check possible ErrorLog on receiving server's debug page.
-Cmd Setup - Success                             || §aConnection successful, Plan may restart in a few seconds..
-Cmd Setup - Unauthorized                        || §eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support
-Cmd Setup - Url mistake                         || §cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address.
-Cmd Setup - WebServer not Enabled               || §cWebServer is not enabled on this server! Make sure it enables on boot!
-Cmd SUCCESS - Feature disabled                  || §aDisabled '${0}' temporarily until next plugin reload.
-Cmd SUCCESS - WebUser register                  || §aAdded a new user (${0}) successfully!
-Cmd Update - Cancel Success                     || §aCancel operation performed.
-Cmd Update - Cancelled                          || §cUpdate cancelled.
+Cmd Setup - Forbidden                           || §eVerbinding is goed, maar Bungee heeft set-up mode uitgeschakeld - gebruik '/planbungee setup' om het in te schakelen.
+Cmd Setup - Gateway Error                       || §eVerbinding is goed, maar Bungee kon niet verbinden naar deze server (Is de webserver opnieuw opgestart?). Gebruik /plan m con & /planbungee con om de fout te achterhalen.
+Cmd Setup - Generic Fail                        || §eVerbinden mislukt: ${0}
+Cmd Setup - Internal Error                      || §eVerbinding is goed. ${0}, controleer de ErrorLog op de debug-pagina van de andere server.
+Cmd Setup - Success                             || §aVerbinding is goed, Plan herstart mogelijk in enkele seconden..
+Cmd Setup - Unauthorized                        || §eVerbinding is goed, maar de andere server heeft deze server niet geautoriseerd. Neem contact op over Discord voor ondersteuning.
+Cmd Setup - Url mistake                         || §cZorg ervoor dat je het volledige adres gebruikt (Begint met http:// or https://) - Controleer Bungee enable log hiervoor.
+Cmd Setup - WebServer not Enabled               || §cWebServer is niet in gebruik op deze server! Zorg ervoor dat hij start wanneer de server opstart!
+Cmd SUCCESS - Feature disabled                  || §a'${0}' uitgeschakeld tijdelijk tot de volgende plugin reload.
+Cmd SUCCESS - WebUser register                  || §aNieuwe gebruiker (${0}) toegevoegd!
+Cmd Update - Cancel Success                     || §aBewerking geanuleerd.
+Cmd Update - Cancelled                          || §cUpdate geanuleerd.
 Cmd Update - Change log                         || Change Log v${0}:
-Cmd Update - Fail Cacnel                        || §cUpdate failed on a server, cancelling update on all servers..
-Cmd Update - Fail Force Notify                  || §e${0} failed to update, -force specified, continuing update.
-Cmd Update - Fail Not Online                    || §cNot all servers were online or accessible, you can still update available servers using /plan update -u -force
-Cmd Update - Notify Cancel                      || §aYou can cancel the update on servers that haven't rebooted yet with /plan update cancel.
-Cmd Update - Online Check                       || Checking that all servers are online..
-Cmd Update - Scheduled                          || §a${0} scheduled for update.
+Cmd Update - Fail Cacnel                        || §cUpdate mislukt op een server, ik stop met updaten op alle servers..
+Cmd Update - Fail Force Notify                  || §e${0} mislukt om te updaten, -force gebruikt, doorgaan met update.
+Cmd Update - Fail Not Online                    || §cNiet alle servers waren online of beschikbaar, je kan deze servers updaten met /plan update -u -force
+Cmd Update - Notify Cancel                      || §aJe kan de update stoppen op servers die nog niet zijn herstart met /plan update cancel.
+Cmd Update - Online Check                       || Kijken of alle servers online zijn..
+Cmd Update - Scheduled                          || §a${0} gepland voor een update.
 Cmd Update - Url mismatch                       || §cVersion download url did not start with ${0} and might not be trusted. You can download this version manually here (Direct download):
 Cmd Web - Permission Levels                     || >\§70: Access all pages\§71: Access '/players' and all player pages\§72: Access player page with the same username as the webuser\§73+: No permissions
 Command Help - /plan analyze                    || View the Server Page
