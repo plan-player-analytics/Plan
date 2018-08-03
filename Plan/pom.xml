@@ -79,6 +79,12 @@
             <artifactId>commons-text</artifactId>
             <version>1.3</version>
         </dependency>
+        <!--        HttpClient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.6</version>
+        </dependency>
         <!--        Geo IP -->
         <dependency>
             <groupId>com.maxmind.geoip2</groupId>
