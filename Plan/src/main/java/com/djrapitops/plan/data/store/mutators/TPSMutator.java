@@ -10,6 +10,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -35,10 +36,14 @@ public class TPSMutator {
         return new TPSMutator(new ArrayList<>(mutator.tpsData));
     }
 
-    public TPSMutator filterDataBetween(long after, long before) {
+    public TPSMutator filterBy(Predicate<TPS> filter) {
         return new TPSMutator(tpsData.stream()
-                .filter(tps -> tps.getDate() >= after && tps.getDate() <= before)
+                .filter(filter)
                 .collect(Collectors.toList()));
+    }
+
+    public TPSMutator filterDataBetween(long after, long before) {
+        return filterBy(tps -> tps.getDate() >= after && tps.getDate() <= before);
     }
 
     public List<TPS> all() {

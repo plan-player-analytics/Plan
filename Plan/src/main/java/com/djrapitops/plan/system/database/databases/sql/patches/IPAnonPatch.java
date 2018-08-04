@@ -64,25 +64,29 @@ public class IPAnonPatch extends Patch {
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (List<GeoInfo> geoInfos : allGeoInfo.values()) {
                     for (GeoInfo geoInfo : geoInfos) {
-                        try {
-                            String oldIP = geoInfo.getIp();
-                            if (oldIP.endsWith(".xx.xx") || oldIP.endsWith("xx..")) {
-                                continue;
-                            }
-                            GeoInfo updatedInfo = new GeoInfo(
-                                    InetAddress.getByName(oldIP),
-                                    geoInfo.getGeolocation(),
-                                    geoInfo.getDate()
-                            );
-                            statement.setString(1, updatedInfo.getIp());
-                            statement.setString(2, updatedInfo.getIpHash());
-                            statement.setString(3, geoInfo.getIp());
-                            statement.addBatch();
-                        } catch (UnknownHostException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
-                            if (Settings.DEV_MODE.isTrue()) {
-                                Log.toLog(this.getClass(), e);
-                            }
-                        }
+                        addToBatch(statement, geoInfo);
+                    }
+                }
+            }
+
+            private void addToBatch(PreparedStatement statement, GeoInfo geoInfo) throws SQLException {
+                try {
+                    String oldIP = geoInfo.getIp();
+                    if (oldIP.endsWith(".xx.xx") || oldIP.endsWith("xx..")) {
+                        return;
+                    }
+                    GeoInfo updatedInfo = new GeoInfo(
+                            InetAddress.getByName(oldIP),
+                            geoInfo.getGeolocation(),
+                            geoInfo.getDate()
+                    );
+                    statement.setString(1, updatedInfo.getIp());
+                    statement.setString(2, updatedInfo.getIpHash());
+                    statement.setString(3, geoInfo.getIp());
+                    statement.addBatch();
+                } catch (UnknownHostException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
+                    if (Settings.DEV_MODE.isTrue()) {
+                        Log.toLog(this.getClass(), e);
                     }
                 }
             }
