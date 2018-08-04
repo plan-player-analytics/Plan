@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities.html.graphs;
 
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,25 +53,15 @@ public class WorldMap implements HighChart {
             }
         }
 
-        StringBuilder dataBuilder = new StringBuilder("[");
+        TextStringBuilder dataBuilder = new TextStringBuilder("[");
 
-        int i = 0;
-        int size = geoCodeCounts.size();
-        for (Map.Entry<String, Integer> entry : geoCodeCounts.entrySet()) {
-            String geoCode = entry.getKey();
-            Integer players = entry.getValue();
+        dataBuilder.appendWithSeparators(
+                geoCodeCounts.entrySet().stream()
+                        .map(entry -> "{'code':'" + entry.getKey() + "','value':" + entry.getValue() + "}")
+                        .iterator(),
+                ","
+        );
 
-            if (players != 0) {
-                dataBuilder.append("{'code':'").append(geoCode).append("','value':").append(players).append("}");
-                if (i < size - 1) {
-                    dataBuilder.append(",");
-                }
-            }
-
-            i++;
-        }
-
-        dataBuilder.append("]");
-        return dataBuilder.toString();
+        return dataBuilder.append("]").toString();
     }
 }

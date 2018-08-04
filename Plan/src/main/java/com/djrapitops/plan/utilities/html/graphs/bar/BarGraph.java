@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities.html.graphs.bar;
 
 import com.djrapitops.plan.utilities.html.graphs.HighChart;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.util.List;
 
@@ -13,35 +14,15 @@ public class BarGraph implements HighChart {
     }
 
     public String toHighChartsCategories() {
-        StringBuilder categories = new StringBuilder("[");
-
-        int i = 0;
-        int size = bars.size();
-        for (Bar bar : bars) {
-            categories.append("'").append(bar.getLabel()).append("'");
-            if (i < size - 1) {
-                categories.append(",");
-            }
-            i++;
-        }
-
+        TextStringBuilder categories = new TextStringBuilder("[");
+        categories.appendWithSeparators(bars.stream().map(bar -> "'" + bar.getLabel() + "'").iterator(), ",");
         return categories.append("]").toString();
     }
 
     @Override
     public String toHighChartsSeries() {
-        StringBuilder series = new StringBuilder("[");
-
-        int i = 0;
-        int size = bars.size();
-        for (Bar bar : bars) {
-            series.append(bar.getValue());
-            if (i < size - 1) {
-                series.append(",");
-            }
-            i++;
-        }
-
+        TextStringBuilder series = new TextStringBuilder("[");
+        series.appendWithSeparators(bars.stream().map(Bar::getValue).iterator(), ",");
         return series.append("]").toString();
     }
 }
