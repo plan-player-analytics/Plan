@@ -6,6 +6,7 @@
     <artifactId>Plan</artifactId>
     <version>4.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+
     <repositories>
         <repository>
             <id>bungeecord-repo</id>
@@ -24,6 +25,7 @@
             <url>https://repo.spongepowered.org/maven</url>
         </repository>
     </repositories>
+
     <dependencies>
         <!--        Framework for easier plugin development -->
         <dependency>
@@ -37,6 +39,7 @@
             <artifactId>PlanPluginBridge</artifactId>
             <version>4.3.0-SNAPSHOT</version>
         </dependency>
+
         <!--        Paper API -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
@@ -48,7 +51,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -70,10 +73,12 @@
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>LATEST</version>
+            <version>7.0.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+
+        <!--        String Replacer -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
@@ -85,17 +90,18 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.6</version>
         </dependency>
-        <!--        Geo IP -->
-        <dependency>
-            <groupId>com.maxmind.geoip2</groupId>
-            <artifactId>geoip2</artifactId>
-            <version>2.9.0</version>
-        </dependency>
         <!--         Connection Pool -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.1.0</version>
+        </dependency>
+
+        <!--        Geo IP -->
+        <dependency>
+            <groupId>com.maxmind.geoip2</groupId>
+            <artifactId>geoip2</artifactId>
+            <version>2.9.0</version>
         </dependency>
 
         <!-- Mockito (Test Dependency) -->
@@ -107,11 +113,10 @@
             <scope>test</scope>
         </dependency>
         <!-- SQLite (Test Dependency) -->
-        <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.21.0</version>
+            <version>3.21.0.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -151,7 +156,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.7.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -223,7 +228,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.0.2</version>
                 <configuration>
                     <excludes>
                         <exclude>**/test/*</exclude>
@@ -236,7 +241,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.9</version>
+                <version>0.8.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
