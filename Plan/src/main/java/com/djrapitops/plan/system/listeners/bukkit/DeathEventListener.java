@@ -93,8 +93,16 @@ public class DeathEventListener implements Listener {
             return null;
         }
 
+        String name;
+        try {
+            name = tameable.getType().name();
+        } catch (NoSuchMethodError oldVersionNoTypesError) {
+            // getType introduced in 1.9
+            name = tameable.getClass().getSimpleName();
+        }
+
         return new KillProcessor(owner.getUniqueId(), time, dead,
-                new Format(tameable.getType().name()).capitalize().toString()
+                new Format(name).removeNumbers().removeSymbols().capitalize().toString()
         );
     }
 
