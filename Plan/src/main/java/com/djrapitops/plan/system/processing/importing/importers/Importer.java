@@ -24,7 +24,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.collect.ImmutableMap;
 
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -233,7 +232,7 @@ public abstract class Importer {
                     String geoLoc = GeolocationCache.getCountry(ip);
                     try {
                         return new GeoInfo(ip, geoLoc, date, new SHA256Hash(ip).create());
-                    } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+                    } catch (NoSuchAlgorithmException e) {
                         throw new IllegalArgumentException(e);
                     }
                 }).collect(Collectors.toList());
