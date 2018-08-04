@@ -86,8 +86,4 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables impleme
             }
         }
     }
-
-    public UUID getPlayerUUID() {
-        return playerUUID;
-    }
 }

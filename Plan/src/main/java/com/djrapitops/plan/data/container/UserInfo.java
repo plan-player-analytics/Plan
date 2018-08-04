@@ -17,10 +17,6 @@ public class UserInfo {
     private boolean banned;
     private boolean opped;
 
-    public UserInfo(UUID uuid) {
-        this.uuid = uuid;
-    }
-
     public UserInfo(UUID uuid, String name, long registered, boolean opped, boolean banned) {
         this.uuid = uuid;
         this.name = name;

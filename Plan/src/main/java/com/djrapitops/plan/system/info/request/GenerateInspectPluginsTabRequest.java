@@ -61,8 +61,4 @@ public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables i
     public void runLocally() throws WebException {
         generateAndCache(playerUUID);
     }
-
-    public UUID getPlayerUUID() {
-        return playerUUID;
-    }
 }

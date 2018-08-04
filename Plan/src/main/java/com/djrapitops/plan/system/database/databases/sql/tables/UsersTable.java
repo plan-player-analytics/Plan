@@ -382,39 +382,6 @@ public class UsersTable extends UserIDTable {
         });
     }
 
-    public Optional<Long> getRegisterDate(UUID uuid) {
-        String sql = Select.from(tableName, Col.REGISTERED).where(Col.UUID + "=?").toString();
-
-        return query(new QueryStatement<Optional<Long>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Optional<Long> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(set.getLong(Col.REGISTERED.get()));
-                }
-                return Optional.empty();
-            }
-        });
-    }
-
-    public int getPlayerCount() {
-        String sql = "SELECT COUNT(*) AS player_count FROM " + tableName;
-
-        return query(new QueryAllStatement<Integer>(sql) {
-            @Override
-            public Integer processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getInt("player_count");
-                }
-                return 0;
-            }
-        });
-    }
-
     public Map<Integer, UUID> getUUIDsByID() {
         String sql = Select.from(tableName, Col.ID, Col.UUID).toString();
 

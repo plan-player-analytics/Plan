@@ -72,47 +72,6 @@ public class WorldTable extends Table {
         });
     }
 
-    public Map<UUID, List<String>> getWorldsPerServer() {
-        Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
-        String sql = "SELECT * FROM " + tableName;
-
-        return query(new QueryAllStatement<Map<UUID, List<String>>>(sql, 1000) {
-            @Override
-            public Map<UUID, List<String>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<String>> worldsPerServer = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = serverUUIDsByID.get(set.getInt(Col.SERVER_ID.get()));
-                    String worldName = set.getString(Col.NAME.get());
-                    List<String> worlds = worldsPerServer.getOrDefault(serverUUID, new ArrayList<>());
-                    worlds.add(worldName);
-                    worldsPerServer.put(serverUUID, worlds);
-                }
-                return worldsPerServer;
-            }
-        });
-    }
-
-    public Map<Integer, UUID> getServerUUIDByWorldID() {
-        Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
-        String sql = "SELECT DISTINCT " +
-                Col.ID + ", " +
-                Col.SERVER_ID +
-                " FROM " + tableName;
-        return query(new QueryAllStatement<Map<Integer, UUID>>(sql, 100) {
-            @Override
-            public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
-                Map<Integer, UUID> idMap = new HashMap<>();
-                while (set.next()) {
-                    int worldId = set.getInt(Col.ID.get());
-                    int serverId = set.getInt(Col.SERVER_ID.get());
-                    UUID serverUUID = serverUUIDsByID.getOrDefault(serverId, ServerInfo.getServerUUID());
-                    idMap.put(worldId, serverUUID);
-                }
-                return idMap;
-            }
-        });
-    }
-
     public List<String> getWorlds() {
         return getWorlds(ServerInfo.getServerUUID());
     }
@@ -194,28 +153,6 @@ public class WorldTable extends Table {
                     worldNames.add(set.getString(Col.NAME.get()));
                 }
                 return worldNames;
-            }
-        });
-    }
-
-    public Map<Integer, List<Integer>> getWorldIDsByServerIDs() {
-        String sql = "SELECT " +
-                Col.ID + ", " +
-                Col.SERVER_ID +
-                " FROM " + tableName;
-        return query(new QueryAllStatement<Map<Integer, List<Integer>>>(sql, 100) {
-            @Override
-            public Map<Integer, List<Integer>> processResults(ResultSet set) throws SQLException {
-                Map<Integer, List<Integer>> map = new HashMap<>();
-                while (set.next()) {
-
-                    int serverID = set.getInt(Col.SERVER_ID.get());
-                    int worldID = set.getInt(Col.ID.get());
-                    List<Integer> worldIDs = map.getOrDefault(serverID, new ArrayList<>());
-                    worldIDs.add(worldID);
-                    map.put(serverID, worldIDs);
-                }
-                return map;
             }
         });
     }

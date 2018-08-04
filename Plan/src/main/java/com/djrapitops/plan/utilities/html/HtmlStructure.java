@@ -15,10 +15,9 @@ import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.text.TextStringBuilder;
 
-import java.util.*;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -61,28 +60,6 @@ public class HtmlStructure {
                 "</div></div>" +
                 "</div></div></div>";
         return new String[]{"<li><a>Calculating... Refresh shortly</a></li>", tab};
-    }
-
-    public static String createNetworkPageContent(Map<UUID, String> networkPageContents) {
-        if (Verify.isEmpty(networkPageContents)) {
-            return "";
-        }
-        int i = 0;
-        StringBuilder b = new StringBuilder();
-        List<String> values = new ArrayList<>(networkPageContents.values());
-        Collections.sort(values);
-        int size = values.size();
-        for (String server : values) {
-            if (i % 2 == 0) {
-                b.append("<div class=\"row clearfix\">");
-            }
-            b.append(server);
-            if ((i + 1) % 2 == 0 || i + 1 == size) {
-                b.append("</div>");
-            }
-            i++;
-        }
-        return b.toString();
     }
 
     // TODO Rework into NetworkPage generation

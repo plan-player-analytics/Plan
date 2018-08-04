@@ -32,17 +32,16 @@ public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
             return;
         }
 
-        history.add(calculateTPS(diff, now));
+        history.add(calculateTPS(now));
     }
 
     /**
      * Calculates the TPS
      *
-     * @param diff The time difference between the last run and the new run
      * @param now  The time right now
      * @return the TPS
      */
-    private TPS calculateTPS(long diff, long now) {
+    private TPS calculateTPS(long now) {
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         int availableProcessors = operatingSystemMXBean.getAvailableProcessors();
         double averageCPUUsage = operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0;

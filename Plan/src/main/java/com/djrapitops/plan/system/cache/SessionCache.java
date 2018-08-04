@@ -58,10 +58,6 @@ public class SessionCache {
         return Optional.ofNullable(activeSessions.get(uuid));
     }
 
-    public static boolean isOnline(UUID uuid) {
-        return getCachedSession(uuid).isPresent();
-    }
-
     public void cacheSession(UUID uuid, Session session) {
         if (getCachedSession(uuid).isPresent()) {
             endSession(uuid, System.currentTimeMillis());

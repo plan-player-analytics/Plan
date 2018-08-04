@@ -57,7 +57,7 @@ public class MiscUtils {
      * @return The name of the player (first argument or sender) or null if sender has no permission.
      */
     public static String getPlayerName(String[] args, ISender sender, Permissions perm) {
-        String playerName = "";
+        String playerName;
         boolean isConsole = !CommandUtils.isPlayer(sender);
         if (isConsole) {
             playerName = args[0];

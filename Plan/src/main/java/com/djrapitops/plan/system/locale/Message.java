@@ -43,10 +43,6 @@ public class Message {
         return parse(p).split("\\\\");
     }
 
-    public String parse() {
-        return toString();
-    }
-
     @Override
     public String toString() {
         return content;

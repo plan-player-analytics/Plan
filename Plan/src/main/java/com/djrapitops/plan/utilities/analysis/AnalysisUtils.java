@@ -6,7 +6,6 @@ import com.djrapitops.plan.data.store.mutators.RetentionData;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,36 +48,6 @@ public class AnalysisUtils {
             }
             return new int[]{dayOfWeek, hourOfDay};
         }).collect(Collectors.toList());
-    }
-
-    public static double getAveragePerDay(long after, long before, long total) {
-        return (double) total / getNumberOfDaysBetween(after, before);
-    }
-
-    public static long getNumberOfDaysBetween(long start, long end) {
-        long value = 0;
-        long test = start;
-        long day = TimeAmount.DAY.ms();
-        while (test < end) {
-            test += day;
-            value++;
-        }
-        return value == 0 ? 1 : value;
-    }
-
-    public static Map<UUID, List<Session>> sortSessionsByUser(Map<UUID, Map<UUID, List<Session>>> allSessions) {
-        Map<UUID, List<Session>> userSessions = new HashMap<>();
-
-        for (Map<UUID, List<Session>> sessions : allSessions.values()) {
-            for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
-                UUID uuid = entry.getKey();
-                List<Session> list = userSessions.getOrDefault(uuid, new ArrayList<>());
-                list.addAll(entry.getValue());
-                userSessions.put(uuid, list);
-            }
-        }
-
-        return userSessions;
     }
 
     public static Map<String, Long> getPlaytimePerAlias(WorldTimes worldTimes) {

@@ -16,7 +16,6 @@ public enum Permissions {
     QUICK_INSPECT_OTHER("plan.qinspect.other"),
 
     ANALYZE("plan.analyze"),
-    QUICK_ANALYZE("plan.qanalyze"),
 
     SEARCH("plan.search"),
 

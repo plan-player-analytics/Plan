@@ -43,10 +43,6 @@ public class Server implements Comparable<Server> {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getWebAddress() {
         return webAddress;
     }

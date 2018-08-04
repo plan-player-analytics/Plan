@@ -6,5 +6,4 @@ public interface CountOperations {
 
     int getServerPlayerCount(UUID server);
 
-    int getNetworkPlayerCount();
 }

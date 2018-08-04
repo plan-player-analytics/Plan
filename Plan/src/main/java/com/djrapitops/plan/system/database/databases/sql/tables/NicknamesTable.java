@@ -65,48 +65,6 @@ public class NicknamesTable extends UserIDTable {
     }
 
     /**
-     * Get ALL nicknames of the user by Server UUID.
-     * <p>
-     * Get's nicknames from other servers as well.
-     *
-     * @param uuid UUID of the Player
-     * @return The nicknames of the User in a map by ServerUUID
-     */
-    public Map<UUID, List<String>> getAllNicknames(UUID uuid) {
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
-        String sql = "SELECT " +
-                Col.NICKNAME + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID +
-                " WHERE (" + Col.USER_ID + "=" + usersTable.statementSelectID + ")";
-
-        return query(new QueryStatement<Map<UUID, List<String>>>(sql, 5000) {
-
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Map<UUID, List<String>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<String>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-
-                    List<String> nicknames = map.getOrDefault(serverUUID, new ArrayList<>());
-
-                    nicknames.add(set.getString(Col.NICKNAME.get()));
-
-                    map.put(serverUUID, nicknames);
-                }
-                return map;
-            }
-        });
-    }
-
-    /**
      * Get nicknames of the user on a server.
      * <p>
      * Get's nicknames from other servers as well.

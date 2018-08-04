@@ -23,7 +23,7 @@ public class ReloadCommand extends CommandNode {
     private final Locale locale;
 
     public ReloadCommand(PlanPlugin plugin) {
-        super("reload", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
+        super("reload", Permissions.RELOAD.getPermission(), CommandType.CONSOLE);
         this.plugin = plugin;
 
         locale = plugin.getSystem().getLocaleSystem().getLocale();

@@ -8,10 +8,6 @@ import com.djrapitops.plan.utilities.html.icon.Icon;
  * @since 3.5.2
  */
 public class ForbiddenResponse extends ErrorResponse {
-    public ForbiddenResponse() {
-        super.setHeader("HTTP/1.1 403 Forbidden");
-        super.setTitle(Icon.called("hand-paper").of(Family.REGULAR) + " 403 Forbidden - Access Denied");
-    }
 
     public ForbiddenResponse(String msg) {
         super.setHeader("HTTP/1.1 403 Forbidden");
