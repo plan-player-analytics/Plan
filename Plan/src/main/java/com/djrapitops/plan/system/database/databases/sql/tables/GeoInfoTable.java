@@ -59,10 +59,6 @@ public class GeoInfoTable extends UserIDTable {
         );
     }
 
-    public void clean() {
-
-    }
-
     public List<GeoInfo> getGeoInfo(UUID uuid) {
         String sql = "SELECT DISTINCT * FROM " + tableName +
                 " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID;

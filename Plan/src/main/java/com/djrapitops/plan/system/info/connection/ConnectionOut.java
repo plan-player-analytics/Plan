@@ -116,7 +116,7 @@ public class ConnectionOut {
         }
     }
 
-    private String prepareRequest(HttpPost post, String parameters) {
+    private void prepareRequest(HttpPost post, String parameters) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectionRequestTimeout(10000)
                 .setRelativeRedirectsAllowed(true)
@@ -130,7 +130,6 @@ public class ConnectionOut {
 
         byte[] toSend = parameters.getBytes();
         post.setEntity(new ByteArrayEntity(toSend));
-        return parameters;
     }
 
     private CloseableHttpClient getHttpClient(String address) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {

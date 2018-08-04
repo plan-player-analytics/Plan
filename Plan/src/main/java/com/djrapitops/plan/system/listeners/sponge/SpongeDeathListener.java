@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.SpongeKillProcessor;
@@ -73,7 +74,7 @@ public class SpongeDeathListener {
         ItemStack inHand = inMainHand.orElse(killer.getItemInHand(HandTypes.OFF_HAND).orElse(ItemStack.empty()));
         ItemType type = inHand.isEmpty() ? ItemTypes.AIR : inHand.getType();
 
-        return new SpongeKillProcessor(killer.getUniqueId(), time, getUUID(dead), normalizeItemName(type));
+        return new SpongeKillProcessor(killer.getUniqueId(), time, getUUID(dead), Formatters.itemName().apply(type.getName()));
     }
 
     private UUID getUUID(Living dead) {
@@ -86,13 +87,10 @@ public class SpongeDeathListener {
     private SpongeKillProcessor handleWolfKill(long time, Living dead, Wolf wolf) {
         Optional<Optional<UUID>> owner = wolf.get(Keys.TAMED_OWNER);
 
-        if (!owner.isPresent()) {
-            return null;
-        }
-
-        return owner.get().map(
+        return owner.map(ownerUUID -> ownerUUID.map(
                 uuid -> new SpongeKillProcessor(uuid, time, getUUID(dead), "Wolf")
-        ).orElse(null);
+        ).orElse(null)).orElse(null);
+
     }
 
     private SpongeKillProcessor handleProjectileKill(long time, Living dead, Projectile projectile) {
@@ -106,27 +104,6 @@ public class SpongeDeathListener {
         return new SpongeKillProcessor(player.getUniqueId(), time, getUUID(dead),
                 new Format(projectile.getType().getName()).capitalize().toString()
         );
-    }
-
-    /**
-     * Normalizes an item name
-     *
-     * @param type The type of the item
-     * @return The normalized item name
-     */
-    private String normalizeItemName(ItemType type) {
-        String[] parts = type.getName().split("_");
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < parts.length; i++) {
-            String part = new Format(parts[i]).capitalize().toString();
-            builder.append(part);
-            if (i < parts.length - 1) {
-                builder.append(" ");
-            }
-        }
-
-        return builder.toString();
     }
 
 }

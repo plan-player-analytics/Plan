@@ -239,7 +239,6 @@ public abstract class SQLDB extends Database {
     private void clean() {
         tpsTable.clean();
         transferTable.clean();
-        geoInfoTable.clean();
         pingTable.clean();
 
         long now = System.currentTimeMillis();
