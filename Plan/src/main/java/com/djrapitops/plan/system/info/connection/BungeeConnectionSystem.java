@@ -46,14 +46,12 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     protected Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException {
         refreshServerMap();
         Server server = null;
-        if (infoRequest instanceof CacheRequest) {
-            throw new NoServersException("Bungee should not send Cache requests.");
+        if (infoRequest instanceof CacheRequest || infoRequest instanceof GenerateInspectPageRequest) {
+            // Run locally
+            return ServerInfo.getServer();
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
             server = bukkitServers.get(serverUUID);
-        } else if (infoRequest instanceof GenerateInspectPageRequest) {
-            // Run locally
-            server = ServerInfo.getServer();
         }
         if (server == null) {
             throw new NoServersException("Proper server is not available to process request: " + infoRequest.getClass().getSimpleName());
