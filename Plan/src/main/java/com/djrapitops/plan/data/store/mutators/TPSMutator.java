@@ -4,6 +4,7 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -89,6 +90,7 @@ public class TPSMutator {
     public long serverDownTime() {
         long lastDate = -1;
         long downTime = 0;
+        tpsData.sort(new TPSComparator());
         for (TPS tps : tpsData) {
             long date = tps.getDate();
             if (lastDate == -1) {
@@ -110,6 +112,7 @@ public class TPSMutator {
         long lastDate = -1;
         int lastPlayers = 0;
         long idleTime = 0;
+        tpsData.sort(new TPSComparator());
         for (TPS tps : tpsData) {
             long date = tps.getDate();
             int players = tps.getPlayers();
