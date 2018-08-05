@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.time;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import java.util.Objects;
  * @author Rsl1122
  * @since 4.0.0
  */
-public class WorldTimes {
+public class WorldTimes implements Serializable {
 
     private final Map<String, GMTimes> worldTimes;
     private String currentWorld;

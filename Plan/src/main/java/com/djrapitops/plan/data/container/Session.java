@@ -107,8 +107,6 @@ public class Session extends DataContainer implements DateHolder {
      */
     public void endSession(long endOfSession) {
         putRawData(SessionKeys.END, endOfSession);
-        WorldTimes worldTimes = getValue(SessionKeys.WORLD_TIMES)
-                .orElseThrow(() -> new IllegalStateException("World times have not been defined"));
         worldTimes.updateState(endOfSession);
     }
 
@@ -120,14 +118,10 @@ public class Session extends DataContainer implements DateHolder {
      * @param time  Epoch ms of the event.
      */
     public void changeState(String world, String gm, long time) {
-        WorldTimes worldTimes = getValue(SessionKeys.WORLD_TIMES)
-                .orElseThrow(() -> new IllegalStateException("World times is not defined"));
         worldTimes.updateState(world, gm, time);
     }
 
     public void playerKilled(PlayerKill kill) {
-        List<PlayerKill> playerKills = getValue(SessionKeys.PLAYER_KILLS)
-                .orElseThrow(() -> new IllegalStateException("Player kills is not defined."));
         playerKills.add(kill);
     }
 

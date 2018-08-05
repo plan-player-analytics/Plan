@@ -2,25 +2,20 @@ package com.djrapitops.plan.data.time;
 
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /**
  * Abstract class for keeping track of time spent in each state.
+ *
+ * @author Rsl1122
  */
-public abstract class TimeKeeper {
-    /**
-     * Keeps time of states.
-     */
+public abstract class TimeKeeper implements Serializable {
+
     protected Map<String, Long> times;
-    /**
-     * Last State seen in
-     */
     protected String state;
-    /**
-     * Relates to Playtime Milliseconds.
-     */
     protected long lastStateChange;
 
     public TimeKeeper(Map<String, Long> times, String lastState, long lastStateChange) {
