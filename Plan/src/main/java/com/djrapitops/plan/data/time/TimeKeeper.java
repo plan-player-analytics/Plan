@@ -72,19 +72,19 @@ public abstract class TimeKeeper {
      * Adds time to the last state while updating the status of other parameters.
      *
      * @param newState New State seen in.
-     * @param playTime Current Playtime.
+     * @param ms Epoch ms the change occurred.
      * @throws IllegalArgumentException If newState is null.
      */
-    public void changeState(String newState, long playTime) {
+    public void changeState(String newState, long ms) {
         Verify.nullCheck(newState);
         if (state == null) {
             state = newState;
         }
         Long currentTime = times.getOrDefault(state, 0L);
-        long diff = playTime - lastStateChange;
+        long diff = ms - lastStateChange;
         times.put(state, currentTime + Math.abs(diff));
         state = newState;
-        lastStateChange = playTime;
+        lastStateChange = ms;
     }
 
     protected void resetState(String state) {

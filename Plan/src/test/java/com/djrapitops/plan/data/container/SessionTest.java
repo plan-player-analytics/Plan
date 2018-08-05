@@ -1,7 +1,14 @@
 package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.time.WorldTimes;
 import org.junit.Test;
+import utilities.TestConstants;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.*;
 
 /**
  * Test for {@link Session} {@link com.djrapitops.plan.data.store.containers.DataContainer}.
@@ -31,4 +38,48 @@ public class SessionTest {
         }
     }
 
+    @Test
+    public void killsAreAdded() {
+        Session session = new Session(null, System.currentTimeMillis(), "", "");
+
+        Optional<List<PlayerKill>> beforeOptional = session.getValue(SessionKeys.PLAYER_KILLS);
+        assertTrue(beforeOptional.isPresent());
+        List<PlayerKill> before = beforeOptional.get();
+        assertTrue(before.isEmpty());
+
+        session.playerKilled(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
+
+        Optional<List<PlayerKill>> afterOptional = session.getValue(SessionKeys.PLAYER_KILLS);
+        assertTrue(afterOptional.isPresent());
+        List<PlayerKill> after = afterOptional.get();
+
+        assertFalse(after.isEmpty());
+        assertEquals(before, after);
+    }
+
+    @Test
+    public void killsAreAdded2() {
+        Session session = new Session(null, System.currentTimeMillis(), "", "");
+
+        session.playerKilled(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
+
+        Optional<List<PlayerKill>> afterOptional = session.getValue(SessionKeys.PLAYER_KILLS);
+        assertTrue(afterOptional.isPresent());
+        List<PlayerKill> after = afterOptional.get();
+
+        assertFalse(after.isEmpty());
+    }
+
+    @Test
+    public void worldTimesWorks() {
+        long time = System.currentTimeMillis();
+        Session session = new Session(null, time, "One", "Survival");
+        session.changeState("Two", "Three", time + 5L);
+
+        Optional<WorldTimes> optional = session.getValue(SessionKeys.WORLD_TIMES);
+        assertTrue(optional.isPresent());
+        WorldTimes worldTimes = optional.get();
+
+        assertEquals(5L, worldTimes.getGMTimes("One").getTotal());
+    }
 }

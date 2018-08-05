@@ -21,12 +21,13 @@ public class WorldTimes {
      *
      * @param startingWorld World to start the calculations at.
      * @param startingGM    GameMode to start the calculations at.
+     * @param time          Epoch ms the time calculation should start
      */
-    public WorldTimes(String startingWorld, String startingGM) {
+    public WorldTimes(String startingWorld, String startingGM, long time) {
         worldTimes = new HashMap<>();
         currentWorld = startingWorld;
         currentGamemode = startingGM;
-        addWorld(startingWorld, startingGM, System.currentTimeMillis());
+        addWorld(startingWorld, startingGM, time);
     }
 
     /**
