@@ -2,7 +2,6 @@ package com.djrapitops.plan.data.container;
 
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class GeoInfoTest {
 
     @Test
-    public void automaticallyHidesLast16Bits() throws UnsupportedEncodingException, NoSuchAlgorithmException, UnknownHostException {
+    public void automaticallyHidesLast16Bits() throws NoSuchAlgorithmException, UnknownHostException {
         InetAddress test = InetAddress.getByName("1.2.3.4");
         String expected = "1.2.xx.xx";
         String result = new GeoInfo(test, "Irrelevant", 3).getIp();

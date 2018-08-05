@@ -11,7 +11,6 @@ import com.djrapitops.plan.system.database.databases.sql.tables.move.Version18Tr
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
@@ -84,7 +83,7 @@ public class IPAnonPatch extends Patch {
                     statement.setString(2, updatedInfo.getIpHash());
                     statement.setString(3, geoInfo.getIp());
                     statement.addBatch();
-                } catch (UnknownHostException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
+                } catch (UnknownHostException | NoSuchAlgorithmException e) {
                     if (Settings.DEV_MODE.isTrue()) {
                         Log.toLog(this.getClass(), e);
                     }
