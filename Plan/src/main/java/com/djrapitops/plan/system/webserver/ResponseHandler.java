@@ -44,9 +44,14 @@ public class ResponseHandler extends TreePageHandler {
         ServerPageHandler serverPageHandler = new ServerPageHandler();
         registerPage("network", serverPageHandler);
         registerPage("server", serverPageHandler);
-        if (webServer.isAuthRequired()) {
-            registerPage("", new RootPageHandler(this));
-        }
+        registerPage("", webServer.isAuthRequired()
+                ? new RootPageHandler(this)
+                : new PageHandler() {
+            @Override
+            public Response getResponse(Request request, List<String> target) {
+                return new RedirectResponse("/server");
+            }
+        });
     }
 
     public void registerWebAPIPages() {

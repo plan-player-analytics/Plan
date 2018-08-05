@@ -20,7 +20,7 @@ public abstract class Response {
     private String header;
     private String content;
 
-    private Headers responseHeaders;
+    protected Headers responseHeaders;
 
     public Response(ResponseType type) {
         this.type = type.get();
