@@ -57,6 +57,7 @@ public class WorldMap implements HighChart {
 
         dataBuilder.appendWithSeparators(
                 geoCodeCounts.entrySet().stream()
+                        .filter(entry -> entry.getValue() != 0)
                         .map(entry -> "{'code':'" + entry.getKey() + "','value':" + entry.getValue() + "}")
                         .iterator(),
                 ","
