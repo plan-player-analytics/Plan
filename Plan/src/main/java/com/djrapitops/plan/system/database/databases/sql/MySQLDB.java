@@ -4,6 +4,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -19,7 +20,9 @@ import java.util.function.Supplier;
  */
 public class MySQLDB extends SQLDB {
 
-    protected DataSource dataSource;
+    private static int increment = 1;
+
+    protected volatile DataSource dataSource;
 
     public MySQLDB(Supplier<Locale> locale) {
         super(locale);
@@ -48,12 +51,14 @@ public class MySQLDB extends SQLDB {
         config.setUsername(username);
         config.setPassword(password);
 
-        config.setPoolName("Plan Connection Pool");
+        config.setPoolName("Plan Connection Pool-" + increment);
         config.setDriverClassName("com.mysql.jdbc.Driver");
+        increment++;
 
         config.setAutoCommit(true);
         config.setReadOnly(false);
         config.setMaximumPoolSize(8);
+        config.setLeakDetectionThreshold(TimeAmount.MINUTE.ms() * 10L);
 
         this.dataSource = new HikariDataSource(config);
     }
