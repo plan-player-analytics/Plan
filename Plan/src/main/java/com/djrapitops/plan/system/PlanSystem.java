@@ -88,7 +88,7 @@ public abstract class PlanSystem implements SubSystem {
     public void enable() throws EnableException {
         checkSubSystemInitialization();
 
-        SubSystem[] systems = new SubSystem[]{
+        enableSystems(
                 fileSystem,
                 configSystem,
                 localeSystem,
@@ -102,7 +102,10 @@ public abstract class PlanSystem implements SubSystem {
                 listenerSystem,
                 taskSystem,
                 hookHandler
-        };
+        );
+    }
+
+    private void enableSystems(SubSystem... systems) throws EnableException {
         for (SubSystem system : systems) {
             system.enable();
         }
@@ -110,7 +113,7 @@ public abstract class PlanSystem implements SubSystem {
 
     @Override
     public void disable() {
-        SubSystem[] systems = new SubSystem[]{
+        disableSystems(
                 taskSystem,
                 hookHandler,
                 cacheSystem,
@@ -124,7 +127,10 @@ public abstract class PlanSystem implements SubSystem {
                 configSystem,
                 fileSystem,
                 versionCheckSystem
-        };
+        );
+    }
+
+    private void disableSystems(SubSystem... systems) {
         for (SubSystem system : systems) {
             try {
                 if (system != null) {
@@ -141,6 +147,7 @@ public abstract class PlanSystem implements SubSystem {
             Verify.nullCheck(versionCheckSystem, () -> new IllegalStateException("Version Check system was not initialized."));
             Verify.nullCheck(fileSystem, () -> new IllegalStateException("File system was not initialized."));
             Verify.nullCheck(configSystem, () -> new IllegalStateException("Config system was not initialized."));
+            Verify.nullCheck(localeSystem, () -> new IllegalStateException("Locale system was not initialized."));
             Verify.nullCheck(databaseSystem, () -> new IllegalStateException("Database system was not initialized."));
             Verify.nullCheck(infoSystem, () -> new IllegalStateException("Info system was not initialized."));
             Verify.nullCheck(serverInfo, () -> new IllegalStateException("ServerInfo was not initialized."));
