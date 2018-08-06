@@ -3,6 +3,8 @@ Plan.iml
 PlanPluginBridge.iml
 .sonar/
 
+*.db
+
 # Shell files
 *.sh
 
