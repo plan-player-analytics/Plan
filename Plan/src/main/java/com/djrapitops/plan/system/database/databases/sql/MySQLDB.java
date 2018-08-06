@@ -29,6 +29,18 @@ public class MySQLDB extends SQLDB {
         super(locale);
     }
 
+    private static synchronized void increment() {
+        increment++;
+    }
+
+    /**
+     * @return the name of the Database
+     */
+    @Override
+    public String getName() {
+        return "MySQL";
+    }
+
     /**
      * Setups the {@link HikariDataSource}
      */
@@ -55,7 +67,7 @@ public class MySQLDB extends SQLDB {
 
             config.setPoolName("Plan Connection Pool-" + increment);
             config.setDriverClassName("com.mysql.jdbc.Driver");
-            increment++;
+            increment();
 
             config.setAutoCommit(true);
             config.setMaximumPoolSize(8);
@@ -67,14 +79,6 @@ public class MySQLDB extends SQLDB {
         } catch (SQLException e) {
             throw new DBInitException("Failed to set-up HikariCP Datasource: " + e.getMessage(), e);
         }
-    }
-
-    /**
-     * @return the name of the Database
-     */
-    @Override
-    public String getName() {
-        return "MySQL";
     }
 
     @Override
