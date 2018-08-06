@@ -81,11 +81,14 @@ public class MySQLDB extends SQLDB {
     public Connection getConnection() throws SQLException {
         Connection connection = dataSource.getConnection();
         if (!connection.isValid(5)) {
+            connection.close();
             if (dataSource instanceof HikariDataSource) {
                 ((HikariDataSource) dataSource).close();
             }
             try {
                 setupDataSource();
+                // get new connection after restarting pool
+                return dataSource.getConnection();
             } catch (DBInitException e) {
                 throw new DBOpException("Failed to restart DataSource after a connection was invalid: " + e.getMessage(), e);
             }
