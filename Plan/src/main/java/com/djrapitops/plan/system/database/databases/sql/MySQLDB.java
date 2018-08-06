@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
@@ -33,34 +34,39 @@ public class MySQLDB extends SQLDB {
      */
     @Override
     public void setupDataSource() throws DBInitException {
-        HikariConfig config = new HikariConfig();
+        try {
+            HikariConfig config = new HikariConfig();
 
-        String host = Settings.DB_HOST.toString();
-        String port = Integer.toString(Settings.DB_PORT.getNumber());
-        String database = Settings.DB_DATABASE.toString();
-        String launchOptions = Settings.DB_LAUNCH_OPTIONS.toString();
-        if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
-            launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
-            Log.error(locale.get().getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
+            String host = Settings.DB_HOST.toString();
+            String port = Integer.toString(Settings.DB_PORT.getNumber());
+            String database = Settings.DB_DATABASE.toString();
+            String launchOptions = Settings.DB_LAUNCH_OPTIONS.toString();
+            if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
+                launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
+                Log.error(locale.get().getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
+            }
+            config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
+
+            String username = Settings.DB_USER.toString();
+            String password = Settings.DB_PASS.toString();
+
+            config.setUsername(username);
+            config.setPassword(password);
+
+            config.setPoolName("Plan Connection Pool-" + increment);
+            config.setDriverClassName("com.mysql.jdbc.Driver");
+            increment++;
+
+            config.setAutoCommit(true);
+            config.setMaximumPoolSize(8);
+            config.setLeakDetectionThreshold(TimeAmount.MINUTE.ms() * 10L);
+
+            this.dataSource = new HikariDataSource(config);
+
+            getConnection();
+        } catch (SQLException e) {
+            throw new DBInitException("Failed to set-up HikariCP Datasource: " + e.getMessage(), e);
         }
-        config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
-
-        String username = Settings.DB_USER.toString();
-        String password = Settings.DB_PASS.toString();
-
-        config.setUsername(username);
-        config.setPassword(password);
-
-        config.setPoolName("Plan Connection Pool-" + increment);
-        config.setDriverClassName("com.mysql.jdbc.Driver");
-        increment++;
-
-        config.setAutoCommit(true);
-        config.setReadOnly(false);
-        config.setMaximumPoolSize(8);
-        config.setLeakDetectionThreshold(TimeAmount.MINUTE.ms() * 10L);
-
-        this.dataSource = new HikariDataSource(config);
     }
 
     /**
@@ -73,7 +79,18 @@ public class MySQLDB extends SQLDB {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+        Connection connection = dataSource.getConnection();
+        if (!connection.isValid(5)) {
+            if (dataSource instanceof HikariDataSource) {
+                ((HikariDataSource) dataSource).close();
+            }
+            try {
+                setupDataSource();
+            } catch (DBInitException e) {
+                throw new DBOpException("Failed to restart DataSource after a connection was invalid: " + e.getMessage(), e);
+            }
+        }
+        return connection;
     }
 
     @Override
