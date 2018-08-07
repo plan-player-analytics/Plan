@@ -3,6 +3,7 @@ package com.djrapitops.plan.data.store.containers;
 import com.djrapitops.plan.data.store.CachingSupplier;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -17,6 +18,16 @@ import java.util.function.Supplier;
  * @author Rsl1122
  */
 public class DataContainer extends HashMap<Key, Supplier> {
+
+    private long timeToLive;
+
+    public DataContainer() {
+        timeToLive = TimeAmount.SECOND.ms() * 30L;
+    }
+
+    public DataContainer(long timeToLive) {
+        this.timeToLive = timeToLive;
+    }
 
     /**
      * Place your data inside the container.
@@ -33,7 +44,7 @@ public class DataContainer extends HashMap<Key, Supplier> {
         if (supplier == null) {
             return;
         }
-        super.put(key, new CachingSupplier<>(supplier));
+        super.put(key, new CachingSupplier<>(supplier, timeToLive));
     }
 
     public <T> Supplier<T> getSupplier(Key<T> key) {

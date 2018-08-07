@@ -18,6 +18,7 @@ public class CacheSystem implements SubSystem {
 
     private final DataCache dataCache;
     private final GeolocationCache geolocationCache;
+    private final DataContainerCache dataContainerCache;
 
     public CacheSystem(PlanSystem system) {
         this(new DataCache(system), system);
@@ -26,6 +27,7 @@ public class CacheSystem implements SubSystem {
     protected CacheSystem(DataCache dataCache, PlanSystem system) {
         this.dataCache = dataCache;
         geolocationCache = new GeolocationCache(() -> system.getLocaleSystem().getLocale());
+        dataContainerCache = new DataContainerCache();
     }
 
     public static CacheSystem getInstance() {
@@ -43,6 +45,7 @@ public class CacheSystem implements SubSystem {
     @Override
     public void disable() {
         geolocationCache.clearCache();
+        dataContainerCache.clear();
     }
 
     public DataCache getDataCache() {
@@ -51,5 +54,9 @@ public class CacheSystem implements SubSystem {
 
     public GeolocationCache getGeolocationCache() {
         return geolocationCache;
+    }
+
+    public DataContainerCache getDataContainerCache() {
+        return dataContainerCache;
     }
 }

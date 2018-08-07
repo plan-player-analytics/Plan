@@ -66,12 +66,12 @@ public class MySQLDB extends SQLDB {
             config.setPassword(password);
 
             config.setPoolName("Plan Connection Pool-" + increment);
-            config.setDriverClassName("com.mysql.jdbc.Driver");
             increment();
 
             config.setAutoCommit(true);
             config.setMaximumPoolSize(8);
-            config.setLeakDetectionThreshold(TimeAmount.MINUTE.ms() * 10L);
+            config.setMaxLifetime(25L * TimeAmount.MINUTE.ms());
+            config.setLeakDetectionThreshold(10L * TimeAmount.MINUTE.ms());
 
             this.dataSource = new HikariDataSource(config);
 
