@@ -14,6 +14,7 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -59,7 +60,7 @@ public class InspectPage implements Page {
             }
             Benchmark.start("Inspect Parse, Fetch");
             Database db = Database.getActive();
-            PlayerContainer container = db.fetch().getPlayerContainer(uuid);
+            PlayerContainer container = CacheSystem.getInstance().getDataContainerCache().getPlayerContainer(uuid);
             if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
                 throw new IllegalStateException("Player is not registered");
             }
