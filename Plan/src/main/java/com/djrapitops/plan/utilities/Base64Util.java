@@ -21,9 +21,17 @@ public class Base64Util {
     private Base64Util() {
     }
 
+    public static String encodeBytes(byte[] bytes) {
+        return new String(Base64.getEncoder().encode(bytes));
+    }
+
     public static String encode(String decoded) {
         byte[] encoded = Base64.getEncoder().encode(decoded.getBytes());
         return new String(encoded);
+    }
+
+    public static byte[] decodeBytes(String encoded) {
+        return Base64.getDecoder().decode(encoded.getBytes());
     }
 
     public static String decode(String encoded) {
