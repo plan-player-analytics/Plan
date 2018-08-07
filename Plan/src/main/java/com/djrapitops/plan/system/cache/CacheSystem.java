@@ -7,6 +7,9 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 /**
@@ -40,6 +43,13 @@ public class CacheSystem implements SubSystem {
     public void enable() throws EnableException {
         dataCache.enable();
         geolocationCache.enable();
+
+        RunnableFactory.createNew("DataContainer cache clean task", new AbsRunnable() {
+            @Override
+            public void run() {
+                dataContainerCache.clear();
+            }
+        }).runTaskTimerAsynchronously(TimeAmount.MINUTE.ticks(), TimeAmount.MINUTE.ms());
     }
 
     @Override
