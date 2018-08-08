@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
+import org.bukkit.World;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
@@ -107,7 +108,11 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
      * @return amount of loaded chunks
      */
     private int getLoadedChunks() {
-        return plugin.getServer().getWorlds().stream().mapToInt(world -> world.getLoadedChunks().length).sum();
+        int sum = 0;
+        for (World world : plugin.getServer().getWorlds()) {
+            sum += world.getLoadedChunks().length;
+        }
+        return sum;
     }
 
     /**
@@ -116,6 +121,10 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
      * @return amount of entities
      */
     protected int getEntityCount() {
-        return plugin.getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
+        int sum = 0;
+        for (World world : plugin.getServer().getWorlds()) {
+            sum += world.getEntityCount();
+        }
+        return sum;
     }
 }
