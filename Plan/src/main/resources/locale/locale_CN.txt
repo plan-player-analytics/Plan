@@ -1,13 +1,13 @@
 # Translated by 佛壁灯 (f0rb1d) on 2018-8-8 06:00 UTC
-Analysis - Third Party                    || Analysis | 正在分析额外（第三方）数据源。
-Analysis FAIL - Fetch Exception           || Analysis | 分析无法获取数据，发生错误。
-Analysis FAIL - No Data                   || Analyse | 分析失败，数据库中无数据。
-Analysis FAIL - No Players                || Analyse | 分析失败，无已知玩家。
-Analysis - Fetch Phase                    || Analyse | 正在获取数据···
-Analysis - Fetch Phase Start              || Analyse | 正在检查可用玩家···
-Analysis - Complete                       || Analyse | 分析完成。（花费时间 ${0} 毫秒） ${1}
-Analysis - Begin Analysis                 || Analyse | 已获取数据（${0} 名玩家，花费时间 ${1} 毫秒），正在开始分析数据···
-Analysis - Start                          || Analyse | 正在开始分析用户数据···
+Analysis - Third Party                    || 分析 | 正在分析额外（第三方）数据源。
+Analysis FAIL - Fetch Exception           || 分析 | 分析无法获取数据，发生错误。
+Analysis FAIL - No Data                   || 分析 | 分析失败，数据库中无数据。
+Analysis FAIL - No Players                || 分析 | 分析失败，无已知玩家。
+Analysis - Fetch Phase                    || 分析 | 正在获取数据···
+Analysis - Fetch Phase Start              || 分析 | 正在检查可用玩家···
+Analysis - Complete                       || 分析 | 分析完成。（花费时间 ${0} 毫秒） ${1}
+Analysis - Begin Analysis                 || 分析 | 已获取数据（${0} 名玩家，花费时间 ${1} 毫秒），正在开始分析数据···
+Analysis - Start                          || 分析 | 正在开始分析用户数据···
 >Constant - CMD Footer                    || §f»
 >Constant - List Ball                     || §7 •§2
 Cmd FAIL - No Data View                   || §e[计划] 无可预览数据的可用方法。
@@ -73,8 +73,8 @@ Disable                                   || 已禁用玩家分析。
 Disable - Save                            || 正在保存已缓存的数据···
 Disable - WebServer                       || 正在关闭网页服务器···
 Enable                                    || 已启用玩家分析。
-Enable - Boot Analysis 30s Notify         || Analyse | 将在 30 秒后开始启动分析···
-Enable - Boot Analysis Notify             || Analyse | 正在开始启动分析···
+Enable - Boot Analysis 30s Notify         || 分析 | 将在 30 秒后开始启动分析···
+Enable - Boot Analysis Notify             || 分析 | 正在开始启动分析···
 Enable Db FAIL - Disable Info             || 初始化数据库失败，正在关闭计划。
 Enable - Db Info                          || ${0}-已建立数据库连接。
 Enable - Db                               || 初始化数据库···
