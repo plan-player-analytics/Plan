@@ -18,6 +18,7 @@ import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -99,28 +100,33 @@ public class LiteBansData extends PluginData implements BanData {
         } catch (DBOpException ex) {
             Log.toLog(this.getClass().getName(), ex);
             table.addRow("Error: " + ex);
+        } catch (IllegalStateException e) {
+            inspectContainer.addValue(getWithIcon("Error", Icons.RED_WARN), "Database connection is not available");
+            return inspectContainer;
         }
         inspectContainer.addTable("table", table);
-
         return inspectContainer;
     }
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
-        TableContainer banTable = getBanTable();
-        TableContainer muteTable = getMuteTable();
-        TableContainer warningTable = getWarningTable();
-        TableContainer kickTable = getKickTable();
+        try {
+            TableContainer banTable = getBanTable();
+            TableContainer muteTable = getMuteTable();
+            TableContainer warningTable = getWarningTable();
+            TableContainer kickTable = getKickTable();
 
-        Html spacing = Html.PANEL_BODY;
-        String[] navAndHtml = new TabsElement(
-                new TabsElement.Tab(getWithIcon("Bans", Icon.called("ban")), spacing.parse(banTable.parseHtml())),
-                new TabsElement.Tab(getWithIcon("Mutes", Icon.called("bell-slash").of(Family.REGULAR)), spacing.parse(muteTable.parseHtml())),
-                new TabsElement.Tab(getWithIcon("Warnings", Icon.called("exclamation-triangle")), spacing.parse(warningTable.parseHtml())),
-                new TabsElement.Tab(getWithIcon("Kicks", Icon.called("user-times")), spacing.parse(kickTable.parseHtml()))
-        ).toHtml();
-        analysisContainer.addHtml("Tables", navAndHtml[0] + navAndHtml[1]);
-
+            Html spacing = Html.PANEL_BODY;
+            String[] navAndHtml = new TabsElement(
+                    new TabsElement.Tab(getWithIcon("Bans", Icon.called("ban")), spacing.parse(banTable.parseHtml())),
+                    new TabsElement.Tab(getWithIcon("Mutes", Icon.called("bell-slash").of(Family.REGULAR)), spacing.parse(muteTable.parseHtml())),
+                    new TabsElement.Tab(getWithIcon("Warnings", Icon.called("exclamation-triangle")), spacing.parse(warningTable.parseHtml())),
+                    new TabsElement.Tab(getWithIcon("Kicks", Icon.called("user-times")), spacing.parse(kickTable.parseHtml()))
+            ).toHtml();
+            analysisContainer.addHtml("Tables", navAndHtml[0] + navAndHtml[1]);
+        } catch (IllegalStateException e) {
+            analysisContainer.addValue(getWithIcon("Error", Icons.RED_WARN), "Database connection is not available");
+        }
         return analysisContainer;
     }
 

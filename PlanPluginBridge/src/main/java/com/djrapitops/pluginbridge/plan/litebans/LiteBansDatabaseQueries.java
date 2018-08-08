@@ -81,6 +81,9 @@ public class LiteBansDatabaseQueries extends Table {
         List<LiteBansDBObj> objs = new ArrayList<>();
         while (set.next()) {
             String uuidS = set.getString("uuid");
+            if (uuidS == null) {
+                continue;
+            }
             UUID uuid;
             try {
                 uuid = UUID.fromString(uuidS);
