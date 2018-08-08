@@ -36,7 +36,6 @@ public class GeoInfoMutator {
         if (geoInfo.isEmpty()) {
             return Optional.empty();
         }
-        geoInfo.sort(new GeoInfoComparator());
-        return Optional.of(geoInfo.get(0));
+        return geoInfo.stream().min(new GeoInfoComparator());
     }
 }
