@@ -10,14 +10,14 @@ Analysis - Begin Analysis                 || Analyse | 已获取数据（${0} �
 Analysis - Start                          || Analyse | 正在开始分析用户数据···
 >Constant - CMD Footer                    || §f»
 >Constant - List Ball                     || §7 •§2
-Cmd FAIL - No Data View                   || §e[Plan] 无可预览数据的可用方法。
-Cmd FAIL - No Permission                  || §c[Plan] 阁下没有所需权限。
-Cmd FAIL - Requires Arguments             || §c[Plan] 命令缺少参数。${0}
-Cmd FAIL - Require only one Argument      || §c[Plan] 命令需要一个参数。
-Cmd FAIL - Timeout                        || §c[Plan] ${0} 命令超时！请查看 '/plan status' 或控制台。
-Cmd FAIL - Unknown Username               || §c[Plan] 未在数据库中找到此玩家。
-Cmd FAIL - Unseen Username                || §c[Plan] 此玩家尚未在此服务器游玩过。
-Cmd FAIL - Invalid Username               || §c[Plan] 此玩家不存在。
+Cmd FAIL - No Data View                   || §e[计划] 无可预览数据的可用方法。
+Cmd FAIL - No Permission                  || §c[计划] 阁下没有所需权限。
+Cmd FAIL - Requires Arguments             || §c[计划] 命令缺少参数。${0}
+Cmd FAIL - Require only one Argument      || §c[计划] 命令需要一个参数。
+Cmd FAIL - Timeout                        || §c[计划] ${0} 命令超时！请查看 '/plan status' 或控制台。
+Cmd FAIL - Unknown Username               || §c[计划] 未在数据库中找到此玩家。
+Cmd FAIL - Unseen Username                || §c[计划] 此玩家尚未在此服务器游玩过。
+Cmd FAIL - Invalid Username               || §c[计划] 此玩家不存在。
 Cmd Header - Analysis                     || §f»§2 玩家统计 - 统计结果
 Cmd Header - Info                         || §f»§2 玩家统计 - 信息
 Cmd Header - Inspect                      || §f»§2 玩家统计 - 检视结果：
@@ -42,12 +42,12 @@ Cmd - Click Me                            || 点击此处
 Cmd - Fetch Data                          || §f»§2 正在获取数据至缓存···	
 Cmd - Link                                || §7 •§2 链接：§f
 Cmd - No Results                          || §7 •§2 搜索 §7${0}§2 未找到结果。
-Cmd - Reload Success                      || §a[Plan] 重新载入完毕。
+Cmd - Reload Success                      || §a[计划] 重新载入完毕。
 Cmd - Results                             || §7 匹配玩家：§f
 Cmd - Searching                           || §f»§2正在搜索···
 Cmd - Usage /plan analyze                 || 查看服务器分析
 Cmd - Usage /plan help                    || 查看命令列表。
-Cmd - Usage /plan info                    || 查看 Plan 版本
+Cmd - Usage /plan info                    || 查看计划版本
 Cmd - Usage /plan inspect                 || 检视玩家数据
 Cmd - Usage /plan list                    || 列出所有已缓存玩家名单
 Cmd - Usage /plan manage                  || 数据库管理命令
@@ -75,7 +75,7 @@ Disable - WebServer                       || 正在关闭网页服务器···
 Enable                                    || 已启用玩家分析。
 Enable - Boot Analysis 30s Notify         || Analyse | 将在 30 秒后开始启动分析···
 Enable - Boot Analysis Notify             || Analyse | 正在开始启动分析···
-Enable Db FAIL - Disable Info             || 初始化数据库失败，正在关闭 Plan 。
+Enable Db FAIL - Disable Info             || 初始化数据库失败，正在关闭计划。
 Enable - Db Info                          || ${0}-已建立数据库连接。
 Enable - Db                               || 初始化数据库···
 Enable FAIL-Db                            || ${0}-连接数据库失败：${1}
@@ -94,20 +94,20 @@ Html - Offline                            || | <span class="darkred">离线</spa
 Html - Online                             || | <span class="darkgreen">在线</span>
 Html - OP                                 || , 操作员（OP）
 Html - Table No Kills                     || 无击杀
-Manage FAIL - Confirm Action              || §c[Plan] 请添加 -a 以确认执行！${0}
-Manage FAIL - Faulty DB Connection        || §c[Plan] 未正确初始化其中一个数据库。
-Manage FAIL - Backup File Not Found       || §c[Plan] 备份文件不存在！
-Manage FAIL - Incorrect DB                || §c[Plan] 数据库不正确！（支持 SQlite/MySQL）：
-Manage FAIL - Incorrect Plugin            || §c[Plan] 不支持插件：
-Manage FAIL - Empty DB                    || §c[Plan] 数据库中无玩家数据！
-Manage FAIL - Unenabled Plugin            || §c[Plan] 未启用插件：
-Manage FAIL - Same DB                     || §c[Plan] 无法移动至相同的数据库！
-Manage - Clear Success                    || §a[Plan] 已成功清除所有数据！
-Manage - Remind Config Change             || §e[Plan] 请记住要切换至新数据库并重新载入插件
-Manage - Copy Success                     || §a[Plan] 已成功复制所有数据！
-Manage - Process Fail                     || §c[Plan] 处理数据时发生错误！
+Manage FAIL - Confirm Action              || §c[计划] 请添加 -a 以确认执行！${0}
+Manage FAIL - Faulty DB Connection        || §c[计划] 未正确初始化其中一个数据库。
+Manage FAIL - Backup File Not Found       || §c[计划] 备份文件不存在！
+Manage FAIL - Incorrect DB                || §c[计划] 数据库不正确！（支持 SQlite/MySQL）：
+Manage FAIL - Incorrect Plugin            || §c[计划] 不支持插件：
+Manage FAIL - Empty DB                    || §c[计划] 数据库中无玩家数据！
+Manage FAIL - Unenabled Plugin            || §c[计划] 未启用插件：
+Manage FAIL - Same DB                     || §c[计划] 无法移动至相同的数据库！
+Manage - Clear Success                    || §a[计划] 已成功清除所有数据！
+Manage - Remind Config Change             || §e[计划] 请记住要切换至新数据库并重新载入插件
+Manage - Copy Success                     || §a[计划] 已成功复制所有数据！
+Manage - Process Fail                     || §c[计划] 处理数据时发生错误！
 Manage - Import                           || §f» §2 正在导入数据···
-Manage - Move Success                     || §a[Plan] 已成功移动所有数据！
+Manage - Move Success                     || §a[计划] 已成功移动所有数据！
 Manage - Remove Success                   || §f» §2已成功从数据库 §f${1}§2 中移除数据 §f${0}§2。
 Manage - Start                            || »§7 正在处理数据···
 Manage - Success                          || §f» §2 成功！
