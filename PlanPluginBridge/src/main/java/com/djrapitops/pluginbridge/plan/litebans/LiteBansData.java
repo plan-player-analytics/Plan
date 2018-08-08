@@ -189,7 +189,7 @@ public class LiteBansData extends PluginData implements BanData {
             Map<UUID, String> playerNames = analysisData.getValue(AnalysisKeys.PLAYER_NAMES).orElse(new HashMap<>());
             for (LiteBansDBObj object : objects) {
                 UUID uuid = object.getUuid();
-                String name = playerNames.getOrDefault(uuid, "Unknown to Plan");
+                String name = playerNames.getOrDefault(uuid, uuid.toString());
                 long expiry = object.getExpiry();
                 String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
 
