@@ -133,11 +133,7 @@ public class LiteBansData extends PluginData implements BanData {
     private TableContainer getBanTable() {
         String banned = getWithIcon("Banned", Icon.called("ban"));
         String by = getWithIcon("Banned By", Icon.called("gavel"));
-        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
-        String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
-        String active = getWithIcon("Active", Icon.called("hourglass"));
-
-        TableContainer banTable = new TableContainer(banned, by, reason, date, active);
+        TableContainer banTable = createTableContainer(banned, by);
         banTable.useJqueryDataTables();
         addRows(banTable, db.getBans());
         return banTable;
@@ -146,11 +142,7 @@ public class LiteBansData extends PluginData implements BanData {
     private TableContainer getMuteTable() {
         String muted = getWithIcon("Muted", Icon.called("bell-slash").of(Family.REGULAR));
         String by = getWithIcon("Muted By", Icon.called("gavel"));
-        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
-        String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
-        String active = getWithIcon("Active", Icon.called("hourglass"));
-
-        TableContainer muteTable = new TableContainer(muted, by, reason, date, active);
+        TableContainer muteTable = createTableContainer(muted, by);
         muteTable.useJqueryDataTables();
         addRows(muteTable, db.getMutes());
         return muteTable;
@@ -159,11 +151,7 @@ public class LiteBansData extends PluginData implements BanData {
     private TableContainer getWarningTable() {
         String warned = getWithIcon("Warned", Icon.called("exclamation-triangle"));
         String by = getWithIcon("Warned By", Icon.called("gavel"));
-        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
-        String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
-        String active = getWithIcon("Active", Icon.called("hourglass"));
-
-        TableContainer warnTable = new TableContainer(warned, by, reason, date, active);
+        TableContainer warnTable = createTableContainer(warned, by);
         warnTable.useJqueryDataTables();
         addRows(warnTable, db.getWarnings());
         return warnTable;
@@ -172,14 +160,19 @@ public class LiteBansData extends PluginData implements BanData {
     private TableContainer getKickTable() {
         String kicked = getWithIcon("Kicked", Icon.called("user-times"));
         String by = getWithIcon("Kicked By", Icon.called("gavel"));
-        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
-        String date = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
-        String active = getWithIcon("Active", Icon.called("hourglass"));
-
-        TableContainer kickTable = new TableContainer(kicked, by, reason, date, active);
+        TableContainer kickTable = createTableContainer(kicked, by);
         kickTable.useJqueryDataTables();
         addRows(kickTable, db.getKicks());
         return kickTable;
+    }
+
+    private TableContainer createTableContainer(String who, String by) {
+        String reason = getWithIcon("Reason", Icon.called("balance-scale"));
+        String given = getWithIcon("Given", Icon.called("clock").of(Family.REGULAR));
+        String expiry = getWithIcon("Expires", Icon.called("calendar-times").of(Family.REGULAR));
+        String active = getWithIcon("Active", Icon.called("hourglass"));
+
+        return new TableContainer(who, by, reason, given, expiry, active);
     }
 
     private void addRows(TableContainer table, List<LiteBansDBObj> objects) {
@@ -192,11 +185,14 @@ public class LiteBansData extends PluginData implements BanData {
                 String name = playerNames.getOrDefault(uuid, uuid.toString());
                 long expiry = object.getExpiry();
                 String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
+                long time = object.getTime();
+                String given = time <= 0 ? "Unknown" : FormatUtils.formatTimeStampSecond(time);
 
                 table.addRow(
                         Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
                         Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(object.getBannedBy()), object.getBannedBy()),
                         object.getReason(),
+                        given,
                         expires,
                         object.isActive() ? "Yes" : "No"
                 );

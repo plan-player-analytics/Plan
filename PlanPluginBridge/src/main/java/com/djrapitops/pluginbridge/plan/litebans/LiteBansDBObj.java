@@ -13,13 +13,15 @@ public class LiteBansDBObj {
     private final String bannedBy;
     private final long expiry;
     private final boolean active;
+    private final long time;
 
-    public LiteBansDBObj(UUID uuid, String reason, String bannedBy, long expiry, boolean active) {
+    public LiteBansDBObj(UUID uuid, String reason, String bannedBy, long expiry, boolean active, long time) {
         this.uuid = uuid;
         this.reason = reason;
         this.bannedBy = bannedBy;
         this.expiry = expiry;
         this.active = active;
+        this.time = time;
     }
 
     public UUID getUuid() {
@@ -40,5 +42,9 @@ public class LiteBansDBObj {
 
     public boolean isActive() {
         return active;
+    }
+
+    public long getTime() {
+        return time;
     }
 }
