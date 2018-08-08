@@ -3,6 +3,7 @@ package com.djrapitops.plan.command;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
+import com.djrapitops.plan.command.commands.manage.ManageRawDataCommand;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
@@ -41,6 +42,7 @@ public class PlanBungeeCommand extends TreeCmdNode {
         };
         CommandNode[] manageGroup = {
                 new ManageConDebugCommand(plugin),
+                new ManageRawDataCommand(plugin),
                 new BungeeSetupToggleCommand(plugin),
                 new ReloadCommand(plugin),
                 new DisableCommand(plugin),
