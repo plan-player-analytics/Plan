@@ -1,314 +1,315 @@
 Cmd - Click Me                                  || 点击此处
 Cmd - Link                                      || §7 •§2 链接：§f
-Cmd Disable - Disabled                          || §aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin.
+Cmd Disable - Disabled                          || §a现已禁用计划系统。阁下仍可使用 /planbungee reload 重启插件。
 Cmd FAIL - Invalid Username                     || §c[计划] 此玩家不存在。
-Cmd FAIL - No Feature                           || §eDefine a feature to disable! (currently supports ${0})
+Cmd FAIL - No Feature                           || §e请定义要禁用的功能！（当前支持 ${0}）
 Cmd FAIL - No Permission                        || §c[计划] 阁下没有所需权限。
 Cmd FAIL - Require only one Argument            || §c[计划] 命令需要一个参数。
 Cmd FAIL - Requires Arguments                   || §c[计划] 命令缺少参数。${0}
 Cmd FAIL - Unknown Username                     || §c[计划] 未在数据库中找到此玩家。
-Cmd FAIL - WebUser does not exists              || §cUser does not exists!
-Cmd FAIL - WebUser exists                       || §cUser already exists!
+Cmd FAIL - WebUser does not exists              || §c用户不存在！
+Cmd FAIL - WebUser exists                       || §c用户已存在！
 Cmd Header - Analysis                           || §f»§2 玩家统计 - 统计结果
 Cmd Header - Info                               || §f»§2 玩家统计 - 信息
 Cmd Header - Inspect                            || §f»§2 玩家统计 - 检视结果：
-Cmd Header - Network                            || > §2Network Page
-Cmd Header - Players                            || > §2Players
+Cmd Header - Network                            || > §2网络页面
+Cmd Header - Players                            || > §2玩家
 Cmd Header - Search                             || §f»§2 玩家统计 - 搜索结果：
-Cmd Header - Servers                            || > §2Servers
-Cmd Header - Web Users                          || > §2${0} Web Users
-Cmd Info - Bungee Connection                    ||   §2Connected to Bungee: §f${0}
-Cmd Info - Database                             ||   §2Active Database: §f${0}
-Cmd Info - Reload Complete                      || §aReload Complete
-Cmd Info - Reload Failed                        || §cSomething went wrong during reload of the plugin, a restart is recommended.
-Cmd Info - Update                               ||   §2Update Available: §f${0}
-Cmd Info - Version                              ||   §2Version: §f${0}
-Cmd Notify - No WebUser                         || You might not have a web user, use /plan register <password>
-Cmd Notify - WebUser register                   || Registered new user: '${0}' Perm level: ${1}
-Cmd Qinspect - Activity Index                   ||   §2Activity Index: §f${0} | ${1}
-Cmd Qinspect - Deaths                           ||   §2Deaths: §f${0}
-Cmd Qinspect - Geolocation                      ||   §2Logged in from: §f${0}
-Cmd Qinspect - Last Seen                        ||   §2Last Seen: §f${0}
-Cmd Qinspect - Longest Session                  ||   §2Longest Session: §f${0}
-Cmd Qinspect - Mob Kills                        ||   §2Mob Kills: §f${0}
-Cmd Qinspect - Player Kills                     ||   §2Player Kills: §f${0}
-Cmd Qinspect - Playtime                         ||   §2Playtime: §f${0}
-Cmd Qinspect - Registered                       ||   §2Registered: §f${0}
-Cmd Qinspect - Times Kicked                     ||   §2Times Kicked: §f${0}
-Cmd Setup - Allowed                             || §aSet-up is now Allowed
-Cmd Setup - Bad Request                         || §eConnection succeeded, but Receiving server was not a Bungee server. Use Bungee address instead.
-Cmd Setup - Disallowed                          || §cSet-up is now Forbidden
-Cmd Setup - Forbidden                           || §eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it.
-Cmd Setup - Gateway Error                       || §eConnection succeeded, but Bungee failed to connect to this server (Did current web server restart?). Use /plan m con & /planbungee con to debug.
-Cmd Setup - Generic Fail                        || §eConnection failed: ${0}
-Cmd Setup - Internal Error                      || §eConnection succeeded. ${0}, check possible ErrorLog on receiving server's debug page.
-Cmd Setup - Success                             || §aConnection successful, Plan may restart in a few seconds..
-Cmd Setup - Unauthorized                        || §eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support
-Cmd Setup - Url mistake                         || §cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address.
-Cmd Setup - WebServer not Enabled               || §cWebServer is not enabled on this server! Make sure it enables on boot!
-Cmd SUCCESS - Feature disabled                  || §aDisabled '${0}' temporarily until next plugin reload.
-Cmd SUCCESS - WebUser register                  || §aAdded a new user (${0}) successfully!
-Cmd Update - Cancel Success                     || §aCancel operation performed.
-Cmd Update - Cancelled                          || §cUpdate cancelled.
-Cmd Update - Change log                         || Change Log v${0}:
-Cmd Update - Fail Cacnel                        || §cUpdate failed on a server, cancelling update on all servers..
-Cmd Update - Fail Force Notify                  || §e${0} failed to update, -force specified, continuing update.
-Cmd Update - Fail Not Online                    || §cNot all servers were online or accessible, you can still update available servers using /plan update -u -force
-Cmd Update - Notify Cancel                      || §aYou can cancel the update on servers that haven't rebooted yet with /plan update cancel.
-Cmd Update - Online Check                       || Checking that all servers are online..
-Cmd Update - Scheduled                          || §a${0} scheduled for update.
-Cmd Update - Url mismatch                       || §cVersion download url did not start with ${0} and might not be trusted. You can download this version manually here (Direct download):
-Cmd Web - Permission Levels                     || >\§70: Access all pages\§71: Access '/players' and all player pages\§72: Access player page with the same username as the webuser\§73+: No permissions
+Cmd Header - Servers                            || > §2服务器
+Cmd Header - Web Users                          || > §2${0} 个网页用户
+Cmd Info - Bungee Connection                    ||   §2已连接至 Bungee：§f${0}
+Cmd Info - Database                             ||   §2活跃数据库：§f${0}
+Cmd Info - Reload Complete                      || §a重新载入完毕
+Cmd Info - Reload Failed                        || §c重载插件时发生错误，建议重新启动服务器。
+Cmd Info - Update                               ||   §2更新可用：§f${0}
+Cmd Info - Version                              ||   §2版本：§f${0}
+Cmd Notify - No WebUser                         || 阁下可能还没有网页账户，请输入 /plan register <密码>
+Cmd Notify - WebUser register                   || 已注册新用户：'${0}' 权限级别：${1}
+Cmd Qinspect - Activity Index                   ||   §2活动索引：§f${0} | ${1}
+Cmd Qinspect - Deaths                           ||   §2死亡数：§f${0}
+Cmd Qinspect - Geolocation                      ||   §2从 §f${0} 处登录
+Cmd Qinspect - Last Seen                        ||   §2最后在线：§f${0}
+Cmd Qinspect - Longest Session                  ||   §2最长在线时间：§f${0}
+Cmd Qinspect - Mob Kills                        ||   §2怪物击杀数：§f${0}
+Cmd Qinspect - Player Kills                     ||   §2玩家击杀数：§f${0}
+Cmd Qinspect - Playtime                         ||   §2游玩时间：§f${0}
+Cmd Qinspect - Registered                       ||   §2注册时间：§f${0}
+Cmd Qinspect - Times Kicked                     ||   §2踢出次数：§f${0}
+Cmd Setup - Allowed                             || §a现已允许安装
+Cmd Setup - Bad Request                         || §e连接成功，但接收服务器不是 Bungee 服务器。请使用 Bungee 地址。
+Cmd Setup - Disallowed                          || §c现已禁止安装
+Cmd Setup - Forbidden                           || §e连接成功，但 Bungee 已禁用安装模式 - 请使用 '/planbungee setup' 启用。
+Cmd Setup - Gateway Error                       || §e连接成功，但 Bungee 无法与此服务器建立连接（是否重启了当前网页服务器？）请使用 /plan m con 与 /planbungee con 进行调试。
+Cmd Setup - Generic Fail                        || §e连接失败：${0}
+Cmd Setup - Internal Error                      || §e连接成功。${0}，请检查接收服务器调试页面的错误日志。
+Cmd Setup - Success                             || §a连接成功，计划可能将在几秒内重启···
+Cmd Setup - Unauthorized                        || §e连接成功，但接收服务器并未授权此服务器。请在 Discord 上联系以寻求帮助
+Cmd Setup - Url mistake                         || §c请确保阁下所输入的是完整地址（以 http:// 或 https:// 开头）- 请检查 Bungee 启用日志获取完整地址。
+Cmd Setup - WebServer not Enabled               || §c未在此服务器上启用网页服务器！请确保其在开机时启用！
+Cmd SUCCESS - Feature disabled                  || §a已在下次插件重载前暂时禁用 '${0}'。
+Cmd SUCCESS - WebUser register                  || §a已成功添加新用户（${0}）！
+Cmd Update - Cancel Success                     || §a已完成取消操作。
+Cmd Update - Cancelled                          || §c已取消更新。
+Cmd Update - Change log                         || 更新日志 版本${0}：
+Cmd Update - Fail Cacnel                        || §c某个服务器更新失败，正在取消所有服务器的更新···
+Cmd Update - Fail Force Notify                  || §e${0} 无法更新，但使用了 -force，正在继续更新。
+Cmd Update - Fail Not Online                    || §c并非所有服务器均在线或可访问，阁下仍可通过使用 /plan update -u -force 的方式强制更新。
+Cmd Update - Notify Cancel                      || §a阁下可以使用 /plan update cancel 以取消尚未重启的服务器上的更新。
+Cmd Update - Online Check                       || 正在检查是否所有服务器均在线···
+Cmd Update - Scheduled                          || §a已为 ${0} 计划了更新。
+Cmd Update - Url mismatch                       || §c版本下载网址不以 ${0} 开头故可能不受信任。阁下可手动下载此版本（直接下载）：
+Cmd Web - Permission Levels                     || >\§70：访问所有页面\§71：访问 '/players' 及所有玩家页\§72：访问用户名与网页用户名一致的玩家页\§73+：无权限
 Command Help - /plan analyze                    || 查看服务器分析
-Command Help - /plan dev                        || Development mode command
+Command Help - /plan dev                        || 开发模式命令
 Command Help - /plan help                       || 查看命令列表。
 Command Help - /plan info                       || 查看计划版本
 Command Help - /plan inspect                    || 检视玩家数据
 Command Help - /plan manage                     || 数据库管理命令
 Command Help - /plan manage backup              || 备份数据库至 .db 文件
 Command Help - /plan manage clear               || 从数据库中清空所有数据
-Command Help - /plan manage con                 || Debug Server-Bungee connections
-Command Help - /plan manage disable             || Disable a feature temporarily
+Command Help - /plan manage con                 || 调试服务器至 Bungee 的连接
+Command Help - /plan manage disable             || 暂时禁用功能
 Command Help - /plan manage hotswap             || 热插拔数据库并重启插件
 Command Help - /plan manage import              || 从插件中导入数据
 Command Help - /plan manage move                || 在数据库间移动数据
 Command Help - /plan manage remove              || 从活跃数据库中移除玩家数据
 Command Help - /plan manage restore             || 恢复数据库
-Command Help - /plan manage setup               || Set-up Server-Bungee connection
-Command Help - /plan network                    || View the Network Page
+Command Help - /plan manage setup               || 设置服务器至 Bungee 的连接
+Command Help - /plan network                    || 查看网络页面
 Command Help - /plan players                    || 列出所有已缓存玩家名单
 Command Help - /plan qinspect                   || 在游戏内检视玩家数据
-Command Help - /plan register                   || Register a Web User
+Command Help - /plan register                   || 注册网页用户
 Command Help - /plan reload                     || 重新启动插件（重载配置）
 Command Help - /plan search                     || 搜索玩家
-Command Help - /plan servers                    || List servers in Database
-Command Help - /plan update                     || Get change log link or update plugin
+Command Help - /plan servers                    || 列出数据库中的服务器
+Command Help - /plan update                     || 获取更新日志链接或更新插件
 Command Help - /plan web check                  || 检查网页用户的权限级别。
 Command Help - /plan web delete                 || 删除网页用户
 Command Help - /plan web level                  || 权限级别信息
-Command Help - /plan web list                   || List Web Users
+Command Help - /plan web list                   || 列出网页用户
 Command Help - /plan webuser                    || 管理网页用户
-Command Help - /planbungee con                  || Debug Bungee-Server connections
-Command Help - /planbungee disable              || Disable the plugin temporarily
-Command Help - /planbungee setup                || Toggle set-up mode
-Database - Apply Patch                          || Applying Patch: ${0}..
-Database - Patches Applied                      || All database patches applied successfully.
-Database - Patches Applied Already              || All database patches already applied.
-Database MySQL - Launch Options Error           || Launch Options were faulty, using default (${0})
-Database Notify - Clean                         || Removed data of ${0} players.
-Database Notify - SQLite No WAL                 || SQLite WAL mode not supported on this server version, using default. This may or may not affect performance.
+Command Help - /planbungee con                  || 调试 Bungee 至服务器的连接
+Command Help - /planbungee disable              || 暂时禁用插件
+Command Help - /planbungee setup                || 开关设置功能
+Database - Apply Patch                          || 正在应用更新：${0}···
+Database - Patches Applied                      || 已成功应用所有数据库补丁。
+Database - Patches Applied Already              || 已应用所有数据库补丁。
+Database MySQL - Launch Options Error           || 启动参数出错，正使用默认参数（${0}）
+Database Notify - Clean                         || 移除了 ${0} 位用户的数据。
+Database Notify - SQLite No WAL                 || 此服务器版本不支持 SQLite WAL 模式，正使用默认模式。这可能会影响性能。
 Disable                                         || 已禁用玩家分析。
-Disable - Processing                            || Processing critical unprocessed tasks. (${0})
-Disable - Processing Complete                   || Processing complete.
+Disable - Processing                            || 正在处理未处理的关键任务。（${0}）
+Disable - Processing Complete                   || 处理完毕。
 Disable - WebServer                             || 正在关闭网页服务器···
 Enable                                          || 已启用玩家分析。
 Enable - Database                               || ${0}-已建立数据库连接。
-Enable - Notify Address Confirmation            || Make sure that this address points to THIS Server: ${0}
-Enable - Notify Empty IP                        || IP in server.properties is empty & AlternativeIP is not in use. Incorrect links will be given!
-Enable - Notify Geolocations disabled           || Geolocation gathering is not active. (Data.Geolocations: false)
-Enable - Notify Geolocations Internet Required  || Plan Requires internet access on first run to download GeoLite2 Geolocation database.
-Enable - Notify Webserver disabled              || WebServer was not initialized. (WebServer.DisableWebServer: true)
+Enable - Notify Address Confirmation            || 确保此地址指向此服务器：${0}
+Enable - Notify Empty IP                        || server.properties 中的 IP 为空且未使用替代 IP。这将给出错误地址！
+Enable - Notify Geolocations disabled           || 地理位置收集不活跃。（Data.Geolocations: false）
+Enable - Notify Geolocations Internet Required  || 计划需要在首次运行时访问互联网以下载 GeoLite2 地理位置数据库。
+Enable - Notify Webserver disabled              || 未初始化网页服务器。（WebServer.DisableWebServer: true）
 Enable - WebServer                              || 正在初始化网页服务器···
 Enable FAIL - Database                          || ${0}-连接数据库失败：${1}
-Enable FAIL - Database Patch                    || Database Patching failed, plugin has to be disabled. Please report this issue
-Enable FAIL - GeoDB Write                       || Something went wrong saving the downloaded GeoLite2 Geolocation database
-Enable FAIL - WebServer (Bungee)                || WebServer did not initialize!
+Enable FAIL - Database Patch                    || 数据库补丁失败，插件必须被禁用。请汇报此问题
+Enable FAIL - GeoDB Write                       || 保存已下载的 GeoLite2 地理位置数据库时发生问题
+Enable FAIL - WebServer (Bungee)                || 网页服务器未初始化
 Enable FAIL - Wrong Database Type               || ${0} 此数据类型不存在。
-HTML - ACTIVITY_INDEX                           || Activity Index
-HTML - ALL                                      || ALL
-HTML - ALL_TIME_PEAK                            || All Time Peak
-HTML - AVERAGE_PING                             || Average Ping
-HTML - AVG                                      || AVG
-HTML - BANNED                                   || Banned
-HTML - BEST_PING                                || Best Ping
-HTML - CALENDAR                                 || CALENDAR
-HTML - CALENDAR_TEXT                            ||  Calendar
-HTML - CHUNKS                                   || Chunks
-HTML - COMMAND                                  ||  Command
-HTML - COMMNAND_USAGE                           || Command Usage
-HTML - CONNECTION_INFORMATION                   || Connection Information
-HTML - COUNTRY                                  || Country
-HTML - CURRENT_PLAYERBASE                       || Current Playerbase
-HTML - DEATHS                                   || Deaths
-HTML - ENTITIES                                 || Entities
-HTML - ERROR                                    || Authentication failed due to error
-HTML - FAVORITE_SERVER                          || Favorite Server
-HTML - GEOLOCATION                              || Geolocation
-HTML - GEOLOCATION_TEXT                         || Geolocation
-HTML - HEALTH_ESTIMATE                          || Health Estimate
-HTML - INDEX_ACTIVE                             || Active
-HTML - INDEX_INACTIVE                           || Inactive
-HTML - INDEX_IRREGULAR                          || Irregular
-HTML - INDEX_REGULAR                            || Regular
-HTML - INDEX_VERY_ACTIVE                        || Very Active
-HTML - IP_ADDRESS                               || IP-address
-HTML - KILLED                                   || Killed
-HTML - KILLED_BY                                || Killed by
-HTML - LAST_24_HOURS                            || LAST 24 HOURS
-HTML - LAST_30_DAYS                             || LAST 30 DAYS
-HTML - LAST_30_DAYS_TEXT                        || Last 30 Days
-HTML - LAST_7_DAYS                              || LAST 7 DAYS
-HTML - LAST_CONNECTED                           || Last Connected
-HTML - LAST_PEAK                                || Last Peak
-HTML - LAST_SEEN                                || LAST SEEN
-HTML - LAST_SEEN_TEXT                           || Last Seen
-HTML - LOADED_CHUNKS                            || Loaded Chunks
-HTML - LOADED_ENTITIES                          || Loaded Entities
-HTML - LOCAL_MACHINE                            || Local Machine
-HTML - LONGEST                                  || Longest
-HTML - LOW_TPS_SPIKES                           || Low TPS Spikes
-HTML - MOB_CAUSED_DEATHS                        || Mob caused Deaths
-HTML - MOB_KDR                                  || Mob KDR
-HTML - MOB_KILLS                                || Mob Kills
-HTML - MOST_RECENT_SESSIONS                     || Most Recent Sessions
-HTML - NAME                                     ||  Name
-HTML - NAV_COMMAND_USAGE                        || Command Usage
-HTML - NAV_GEOLOCATIONS                         || Geolocations
-HTML - NAV_INFORMATION                          || Information
-HTML - NAV_NETWORK_PLAYERS                      || Network Players
-HTML - NAV_ONLINE_ACTIVITY                      || Online Activity
-HTML - NAV_OVERVIEW                             || Overview
-HTML - NAV_PERFORMANCE                          || Performance
-HTML - NAV_PLAYERS                              || Players
-HTML - NAV_PLUGINS                              || Plugins
-HTML - NAV_SESSIONS                             || Sessions
-HTML - NAV_SEVER_HEALTH                         || Server Health
-HTML - NETWORK                                  || Network
-HTML - NETWORK_INFORMATION                      || NETWORK INFORMATION
-HTML - NEW                                      || NEW
-HTML - NEW_CALENDAR                             || New:
-HTML - NEW_PLAYERS_TEXT                         || New Players
-HTML - NEW_RETENTION                            || New Player Retention
-HTML - NEW_TEXT                                 || New
-HTML - NICKNAME                                 || Nickname
-HTML - NO_KILLS                                 || No Kills
-HTML - NO_PLAYER_CAUSED_DEATHS                  || No Player caused Deaths
-HTML - OFFLINE                                  ||  Offline
-HTML - ONLINE                                   ||  Online
-HTML - ONLINE_ACTIVITY                          || ONLINE ACTIVITY
-HTML - OPERATOR                                 || Operator
-HTML - OVERVIEW                                 || OVERVIEW
-HTML - PER_DAY                                  || / Day
-HTML - PLAYER_CAUSED_DEATHS                     || Player caused Deaths
-HTML - PLAYER_KILLS                             || Player Kills
-HTML - PLAYER_LIST                              || Player List
-HTML - PLAYERBASE_DEVELOPMENT                   || Playerbase Development
-HTML - PLAYERS                                  || PLAYERS
-HTML - PLAYERS_ONLINE                           || PLAYERS ONLINE
-HTML - PLAYERS_ONLINE_TEXT                      || Players Online
-HTML - PLAYERS_TEXT                             || Players
-HTML - PLAYTIME                                 || Playtime
-HTML - PLEASE_WAIT                              || Please wait...
-HTML - PREDICETED_RETENTION                     || Predicted Retention
-HTML - PUNCH_CARD                               || Punchcard
-HTML - PUNCHCARD                                || PUNCHCARD
-HTML - RECENT_LOGINS                            || RECENT LOGINS
-HTML - REGISTERED                               || REGISTERED
-HTML - REGISTERED_TEXT                          || Registered
-HTML - REGULAR                                  || REGULAR
-HTML - SEEN_NICKNAMES                           || Seen Nicknames
-HTML - SERVER                                   || Server
-HTML - SERVER_ANALYSIS                          || Server Analysis
-HTML - SERVER_HEALTH_ESTIMATE                   || Server Health Estimate
-HTML - SERVER_INFORMATION                       || SERVER INFORMATION
-HTML - SERVER_PREFERENCE                        || Server Preference
-HTML - SERVERS                                  || Servers
-HTML - SESSION                                  || Session
-HTML - SESSION_ENDED                            || Session Ended
-HTML - SESSION_LENGTH                           || Session Lenght
-HTML - SESSION_MEDIAN                           || Session Median
-HTML - SESSIONS                                 || Sessions
-HTML - TIME                                     ||  Time
-HTML - TIMES_KICKED                             || Times Kicked
-HTML - TIMES_USED                               || Times Used
-HTML - TOTAL_ACTIVE_TEXT                        || Total Active
-HTML - TOTAL_AFK                                || Total AFK
-HTML - TOTAL_PLAYERS                            || Total Players
-HTML - TOTAL_PLAYTIME                           || Total Playtime
-HTML - UNIQUE                                   || UNIQUE
-HTML - UNIQUE_CALENDAR                          || Unique:
-HTML - UNIQUE_PLAYERS                           || UNIQUE PLAYERS
-HTML - UNIQUE_PLAYERS_TEXT                      || Unique Players
-HTML - UNIQUE_TEXT                              || Unique
-HTML - USAGE                                    ||  Usage
-HTML - USED_COMMANDS                            || Used Commands
-HTML - USER_AND_PASS_NOT_SPECIFIED              || User and Password not specified
-HTML - USER_DOES_NOT_EXIST                      || User does not exist
-HTML - USER_INFORMATION                         || USER INFORMATION
-HTML - USER_PASS_MISMATCH                       || User and Password did not match
-HTML - WITH                                     || <th>With
-HTML - WORLD                                    ||  World
-HTML - WORLD_LOAD                               || WORLD LOAD
-HTML - WORLD_PLAYTIME                           || World Playtime
-HTML - WORST_PING                               || Worst Ping
-HTML ERRORS - ACCESS_DENIED_403                 || Access Denied
-HTML ERRORS - ANALYSIS_REFRESH                  || Analysis is being refreshed..
-HTML ERRORS - ANALYSIS_REFRESH_LONG             || Analysis is being run, refresh the page after a few seconds..
-HTML ERRORS - AUTH_FAIL_TIPS_401                || - Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register.
-HTML ERRORS - AUTHENTICATION_FAIlED_401         || Authentication Failed.
-HTML ERRORS - FORBIDDEN_403                     || Forbidden
-HTML ERRORS - NO_SERVERS_404                    || No Servers online to perform the request.
-HTML ERRORS - NOT_FOUND_404                     || Not Found
-HTML ERRORS - NOT_PLAYED_404                    || Player has not played on this server.
-HTML ERRORS - PAGE_NOT_FOUND_404                || Page does not exist.
-HTML ERRORS - UNAUTHORIZED_401                  || Unauthorized
-HTML ERRORS - UNKNOWN_PAGE_404                  || Make sure you're accessing a link given by a command, Examples:</p><p>/player/PlayerName<br>/server/ServerName</p>
-HTML ERRORS - UUID_404                          || Player UUID was not found in the database.
+HTML - ACTIVITY_INDEX                           || 活动索引
+HTML - ALL                                      || 全部
+HTML - ALL_TIME_PEAK                            || 所有时间峰值
+HTML - AVERAGE_PING                             || 平均延迟
+HTML - AVG                                      || 平均
+HTML - BANNED                                   || 已封禁
+HTML - BEST_PING                                || 最低延迟
+HTML - CALENDAR                                 || 日历
+HTML - CALENDAR_TEXT                            ||  日历
+HTML - CHUNKS                                   || 区块
+HTML - COMMAND                                  ||  命令
+HTML - COMMNAND_USAGE                           || 命令用法
+HTML - CONNECTION_INFORMATION                   || 连接信息
+HTML - COUNTRY                                  || 国家
+HTML - CURRENT_PLAYERBASE                       || 当前玩家
+HTML - DEATHS                                   || 死亡数
+HTML - ENTITIES                                 || 实体数
+HTML - ERROR                                    || 认证时发生错误
+HTML - FAVORITE_SERVER                          || 喜爱的服务器
+HTML - GEOLOCATION                              || 地理位置
+HTML - GEOLOCATION_TEXT                         || 地理位置
+HTML - HEALTH_ESTIMATE                          || 预计健康度
+HTML - INDEX_ACTIVE                             || 活跃
+HTML - INDEX_INACTIVE                           || 不活跃
+HTML - INDEX_IRREGULAR                          || 偶尔
+HTML - INDEX_REGULAR                            || 经常
+HTML - INDEX_VERY_ACTIVE                        || 非常活跃
+HTML - IP_ADDRESS                               || IP 地址
+HTML - KILLED                                   || 被击杀
+HTML - KILLED_BY                                || 击杀者
+HTML - LAST_24_HOURS                            || 过去 24 小时
+HTML - LAST_30_DAYS                             || 过去 30 天
+HTML - LAST_30_DAYS_TEXT                        || 过去 30 天
+HTML - LAST_7_DAYS                              || 过去 7 天
+HTML - LAST_CONNECTED                           || 最后连接
+HTML - LAST_PEAK                                || 上次峰值
+HTML - LAST_SEEN                                || 最后在线
+HTML - LAST_SEEN_TEXT                           || 最后在线
+HTML - LOADED_CHUNKS                            || 已加载的区块
+HTML - LOADED_ENTITIES                          || 已加载的实体
+HTML - LOCAL_MACHINE                            || 本机
+HTML - LONGEST                                  || 最长
+HTML - LOW_TPS_SPIKES                           || 最低 TPS 值
+HTML - MOB_CAUSED_DEATHS                        || 被怪物击杀数
+HTML - MOB_KDR                                  || 怪物击杀比
+HTML - MOB_KILLS                                || 怪物击杀数
+HTML - MOST_RECENT_SESSIONS                     || 最近会话
+HTML - NAME                                     ||  名称
+HTML - NAV_COMMAND_USAGE                        || 指令用法
+HTML - NAV_GEOLOCATIONS                         || 地理位置
+HTML - NAV_INFORMATION                          || 信息
+HTML - NAV_NETWORK_PLAYERS                      || 网络玩家
+HTML - NAV_ONLINE_ACTIVITY                      || 在线活动
+HTML - NAV_OVERVIEW                             || 预览
+HTML - NAV_PERFORMANCE                          || 性能
+HTML - NAV_PLAYERS                              || 玩家
+HTML - NAV_PLUGINS                              || 插件
+HTML - NAV_SESSIONS                             || 会话
+HTML - NAV_SEVER_HEALTH                         || 服务器健康度
+HTML - NETWORK                                  || 网络
+HTML - NETWORK_INFORMATION                      || 网络信息
+HTML - NEW                                      || 新建
+HTML - NEW_CALENDAR                             || 新：
+HTML - NEW_PLAYERS_TEXT                         || 新玩家
+HTML - NEW_RETENTION                            || 新玩家保留
+HTML - NEW_TEXT                                 || 新建
+HTML - NICKNAME                                 || 昵称
+HTML - NO_KILLS                                 || 无击杀数
+HTML - NO_PLAYER_CAUSED_DEATHS                  || 无被玩家击杀数
+HTML - OFFLINE                                  ||  离线
+HTML - ONLINE                                   ||  在线
+HTML - ONLINE_ACTIVITY                          || 在线活动
+HTML - OPERATOR                                 || 操作员
+HTML - OVERVIEW                                 || 预览
+HTML - PER_DAY                                  || / 天
+HTML - PLAYER_CAUSED_DEATHS                     || 被玩家击杀数
+HTML - PLAYER_KILLS                             || 玩家击杀数
+HTML - PLAYER_LIST                              || 玩家列表
+HTML - PLAYERBASE_DEVELOPMENT                   || 玩家发展
+HTML - PLAYERS                                  || 玩家
+HTML - PLAYERS_ONLINE                           || 在线玩家
+HTML - PLAYERS_ONLINE_TEXT                      || 在线玩家
+HTML - PLAYERS_TEXT                             || 玩家
+HTML - PLAYTIME                                 || 游玩时间
+HTML - PLEASE_WAIT                              || 请稍候···
+HTML - PREDICETED_RETENTION                     || 预计保留
+HTML - PUNCH_CARD                               || 打卡签到
+HTML - PUNCHCARD                                || 打卡签到
+HTML - RECENT_LOGINS                            || 近期登陆
+HTML - REGISTERED                               || 已注册
+HTML - REGISTERED_TEXT                          || 已注册
+HTML - REGULAR                                  || 经常
+HTML - SEEN_NICKNAMES                           || 可见昵称
+HTML - SERVER                                   || 服务器
+HTML - SERVER_ANALYSIS                          || 服务器分析
+HTML - SERVER_HEALTH_ESTIMATE                   || 服务器健康估计
+HTML - SERVER_INFORMATION                       || 服务器信息
+HTML - SERVER_PREFERENCE                        || 服务器偏好设置
+HTML - SERVERS                                  || 服务器
+HTML - SESSION                                  || 会话
+HTML - SESSION_ENDED                            || 会话已结束
+HTML - SESSION_LENGTH                           || 会话长度
+HTML - SESSION_MEDIAN                           || 会话中位数
+HTML - SESSIONS                                 || 会话
+# Not sure if this is the time or count of numbers.
+HTML - TIME                                     ||  次数
+HTML - TIMES_KICKED                             || 被踢次数
+HTML - TIMES_USED                               || 使用次数
+HTML - TOTAL_ACTIVE_TEXT                        || 总活跃玩家
+HTML - TOTAL_AFK                                || 总挂机玩家
+HTML - TOTAL_PLAYERS                            || 总玩家
+HTML - TOTAL_PLAYTIME                           || 总在线时长
+HTML - UNIQUE                                   || 唯一
+HTML - UNIQUE_CALENDAR                          || 唯一:
+HTML - UNIQUE_PLAYERS                           || 唯一玩家
+HTML - UNIQUE_PLAYERS_TEXT                      || 唯一玩家
+HTML - UNIQUE_TEXT                              || 唯一
+HTML - USAGE                                    ||  用法
+HTML - USED_COMMANDS                            || 使用的命令
+HTML - USER_AND_PASS_NOT_SPECIFIED              || 未指定用户名与密码
+HTML - USER_DOES_NOT_EXIST                      || 用户不存在
+HTML - USER_INFORMATION                         || 用户信息
+HTML - USER_PASS_MISMATCH                       || 用户名与密码不匹配
+HTML - WITH                                     || <th> 与
+HTML - WORLD                                    ||  世界
+HTML - WORLD_LOAD                               || 世界载入
+HTML - WORLD_PLAYTIME                           || 世界游玩时间
+HTML - WORST_PING                               || 最高延迟
+HTML ERRORS - ACCESS_DENIED_403                 || 拒绝访问
+HTML ERRORS - ANALYSIS_REFRESH                  || 正在刷新分析···
+HTML ERRORS - ANALYSIS_REFRESH_LONG             || 正在执行分析，请在几秒后刷新页面···
+HTML ERRORS - AUTH_FAIL_TIPS_401                || - 确保阁下已使用 <b>/plan register</b> 注册用户<br>- 检查用户名与密码是否正确<br>- 用户名与密码区分大小写<br><br>若阁下忘记了密码，请让工作人员删除阁下的旧密码并重新注册。
+HTML ERRORS - AUTHENTICATION_FAIlED_401         || 认证失败。
+HTML ERRORS - FORBIDDEN_403                     || 禁止访问
+HTML ERRORS - NO_SERVERS_404                    || 无可执行此请求的在线服务器。
+HTML ERRORS - NOT_FOUND_404                     || 未找到
+HTML ERRORS - NOT_PLAYED_404                    || 玩家从未在此服务器上游玩过。
+HTML ERRORS - PAGE_NOT_FOUND_404                || 页面不存在。
+HTML ERRORS - UNAUTHORIZED_401                  || 未认证
+HTML ERRORS - UNKNOWN_PAGE_404                  || 请确保阁下正通过命令所给出的链接访问，示例：</p><p>/player/玩家名<br>/server/服务器名</p>
+HTML ERRORS - UUID_404                          || 未在数据库中找到玩家的 UUID。
 In Depth Help - /plan ?                         || §2/plan - 主命令\§f  用于访问所有子命令及帮助\§7  /plan - 列出子命令\§7  /plan <子命令> ? - 详细帮助
 In Depth Help - /plan analyze ?                 || §2分析命令\§f  用于刷新分析缓存及访问结果页面\§7  /plan status 可用于在网页在线时检查分析状态fen.\§7  别名：analyze, analyse, analysis, a
 In Depth Help - /plan inspect ?                 || §2检视命令\§f  用于获取用户检视页链接。\§7 个人检视页可通过输入 /plan inspect 访问\§7  别名：/plan <名称>
 In Depth Help - /plan manage ?                  || §2管理命令\§f  用于管理插件数据库。\§7  别名：/plan m\§7  /plan m - Auflistung der Unterbefehle\§7  /plan m <子命令> ? - 详细帮助
-In Depth Help - /plan manage backup ?           || > §2Backup Subcommand\  Creates a new SQLite database (.db file) with contents of currently active database in the Plan plugin folder.
+In Depth Help - /plan manage backup ?           || > §2备份命令\  用于建立新 SQLite 数据库（.db 文件）并包含当前在计划插件文件夹中所有的活跃数据库内容。
 In Depth Help - /plan manage clear ?            || §2管理清除命令\§f  用于清除活跃数据库中的所有数据。\§7  插件在清理完毕后应被重载。\§7  别名：/plan pl
-In Depth Help - /plan manage con ?              || > §2Connection Debug Subcommand\  Used to debug connections in the network.\  Sends a request to each server in the database.
-In Depth Help - /plan manage disable ?          || > §2Disable Subcommand\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
+In Depth Help - /plan manage con ?              || > §2调试连接命令\  用于调试网络间的连接。\  向数据库中的每个服务器发送请求。
+In Depth Help - /plan manage disable ?          || > §2禁用命令\  用于在下次重新载入之前禁用插件的部分特性。\  接受的参数：\    §2kickcount §f禁用在关闭服务器时 /kickall 的踢出计数。
 In Depth Help - /plan manage import ?           || §2管理导入命令\§f  用于从其它来源导入数据\§7  在导入过程中将禁用数据分析。
-In Depth Help - /plan manage move ?             || > §2Move Subcommand\  Move data from SQLite to MySQL or other way around.\  Target database is cleared before transfer.
+In Depth Help - /plan manage move ?             || > §2移动指令\  将数据从 SQLite 移动至 MySQL，反之亦然。\  目标数据库将在转移前被清除。
 In Depth Help - /plan manage remove ?           || §2管理移除命令\§f  用于从活跃数据库中移除用户数据。
-In Depth Help - /plan manage restore ?          || > §2Restore Subcommand\  Restore a previous backup SQLite database (.db file)\  You can also restore database.db from another server to MySQL.\  Target database is cleared before transfer.
-In Depth Help - /plan manage setup ?            || > §2Setup Subcommand\  Set-up a connection between Bungee and this server for network functionality.\  BungeeAddress can be found in the enable log on console when Plan enables on Bungee.
-In Depth Help - /plan network ?                 || > §2Network Command\  Displays link to the network page.\  If not on a network, this page displays the server page.
-In Depth Help - /plan players ?                 || > §2Players Command\  Displays link to the players page.
+In Depth Help - /plan manage restore ?          || > §2恢复命令\  从先前备份的 SQLite 数据库中恢复数据（.db 文件）\  阁下也可以从其他服务器中恢复 database.db 到 MySQL。\  目标数据库将在传输前被清除。
+In Depth Help - /plan manage setup ?            || > §2安装命令\  设置 Bungee 与此服务器之间的网络连接。\  Bungee 地址可在计划于 Bungee 上启动时的控制台日志中找到。
+In Depth Help - /plan network ?                 || > §2网络命令\  显示到网络页的链接。\  若不在群组网络上，此页面将显示为服务器页面。
+In Depth Help - /plan players ?                 || > §2玩家命令\  显示到玩家页的链接。
 In Depth Help - /plan qinspect ?                || §2快速检视命令\§f  用于获取游戏内关于检视的信息。\§7  相比检视网页有着更少的信息。\§7  别名：/plan qi
-In Depth Help - /plan reload ?                  || > §2Reload Command\  Restarts the plugin using onDisable and onEnable.\  §bDoes not support swapping jar on the fly
+In Depth Help - /plan reload ?                  || > §2重载命令\  使用 onDisable 与 onEnable 重新载入插件。\  §b不支持运行时热切换插件
 In Depth Help - /plan search ?                  || §2搜索命令\§f  用于获取匹配特定参数的玩家名列表。\§7  示例：/plan search 123 - 搜索名称中包含 123 的所有玩家。
-In Depth Help - /plan servers ?                 || > §2Servers Command\  Displays list of Plan servers in the Database.\  Can be used to debug issues with database registration on a network.
-In Depth Help - /plan update ?                  || > §2Update Command\  Used to update the plugin on the next shutdown\  /plan update - Changelog link\  /plan update -u - Schedule update to happen on all network servers that are online, next time they reboot.\  /plan update cancel - Cancel scheduled update on servers that haven't rebooted yet.
-In Depth Help - /plan web ?                     || < §2Web User Manage Command.\  §2/plan web §fList subcommands\  §2/plan web <subcommand> ? §fIn Depth help
-In Depth Help - /plan web register ?            || > §2Register Subcommand\  Registers a new Web User.\  Registering a user for another player requires plan.webmanage permission.\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt.
-In Depth Help - /planbungee disable ?           || > §2Disable Command\  Runs onDisable on PlanBungee.\  Plugin can be enabled with /planbungee reload afterwards.\  §bDoes not support swapping jar on the fly
-In Depth Help - /planbungee setup ?             || > §2Set-up toggle Command\  Toggles set-up mode on Bungee.\  Safeguard against unauthorized MySQL snooping with another server.
+In Depth Help - /plan servers ?                 || > §2服务器命令\  显示数据库中的计划服务器列表。\  可用于调试在网络上数据库注册的问题。
+In Depth Help - /plan update ?                  || > §2更新命令\  用于在下次关闭服务器时更新插件\  /plan update - 更新日志链接\  /plan update -u - 在所有在线的网络服务器上预定在下次重新启动时更新。\  /plan update cancel - 取消尚未重启的服务器上的更新。
+In Depth Help - /plan web ?                     || < §2网页用户管理命令。\  §2/plan web §f列出子命令\  §2/plan web <子命令> ? §f详细帮助
+In Depth Help - /plan web register ?            || > §2注册命令\  注册一位新的网页用户。\  为其他用户注册需要 plan.webmanage 权限。\  密码通过使用随机密码盐的 PBKDF2 哈希方法加密（重复 64000 次 SHA1）。
+In Depth Help - /planbungee disable ?           || > §2禁用命令\  在 PlanBungee 上运行 onDisable。\  插件之后需要运行 /planbungee reload 以重新启用。\  §b不支持运行时热切换插件
+In Depth Help - /planbungee setup ?             || > §2设置开关命令\  开关 Bungee 上的安装功能。\  用来防止与其他服务器之间未授权的 MySQL 监听。
 Manage - Confirm Overwrite                      || 数据库 ${0} 中的数据将被覆盖！
 Manage - Confirm Removal                        || 数据库 ${0} 中的数据将被移除！
 Manage - Fail                                   || > §c[计划] 处理数据时发生错误！ ${0}
 Manage - Fail File not found                    || > §c[计划] 备份文件不存在！ ${0}
-Manage - Fail Incorrect Database                || > §c'${0}' is not a supported database.
-Manage - Fail No Importer                       || §eImporter '${0}' doesn't exist
+Manage - Fail Incorrect Database                || > §c'${0}' 不是一个支持的数据库。
+Manage - Fail No Importer                       || §e导入器 '${0}' 不存在
 Manage - Fail Same Database                     || > §c[计划] 无法移动至相同的数据库！
 Manage - Fail, Confirmation                     || > §c[计划] 请添加 -a 以确认执行！${0}
-Manage - Fail, Connection Exception             || §eFail reason: 
-Manage - Fail, No Servers                       || §cNo Servers found in the database.
-Manage - Fail, Old version                      || §eFail reason: Older Plan version on receiving server
-Manage - Fail, Unauthorized                     || §eFail reason: Unauthorized. Server might be using different database.
-Manage - Fail, Unexpected Exception             || §eOdd Exception: ${0}
-Manage - List Importers                         || Importers: 
-Manage - Notify External Url                    || §eNon-local address, check that port is open
-Manage - Remind HotSwap                         || §e[计划] 请记住要切换至新数据库并重新载入插件 (/plan m hotswap ${0})
+Manage - Fail, Connection Exception             || §e失败原因：
+Manage - Fail, No Servers                       || §c未在数据库中找到服务器。
+Manage - Fail, Old version                      || §e失败原因：接收服务器正运行计划的老版本。
+Manage - Fail, Unauthorized                     || §e失败原因：未授权。服务器可能使用不同的数据库。
+Manage - Fail, Unexpected Exception             || §e异常例外：${0}
+Manage - List Importers                         || 导入器： 
+Manage - Notify External Url                    || §e非本地地址，请检查端口是否开放
+Manage - Remind HotSwap                         || §e[计划] 请记住要切换至新数据库并重新载入插件（/plan m hotswap ${0}）
 Manage - Start                                  || »§7 正在处理数据···
 Manage - Success                                || §f» §2 成功！
-Negative                                        || No
-Positive                                        || Yes
-Unknown                                         || Unknown
-Version - DEV                                   ||  This is a DEV release.
-Version - Latest                                || You're using the latest version.
-Version - New                                   || New Release (${0}) is available ${1}
-Version - New (old)                             || New Version is available at ${0}
-Version FAIL - Read info (old)                  || Failed to check newest version number
-Version FAIL - Read versions.txt                || Version information could not be loaded from Github/versions.txt
-Web User Listing                                ||   §2${0} §7: §f${1}
-WebServer - Notify HTTP                         || WebServer: No Certificate -> Using HTTP-server for Visualization.
-WebServer - Notify HTTP User Auth               || WebServer: User Authorization Disabled! (Not secure over HTTP)
-WebServer - Notify no Cert file                 || WebServer: Certificate KeyStore File not Found: ${0}
-WebServer FAIL - Port Bind                      || WebServer was not initialized successfully. Is the port (${0}) in use?
-WebServer FAIL - SSL Context                    || WebServer: SSL Context Initialization Failed.
-WebServer FAIL - Store Load                     || WebServer: SSL Certificate loading Failed.
+Negative                                        || 否
+Positive                                        || 是
+Unknown                                         || 未知
+Version - DEV                                   ||  这是开发者版本。
+Version - Latest                                || 阁下正使用最新版本。
+Version - New                                   || 新版本（${0}）可用 ${1}
+Version - New (old)                             || 新版本在 ${0} 可用
+Version FAIL - Read info (old)                  || 无法检查最新版本号
+Version FAIL - Read versions.txt                || 无法从 Github/versions.txt 处载入版本信息
+Web User Listing                                ||   §2${0} §7：§f${1}
+WebServer - Notify HTTP                         || 网页服务器：无证书 -> 正使用 HTTP 服务器提供可视化效果。
+WebServer - Notify HTTP User Auth               || 网页服务器：已禁用用户认证！（HTTP 方式不安全）
+WebServer - Notify no Cert file                 || 网页服务器：未找到证书密钥存储文件：${0}
+WebServer FAIL - Port Bind                      || 未成功初始化网页服务器。端口（${0}）是否被占用？
+WebServer FAIL - SSL Context                    || 网页服务器：SSL 环境初始化失败。
+WebServer FAIL - Store Load                     || 网页服务器：SSL 证书载入失败。
