@@ -123,7 +123,7 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
     protected int getEntityCount() {
         int sum = 0;
         for (World world : plugin.getServer().getWorlds()) {
-            sum += world.getEntityCount();
+            sum += world.getEntities().size();
         }
         return sum;
     }
