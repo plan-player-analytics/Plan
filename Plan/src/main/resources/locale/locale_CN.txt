@@ -1,0 +1,118 @@
+# Translated by 佛壁灯 (f0rb1d) on 2018-8-8 06:00 UTC
+Analysis - Third Party                    || Analysis | 正在分析额外（第三方）数据源。
+Analysis FAIL - Fetch Exception           || Analysis | 分析无法获取数据，发生错误。
+Analysis FAIL - No Data                   || Analyse | 分析失败，数据库中无数据。
+Analysis FAIL - No Players                || Analyse | 分析失败，无已知玩家。
+Analysis - Fetch Phase                    || Analyse | 正在获取数据···
+Analysis - Fetch Phase Start              || Analyse | 正在检查可用玩家···
+Analysis - Complete                       || Analyse | 分析完成。（花费时间 ${0} 毫秒） ${1}
+Analysis - Begin Analysis                 || Analyse | 已获取数据（${0} 名玩家，花费时间 ${1} 毫秒），正在开始分析数据···
+Analysis - Start                          || Analyse | 正在开始分析用户数据···
+>Constant - CMD Footer                    || §f»
+>Constant - List Ball                     || §7 •§2
+Cmd FAIL - No Data View                   || §e[Plan] 无可预览数据的可用方法。
+Cmd FAIL - No Permission                  || §c[Plan] 阁下没有所需权限。
+Cmd FAIL - Requires Arguments             || §c[Plan] 命令缺少参数。${0}
+Cmd FAIL - Require only one Argument      || §c[Plan] 命令需要一个参数。
+Cmd FAIL - Timeout                        || §c[Plan] ${0} 命令超时！请查看 '/plan status' 或控制台。
+Cmd FAIL - Unknown Username               || §c[Plan] 未在数据库中找到此玩家。
+Cmd FAIL - Unseen Username                || §c[Plan] 此玩家尚未在此服务器游玩过。
+Cmd FAIL - Invalid Username               || §c[Plan] 此玩家不存在。
+Cmd Header - Analysis                     || §f»§2 玩家统计 - 统计结果
+Cmd Header - Info                         || §f»§2 玩家统计 - 信息
+Cmd Header - Inspect                      || §f»§2 玩家统计 - 检视结果：
+Cmd Header - Search                       || §f»§2 玩家统计 - 搜索结果：
+In Depth Help - /plan analyze ?           || §2分析命令\§f  用于刷新分析缓存及访问结果页面\§7  /plan status 可用于在网页在线时检查分析状态fen.\§7  别名：analyze, analyse, analysis, a
+In Depth Help - /plan inspect ?           || §2检视命令\§f  用于获取用户检视页链接。\§7 个人检视页可通过输入 /plan inspect 访问\§7  别名：/plan <名称>
+In Depth Help - /plan list ?              || §2列表命令\§f  用于获取玩家页链接。\§7  玩家页包含前往所有已缓存监视页面的链接。\§7  别名：/plan pl
+In Depth Help - /plan manage ?            || §2管理命令\§f  用于管理插件数据库。\§7  别名：/plan m\§7  /plan m - Auflistung der Unterbefehle\§7  /plan m <子命令> ? - 详细帮助
+In Depth Help - /plan manage clear ?      || §2管理清除命令\§f  用于清除活跃数据库中的所有数据。\§7  插件在清理完毕后应被重载。\§7  别名：/plan pl
+In Depth Help - /plan manage dump ?       || §2管理转储命令\§f  用于为漏洞汇报导出重要数据至Hastbin。
+In Depth Help - /plan manage hotswap ?    || §2管理热插拔命令\§f  用于在运行过程中切换数据库。\§7  在连接失败时请勿切换数据库
+In Depth Help - /plan manage import ?     || §2管理导入命令\§f  用于从其它来源导入数据\§7  在导入过程中将禁用数据分析。
+In Depth Help - /plan manage remove ?     || §2管理移除命令\§f  用于从活跃数据库中移除用户数据。
+In Depth Help - /plan ?                   || §2/plan - 主命令\§f  用于访问所有子命令及帮助\§7  /plan - 列出子命令\§7  /plan <子命令> ? - 详细帮助
+In Depth Help - /plan qanalyze ?          || §2快速分析命令\§f  用于获取游戏内关于分析的信息。\§7  相比分析网页有着更少的信息。\§7  别名：qanalyze, ganalyse, qanalysis, qa
+In Depth Help - /plan qinspect ?          || §2快速检视命令\§f  用于获取游戏内关于检视的信息。\§7  相比检视网页有着更少的信息。\§7  别名：/plan qi
+In Depth Help - /plan search ?            || §2搜索命令\§f  用于获取匹配特定参数的玩家名列表。\§7  示例：/plan search 123 - 搜索名称中包含 123 的所有玩家。
+In Depth Help - /plan webuser ?           || §2网页用户管理命令\§f  用于管理插件的网页用户\§7  用户的权限级别为：\§f   0 - 可访问所有页面\§f   1 - 可访问 /players 及所有检视页面\§f   2 - 可访问自己的检视页面\§7  别名：/plan web
+In Depth Help - /plan webuser register ?  || §2网页注册命令\§f  用于为网页服务器注册新用户。\§7  为另一名玩家注册账户需要权限 plan.webmanage 。\§7  密码通过使用随机密码加盐的 PBKDF2 方式（重复 64000 次 SHA1）的方式加密。
+Analysis NOTIFY - Temporary Disable       || §e分析由于任务繁重而被暂时禁用，请使用 /plan status 查看详情。
+Cmd - Click Me                            || 点击此处
+Cmd - Fetch Data                          || §f»§2 正在获取数据至缓存···	
+Cmd - Link                                || §7 •§2 链接：§f
+Cmd - No Results                          || §7 •§2 搜索 §7${0}§2 未找到结果。
+Cmd - Reload Success                      || §a[Plan] 重新载入完毕。
+Cmd - Results                             || §7 匹配玩家：§f
+Cmd - Searching                           || §f»§2正在搜索···
+Cmd - Usage /plan analyze                 || 查看服务器分析
+Cmd - Usage /plan help                    || 查看命令列表。
+Cmd - Usage /plan info                    || 查看 Plan 版本
+Cmd - Usage /plan inspect                 || 检视玩家数据
+Cmd - Usage /plan list                    || 列出所有已缓存玩家名单
+Cmd - Usage /plan manage                  || 数据库管理命令
+Cmd - Usage /plan manage backup           || 备份数据库至 .db 文件
+Cmd - Usage /plan manage clean            || 从数据库中清空旧数据
+Cmd - Usage /plan manage clear            || 从数据库中清空所有数据
+Cmd - Usage /plan manage dump             || 为开发人员新建 Hastebin 日志以轻松进行问题汇报
+Cmd - Usage /plan manage hotswap          || 热插拔数据库并重启插件
+Cmd - Usage /plan manage import           || 从插件中导入数据
+Cmd - Usage /plan manage move             || 在数据库间移动数据
+Cmd - Usage /plan manage remove           || 从活跃数据库中移除玩家数据
+Cmd - Usage /plan manage restore          || 恢复数据库
+Cmd - Usage /plan qanalyze                || 以文本方式查看服务器分析
+Cmd - Usage /plan qinspect                || 在游戏内检视玩家数据
+Cmd - Usage /plan reload                  || 重新启动插件（重载配置）
+Cmd - Usage /plan search                  || 搜索玩家
+Cmd - Usage /plan webuser                 || 管理网页用户
+Cmd - Usage /plan webuser check           || 检查网页用户的权限级别。
+Cmd - Usage /plan webuser delete          || 删除网页用户
+Cmd - Usage /plan webuser level           || 权限级别信息
+Cmd - Usage /plan webuser register        || 注册网页用户
+Disable                                   || 已禁用玩家分析。
+Disable - Save                            || 正在保存已缓存的数据···
+Disable - WebServer                       || 正在关闭网页服务器···
+Enable                                    || 已启用玩家分析。
+Enable - Boot Analysis 30s Notify         || Analyse | 将在 30 秒后开始启动分析···
+Enable - Boot Analysis Notify             || Analyse | 正在开始启动分析···
+Enable Db FAIL - Disable Info             || 初始化数据库失败，正在关闭 Plan 。
+Enable - Db Info                          || ${0}-已建立数据库连接。
+Enable - Db                               || 初始化数据库···
+Enable FAIL-Db                            || ${0}-连接数据库失败：${1}
+Enable FAIL - Wrong Db Type               || 此数据类型不存在。
+Enable Notify - ChatListener              || §e已禁用聊天监听，昵称信息将不准确。
+Enable Notify - Disabled CommandListener  || §e已禁用指令用法监听。
+Enable Notify - Disabled DeathListener    || §e已禁用死亡监听，停止记录玩家及怪物击杀数。
+Enable Notify - No data view              || §e已禁用网页服务器但未使用替代 IP，无法查看数据！
+Enable - WebServer                        || 正在初始化网页服务器···
+Enable - WebServer Info                   || 网页服务器运行在端口 ${0}
+Html - Active                             || 玩家活跃
+Html - Banned                             || | <span class="darkred">已封禁</span>
+Html - Inactive                           || 玩家不活跃
+Html - No Extra Plugins                   || <p>无已注册的附加插件。</p>
+Html - Offline                            || | <span class="darkred">离线</span>
+Html - Online                             || | <span class="darkgreen">在线</span>
+Html - OP                                 || , 操作员（OP）
+Html - Table No Kills                     || 无击杀
+Manage FAIL - Confirm Action              || §c[Plan] 请添加 -a 以确认执行！${0}
+Manage FAIL - Faulty DB Connection        || §c[Plan] 未正确初始化其中一个数据库。
+Manage FAIL - Backup File Not Found       || §c[Plan] 备份文件不存在！
+Manage FAIL - Incorrect DB                || §c[Plan] 数据库不正确！（支持 SQlite/MySQL）：
+Manage FAIL - Incorrect Plugin            || §c[Plan] 不支持插件：
+Manage FAIL - Empty DB                    || §c[Plan] 数据库中无玩家数据！
+Manage FAIL - Unenabled Plugin            || §c[Plan] 未启用插件：
+Manage FAIL - Same DB                     || §c[Plan] 无法移动至相同的数据库！
+Manage - Clear Success                    || §a[Plan] 已成功清除所有数据！
+Manage - Remind Config Change             || §e[Plan] 请记住要切换至新数据库并重新载入插件
+Manage - Copy Success                     || §a[Plan] 已成功复制所有数据！
+Manage - Process Fail                     || §c[Plan] 处理数据时发生错误！
+Manage - Import                           || §f» §2 正在导入数据···
+Manage - Move Success                     || §a[Plan] 已成功移动所有数据！
+Manage - Remove Success                   || §f» §2已成功从数据库 §f${1}§2 中移除数据 §f${0}§2。
+Manage - Start                            || »§7 正在处理数据···
+Manage - Success                          || §f» §2 成功！
+Manage NOTIFY - Overwrite                 || 数据库 ${0} 中的数据将被覆盖！
+Manage NOTIFY - Partial Overwrite         || 数据库 ${0} 中的部分数据将被覆盖！
+Manage NOTIFY - Remove                    || 数据库 ${0} 中的数据将被移除！
+Manage NOTIFY - Rewrite                   || 数据库 ${0} 中的数据将被重写！
+WARN - Too Small Queue Size               || 队列大小过小！（${0}），请将队列大小设置调高！（当前为 ${1}）
