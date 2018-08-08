@@ -9,6 +9,8 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.info.server.properties.BukkitServerProperties;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 
@@ -29,7 +31,7 @@ public class BukkitServerInfo extends ServerInfo {
     private Database database;
 
     public BukkitServerInfo(Plan plugin) {
-        this(new ServerProperties(plugin.getServer()));
+        this(new BukkitServerProperties(plugin.getServer()));
     }
 
     public BukkitServerInfo(ServerProperties serverProperties) {

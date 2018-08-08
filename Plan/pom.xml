@@ -24,6 +24,11 @@
             <id>sponge-repo</id>
             <url>https://repo.spongepowered.org/maven</url>
         </repository>
+        <!--        RedisBungee Repository -->
+        <repository>
+            <id>md_5-releases</id>
+            <url>http://repo.md-5.net/content/repositories/releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -74,6 +79,14 @@
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
             <version>7.0.0</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <!--        RedisBungee -->
+        <dependency>
+            <groupId>com.imaginarycode.minecraft</groupId>
+            <artifactId>RedisBungee</artifactId>
+            <version>RELEASE</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
