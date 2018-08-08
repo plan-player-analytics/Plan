@@ -594,7 +594,7 @@ public class SQLiteTest {
         assertTrue(securityTable.getUsers().isEmpty());
     }
 
-    private void saveAllData(SQLDB database) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    private void saveAllData(SQLDB database) throws NoSuchAlgorithmException {
         System.out.println("Saving all possible data to the Database..");
         UserInfoTable userInfoTable = database.getUserInfoTable();
         UsersTable usersTable = database.getUsersTable();
@@ -864,7 +864,7 @@ public class SQLiteTest {
         System.out.println("\n- Running RegisterProcessors -");
         List<RegisterProcessor> processors = new ArrayList<>();
         for (int i = 0; i < 200; i++) {
-            processors.add(new RegisterProcessor(playerUUID, 500L, "name"));
+            processors.add(new RegisterProcessor(playerUUID, () -> 500L, "name"));
         }
         for (RegisterProcessor processor : processors) {
             processor.run();

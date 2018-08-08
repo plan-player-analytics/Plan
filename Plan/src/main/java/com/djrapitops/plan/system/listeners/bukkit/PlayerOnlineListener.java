@@ -97,7 +97,7 @@ public class PlayerOnlineListener implements Listener {
         SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
 
         Processing.submit(
-                new RegisterProcessor(uuid, player.getFirstPlayed(), playerName,
+                new RegisterProcessor(uuid, player::getFirstPlayed, playerName,
                         new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)
