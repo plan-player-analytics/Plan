@@ -3,7 +3,10 @@ package com.djrapitops.plan.data.store.mutators.formatting;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.utilities.Format;
+import org.apache.commons.text.TextStringBuilder;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.function.Function;
 
@@ -77,6 +80,15 @@ public class Formatters {
             } else {
                 return 1.0 * ns / TimeAmount.MILLISECOND.ns() + "ms";
             }
+        };
+    }
+
+    public static Formatter<String> itemName() {
+        return name -> {
+            String[] parts = name.split("_");
+            TextStringBuilder builder = new TextStringBuilder();
+            builder.appendWithSeparators(Arrays.stream(parts).map(part -> new Format(part).capitalize()).iterator(), " ");
+            return builder.toString();
         };
     }
 }

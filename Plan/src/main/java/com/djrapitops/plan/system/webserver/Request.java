@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.webserver;
 
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -22,15 +23,18 @@ public class Request {
     private final String target;
     private final HttpExchange exchange;
     private final String remoteAddress;
+    private final Locale locale;
     private Authentication auth;
 
-    public Request(HttpExchange exchange) {
+    public Request(HttpExchange exchange, Locale locale) {
         this.requestMethod = exchange.getRequestMethod();
         this.target = exchange.getRequestURI().toString();
 
         remoteAddress = exchange.getRemoteAddress().getAddress().getHostAddress();
 
         this.exchange = exchange;
+
+        this.locale = locale;
     }
 
     public Optional<Authentication> getAuth() {
@@ -60,5 +64,9 @@ public class Request {
 
     public String getRemoteAddress() {
         return remoteAddress;
+    }
+
+    public Locale getLocale() {
+        return locale;
     }
 }

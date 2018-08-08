@@ -1,5 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.command.commands.manage.ManageConDebugCommand;
@@ -9,9 +10,12 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.UpdateCancelRequest;
 import com.djrapitops.plan.system.info.request.UpdateRequest;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.update.VersionInfo;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
@@ -35,23 +39,22 @@ import java.util.UUID;
  */
 public class UpdateCommand extends CommandNode {
 
-    public UpdateCommand() {
+    private final Locale locale;
+
+    public UpdateCommand(PlanPlugin plugin) {
         super("update", Permissions.MANAGE.getPermission(), CommandType.ALL);
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
         setArguments("[-u]/[cancel]");
-        setShortHelp("Get change log link or update plugin.");
-        setInDepthHelp(
-                "/plan update",
-                "  Used to update the plugin on the next shutdown\n",
-                "  /plan update - get change log link",
-                "  /plan update -u - Schedule update to happen on all network servers that are online next time they reboot.",
-                "  /plan update cancel - Cancel scheduled update on servers that haven't rebooted yet."
-        );
+        setShortHelp(locale.getString(CmdHelpLang.UPDATE));
+        setInDepthHelp(locale.getArray(DeepHelpLang.UPDATE));
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         if (!VersionCheckSystem.isNewVersionAvailable()) {
-            sender.sendMessage("§aYou're running the latest version of Plan.");
+            sender.sendMessage("§a" + locale.getString(PluginLang.VERSION_NEWEST));
             return;
         }
 
@@ -59,21 +62,19 @@ public class UpdateCommand extends CommandNode {
         String downloadUrl = available.getDownloadUrl();
 
         if (!available.isTrusted()) {
-            sender.sendMessage("§cVersion download url did not start with " +
-                    "https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/ " +
-                    "and might not be trusted. You can download this version manually here (Direct download):");
+            sender.sendMessage(locale.getString(CommandLang.UPDATE_WRONG_URL, "https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/"));
             sender.sendLink(downloadUrl, downloadUrl);
             return;
         }
 
         if (args.length == 0) {
-            String message = "Change Log v" + available.getVersion().toString() + ": ";
+            String message = locale.getString(CommandLang.UPDATE_CHANGE_LOG, available.getVersion().toString());
             String url = available.getChangeLogUrl();
             if (CommandUtils.isConsole(sender)) {
                 sender.sendMessage(message + url);
             } else {
                 sender.sendMessage(message);
-                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+                sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
             }
             return;
         }
@@ -100,7 +101,7 @@ public class UpdateCommand extends CommandNode {
     private void handleCancel(ISender sender) {
         try {
             cancel(sender, Database.getActive().fetch().getServers());
-            sender.sendMessage("§aCancel operation performed.");
+            sender.sendMessage(locale.getString(CommandLang.UPDATE_CANCEL_SUCCESS));
         } catch (DBOpException e) {
             sender.sendMessage("§cDatabase error occurred, cancel could not be performed.");
             Log.toLog(this.getClass().getName(), e);
@@ -108,10 +109,10 @@ public class UpdateCommand extends CommandNode {
     }
 
     private void handleUpdate(ISender sender, String[] args) {
-        sender.sendMessage("§aYou can cancel the update on servers that haven't rebooted yet with /plan update cancel.");
-        sender.sendMessage("Checking that all servers are online..");
+        sender.sendMessage(locale.getString(CommandLang.UPDATE_NOTIFY_CANCEL));
+        sender.sendMessage(locale.getString(CommandLang.UPDATE_ONLINE_CHECK));
         if (!checkNetworkStatus(sender)) {
-            sender.sendMessage("§cNot all servers were online or accessible, you can still update available servers using /plan -update -force");
+            sender.sendMessage(locale.getString(CommandLang.UPDATE_FAIL_NOT_ONLINE));
             // If -force, continue, otherwise return.
             if (args.length < 2 || !"-force".equals(args[1])) {
                 return;
@@ -128,15 +129,15 @@ public class UpdateCommand extends CommandNode {
     private void update(ISender sender, List<Server> servers, String[] args) {
         for (Server server : servers) {
             if (update(sender, server)) {
-                sender.sendMessage("§a" + server.getName() + " scheduled for update.");
+                sender.sendMessage(locale.getString(CommandLang.UPDATE_SCHEDULED, server.getName()));
             } else {
                 if (args.length > 1 && "-force".equals(args[1])) {
-                    sender.sendMessage("§e" + server.getName() + " failed to update, -force specified, continuing update.");
+                    sender.sendMessage(locale.getString(CommandLang.UPDATE_FAIL_FORCED));
                     continue;
                 }
-                sender.sendMessage("§cUpdate failed on a server, cancelling update on all servers..");
+                sender.sendMessage(locale.getString(CommandLang.UPDATE_FAIL_CANCEL));
                 cancel(sender, servers);
-                sender.sendMessage("§cUpdate cancelled.");
+                sender.sendMessage(locale.getString(CommandLang.UPDATE_CANCELLED));
                 break;
             }
         }
@@ -146,7 +147,6 @@ public class UpdateCommand extends CommandNode {
         for (Server server : servers) {
             cancel(sender, server);
         }
-
     }
 
     private void cancel(ISender sender, Server server) {
@@ -219,12 +219,12 @@ public class UpdateCommand extends CommandNode {
             String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
             boolean success = true;
             for (Server server : bukkitServers.values()) {
-                if (!ManageConDebugCommand.testServer(sender, accessAddress, server)) {
+                if (!ManageConDebugCommand.testServer(sender, accessAddress, server, locale)) {
                     success = false;
                 }
             }
             Server bungee = bungeeInformation.get();
-            if (!ManageConDebugCommand.testServer(sender, accessAddress, bungee)) {
+            if (!ManageConDebugCommand.testServer(sender, accessAddress, bungee, locale)) {
                 success = false;
             }
             return success;

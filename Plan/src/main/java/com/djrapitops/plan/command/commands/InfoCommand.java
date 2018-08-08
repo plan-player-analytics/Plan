@@ -3,14 +3,15 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.GenericLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.settings.ColorScheme;
 
 /**
  * This SubCommand is used to view the version and the database type in use.
@@ -21,29 +22,33 @@ import com.djrapitops.plugin.settings.ColorScheme;
 public class InfoCommand extends CommandNode {
 
     private final PlanPlugin plugin;
+    private final Locale locale;
 
     public InfoCommand(PlanPlugin plugin) {
         super("info", Permissions.INFO.getPermission(), CommandType.CONSOLE);
-        setShortHelp(Locale.get(Msg.CMD_USG_INFO).toString());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.get(CmdHelpLang.INFO).toString());
         this.plugin = plugin;
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        ColorScheme cs = plugin.getColorScheme();
-        String mColor = cs.getMainColor();
-        String sColor = cs.getSecondaryColor();
-        String tColor = cs.getTertiaryColor();
-        String ball = Locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString();
+        String yes = locale.getString(GenericLang.YES);
+        String no = locale.getString(GenericLang.NO);
 
-        String upToDate = VersionCheckSystem.isNewVersionAvailable() ? "Update Available" : "Up to date";
+        String updateAvailable = VersionCheckSystem.isNewVersionAvailable() ? yes : no;
+        String connectedToBungee = ConnectionSystem.getInstance().isServerAvailable() ? yes : no;
         String[] messages = {
-                Locale.get(Msg.CMD_HEADER_INFO).toString(),
-                ball + mColor + " Version: " + sColor + plugin.getVersion(),
-                ball + mColor + " Up to date: " + sColor + upToDate,
-                ball + mColor + " Active Database: " + tColor + Database.getActive().getConfigName(),
-                ball + mColor + " Connected to Bungee: " + tColor + (ConnectionSystem.getInstance().isServerAvailable() ? "Yes" : "No"),
-                Locale.get(Msg.CMD_CONSTANT_FOOTER).toString()
+                locale.getString(CommandLang.HEADER_INFO),
+                "",
+                locale.getString(CommandLang.INFO_VERSION, plugin.getVersion()),
+                locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
+                locale.getString(CommandLang.INFO_DATABASE, Database.getActive().getName()),
+                locale.getString(CommandLang.INFO_BUNGEE_CONNECTION, connectedToBungee),
+                "",
+                ">"
         };
         sender.sendMessage(messages);
     }

@@ -18,8 +18,8 @@ public class WorldTimesTest {
     private final String worldOne = "ONE";
     private final String worldTwo = "TWO";
     private final String[] gms = GMTimes.getGMKeyArray();
-    private WorldTimes worldTimes = new WorldTimes(worldOne, gms[0]);
-    private long time = worldTimes.getGMTimes(worldOne).getLastStateChange();
+    private long time = System.currentTimeMillis();
+    private WorldTimes worldTimes = new WorldTimes(worldOne, gms[0], time);
 
     @Test
     public void testWorldChange() {

@@ -14,6 +14,7 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -59,7 +60,7 @@ public class InspectPage implements Page {
             }
             Benchmark.start("Inspect Parse, Fetch");
             Database db = Database.getActive();
-            PlayerContainer container = db.fetch().getPlayerContainer(uuid);
+            PlayerContainer container = CacheSystem.getInstance().getDataContainerCache().getPlayerContainer(uuid);
             if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
                 throw new IllegalStateException("Player is not registered");
             }
@@ -123,9 +124,10 @@ public class InspectPage implements Page {
         double averagePing = pingMutator.average();
         int minPing = pingMutator.min();
         int maxPing = pingMutator.max();
-        replacer.put("avgPing", averagePing != -1 ? FormatUtils.cutDecimals(averagePing) + " ms" : "Unavailable");
-        replacer.put("minPing", minPing != -1 ? minPing + " ms" : "Unavailable");
-        replacer.put("maxPing", maxPing != -1 ? maxPing + " ms" : "Unavailable");
+        String unavailable = "Unavailable";
+        replacer.put("avgPing", averagePing != -1 ? FormatUtils.cutDecimals(averagePing) + " ms" : unavailable);
+        replacer.put("minPing", minPing != -1 ? minPing + " ms" : unavailable);
+        replacer.put("maxPing", maxPing != -1 ? maxPing + " ms" : unavailable);
 
         List<Session> allSessions = player.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);

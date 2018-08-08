@@ -15,12 +15,15 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.BungeeInfoSystem;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
+
+import java.util.function.Supplier;
 
 /**
  * Represents PlanSystem for PlanBungee.
@@ -34,10 +37,12 @@ public class BungeeSystem extends PlanSystem {
 
         Log.setErrorManager(new PlanErrorManager());
 
-        versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
+        Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
+
+        versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
         configSystem = new BungeeConfigSystem();
-        databaseSystem = new BungeeDBSystem();
+        databaseSystem = new BungeeDBSystem(localeSupplier);
         cacheSystem = new BungeeCacheSystem(this);
         listenerSystem = new BungeeListenerSystem(plugin);
         taskSystem = new BungeeTaskSystem(plugin);

@@ -24,6 +24,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
@@ -68,7 +69,7 @@ public class SQLiteTest {
         System.out.println("--- Test Class Setup     ---");
         SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
-        db = new SQLiteDB();
+        db = new SQLiteDB(Locale::new);
         mockUtil.enableDatabaseSystem(db)
                 .enableServerInfoSystem();
         StaticHolder.saveInstance(SQLDB.class, Plan.class);
@@ -593,7 +594,7 @@ public class SQLiteTest {
         assertTrue(securityTable.getUsers().isEmpty());
     }
 
-    private void saveAllData(SQLDB database) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    private void saveAllData(SQLDB database) throws NoSuchAlgorithmException {
         System.out.println("Saving all possible data to the Database..");
         UserInfoTable userInfoTable = database.getUserInfoTable();
         UsersTable usersTable = database.getUsersTable();
@@ -748,7 +749,7 @@ public class SQLiteTest {
     @Test
     public void testBackupAndRestore() throws DBException, UnsupportedEncodingException, NoSuchAlgorithmException {
         System.out.println("- Creating Backup Database -");
-        SQLiteDB backup = new SQLiteDB("debug-backup" + System.currentTimeMillis());
+        SQLiteDB backup = new SQLiteDB("debug-backup" + System.currentTimeMillis(), Locale::new);
         backup.init();
         System.out.println("- Backup Database Created  -");
 
@@ -863,7 +864,7 @@ public class SQLiteTest {
         System.out.println("\n- Running RegisterProcessors -");
         List<RegisterProcessor> processors = new ArrayList<>();
         for (int i = 0; i < 200; i++) {
-            processors.add(new RegisterProcessor(playerUUID, 500L, "name"));
+            processors.add(new RegisterProcessor(playerUUID, () -> 500L, "name"));
         }
         for (RegisterProcessor processor : processors) {
             processor.run();
@@ -927,94 +928,6 @@ public class SQLiteTest {
         assertFalse(geolocations.isEmpty());
         assertEquals(3, geolocations.size());
         assertTrue(geolocations.contains(secondInfo.getGeolocation()));
-    }
-
-    @Test
-    public void testWorldTableAlterV16() {
-        saveUserOne();
-        new Table("test", db) {
-            @Override
-            public void createTable() {
-                execute(
-                        "INSERT INTO " + WorldTable.TABLE_NAME + " (" +
-                                WorldTable.Col.NAME + ", " +
-                                WorldTable.Col.SERVER_ID +
-                                ") VALUES ('Test', '0')"
-                );
-                execute(
-                        "INSERT INTO " + SessionsTable.TABLE_NAME + " (" +
-                                SessionsTable.Col.SESSION_START + ", " +
-                                SessionsTable.Col.SESSION_END + ", " +
-                                SessionsTable.Col.AFK_TIME + ", " +
-                                SessionsTable.Col.DEATHS + ", " +
-                                SessionsTable.Col.MOB_KILLS + ", " +
-                                SessionsTable.Col.SERVER_ID + ", " +
-                                SessionsTable.Col.USER_ID +
-                                ") VALUES ('0', '0', '0', '0', '0', '1', '1')"
-                );
-                execute(
-                        "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
-                                WorldTimesTable.Col.SERVER_ID + ", " +
-                                WorldTimesTable.Col.SESSION_ID + ", " +
-                                WorldTimesTable.Col.USER_ID + ", " +
-                                WorldTimesTable.Col.WORLD_ID + ", " +
-                                WorldTimesTable.Col.SURVIVAL + ", " +
-                                WorldTimesTable.Col.CREATIVE + ", " +
-                                WorldTimesTable.Col.SPECTATOR + ", " +
-                                WorldTimesTable.Col.ADVENTURE +
-                                ") VALUES ('1', '1', '1', '1', '0','0','0','0')"
-                );
-                execute(
-                        "INSERT INTO " + ServerTable.TABLE_NAME + " (" +
-                                ServerTable.Col.SERVER_UUID + ", " +
-                                ServerTable.Col.SERVER_ID + ", " +
-                                ServerTable.Col.MAX_PLAYERS + ", " +
-                                ServerTable.Col.WEBSERVER_ADDRESS + ", " +
-                                ServerTable.Col.INSTALLED + ", " +
-                                ServerTable.Col.NAME +
-                                ") VALUES ('" + UUID.randomUUID() + "', '2', '0', '0', '1', '2')"
-                );
-                execute(
-                        "INSERT INTO " + SessionsTable.TABLE_NAME + " (" +
-                                SessionsTable.Col.SESSION_START + ", " +
-                                SessionsTable.Col.SESSION_END + ", " +
-                                SessionsTable.Col.AFK_TIME + ", " +
-                                SessionsTable.Col.DEATHS + ", " +
-                                SessionsTable.Col.MOB_KILLS + ", " +
-                                SessionsTable.Col.SERVER_ID + ", " +
-                                SessionsTable.Col.USER_ID +
-                                ") VALUES ('0', '0', '0', '0', '0', '2', '1')"
-                );
-                execute(
-                        "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
-                                WorldTimesTable.Col.SERVER_ID + ", " +
-                                WorldTimesTable.Col.SESSION_ID + ", " +
-                                WorldTimesTable.Col.USER_ID + ", " +
-                                WorldTimesTable.Col.WORLD_ID + ", " +
-                                WorldTimesTable.Col.SURVIVAL + ", " +
-                                WorldTimesTable.Col.CREATIVE + ", " +
-                                WorldTimesTable.Col.SPECTATOR + ", " +
-                                WorldTimesTable.Col.ADVENTURE +
-                                ") VALUES ('2', '2', '1', '1', '0','0','0','0')"
-                );
-            }
-        }.createTable();
-
-        WorldTable worldTable = db.getWorldTable();
-        Map<Integer, List<Integer>> before = worldTable.getWorldIDsByServerIDs();
-        System.out.println("\nBefore: " + before);
-        System.out.println("Before: " + worldTable.getWorldObjects() + "\n");
-
-        worldTable.alterTableV16();
-
-        Map<Integer, List<Integer>> after = worldTable.getWorldIDsByServerIDs();
-        System.out.println("\nAfter: " + after);
-        System.out.println("After: " + worldTable.getWorldObjects() + "\n");
-        assertNull(after.get(0));
-        assertNotNull(after.get(1));
-        assertEquals(1, after.get(1).size());
-        assertNotNull(after.get(2));
-        assertEquals(1, after.get(2).size());
     }
 
     @Test

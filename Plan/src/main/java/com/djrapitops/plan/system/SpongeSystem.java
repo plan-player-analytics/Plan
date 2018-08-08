@@ -14,6 +14,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.ServerInfoSystem;
 import com.djrapitops.plan.system.info.server.SpongeServerInfo;
 import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.SpongeConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
@@ -21,6 +22,8 @@ import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
+
+import java.util.function.Supplier;
 
 /**
  * Represents PlanSystem for PlanSponge.
@@ -32,16 +35,18 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
     public SpongeSystem(PlanSponge plugin) {
         setTestSystem(this);
 
+        Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
+
         Log.setErrorManager(new PlanErrorManager());
 
-        versionCheckSystem = new VersionCheckSystem(plugin.getVersion());
+        versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
         configSystem = new SpongeConfigSystem();
-        databaseSystem = new ServerDBSystem();
+        databaseSystem = new ServerDBSystem(localeSupplier);
         listenerSystem = new SpongeListenerSystem(plugin);
         taskSystem = new SpongeTaskSystem(plugin);
 
-        infoSystem = new ServerInfoSystem();
+        infoSystem = new ServerInfoSystem(localeSupplier);
         serverInfo = new SpongeServerInfo();
 
         hookHandler = new HookHandler();

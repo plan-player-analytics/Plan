@@ -12,7 +12,7 @@ import com.djrapitops.plan.system.PlanSystem;
 public class BungeeCacheSystem extends CacheSystem {
 
     public BungeeCacheSystem(PlanSystem system) {
-        super(new BungeeDataCache(system));
+        super(new BungeeDataCache(system), system);
     }
 
 }

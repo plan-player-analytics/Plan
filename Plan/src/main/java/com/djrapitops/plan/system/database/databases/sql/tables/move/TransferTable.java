@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.database.databases.sql.tables.move;
 
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 
 /**
@@ -27,8 +28,7 @@ public class TransferTable extends Table {
     }
 
     protected void dropTable(String name) {
-        String sql = "DROP TABLE " + name;
-        execute(sql);
+        execute(TableSqlParser.dropTable(name));
     }
 
 }

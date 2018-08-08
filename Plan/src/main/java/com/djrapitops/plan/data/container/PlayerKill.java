@@ -2,6 +2,7 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PlayerKill implements DateHolder {
+public class PlayerKill implements DateHolder, Serializable {
 
     private final UUID victim;
     private final long date;

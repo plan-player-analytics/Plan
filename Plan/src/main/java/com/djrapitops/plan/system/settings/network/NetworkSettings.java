@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
@@ -59,7 +59,7 @@ public class NetworkSettings {
         Processing.submitCritical(() -> {
             try {
                 new NetworkSettings().placeToDatabase();
-            } catch (DBException | UnsupportedTransferDatabaseException e) {
+            } catch (DBOpException | UnsupportedTransferDatabaseException e) {
                 Log.toLog(NetworkSettings.class, e);
             }
         });
@@ -108,7 +108,7 @@ public class NetworkSettings {
         return pathValueMap;
     }
 
-    public void placeToDatabase() throws DBException, UnsupportedTransferDatabaseException {
+    public void placeToDatabase() throws UnsupportedTransferDatabaseException {
         Map<String, Object> configValues = getConfigValues();
 
         Log.debug("NetworkSettings: Building Base64 String..");

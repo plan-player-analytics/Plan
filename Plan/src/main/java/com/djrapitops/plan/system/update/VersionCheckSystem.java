@@ -6,6 +6,8 @@ package com.djrapitops.plan.system.update;
 
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.Priority;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
@@ -15,6 +17,7 @@ import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -25,10 +28,12 @@ import java.util.stream.Collectors;
 public class VersionCheckSystem implements SubSystem {
 
     private final String currentVersion;
+    private final Supplier<Locale> locale;
     private VersionInfo newVersionAvailable;
 
-    public VersionCheckSystem(String currentVersion) {
+    public VersionCheckSystem(String currentVersion, Supplier<Locale> locale) {
         this.currentVersion = currentVersion;
+        this.locale = locale;
     }
 
     public static VersionCheckSystem getInstance() {
@@ -56,20 +61,21 @@ public class VersionCheckSystem implements SubSystem {
                 VersionInfo newestVersion = versions.get(0);
                 if (Version.isNewVersionAvailable(new Version(currentVersion), newestVersion.getVersion())) {
                     newVersionAvailable = newestVersion;
-                    String notification =
-                            "New Release (" + newestVersion.getVersion().toString() + ") is available " +
-//                                    "and can be updated to using update subcommand." +
-                                    newestVersion.getChangeLogUrl() +
-                                    (newestVersion.isRelease() ? "" : " This is a DEV release.");
+                    String notification = locale.get().getString(
+                            PluginLang.VERSION_AVAILABLE,
+                            newestVersion.getVersion().toString(),
+                            newestVersion.getChangeLogUrl()
+                    ) + (newestVersion.isRelease() ? "" : locale.get().getString(PluginLang.VERSION_AVAILABLE_DEV));
                     Log.infoColor("§a----------------------------------------");
                     Log.infoColor("§a" + notification);
                     Log.infoColor("§a----------------------------------------");
+                    NotificationCenter.getNotifications().clear();
                     NotificationCenter.addNotification(newestVersion.isRelease() ? Priority.HIGH : Priority.MEDIUM, notification);
                 } else {
-                    Log.info("You're using the latest version.");
+                    Log.info(locale.get().getString(PluginLang.VERSION_NEWEST));
                 }
             } catch (IOException e) {
-                Log.error("Version information could not be loaded from Github/versions.txt");
+                Log.error(locale.get().getString(PluginLang.VERSION_FAIL_READ_VERSIONS));
             }
         } else {
             checkForNewVersion();
@@ -89,16 +95,16 @@ public class VersionCheckSystem implements SubSystem {
                 }
             }
             if (newVersionAvailable) {
-                String newVersionNotification = "New Version is available at " + spigotUrl;
+                String newVersionNotification = locale.get().getString(PluginLang.VERSION_AVAILABLE_SPIGOT, spigotUrl);
                 Log.infoColor("§a----------------------------------------");
                 Log.infoColor("§a" + newVersionNotification);
                 Log.infoColor("§a----------------------------------------");
                 NotificationCenter.addNotification(Priority.HIGH, newVersionNotification);
             } else {
-                Log.info("You're using the latest version.");
+                Log.info(locale.get().getString(PluginLang.VERSION_NEWEST));
             }
         } catch (IOException e) {
-            Log.error("Failed to check newest version number");
+            Log.error(locale.get().getString(PluginLang.VERSION_FAIL_READ_OLD));
         }
     }
 

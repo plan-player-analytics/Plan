@@ -2,16 +2,18 @@ package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.File;
 import java.sql.*;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * @author Rsl1122
@@ -23,25 +25,20 @@ public class SQLiteDB extends SQLDB {
     private Connection connection;
     private ITask connectionPingTask;
 
-    /**
-     * Class Constructor.
-     */
-    public SQLiteDB() {
-        this("database");
+    public SQLiteDB(Supplier<Locale> locale) {
+        this("database", locale);
     }
 
-    public SQLiteDB(String dbName) {
-        this(new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db"));
+    public SQLiteDB(String dbName, Supplier<Locale> locale) {
+        this(new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db"), locale);
     }
 
-    public SQLiteDB(File databaseFile) {
+    public SQLiteDB(File databaseFile, Supplier<Locale> locale) {
+        super(locale);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
     }
 
-    /**
-     * Setups the {@link BasicDataSource}
-     */
     @Override
     public void setupDataSource() throws DBInitException {
         try {
@@ -72,7 +69,7 @@ public class SQLiteDB extends SQLDB {
         try {
             return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath + "?journal_mode=WAL");
         } catch (SQLException ignored) {
-            Log.info("SQLite WAL mode not supported on this server version, using default. This may or may not affect performance.");
+            Log.info(locale.get().getString(PluginLang.DB_NOTIFY_SQLITE_WAL));
             return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
         }
     }
@@ -92,7 +89,7 @@ public class SQLiteDB extends SQLDB {
                             resultSet = statement.executeQuery("/* ping */ SELECT 1");
                         }
                     } catch (SQLException e) {
-                        Log.debug("Something went wrong during Ping task.");
+                        Log.debug("Something went wrong during SQLite Connection upkeep task.");
                         try {
                             connection = getNewConnection(databaseFile);
                         } catch (SQLException e1) {
@@ -145,6 +142,22 @@ public class SQLiteDB extends SQLDB {
     }
 
     @Override
+    public void commit(Connection connection) {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            if (!e.getMessage().contains("cannot commit")) {
+                Log.toLog(this.getClass(), e);
+            }
+        }
+    }
+
+    @Override
+    public void returnToPool(Connection connection) {
+        // Connection pool not in use, no action required.
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -155,7 +168,6 @@ public class SQLiteDB extends SQLDB {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), dbName);
     }
 }

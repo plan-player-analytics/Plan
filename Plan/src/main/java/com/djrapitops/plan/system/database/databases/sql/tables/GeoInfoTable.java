@@ -1,7 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
@@ -11,18 +10,9 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.database.databases.sql.tables.move.Version18TransferTable;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,8 +29,10 @@ import java.util.*;
  */
 public class GeoInfoTable extends UserIDTable {
 
+    public static final String TABLE_NAME = "plan_ips";
+
     public GeoInfoTable(SQLDB db) {
-        super("plan_ips", db);
+        super(TABLE_NAME, db);
         insertStatement = "INSERT INTO " + tableName + " ("
                 + Col.USER_ID + ", "
                 + Col.IP + ", "
@@ -65,71 +57,6 @@ public class GeoInfoTable extends UserIDTable {
                 .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
                 .toString()
         );
-    }
-
-    public void alterTableV12() {
-        if (usingMySQL) {
-            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + Col.IP + " VARCHAR(39) NOT NULL");
-        }
-    }
-
-    public void alterTableV13() {
-        addColumns(Col.LAST_USED + " bigint NOT NULL DEFAULT 0");
-    }
-
-    public void alterTableV17() {
-        addColumns(Col.IP_HASH.get() + " varchar(200) DEFAULT ''");
-    }
-
-    public void alterTableV18() {
-        RunnableFactory.createNew("DB Version 17->18", new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    Map<UUID, List<GeoInfo>> allGeoInfo = getAllGeoInfo();
-
-                    String sql = "UPDATE " + tableName + " SET " +
-                            Col.IP + "=?, " +
-                            Col.IP_HASH + "=? " +
-                            "WHERE " + Col.IP + "=?";
-                    executeBatch(new ExecStatement(sql) {
-                        @Override
-                        public void prepare(PreparedStatement statement) throws SQLException {
-                            for (List<GeoInfo> geoInfos : allGeoInfo.values()) {
-                                for (GeoInfo geoInfo : geoInfos) {
-                                    try {
-                                        if (geoInfo.getIp().endsWith(".xx.xx")) {
-                                            continue;
-                                        }
-                                        GeoInfo updatedInfo = new GeoInfo(
-                                                InetAddress.getByName(geoInfo.getIp()),
-                                                geoInfo.getGeolocation(),
-                                                geoInfo.getDate()
-                                        );
-                                        statement.setString(1, updatedInfo.getIp());
-                                        statement.setString(2, updatedInfo.getIpHash());
-                                        statement.setString(3, geoInfo.getIp());
-                                        statement.addBatch();
-                                    } catch (UnknownHostException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
-                                        if (Settings.DEV_MODE.isTrue()) {
-                                            Log.toLog(this.getClass(), e);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    new Version18TransferTable(db).alterTableV18();
-                    db.setVersion(18);
-                } catch (DBOpException | DBInitException e) {
-                    Log.toLog(this.getClass(), e);
-                }
-            }
-        }).runTaskAsynchronously();
-    }
-
-    public void clean() {
-
     }
 
     public List<GeoInfo> getGeoInfo(UUID uuid) {

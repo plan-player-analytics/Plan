@@ -6,8 +6,9 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.system.settings.locale.Message;
-import com.djrapitops.plan.system.settings.locale.Msg;
+import com.djrapitops.plan.system.locale.Message;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.Lang;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import org.junit.Test;
@@ -123,20 +124,20 @@ public class ComparatorTest {
 
     @Test
     public void localeEntryComparator() {
-        Map<Msg, Message> messageMap = new HashMap<>();
-        messageMap.put(Msg.CMD_CONSTANT_FOOTER, new Message(RandomData.randomString(10)));
-        messageMap.put(Msg.ANALYSIS_3RD_PARTY, new Message(RandomData.randomString(10)));
-        messageMap.put(Msg.MANAGE_FAIL_NO_PLAYERS, new Message(RandomData.randomString(10)));
+        Map<Lang, Message> messageMap = new HashMap<>();
+        messageMap.put(CmdHelpLang.SERVERS, new Message(RandomData.randomString(10)));
+        messageMap.put(CmdHelpLang.ANALYZE, new Message(RandomData.randomString(10)));
+        messageMap.put(CmdHelpLang.MANAGE_RESTORE, new Message(RandomData.randomString(10)));
 
-        List<Msg> result = messageMap.entrySet().stream()
+        List<Lang> result = messageMap.entrySet().stream()
                 .sorted(new LocaleEntryComparator())
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        List<Msg> expected = Arrays.asList(
-                Msg.ANALYSIS_3RD_PARTY,
-                Msg.CMD_CONSTANT_FOOTER,
-                Msg.MANAGE_FAIL_NO_PLAYERS
+        List<Lang> expected = Arrays.asList(
+                CmdHelpLang.ANALYZE,
+                CmdHelpLang.MANAGE_RESTORE,
+                CmdHelpLang.SERVERS
         );
         assertEquals(expected, result);
     }

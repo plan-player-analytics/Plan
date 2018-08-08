@@ -9,7 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
@@ -79,9 +79,7 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
         try {
             runningAnalysis = true;
             UUID serverUUID = ServerInfo.getServerUUID();
-            Database db = Database.getActive();
-
-            AnalysisContainer analysisContainer = new AnalysisContainer(db.fetch().getServerContainer(serverUUID));
+            AnalysisContainer analysisContainer = CacheSystem.getInstance().getDataContainerCache().getAnalysisContainer(serverUUID);
             return new AnalysisPage(analysisContainer).toHtml();
         } catch (DBOpException e) {
             if (!e.getCause().getMessage().contains("Connection is closed")) {

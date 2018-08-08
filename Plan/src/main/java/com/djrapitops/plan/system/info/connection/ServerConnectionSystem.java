@@ -10,16 +10,17 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Connection system for Bukkit servers.
@@ -28,11 +29,14 @@ import java.util.UUID;
  */
 public class ServerConnectionSystem extends ConnectionSystem {
 
+    private final Supplier<Locale> locale;
+
     private long latestServerMapRefresh;
 
     private Server mainServer;
 
-    public ServerConnectionSystem() {
+    public ServerConnectionSystem(Supplier<Locale> locale) {
+        this.locale = locale;
         latestServerMapRefresh = 0;
     }
 
@@ -105,11 +109,11 @@ public class ServerConnectionSystem extends ConnectionSystem {
         boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
 
         if (!usingAlternativeIP && ServerInfo.getServerProperties().getIp().isEmpty()) {
-            Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
+            Log.infoColor("§e" + locale.get().getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
         }
         if (usingBungeeWebServer && usingAlternativeIP) {
             String webServerAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
-            Log.info("Make sure that this address points to THIS Bukkit Server: " + webServerAddress);
+            Log.info(locale.get().getString(PluginLang.ENABLE_NOTIFY_ADDRESS_CONFIRMATION, webServerAddress));
         }
     }
 

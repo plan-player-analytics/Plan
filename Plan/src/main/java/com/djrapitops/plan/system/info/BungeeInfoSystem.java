@@ -8,6 +8,8 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.connection.WebFailException;
+import com.djrapitops.plan.data.store.containers.NetworkContainer;
+import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.info.connection.BungeeConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
@@ -43,7 +45,8 @@ public class BungeeInfoSystem extends InfoSystem {
     @Override
     public void updateNetworkPage() throws WebException {
         try {
-            String html = new NetworkPage().toHtml();
+            NetworkContainer networkContainer = CacheSystem.getInstance().getDataContainerCache().getNetworkContainer();
+            String html = new NetworkPage(networkContainer).toHtml();
             ResponseCache.cacheResponse(PageId.SERVER.of(ServerInfo.getServerUUID()), () -> new AnalysisPageResponse(html));
         } catch (ParseException e) {
             throw new WebFailException("Exception during Network Page Parsing", e);

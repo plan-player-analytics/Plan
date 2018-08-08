@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
@@ -9,6 +10,7 @@ import org.spongepowered.api.service.sql.SqlService;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * MySQLDB implementation for Sponge since default driver is not available.
@@ -16,6 +18,10 @@ import java.util.Optional;
  * @author Rsl1122
  */
 public class SpongeMySQLDB extends MySQLDB {
+
+    public SpongeMySQLDB(Supplier<Locale> locale) {
+        super(locale);
+    }
 
     @Override
     public void setupDataSource() throws DBInitException {

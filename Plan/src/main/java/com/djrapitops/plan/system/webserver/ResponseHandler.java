@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.connection.InfoRequestPageHandler;
+import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.pages.*;
 import com.djrapitops.plan.system.webserver.response.*;
@@ -43,9 +44,14 @@ public class ResponseHandler extends TreePageHandler {
         ServerPageHandler serverPageHandler = new ServerPageHandler();
         registerPage("network", serverPageHandler);
         registerPage("server", serverPageHandler);
-        if (webServer.isAuthRequired()) {
-            registerPage("", new RootPageHandler(this));
-        }
+        registerPage("", webServer.isAuthRequired()
+                ? new RootPageHandler(this)
+                : new PageHandler() {
+            @Override
+            public Response getResponse(Request request, List<String> target) {
+                return new RedirectResponse("/server");
+            }
+        });
     }
 
     public void registerWebAPIPages() {
@@ -107,7 +113,7 @@ public class ResponseHandler extends TreePageHandler {
         }
         PageHandler pageHandler = getPageHandler(target);
         if (pageHandler == null) {
-            return DefaultResponses.NOT_FOUND.get();
+            return new NotFoundResponse(request.getLocale().getString(ErrorPageLang.UNKNOWN_PAGE_404));
         } else {
             boolean isAuthorized = authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target);
             if (!isAuthRequired || isAuthorized) {

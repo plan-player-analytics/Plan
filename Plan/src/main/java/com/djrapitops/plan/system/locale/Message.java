@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.settings.locale;
+package com.djrapitops.plan.system.locale;
 
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.text.StringSubstitutor;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a Message that can be modified.
+ * Represents a Message that can be modified by the caller.
  *
  * @author Rsl1122
  * @since 3.6.2
@@ -41,10 +41,6 @@ public class Message {
 
     public String[] toArray(Serializable... p) {
         return parse(p).split("\\\\");
-    }
-
-    public String parse() {
-        return toString();
     }
 
     @Override

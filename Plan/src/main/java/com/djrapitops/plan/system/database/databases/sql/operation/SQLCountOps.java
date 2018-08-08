@@ -16,8 +16,4 @@ public class SQLCountOps extends SQLOps implements CountOperations {
         return userInfoTable.getServerUserCount(server);
     }
 
-    @Override
-    public int getNetworkPlayerCount() {
-        return usersTable.getPlayerCount();
-    }
 }

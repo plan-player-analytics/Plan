@@ -114,7 +114,6 @@ public class ActivityIndexTest {
     public void testTimeout() {
         PlayerContainer container = new PlayerContainer();
         List<Session> sessions = new ArrayList<>();
-        long date = 0;
 
         for (int i = 0; i < 5000; i++) {
             sessions.add(new Session(0, UUID, SERVER_UUID, 0, 0, 0, 0, 0));

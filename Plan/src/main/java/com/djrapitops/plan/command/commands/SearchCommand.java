@@ -1,9 +1,13 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
@@ -25,18 +29,24 @@ import java.util.List;
  */
 public class SearchCommand extends CommandNode {
 
-    public SearchCommand() {
+    private final Locale locale;
+
+    public SearchCommand(PlanPlugin plugin) {
         super("search", Permissions.SEARCH.getPermission(), CommandType.PLAYER_OR_ARGS);
-        setShortHelp(Locale.get(Msg.CMD_USG_SEARCH).toString());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
         setArguments("<text>");
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_SEARCH).toArray());
+        setShortHelp(locale.getString(CmdHelpLang.SEARCH));
+        setInDepthHelp(locale.getArray(DeepHelpLang.SEARCH));
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        Verify.isTrue(args.length >= 1, () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+        Verify.isTrue(args.length >= 1,
+                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
-        sender.sendMessage(Locale.get(Msg.CMD_INFO_SEARCHING).toString());
+        sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
         runSearchTask(args, sender);
     }
@@ -46,19 +56,18 @@ public class SearchCommand extends CommandNode {
             @Override
             public void run() {
                 try {
-                    List<String> names = MiscUtils.getMatchingPlayerNames(args[0]);
+                    String searchTerm = args[0];
+                    List<String> names = MiscUtils.getMatchingPlayerNames(searchTerm);
 
                     boolean empty = Verify.isEmpty(names);
 
-                    sender.sendMessage(Locale.get(Msg.CMD_HEADER_SEARCH) + args[0] + " (" + (empty ? 0 : names.size()) + ")");
+                    sender.sendMessage(locale.getString(CommandLang.HEADER_SEARCH, empty ? 0 : names.size(), searchTerm));
                     // Results
-                    if (empty) {
-                        sender.sendMessage(Locale.get(Msg.CMD_INFO_NO_RESULTS).parse(Arrays.toString(args)));
-                    } else {
-                        sender.sendMessage(Locale.get(Msg.CMD_INFO_RESULTS).toString() + FormatUtils.collectionToStringNoBrackets(names));
+                    if (!empty) {
+                        sender.sendMessage(FormatUtils.collectionToStringNoBrackets(names));
                     }
 
-                    sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+                    sender.sendMessage(">");
                 } catch (DBOpException e) {
                     sender.sendMessage("§cDatabase error occurred: " + e.getMessage());
                     Log.toLog(this.getClass(), e);

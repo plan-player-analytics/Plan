@@ -290,36 +290,6 @@ public class UserInfoTable extends UserIDTable {
         });
     }
 
-    public Map<UUID, Set<UUID>> getSavedUUIDs() {
-        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
-        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
-        String sql = "SELECT " +
-                usersUUIDColumn + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
-
-        return query(new QueryAllStatement<Map<UUID, Set<UUID>>>(sql, 50000) {
-            @Override
-            public Map<UUID, Set<UUID>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Set<UUID>> serverMap = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-                    UUID uuid = UUID.fromString(set.getString("uuid"));
-
-                    Set<UUID> uuids = serverMap.getOrDefault(serverUUID, new HashSet<>());
-                    uuids.add(uuid);
-
-                    serverMap.put(serverUUID, uuids);
-                }
-                return serverMap;
-            }
-        });
-    }
-
     public int getServerUserCount(UUID serverUUID) {
         String sql = "SELECT " +
                 " COUNT(" + Col.REGISTERED + ") as c" +

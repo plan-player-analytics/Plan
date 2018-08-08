@@ -16,6 +16,10 @@ import java.util.*;
  */
 public class Session extends DataContainer implements DateHolder {
 
+    private long sessionStart;
+    private WorldTimes worldTimes;
+    private List<PlayerKill> playerKills;
+
     private int mobKills;
     private int deaths;
     private long afkTime;
@@ -29,18 +33,22 @@ public class Session extends DataContainer implements DateHolder {
      * @param gm           Starting GameMode.
      */
     public Session(UUID uuid, long sessionStart, String world, String gm) {
+        this.sessionStart = sessionStart;
+        worldTimes = new WorldTimes(world, gm, sessionStart);
+        playerKills = new ArrayList<>();
+
         mobKills = 0;
         deaths = 0;
         afkTime = 0;
 
         putRawData(SessionKeys.UUID, uuid);
-        putRawData(SessionKeys.START, sessionStart);
-        putRawData(SessionKeys.WORLD_TIMES, new WorldTimes(world, gm));
-        putRawData(SessionKeys.PLAYER_KILLS, new ArrayList<>());
+        putSupplier(SessionKeys.START, this::getSessionStart);
+        putSupplier(SessionKeys.WORLD_TIMES, this::getWorldTimes);
+        putSupplier(SessionKeys.PLAYER_KILLS, this::getPlayerKills);
         putRawData(SessionKeys.PLAYER_DEATHS, new ArrayList<>());
-        putSupplier(SessionKeys.MOB_KILL_COUNT, () -> mobKills);
-        putSupplier(SessionKeys.DEATH_COUNT, () -> deaths);
-        putSupplier(SessionKeys.AFK_TIME, () -> afkTime);
+        putSupplier(SessionKeys.MOB_KILL_COUNT, this::getMobKills);
+        putSupplier(SessionKeys.DEATH_COUNT, this::getDeaths);
+        putSupplier(SessionKeys.AFK_TIME, this::getAfkTime);
 
         putSupplier(SessionKeys.PLAYER_KILL_COUNT, getUnsafe(SessionKeys.PLAYER_KILLS)::size);
         putSupplier(SessionKeys.LENGTH, () ->
@@ -64,21 +72,25 @@ public class Session extends DataContainer implements DateHolder {
      * @param afkTime      Time spent AFK during the session.
      */
     public Session(int id, UUID uuid, UUID serverUUID, long sessionStart, long sessionEnd, int mobKills, int deaths, long afkTime) {
-        putRawData(SessionKeys.DB_ID, id);
-        putRawData(SessionKeys.UUID, uuid);
-        putRawData(SessionKeys.SERVER_UUID, serverUUID);
-        putRawData(SessionKeys.START, sessionStart);
-        putRawData(SessionKeys.END, sessionEnd);
-        putRawData(SessionKeys.WORLD_TIMES, new WorldTimes(new HashMap<>()));
-        putRawData(SessionKeys.PLAYER_KILLS, new ArrayList<>());
-        putRawData(SessionKeys.PLAYER_DEATHS, new ArrayList<>());
-        putSupplier(SessionKeys.MOB_KILL_COUNT, () -> mobKills);
-        putSupplier(SessionKeys.DEATH_COUNT, () -> deaths);
-        putSupplier(SessionKeys.AFK_TIME, () -> afkTime);
+        this.sessionStart = sessionStart;
+        worldTimes = new WorldTimes(new HashMap<>());
+        playerKills = new ArrayList<>();
 
         this.mobKills = mobKills;
         this.deaths = deaths;
         this.afkTime = afkTime;
+
+        putRawData(SessionKeys.DB_ID, id);
+        putRawData(SessionKeys.UUID, uuid);
+        putRawData(SessionKeys.SERVER_UUID, serverUUID);
+        putSupplier(SessionKeys.START, this::getSessionStart);
+        putRawData(SessionKeys.END, sessionEnd);
+        putSupplier(SessionKeys.WORLD_TIMES, this::getWorldTimes);
+        putSupplier(SessionKeys.PLAYER_KILLS, this::getPlayerKills);
+        putRawData(SessionKeys.PLAYER_DEATHS, new ArrayList<>());
+        putSupplier(SessionKeys.MOB_KILL_COUNT, this::getMobKills);
+        putSupplier(SessionKeys.DEATH_COUNT, this::getDeaths);
+        putSupplier(SessionKeys.AFK_TIME, this::getAfkTime);
 
         putSupplier(SessionKeys.PLAYER_KILL_COUNT, () -> getUnsafe(SessionKeys.PLAYER_KILLS).size());
         putSupplier(SessionKeys.LENGTH, () ->
@@ -95,8 +107,6 @@ public class Session extends DataContainer implements DateHolder {
      */
     public void endSession(long endOfSession) {
         putRawData(SessionKeys.END, endOfSession);
-        WorldTimes worldTimes = getValue(SessionKeys.WORLD_TIMES)
-                .orElseThrow(() -> new IllegalStateException("World times have not been defined"));
         worldTimes.updateState(endOfSession);
     }
 
@@ -108,14 +118,10 @@ public class Session extends DataContainer implements DateHolder {
      * @param time  Epoch ms of the event.
      */
     public void changeState(String world, String gm, long time) {
-        WorldTimes worldTimes = getValue(SessionKeys.WORLD_TIMES)
-                .orElseThrow(() -> new IllegalStateException("World times is not defined"));
         worldTimes.updateState(world, gm, time);
     }
 
     public void playerKilled(PlayerKill kill) {
-        List<PlayerKill> playerKills = getValue(SessionKeys.PLAYER_KILLS)
-                .orElseThrow(() -> new IllegalStateException("Player kills is not defined."));
         playerKills.add(kill);
     }
 
@@ -178,5 +184,34 @@ public class Session extends DataContainer implements DateHolder {
                         getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()),
                         session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>())
                 );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), mobKills, deaths, afkTime);
+    }
+
+    private long getSessionStart() {
+        return sessionStart;
+    }
+
+    private WorldTimes getWorldTimes() {
+        return worldTimes;
+    }
+
+    private List<PlayerKill> getPlayerKills() {
+        return playerKills;
+    }
+
+    private int getMobKills() {
+        return mobKills;
+    }
+
+    private int getDeaths() {
+        return deaths;
+    }
+
+    private long getAfkTime() {
+        return afkTime;
     }
 }

@@ -1,9 +1,11 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -18,11 +20,16 @@ import com.djrapitops.plugin.command.ISender;
 public class ReloadCommand extends CommandNode {
 
     private final PlanPlugin plugin;
+    private final Locale locale;
 
     public ReloadCommand(PlanPlugin plugin) {
-        super("reload", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
-        setShortHelp(Locale.get(Msg.CMD_USG_RELOAD).toString());
+        super("reload", Permissions.RELOAD.getPermission(), CommandType.CONSOLE);
         this.plugin = plugin;
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.RELOAD));
+        setInDepthHelp(locale.getArray(DeepHelpLang.RELOAD));
     }
 
     @Override
@@ -31,8 +38,8 @@ public class ReloadCommand extends CommandNode {
             plugin.reloadPlugin(true);
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
-            sender.sendMessage("§cSomething went wrong during reload of the plugin, a restart is recommended.");
+            sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
         }
-        sender.sendMessage(Locale.get(Msg.CMD_INFO_RELOAD_COMPLETE).toString());
+        sender.sendMessage(locale.getString(CommandLang.RELOAD_COMPLETE));
     }
 }

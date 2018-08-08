@@ -16,15 +16,22 @@ public class CachingSupplier<T> implements Supplier<T> {
     private final Supplier<T> original;
     private T cachedValue;
     private long cacheTime;
+    private long timeToLive;
 
     public CachingSupplier(Supplier<T> original) {
+        this(original, TimeAmount.SECOND.ms() * 30L);
+    }
+
+    public CachingSupplier(Supplier<T> original, long timeToLive) {
         this.original = original;
+        this.timeToLive = timeToLive;
+
         cacheTime = 0L;
     }
 
     @Override
     public T get() {
-        if (cachedValue == null || System.currentTimeMillis() - cacheTime > TimeAmount.SECOND.ms() * 30L) {
+        if (cachedValue == null || System.currentTimeMillis() - cacheTime > timeToLive) {
             cachedValue = original.get();
             cacheTime = System.currentTimeMillis();
         }

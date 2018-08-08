@@ -11,8 +11,11 @@ import com.djrapitops.plan.system.info.request.CacheNetworkPageContentRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plugin.api.utility.log.Log;
+
+import java.util.function.Supplier;
 
 /**
  * InfoSystem for Bukkit servers.
@@ -21,8 +24,8 @@ import com.djrapitops.plugin.api.utility.log.Log;
  */
 public class ServerInfoSystem extends InfoSystem {
 
-    public ServerInfoSystem() {
-        super(new ServerConnectionSystem());
+    public ServerInfoSystem(Supplier<Locale> locale) {
+        super(new ServerConnectionSystem(locale));
     }
 
     @Override

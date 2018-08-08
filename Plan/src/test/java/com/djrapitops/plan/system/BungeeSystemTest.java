@@ -7,6 +7,7 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.database.ServerDBSystem;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -63,7 +64,7 @@ public class BungeeSystemTest {
         Settings.WEBSERVER_PORT.setTemporaryValue(9005);
         Settings.BUNGEE_IP.setTemporaryValue("8.8.8.8");
         Settings.DB_TYPE.setTemporaryValue("sqlite");
-        bungeeSystem.setDatabaseSystem(new ServerDBSystem());
+        bungeeSystem.setDatabaseSystem(new ServerDBSystem(Locale::new));
 
         bungeeSystem.enable();
     }
@@ -77,7 +78,7 @@ public class BungeeSystemTest {
 
         Settings.WEBSERVER_PORT.setTemporaryValue(9005);
         Settings.DB_TYPE.setTemporaryValue("sqlite");
-        bungeeSystem.setDatabaseSystem(new ServerDBSystem());
+        bungeeSystem.setDatabaseSystem(new ServerDBSystem(Locale::new));
 
         bungeeSystem.enable();
     }

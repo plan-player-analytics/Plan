@@ -7,6 +7,7 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.io.File;
@@ -37,7 +38,7 @@ public class TestDatabaseCreator {
 
         boolean oldDB = testDB.exists();
 
-        db = new SQLiteDB(testDB);
+        db = new SQLiteDB(testDB, Locale::new);
         db.init();
 
         r = new Random();

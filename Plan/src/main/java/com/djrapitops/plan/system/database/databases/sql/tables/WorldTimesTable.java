@@ -1,7 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
@@ -14,10 +13,6 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -354,42 +349,6 @@ public class WorldTimesTable extends UserIDTable {
                 }
             }
         });
-    }
-
-    public void alterTableV16() {
-        addColumns(Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
-
-        RunnableFactory.createNew("DB version -> 16", new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    Map<Integer, Integer> sessionIDServerIDRelation = sessionsTable.getIDServerIDRelation();
-
-                    String sql = "UPDATE " + tableName + " SET " +
-                            Col.SERVER_ID + "=?" +
-                            " WHERE " + Col.SESSION_ID + "=?";
-
-                    executeBatch(new ExecStatement(sql) {
-                        @Override
-                        public void prepare(PreparedStatement statement) throws SQLException {
-                            for (Map.Entry<Integer, Integer> entry : sessionIDServerIDRelation.entrySet()) {
-                                Integer sessionID = entry.getKey();
-                                Integer serverID = entry.getValue();
-                                statement.setInt(1, serverID);
-                                statement.setInt(2, sessionID);
-                                statement.addBatch();
-                            }
-                        }
-                    });
-
-                    worldTable.alterTableV16();
-                } catch (DBOpException e) {
-                    Log.toLog(this.getClass().getName(), e);
-                } finally {
-                    cancel();
-                }
-            }
-        }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 2);
     }
 
     public enum Col implements Column {

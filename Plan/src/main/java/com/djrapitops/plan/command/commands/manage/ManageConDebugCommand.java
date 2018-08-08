@@ -7,9 +7,15 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.CheckConnectionRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -26,39 +32,18 @@ import java.util.UUID;
  */
 public class ManageConDebugCommand extends CommandNode {
 
-    public ManageConDebugCommand() {
+    private final Locale locale;
+
+    public ManageConDebugCommand(PlanPlugin plugin) {
         super("con", Permissions.MANAGE.getPermission(), CommandType.ALL);
-        setShortHelp("Debug Bukkit-Bungee Connections");
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(Check.isBungeeAvailable() ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
     }
 
-    @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!WebServerSystem.isWebServerEnabled()) {
-            sender.sendMessage("§cWebServer is not enabled on this server.");
-            return;
-        }
-
-        Processing.submitNonCritical(() -> testServers(sender));
-    }
-
-    private void testServers(ISender sender) {
-        List<Server> servers = Database.getActive().fetch().getServers();
-
-        if (servers.isEmpty()) {
-            sender.sendMessage("§cNo Servers found in the database.");
-        }
-
-        String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
-        UUID thisServer = ServerInfo.getServerUUID();
-        for (Server server : servers) {
-            if (thisServer.equals(server.getUuid())) {
-                continue;
-            }
-            testServer(sender, accessAddress, server);
-        }
-    }
-
-    public static boolean testServer(ISender sender, String accessAddress, Server server) {
+    public static boolean testServer(ISender sender, String accessAddress, Server server, Locale locale) {
         String address = server.getWebAddress().toLowerCase();
         boolean usingHttps = address.startsWith("https");
         boolean local = address.contains("localhost")
@@ -74,26 +59,53 @@ public class ManageConDebugCommand extends CommandNode {
 
         } catch (ForbiddenException | BadRequestException | InternalErrorException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
-            sender.sendMessage("§eOdd Exception: " + e.getClass().getSimpleName());
+            sender.sendMessage(locale.getString(ManageLang.CON_EXCEPTION, e.getClass().getSimpleName()));
         } catch (UnauthorizedServerException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, true, false));
-            sender.sendMessage("§eFail reason: Unauthorized. Server might be using different database.");
+            sender.sendMessage(locale.getString(ManageLang.CON_UNAUTHORIZED));
         } catch (ConnectionFailException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
-            sender.sendMessage("§eFail reason: " + e.getCause().getClass().getSimpleName() + " " + e.getCause().getMessage());
+            sender.sendMessage(locale.getString(ManageLang.CON_GENERIC_FAIL) + e.getCause().getClass().getSimpleName() + " " + e.getCause().getMessage());
             if (!local) {
-                sender.sendMessage("§eNon-local address, check that port is open");
+                sender.sendMessage(locale.getString(ManageLang.CON_EXTERNAL_URL));
             }
         } catch (GatewayException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, true, false));
         } catch (NotFoundException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
-            sender.sendMessage("§eFail reason: Older Plan version on receiving server");
+            sender.sendMessage(locale.getString(ManageLang.CON_OLD_VERSION));
         } catch (WebException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
-            sender.sendMessage("§eOdd Exception: " + e.getClass().getSimpleName());
+            sender.sendMessage(locale.getString(ManageLang.CON_EXCEPTION, e.getClass().getSimpleName()));
         }
         return false;
+    }
+
+    @Override
+    public void onCommand(ISender sender, String commandLabel, String[] args) {
+        if (!WebServerSystem.isWebServerEnabled()) {
+            sender.sendMessage(locale.getString(CommandLang.CONNECT_WEBSERVER_NOT_ENABLED));
+            return;
+        }
+
+        Processing.submitNonCritical(() -> testServers(sender));
+    }
+
+    private void testServers(ISender sender) {
+        List<Server> servers = Database.getActive().fetch().getServers();
+
+        if (servers.isEmpty()) {
+            sender.sendMessage(locale.getString(ManageLang.CON_NO_SERVERS));
+        }
+
+        String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        UUID thisServer = ServerInfo.getServerUUID();
+        for (Server server : servers) {
+            if (thisServer.equals(server.getUuid())) {
+                continue;
+            }
+            testServer(sender, accessAddress, server, locale);
+        }
     }
 
     private static String getMsgFor(String address, boolean usingHttps, boolean local, boolean successTo, boolean successFrom) {

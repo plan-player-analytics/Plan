@@ -1,118 +1,313 @@
-Analysis - Third Party                    || Analyysi | Analysoidaan Kolmannen osapuolen lähteitä
-Analysis FAIL - Fetch Exception           || Analyysi | Datan haku ei onnistunut, Virhe.
-Analysis FAIL - No Data                   || Analyysi | Analyysi ei onnistunut, Ei dataa.
-Analysis FAIL - No Players                || Analyysi | Analyysi ei onnistunut, Ei tunnettuja pelaajia
-Analysis - Fetch Phase                    || Analyysi | Haetaan Dataa..
-Analysis - Fetch Phase Start              || Analyysi | Tarkistetaan saatavilla olevia pelaajia..
-Analysis - Complete                       || Analyysi | Analyysi Valmis. (meni ${0}ms) ${1}
-Analysis - Begin Analysis                 || Analyysi | Data Haettu (${0} käyttäjää, meni ${1}ms), aloitetaan Datan analysointi..
-Analysis - Start                          || Analyysi | Aloitetaan Analyysi..
->Constant - CMD Footer                    || §f»
->Constant - List Ball                     || §7 •§2
-Cmd FAIL - No Data View                   || §e[Plan] Dataa ei voida näyttää.
-Cmd FAIL - No Permission                  || §c[Plan] Sinulla ei ole lupaa tähän komentoon.
-Cmd FAIL - Requires Arguments             || §c[Plan] Komento tarvitsee argumentteja. ${0}
-Cmd FAIL - Require only one Argument      || §c[Plan] Komento tarvitsee yhden argumentin.
-Cmd FAIL - Timeout                        || §c[Plan] ${0} komento aikakatkaistu! Tarkista '/plan status' & konsoli.
-Cmd FAIL - Unknown Username               || §c[Plan] Pelaajaa ei löytynyt tietokannasta
-Cmd FAIL - Unseen Username                || §c[Plan] Pelaaja ei ole pelannut palvelimella.
-Cmd FAIL - Invalid Username               || §c[Plan] Pelaajaa ei ole olemassa.
-Cmd Header - Analysis                     || §f»§2 Player Analytics - Analyysin tulokset
-Cmd Header - Info                         || §f»§2 Player Analytics - Tietoja
-Cmd Header - Inspect                      || §f»§2 Player Analytics - Pelaajan tiedot:
-Cmd Header - Search                       || §f»§2 Player Analytics - Haun tulokset: 
-In Depth Help - /plan analyze ?           || §2Analyysi Komento\§f  Päivittää Analyysin ja antaa linkin sen sivulle.\§7  /plan status-komentoa voidaan käyttää Analyysin tilan tarkistamiseen\§7  Vaihtoehtoiset komennot: analyze, analyse, analysis, a
-In Depth Help - /plan inspect ?           || §2Inspect Komento\§f  Antaa linkin pelaajan sivulle.\§7  Oman sivun voi nähdä komennolla /plan inspect\§7  Vaihtoehtoiset komennot /plan <nimi>
-In Depth Help - /plan list ?              || §2List Komento\§f  Antaa linkin pelaajalista sivulle.\§7  Pelaajalista sivulla näkyy kaikki välimuistissa olevat pelaajien sivut.\§7  Vaihtoehtoiset komennot: /plan pl
-In Depth Help - /plan manage ?            || §2Manage Komento\§f  Käytetään Tietokannan hallitsemiseen\§7  Vaihtoehtoiset komennot /plan m\§7  /plan m - Listaa komennot\§7  /plan m <alikomento> ? - tarkempi apu
-In Depth Help - /plan manage clear ?      || §2Manage Clear Komento\§f  Tyhjentää kaiken tiedon tietokannasta\§7  Plan kannattaa uudelleenkäynnistää onnistuneen tyhjennyksen jälkeen\§7  Vaihtoehtoiset komennot /plan pl
-In Depth Help - /plan manage dump ?       || §2Manage Dump Komento\§f  Heittää kaiken tiedon hastebiniin kehittäjän avuksi
-In Depth Help - /plan manage hotswap ?    || §2Manage Hotswap Komento\§f  Vaihtaa tietokantaa lennossa\§7  Ei vaihda tietokantaa mikäli yhteyttä ei saada muodostettua
-In Depth Help - /plan manage import ?     || §2Manage Import Komento\§f  Tuo Dataa muista lähteistä\§7  Analyysi poistetaan käytöstä tuonnin ajaksi
-In Depth Help - /plan manage remove ?     || §2Manage Remove Komento\§f  Poistaa käyttäjän datan aktiivisesta tietokannasta
-In Depth Help - /plan ?                   || §2/plan - Pää komento\§f  Käytetään kaikkien komentojen käyttämiseen\§7  /plan - Listaa komennot\§7  /plan <alikomento> ? - tarkempi apu
-In Depth Help - /plan qanalyze ?          || §2Quick Analysis Komento\§f  Näyttää osan analyysin tietoja pelissä\§7  Vähemmän tietoa kuin nettisivulla.\§7  Vaihtoehtoiset komennot: qanalyze, ganalyse, qanalysis, qa
-In Depth Help - /plan qinspect ?          || §2Quick Inspect Komento\§f  Näyttää osan pelaajan tiedoista pelissä.\§7  Vähemmän tietoa kuin nettisivulla.\§7  Vaihtoehtoiset komennot /plan qi
-In Depth Help - /plan search ?            || §2Search Komento\§f  Hakee pelaajia joiden nimestä löytyy haettava osa.\§7  Esim: /plan search 123 - Hakee pelaajat joiden nimestä löytyy 123
-In Depth Help - /plan webuser ?           || §2Web User Manage Komento\§f  Hallitsee Nettiserverin käyttäjiä\§7  Käyttäjillä on lupa taso:\§f   0 - Kaikki sivut\§f   1 - /players & kaikki pelaaja sivut\§f   2 - Oma pelaajan sivu\§7  Vaihtoehtoiset komennot /plan web
-In Depth Help - /plan webuser register ?  || §2Web Register Komento\§f  Rekisteröi uuden käyttäjän nettiserverille.\§7  Toiselle henkilölle rekisteröinti tarvitsee plan.webmanage luvan.\§7  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt.
-Analysis NOTIFY - Temporary Disable       || §eAnalyysi poistettu käytöstä toistaiseksi, /plan status kertoo lisää
-Cmd - Click Me                            || Klikkaa minua
-Cmd - Fetch Data                          || §f»§2 Haetaan tietoja välimuistiin..
-Cmd - Link                                || §7 • §2Linkki: §f
-Cmd - No Results                          || §7 • §2Ei tuloksia hakusanalle §7${0}§2.
-Cmd - Reload Success                      || §a[Plan] Uudelleenkäynnistys Valmis.
-Cmd - Results                             || §7 Sopivat pelaajat: §f
-Cmd - Searching                           || §f»§2Haetaaan..
-Cmd - Usage /plan analyze                 || Katso serverin analyysi
-Cmd - Usage /plan help                    || Katso komentolista.
-Cmd - Usage /plan info                    || Tarkista Plan versio
-Cmd - Usage /plan inspect                 || Tutki pelaajan sivua
-Cmd - Usage /plan list                    || Listaa välimuistissa olevat pelaajat
-Cmd - Usage /plan manage                  || Tietokannan hallinta komento
-Cmd - Usage /plan manage backup           || Varmuuskopioi tietokanta .db tiedostoon
-Cmd - Usage /plan manage clean            || Putsaa vanha data tietokannasta
-Cmd - Usage /plan manage clear            || Putsaa KAIKKI data tietokannasta
-Cmd - Usage /plan manage dump             || Luo Hastebin loki kehittäjän avuksi.
-Cmd - Usage /plan manage hotswap          || Vaihda tietokantaa lennossa ja käynnistä Plan uudelleen
-Cmd - Usage /plan manage import           || Tuo dataa muualta aktiiviseen tietokantaan
-Cmd - Usage /plan manage move             || Kopioi tiedot tietokannasta toiseen, ylikirjoittaen vanhat arvot.
-Cmd - Usage /plan manage remove           || Poista pelaajan tiedot aktiivisesta tietokannasta
-Cmd - Usage /plan manage restore          || Palauta varmuuskopio
-Cmd - Usage /plan qanalyze                || Tutki pika-analyysia
-Cmd - Usage /plan qinspect                || Tutki pelaajan tietoja pelissä
-Cmd - Usage /plan reload                  || Restart the Plugin (Reloads config)
-Cmd - Usage /plan search                  || Hae pelaajaa
-Cmd - Usage /plan webuser                 || Hallitse nettikäyttäjiä
-Cmd - Usage /plan webuser check           || Tarkista nettikäyttäjä ja sen lupa taso
-Cmd - Usage /plan webuser delete          || Poista nettikäyttäjä
-Cmd - Usage /plan webuser level           || Tietoa lupa tasoista
-Cmd - Usage /plan webuser register        || Register a user for the webserver
-Disable                                   || Player Analytics Disabled.
-Disable - Save                            || Tallennetaan välimuistia..
-Disable - WebServer                       || Sammutetaan Web palvelin..
-Enable                                    || Player Analytics Enabled.
-Enable - Boot Analysis 30s Notify         || Analyysi | Käynnistyksen yhteinen analyysi 30 sekunnin kuluttua..
-Enable - Boot Analysis Notify             || Analysis | Aloitetaan Käynnistyksen yhteinen analyysi..
-Enable Db FAIL - Disable Info             || Database initialization has failed, disabling Plan.
-Enable - Db Info                          || ${0}-tietokantayhteys onnistui.
-Enable - Db                               || Tietokannan käynnistys..
-Enable FAIL-Db                            || ${0}-Database Connection failed: ${1}
-Enable FAIL - Wrong Db Type               || Tietokantatyyppiä ei ole olemassa
-Enable Notify - ChatListener              || §eViestien kuuntelu pois käytöstä, nimi tieto voi olla väärin.
-Enable Notify - Disabled CommandListener  || §eKomentojen kuuntelu pois käytöstä.	
-Enable Notify - Disabled DeathListener    || §eKuolema kuuntelu pois käytöstä, tappoja ei lasketa.
-Enable Notify-Empty IP                    || §eIP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!
-Enable Notify - No data view              || §eNetti Palvelin Poissa käytöstä, mutta Alternative IP/TextUI ei ole käytössä, dataa ei voi tarkastella!
-Enable - WebServer                        || Käynnistetään Netti Palvelin..
-Enable - WebServer Info                   || Netti Palvelin pyörii PORTILLA ${0}
-Html - Active                             || Pelaaja on aktiivinen
-Html - Banned                             || | <span class="darkred">Pannassa</span>
-Html - Inactive                           || Pelaaja ei ole aktiivinen
-Html - No Extra Plugins                   || <p>Ei kauheasti lisä plugineita.</p>
-Html - Offline                            || | <span class="darkred">Offline</span>
-Html - Online                             || | <span class="darkgreen">Online</span>
-Html - OP                                 || , Operaattori (Op)
-Html - Table No Kills                     || Ei tappoja
-Manage FAIL - Confirm Action              || §c[Plan] Lisää -a vahvistaaksesi! ${0}
-Manage FAIL - Faulty DB Connection        || §c[Plan] Toinen tietokannoista ei käynnistynyt odotetusti.
-Manage FAIL - Backup File Not Found       || §c[Plan] Varmuuskopiota ei ole olemassa!
-Manage FAIL - Incorrect DB                || §c[Plan] Väärä tietokanta! (sqlite/mysql hyväksytään): 
-Manage FAIL - Incorrect Plugin            || §c[Plan] Plugin ei ole tuettu: 
-Manage FAIL - Empty DB                    || §c[Plan] Tietokannassa ei ole pelaaja dataa!
-Manage FAIL - Unenabled Plugin            || §c[Plan] Plugin ei ole käynnissä: 
-Manage FAIL - Same DB                     || §c[Plan] Ei voida siirtää samaan tietokantaan!
-Manage - Clear Success                    || §a[Plan] Kaikki data siirretty onnistuneesti!
-Manage - Remind Config Change             || §e[Plan] Muista vaihtaa tietokantaa ja käynnistää Plan uudelleen.
-Manage - Copy Success                     || §a[Plan] Kaikki tiedot kopioitu onnistuneesti!
-Manage - Process Fail                     || §c[Plan] Jokin meni vikaan dataa käsitellessä!
-Manage - Import                           || §f» §2 Tuodaan Dataa..
-Manage - Move Success                     || §a[Plan] Kaikki data siirretty onnistuneesti!
-Manage - Remove Success                   || §f» §f${0}:n§2 data poistettiin tietokannasta §f${1}§2.
-Manage - Start                            || »§7 Käsitellään Dataa..
-Manage - Success                          || §f» §2 Onnistui!
-Manage NOTIFY - Overwrite                 || Tiedot ${0}-tietokannassa ylikirjoitetaan!
-Manage NOTIFY - Partial Overwrite         || Osa tiedoista ${0}-tietokannassa ylikirjoitetaan!
-Manage NOTIFY - Remove                    || Tiedot ${0}-tietokannassa poistetaan!
-Manage NOTIFY - Rewrite                   || Tiedot ${0}-tietokannassa uudelleenkirjoitetaan!
-WARN - Too Small Queue Size               || Queue size is too small! (${0}), change the setting to a higher number! (Currently ${1})
+Cmd - Click Me                                  || Klikkaa minua
+Cmd - Link                                      ||   §2Linkki: §f
+Cmd Disable - Disabled                          || §aPlan on nyt poissa päältä. Voit käyttää /planbungee reload komentoa uudelleenkäynnistykseen.
+Cmd FAIL - Invalid Username                     || §cPelaajalla ei löytynyt UUID:ta.
+Cmd FAIL - No Feature                           || §eValitse sammutettava osa! (tällähetkellä tuetut: ${0})
+Cmd FAIL - No Permission                        || §cSinulla ei ole lupaa.
+Cmd FAIL - Require only one Argument            || §cAnna ainakin yksi muuttuja ${1}
+Cmd FAIL - Requires Arguments                   || §cMääritä enemmän muuttujia (${0}) ${1}
+Cmd FAIL - Unknown Username                     || §cPleaajaa ei ole nähty tällä palvelimella.
+Cmd FAIL - WebUser does not exists              || §cKäyttäjää ei ole olemassa!
+Cmd FAIL - WebUser exists                       || §cKäyttäjä on jo olemassa!
+Cmd Header - Analysis                           || > §2Analyysin tulokset
+Cmd Header - Info                               || > §2Player Analytics
+Cmd Header - Inspect                            || > §2Pelaaja: §f${0}
+Cmd Header - Network                            || > §2Verkoston Sivu
+Cmd Header - Players                            || > §2Pelaajat
+Cmd Header - Search                             || > §2${0} Tulosta haulle §f${1}§2:
+Cmd Header - Servers                            || > §2Palvelimet
+Cmd Header - Web Users                          || > §2${0} Web Käyttäjät
+Cmd Info - Bungee Connection                    ||   §2Yhdistetty BungeeCord:iin: §f${0}
+Cmd Info - Database                             ||   §2Aktiivinen Tietokanta: §f${0}
+Cmd Info - Reload Complete                      || §aUudelleenlataus onnistui!
+Cmd Info - Reload Failed                        || §cUudelleenlatauksessa esiintyi ongelmia. Käynnistystä uudelleen suositellaan.
+Cmd Info - Update                               ||   §2Päivitys saatavilla: §f${0}
+Cmd Info - Version                              ||   §2Versio: §f${0}
+Cmd Notify - No WebUser                         || Sinulla ei ehkä ole Web Käyttäjää, käytä /plan register <salasana>-komentoa
+Cmd Notify - WebUser register                   || Rekisteröitiin uusi Web Käyttäjä: '${0}' Lupa taso: ${1}
+Cmd Qinspect - Activity Index                   ||   §2Aktiivisuus Indeksi: §f${0} | ${1}
+Cmd Qinspect - Deaths                           ||   §2Kuolemat: §f${0}
+Cmd Qinspect - Geolocation                      ||   §2Kirjautui sisään maasta: §f${0}
+Cmd Qinspect - Last Seen                        ||   §2Viimeksi nähty: §f${0}
+Cmd Qinspect - Longest Session                  ||   §2Pisin istunto: §f${0}
+Cmd Qinspect - Mob Kills                        ||   §2Otusten Tappoja: §f${0}
+Cmd Qinspect - Player Kills                     ||   §2Pelaajien Tappoja: §f${0}
+Cmd Qinspect - Playtime                         ||   §2Peliaika: §f${0}
+Cmd Qinspect - Registered                       ||   §2Rekisteröitynyt: §f${0}
+Cmd Qinspect - Times Kicked                     ||   §2Potkittu Pellolle: §f${0}
+Cmd Setup - Allowed                             || §aYhteydenotto on nyt sallittu.
+Cmd Setup - Bad Request                         || §eYhteys onnistui, mutta Vastaanottava palvelin ei ollut BungeeCord. Käytä BungeeCord:in osoitetta.
+Cmd Setup - Disallowed                          || §cYhteydenotto on nyt kielletty.
+Cmd Setup - Forbidden                           || §eYhteys onnistui, mutta BungeeCord:n set-up tila oli poissa käytöstä - käytä '/planbungee setup' laittaaksesi sen päälle.
+Cmd Setup - Gateway Error                       || §eYhteys onnistui, mutta BungeeCord ei saanut yhteyttä tähän palvelimeen (Käynnistyikö Web palvelin uudelleen?). Käytä /plan m con & /planbungee con tutkiaksesi ongelmia.
+Cmd Setup - Generic Fail                        || §eYhteys ei onnistunut: ${0}
+Cmd Setup - Internal Error                      || §eYhteys onnistui. ${0}, tarkista mahdollinen virheloki vastaanottavalla palvelimella.
+Cmd Setup - Success                             || §aYhteys onnistui, Plan saattaa käynnistyä uudelleen muutaman sekunnin kuluttua..
+Cmd Setup - Unauthorized                        || §eYhteys onnistui, mutta Vastaanottava palvelin ei hyväksynyt tätä palvelinta. Pyydä apua Discordissa.
+Cmd Setup - Url mistake                         || §cVarmista käyttäväsi kokonaista osoitetta (http:// tai https:// alkuinen) - Tarkista osoite BungeeCord:in käynnistyslokista.
+Cmd Setup - WebServer not Enabled               || §cWeb Palevlin ei ole käynnissä tällä palvelimella! Varmista että se käynnistyy pelin mukana!
+Cmd SUCCESS - Feature disabled                  || §aSammutettiin '${0}' toistaiseksi, kunnes Plan ladataan uudelleen.
+Cmd SUCCESS - WebUser register                  || §aLisättiin uusi Web Käyttäjä (${0})!
+Cmd Update - Cancel Success                     || §aPeruutettu.
+Cmd Update - Cancelled                          || §cPäivitys peruutettu.
+Cmd Update - Change log                         || Muutosloki v${0}:
+Cmd Update - Fail Cacnel                        || §cPäivitys epäonnistui palvelimella, peruutetaan päivitys kaikilla palvelimilla..
+Cmd Update - Fail Force Notify                  || §e${0} ei voitu päivittää, -force käytössä, jatketaan päivitystä.
+Cmd Update - Fail Not Online                    || §cKaikki palvelimet eivät olleet saatavilla, voit silti päivittää käyttämällä komentoa /plan update -u -force
+Cmd Update - Notify Cancel                      || §aVoit peruuttaa päivityksen palvelimilla, joita ei ole käynnistetty uudelleen, komennolla /plan update cancel.
+Cmd Update - Online Check                       || Varmistetaan että palvelimet ovat päällä..
+Cmd Update - Scheduled                          || §a${0} astettu päivittymään.
+Cmd Update - Url mismatch                       || §cVersio URL ei alkanut ${0} joten siihen ei voi ehkä luottaa. Voit ladata sen manuaalisesti täältä (Suora lataus):
+Cmd Web - Permission Levels                     || >\§70: Pääsy kaikille sivuille\§71: Pääsy '/players' ja pelaajien sivuille\§72: Pääsy pelaajan sivulle, jolla on sama nimi kuin Web Käyttäjällä\§73+: Ei pääsyä
+Command Help - /plan analyze                    || Katso Palvelimen sivua
+Command Help - /plan dev                        || Kehitys komento
+Command Help - /plan help                       || Komentojen lista
+Command Help - /plan info                       || Tarkista Plan versio
+Command Help - /plan inspect                    || Katso Pelaajan sivua
+Command Help - /plan manage                     || Hallitse Plan tietokantaa
+Command Help - /plan manage backup              || Varmuuskopioi tietokanta
+Command Help - /plan manage clear               || Tyhjennä tietokanta
+Command Help - /plan manage con                 || Tutki Palvelin-BungeeCord yhteys ongelmia
+Command Help - /plan manage disable             || Sammuta osa toistaiseksi
+Command Help - /plan manage hotswap             || Vaihda tietokantaa lennosta
+Command Help - /plan manage import              || Tuo tietoa muualta
+Command Help - /plan manage move                || Siirrä tietoa tietokantojen välillä
+Command Help - /plan manage remove              || Poista pelaajan tiedot
+Command Help - /plan manage restore             || Palauta teitokannan varmuuskopio
+Command Help - /plan manage setup               || Muodosta Palvelin-BungeeCord yhteys
+Command Help - /plan network                    || Katso Verkoston sivua
+Command Help - /plan players                    || Katso Pelaajat sivua
+Command Help - /plan qinspect                   || Katso pelaajan tietoja pelissä
+Command Help - /plan register                   || Rekisteröi Web Käyttäjä
+Command Help - /plan reload                     || Käynnistä Plan uudelleen
+Command Help - /plan search                     || Etsi pelaajan nimeä
+Command Help - /plan servers                    || Listaa tietokannassa olevat palvelimet 
+Command Help - /plan update                     || Muutosloki linkki tai Plan:in päivitys
+Command Help - /plan web check                  || Tarkista Web Käyttäjän tiedot
+Command Help - /plan web delete                 || Poista Web Käyttäjä
+Command Help - /plan web level                  || Tietoa Web lupatasoista
+Command Help - /plan web list                   || Listaa Web Käyttäjät
+Command Help - /plan webuser                    || Halliste Web Käyttäjiä
+Command Help - /planbungee con                  || Tutki BungeeCord-Palvelin yhteys ongelmia
+Command Help - /planbungee disable              || Sammuta Plan toistaiseksi
+Command Help - /planbungee setup                || Vaihda asennustilaa
+Database - Apply Patch                          || Muutetaan Tietokantaa: ${0}..
+Database - Patches Applied                      || Tietokannan muutokset suoritettu onnistuneesti.
+Database - Patches Applied Already              || Kaikki tietokannan muutokset oli jo tehty.
+Database MySQL - Launch Options Error           || LauchOptions-asetus oli virheellinen, käytetään oletusta (${0})
+Database Notify - Clean                         || Poistetiin ${0}n pelaajan tiedot.
+Database Notify - SQLite No WAL                 || SQLite WAL tilaa ei tueta tällä versiolla, Käytetään perustilaa. Tämä voi vaikuttaa suorituskykyyn.
+Disable                                         || Player Analytics Sammutettu.
+Disable - Processing                            || Suoritetaan kriittisiä suorittamattomia toimintoja. (${0})
+Disable - Processing Complete                   || Suoritus valmis.
+Disable - WebServer                             || Web palvelin on sammutettu.
+Enable                                          || Player Analytics Käynnistetty.
+Enable - Database                               || ${0}-tietokanta yhteys luotu.
+Enable - Notify Address Confirmation            || Varmista että tämä osoite osoittaa TÄHÄN palvelimeen: ${0}
+Enable - Notify Empty IP                        || IP server.properties tiedostossa on tyhjä & AlternativeIP ei ole käytössä. Linkit ovat virheellisiä!
+Enable - Notify Geolocations disabled           || Sijaintien keräys ei ole päällä. (Data.Geolocations: false)
+Enable - Notify Geolocations Internet Required  || Plan Vaatii internetin ensimmäisellä käynnistyskerralla GeoLite2 tietokannan lataamiseen.
+Enable - Notify Webserver disabled              || Web Palvelinta ei käynnistetty. (WebServer.DisableWebServer: true)
+Enable - WebServer                              || Web Palvelin pyörii PORTILLA ${0} (${1})
+Enable FAIL - Database                          || ${0}-Tietokanta yhteys epäonnistui: ${1}
+Enable FAIL - Database Patch                    || Tietokannan muutokset epäonnistuivat, Plan jouduttiin sulkemaan. Ilmoita tästä ongelmasta
+Enable FAIL - GeoDB Write                       || Jokin meni pieleen tallentaessa GeoLite2 tietokantaa
+Enable FAIL - WebServer (Bungee)                || Web Palvelin ei käynnistynyt!
+Enable FAIL - Wrong Database Type               || ${0} ei ole tuettu Tietokanta
+HTML - ACTIVITY_INDEX                           || Aktiivisuus Indeksi
+HTML - ALL                                      || KAIKKI
+HTML - ALL_TIME_PEAK                            || Paras Huippu
+HTML - AVERAGE_PING                             || Keskimääräinen Ping
+HTML - AVG                                      || AVG
+HTML - BANNED                                   || Pannassa
+HTML - BEST_PING                                || Paras Ping
+HTML - CALENDAR                                 || KALENTERI
+HTML - CALENDAR_TEXT                            ||  Kalenteri
+HTML - CHUNKS                                   || Chunkit
+HTML - COMMAND                                  ||  Komento
+HTML - COMMNAND_USAGE                           || Komentojen Käyttö
+HTML - CONNECTION_INFORMATION                   || Yhteydet
+HTML - COUNTRY                                  || Maa
+HTML - CURRENT_PLAYERBASE                       || Nykyiset pelaajat
+HTML - DEATHS                                   || Kuolemat
+HTML - ENTITIES                                 || Entiteetit
+HTML - ERROR                                    || Autentisointi epäonnistui virheen vuoksi
+HTML - FAVORITE_SERVER                          || Lempipalvelin
+HTML - GEOLOCATION                              || Sijainti
+HTML - GEOLOCATION_TEXT                         || Sijainti
+HTML - HEALTH_ESTIMATE                          || Terveysarvio
+HTML - INDEX_ACTIVE                             || Aktiivinen
+HTML - INDEX_INACTIVE                           || Inaktiivinen
+HTML - INDEX_IRREGULAR                          || Epäsäännöllinen
+HTML - INDEX_REGULAR                            || Säännöllinen
+HTML - INDEX_VERY_ACTIVE                        || Todella Aktiivinen
+HTML - IP_ADDRESS                               || IP-osoite
+HTML - KILLED                                   || Tappanut
+HTML - KILLED_BY                                || Tappanut
+HTML - LAST_24_HOURS                            || VIIMEISET 24 TUNTIA
+HTML - LAST_30_DAYS                             || VIIMEISET 30 PÄIVÄÄ
+HTML - LAST_30_DAYS_TEXT                        || Viimeiset 30 Päivää
+HTML - LAST_7_DAYS                              || VIIMEISET 7 PÄIVÄÄ
+HTML - LAST_CONNECTED                           || Viimeisin yhteys
+HTML - LAST_PEAK                                || Viimeisin huippu
+HTML - LAST_SEEN                                || NÄHTY VIIMEKSI
+HTML - LAST_SEEN_TEXT                           || Nähty Viimeksi
+HTML - LOADED_CHUNKS                            || Ladatut Chunkit
+HTML - LOADED_ENTITIES                          || Ladatut Entiteetit
+HTML - LOCAL_MACHINE                            || Paikallinen laite
+HTML - LONGEST                                  || Pisin
+HTML - LOW_TPS_SPIKES                           || Matalat TPS Harjat
+HTML - MOB_CAUSED_DEATHS                        || Otusten aiheuttamat Kuolemat
+HTML - MOB_KILLS                                || Tapetut Otukset
+HTML - MOST_RECENT_SESSIONS                     || Viimeisimmät Istunnot
+HTML - NAME                                     ||  Nimi
+HTML - NAV_COMMAND_USAGE                        || Komentojen Käyttö
+HTML - NAV_GEOLOCATIONS                         || Sijainnit
+HTML - NAV_INFORMATION                          || Tiedot
+HTML - NAV_NETWORK_PLAYERS                      || Verkoston Pelaajat
+HTML - NAV_ONLINE_ACTIVITY                      || Aktiivisuus
+HTML - NAV_OVERVIEW                             || Yhteenveto
+HTML - NAV_PERFORMANCE                          || Suorituskyky
+HTML - NAV_PLAYERS                              || Pelaajat
+HTML - NAV_PLUGINS                              || Lisäosat
+HTML - NAV_SESSIONS                             || Istunnot
+HTML - NAV_SEVER_HEALTH                         || Palvelimen Terveys
+HTML - NETWORK                                  || Verkosto
+HTML - NETWORK_INFORMATION                      || VERKOSTON TIEDOT
+HTML - NEW                                      || UUDET
+HTML - NEW_CALENDAR                             || Uudet:
+HTML - NEW_PLAYERS_TEXT                         || Uudet Pelaajat
+HTML - NEW_RETENTION                            || Uusien Pelaajien pysyvyys
+HTML - NEW_TEXT                                 || Uudet
+HTML - NICKNAME                                 || Lempinimi
+HTML - NO_KILLS                                 || Ei Tappoja
+HTML - NO_PLAYER_CAUSED_DEATHS                  || Ei Pelaajien auheuttamia kuolemia
+HTML - OFFLINE                                  ||  Ei Paikalla
+HTML - ONLINE                                   ||  Paikalla
+HTML - ONLINE_ACTIVITY                          || AKTIIVISUUS
+HTML - OPERATOR                                 || Operaattori
+HTML - OVERVIEW                                 || YHTEENVETO
+HTML - PER_DAY                                  || / Päivä
+HTML - PLAYER_CAUSED_DEATHS                     || Pelaajien aiheuttamat Kuolemat
+HTML - PLAYER_KILLS                             || Tapetut Pelaajat
+HTML - PLAYER_LIST                              || Pelaajalista
+HTML - PLAYERBASE_DEVELOPMENT                   || Pelaajakunnan kehitys
+HTML - PLAYERS                                  || PELAAJAT
+HTML - PLAYERS_ONLINE                           || PELAAJIA PAIKALLA
+HTML - PLAYERS_ONLINE_TEXT                      || Pelaajia Paikalla
+HTML - PLAYERS_TEXT                             || Pelaajia
+HTML - PLAYTIME                                 || Peliaika
+HTML - PLEASE_WAIT                              || Odota Hetki...
+HTML - PREDICETED_RETENTION                     || Pysyvyyden Ennuste
+HTML - PUNCH_CARD                               || Reikäkortti
+HTML - PUNCHCARD                                || REIKÄKORTTI
+HTML - RECENT_LOGINS                            || VIIMEAIKAISET KIRJAUTUMISET
+HTML - REGISTERED                               || REKISTERÖITYNYT
+HTML - REGISTERED_TEXT                          || Rekisteröitynyt
+HTML - REGULAR                                  || SÄÄNNÖLLISET
+HTML - SEEN_NICKNAMES                           || Nähdyt Lempinimet
+HTML - SERVER                                   || Palvelin
+HTML - SERVER_ANALYSIS                          || Palvelimen Analyysi
+HTML - SERVER_HEALTH_ESTIMATE                   || Palvelimen Terveysarvio
+HTML - SERVER_INFORMATION                       || PALVELIMEN TIEDOT
+HTML - SERVER_PREFERENCE                        || Palvelinten mieleisyys
+HTML - SERVERS                                  || Palvelimet
+HTML - SESSION                                  || Istunto
+HTML - SESSION_ENDED                            || Istunto Päättyi
+HTML - SESSION_LENGTH                           || Istunnon Pituus
+HTML - SESSION_MEDIAN                           || Istuntojen Mediaani
+HTML - SESSIONS                                 || Istunnot
+HTML - TIME                                     ||  Aika
+HTML - TIMES_KICKED                             || Potkimis Kerrat
+HTML - TIMES_USED                               || Käyttökerrat
+HTML - TOTAL_ACTIVE                             || Aktiivinen Peliaika
+HTML - TOTAL_AFK                                || AFK
+HTML - TOTAL_PLAYERS                            || Kaikki Pelaajat
+HTML - TOTAL_PLAYTIME                           || Peliaika
+HTML - UNIQUE                                   || UNIIKIT
+HTML - UNIQUE_CALENDAR                          || Uniikit:
+HTML - UNIQUE_PLAYERS                           || UNIIKIT PELAAJAT
+HTML - UNIQUE_PLAYERS_TEXT                      || Uniikit Pelaajat
+HTML - UNIQUE_TEXT                              || Uniikit
+HTML - USAGE                                    ||  Käyttö
+HTML - USED_COMMANDS                            || Käytetyt Komennot
+HTML - USER_AND_PASS_NOT_SPECIFIED              || Käyttäjää ja salasana vaaditaan.
+HTML - USER_DOES_NOT_EXIST                      || Käyttäjää ei ole olemassa
+HTML - USER_INFORMATION                         || KÄYTTÄJIEN TIEDOT
+HTML - USER_PASS_MISMATCH                       || Käyttäjä ja salasana ei täsmää
+HTML - WITH                                     || <th>Millä
+HTML - WORLD                                    ||  Maailma
+HTML - WORLD_LOAD                               || MAAILMAN VARAUS
+HTML - WORLD_PLAYTIME                           || Maailman Peliaika
+HTML - WORST_PING                               || Huonoin Ping
+HTML ERRORS - ACCESS_DENIED_403                 || Pääsy Kielletty
+HTML ERRORS - ANALYSIS_REFRESH                  || Analyysiä suoritetaan..
+HTML ERRORS - ANALYSIS_REFRESH_LONG             || Analyysiä suoritetaan, sivu päivittyy hetken kuluttua..
+HTML ERRORS - AUTH_FAIL_TIPS_401                || - Varmista että olet rekisteröinyt käyttäjän komennolla <b>/plan register</b><br>- Tarkista että käyttäjänimi ja salaasana ovat oikein<br>- Nimi ja salasana ovat CASE SENSITIVE<br><br>Jos unohdit salasanasi, pyydä valvojia poistamaan käyttäjäsi ja uudelleenrekisteröidy.
+HTML ERRORS - AUTHENTICATION_FAIlED_401         || Autentikaatio ei onnistunut.
+HTML ERRORS - FORBIDDEN_403                     || Kielletty
+HTML ERRORS - NO_SERVERS_404                    || Ei palvelimia jolla toiminto voitaisiin suorittaa.
+HTML ERRORS - NOT_FOUND_404                     || Ei löytynyt
+HTML ERRORS - NOT_PLAYED_404                    || Pelaaja ei ole pelannut palvelimella.
+HTML ERRORS - PAGE_NOT_FOUND_404                || Sivua ei ole olemassa.
+HTML ERRORS - UNAUTHORIZED_401                  || Ei Autentikoitu
+HTML ERRORS - UNKNOWN_PAGE_404                  || Varmista menneeesi komennon antamaan osoitteeseen, Esim:</p><p>/player/PelaajanNimi<br>/server/PalvelimenNimi</p>
+HTML ERRORS - UUID_404                          || Pelaajan UUID:ta ei löytynyt tietokannasta.
+In Depth Help - /plan ?                         || > §2Pääkomento\  Käytä alikomentoja ja apua\  §2/plan §fListaa alikomennot\  §2/plan <alikomento> ? §fYksityiskohtainen apu
+In Depth Help - /plan analyze ?                 || > §2Analyysi Komento\  Päivittää palvelin sivun ja näyttää linkin sivustolle.
+In Depth Help - /plan inspect ?                 || > §2Tutkimus Komento\  Päivittää pelaajan sivun ja näyttää linkin sivustolle
+In Depth Help - /plan manage ?                  || > §2Hallinto Komento\  Hallitse Plan MySQL and SQLite tietokantoja.\  §2/plan m §fListaa alikomennot\  §2/plan m <alikomento> ? §fYksityiskohtainen apu
+In Depth Help - /plan manage backup ?           || > §2Varmuuskopio Alikomento\  Luo uuden SQLite tietokannan (.db file) nykyisen tietokannan tiedoilla Plan plugins kansioon..
+In Depth Help - /plan manage clear ?            || > §2Poisto Alikomento\  Poistaa kaiken aktiivisesta tietokannasta. Käytä varoen
+In Depth Help - /plan manage con ?              || > §2Yhteyksien tutkimus Alikomento\  Käytetään yhteys ongelmien tutkimiseen verkostoissa.\  Lähettää viestin jokaiselle palvelimelle tietokannassa.
+In Depth Help - /plan manage disable ?          || > §2Sammutus Alikomento\  Voi poistaa osia käytöstä tilapäisesti.\  Hyväksytyt muuttujat:\    §2kickcount §fSulkee potkimisten laskun, mikäli /kickall komentoa käytetään sammutus makrossa.
+In Depth Help - /plan manage import ?           || > §2Tuonti Alikomento\  Tuo tietoa muualta.\  Hyväksytyt muuttujat:\    §2offline §fBukkitin pelaajatiedot, rekisteröitymispäivä ja nimi.
+In Depth Help - /plan manage move ?             || > §2Siirto Alikomento\  Siirrä tietoa SQLite ja MySQL tietokantojen välillä.\  Kohde tietokanta tyhjennetään ennen siirtoa.
+In Depth Help - /plan manage remove ?           || > §2Poisto Alikomento\  Poistaa pelaajan tiedot aktiivisesta tietokannasta.
+In Depth Help - /plan manage restore ?          || > §2Palautus Alikomento\  Palauta edellinen varmuuskopio SQLite tietokanta (.db tiedosto)\  Voit myös palauttaa database.db tiedoston toiselta palvelimelta MySQL-tietokantan.\  Kohde tietokanta tyhjennetään ennen siirtoa.
+In Depth Help - /plan manage setup ?            || > §2Asennus Alikomento\  Muodosta yhteys BungeeCordin ja tämän palvelimen välille.\  BungeeAddress löytyy BungeeCordin käynnistyslokista
+In Depth Help - /plan network ?                 || > §2Verkosto Komento\  Näyttää linkin verkosto sivulle.\  Jos palvelin ei ole verkostossa, näyttää tämä sivu palvelimen sivun.
+In Depth Help - /plan players ?                 || > §2Pelaajat Komento\  Näyttää linkin pelaajan sivulle.
+In Depth Help - /plan qinspect ?                || > §2Pika-tutkimus Komento\  Näyttää tietoja pelaajasta pelin sisällä.
+In Depth Help - /plan reload ?                  || > §2Uudelleenlataus Komento\  Käynnistää Plan:in uudelleen.\  §bEi tue jar:in vaihtoa lennosta
+In Depth Help - /plan search ?                  || > §2Haku Komento\  Hae pelaajannimiä jollain hakusanalla.\§7  Esim: /plan search 123 - Etsii kaikki pelaajat joilla on 123 nimessään.
+In Depth Help - /plan servers ?                 || > §2Palvelimet Komento\  Näyttää tietokannassa olevat Plan palvelimet.\  Voidaan käyttää yhteys ongelmien tutkimiseen.
+In Depth Help - /plan update ?                  || > §2Päivitys Komento\  Päivittää Plan:in seuraavan käynnistyksen yhteydessä\  /plan update - Muutosloki linkki\  /plan update -u - Ajoita päivitys kaikissa päällä olevissa palvelimissa seuraavalle käynnistyskerralle.\  /plan update cancel - Peruuta ajoitettu päivitys palvelimilla jotka eivät ole vielä käynnistyneet uudelleen.
+In Depth Help - /plan web ?                     || < §2Web Käyttäjähallinto Komento.\  §2/plan web §fList alikomentos\  §2/plan web <alikomento> ? §fYksityiskohtainen apu
+In Depth Help - /plan web register ?            || > §2Rekisteröinti Alikomento\  Rekisteröi uuden Web Käyttäjän.\  Toiselle pelaajalle käyttäjän rekisteröinti vaatii plan.webmanage permission.\  Salasanat salataan PBKDF2 (64,000 iterations of SHA1) algoritmilla.
+In Depth Help - /planbungee disable ?           || > §2Sammutus Komento\  Sammuttaa PlanBungee:n.\  /planbungee reload käynnistää Plan:in uudelleen.\  §bEi tue jar:in vaihtoa lennossa
+In Depth Help - /planbungee setup ?             || > §2Asennustilan vaihto Komento\  Vaihtaa asennustilaa Bungee:lla.\  Turvatoimi MySQL haistelulle toisella Plan palvelimella.
+Manage - Confirm Overwrite                      || Tiedot ${0}:ssa ylikirjoitetaan!
+Manage - Confirm Removal                        || Tiedot ${0}:ssa poistetaan!
+Manage - Fail                                   || > §cJokin meni vikaan: ${0}
+Manage - Fail File not found                    || > §cTiedostoa ei löytynyt ${0}
+Manage - Fail Incorrect Database                || > §c'${0}' ei ole tuettu tietokanta.
+Manage - Fail No Importer                       || §eTuojaa '${0}' ei ole olemassa
+Manage - Fail Same Database                     || > §cEi voi käyttää samaa tietokantaa molempiin asioihin!
+Manage - Fail, Confirmation                     || > §cLisää '-a' vahvistaaksesi: ${0}
+Manage - Fail, Connection Exception             || §eEpäonnistumisen syy: 
+Manage - Fail, No Servers                       || §cEi Palvelimia tietokannassa.
+Manage - Fail, Old version                      || §eSyy: Vanhempi versio vastaanottavalla palvelimella
+Manage - Fail, Unauthorized                     || §eSyy: Ei authentikoitu, palvelin voi käyttää toista tietokantaa
+Manage - Fail, Unexpected Exception             || §eKummallinen Virhe: ${0}
+Manage - List Importers                         || Tuojat: 
+Manage - Notify External Url                    || §eEi-lokaali osoite, tarkista että portti on auki
+Manage - Remind HotSwap                         || §eMuista vaihtaa tietokantaa (/plan m hotswap ${0}) & käynnistä Plan uudelleen.
+Manage - Start                                  || > §2Prosessoidaan tietoa..
+Manage - Success                                || > §aOnnistui!
+Negative                                        || Ei
+Positive                                        || Kyllä
+Unknown                                         || Tuntematon
+Version - DEV                                   ||  Tämä on KEHITYS julkaisu.
+Version - Latest                                || Käytät uusinta versiota.
+Version - New                                   || Uusi Julkaisu (${0}) on saatavilla ${1}
+Version - New (old)                             || Uusi Versio on saatavilla ${0}
+Version FAIL - Read info (old)                  || Uuden version tarkistus epäonnistui
+Version FAIL - Read versions.txt                || Uuden version tarkistus epäonnistui Github/versions.txt:ta
+Web User Listing                                ||   §2${0} §7: §f${1}
+WebServer - Notify HTTP                         || Web Palvelin: Ei Sertifikaattia -> Käytetään HTTP-Palvelinta.
+WebServer - Notify HTTP User Auth               || Web Palvelin: Käyttäjien varmennus ei käytössä! (Ei turvallista HTTP-protokollalla)
+WebServer - Notify no Cert file                 || Web Palvelin: Sertifikaatti AvainKirjasto tiedostoa ei löytynyt: ${0}
+WebServer FAIL - Port Bind                      || Web Palvelin ei käynnistynyt. Onko portti (${0}) käytössä?
+WebServer FAIL - SSL Context                    || Web Palvelin: SSL Kontekstin käynnistys ei onnistunut.
+WebServer FAIL - Store Load                     || Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.

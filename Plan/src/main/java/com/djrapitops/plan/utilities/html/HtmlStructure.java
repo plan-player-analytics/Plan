@@ -15,9 +15,9 @@ import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.text.TextStringBuilder;
 
-import java.util.*;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -28,18 +28,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class HtmlStructure {
 
     public static String separateWithDots(String... elements) {
-        if (elements.length == 0) {
-            return "";
-        }
-        StringBuilder builder = new StringBuilder(elements[0]);
-        for (int i = 1; i < elements.length; i++) {
-            String element = elements[i];
-            if (element.isEmpty()) {
-                continue;
-            }
-            builder.append(" &#x2022; ");
-            builder.append(element);
-        }
+        TextStringBuilder builder = new TextStringBuilder();
+        builder.appendWithSeparators(elements, " &#x2022; ");
         return builder.toString();
     }
 
@@ -70,28 +60,6 @@ public class HtmlStructure {
                 "</div></div>" +
                 "</div></div></div>";
         return new String[]{"<li><a>Calculating... Refresh shortly</a></li>", tab};
-    }
-
-    public static String createNetworkPageContent(Map<UUID, String> networkPageContents) {
-        if (Verify.isEmpty(networkPageContents)) {
-            return "";
-        }
-        int i = 0;
-        StringBuilder b = new StringBuilder();
-        List<String> values = new ArrayList<>(networkPageContents.values());
-        Collections.sort(values);
-        int size = values.size();
-        for (String server : values) {
-            if (i % 2 == 0) {
-                b.append("<div class=\"row clearfix\">");
-            }
-            b.append(server);
-            if ((i + 1) % 2 == 0 || i + 1 == size) {
-                b.append("</div>");
-            }
-            i++;
-        }
-        return b.toString();
     }
 
     // TODO Rework into NetworkPage generation
@@ -168,22 +136,16 @@ public class HtmlStructure {
     public static String playerStatus(boolean online, boolean banned, boolean op) {
         StringBuilder html = new StringBuilder("<p>");
         if (online) {
-            html.append(Icon.called("circle").of(Color.GREEN))
-                    .append(" Online");
+            html.append(Icon.called("circle").of(Color.GREEN)).append(" Online");
         } else {
-            html.append(Icon.called("circle").of(Color.RED))
-                    .append(" Offline");
+            html.append(Icon.called("circle").of(Color.RED)).append(" Offline");
         }
         html.append("</p>");
         if (op) {
-            html.append("<p>")
-                    .append(Icons.OPERATOR)
-                    .append(" Operator</p>");
+            html.append("<p>").append(Icons.OPERATOR).append(" Operator</p>");
         }
         if (banned) {
-            html.append("<p>")
-                    .append(Icons.BANNED)
-                    .append(" Banned");
+            html.append("<p>").append(Icons.BANNED).append(" Banned</p>");
         }
         return html.toString();
     }

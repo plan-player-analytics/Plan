@@ -3,6 +3,8 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -21,6 +23,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -33,10 +36,12 @@ import java.util.zip.GZIPInputStream;
  */
 public class GeolocationCache implements SubSystem {
 
+    private final Supplier<Locale> locale;
     private final Map<String, String> geolocationCache;
     private File geolocationDB;
 
-    public GeolocationCache() {
+    public GeolocationCache(Supplier<Locale> locale) {
+        this.locale = locale;
         geolocationCache = new HashMap<>();
     }
 
@@ -47,10 +52,12 @@ public class GeolocationCache implements SubSystem {
             try {
                 GeolocationCache.checkDB();
             } catch (UnknownHostException e) {
-                Log.error("Plan Requires internet access on first run to download GeoLite2 Geolocation database.");
+                Log.error(locale.get().getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED));
             } catch (IOException e) {
-                throw new EnableException("Something went wrong saving the downloaded GeoLite2 Geolocation database", e);
+                throw new EnableException(locale.get().getString(PluginLang.ENABLE_FAIL_GEODB_WRITE), e);
             }
+        } else {
+            Log.infoColor("§e" + locale.get().getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_DISABLED));
         }
     }
 

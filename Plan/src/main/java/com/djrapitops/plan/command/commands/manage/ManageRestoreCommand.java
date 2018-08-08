@@ -4,9 +4,12 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -27,51 +30,59 @@ import java.util.Arrays;
 public class ManageRestoreCommand extends CommandNode {
 
     private final PlanPlugin plugin;
+    private final Locale locale;
 
     public ManageRestoreCommand(PlanPlugin plugin) {
         super("restore", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
-        setShortHelp(Locale.get(Msg.CMD_USG_MANAGE_RESTORE).toString());
-        setArguments("<Filename.db>", "<dbTo>", "[-a]");
-
         this.plugin = plugin;
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setArguments("<Filename.db>", "<dbTo>", "[-a]");
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_RESTORE));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_RESTORE));
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 2,
-                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 2, Arrays.toString(this.getArguments()))));
 
-        String db = args[1].toLowerCase();
-        boolean isCorrectDB = Verify.equalsOne(db, "sqlite", "mysql");
+        String backupDbName = args[0];
+
+        String dbName = args[1].toLowerCase();
+        boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql");
         Verify.isTrue(isCorrectDB,
-                () -> new IllegalArgumentException(Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB).toString()));
-
-        if (!Verify.contains("-a", args)) {
-            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REWRITE).parse(args[1])));
-            return;
-        }
+                () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
         try {
-            final Database database = DBSystem.getActiveDatabaseByName(db);
+            Database database = DBSystem.getActiveDatabaseByName(dbName);
+            Verify.isFalse(backupDbName.contains("database") && database instanceof SQLiteDB,
+                    () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB)));
 
-            runRestoreTask(args, sender, database);
+            if (!Verify.contains("-a", args)) {
+                sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_OVERWRITE, database.getName())));
+                return;
+            }
+
+            runRestoreTask(backupDbName, sender, database);
         } catch (Exception e) {
-            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+            sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
 
-    private void runRestoreTask(String[] args, ISender sender, final Database database) {
+    private void runRestoreTask(String backupDbName, ISender sender, final Database database) {
         RunnableFactory.createNew(new AbsRunnable("RestoreTask") {
             @Override
             public void run() {
                 try {
-                    String backupDBName = args[0];
+                    String backupDBName = backupDbName;
                     boolean containsDBFileExtension = backupDBName.endsWith(".db");
 
                     File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (containsDBFileExtension ? "" : ".db"));
 
                     if (!backupDBFile.exists()) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FILE_NOT_FOUND) + " " + args[0]);
+                        sender.sendMessage(locale.getString(ManageLang.FAIL_FILE_NOT_FOUND, backupDBFile.getAbsolutePath()));
                         return;
                     }
 
@@ -79,17 +90,17 @@ public class ManageRestoreCommand extends CommandNode {
                         backupDBName = backupDBName.substring(0, backupDBName.length() - 3);
                     }
 
-                    SQLiteDB backupDB = new SQLiteDB(backupDBName);
+                    SQLiteDB backupDB = new SQLiteDB(backupDBName, () -> locale);
                     backupDB.init();
 
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
                     database.backup().restore(backupDB);
 
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
                 } catch (Exception e) {
                     Log.toLog(this.getClass(), e);
-                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
                 } finally {
                     this.cancel();
                 }

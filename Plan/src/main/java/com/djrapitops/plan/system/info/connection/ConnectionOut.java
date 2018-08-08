@@ -9,16 +9,24 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.InfoRequestWithVariables;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustAllStrategy;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
 
-import javax.net.ssl.*;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.security.KeyManagementException;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.UUID;
@@ -29,25 +37,6 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class ConnectionOut {
-
-    private static final TrustManager[] trustAllCerts = new TrustManager[]{
-            new X509TrustManager() {
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                    //No need to implement.
-                }
-
-                @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                    //No need to implement.
-                }
-            }
-    };
 
     private final Server toServer;
     private final UUID serverUUID;
@@ -68,79 +57,28 @@ public class ConnectionOut {
     }
 
     public void sendRequest() throws WebException {
-        String address = toServer.getWebAddress();
+        String address = getAddress();
 
-        HttpURLConnection connection = null;
+        CloseableHttpClient client = null;
+        HttpPost post = null;
+        CloseableHttpResponse response = null;
         try {
-            URL url = new URL(address + "/info/" + infoRequest.getClass().getSimpleName().toLowerCase());
-            connection = (HttpURLConnection) url.openConnection();
-            if (address.startsWith("https")) {
-                HttpsURLConnection httpsConn = (HttpsURLConnection) connection;
+            client = getHttpClient(address);
+            String url = address + "/info/" + infoRequest.getClass().getSimpleName().toLowerCase();
 
-                // Disables unsigned certificate & hostname check, because we're trusting the user given certificate.
-
-                // This allows https connections internally to local ports.
-                httpsConn.setHostnameVerifier((hostname, session) -> true);
-
-                // This allows connecting to connections with invalid certificate
-                // Drawback: MitM attack possible between connections to servers that are not local.
-                // Scope: InfoRequest transmissions
-                // Risk: Attacker sets up a server between Bungee and Bukkit WebServers
-                //       - Negotiates SSL Handshake with both servers
-                //       - Receives the SSL encrypted data, but decrypts it in the MitM server.
-                //       -> Access to valid ServerUUID for POST requests
-                //       -> Access to sending Html to the (Bungee) WebServer
-                // Mitigating factors:
-                // - If Server owner has access to all routing done on the domain (IP/Address)
-                // - If Direct IPs are used to transfer between servers
-                // Alternative solution: InfoRequests run only on HTTP, HTTP can be read during transmission,
-                // would require running two WebServers when HTTPS is used.
-                httpsConn.setSSLSocketFactory(getRelaxedSocketFactory());
-            }
-            connection.setConnectTimeout(10000);
-            connection.setDoOutput(true);
-            connection.setInstanceFollowRedirects(false);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-            connection.setRequestProperty("charset", "UTF-8");
-
+            post = new HttpPost(url);
             String parameters = parseVariables();
+            prepareRequest(post, parameters);
 
-            connection.setRequestProperty("Content-Length", Integer.toString(parameters.length()));
+            // Send request
+            response = client.execute(post);
+            int responseCode = response.getStatusLine().getStatusCode();
 
-            byte[] toSend = parameters.getBytes();
-
-            connection.setUseCaches(false);
-            try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
-                out.write(toSend);
-            }
-
-            int responseCode = connection.getResponseCode();
-
-            ConnectionLog.logConnectionTo(toServer, infoRequest, responseCode);
-            switch (responseCode) {
-                case 200:
-                    return;
-                case 400:
-                    throw new BadRequestException("Bad Request: " + url.toString() + " | " + parameters);
-                case 403:
-                    throw new ForbiddenException(url.toString() + " returned 403 | " + parameters);
-                case 404:
-                    throw new NotFoundException(url.toString() + " returned a 404, ensure that your server is connected to an up to date Plan server.");
-                case 412:
-                    throw new UnauthorizedServerException(url.toString() + " reported that it does not recognize this server. Make sure '/plan m setup' was successful.");
-                case 500:
-                    throw new InternalErrorException();
-                case 504:
-                    throw new GatewayException(url.toString() + " reported that it failed to connect to this server.");
-                default:
-                    throw new WebException(url.toString() + "| Wrong response code " + responseCode);
-            }
+            handleResult(url, parameters, responseCode);
         } catch (SocketTimeoutException e) {
             ConnectionLog.logConnectionTo(toServer, infoRequest, 0);
             throw new ConnectionFailException("Connection timed out after 10 seconds.", e);
-        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException | IOException e) {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
                 Log.toLog(this.getClass(), e);
@@ -148,10 +86,70 @@ public class ConnectionOut {
             ConnectionLog.logConnectionTo(toServer, infoRequest, -1);
             throw new ConnectionFailException("Connection failed to address: " + address + " - Make sure the server is online.", e);
         } finally {
-            if (connection != null) {
-                connection.disconnect();
+            if (post != null) {
+                post.releaseConnection();
             }
+            MiscUtils.close(response);
+            MiscUtils.close(client);
         }
+    }
+
+    private void handleResult(String url, String parameters, int responseCode) throws WebException {
+        ConnectionLog.logConnectionTo(toServer, infoRequest, responseCode);
+        switch (responseCode) {
+            case 200:
+                return;
+            case 400:
+                throw new BadRequestException("Bad Request: " + url + " | " + parameters);
+            case 403:
+                throw new ForbiddenException(url + " returned 403 | " + parameters);
+            case 404:
+                throw new NotFoundException(url + " returned a 404, ensure that your server is connected to an up to date Plan server.");
+            case 412:
+                throw new UnauthorizedServerException(url + " reported that it does not recognize this server. Make sure '/plan m setup' was successful.");
+            case 500:
+                throw new InternalErrorException();
+            case 504:
+                throw new GatewayException(url + " reported that it failed to connect to this server.");
+            default:
+                throw new WebException(url + "| Wrong response code " + responseCode);
+        }
+    }
+
+    private void prepareRequest(HttpPost post, String parameters) {
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectionRequestTimeout(10000)
+                .setRelativeRedirectsAllowed(true)
+                .setContentCompressionEnabled(true)
+                .setMaxRedirects(1)
+                .build();
+        post.setConfig(requestConfig);
+
+        post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        post.setHeader("charset", "UTF-8");
+
+        byte[] toSend = parameters.getBytes();
+        post.setEntity(new ByteArrayEntity(toSend));
+    }
+
+    private CloseableHttpClient getHttpClient(String address) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        if (address.startsWith("https")) {
+            SSLContextBuilder builder = new SSLContextBuilder();
+            builder.loadTrustMaterial(null, new TrustAllStrategy());
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build(), NoopHostnameVerifier.INSTANCE);
+            return HttpClients.custom().setSSLSocketFactory(sslsf).build();
+        } else {
+            return HttpClients.createDefault();
+        }
+    }
+
+    private String getAddress() {
+        String address = toServer.getWebAddress();
+        if (address.contains("://:")) {
+            String[] parts = address.split("://:", 2);
+            address = parts[0] + "://localhost:" + parts[1];
+        }
+        return address;
     }
 
     private String parseVariables() {
@@ -166,11 +164,5 @@ public class ConnectionOut {
         }
 
         return parameters.toString();
-    }
-
-    private SSLSocketFactory getRelaxedSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
-        SSLContext sc = SSLContext.getInstance("TLSv1.2");
-        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        return sc.getSocketFactory();
     }
 }

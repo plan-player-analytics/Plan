@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.settings.ColorScheme;
@@ -60,4 +61,6 @@ public interface PlanPlugin extends IPlugin {
 
     @Override
     boolean isReloading();
+
+    PlanSystem getSystem();
 }

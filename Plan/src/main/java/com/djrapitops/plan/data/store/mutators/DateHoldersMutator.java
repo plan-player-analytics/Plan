@@ -47,7 +47,7 @@ public class DateHoldersMutator<T extends DateHolder> {
             long start = map.firstKey();
             long now = System.currentTimeMillis();
             long end = now - (now % twentyFourHours);
-            for (long date = map.firstKey(); date < end; date += twentyFourHours) {
+            for (long date = start; date < end; date += twentyFourHours) {
                 map.putIfAbsent(date, new ArrayList<>());
             }
         }

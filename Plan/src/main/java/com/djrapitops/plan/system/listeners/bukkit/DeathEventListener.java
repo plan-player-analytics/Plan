@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.KillProcessor;
@@ -80,7 +81,7 @@ public class DeathEventListener implements Listener {
             }
         }
 
-        return new KillProcessor(killer.getUniqueId(), time, dead, normalizeMaterialName(itemInHand));
+        return new KillProcessor(killer.getUniqueId(), time, dead, Formatters.itemName().apply(itemInHand.name()));
     }
 
     private KillProcessor handlePetKill(long time, LivingEntity dead, Tameable tameable) {
@@ -93,8 +94,16 @@ public class DeathEventListener implements Listener {
             return null;
         }
 
+        String name;
+        try {
+            name = tameable.getType().name();
+        } catch (NoSuchMethodError oldVersionNoTypesError) {
+            // getType introduced in 1.9
+            name = tameable.getClass().getSimpleName();
+        }
+
         return new KillProcessor(owner.getUniqueId(), time, dead,
-                new Format(tameable.getType().name()).capitalize().toString()
+                new Format(name).removeNumbers().removeSymbols().capitalize().toString()
         );
     }
 
@@ -109,27 +118,6 @@ public class DeathEventListener implements Listener {
         return new KillProcessor(player.getUniqueId(), time, dead,
                 new Format(projectile.getType().name()).capitalize().toString()
         );
-    }
-
-    /**
-     * Normalizes a material name
-     *
-     * @param material The material
-     * @return The normalized material name
-     */
-    private String normalizeMaterialName(Material material) {
-        String[] parts = material.name().split("_");
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < parts.length; i++) {
-            String part = new Format(parts[i]).capitalize().toString();
-            builder.append(part);
-            if (i < parts.length - 1) {
-                builder.append(" ");
-            }
-        }
-
-        return builder.toString();
     }
 }
 

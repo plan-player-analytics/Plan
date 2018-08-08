@@ -1,9 +1,12 @@
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.listeners.bukkit.PlayerOnlineListener;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -18,27 +21,31 @@ import java.util.Arrays;
  * @since 4.0.4
  */
 public class ManageDisableCommand extends CommandNode {
-    /**
-     * Class Constructor.
-     */
-    public ManageDisableCommand() {
+
+    private final Locale locale;
+
+    public ManageDisableCommand(PlanPlugin plugin) {
         super("disable", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
-        setShortHelp("Disable a feature temporarily");
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
         setArguments("<feature>");
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_DISABLE));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_DISABLE));
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(Arrays.toString(this.getArguments()))));
+                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
         switch (args[0].toLowerCase()) {
             case "kickcount":
                 PlayerOnlineListener.setCountKicks(false);
-                sender.sendMessage("§aDisabled Kick Counting temporarily until next plugin reload.");
+                sender.sendMessage(locale.getString(CommandLang.FEATURE_DISABLED, "Kick Counting"));
                 break;
             default:
-                sender.sendMessage("§eDefine a feature to disable! (currently supports only kickCount)");
+                sender.sendMessage(locale.getString(CommandLang.FAIL_NO_SUCH_FEATURE, "'kickcount'"));
         }
     }
 }

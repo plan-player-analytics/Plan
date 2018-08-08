@@ -23,11 +23,6 @@ public class NetworkPageContent extends Response {
         content = new HashMap<>();
     }
 
-    public NetworkPageContent(String serverName, String html) {
-        this();
-        content.put(serverName, html);
-    }
-
     public void addElement(String serverName, String html) {
         content.put(serverName, html);
     }

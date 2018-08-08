@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Registers the user to the database and marks first session if the user has no actions.
@@ -19,11 +20,11 @@ import java.util.UUID;
 public class RegisterProcessor implements CriticalRunnable {
 
     private final UUID uuid;
-    private final long registered;
+    private final Supplier<Long> registered;
     private final String name;
     private final Runnable[] afterProcess;
 
-    public RegisterProcessor(UUID uuid, long registered, String name, Runnable... afterProcess) {
+    public RegisterProcessor(UUID uuid, Supplier<Long> registered, String name, Runnable... afterProcess) {
         this.uuid = uuid;
         this.registered = registered;
         this.name = name;
@@ -36,10 +37,10 @@ public class RegisterProcessor implements CriticalRunnable {
         Verify.nullCheck(uuid, () -> new IllegalStateException("UUID was null"));
         try {
             if (!db.check().isPlayerRegistered(uuid)) {
-                db.save().registerNewUser(uuid, registered, name);
+                db.save().registerNewUser(uuid, registered.get(), name);
             }
             if (!db.check().isPlayerRegisteredOnThisServer(uuid)) {
-                db.save().registerNewUserOnThisServer(uuid, registered);
+                db.save().registerNewUserOnThisServer(uuid, registered.get());
             }
         } finally {
             for (Runnable runnable : afterProcess) {

@@ -1,10 +1,12 @@
 package com.djrapitops.plan.system.webserver.response;
 
+import com.djrapitops.plan.system.locale.Locale;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.zip.GZIPOutputStream;
 
@@ -18,7 +20,7 @@ public abstract class Response {
     private String header;
     private String content;
 
-    private Headers responseHeaders;
+    protected Headers responseHeaders;
 
     public Response(ResponseType type) {
         this.type = type.get();
@@ -81,13 +83,17 @@ public abstract class Response {
         this.responseHeaders = responseHeaders;
     }
 
-    public void send(HttpExchange exchange) throws IOException {
+    public void send(HttpExchange exchange, Locale locale) throws IOException {
         responseHeaders.set("Content-Type", type);
         responseHeaders.set("Content-Encoding", "gzip");
         exchange.sendResponseHeaders(getCode(), 0);
 
+        String sentContent = this instanceof JavaScriptResponse
+                ? getContent()
+                : locale.replaceMatchingLanguage(getContent());
+
         try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
-             ByteArrayInputStream bis = new ByteArrayInputStream(getContent().getBytes())) {
+             ByteArrayInputStream bis = new ByteArrayInputStream(sentContent.getBytes(StandardCharsets.UTF_8))) {
             byte[] buffer = new byte[2048];
             int count;
             while ((count = bis.read(buffer)) != -1) {

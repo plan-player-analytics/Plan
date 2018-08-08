@@ -9,7 +9,6 @@ import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.locale.Locale;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -25,11 +24,9 @@ import java.io.IOException;
 public abstract class ConfigSystem implements SubSystem {
 
     protected Config config;
-    protected final Locale locale;
     protected final Theme theme;
 
     public ConfigSystem() {
-        locale = new Locale();
         theme = new Theme();
     }
 
@@ -57,7 +54,6 @@ public abstract class ConfigSystem implements SubSystem {
         } catch (IOException e) {
             throw new EnableException("Failed to save default config.", e);
         }
-        locale.loadLocale();
         theme.enable();
     }
 
@@ -71,7 +67,6 @@ public abstract class ConfigSystem implements SubSystem {
     @Override
     public void disable() {
         theme.disable();
-        locale.unload();
     }
 
     public void reload() {
@@ -80,9 +75,5 @@ public abstract class ConfigSystem implements SubSystem {
         } catch (IOException e) {
             Log.toLog(ConfigSystem.class, e);
         }
-    }
-
-    public Locale getLocale() {
-        return getInstance().locale;
     }
 }

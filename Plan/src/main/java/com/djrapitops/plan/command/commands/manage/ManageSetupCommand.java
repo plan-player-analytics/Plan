@@ -1,18 +1,23 @@
 package com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.Verify;
+
+import java.util.Arrays;
 
 /**
  * This manage SubCommand is used to request settings from Bungee so that connection can be established.
@@ -22,25 +27,30 @@ import com.djrapitops.plugin.utilities.Verify;
  */
 public class ManageSetupCommand extends CommandNode {
 
-    public ManageSetupCommand() {
+    private final Locale locale;
+
+    public ManageSetupCommand(PlanPlugin plugin) {
         super("setup", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
-        setShortHelp("Set-Up Bungee connection");
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
         setArguments("<BungeeAddress>");
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_MANAGE_HOTSWAP).toArray());
+        setShortHelp(locale.getString(CmdHelpLang.MANAGE_SETUP));
+        setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_SETUP));
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
-                () -> new IllegalArgumentException(Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString()));
+                () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
         if (!WebServerSystem.isWebServerEnabled()) {
-            sender.sendMessage("§cWebServer is not enabled on this server! Make sure it enables on boot!");
+            sender.sendMessage(locale.getString(CommandLang.CONNECT_WEBSERVER_NOT_ENABLED));
             return;
         }
         String address = args[0].toLowerCase();
         if (!address.startsWith("http") || address.endsWith("://")) {
-            sender.sendMessage("§cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address.");
+            sender.sendMessage(locale.getString(CommandLang.CONNECT_URL_MISTAKE));
             return;
         }
         if (address.endsWith("/")) {
@@ -58,22 +68,22 @@ public class ManageSetupCommand extends CommandNode {
 
                 InfoSystem.getInstance().requestSetUp(address);
 
-                sender.sendMessage("§aConnection successful, Plan may restart in a few seconds..");
+                sender.sendMessage(locale.getString(CommandLang.CONNECT_SUCCESS));
             } catch (ForbiddenException e) {
-                sender.sendMessage("§eConnection succeeded, but Bungee has set-up mode disabled - use '/planbungee setup' to enable it.");
+                sender.sendMessage(locale.getString(CommandLang.CONNECT_FORBIDDEN));
             } catch (BadRequestException e) {
-                sender.sendMessage("§eConnection succeeded, but Receiving server was a Bukkit server. Use Bungee address instead.");
+                sender.sendMessage(locale.getString(CommandLang.CONNECT_BAD_REQUEST));
             } catch (UnauthorizedServerException e) {
-                sender.sendMessage("§eConnection succeeded, but Receiving server didn't authorize this server. Contact Discord for support");
+                sender.sendMessage(locale.getString(CommandLang.CONNECT_UNAUTHORIZED));
             } catch (ConnectionFailException e) {
-                sender.sendMessage("§eConnection failed: " + e.getMessage());
+                sender.sendMessage(locale.getString(CommandLang.CONNECT_FAIL, e.getMessage()));
             } catch (InternalErrorException e) {
-                sender.sendMessage("§eConnection succeeded. " + e.getMessage() + ", check possible ErrorLog on receiving server's debug page.");
+                sender.sendMessage(locale.getString(CommandLang.CONNECT_INTERNAL_ERROR, e.getMessage()));
             } catch (GatewayException e) {
-                sender.sendMessage("§eConnection succeeded, but Bungee failed to connect to this server. Use Connection debug commands for more.");
+                sender.sendMessage(locale.getString(CommandLang.CONNECT_GATEWAY));
             } catch (WebException e) {
                 Log.toLog(this.getClass(), e);
-                sender.sendMessage("§cConnection to Bungee WebServer failed: More info in the error log.");
+                sender.sendMessage(locale.getString(CommandLang.CONNECT_FAIL, e.toString()));
             }
         });
     }

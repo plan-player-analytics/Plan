@@ -6,6 +6,9 @@ package com.djrapitops.plan.system.database;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
+import com.djrapitops.plan.system.locale.Locale;
+
+import java.util.function.Supplier;
 
 /**
  * Bungee Database system that initializes MySQL object.
@@ -14,9 +17,13 @@ import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
  */
 public class BungeeDBSystem extends DBSystem {
 
+    public BungeeDBSystem(Supplier<Locale> locale) {
+        super(locale);
+    }
+
     @Override
     protected void initDatabase() throws DBInitException {
-        db = new MySQLDB();
+        db = new MySQLDB(locale);
         databases.add(db);
         db.init();
     }

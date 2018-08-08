@@ -5,6 +5,7 @@
 package com.djrapitops.plan.utilities.html.graphs.pie;
 
 import com.djrapitops.plan.utilities.html.graphs.HighChart;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +30,9 @@ public class AbstractPieChart implements HighChart {
 
     @Override
     public String toHighChartsSeries() {
-        StringBuilder seriesBuilder = new StringBuilder("[");
-        int i = 0;
-        int size = slices.size();
-        for (PieSlice slice : slices) {
-            seriesBuilder.append(slice.toString());
-            if (i < size - 1) {
-                seriesBuilder.append(",");
-            }
-            i++;
-        }
-        seriesBuilder.append("]");
-
-        return seriesBuilder.toString();
+        TextStringBuilder series = new TextStringBuilder("[");
+        series.appendWithSeparators(slices, ",");
+        return series.append("]").toString();
     }
 
     public void setSlices(List<PieSlice> slices) {

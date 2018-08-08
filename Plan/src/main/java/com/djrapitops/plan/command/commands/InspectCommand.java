@@ -1,12 +1,15 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.InspectCacheRequestProcessor;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -28,16 +31,25 @@ import java.util.UUID;
  */
 public class InspectCommand extends CommandNode {
 
-    public InspectCommand() {
+    private final Locale locale;
+
+    public InspectCommand(PlanPlugin plugin) {
         super("inspect", Permissions.INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
         setArguments("<player>");
-        setShortHelp(Locale.get(Msg.CMD_USG_INSPECT).toString());
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_INSPECT).toArray());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
+        setShortHelp(locale.getString(CmdHelpLang.INSPECT));
+        setInDepthHelp(locale.getArray(DeepHelpLang.INSPECT));
     }
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender);
+
+        if (playerName == null) {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_NO_PERMISSION));
+        }
 
         runInspectTask(playerName, sender);
     }
@@ -49,18 +61,18 @@ public class InspectCommand extends CommandNode {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     if (uuid == null) {
-                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString());
+                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
                         return;
                     }
 
                     Database activeDB = Database.getActive();
                     if (!activeDB.check().isPlayerRegistered(uuid)) {
-                        sender.sendMessage(Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString());
+                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                         return;
                     }
 
                     checkWebUserAndNotify(activeDB, sender);
-                    Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName));
+                    Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName, locale));
                 } catch (DBOpException e) {
                     if (e.isFatal()) {
                         sender.sendMessage("§cFatal database exception occurred: " + e.getMessage());
@@ -80,7 +92,7 @@ public class InspectCommand extends CommandNode {
             boolean senderHasWebUser = activeDB.check().doesWebUserExists(sender.getName());
 
             if (!senderHasWebUser) {
-                sender.sendMessage("§e[Plan] You might not have a web user, use /plan register <password>");
+                sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
             }
         }
     }

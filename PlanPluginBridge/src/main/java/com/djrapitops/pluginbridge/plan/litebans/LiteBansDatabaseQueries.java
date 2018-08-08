@@ -38,7 +38,7 @@ public class LiteBansDatabaseQueries extends Table {
         mutesTable = tablePrefix + "mutes";
         warningsTable = tablePrefix + "warnings";
         kicksTable = tablePrefix + "kicks";
-        selectSQL = "SELECT uuid, reason, banned_by_name, until, active FROM ";
+        selectSQL = "SELECT uuid, reason, banned_by_name, until, active, time FROM ";
     }
 
     @Override
@@ -81,6 +81,9 @@ public class LiteBansDatabaseQueries extends Table {
         List<LiteBansDBObj> objs = new ArrayList<>();
         while (set.next()) {
             String uuidS = set.getString("uuid");
+            if (uuidS == null) {
+                continue;
+            }
             UUID uuid;
             try {
                 uuid = UUID.fromString(uuidS);
@@ -89,9 +92,10 @@ public class LiteBansDatabaseQueries extends Table {
             }
             String reason = set.getString("reason");
             String bannedBy = set.getString("banned_by_name");
-            long time = set.getLong("until");
+            long until = set.getLong("until");
+            long time = set.getLong("time");
             boolean active = set.getBoolean("active");
-            objs.add(new LiteBansDBObj(uuid, reason, bannedBy, time, active));
+            objs.add(new LiteBansDBObj(uuid, reason, bannedBy, until, active, time));
         }
         return objs;
     }

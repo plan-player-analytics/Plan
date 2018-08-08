@@ -62,12 +62,6 @@ public class ServerTable extends Table {
         );
     }
 
-    public void alterTableV11() {
-        if (usingMySQL) {
-            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + Col.MAX_PLAYERS + " INTEGER NOT NULL DEFAULT -1");
-        }
-    }
-
     private void updateServerInfo(Server info) {
         String sql = Update.values(tableName,
                 Col.SERVER_UUID,
@@ -177,24 +171,6 @@ public class ServerTable extends Table {
                 } else {
                     return Optional.empty();
                 }
-            }
-        });
-    }
-
-    public Map<Integer, String> getServerNamesByID() {
-        String sql = Select.from(tableName,
-                Col.SERVER_ID, Col.NAME)
-                .toString();
-
-        return query(new QueryAllStatement<Map<Integer, String>>(sql) {
-            @Override
-            public Map<Integer, String> processResults(ResultSet set) throws SQLException {
-                Map<Integer, String> names = new HashMap<>();
-                while (set.next()) {
-                    int id = set.getInt(Col.SERVER_ID.get());
-                    names.put(id, set.getString(Col.NAME.get()));
-                }
-                return names;
             }
         });
     }
@@ -384,20 +360,6 @@ public class ServerTable extends Table {
                             set.getInt(Col.MAX_PLAYERS.get())));
                 }
                 return Optional.empty();
-            }
-        });
-    }
-
-    public int getMaxPlayers() {
-        String sql = "SELECT SUM(" + Col.MAX_PLAYERS + ") AS max FROM " + tableName;
-
-        return query(new QueryAllStatement<Integer>(sql) {
-            @Override
-            public Integer processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getInt("max");
-                }
-                return 0;
             }
         });
     }

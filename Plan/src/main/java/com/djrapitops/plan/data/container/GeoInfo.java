@@ -10,7 +10,7 @@ import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.google.common.base.Objects;
 
-import java.io.UnsupportedEncodingException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
 
@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Rsl1122
  */
-public class GeoInfo implements DateHolder {
+public class GeoInfo implements DateHolder, Serializable {
 
     private final String ip;
     private final String geolocation;
@@ -27,7 +27,7 @@ public class GeoInfo implements DateHolder {
     private final long date;
 
     public GeoInfo(InetAddress address, String geolocation, long lastUsed)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException {
+            throws NoSuchAlgorithmException {
         this(FormatUtils.formatIP(address), geolocation, lastUsed, new SHA256Hash(address.getHostAddress()).create());
     }
 

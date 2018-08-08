@@ -100,7 +100,7 @@ public class SpongePlayerListener {
         SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
 
         Processing.submit(
-                new RegisterProcessor(uuid, time, playerName,
+                new RegisterProcessor(uuid, () -> time, playerName,
                         new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)

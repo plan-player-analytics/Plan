@@ -4,9 +4,9 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Check;
@@ -30,11 +30,14 @@ import java.security.cert.CertificateException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * @author Rsl1122
  */
 public class WebServer implements SubSystem {
+
+    private final Supplier<Locale> locale;
 
     private int port;
     private boolean enabled = false;
@@ -44,6 +47,10 @@ public class WebServer implements SubSystem {
 
     private RequestHandler requestHandler;
     private ResponseHandler responseHandler;
+
+    public WebServer(Supplier<Locale> locale) {
+        this.locale = locale;
+    }
 
     public static WebServer getInstance() {
         WebServer webServer = WebServerSystem.getInstance().getWebServer();
@@ -66,19 +73,14 @@ public class WebServer implements SubSystem {
 
         if (!isEnabled()) {
             if (Check.isBungeeAvailable()) {
-                throw new EnableException("WebServer did not initialize!");
+                throw new EnableException(locale.get().getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_BUNGEE));
             }
             if (Settings.WEBSERVER_DISABLED.isTrue()) {
-                Log.warn("WebServer was not initialized. (WebServer.DisableWebServer: true)");
+                Log.warn(locale.get().getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
             } else {
-                Log.error("WebServer was not initialized successfully. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
+                Log.error(locale.get().getString(PluginLang.WEB_SERVER_FAIL_PORT_BIND, port));
             }
         }
-    }
-
-    @Override
-    public void disable() {
-        stop();
     }
 
     /**
@@ -95,14 +97,13 @@ public class WebServer implements SubSystem {
             return;
         }
 
-        Log.info(Locale.get(Msg.ENABLE_WEBSERVER).toString());
         try {
             usingHttps = startHttpsServer();
 
             Log.debug(usingHttps ? "Https Start Successful." : "Https Start Failed.");
 
             if (!usingHttps) {
-                Log.infoColor("§eUser Authorization Disabled! (Not possible over http)");
+                Log.infoColor("§e" + locale.get().getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
                 server = HttpServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
             }
             server.createContext("/", requestHandler);
@@ -112,7 +113,7 @@ public class WebServer implements SubSystem {
 
             enabled = true;
 
-            Log.info(Locale.get(Msg.ENABLE_WEBSERVER_INFO).parse(server.getAddress().getPort()) + " (" + getAccessAddress() + ")");
+            Log.info(locale.get().getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), getAccessAddress()));
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Log.toLog(this.getClass(), e);
             enabled = false;
@@ -136,7 +137,11 @@ public class WebServer implements SubSystem {
             keystore.load(fIn, storepass);
             Certificate cert = keystore.getCertificate(alias);
 
-            Log.info("Found Certificate: " + cert.getType());
+            if (cert == null) {
+                throw new IllegalStateException("Certificate with Alias: " + alias + " was not found in the Keystore.");
+            }
+
+            Log.info("Certificate: " + cert.getType());
 
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             keyManagerFactory.init(keystore, keypass);
@@ -162,17 +167,20 @@ public class WebServer implements SubSystem {
                 }
             });
             startSuccessful = true;
+        } catch (IllegalStateException e) {
+            Log.error(e.getMessage());
+            Log.toLog(this.getClass(), e);
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            Log.error("WebServer: SSL Context Initialization Failed.");
+            Log.error(locale.get().getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
             Log.toLog(this.getClass(), e);
         } catch (FileNotFoundException e) {
-            Log.infoColor("§eWebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
-            Log.info("No Certificate -> Using Http server for Visualization.");
+            Log.infoColor("§e" + locale.get().getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
+            Log.info(locale.get().getString(PluginLang.WEB_SERVER_NOTIFY_HTTP));
         } catch (IOException e) {
             Log.error("WebServer: " + e);
             Log.toLog(this.getClass(), e);
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
-            Log.error("WebServer: SSL Certificate loading Failed.");
+            Log.error(locale.get().getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
             Log.toLog(this.getClass(), e);
         }
         return startSuccessful;
@@ -188,9 +196,10 @@ public class WebServer implements SubSystem {
     /**
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
-    public void stop() {
+    @Override
+    public void disable() {
         if (server != null) {
-            Log.info(Locale.get(Msg.DISABLE_WEBSERVER).toString());
+            Log.info(locale.get().getString(PluginLang.DISABLED_WEB_SERVER));
             server.stop(0);
         }
         enabled = false;
@@ -218,5 +227,9 @@ public class WebServer implements SubSystem {
 
     public ResponseHandler getResponseHandler() {
         return responseHandler;
+    }
+
+    Supplier<Locale> getLocaleSupplier() {
+        return locale;
     }
 }

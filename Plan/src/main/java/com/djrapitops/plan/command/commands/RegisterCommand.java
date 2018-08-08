@@ -1,10 +1,13 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
+import com.djrapitops.plan.system.locale.lang.CommandLang;
+import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.locale.Locale;
-import com.djrapitops.plan.system.settings.locale.Msg;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -33,18 +36,22 @@ public class RegisterCommand extends CommandNode {
 
     private final String notEnoughArgsMsg;
     private final String hashErrorMsg;
+    private final Locale locale;
 
-    public RegisterCommand() {
+    public RegisterCommand(PlanPlugin plugin) {
         // No Permission Requirement
         super("register", "", CommandType.PLAYER_OR_ARGS);
-        setShortHelp(Locale.get(Msg.CMD_USG_WEB_REGISTER).toString());
+
+        locale = plugin.getSystem().getLocaleSystem().getLocale();
+
         setArguments("<password>", "[name]", "[lvl]");
-        setInDepthHelp(Locale.get(Msg.CMD_HELP_WEB_REGISTER).toArray());
+        setShortHelp(locale.getString(CmdHelpLang.WEB_REGISTER));
+        setInDepthHelp(locale.getArray(DeepHelpLang.WEB_REGISTER));
         if (Check.isBukkitAvailable()) {
             setupFilter();
         }
 
-        notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + Arrays.toString(getArguments()));
+        notEnoughArgsMsg = locale.getString(CommandLang.FAIL_REQ_ARGS, 3, Arrays.toString(getArguments()));
         hashErrorMsg = "§cPassword hash error.";
     }
 
@@ -52,7 +59,6 @@ public class RegisterCommand extends CommandNode {
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         try {
             if (CommandUtils.isPlayer(sender)) {
-                Log.info(sender.getName() + " issued WebUser register command.");
                 playerRegister(args, sender);
             } else {
                 consoleRegister(args, sender, notEnoughArgsMsg);
@@ -86,7 +92,7 @@ public class RegisterCommand extends CommandNode {
         } else if (sender.hasPermission(Permissions.MANAGE_WEB.getPermission())) {
             consoleRegister(args, sender, notEnoughArgsMsg);
         } else {
-            sender.sendMessage(Locale.get(Msg.CMD_FAIL_NO_PERMISSION).parse());
+            sender.sendMessage(locale.getString(CommandLang.FAIL_NO_PERMISSION));
         }
     }
 
@@ -110,9 +116,9 @@ public class RegisterCommand extends CommandNode {
         RunnableFactory.createNew(new AbsRunnable("Register WebUser Task") {
             @Override
             public void run() {
-                final String existsMsg = "§cUser Already Exists!";
+                final String existsMsg = locale.getString(CommandLang.FAIL_WEB_USER_EXISTS);
                 final String userName = webUser.getName();
-                final String successMsg = "§aAdded a new user (" + userName + ") successfully!";
+                final String successMsg = locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS);
                 try {
                     Database database = Database.getActive();
                     boolean userExists = database.check().doesWebUserExists(userName);
@@ -122,7 +128,7 @@ public class RegisterCommand extends CommandNode {
                     }
                     database.save().webUser(webUser);
                     sender.sendMessage(successMsg);
-                    Log.info("Registered new user: " + userName + " Perm level: " + webUser.getPermLevel());
+                    Log.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
                 } catch (Exception e) {
                     Log.toLog(this.getClass(), e);
                 } finally {

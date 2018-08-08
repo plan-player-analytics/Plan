@@ -10,8 +10,6 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -30,12 +28,13 @@ import java.util.*;
  */
 public class NicknamesTable extends UserIDTable {
 
+    public static final String TABLE_NAME = "plan_nicknames";
     private final ServerTable serverTable;
     private String insertStatement;
     private final String updateStatement;
 
     public NicknamesTable(SQLDB db) {
-        super("plan_nicknames", db);
+        super(TABLE_NAME, db);
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
                 Col.USER_ID + ", " +
@@ -63,117 +62,6 @@ public class NicknamesTable extends UserIDTable {
                 .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
                 .toString()
         );
-    }
-
-    public void alterTableV19() {
-        addColumns(Col.LAST_USED + " bigint NOT NULL DEFAULT '0'");
-
-        RunnableFactory.createNew(new AbsRunnable("DB version 18->19") {
-            @Override
-            public void run() {
-                // Create actions table if version 18 transfer is run concurrently.
-                execute("CREATE TABLE IF NOT EXISTS plan_actions " +
-                        "(action_id integer, date bigint, server_id integer, user_id integer, additional_info varchar(1))");
-
-                Map<Integer, UUID> serverUUIDsByID = serverTable.getServerUUIDsByID();
-                Map<UUID, Integer> serverIDsByUUID = new HashMap<>();
-                for (Map.Entry<Integer, UUID> entry : serverUUIDsByID.entrySet()) {
-                    serverIDsByUUID.put(entry.getValue(), entry.getKey());
-                }
-
-                String fetchSQL = "SELECT * FROM plan_actions WHERE action_id=3 ORDER BY date DESC";
-                Map<Integer, Set<Nickname>> nicknames = query(new QueryAllStatement<Map<Integer, Set<Nickname>>>(fetchSQL, 10000) {
-                    @Override
-                    public Map<Integer, Set<Nickname>> processResults(ResultSet set) throws SQLException {
-                        Map<Integer, Set<Nickname>> map = new HashMap<>();
-
-                        while (set.next()) {
-                            long date = set.getLong("date");
-                            int userID = set.getInt(UserIDTable.Col.USER_ID.get());
-                            int serverID = set.getInt("server_id");
-                            UUID serverUUID = serverUUIDsByID.get(serverID);
-                            Nickname nick = new Nickname(set.getString("additional_info"), date, serverUUID);
-                            Set<Nickname> nicknames = map.getOrDefault(userID, new HashSet<>());
-                            if (serverUUID == null || nicknames.contains(nick)) {
-                                continue;
-                            }
-                            nicknames.add(nick);
-                            map.put(userID, nicknames);
-                        }
-
-                        return map;
-                    }
-                });
-
-                String updateSQL = "UPDATE " + tableName + " SET " + Col.LAST_USED + "=?" +
-                        " WHERE " + Col.NICKNAME + "=?" +
-                        " AND " + Col.USER_ID + "=?" +
-                        " AND " + Col.SERVER_ID + "=?";
-
-                executeBatch(new ExecStatement(updateSQL) {
-                    @Override
-                    public void prepare(PreparedStatement statement) throws SQLException {
-                        for (Map.Entry<Integer, Set<Nickname>> entry : nicknames.entrySet()) {
-                            Integer userId = entry.getKey();
-                            Set<Nickname> nicks = entry.getValue();
-                            for (Nickname nick : nicks) {
-                                Integer serverID = serverIDsByUUID.get(nick.getServerUUID());
-                                statement.setLong(1, nick.getDate());
-                                statement.setString(2, nick.getName());
-                                statement.setInt(3, userId);
-                                statement.setInt(4, serverID);
-                                statement.addBatch();
-                            }
-                        }
-                    }
-                });
-
-                db.setVersion(19);
-                executeUnsafe("DROP TABLE plan_actions");
-            }
-        }).runTaskAsynchronously();
-    }
-
-    /**
-     * Get ALL nicknames of the user by Server UUID.
-     * <p>
-     * Get's nicknames from other servers as well.
-     *
-     * @param uuid UUID of the Player
-     * @return The nicknames of the User in a map by ServerUUID
-     */
-    public Map<UUID, List<String>> getAllNicknames(UUID uuid) {
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
-        String sql = "SELECT " +
-                Col.NICKNAME + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID +
-                " WHERE (" + Col.USER_ID + "=" + usersTable.statementSelectID + ")";
-
-        return query(new QueryStatement<Map<UUID, List<String>>>(sql, 5000) {
-
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-
-            @Override
-            public Map<UUID, List<String>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<String>> map = new HashMap<>();
-                while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-
-                    List<String> nicknames = map.getOrDefault(serverUUID, new ArrayList<>());
-
-                    nicknames.add(set.getString(Col.NICKNAME.get()));
-
-                    map.put(serverUUID, nicknames);
-                }
-                return map;
-            }
-        });
     }
 
     /**

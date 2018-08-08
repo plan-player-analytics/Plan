@@ -55,7 +55,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
         uniquePlayersNote(serverCount, serverKey, perServerContainers);
         newPlayersNote(serverCount, serverKey, perServerContainers);
-        playersNote(serverCount, serverKey, perServerContainers);
+        playersNote(serverKey, perServerContainers);
     }
 
     private void uniquePlayersNote(int serverCount, Key<Server> serverKey, List<DataContainer> perServerContainers) {
@@ -137,7 +137,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
         return perServerContainers;
     }
 
-    private void playersNote(int serverCount, Key<Server> serverKey, List<DataContainer> perServerContainers) {
+    private void playersNote(Key<Server> serverKey, List<DataContainer> perServerContainers) {
         Icon icon = Icons.HELP_RING;
         String uniquePlayersNote = "${playersMonth} players played on the network:";
         StringBuilder subNotes = new StringBuilder();
