@@ -6,6 +6,7 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -17,16 +18,18 @@ import java.util.function.Supplier;
  *
  * @author Rsl1122
  */
-public class DataContainer extends HashMap<Key, Supplier> {
+public class DataContainer {
 
+    private final Map<Key, Supplier> map;
     private long timeToLive;
 
     public DataContainer() {
-        timeToLive = TimeAmount.SECOND.ms() * 30L;
+        this(TimeAmount.SECOND.ms() * 30L);
     }
 
     public DataContainer(long timeToLive) {
         this.timeToLive = timeToLive;
+        map = new HashMap<>();
     }
 
     /**
@@ -44,11 +47,11 @@ public class DataContainer extends HashMap<Key, Supplier> {
         if (supplier == null) {
             return;
         }
-        super.put(key, new CachingSupplier<>(supplier, timeToLive));
+        map.put(key, new CachingSupplier<>(supplier, timeToLive));
     }
 
     public <T> Supplier<T> getSupplier(Key<T> key) {
-        return (Supplier<T>) super.get(key);
+        return (Supplier<T>) map.get(key);
     }
 
     /**
@@ -59,7 +62,7 @@ public class DataContainer extends HashMap<Key, Supplier> {
      * @return true if found, false if not.
      */
     public <T> boolean supports(Key<T> key) {
-        return containsKey(key);
+        return map.containsKey(key);
     }
 
     /**
@@ -87,7 +90,7 @@ public class DataContainer extends HashMap<Key, Supplier> {
     }
 
     public <T> T getUnsafe(Key<T> key) {
-        Supplier supplier = super.get(key);
+        Supplier supplier = map.get(key);
         if (supplier == null) {
             throw new IllegalArgumentException("Unsupported Key: " + key.getKeyName());
         }
@@ -104,30 +107,15 @@ public class DataContainer extends HashMap<Key, Supplier> {
         return formatter.apply(value);
     }
 
-    /**
-     * Normal put method.
-     *
-     * @param key   Key.
-     * @param value Supplier
-     * @return the previous value.
-     * @deprecated Use putSupplier instead for type safety.
-     */
-    @Override
-    @Deprecated
-    public Supplier put(Key key, Supplier value) {
-        return super.put(key, value);
+    public void putAll(Map<Key, Supplier> toPut) {
+        map.putAll(toPut);
     }
 
-    /**
-     * Normal get method.
-     *
-     * @param key Key.
-     * @return Supplier
-     * @deprecated Use getSupplier instead for types.
-     */
-    @Override
-    @Deprecated
-    public Supplier get(Object key) {
-        return super.get(key);
+    public void putAll(DataContainer dataContainer) {
+        putAll(dataContainer.map);
+    }
+
+    public void clear() {
+        map.clear();
     }
 }

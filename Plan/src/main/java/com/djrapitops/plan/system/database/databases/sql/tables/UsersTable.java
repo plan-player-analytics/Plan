@@ -16,7 +16,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * Table that is in charge of storing common player data for all servers.
@@ -402,43 +401,43 @@ public class UsersTable extends UserIDTable {
     }
 
     public DataContainer getUserInformation(UUID uuid) {
-        Key<DataContainer> key = new Key<>(DataContainer.class, "plan_users_data");
+        Key<DataContainer> user_data = new Key<>(DataContainer.class, "plan_users_data");
         DataContainer returnValue = new DataContainer();
 
-        Supplier<DataContainer> usersTableResults = () -> {
-            String sql = "SELECT * FROM " + tableName + " WHERE " + Col.UUID + "=?";
-
-            return query(new QueryStatement<DataContainer>(sql) {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setString(1, uuid.toString());
-                }
-
-                @Override
-                public DataContainer processResults(ResultSet set) throws SQLException {
-                    DataContainer container = new DataContainer();
-
-                    if (set.next()) {
-                        long registered = set.getLong(Col.REGISTERED.get());
-                        String name = set.getString(Col.USER_NAME.get());
-                        int timesKicked = set.getInt(Col.TIMES_KICKED.get());
-
-                        container.putRawData(PlayerKeys.REGISTERED, registered);
-                        container.putRawData(PlayerKeys.NAME, name);
-                        container.putRawData(PlayerKeys.KICK_COUNT, timesKicked);
-                    }
-
-                    return container;
-                }
-            });
-        };
-
-        returnValue.putSupplier(key, usersTableResults);
+        returnValue.putSupplier(user_data, () -> getUserInformationDataContainer(uuid));
         returnValue.putRawData(PlayerKeys.UUID, uuid);
-        returnValue.putSupplier(PlayerKeys.REGISTERED, () -> returnValue.getUnsafe(key).getUnsafe(PlayerKeys.REGISTERED));
-        returnValue.putSupplier(PlayerKeys.NAME, () -> returnValue.getUnsafe(key).getUnsafe(PlayerKeys.NAME));
-        returnValue.putSupplier(PlayerKeys.KICK_COUNT, () -> returnValue.getUnsafe(key).getUnsafe(PlayerKeys.KICK_COUNT));
+        returnValue.putSupplier(PlayerKeys.REGISTERED, () -> returnValue.getUnsafe(user_data).getValue(PlayerKeys.REGISTERED).orElse(null));
+        returnValue.putSupplier(PlayerKeys.NAME, () -> returnValue.getUnsafe(user_data).getValue(PlayerKeys.NAME).orElse(null));
+        returnValue.putSupplier(PlayerKeys.KICK_COUNT, () -> returnValue.getUnsafe(user_data).getValue(PlayerKeys.KICK_COUNT).orElse(null));
         return returnValue;
+    }
+
+    private DataContainer getUserInformationDataContainer(UUID uuid) {
+        String sql = "SELECT * FROM " + tableName + " WHERE " + Col.UUID + "=?";
+
+        return query(new QueryStatement<DataContainer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+
+            @Override
+            public DataContainer processResults(ResultSet set) throws SQLException {
+                DataContainer container = new DataContainer();
+
+                if (set.next()) {
+                    long registered = set.getLong(Col.REGISTERED.get());
+                    String name = set.getString(Col.USER_NAME.get());
+                    int timesKicked = set.getInt(Col.TIMES_KICKED.get());
+
+                    container.putRawData(PlayerKeys.REGISTERED, registered);
+                    container.putRawData(PlayerKeys.NAME, name);
+                    container.putRawData(PlayerKeys.KICK_COUNT, timesKicked);
+                }
+
+                return container;
+            }
+        });
     }
 
     public enum Col implements Column {
