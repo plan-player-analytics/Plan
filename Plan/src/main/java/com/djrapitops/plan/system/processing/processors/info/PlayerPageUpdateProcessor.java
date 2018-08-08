@@ -18,17 +18,20 @@ public class PlayerPageUpdateProcessor implements Runnable {
 
     @Override
     public void run() {
-        RunnableFactory.createNew("Generate Inspect page: " + uuid, new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    WebExceptionLogger.logIfOccurs(PlayerPageUpdateProcessor.class,
-                            () -> InfoSystem.getInstance().generateAndCachePlayerPage(uuid)
-                    );
-                } finally {
-                    cancel();
+        if (!InfoSystem.getInstance().getConnectionSystem().isServerAvailable()) {
+            RunnableFactory.createNew("Generate Inspect page: " + uuid, new AbsRunnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        WebExceptionLogger.logIfOccurs(PlayerPageUpdateProcessor.class,
+                                () -> InfoSystem.getInstance().generateAndCachePlayerPage(uuid)
+                        );
+                    } finally {
+                        cancel();
+                    }
                 }
-            }
-        }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 20);
+            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 20);
+        }
     }
 }

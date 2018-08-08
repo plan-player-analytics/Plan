@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.listeners.bungee;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.BungeePlayerRegisterProcessor;
 import com.djrapitops.plan.system.processing.processors.player.IPUpdateProcessor;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -41,6 +42,7 @@ public class PlayerOnlineListener implements Listener {
             Processing.submit(new BungeePlayerRegisterProcessor(uuid, name, now,
                     new IPUpdateProcessor(uuid, address, now))
             );
+            Processing.submit(new PlayerPageUpdateProcessor(uuid));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -53,6 +55,7 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = player.getUniqueId();
 
             SessionCache.getInstance().endSession(uuid, System.currentTimeMillis());
+            Processing.submit(new PlayerPageUpdateProcessor(uuid));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -67,6 +70,7 @@ public class PlayerOnlineListener implements Listener {
             long now = System.currentTimeMillis();
             // Replaces the current session in the cache.
             SessionCache.getInstance().cacheSession(uuid, new Session(uuid, now, "", ""));
+            Processing.submit(new PlayerPageUpdateProcessor(uuid));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
