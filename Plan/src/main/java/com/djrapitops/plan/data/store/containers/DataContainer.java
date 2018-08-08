@@ -118,4 +118,8 @@ public class DataContainer {
     public void clear() {
         map.clear();
     }
+
+    public Map<Key, Supplier> getMap() {
+        return map;
+    }
 }
