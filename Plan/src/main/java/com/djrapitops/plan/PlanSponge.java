@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.SpongeSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.utilities.metrics.BStatsSponge;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
@@ -56,6 +57,8 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         try {
             system.enable();
             locale = system.getLocaleSystem().getLocale();
+
+            new BStatsSponge().registerMetrics();
 
             Log.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {

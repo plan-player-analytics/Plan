@@ -27,7 +27,7 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.OfflinePlayerImporter;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
-import com.djrapitops.plan.utilities.metrics.BStats;
+import com.djrapitops.plan.utilities.metrics.BStatsBukkit;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
@@ -70,8 +70,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 
-            BStats bStats = new BStats(this);
-            bStats.registerMetrics();
+            new BStatsBukkit(this).registerMetrics();
 
             Log.debug("Verbose debug messages are enabled.");
             Benchmark.stop("Enable", "Enable");
