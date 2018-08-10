@@ -8,6 +8,7 @@ import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdatePro
 import com.djrapitops.plan.system.processing.processors.player.*;
 import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
@@ -99,7 +100,7 @@ public class SpongePlayerListener {
 
         SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
 
-        Processing.submit(
+        RunnableFactory.createNew("Player Register: " + uuid,
                 new RegisterProcessor(uuid, () -> time, playerName,
                         new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
