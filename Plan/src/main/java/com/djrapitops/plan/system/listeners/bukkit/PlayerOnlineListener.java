@@ -103,7 +103,7 @@ public class PlayerOnlineListener implements Listener {
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)
                 )
-        );
+        ).runTaskAsynchronously();
         Processing.submit(new NetworkPageUpdateProcessor());
     }
 

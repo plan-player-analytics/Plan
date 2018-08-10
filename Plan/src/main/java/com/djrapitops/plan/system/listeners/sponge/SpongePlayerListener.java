@@ -106,7 +106,7 @@ public class SpongePlayerListener {
                         new NameProcessor(uuid, playerName, displayName),
                         new PlayerPageUpdateProcessor(uuid)
                 )
-        );
+        ).runTaskAsynchronously();
         Processing.submit(new NetworkPageUpdateProcessor());
     }
 
