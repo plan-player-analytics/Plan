@@ -65,8 +65,8 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         try {
             Benchmark.start("Enable");
             system = new BukkitSystem(this);
-            system.enable();
             locale = system.getLocaleSystem().getLocale();
+            system.enable();
 
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 

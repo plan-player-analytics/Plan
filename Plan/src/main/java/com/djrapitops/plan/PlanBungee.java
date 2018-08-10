@@ -41,8 +41,8 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         super.onEnable();
         try {
             system = new BungeeSystem(this);
-            system.enable();
             locale = system.getLocaleSystem().getLocale();
+            system.enable();
 
             new BStatsBungee(this).registerMetrics();
 

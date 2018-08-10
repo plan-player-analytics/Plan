@@ -53,10 +53,10 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
-        system = new SpongeSystem(this);
         try {
-            system.enable();
+            system = new SpongeSystem(this);
             locale = system.getLocaleSystem().getLocale();
+            system.enable();
 
             new BStatsSponge().registerMetrics();
 
