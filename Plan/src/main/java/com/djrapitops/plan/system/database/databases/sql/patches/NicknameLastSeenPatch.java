@@ -4,7 +4,6 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
-import com.djrapitops.plan.system.database.databases.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.UserIDTable;
 
@@ -21,7 +20,7 @@ public class NicknameLastSeenPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.Col.LAST_USED.get());
+        return hasColumn(NicknamesTable.TABLE_NAME, NicknamesTable.Col.LAST_USED.get());
     }
 
     @Override

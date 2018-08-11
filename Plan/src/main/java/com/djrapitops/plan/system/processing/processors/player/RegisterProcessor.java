@@ -5,8 +5,8 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  *
  * @author Rsl1122
  */
-public class RegisterProcessor implements CriticalRunnable {
+public class RegisterProcessor extends AbsRunnable {
 
     private final UUID uuid;
     private final Supplier<Long> registered;
@@ -25,6 +25,7 @@ public class RegisterProcessor implements CriticalRunnable {
     private final Runnable[] afterProcess;
 
     public RegisterProcessor(UUID uuid, Supplier<Long> registered, String name, Runnable... afterProcess) {
+        super(RegisterProcessor.class.getSimpleName());
         this.uuid = uuid;
         this.registered = registered;
         this.name = name;
@@ -46,6 +47,7 @@ public class RegisterProcessor implements CriticalRunnable {
             for (Runnable runnable : afterProcess) {
                 Processing.submit(runnable);
             }
+            cancel();
         }
     }
 }

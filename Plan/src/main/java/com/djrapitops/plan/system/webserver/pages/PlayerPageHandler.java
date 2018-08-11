@@ -19,6 +19,7 @@ import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.RawPlayerDataResponse;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.util.List;
@@ -41,17 +42,17 @@ public class PlayerPageHandler extends PageHandler {
         UUID uuid = UUIDUtility.getUUIDOf(playerName);
         Locale locale = request.getLocale();
 
+        boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
+
         if (uuid == null) {
             return notFound(locale.getString(ErrorPageLang.UUID_404));
         }
         try {
             if (Database.getActive().check().isPlayerRegistered(uuid)) {
-                Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
-                if (!(response instanceof InspectPageResponse)) {
-                    InfoSystem.getInstance().generateAndCachePlayerPage(uuid);
-                    response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
+                if (raw) {
+                    return ResponseCache.loadResponse(PageId.RAW_PLAYER.of(uuid), () -> new RawPlayerDataResponse(uuid));
                 }
-                return response != null ? response : notFound(locale.getString(ErrorPageLang.NO_SERVERS_404));
+                return playerResponseOrNotFound(uuid, locale);
             } else {
                 return notFound(locale.getString(ErrorPageLang.NOT_PLAYED_404));
             }
@@ -59,6 +60,15 @@ public class PlayerPageHandler extends PageHandler {
             ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> new NotFoundResponse(e.getMessage()));
         }
         return InspectPageResponse.getRefreshing();
+    }
+
+    private Response playerResponseOrNotFound(UUID uuid, Locale locale) throws WebException {
+        Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
+        if (!(response instanceof InspectPageResponse)) {
+            InfoSystem.getInstance().generateAndCachePlayerPage(uuid);
+            response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
+        }
+        return response != null ? response : notFound(locale.getString(ErrorPageLang.NO_SERVERS_404));
     }
 
     private Response notFound(String error) {

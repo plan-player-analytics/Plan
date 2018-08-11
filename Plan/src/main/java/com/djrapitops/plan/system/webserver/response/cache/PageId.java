@@ -14,7 +14,9 @@ import java.util.UUID;
 public enum PageId {
 
     SERVER("serverPage:"),
+    RAW_SERVER("rawServer:"),
     PLAYER("playerPage:"),
+    RAW_PLAYER("rawPlayer:"),
     PLAYERS("playersPage"),
 
     ERROR("error:"),

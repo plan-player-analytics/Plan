@@ -31,7 +31,8 @@ public enum DeepHelpLang implements Lang {
     MANAGE_RESTORE("In Depth Help - /plan manage restore ?", "> §2Restore Subcommand\\  Restore a previous backup SQLite database (.db file)\\  You can also restore database.db from another server to MySQL.\\  Target database is cleared before transfer."),
     MANAGE_SETUP("In Depth Help - /plan manage setup ?", "> §2Setup Subcommand\\  Set-up a connection between Bungee and this server for network functionality.\\  BungeeAddress can be found in the enable log on console when Plan enables on Bungee."),
 
-    WEB_REGISTER("In Depth Help - /plan web register ?", "> §2Register Subcommand\\  Registers a new Web User.\\  Registering a user for another player requires plan.webmanage permission.\\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt.");
+    WEB_REGISTER("In Depth Help - /plan web register ?", "> §2Register Subcommand\\  Registers a new Web User.\\  Registering a user for another player requires plan.webmanage permission.\\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt."),
+    MANAGE_RAW_DATA("In Depth Help - /plan manage raw ?", "> §2Raw Data Subcommand\\  Displays link to raw JSON data page.\\  Not available if Plan webserver is not enabled.");
 
     private final String identifier;
     private final String defaultValue;

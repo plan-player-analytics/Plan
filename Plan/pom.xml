@@ -24,6 +24,16 @@
             <id>sponge-repo</id>
             <url>https://repo.spongepowered.org/maven</url>
         </repository>
+        <!--        RedisBungee Repository -->
+        <repository>
+            <id>md_5-snapshots</id>
+            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+        </repository>
+        <!--        Metrics -->
+        <repository>
+            <id>bstats-repo</id>
+            <url>http://repo.bstats.org/content/repositories/releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -77,6 +87,14 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+        <!--        RedisBungee -->
+        <dependency>
+            <groupId>com.imaginarycode.minecraft</groupId>
+            <artifactId>RedisBungee</artifactId>
+            <version>0.3.8-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
 
         <!--        String Replacer -->
         <dependency>
@@ -104,6 +122,23 @@
             <version>2.9.0</version>
         </dependency>
 
+        <!--        Metrics -->
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bungeecord</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-sponge</artifactId>
+            <version>1.2</version>
+        </dependency>
+
         <!-- Mockito (Test Dependency) -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -116,7 +151,7 @@
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.21.0.1</version>
+            <version>3.23.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -216,6 +251,10 @@
                             <excludes>
                                 <exclude>org.slf4j.Logger</exclude>
                             </excludes>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>com.djrapitops.plan.utilities.metrics</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

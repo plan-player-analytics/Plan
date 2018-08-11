@@ -8,6 +8,8 @@ import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.properties.BungeeServerProperties;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -22,7 +24,7 @@ import java.util.UUID;
 public class BungeeServerInfo extends ServerInfo {
 
     public BungeeServerInfo(PlanBungee plugin) {
-        super(new ServerProperties(plugin.getProxy()));
+        super(new BungeeServerProperties(plugin.getProxy()));
     }
 
     @Override

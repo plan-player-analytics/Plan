@@ -15,6 +15,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plan.system.webserver.response.pages.RawServerDataResponse;
 import com.djrapitops.plugin.api.Check;
 
 import java.util.List;
@@ -31,6 +32,12 @@ public class ServerPageHandler extends PageHandler {
     @Override
     public Response getResponse(Request request, List<String> target) {
         UUID serverUUID = getServerUUID(target);
+
+        boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
+        if (raw) {
+            return ResponseCache.loadResponse(PageId.RAW_SERVER.of(serverUUID), () -> new RawServerDataResponse(serverUUID));
+        }
+
         Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
 
         if (response != null) {

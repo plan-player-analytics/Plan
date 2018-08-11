@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.utilities.metrics.BStatsBungee;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
@@ -40,8 +41,10 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         super.onEnable();
         try {
             system = new BungeeSystem(this);
-            system.enable();
             locale = system.getLocaleSystem().getLocale();
+            system.enable();
+
+            new BStatsBungee(this).registerMetrics();
 
             Log.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {

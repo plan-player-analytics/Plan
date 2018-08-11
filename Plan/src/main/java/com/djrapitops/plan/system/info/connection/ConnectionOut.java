@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.info.request.InfoRequestWithVariables;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.http.client.config.RequestConfig;
@@ -29,6 +30,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 
 /**
@@ -41,6 +43,17 @@ public class ConnectionOut {
     private final Server toServer;
     private final UUID serverUUID;
     private final InfoRequest infoRequest;
+
+    static {
+        try {
+            Properties properties = System.getProperties();
+            properties.setProperty("sun.net.client.defaultConnectTimeout", Long.toString(TimeAmount.MINUTE.ms()));
+            properties.setProperty("sun.net.client.defaultReadTimeout", Long.toString(TimeAmount.MINUTE.ms()));
+            properties.setProperty("sun.net.http.retryPost", Boolean.toString(false));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Constructor.
@@ -118,10 +131,12 @@ public class ConnectionOut {
 
     private void prepareRequest(HttpPost post, String parameters) {
         RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectionRequestTimeout(10000)
+                .setConnectionRequestTimeout(5000)
+                .setSocketTimeout(10000)
+                .setConnectTimeout(9000)
+                .setRedirectsEnabled(true)
                 .setRelativeRedirectsAllowed(true)
                 .setContentCompressionEnabled(true)
-                .setMaxRedirects(1)
                 .build();
         post.setConfig(requestConfig);
 

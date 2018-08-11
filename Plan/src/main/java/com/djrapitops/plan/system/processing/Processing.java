@@ -143,6 +143,16 @@ public class Processing implements SubSystem {
                 Log.toLog(this.getClass(), e);
             }
         }
+        if (!nonCriticalExecutor.isTerminated()) {
+            try {
+                nonCriticalExecutor.awaitTermination(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                nonCriticalExecutor.shutdownNow();
+            }
+        }
+        if (!criticalExecutor.isTerminated()) {
+            criticalExecutor.shutdownNow();
+        }
         Log.info(locale.get().getString(PluginLang.DISABLED_PROCESSING_COMPLETE));
     }
 }

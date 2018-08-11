@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.info.server.ServerProperties;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plan.utilities.html.icon.Color;

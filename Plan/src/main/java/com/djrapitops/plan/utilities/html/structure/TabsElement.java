@@ -19,6 +19,11 @@ public class TabsElement {
         this.tabs = tabs;
     }
 
+    public String toHtmlFull() {
+        String[] navAndContent = toHtml();
+        return navAndContent[0] + navAndContent[1];
+    }
+
     public String[] toHtml() {
         StringBuilder nav = new StringBuilder();
         StringBuilder content = new StringBuilder();

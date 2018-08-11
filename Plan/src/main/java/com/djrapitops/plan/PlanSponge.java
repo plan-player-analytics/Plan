@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.SpongeSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.utilities.metrics.BStatsSponge;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
@@ -23,7 +24,7 @@ import org.spongepowered.api.plugin.Plugin;
 import java.io.File;
 import java.io.InputStream;
 
-@Plugin(id = "plan", name = "Plan", version = "4.4.2", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
+@Plugin(id = "plan", name = "Plan", version = "4.4.3", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Inject
@@ -52,10 +53,12 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
-        system = new SpongeSystem(this);
         try {
-            system.enable();
+            system = new SpongeSystem(this);
             locale = system.getLocaleSystem().getLocale();
+            system.enable();
+
+            new BStatsSponge().registerMetrics();
 
             Log.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {

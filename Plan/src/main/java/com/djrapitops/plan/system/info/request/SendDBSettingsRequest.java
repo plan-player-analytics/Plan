@@ -56,6 +56,9 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
         if (Check.isBukkitAvailable()) {
             return new BadRequestResponse("Not supposed to be called on a Bukkit server");
         }
+        if (Check.isSpongeAvailable()) {
+            return new BadRequestResponse("Not supposed to be called on a Sponge server");
+        }
 
         String address = variables.get("address");
         Verify.nullCheck(address, () -> new BadRequestException("WebServer Address ('address') not specified in the request."));

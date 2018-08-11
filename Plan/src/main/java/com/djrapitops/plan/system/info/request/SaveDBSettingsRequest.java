@@ -12,7 +12,10 @@ import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
 import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -64,7 +67,12 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
             Log.info("----------------------------------");
             return DefaultResponses.SUCCESS.get();
         } finally {
-            PlanPlugin.getInstance().reloadPlugin(true);
+            RunnableFactory.createNew("Bungee Setup Restart Task", new AbsRunnable() {
+                @Override
+                public void run() {
+                    PlanPlugin.getInstance().reloadPlugin(true);
+                }
+            }).runTaskLater(TimeAmount.SECOND.ticks() * 2L);
         }
     }
 

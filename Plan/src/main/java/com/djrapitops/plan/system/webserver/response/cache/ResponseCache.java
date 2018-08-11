@@ -4,6 +4,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -93,4 +94,7 @@ public class ResponseCache {
         cache.clear();
     }
 
+    public static Set<String> getCacheKeys() {
+        return cache.keySet();
+    }
 }

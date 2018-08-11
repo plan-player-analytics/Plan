@@ -5,19 +5,28 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.CachingSupplier;
+import com.djrapitops.plan.data.store.Key;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.cache.CacheSystem;
+import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.info.server.ServerProperties;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.icon.Icon;
+import com.djrapitops.plan.utilities.html.structure.TabsElement;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -28,6 +37,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * WebServer response for /debug-page used for easing issue reporting.
@@ -39,27 +49,132 @@ public class DebugPageResponse extends ErrorResponse {
     public DebugPageResponse() {
         super.setHeader("HTTP/1.1 200 OK");
         super.setTitle(Icon.called("bug") + " Debug Information");
-        super.setParagraph(buildParagraph());
+        super.setParagraph(buildContent());
         replacePlaceholders();
     }
 
-    private String buildParagraph() {
-        StringBuilder content = new StringBuilder();
+    private String buildContent() {
+        StringBuilder preContent = new StringBuilder();
 
         String issueLink = Html.LINK_EXTERNAL.parse("https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/new", "Create new issue on Github");
-        // Information
-        content.append("<p>")
-                .append(issueLink).append("<br><br>")
-                .append("This page contains debug information for an issue ticket.<br>You can copy it directly into the issue, the info is pre-formatted.")
+        String hastebinLink = Html.LINK_EXTERNAL.parse("https://hastebin.com/", "Create a new hastebin paste");
+
+        preContent.append("<p>")
+                .append(HtmlStructure.separateWithDots(issueLink, hastebinLink)).append("<br><br>")
+                .append("This page contains debug information for an issue ticket. You can copy it directly into the issue, the info is pre-formatted.")
                 .append("</p>");
 
-        appendServerInformation(content);
+        TabsElement.Tab info = new TabsElement.Tab(Icon.called("server") + " Server Information", createServerInfoContent());
+        TabsElement.Tab errors = new TabsElement.Tab(Icon.called("exclamation-circle") + " Errors", createErrorContent());
+        TabsElement.Tab debugLog = new TabsElement.Tab(Icon.called("bug") + " Debug Log", createDebugLogContent());
+        TabsElement.Tab config = new TabsElement.Tab(Icon.called("cogs") + " Plan Config", createConfigContent());
+        TabsElement.Tab caches = new TabsElement.Tab(Icon.called("archive") + " Plan Caches", createCacheContent());
 
-        appendConnectionLog(content);
-        appendLoggedErrors(content);
-        appendBenchmarks(content);
-        appendDebugLog(content);
+        TabsElement tabs = new TabsElement(info, errors, debugLog, config, caches);
+
+        return preContent + tabs.toHtmlFull();
+    }
+
+    private String createCacheContent() {
+        StringBuilder content = new StringBuilder();
+        appendResponseCache(content);
+        appendSessionCache(content);
+        appendDataContainerCache(content);
+        return content.toString();
+    }
+
+    private void appendResponseCache(StringBuilder content) {
+        try {
+            content.append("<pre>### Cached Responses:<br><br>");
+            List<String> cacheKeys = new ArrayList<>(ResponseCache.getCacheKeys());
+            if (cacheKeys.isEmpty()) {
+                content.append("Empty");
+            }
+            Collections.sort(cacheKeys);
+            for (String cacheKey : cacheKeys) {
+                content.append("- ").append(cacheKey).append("<br>");
+            }
+            content.append("</pre>");
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
+        }
+    }
+
+    private void appendSessionCache(StringBuilder content) {
+        try {
+            content.append("<pre>### Session Cache:<br><br>");
+            content.append("UUID | Session Started <br>")
+                    .append("-- | -- <br>");
+            Formatter<Long> timeStamp = Formatters.yearLongValue();
+            Set<Map.Entry<UUID, Session>> sessions = SessionCache.getActiveSessions().entrySet();
+            if (sessions.isEmpty()) {
+                content.append("Empty");
+            }
+            for (Map.Entry<UUID, Session> entry : sessions) {
+                UUID uuid = entry.getKey();
+                String start = entry.getValue().getValue(SessionKeys.START).map(timeStamp).orElse("Unknown");
+                content.append(uuid.toString()).append(" | ").append(start).append("<br>");
+            }
+            content.append("</pre>");
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
+        }
+    }
+
+    private void appendDataContainerCache(StringBuilder content) {
+        try {
+            content.append("<pre>### DataContainer Cache:<br><br>");
+
+            content.append("Key | Is Cached | Cache Time <br>")
+                    .append("-- | -- | -- <br>");
+            Formatter<Long> timeStamp = Formatters.yearLongValue();
+            Set<Map.Entry<Key, Supplier>> dataContainers = CacheSystem.getInstance().getDataContainerCache().getMap().entrySet();
+            if (dataContainers.isEmpty()) {
+                content.append("Empty");
+            }
+            for (Map.Entry<Key, Supplier> entry : dataContainers) {
+                String keyName = entry.getKey().getKeyName();
+                Supplier supplier = entry.getValue();
+                if (supplier instanceof CachingSupplier) {
+                    CachingSupplier cachingSupplier = (CachingSupplier) supplier;
+                    boolean isCached = cachingSupplier.isCached();
+                    String cacheText = isCached ? "Yes" : "No";
+                    String cacheTime = isCached ? timeStamp.apply(cachingSupplier.getCacheTime()) : "-";
+                    content.append(keyName).append(" | ").append(cacheText).append(" | ").append(cacheTime).append("<br>");
+                } else {
+                    content.append(keyName).append(" | ").append("Non-caching Supplier").append(" | ").append("-").append("<br>");
+                }
+            }
+            content.append("</pre>");
+        } catch (Exception e) {
+            Log.toLog(this.getClass(), e);
+        }
+    }
+
+    private String createConfigContent() {
+        StringBuilder content = new StringBuilder();
         appendConfig(content);
+        return content.toString();
+    }
+
+    private String createDebugLogContent() {
+        StringBuilder content = new StringBuilder();
+        appendDebugLog(content);
+        return content.toString();
+    }
+
+    private String createErrorContent() {
+        StringBuilder content = new StringBuilder();
+        appendLoggedErrors(content);
+        return content.toString();
+    }
+
+    private String createServerInfoContent() {
+        StringBuilder content = new StringBuilder();
+
+        appendServerInformation(content);
+        appendConnectionLog(content);
+        appendBenchmarks(content);
 
         return content.toString();
     }
@@ -68,12 +183,15 @@ public class DebugPageResponse extends ErrorResponse {
         try {
             Map<String, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries();
 
-            content.append("<pre>**Connection Log:**<br>");
+            content.append("<pre>### Connection Log:<br><br>");
             content.append("Server Address | Request Type | Response | Sent<br>")
                     .append("-- | -- | -- | --<br>");
 
             Formatter<DateHolder> formatter = Formatters.second();
 
+            if (logEntries.isEmpty()) {
+                content.append("**No Connections Logged**<br>");
+            }
             for (Map.Entry<String, Map<String, ConnectionLog.Entry>> entry : logEntries.entrySet()) {
                 String address = entry.getKey();
                 Map<String, ConnectionLog.Entry> requests = entry.getValue();
@@ -90,7 +208,7 @@ public class DebugPageResponse extends ErrorResponse {
             }
             content.append("</pre>");
 
-            content.append("<pre>**Servers:**<br>");
+            content.append("<pre>### Servers:<br><br>");
             List<Server> servers = ConnectionSystem.getInstance().getBukkitServers();
             content.append("Server Name | Address | UUID <br>")
                     .append("-- | -- | --<br>");
@@ -195,10 +313,9 @@ public class DebugPageResponse extends ErrorResponse {
                     }
                 }
                 for (String error : errorLines) {
-                    content.append("&#96;&#96;&#96;<br>")
+                    content.append("</pre><pre>&#96;&#96;&#96;<br>")
                             .append(error)
-                            .append("&#96;&#96;&#96;<br>")
-                            .append("- [ ] Fixed<br>");
+                            .append("&#96;&#96;&#96;");
                 }
             } else {
                 content.append("**No Errors logged.**<br>");

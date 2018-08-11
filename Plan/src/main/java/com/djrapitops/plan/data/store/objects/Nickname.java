@@ -21,7 +21,7 @@ public class Nickname implements DateHolder {
     }
 
     public String getName() {
-        return name;
+        return name.length() <= 75 ? name : name.substring(0, 74);
     }
 
     @Override

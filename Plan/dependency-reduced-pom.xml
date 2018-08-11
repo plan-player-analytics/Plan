@@ -87,6 +87,10 @@
                 <exclude>org.slf4j.Logger</exclude>
               </excludes>
             </relocation>
+              <relocation>
+                  <pattern>org.bstats</pattern>
+                  <shadedPattern>com.djrapitops.plan.utilities.metrics</shadedPattern>
+              </relocation>
           </relocations>
         </configuration>
       </plugin>
@@ -145,6 +149,14 @@
       <id>sponge-repo</id>
       <url>https://repo.spongepowered.org/maven</url>
     </repository>
+      <repository>
+          <id>md_5-snapshots</id>
+          <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+      </repository>
+      <repository>
+          <id>bstats-repo</id>
+          <url>http://repo.bstats.org/content/repositories/releases/</url>
+      </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -347,6 +359,12 @@
         </exclusion>
       </exclusions>
     </dependency>
+      <dependency>
+          <groupId>com.imaginarycode.minecraft</groupId>
+          <artifactId>RedisBungee</artifactId>
+          <version>0.3.8-SNAPSHOT</version>
+          <scope>provided</scope>
+      </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
@@ -370,7 +388,7 @@
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.21.0.1</version>
+        <version>3.23.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>

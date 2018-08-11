@@ -1,8 +1,5 @@
-package com.djrapitops.plan.system.info.server;
+package com.djrapitops.plan.system.info.server.properties;
 
-import com.djrapitops.plan.system.settings.Settings;
-import net.md_5.bungee.api.ProxyServer;
-import org.bukkit.Server;
 import org.spongepowered.api.Game;
 
 import java.net.InetSocketAddress;
@@ -15,7 +12,7 @@ import java.util.function.Supplier;
  * @author Rsl1122
  * @since 3.4.1
  */
-public class ServerProperties {
+public abstract class ServerProperties {
 
     private final String id;
     private final String name;
@@ -27,30 +24,18 @@ public class ServerProperties {
 
     private final Supplier<Integer> onlinePlayers;
 
-    public ServerProperties(Server server) {
-        id = server.getServerId();
-        ip = server::getIp;
-        name = server.getName();
-        port = server.getPort();
-        version = server.getVersion();
-        implVersion = server.getBukkitVersion();
-
-        maxPlayers = server.getMaxPlayers();
-
-        onlinePlayers = () -> server.getOnlinePlayers().size();
-    }
-
-    public ServerProperties(ProxyServer server) {
-        id = server.getServers().toString();
-        ip = Settings.BUNGEE_IP::toString;
-        name = "BungeeCord";
-        port = -1;
-        version = server.getVersion();
-        implVersion = server.getVersion();
-
-        maxPlayers = server.getConfig().getPlayerLimit();
-
-        onlinePlayers = server::getOnlineCount;
+    protected ServerProperties(
+            String id, String name, int port,
+            String version, String implVersion,
+            Supplier<String> ip, int maxPlayers, Supplier<Integer> onlinePlayers) {
+        this.id = id;
+        this.name = name;
+        this.port = port;
+        this.version = version;
+        this.implVersion = implVersion;
+        this.ip = ip;
+        this.maxPlayers = maxPlayers;
+        this.onlinePlayers = onlinePlayers;
     }
 
     public ServerProperties(Game game) {

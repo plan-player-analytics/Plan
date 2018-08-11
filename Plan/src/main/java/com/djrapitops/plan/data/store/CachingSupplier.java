@@ -37,4 +37,12 @@ public class CachingSupplier<T> implements Supplier<T> {
         }
         return cachedValue;
     }
+
+    public boolean isCached() {
+        return cachedValue != null;
+    }
+
+    public long getCacheTime() {
+        return cacheTime;
+    }
 }

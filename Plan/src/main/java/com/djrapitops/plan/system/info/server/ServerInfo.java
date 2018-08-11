@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info.server;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;

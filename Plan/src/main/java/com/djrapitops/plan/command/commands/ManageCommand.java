@@ -28,6 +28,7 @@ public class ManageCommand extends TreeCmdNode {
         super.setColorScheme(plugin.getColorScheme());
         setNodeGroups(
                 new CommandNode[]{
+                        new ManageRawDataCommand(plugin),
                         new ManageMoveCommand(plugin),
                         new ManageBackupCommand(plugin),
                         new ManageRestoreCommand(plugin),
