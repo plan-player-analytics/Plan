@@ -10,6 +10,8 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 /**
  * This SubCommand is used to reload the plugin.
@@ -34,12 +36,17 @@ public class ReloadCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        try {
-            plugin.reloadPlugin(true);
-        } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
-            sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
-        }
-        sender.sendMessage(locale.getString(CommandLang.RELOAD_COMPLETE));
+        RunnableFactory.createNew("Reload task", new AbsRunnable() {
+            @Override
+            public void run() {
+                try {
+                    plugin.reloadPlugin(true);
+                } catch (Exception e) {
+                    Log.toLog(this.getClass(), e);
+                    sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
+                }
+                sender.sendMessage(locale.getString(CommandLang.RELOAD_COMPLETE));
+            }
+        }).runTaskAsynchronously();
     }
 }
