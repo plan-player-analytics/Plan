@@ -2,7 +2,6 @@ package com.djrapitops.plan.data.time;
 
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -14,9 +13,9 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 4.0.0
  */
-public class WorldTimes implements Serializable {
+public class WorldTimes {
 
-    private final Map<String, GMTimes> worldTimes;
+    private final Map<String, GMTimes> times;
     private String currentWorld;
     private String currentGamemode;
 
@@ -28,7 +27,7 @@ public class WorldTimes implements Serializable {
      * @param time          Epoch ms the time calculation should start
      */
     public WorldTimes(String startingWorld, String startingGM, long time) {
-        worldTimes = new HashMap<>();
+        times = new HashMap<>();
         currentWorld = startingWorld;
         currentGamemode = startingGM;
         addWorld(startingWorld, startingGM, time);
@@ -40,11 +39,11 @@ public class WorldTimes implements Serializable {
      * @param times Map of each World's GMTimes object.
      */
     public WorldTimes(Map<String, GMTimes> times) {
-        worldTimes = times;
+        this.times = times;
     }
 
     private void addWorld(String worldName, String gameMode, long changeTime) {
-        worldTimes.put(worldName, new GMTimes(gameMode, changeTime));
+        times.put(worldName, new GMTimes(gameMode, changeTime));
     }
 
     /**
@@ -65,18 +64,18 @@ public class WorldTimes implements Serializable {
      * @param changeTime Epoch ms the change occurred.
      */
     public void updateState(String worldName, String gameMode, long changeTime) {
-        GMTimes currentGMTimes = worldTimes.get(currentWorld);
+        GMTimes currentGMTimes = times.get(currentWorld);
         if (worldName.equals(currentWorld)) {
             currentGMTimes.changeState(gameMode, changeTime);
         } else {
-            GMTimes newGMTimes = worldTimes.get(worldName);
+            GMTimes newGMTimes = times.get(worldName);
             if (newGMTimes == null) {
                 addWorld(worldName, gameMode, currentGMTimes.getLastStateChange());
             }
             currentGMTimes.changeState(currentGamemode, changeTime);
         }
 
-        for (GMTimes gmTimes : worldTimes.values()) {
+        for (GMTimes gmTimes : times.values()) {
             gmTimes.setLastStateChange(changeTime);
         }
 
@@ -91,12 +90,12 @@ public class WorldTimes implements Serializable {
      * @return total milliseconds spent in a world.
      */
     public long getWorldPlaytime(String world) {
-        GMTimes gmTimes = worldTimes.get(world);
+        GMTimes gmTimes = times.get(world);
         return gmTimes != null ? gmTimes.getTotal() : 0;
     }
 
     public long getTotal() {
-        return worldTimes.values().stream()
+        return times.values().stream()
                 .mapToLong(GMTimes::getTotal)
                 .sum();
     }
@@ -112,20 +111,15 @@ public class WorldTimes implements Serializable {
      * @return GMTimes object with play times of each GameMode.
      */
     public GMTimes getGMTimes(String world) {
-        return worldTimes.getOrDefault(world, new GMTimes());
+        return times.getOrDefault(world, new GMTimes());
     }
 
-    /**
-     * Used to get the Map for saving.
-     *
-     * @return Current time map.
-     */
     public Map<String, GMTimes> getWorldTimes() {
-        return worldTimes;
+        return times;
     }
 
     public void setGMTimesForWorld(String world, GMTimes gmTimes) {
-        worldTimes.put(world, gmTimes);
+        times.put(world, gmTimes);
     }
 
     @Override
@@ -133,21 +127,21 @@ public class WorldTimes implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WorldTimes that = (WorldTimes) o;
-        return Objects.equals(worldTimes, that.worldTimes) &&
+        return Objects.equals(times, that.times) &&
                 Objects.equals(currentWorld, that.currentWorld) &&
                 Objects.equals(currentGamemode, that.currentGamemode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(worldTimes, currentWorld, currentGamemode);
+        return Objects.hash(times, currentWorld, currentGamemode);
     }
 
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder("WorldTimes (Current: " + currentWorld + "){\n");
 
-        for (Map.Entry<String, GMTimes> entry : worldTimes.entrySet()) {
+        for (Map.Entry<String, GMTimes> entry : times.entrySet()) {
             GMTimes value = entry.getValue();
             b.append("World '").append(entry.getKey()).append("':\n")
                     .append("  Total: ").append(value.getTotal()).append("\n")
@@ -172,7 +166,7 @@ public class WorldTimes implements Serializable {
             for (String gm : GMTimes.getGMKeyArray()) {
                 currentGMTimes.addTime(gm, gmTimes.getTime(gm));
             }
-            worldTimes.put(worldName, currentGMTimes);
+            this.times.put(worldName, currentGMTimes);
         }
     }
 

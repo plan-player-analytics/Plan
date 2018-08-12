@@ -44,6 +44,9 @@ public class DataCache extends SessionCache implements SubSystem {
 
     @Override
     public void disable() {
+        playerNames.clear();
+        uuids.clear();
+        displayNames.clear();
     }
 
     public static DataCache getInstance() {
