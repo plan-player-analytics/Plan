@@ -49,10 +49,6 @@ public class PlanBungeeCommand extends TreeCmdNode {
                 new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
 //                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
         };
-        setNodeGroups(
-                analyticsGroup,
-                webGroup,
-                manageGroup
-        );
+        setNodeGroups(analyticsGroup, webGroup, manageGroup);
     }
 }

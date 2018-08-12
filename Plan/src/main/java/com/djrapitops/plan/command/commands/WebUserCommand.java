@@ -29,14 +29,13 @@ public class WebUserCommand extends TreeCmdNode {
 
         setShortHelp(locale.getString(CmdHelpLang.WEB));
         setInDepthHelp(locale.getArray(DeepHelpLang.WEB));
-        setNodeGroups(
-                new CommandNode[]{
-                        register,
-                        new WebLevelCommand(plugin),
-                        new WebListUsersCommand(plugin),
-                        new WebCheckCommand(plugin),
-                        new WebDeleteCommand(plugin)
-                }
-        );
+        CommandNode[] webGroup = {
+                register,
+                new WebLevelCommand(plugin),
+                new WebListUsersCommand(plugin),
+                new WebCheckCommand(plugin),
+                new WebDeleteCommand(plugin)
+        };
+        setNodeGroups(webGroup);
     }
 }
