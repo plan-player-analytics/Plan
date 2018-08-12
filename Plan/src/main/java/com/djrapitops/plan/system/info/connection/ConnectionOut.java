@@ -92,7 +92,7 @@ public class ConnectionOut {
             handleResult(url, parameters, responseCode);
         } catch (SocketTimeoutException e) {
             ConnectionLog.logConnectionTo(toServer, infoRequest, 0);
-            throw new ConnectionFailException("Connection timed out after 10 seconds.", e);
+            throw new ConnectionFailException("Connection to " + address + " timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException | IOException e) {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
