@@ -14,9 +14,7 @@ import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * ConnectionSystem for Bungee.
@@ -59,20 +57,6 @@ public class BungeeConnectionSystem extends ConnectionSystem {
         return server;
     }
 
-    private Server getOneBukkitServer() {
-        int rand = ThreadLocalRandom.current().nextInt(bukkitServers.size());
-        int i = 0;
-        for (Server server : bukkitServers.values()) {
-            if (i == rand) {
-                return server;
-            }
-            i++;
-        }
-        // Fallback if code above fails (Shouldn't)
-        Optional<Server> first = bukkitServers.values().stream().findAny();
-        return first.orElse(null);
-    }
-
     @Override
     public void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException {
         refreshServerMap();
@@ -99,8 +83,4 @@ public class BungeeConnectionSystem extends ConnectionSystem {
         refreshServerMap();
     }
 
-    @Override
-    public void disable() {
-
-    }
 }

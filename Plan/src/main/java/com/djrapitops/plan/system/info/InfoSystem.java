@@ -156,7 +156,6 @@ public abstract class InfoSystem implements SubSystem {
         Server bungee = new Server(-1, null, "Bungee", addressToRequestServer, -1);
         String addressOfThisServer = WebServerSystem.getInstance().getWebServer().getAccessAddress();
 
-        ConnectionSystem connectionSystem = ConnectionSystem.getInstance();
         connectionSystem.setSetupAllowed(true);
         connectionSystem.sendInfoRequest(new SendDBSettingsRequest(addressOfThisServer), bungee);
     }
