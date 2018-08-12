@@ -48,25 +48,25 @@ public class InspectContainer {
     }
 
     public final String parseHtml() {
-        StringBuilder html = new StringBuilder();
+        StringBuilder parsed = new StringBuilder();
 
         if (!values.isEmpty()) {
-            html.append("<div class=\"body\">");
+            parsed.append("<div class=\"body\">");
             for (Map.Entry<String, String> entry : values.entrySet()) {
-                html.append("<p>").append(entry.getKey()).append(": ").append(entry.getValue()).append("</p>");
+                parsed.append("<p>").append(entry.getKey()).append(": ").append(entry.getValue()).append("</p>");
             }
-            html.append("</div>");
+            parsed.append("</div>");
         }
 
         for (Map.Entry<String, String> entry : this.html.entrySet()) {
-            html.append(entry.getValue());
+            parsed.append(entry.getValue());
         }
 
         for (Map.Entry<String, TableContainer> entry : tables.entrySet()) {
-            html.append(entry.getValue().parseHtml());
+            parsed.append(entry.getValue().parseHtml());
         }
 
-        return html.toString();
+        return parsed.toString();
     }
 
     /**

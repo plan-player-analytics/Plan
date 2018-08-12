@@ -40,12 +40,10 @@ public class TableContainer {
     }
 
     public TableContainer(boolean players, String... header) {
-        this.header = FormatUtils.mergeArrays(
+        this(FormatUtils.mergeArrays(
                 new String[]{Icon.called("user").build() + " Player"},
                 header
-        );
-        this.formatters = new Formatter[this.header.length];
-        values = new ArrayList<>();
+        ));
     }
 
     public final void addRow(Serializable... values) {
@@ -60,36 +58,40 @@ public class TableContainer {
     }
 
     public final String parseBody() {
-        StringBuilder body = new StringBuilder();
-
         if (values.isEmpty()) {
             addRow("No Data");
         }
+        return Html.TABLE_BODY.parse(buildBody());
+
+    }
+
+    private String buildBody() {
+        StringBuilder body = new StringBuilder();
         for (Serializable[] row : values) {
-
-            int maxIndex = row.length - 1;
-            body.append("<tr>");
-            for (int i = 0; i < header.length; i++) {
-                try {
-                    if (i > maxIndex) {
-                        body.append("<td>-");
-                    } else {
-                        Serializable value = row[i];
-                        Formatter formatter = formatters[i];
-                        body.append("<td").append(formatter != null ? " data-order=\"" + value + "\">" : ">");
-                        body.append(formatter != null ? formatter.apply(value) : value);
-                    }
-                    body.append("</td>");
-                } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
-                    throw new IllegalStateException("Invalid formatter given at index " + i + ": " + e.getMessage(), e);
-                }
-            }
-            body.append("</tr>");
-
+            appendRow(body, row);
         }
+        return body.toString();
+    }
 
-        return Html.TABLE_BODY.parse(body.toString());
-
+    private void appendRow(StringBuilder body, Serializable[] row) {
+        int maxIndex = row.length - 1;
+        body.append("<tr>");
+        for (int i = 0; i < header.length; i++) {
+            try {
+                if (i > maxIndex) {
+                    body.append("<td>-");
+                } else {
+                    Serializable value = row[i];
+                    Formatter formatter = formatters[i];
+                    body.append("<td").append(formatter != null ? " data-order=\"" + value + "\">" : ">");
+                    body.append(formatter != null ? formatter.apply(value) : value);
+                }
+                body.append("</td>");
+            } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
+                throw new IllegalStateException("Invalid formatter given at index " + i + ": " + e.getMessage(), e);
+            }
+        }
+        body.append("</tr>");
     }
 
     public final void setColor(String color) {
@@ -97,12 +99,12 @@ public class TableContainer {
     }
 
     public final String parseHeader() {
-        StringBuilder header = new StringBuilder("<thead" + (color != null ? " class=\"bg-" + color + "\"" : "") + "><tr>");
-        for (String title : this.header) {
-            header.append("<th>").append(title).append("</th>");
+        StringBuilder parsedHeader = new StringBuilder("<thead" + (color != null ? " class=\"bg-" + color + "\"" : "") + "><tr>");
+        for (String title : header) {
+            parsedHeader.append("<th>").append(title).append("</th>");
         }
-        header.append("</tr></thead>");
-        return header.toString();
+        parsedHeader.append("</tr></thead>");
+        return parsedHeader.toString();
     }
 
     public final void setFormatter(int index, Formatter formatter) {
