@@ -5,11 +5,11 @@ import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.utilities.html.pages.AnalysisPage;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.UUID;

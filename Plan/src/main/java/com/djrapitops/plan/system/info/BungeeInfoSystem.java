@@ -15,10 +15,10 @@ import com.djrapitops.plan.system.info.request.CacheRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.pages.parsing.NetworkPage;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
+import com.djrapitops.plan.utilities.html.pages.NetworkPage;
 
 /**
  * InfoSystem for Bungee.

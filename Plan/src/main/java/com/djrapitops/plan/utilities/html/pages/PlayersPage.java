@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.webserver.pages.parsing;
+package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
