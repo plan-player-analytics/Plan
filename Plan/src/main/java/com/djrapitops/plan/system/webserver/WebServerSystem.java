@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
+import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plugin.api.Benchmark;
 
 import java.util.function.Supplier;

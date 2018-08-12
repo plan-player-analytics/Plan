@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.webserver.response.cache;
+package com.djrapitops.plan.system.webserver.cache;
 
 import com.djrapitops.plan.system.webserver.response.Response;
 
