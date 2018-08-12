@@ -58,9 +58,7 @@ public class UUIDUtility {
         try {
             uuid = db.fetch().getUuidOf(playerName);
         } catch (DBOpException e) {
-            if (e.isFatal()) {
-                Log.toLog(UUIDUtility.class, e);
-            }
+            Log.toLog(UUIDUtility.class, e);
         }
         try {
             if (uuid == null) {

@@ -9,8 +9,6 @@ import java.sql.SQLException;
  */
 public class DBOpException extends RuntimeException {
 
-    private boolean fatal = false;
-
     public DBOpException(String message) {
         super(message);
     }
@@ -23,11 +21,4 @@ public class DBOpException extends RuntimeException {
         return new DBOpException("SQL Failed: " + sql + "; " + e.getMessage(), e);
     }
 
-    public boolean isFatal() {
-        return fatal;
-    }
-
-    public void setFatal(boolean fatal) {
-        this.fatal = fatal;
-    }
 }
