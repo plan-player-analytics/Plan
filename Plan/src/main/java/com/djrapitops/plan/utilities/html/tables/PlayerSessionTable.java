@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.html.Html;
 
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class PlayerSessionTable extends TableContainer {
             String length = session.supports(SessionKeys.END)
                     ? Formatters.timeAmount().apply(session.getValue(SessionKeys.LENGTH).orElse(0L))
                     : "Online";
-            String world = AnalysisUtils.getLongestWorldPlayed(session);
+            String world = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
 
             String toolTip = "Session ID: " + session.getValue(SessionKeys.DB_ID)
                     .map(id -> Integer.toString(id))

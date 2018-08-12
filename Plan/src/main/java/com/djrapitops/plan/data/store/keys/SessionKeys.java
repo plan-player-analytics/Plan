@@ -32,6 +32,8 @@ public class SessionKeys {
     public static final Key<Integer> DEATH_COUNT = CommonKeys.DEATH_COUNT;
     public static final Key<List<PlayerDeath>> PLAYER_DEATHS = CommonKeys.PLAYER_DEATHS;
 
+    public static final Key<String> LONGEST_WORLD_PLAYED = new Key<>(String.class, "longest_world_played");
+
     private SessionKeys() {
         /* Static variable class */
     }

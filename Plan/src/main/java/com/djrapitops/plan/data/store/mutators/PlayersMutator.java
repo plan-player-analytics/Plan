@@ -9,7 +9,6 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateObj;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
@@ -210,8 +209,8 @@ public class PlayersMutator {
                 .map(player -> new RetentionData(player, onlineResolver))
                 .collect(Collectors.toList());
 
-        RetentionData avgRetained = AnalysisUtils.average(retained);
-        RetentionData avgNotRetained = AnalysisUtils.average(notRetained);
+        RetentionData avgRetained = RetentionData.average(retained);
+        RetentionData avgNotRetained = RetentionData.average(notRetained);
 
         List<PlayerContainer> toBeRetained = new ArrayList<>();
         for (PlayerContainer player : compareTo) {

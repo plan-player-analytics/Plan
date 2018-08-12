@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
 import java.util.*;
@@ -29,7 +28,7 @@ public class WorldPie extends AbstractPieChartWithDrilldown {
         String[] colors = Theme.getValue(ThemeVal.GRAPH_WORLD_PIE).split(", ");
         int colLength = colors.length;
 
-        Map<String, Long> playtimePerAlias = AnalysisUtils.getPlaytimePerAlias(worldTimes);
+        Map<String, Long> playtimePerAlias = worldTimes.getPlaytimePerAlias();
 
         List<String> worlds = new ArrayList<>(playtimePerAlias.keySet());
         Collections.sort(worlds);
