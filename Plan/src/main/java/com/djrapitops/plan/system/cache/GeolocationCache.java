@@ -37,12 +37,12 @@ import java.util.zip.GZIPInputStream;
 public class GeolocationCache implements SubSystem {
 
     private final Supplier<Locale> locale;
-    private final Map<String, String> geolocationCache;
+    private final Map<String, String> cached;
     private File geolocationDB;
 
     public GeolocationCache(Supplier<Locale> locale) {
         this.locale = locale;
-        geolocationCache = new HashMap<>();
+        cached = new HashMap<>();
     }
 
     @Override
@@ -61,20 +61,10 @@ public class GeolocationCache implements SubSystem {
         }
     }
 
-    @Override
-    public void disable() {
-    }
-
-    private static GeolocationCache getInstance() {
-        GeolocationCache geolocationCache = CacheSystem.getInstance().getGeolocationCache();
-        Verify.nullCheck(geolocationCache, () -> new IllegalStateException("GeolocationCache was not initialized."));
-        return geolocationCache;
-    }
-
     /**
      * Retrieves the country in full length (e.g. United States) from the IP Address.
      * <p>
-     * This method uses the {@code geolocationCache}, every first access is getting cached and then retrieved later.
+     * This method uses {@code cached}, every first access is getting cached and then retrieved later.
      *
      * @param ipAddress The IP Address from which the country is retrieved
      * @return The name of the country in full length.
@@ -90,10 +80,26 @@ public class GeolocationCache implements SubSystem {
             return country;
         } else {
             country = getUnCachedCountry(ipAddress);
-            getInstance().geolocationCache.put(ipAddress, country);
+            getInstance().cached.put(ipAddress, country);
 
             return country;
         }
+    }
+
+    private static GeolocationCache getInstance() {
+        GeolocationCache geolocationCache = CacheSystem.getInstance().getGeolocationCache();
+        Verify.nullCheck(geolocationCache, () -> new IllegalStateException("GeolocationCache was not initialized."));
+        return geolocationCache;
+    }
+
+    /**
+     * Returns the cached country
+     *
+     * @param ipAddress The IP Address which is retrieved out of the cache
+     * @return The cached country, {@code null} if the country is not cached
+     */
+    private static String getCachedCountry(String ipAddress) {
+        return getInstance().cached.get(ipAddress);
     }
 
     /**
@@ -148,29 +154,24 @@ public class GeolocationCache implements SubSystem {
     }
 
     /**
-     * Returns the cached country
-     *
-     * @param ipAddress The IP Address which is retrieved out of the cache
-     * @return The cached country, {@code null} if the country is not cached
-     */
-    private static String getCachedCountry(String ipAddress) {
-        return getInstance().geolocationCache.get(ipAddress);
-    }
-
-    /**
      * Checks if the IP Address is cached
      *
      * @param ipAddress The IP Address which is checked
      * @return true if the IP Address is cached
      */
     public static boolean isCached(String ipAddress) {
-        return getInstance().geolocationCache.containsKey(ipAddress);
+        return getInstance().cached.containsKey(ipAddress);
+    }
+
+    @Override
+    public void disable() {
+        cached.clear();
     }
 
     /**
      * Clears the cache
      */
     public void clearCache() {
-        geolocationCache.clear();
+        cached.clear();
     }
 }

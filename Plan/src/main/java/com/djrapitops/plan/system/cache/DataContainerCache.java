@@ -54,6 +54,9 @@ public class DataContainerCache extends DataContainer {
             return new Key<>(PlayerContainer.class, "PLAYER_CONTAINER:" + uuid);
         }
 
+        private Keys() {
+            // Static utility class
+        }
     }
 
     public static class Suppliers {
@@ -65,6 +68,10 @@ public class DataContainerCache extends DataContainer {
 
         static Supplier<PlayerContainer> playerContainer(UUID uuid) {
             return () -> Database.getActive().fetch().getPlayerContainer(uuid);
+        }
+
+        private Suppliers() {
+            // Static utility class
         }
     }
 
