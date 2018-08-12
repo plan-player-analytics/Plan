@@ -32,7 +32,8 @@ public enum DeepHelpLang implements Lang {
     MANAGE_SETUP("In Depth Help - /plan manage setup ?", "> §2Setup Subcommand\\  Set-up a connection between Bungee and this server for network functionality.\\  BungeeAddress can be found in the enable log on console when Plan enables on Bungee."),
 
     WEB_REGISTER("In Depth Help - /plan web register ?", "> §2Register Subcommand\\  Registers a new Web User.\\  Registering a user for another player requires plan.webmanage permission.\\  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt."),
-    MANAGE_RAW_DATA("In Depth Help - /plan manage raw ?", "> §2Raw Data Subcommand\\  Displays link to raw JSON data page.\\  Not available if Plan webserver is not enabled.");
+    MANAGE_RAW_DATA("In Depth Help - /plan manage raw ?", "> §2Raw Data Subcommand\\  Displays link to raw JSON data page.\\  Not available if Plan webserver is not enabled."),
+    MANAGE_UNINSTALLED("In Depth Help - /plan manage uninstalled ?", "> §2Uninstalled Server Subcommand\\  Marks a server as uninstalled in the database.\\  Can not mark the server the command is being used on as uninstalled.\\  Will affect ConnectionSystem.");
 
     private final String identifier;
     private final String defaultValue;

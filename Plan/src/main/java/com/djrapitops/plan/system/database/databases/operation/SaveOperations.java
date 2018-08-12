@@ -69,4 +69,6 @@ public interface SaveOperations {
     void webUser(WebUser webUser);
 
     void ping(UUID uuid, Ping ping);
+
+    void setAsUninstalled(UUID serverUUID);
 }

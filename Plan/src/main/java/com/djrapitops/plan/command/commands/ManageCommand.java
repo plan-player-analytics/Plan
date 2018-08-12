@@ -39,7 +39,8 @@ public class ManageCommand extends TreeCmdNode {
                 new ManageSetupCommand(plugin),
                 new ManageConDebugCommand(plugin),
                 new ManageImportCommand(plugin),
-                new ManageDisableCommand(plugin)
+                new ManageDisableCommand(plugin),
+                new ManageUninstalledCommand(plugin)
         };
         setNodeGroups(databaseGroup, pluginGroup);
     }
