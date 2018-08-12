@@ -38,6 +38,7 @@ public class HealthInformation extends AbstractHealthInfo {
         calculate();
     }
 
+    @Override
     public String toHtml() {
         StringBuilder healthNoteBuilder = new StringBuilder();
         for (String healthNote : notes) {

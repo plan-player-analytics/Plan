@@ -124,6 +124,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         return getClass().getAnnotation(Plugin.class).version();
     }
 
+    @Override
     public SpongeSystem getSystem() {
         return system;
     }

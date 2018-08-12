@@ -93,6 +93,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         return PlanColorScheme.create();
     }
 
+    @Override
     public BungeeSystem getSystem() {
         return system;
     }
