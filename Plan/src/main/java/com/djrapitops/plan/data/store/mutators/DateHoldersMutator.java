@@ -5,6 +5,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class DateHoldersMutator<T extends DateHolder> {
@@ -15,11 +16,11 @@ public class DateHoldersMutator<T extends DateHolder> {
         this.dateHolders = dateHolders;
     }
 
-    public TreeMap<Long, List<T>> groupByStartOfMinute() {
+    public SortedMap<Long, List<T>> groupByStartOfMinute() {
         return groupByStartOfSections(TimeAmount.MINUTE.ms());
     }
 
-    private TreeMap<Long, List<T>> groupByStartOfSections(long sectionLength) {
+    private SortedMap<Long, List<T>> groupByStartOfSections(long sectionLength) {
         TreeMap<Long, List<T>> map = new TreeMap<>();
 
         if (dateHolders.isEmpty()) {
@@ -37,9 +38,9 @@ public class DateHoldersMutator<T extends DateHolder> {
         return map;
     }
 
-    public TreeMap<Long, List<T>> groupByStartOfDay() {
+    public SortedMap<Long, List<T>> groupByStartOfDay() {
         long twentyFourHours = 24L * TimeAmount.HOUR.ms();
-        TreeMap<Long, List<T>> map = groupByStartOfSections(twentyFourHours);
+        SortedMap<Long, List<T>> map = groupByStartOfSections(twentyFourHours);
 
         // Empty map firstKey attempt causes NPE if not checked.
         if (!map.isEmpty()) {

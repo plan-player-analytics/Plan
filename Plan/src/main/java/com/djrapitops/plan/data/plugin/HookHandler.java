@@ -47,7 +47,7 @@ public class HookHandler implements SubSystem {
 
     @Override
     public void disable() {
-
+        // Nothing to disable
     }
 
     /**

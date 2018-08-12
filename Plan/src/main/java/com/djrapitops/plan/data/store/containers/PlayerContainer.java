@@ -23,12 +23,7 @@ public class PlayerContainer extends DataContainer {
     }
 
     public ActivityIndex getActivityIndex(long date) {
-        ActivityIndex index = activityIndexCache.get(date);
-        if (index == null) {
-            index = new ActivityIndex(this, date);
-            activityIndexCache.put(date, index);
-        }
-        return index;
+        return activityIndexCache.computeIfAbsent(date, time -> new ActivityIndex(this, time));
     }
 
     public boolean playedBetween(long after, long before) {

@@ -157,7 +157,7 @@ public class PlayersMutator {
         List<DateObj> registerDates = registerDates().stream()
                 .map(value -> new DateObj<>(value, value))
                 .collect(Collectors.toList());
-        TreeMap<Long, List<DateObj>> byDay = new DateHoldersMutator<>(registerDates).groupByStartOfDay();
+        SortedMap<Long, List<DateObj>> byDay = new DateHoldersMutator<>(registerDates).groupByStartOfDay();
         TreeMap<Long, Integer> byDayCounts = new TreeMap<>();
 
         for (Map.Entry<Long, List<DateObj>> entry : byDay.entrySet()) {

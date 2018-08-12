@@ -64,7 +64,7 @@ public class ServerCalendar {
 
     private void appendSessionRelatedData(StringBuilder series) {
         SessionsMutator sessionsMutator = new SessionsMutator(mutator.getSessions());
-        TreeMap<Long, List<Session>> byStartOfDay = sessionsMutator.toDateHoldersMutator().groupByStartOfDay();
+        SortedMap<Long, List<Session>> byStartOfDay = sessionsMutator.toDateHoldersMutator().groupByStartOfDay();
 
         for (Map.Entry<Long, Integer> entry : uniquePerDay.entrySet()) {
             if (entry.getValue() <= 0) {

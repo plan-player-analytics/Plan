@@ -22,4 +22,14 @@ public class PlaceholderKey<T> extends Key<T> {
     public String getPlaceholder() {
         return placeholder;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
