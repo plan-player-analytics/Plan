@@ -63,4 +63,7 @@ public class WebExceptionLogger {
         return null;
     }
 
+    private WebExceptionLogger() {
+        // Static method class.
+    }
 }

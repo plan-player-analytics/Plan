@@ -50,13 +50,13 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, html (Base64)
 
-        UUID serverUUID = UUID.fromString(variables.get("sender"));
+        UUID sender = UUID.fromString(variables.get("sender"));
 
-        String html = variables.get("html");
-        Verify.nullCheck(html, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
+        String sentHtml = variables.get("html");
+        Verify.nullCheck(sentHtml, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
         boolean export = Settings.ANALYSIS_EXPORT.isTrue();
-        cache(export, serverUUID, Base64Util.decode(html));
+        cache(export, sender, Base64Util.decode(sentHtml));
         return DefaultResponses.SUCCESS.get();
     }
 
