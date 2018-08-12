@@ -14,6 +14,7 @@ import com.djrapitops.plan.utilities.html.pages.NetworkPage;
 public class NetworkPageResponse extends Response {
 
     public NetworkPageResponse() throws ParseException {
+        super.setHeader("HTTP/1.1 200 OK");
         NetworkContainer networkContainer = CacheSystem.getInstance().getDataContainerCache().getNetworkContainer();
         setContent(new NetworkPage(networkContainer).toHtml());
     }

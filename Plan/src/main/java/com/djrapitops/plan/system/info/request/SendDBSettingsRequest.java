@@ -13,7 +13,7 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
+import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.utilities.Verify;
 
