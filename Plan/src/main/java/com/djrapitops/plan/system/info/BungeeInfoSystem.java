@@ -7,9 +7,6 @@ package com.djrapitops.plan.system.info;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.connection.WebFailException;
-import com.djrapitops.plan.data.store.containers.NetworkContainer;
-import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.info.connection.BungeeConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
@@ -17,8 +14,8 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.cache.PageId;
 import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
-import com.djrapitops.plan.utilities.html.pages.NetworkPage;
+import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
+import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
 
 /**
  * InfoSystem for Bungee.
@@ -43,13 +40,13 @@ public class BungeeInfoSystem extends InfoSystem {
     }
 
     @Override
-    public void updateNetworkPage() throws WebException {
-        try {
-            NetworkContainer networkContainer = CacheSystem.getInstance().getDataContainerCache().getNetworkContainer();
-            String html = new NetworkPage(networkContainer).toHtml();
-            ResponseCache.cacheResponse(PageId.SERVER.of(ServerInfo.getServerUUID()), () -> new AnalysisPageResponse(html));
-        } catch (ParseException e) {
-            throw new WebFailException("Exception during Network Page Parsing", e);
-        }
+    public void updateNetworkPage() {
+        ResponseCache.cacheResponse(PageId.SERVER.of(ServerInfo.getServerUUID()), () -> {
+            try {
+                return new NetworkPageResponse();
+            } catch (ParseException e) {
+                return new InternalErrorResponse("Network page parsing failed.", e);
+            }
+        });
     }
 }
