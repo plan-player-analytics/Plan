@@ -57,20 +57,20 @@ Cmd Update - Fail Not Online                    || §cNiet alle servers waren on
 Cmd Update - Notify Cancel                      || §aJe kan de update stoppen op servers die nog niet zijn herstart met /plan update cancel.
 Cmd Update - Online Check                       || Kijken of alle servers online zijn..
 Cmd Update - Scheduled                          || §a${0} gepland voor een update.
-Cmd Update - Url mismatch                       || §cVersion download url did not start with ${0} and might not be trusted. You can download this version manually here (Direct download):
-Cmd Web - Permission Levels                     || >\§70: Access all pages\§71: Access '/players' and all player pages\§72: Access player page with the same username as the webuser\§73+: No permissions
-Command Help - /plan analyze                    || View the Server Page
-Command Help - /plan dev                        || Development mode command
-Command Help - /plan help                       || Show command list
-Command Help - /plan info                       || Check the version of Plan
-Command Help - /plan inspect                    || View a Player Page
-Command Help - /plan manage                     || Manage Plan Database
-Command Help - /plan manage backup              || Backup a Database
-Command Help - /plan manage clear               || Clear a Database
-Command Help - /plan manage con                 || Debug Server-Bungee connections
-Command Help - /plan manage disable             || Disable a feature temporarily
-Command Help - /plan manage hotswap             || Change Database quickly
-Command Help - /plan manage import              || Import data from elsewhere
+Cmd Update - Url mismatch                       || §cDownload link begon niet met ${0} en kan niet worden vertrouwd. Je kan de versie handmatig hier downloaden (directe download):
+Cmd Web - Permission Levels                     || >\§70: Toegang tot alle pagina's\§71: Toegang tot '/players' en alle speler pagina's\§72: Toegang tot de pagina met je eigen informatie\§73+: Geen toegang
+Command Help - /plan analyze                    || Bekijk de server pagina
+Command Help - /plan dev                        || Development mode commando
+Command Help - /plan help                       || Lijst met commando's
+Command Help - /plan info                       || Check de versie van Plan
+Command Help - /plan inspect                    || Bekijk een speler pagina
+Command Help - /plan manage                     || Beheer de Plan Database
+Command Help - /plan manage backup              || Backup de Plan Database
+Command Help - /plan manage clear               || Ruim de Plan Database op
+Command Help - /plan manage con                 || Debug Server-Bungee connecties
+Command Help - /plan manage disable             || Zet een feature tijdelijk uit
+Command Help - /plan manage hotswap             || Wissel snel van Database
+Command Help - /plan manage import              || Importeer data van een andere bron
 Command Help - /plan manage move                || Move data between Databases
 Command Help - /plan manage remove              || Remove Player's data
 Command Help - /plan manage restore             || Restore a previous Backup
@@ -121,33 +121,33 @@ HTML - AVERAGE_PING                             || Average Ping
 HTML - AVG                                      || AVG
 HTML - BANNED                                   || Banned
 HTML - BEST_PING                                || Best Ping
-HTML - CALENDAR                                 || CALENDAR
-HTML - CALENDAR_TEXT                            ||  Calendar
+HTML - CALENDAR                                 || KALENDER
+HTML - CALENDAR_TEXT                            ||  Kalender
 HTML - CHUNKS                                   || Chunks
 HTML - COMMAND                                  ||  Command
 HTML - COMMNAND_USAGE                           || Command Usage
 HTML - CONNECTION_INFORMATION                   || Connection Information
-HTML - COUNTRY                                  || Country
+HTML - COUNTRY                                  || Land
 HTML - CURRENT_PLAYERBASE                       || Current Playerbase
 HTML - DEATHS                                   || Deaths
 HTML - ENTITIES                                 || Entities
 HTML - ERROR                                    || Authentication failed due to error
-HTML - FAVORITE_SERVER                          || Favorite Server
+HTML - FAVORITE_SERVER                          || Favoriete Server
 HTML - GEOLOCATION                              || Geolocation
 HTML - GEOLOCATION_TEXT                         || Geolocation
 HTML - HEALTH_ESTIMATE                          || Health Estimate
-HTML - INDEX_ACTIVE                             || Active
-HTML - INDEX_INACTIVE                           || Inactive
-HTML - INDEX_IRREGULAR                          || Irregular
-HTML - INDEX_REGULAR                            || Regular
-HTML - INDEX_VERY_ACTIVE                        || Very Active
+HTML - INDEX_ACTIVE                             || Actief
+HTML - INDEX_INACTIVE                           || Inactief
+HTML - INDEX_IRREGULAR                          || Onregelmatig
+HTML - INDEX_REGULAR                            || Regelmatig
+HTML - INDEX_VERY_ACTIVE                        || Zeer Actief
 HTML - IP_ADDRESS                               || IP-address
 HTML - KILLED                                   || Killed
 HTML - KILLED_BY                                || Killed by
-HTML - LAST_24_HOURS                            || LAST 24 HOURS
-HTML - LAST_30_DAYS                             || LAST 30 DAYS
-HTML - LAST_30_DAYS_TEXT                        || Last 30 Days
-HTML - LAST_7_DAYS                              || LAST 7 DAYS
+HTML - LAST_24_HOURS                            || LAATSTE 24 UREN
+HTML - LAST_30_DAYS                             || LAATSTE 30 DAGEN
+HTML - LAST_30_DAYS_TEXT                        || LAATSTE 30 DAGEN
+HTML - LAST_7_DAYS                              || LAATSTE 7 DAGEN
 HTML - LAST_CONNECTED                           || Last Connected
 HTML - LAST_PEAK                                || Last Peak
 HTML - LAST_SEEN                                || LAST SEEN
@@ -161,7 +161,7 @@ HTML - MOB_CAUSED_DEATHS                        || Mob caused Deaths
 HTML - MOB_KDR                                  || Mob KDR
 HTML - MOB_KILLS                                || Mob Kills
 HTML - MOST_RECENT_SESSIONS                     || Most Recent Sessions
-HTML - NAME                                     ||  Name
+HTML - NAME                                     ||  Naam
 HTML - NAV_COMMAND_USAGE                        || Command Usage
 HTML - NAV_GEOLOCATIONS                         || Geolocations
 HTML - NAV_INFORMATION                          || Information
@@ -169,14 +169,14 @@ HTML - NAV_NETWORK_PLAYERS                      || Network Players
 HTML - NAV_ONLINE_ACTIVITY                      || Online Activity
 HTML - NAV_OVERVIEW                             || Overview
 HTML - NAV_PERFORMANCE                          || Performance
-HTML - NAV_PLAYERS                              || Players
+HTML - NAV_PLAYERS                              || Spelers
 HTML - NAV_PLUGINS                              || Plugins
-HTML - NAV_SESSIONS                             || Sessions
+HTML - NAV_SESSIONS                             || Sessies
 HTML - NAV_SEVER_HEALTH                         || Server Health
 HTML - NETWORK                                  || Network
 HTML - NETWORK_INFORMATION                      || NETWORK INFORMATION
-HTML - NEW                                      || NEW
-HTML - NEW_CALENDAR                             || New:
+HTML - NEW                                      || NIEUW
+HTML - NEW_CALENDAR                             || Nieuw:
 HTML - NEW_PLAYERS_TEXT                         || New Players
 HTML - NEW_RETENTION                            || New Player Retention
 HTML - NEW_TEXT                                 || New
@@ -296,9 +296,9 @@ Manage - Notify External Url                    || §eNon-local address, check t
 Manage - Remind HotSwap                         || §eRemember to swap to the new database (/plan m hotswap ${0}) & reload the plugin.
 Manage - Start                                  || > §2Processing data..
 Manage - Success                                || > §aSuccess!
-Negative                                        || No
-Positive                                        || Yes
-Unknown                                         || Unknown
+Negative                                        || Nee
+Positive                                        || Ja
+Unknown                                         || Onbekend
 Version - DEV                                   ||  This is a DEV release.
 Version - Latest                                || You're using the latest version.
 Version - New                                   || New Release (${0}) is available ${1}
