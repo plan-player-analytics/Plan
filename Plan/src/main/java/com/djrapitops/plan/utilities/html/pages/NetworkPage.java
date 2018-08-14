@@ -6,7 +6,9 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
+import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.NetworkPageContent;
@@ -30,6 +32,8 @@ public class NetworkPage implements Page {
     @Override
     public String toHtml() throws ParseException {
         try {
+            networkContainer.putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties()::getOnlinePlayers);
+
             PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
             placeholderReplacer.addAllPlaceholdersFrom(networkContainer,
                     VERSION, NETWORK_NAME, TIME_ZONE,

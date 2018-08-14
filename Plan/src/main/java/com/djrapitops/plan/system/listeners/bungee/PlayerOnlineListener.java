@@ -6,11 +6,13 @@ package com.djrapitops.plan.system.listeners.bungee;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.BungeePlayerRegisterProcessor;
 import com.djrapitops.plan.system.processing.processors.player.IPUpdateProcessor;
+import com.djrapitops.plan.system.webserver.cache.PageId;
+import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plugin.api.utility.log.Log;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -44,7 +46,7 @@ public class PlayerOnlineListener implements Listener {
                     new IPUpdateProcessor(uuid, address, now))
             );
             Processing.submit(new PlayerPageUpdateProcessor(uuid));
-            Processing.submit(new NetworkPageUpdateProcessor());
+            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -58,7 +60,7 @@ public class PlayerOnlineListener implements Listener {
 
             SessionCache.getInstance().endSession(uuid, System.currentTimeMillis());
             Processing.submit(new PlayerPageUpdateProcessor(uuid));
-            Processing.submit(new NetworkPageUpdateProcessor());
+            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

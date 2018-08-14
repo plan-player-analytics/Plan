@@ -157,8 +157,7 @@ public class WorldTimes {
     }
 
     public void add(WorldTimes toAdd) {
-        Map<String, GMTimes> times = toAdd.getWorldTimes();
-        for (Map.Entry<String, GMTimes> entry : times.entrySet()) {
+        for (Map.Entry<String, GMTimes> entry : toAdd.getWorldTimes().entrySet()) {
             String worldName = entry.getKey();
             GMTimes gmTimes = entry.getValue();
 

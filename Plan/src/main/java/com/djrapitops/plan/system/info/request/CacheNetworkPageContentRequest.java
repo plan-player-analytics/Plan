@@ -6,7 +6,6 @@ package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -52,8 +51,8 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
 
         NetworkPageContent serversTab = getNetworkPageContent();
         serversTab.addElement(serverName, Base64Util.decode(html));
-        
-        InfoSystem.getInstance().updateNetworkPage();
+
+        ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
 
         return DefaultResponses.SUCCESS.get();
     }

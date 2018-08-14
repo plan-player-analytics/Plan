@@ -97,4 +97,8 @@ public class ResponseCache {
     public static Set<String> getCacheKeys() {
         return cache.keySet();
     }
+
+    public static void clearResponse(String identifier) {
+        cache.remove(identifier);
+    }
 }
