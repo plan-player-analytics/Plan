@@ -68,9 +68,9 @@ public class ConnectionIn {
 
     private Map<String, String> readVariables(Request request) throws WebException {
         String requestBody = readRequestBody(request.getRequestBody());
-        String[] variables = requestBody.split(";&variable;");
+        String[] bodyVariables = requestBody.split(";&variable;");
 
-        return Arrays.stream(variables)
+        return Arrays.stream(bodyVariables)
                 .map(variable -> variable.split("=", 2))
                 .filter(splitVariables -> splitVariables.length == 2)
                 .collect(Collectors.toMap(splitVariables -> splitVariables[0], splitVariables -> splitVariables[1], (a, b) -> b));

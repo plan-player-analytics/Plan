@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.google.common.base.Objects;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -21,6 +22,23 @@ import java.util.Optional;
 public class RetentionData {
     private final double activityIndex;
     private double onlineOnJoin;
+
+    public static RetentionData average(Collection<RetentionData> stuck) {
+        int size = stuck.size();
+
+        double totalIndex = 0.0;
+        double totalPlayersOnline = 0.0;
+
+        for (RetentionData retentionData : stuck) {
+            totalIndex += retentionData.getActivityIndex();
+            totalPlayersOnline += retentionData.getOnlineOnJoin();
+        }
+
+        double averageIndex = totalIndex / (double) size;
+        double averagePlayersOnline = totalPlayersOnline / (double) size;
+
+        return new RetentionData(averageIndex, averagePlayersOnline);
+    }
 
     public RetentionData(double activityIndex, double onlineOnJoin) {
         this.activityIndex = activityIndex;

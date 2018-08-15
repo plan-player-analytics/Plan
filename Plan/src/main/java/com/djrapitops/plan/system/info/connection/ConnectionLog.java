@@ -11,6 +11,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class responsible for logging what ConnectionOut objects get in return.
@@ -89,6 +90,20 @@ public class ConnectionLog {
         @Override
         public int compareTo(Entry o) {
             return Long.compare(o.date, this.date);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Entry)) return false;
+            Entry entry = (Entry) o;
+            return responseCode == entry.responseCode &&
+                    date == entry.date;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(responseCode, date);
         }
     }
 

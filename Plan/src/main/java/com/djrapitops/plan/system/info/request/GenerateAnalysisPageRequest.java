@@ -12,9 +12,9 @@ import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.pages.parsing.AnalysisPage;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.utilities.html.pages.AnalysisPage;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 

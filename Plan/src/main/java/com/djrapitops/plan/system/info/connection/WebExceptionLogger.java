@@ -25,11 +25,11 @@ public class WebExceptionLogger {
             function.apply();
         } catch (ConnectionFailException e) {
             if (shouldLog(e)) {
-                Log.warn(e.getMessage());
+                Log.debug(e.getMessage());
             }
         } catch (UnsupportedTransferDatabaseException | UnauthorizedServerException
                 | NotFoundException | NoServersException e) {
-            Log.warn(e.getMessage());
+            Log.debug(e.getMessage());
         } catch (WebException e) {
             Log.toLog(c, e);
         }
@@ -63,4 +63,7 @@ public class WebExceptionLogger {
         return null;
     }
 
+    private WebExceptionLogger() {
+        // Static method class.
+    }
 }

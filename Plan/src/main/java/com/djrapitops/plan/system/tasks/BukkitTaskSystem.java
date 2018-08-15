@@ -30,11 +30,13 @@ public class BukkitTaskSystem extends ServerTaskSystem {
     @Override
     public void enable() {
         super.enable();
-        if (Check.isSpigotAvailable()) {
+        try {
             PingCountTimer pingCountTimer = new PingCountTimer();
             ((Plan) plugin).registerListener(pingCountTimer);
             RunnableFactory.createNew("PingCountTimer", pingCountTimer)
                     .runTaskTimer(20L, PingCountTimer.PING_INTERVAL);
+        } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {
+            // Running CraftBukkit
         }
     }
 

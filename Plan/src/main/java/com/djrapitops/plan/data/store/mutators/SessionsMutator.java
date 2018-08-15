@@ -156,7 +156,7 @@ public class SessionsMutator {
     }
 
     public TreeMap<Long, Integer> uniqueJoinsPerDay() {
-        TreeMap<Long, List<Session>> byStartOfDay = toDateHoldersMutator().groupByStartOfDay();
+        SortedMap<Long, List<Session>> byStartOfDay = toDateHoldersMutator().groupByStartOfDay();
 
         TreeMap<Long, Integer> uniqueJoins = new TreeMap<>();
         for (Map.Entry<Long, List<Session>> entry : byStartOfDay.entrySet()) {

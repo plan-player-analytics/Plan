@@ -26,7 +26,6 @@ public abstract class PluginData {
     private final String sourcePlugin;
 
     private Icon pluginIcon;
-    private String iconColor;
 
     private String helpText;
 

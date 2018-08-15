@@ -8,10 +8,10 @@ import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.webserver.cache.PageId;
+import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.cache.PageId;
-import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
@@ -50,13 +50,13 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, html (Base64)
 
-        UUID serverUUID = UUID.fromString(variables.get("sender"));
+        UUID sender = UUID.fromString(variables.get("sender"));
 
-        String html = variables.get("html");
-        Verify.nullCheck(html, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
+        String sentHtml = variables.get("html");
+        Verify.nullCheck(sentHtml, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
         boolean export = Settings.ANALYSIS_EXPORT.isTrue();
-        cache(export, serverUUID, Base64Util.decode(html));
+        cache(export, sender, Base64Util.decode(sentHtml));
         return DefaultResponses.SUCCESS.get();
     }
 

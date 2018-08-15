@@ -135,4 +135,9 @@ public class SQLSaveOps extends SQLOps implements SaveOperations {
     public void ping(UUID uuid, Ping ping) {
         pingTable.insertPing(uuid, ping);
     }
+
+    @Override
+    public void setAsUninstalled(UUID serverUUID) {
+        serverTable.setAsUninstalled(serverUUID);
+    }
 }

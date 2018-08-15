@@ -111,4 +111,11 @@ public abstract class ConnectionSystem implements SubSystem {
     public List<Server> getBukkitServers() {
         return new ArrayList<>(bukkitServers.values());
     }
+
+    @Override
+    public void disable() {
+        setupAllowed = false;
+        bukkitServers.clear();
+        dataRequests.clear();
+    }
 }

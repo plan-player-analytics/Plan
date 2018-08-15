@@ -116,9 +116,4 @@ public class ServerConnectionSystem extends ConnectionSystem {
             Log.info(locale.get().getString(PluginLang.ENABLE_NOTIFY_ADDRESS_CONFIRMATION, webServerAddress));
         }
     }
-
-    @Override
-    public void disable() {
-
-    }
 }

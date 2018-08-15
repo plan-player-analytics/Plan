@@ -63,7 +63,7 @@ public abstract class AbstractHealthInfo {
         regularRemainCompareSet.removeAll(veryActiveNow);
         int notRegularAnymore = regularRemainCompareSet.size();
         int remain = activeFWAGNum - notRegularAnymore;
-        double percRemain = remain * 100.0 / activeFWAGNum;
+        double percRemain = activeFWAGNum != 0 ? remain * 100.0 / activeFWAGNum : 100.0;
 
         int newActive = getNewActive(veryActiveNow, activeNow, regularNow, veryActiveFWAG, activeFWAG, regularFWAG);
 

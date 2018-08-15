@@ -21,4 +21,8 @@ public class MutatorFunctions {
                 .average().orElse(0);
     }
 
+    private MutatorFunctions() {
+        // Static method class.
+    }
+
 }

@@ -18,7 +18,10 @@ public enum ErrorPageLang implements Lang {
     NOT_FOUND_404("Not Found"),
     PAGE_NOT_FOUND_404("Page does not exist."),
     ANALYSIS_REFRESH("Analysis is being refreshed.."),
-    ANALYSIS_REFRESH_LONG("Analysis is being run, refresh the page after a few seconds..");
+    ANALYSIS_REFRESH_LONG("Analysis is being run, refresh the page after a few seconds.."),
+    INSPECT_REFRESH("Player page request is being processed.."),
+    INSPECT_REFRESH_LONG("Page will refresh automatically.."),
+    PLUGIN_TAB_REFRESH("Calculating...");
 
     private final String defaultValue;
 

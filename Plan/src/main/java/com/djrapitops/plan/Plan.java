@@ -117,7 +117,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
     @Override
     public void onReload() {
-
+        // Nothing to be done, systems are disabled
     }
 
     @Override
@@ -161,6 +161,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         throw new IllegalStateException("This method should be used on this plugin.");
     }
 
+    @Override
     public BukkitSystem getSystem() {
         return system;
     }

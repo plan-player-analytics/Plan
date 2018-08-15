@@ -8,10 +8,10 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.webserver.pages.parsing.InspectPage;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.utilities.html.pages.InspectPage;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;

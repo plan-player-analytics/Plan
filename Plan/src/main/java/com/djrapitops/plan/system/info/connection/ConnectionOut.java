@@ -32,6 +32,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents an outbound action request to another Plan server.
@@ -51,7 +53,7 @@ public class ConnectionOut {
             properties.setProperty("sun.net.client.defaultReadTimeout", Long.toString(TimeAmount.MINUTE.ms()));
             properties.setProperty("sun.net.http.retryPost", Boolean.toString(false));
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getGlobal().log(Level.WARNING, "[Plan] Failed to set sun client timeout system properties.", e);
         }
     }
 
@@ -90,7 +92,7 @@ public class ConnectionOut {
             handleResult(url, parameters, responseCode);
         } catch (SocketTimeoutException e) {
             ConnectionLog.logConnectionTo(toServer, infoRequest, 0);
-            throw new ConnectionFailException("Connection timed out after 10 seconds.", e);
+            throw new ConnectionFailException("Connection to " + address + " timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException | IOException e) {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");

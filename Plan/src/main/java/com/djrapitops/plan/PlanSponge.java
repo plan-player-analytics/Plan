@@ -101,7 +101,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Override
     public void onReload() {
-
+        // Nothing to be done, systems are disabled
     }
 
     @Override
@@ -124,6 +124,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         return getClass().getAnnotation(Plugin.class).version();
     }
 
+    @Override
     public SpongeSystem getSystem() {
         return system;
     }

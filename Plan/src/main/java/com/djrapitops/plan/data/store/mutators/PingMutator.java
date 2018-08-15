@@ -6,7 +6,7 @@ import com.djrapitops.plan.data.store.keys.CommonKeys;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ public class PingMutator {
 
     public PingMutator mutateToByMinutePings() {
         DateHoldersMutator<Ping> dateMutator = new DateHoldersMutator<>(pings);
-        TreeMap<Long, List<Ping>> byStartOfMinute = dateMutator.groupByStartOfMinute();
+        SortedMap<Long, List<Ping>> byStartOfMinute = dateMutator.groupByStartOfMinute();
 
         return new PingMutator(byStartOfMinute.entrySet().stream()
                 .map(entry -> {

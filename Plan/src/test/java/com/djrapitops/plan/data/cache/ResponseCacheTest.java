@@ -1,7 +1,7 @@
 package com.djrapitops.plan.data.cache;
 
+import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import org.junit.Test;
 import utilities.RandomData;
 

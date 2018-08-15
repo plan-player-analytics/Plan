@@ -178,5 +178,20 @@ public class WorldTable extends Table {
             return column;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WorldTable)) return false;
+        if (!super.equals(o)) return false;
+        WorldTable that = (WorldTable) o;
+        return Objects.equals(statementSelectID, that.statementSelectID) &&
+                Objects.equals(serverTable, that.serverTable);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), statementSelectID, serverTable);
+    }
 }
 

@@ -32,13 +32,7 @@ public class PlanErrorManager implements ErrorManager {
             } else {
                 Log.warn("It has been logged to ErrorLog.txt");
             }
-            try {
-                if ((Check.isBukkitAvailable() && Check.isBungeeAvailable()) || Settings.DEV_MODE.isTrue()) {
-                    Logger.getGlobal().log(Level.WARNING, source, e);
-                }
-            } catch (IllegalStateException ignored) {
-                /* Config system not initialized */
-            }
+            logGlobally(source, e);
             ErrorLogger.logThrowable(e, logsFolder);
         } catch (Exception exception) {
             System.out.println("Failed to log error to file because of " + exception);
@@ -46,6 +40,16 @@ public class PlanErrorManager implements ErrorManager {
             // Fallback
             System.out.println("Fail Reason:");
             Logger.getGlobal().log(Level.WARNING, source, e);
+        }
+    }
+
+    private void logGlobally(String source, Throwable e) {
+        try {
+            if ((Check.isBukkitAvailable() && Check.isBungeeAvailable()) || Settings.DEV_MODE.isTrue()) {
+                Logger.getGlobal().log(Level.WARNING, source, e);
+            }
+        } catch (IllegalStateException ignored) {
+            /* Config system not initialized */
         }
     }
 }

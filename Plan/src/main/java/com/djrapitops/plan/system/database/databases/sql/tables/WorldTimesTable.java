@@ -286,8 +286,8 @@ public class WorldTimesTable extends UserIDTable {
     public void addWorldTimesToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
         Map<Integer, WorldTimes> worldTimesBySessionID = getAllWorldTimesBySessionID();
 
-        for (UUID serverUUID : map.keySet()) {
-            for (List<Session> sessions : map.get(serverUUID).values()) {
+        for (Map.Entry<UUID, Map<UUID, List<Session>>> entry : map.entrySet()) {
+            for (List<Session> sessions : entry.getValue().values()) {
                 for (Session session : sessions) {
                     WorldTimes worldTimes = worldTimesBySessionID.get(session.getUnsafe(SessionKeys.DB_ID));
                     if (worldTimes != null) {
@@ -376,5 +376,22 @@ public class WorldTimesTable extends UserIDTable {
         public String toString() {
             return column;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WorldTimesTable)) return false;
+        if (!super.equals(o)) return false;
+        WorldTimesTable that = (WorldTimesTable) o;
+        return Objects.equals(serverTable, that.serverTable) &&
+                Objects.equals(worldTable, that.worldTable) &&
+                Objects.equals(sessionsTable, that.sessionsTable) &&
+                Objects.equals(insertStatement, that.insertStatement);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), serverTable, worldTable, sessionsTable, insertStatement);
     }
 }

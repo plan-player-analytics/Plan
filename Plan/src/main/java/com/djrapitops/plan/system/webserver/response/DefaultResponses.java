@@ -4,8 +4,6 @@
  */
 package com.djrapitops.plan.system.webserver.response;
 
-import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
-
 /**
  * Enum containing default responses that don't need to be cached because they're always the same.
  *
@@ -13,7 +11,7 @@ import com.djrapitops.plan.system.webserver.response.api.SuccessResponse;
  */
 public enum DefaultResponses {
     BASIC_AUTH(PromptAuthorizationResponse.getBasicAuthResponse()),
-    SUCCESS(new SuccessResponse());
+    SUCCESS(new TextResponse("Success"));
 
     private final Response response;
 

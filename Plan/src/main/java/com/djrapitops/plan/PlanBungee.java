@@ -80,6 +80,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Override
     public void onReload() {
+        // Nothing to be done, systems are disabled
     }
 
     @Override
@@ -92,6 +93,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         return PlanColorScheme.create();
     }
 
+    @Override
     public BungeeSystem getSystem() {
         return system;
     }

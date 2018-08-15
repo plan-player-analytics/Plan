@@ -1,9 +1,9 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
-import com.djrapitops.plan.system.webserver.pages.parsing.PlayersPage;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
+import com.djrapitops.plan.utilities.html.pages.PlayersPage;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 /**

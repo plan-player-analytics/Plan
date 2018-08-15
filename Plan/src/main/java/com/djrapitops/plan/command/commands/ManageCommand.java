@@ -26,22 +26,22 @@ public class ManageCommand extends TreeCmdNode {
         setShortHelp(locale.getString(CmdHelpLang.MANAGE));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE));
         super.setColorScheme(plugin.getColorScheme());
-        setNodeGroups(
-                new CommandNode[]{
-                        new ManageRawDataCommand(plugin),
-                        new ManageMoveCommand(plugin),
-                        new ManageBackupCommand(plugin),
-                        new ManageRestoreCommand(plugin),
-                        new ManageRemoveCommand(plugin),
-                        new ManageHotSwapCommand(plugin),
-                        new ManageClearCommand(plugin),
-                },
-                new CommandNode[]{
-                        new ManageSetupCommand(plugin),
-                        new ManageConDebugCommand(plugin),
-                        new ManageImportCommand(plugin),
-                        new ManageDisableCommand(plugin)
-                }
-        );
+        CommandNode[] databaseGroup = {
+                new ManageRawDataCommand(plugin),
+                new ManageMoveCommand(plugin),
+                new ManageBackupCommand(plugin),
+                new ManageRestoreCommand(plugin),
+                new ManageRemoveCommand(plugin),
+                new ManageHotSwapCommand(plugin),
+                new ManageClearCommand(plugin),
+        };
+        CommandNode[] pluginGroup = {
+                new ManageSetupCommand(plugin),
+                new ManageConDebugCommand(plugin),
+                new ManageImportCommand(plugin),
+                new ManageDisableCommand(plugin),
+                new ManageUninstalledCommand(plugin)
+        };
+        setNodeGroups(databaseGroup, pluginGroup);
     }
 }

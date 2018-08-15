@@ -201,14 +201,12 @@ public class AnalysisContainer extends DataContainer {
 
         putSupplier(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).uniqueJoinsPerDay());
         putSupplier(AnalysisKeys.NEW_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay());
-        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_SERIES, () ->
-                new AbstractLineGraph(MutatorFunctions.toPoints(
-                        getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY))
+        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_SERIES, () -> new AbstractLineGraph(
+                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY))
                 ).toHighChartsSeries()
         );
-        putSupplier(AnalysisKeys.NEW_PLAYERS_SERIES, () ->
-                new AbstractLineGraph(MutatorFunctions.toPoints(
-                        getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY))
+        putSupplier(AnalysisKeys.NEW_PLAYERS_SERIES, () -> new AbstractLineGraph(
+                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY))
                 ).toHighChartsSeries()
         );
 

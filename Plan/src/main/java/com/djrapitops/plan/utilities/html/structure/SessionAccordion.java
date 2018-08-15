@@ -10,7 +10,6 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
@@ -98,6 +97,7 @@ public class SessionAccordion extends AbstractAccordion {
 
             WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
             WorldPie worldPie = new WorldPie(worldTimes);
+            String longestWorldPlayed = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
 
             boolean hasEnded = session.supports(SessionKeys.END);
             String sessionEnd = hasEnded ? timeStampFormatter.apply(() -> session.getUnsafe(SessionKeys.END)) : "Online";
@@ -110,7 +110,7 @@ public class SessionAccordion extends AbstractAccordion {
             int deaths = session.getValue(SessionKeys.DEATH_COUNT).orElse(0);
 
             String info = appendWorldPercentage
-                    ? HtmlStructure.separateWithDots(sessionStart, AnalysisUtils.getLongestWorldPlayed(session))
+                    ? HtmlStructure.separateWithDots(sessionStart, longestWorldPlayed)
                     : sessionStart;
             String title = HtmlStructure.separateWithDots(playerName, info) + "<span class=\"pull-right\">" + length + "</span>";
             String htmlID = "" + session.getValue(SessionKeys.START).orElse(0L) + i;
@@ -170,6 +170,7 @@ public class SessionAccordion extends AbstractAccordion {
 
             WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
             WorldPie worldPie = new WorldPie(worldTimes);
+            String longestWorldPlayed = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
 
             boolean hasEnded = session.supports(SessionKeys.END);
             String sessionEnd = hasEnded ? timeStampFormatter.apply(() -> session.getValue(SessionKeys.END).orElse(0L)) : "Online";
@@ -182,7 +183,7 @@ public class SessionAccordion extends AbstractAccordion {
             int deaths = session.getValue(SessionKeys.DEATH_COUNT).orElse(0);
 
             String info = appendWorldPercentage
-                    ? HtmlStructure.separateWithDots(sessionStart, AnalysisUtils.getLongestWorldPlayed(session))
+                    ? HtmlStructure.separateWithDots(sessionStart, longestWorldPlayed)
                     : sessionStart;
             String title = HtmlStructure.separateWithDots(serverName, info) + "<span class=\"pull-right\">" + length + "</span>";
             String htmlID = "" + session.getValue(SessionKeys.START).orElse(0L) + i;

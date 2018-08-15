@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.webserver.response.cache;
+package com.djrapitops.plan.system.webserver.cache;
 
 import com.djrapitops.plan.system.webserver.response.Response;
 
@@ -96,5 +96,9 @@ public class ResponseCache {
 
     public static Set<String> getCacheKeys() {
         return cache.keySet();
+    }
+
+    public static void clearResponse(String identifier) {
+        cache.remove(identifier);
     }
 }

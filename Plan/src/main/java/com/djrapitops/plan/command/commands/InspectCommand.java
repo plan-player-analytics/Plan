@@ -74,11 +74,7 @@ public class InspectCommand extends CommandNode {
                     checkWebUserAndNotify(activeDB, sender);
                     Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName, locale));
                 } catch (DBOpException e) {
-                    if (e.isFatal()) {
-                        sender.sendMessage("§cFatal database exception occurred: " + e.getMessage());
-                    } else {
-                        sender.sendMessage("§eNon-Fatal database exception occurred: " + e.getMessage());
-                    }
+                    sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
                     Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();

@@ -2,7 +2,6 @@ package com.djrapitops.plan.data.time;
 
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -12,7 +11,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
-public abstract class TimeKeeper implements Serializable {
+public abstract class TimeKeeper {
 
     protected Map<String, Long> times;
     protected String state;

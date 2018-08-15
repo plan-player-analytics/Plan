@@ -9,11 +9,10 @@ import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.connection.InfoRequestPageHandler;
 import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
+import com.djrapitops.plan.system.webserver.cache.PageId;
+import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pages.*;
 import com.djrapitops.plan.system.webserver.response.*;
-import com.djrapitops.plan.system.webserver.response.api.BadRequestResponse;
-import com.djrapitops.plan.system.webserver.response.cache.PageId;
-import com.djrapitops.plan.system.webserver.response.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.*;
 import com.djrapitops.plugin.api.utility.log.Log;
 

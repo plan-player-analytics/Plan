@@ -88,11 +88,7 @@ public class QInspectCommand extends CommandNode {
 
                     sendMessages(sender, container);
                 } catch (DBOpException e) {
-                    if (e.isFatal()) {
-                        sender.sendMessage("§cFatal database exception occurred: " + e.getMessage());
-                    } else {
-                        sender.sendMessage("§eNon-Fatal database exception occurred: " + e.getMessage());
-                    }
+                    sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
                     Log.toLog(this.getClass(), e);
                 } finally {
                     this.cancel();

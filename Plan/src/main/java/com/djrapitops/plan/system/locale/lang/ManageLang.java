@@ -28,7 +28,9 @@ public enum ManageLang implements Lang {
     FAIL_SAME_DB("Manage - Fail Same Database", "> §cCan not operate on to and from the same database!"),
     FAIL_INCORRECT_DB("Manage - Fail Incorrect Database", "> §c'${0}' is not a supported database."),
     FAIL_FILE_NOT_FOUND("Manage - Fail File not found", "> §cNo File found at ${0}"),
-    FAIL_IMPORTER_NOT_FOUND("Manage - Fail No Importer", "§eImporter '${0}' doesn't exist");
+    FAIL_IMPORTER_NOT_FOUND("Manage - Fail No Importer", "§eImporter '${0}' doesn't exist"),
+    NO_SERVER("Manage - Fail No Server", "No server found with given parameters."),
+    UNINSTALLING_SAME_SERVER("Manage - Fail Same server", "Can not mark this server as uninstalled (You are on it)");
 
     private final String identifier;
     private final String defaultValue;

@@ -55,7 +55,7 @@ public class ServerTable extends Table {
                 .column(Col.SERVER_UUID, Sql.varchar(36)).notNull().unique()
                 .column(Col.NAME, Sql.varchar(100))
                 .column(Col.WEBSERVER_ADDRESS, Sql.varchar(100))
-                .column(Col.INSTALLED, Sql.BOOL).notNull().defaultValue(false)
+                .column(Col.INSTALLED, Sql.BOOL).notNull().defaultValue(true)
                 .column(Col.MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
                 .primaryKey(usingMySQL, Col.SERVER_ID)
                 .toString()
@@ -246,12 +246,14 @@ public class ServerTable extends Table {
     public Map<UUID, Server> getBukkitServers() {
         String sql = Select.from(tableName, "*")
                 .where(Col.NAME + "!=?")
+                .and(Col.INSTALLED + "=?")
                 .toString();
 
         return query(new QueryStatement<Map<UUID, Server>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, "BungeeCord");
+                statement.setBoolean(2, true);
             }
 
             @Override
@@ -360,6 +362,18 @@ public class ServerTable extends Table {
                             set.getInt(Col.MAX_PLAYERS.get())));
                 }
                 return Optional.empty();
+            }
+        });
+    }
+
+    public void setAsUninstalled(UUID serverUUID) {
+        String sql = "UPDATE " + tableName + " SET (" + Col.INSTALLED + "=?) WHERE " + Col.SERVER_UUID + "=?";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, false);
+                statement.setString(2, serverUUID.toString());
             }
         });
     }

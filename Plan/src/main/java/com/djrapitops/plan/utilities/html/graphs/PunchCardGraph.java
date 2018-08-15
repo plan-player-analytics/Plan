@@ -7,8 +7,8 @@ package com.djrapitops.plan.utilities.html.graphs;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -33,11 +33,45 @@ public class PunchCardGraph implements HighChart {
         this.sessions = sessions;
     }
 
+    /*
+     * First number signifies the Day of Week. (0 = Monday, 6 = Sunday)
+     * Second number signifies the Hour of Day. (0 = 0 AM, 23 = 11 PM)
+     */
+    private static List<int[]> getDaysAndHours(Collection<Long> sessionStarts) {
+        return sessionStarts.stream().map((Long start) -> {
+            Calendar day = Calendar.getInstance();
+            day.setTimeInMillis(start);
+            int hourOfDay = day.get(Calendar.HOUR_OF_DAY); // 0 AM is 0
+            int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2; // Monday is 0, Sunday is -1
+            if (hourOfDay == 24) { // If hour is 24 (Should be impossible but.)
+                hourOfDay = 0;
+                dayOfWeek += 1;
+            }
+            if (dayOfWeek > 6) { // If Hour added a day on Sunday, move to Monday
+                dayOfWeek = 0;
+            }
+            if (dayOfWeek < 0) { // Move Sunday to 6
+                dayOfWeek = 6;
+            }
+            return new int[]{dayOfWeek, hourOfDay};
+        }).collect(Collectors.toList());
+    }
+
+    private static int[][] turnIntoArray(Collection<Long> sessionStarts) {
+        List<int[]> daysAndHours = getDaysAndHours(sessionStarts);
+        int[][] dataArray = createEmptyArray();
+        for (int[] dAndH : daysAndHours) {
+            int d = dAndH[0];
+            int h = dAndH[1];
+            dataArray[d][h] = dataArray[d][h] + 1;
+        }
+        return dataArray;
+    }
+
     @Override
     public String toHighChartsSeries() {
         List<Long> sessionStarts = getSessionStarts(sessions);
-        List<int[]> daysAndHours = AnalysisUtils.getDaysAndHours(sessionStarts);
-        int[][] dataArray = turnIntoArray(daysAndHours);
+        int[][] dataArray = turnIntoArray(sessionStarts);
         int big = findBiggestValue(dataArray);
         int[][] scaled = scale(dataArray, big);
         StringBuilder arrayBuilder = new StringBuilder("[");
@@ -60,16 +94,6 @@ public class PunchCardGraph implements HighChart {
         }
         arrayBuilder.append("]");
         return arrayBuilder.toString();
-    }
-
-    private static int[][] turnIntoArray(List<int[]> daysAndHours) {
-        int[][] dataArray = createEmptyArray();
-        for (int[] dAndH : daysAndHours) {
-            int d = dAndH[0];
-            int h = dAndH[1];
-            dataArray[d][h] = dataArray[d][h] + 1;
-        }
-        return dataArray;
     }
 
     private static List<Long> getSessionStarts(Collection<Session> data) {
