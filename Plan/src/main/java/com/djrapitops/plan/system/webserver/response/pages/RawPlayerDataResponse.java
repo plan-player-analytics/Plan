@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
-import com.djrapitops.plan.system.cache.CacheSystem;
+import com.djrapitops.plan.system.database.databases.Database;
 
 import java.util.UUID;
 
@@ -12,6 +12,6 @@ import java.util.UUID;
 public class RawPlayerDataResponse extends RawDataResponse {
 
     public RawPlayerDataResponse(UUID uuid) {
-        super(CacheSystem.getInstance().getDataContainerCache().getPlayerContainer(uuid));
+        super(Database.getActive().fetch().getPlayerContainer(uuid));
     }
 }

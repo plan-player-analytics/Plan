@@ -2,13 +2,10 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.store.CachingSupplier;
-import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
-import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionLog;
@@ -32,7 +29,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * Html parsing for the Debug page.
@@ -68,7 +64,6 @@ public class DebugPage implements Page {
         StringBuilder content = new StringBuilder();
         appendResponseCache(content);
         appendSessionCache(content);
-        appendDataContainerCache(content);
         return content.toString();
     }
 
@@ -103,36 +98,6 @@ public class DebugPage implements Page {
                 UUID uuid = entry.getKey();
                 String start = entry.getValue().getValue(SessionKeys.START).map(timeStamp).orElse("Unknown");
                 content.append(uuid.toString()).append(" | ").append(start).append("<br>");
-            }
-            content.append("</pre>");
-        } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
-        }
-    }
-
-    private void appendDataContainerCache(StringBuilder content) {
-        try {
-            content.append("<pre>### DataContainer Cache:<br><br>");
-
-            content.append("Key | Is Cached | Cache Time <br>")
-                    .append("-- | -- | -- <br>");
-            Formatter<Long> timeStamp = Formatters.yearLongValue();
-            Set<Map.Entry<Key, Supplier>> dataContainers = CacheSystem.getInstance().getDataContainerCache().getMap().entrySet();
-            if (dataContainers.isEmpty()) {
-                content.append("Empty");
-            }
-            for (Map.Entry<Key, Supplier> entry : dataContainers) {
-                String keyName = entry.getKey().getKeyName();
-                Supplier supplier = entry.getValue();
-                if (supplier instanceof CachingSupplier) {
-                    CachingSupplier cachingSupplier = (CachingSupplier) supplier;
-                    boolean isCached = cachingSupplier.isCached();
-                    String cacheText = isCached ? "Yes" : "No";
-                    String cacheTime = isCached ? timeStamp.apply(cachingSupplier.getCacheTime()) : "-";
-                    content.append(keyName).append(" | ").append(cacheText).append(" | ").append(cacheTime).append("<br>");
-                } else {
-                    content.append(keyName).append(" | ").append("Non-caching Supplier").append(" | ").append("-").append("<br>");
-                }
             }
             content.append("</pre>");
         } catch (Exception e) {
