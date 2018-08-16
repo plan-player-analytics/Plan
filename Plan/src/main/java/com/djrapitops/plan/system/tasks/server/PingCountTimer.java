@@ -160,7 +160,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
                     addPlayer(player);
                 }
             }
-        }).runTaskLater(TimeAmount.SECOND.ticks() * 10L);
+        }).runTaskLater(TimeAmount.SECOND.ticks() * 15L);
     }
 
     @EventHandler
