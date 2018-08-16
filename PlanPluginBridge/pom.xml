@@ -129,7 +129,7 @@
         </dependency>
         <dependency>
             <groupId>com.gmail.nossr50</groupId>
-            <artifactId>mcmmo</artifactId>
+            <artifactId>mcMMO</artifactId>
             <version>1.5.07</version>
             <scope>provided</scope>
         </dependency>
@@ -161,7 +161,7 @@
         <dependency>
             <groupId>net.kaikk.mc</groupId>
             <artifactId>GriefPreventionPlus</artifactId>
-            <version>RELEASE</version>
+            <version>13.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -228,6 +228,12 @@
             <groupId>com.volmit</groupId>
             <artifactId>react</artifactId>
             <version>6.549</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.leoko</groupId>
+            <artifactId>advancedban</artifactId>
+            <version>2.1.5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
