@@ -42,13 +42,7 @@ public class AdvancedBanData extends PluginData {
         String abUuid = uuid.toString().replace("-", "");
 
         if (uuid.version() == 3) { // Cracked / Offline UUID
-            String username = analysisData.getValue(AnalysisKeys.PLAYER_NAMES).orElse(new HashMap<>()).get(uuid);
-
-            if (username == null) {
-                return inspectContainer; // Player name couldn't be found
-            }
-
-            abUuid = UUIDManager.get().getUUID(username);
+            return inspectContainer;
         }
 
         Punishment ban = PunishmentManager.get().getBan(abUuid);
