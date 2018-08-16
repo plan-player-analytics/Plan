@@ -2,9 +2,6 @@ package com.djrapitops.pluginbridge.plan;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  * Abstract class for easy hooking of plugins.
@@ -35,11 +32,9 @@ public abstract class Hook {
     public Hook(String plugin, HookHandler hookHandler) {
         this.hookHandler = hookHandler;
         try {
-            Class<?> givenClass = Class.forName(plugin);
-            Class<? extends JavaPlugin> pluginClass = (Class<? extends JavaPlugin>) givenClass;
-            JavaPlugin hookedPlugin = getPlugin(pluginClass);
-            enabled = hookedPlugin.isEnabled();
-        } catch (NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError | Exception e) {
+            Class.forName(plugin);
+            enabled = true;
+        } catch (Exception e) {
             enabled = false;
         }
     }
