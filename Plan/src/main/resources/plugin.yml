@@ -19,6 +19,7 @@ softdepend:
 - ProtocolSupport
 - Kingdoms
 - RedProtect
+- AdvancedBan
 
 commands:
   plan:
