@@ -10,7 +10,6 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;
-import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
 
 /**
  * TreeCommand for the /plan command, and all subcommands.
@@ -46,7 +45,6 @@ public class PlanBungeeCommand extends TreeCmdNode {
                 new BungeeSetupToggleCommand(plugin),
                 new ReloadCommand(plugin),
                 new DisableCommand(plugin),
-                new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
 //                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
         };
         setNodeGroups(analyticsGroup, webGroup, manageGroup);

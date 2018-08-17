@@ -10,10 +10,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 
 public class BootAnalysisTask extends AbsRunnable {
 
-    public BootAnalysisTask() {
-        super(BootAnalysisTask.class.getSimpleName());
-    }
-
     @Override
     public void run() {
         try {

@@ -7,14 +7,13 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.FormatUtils;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -52,29 +51,24 @@ public class SearchCommand extends CommandNode {
     }
 
     private void runSearchTask(String[] args, ISender sender) {
-        RunnableFactory.createNew(new AbsRunnable("SearchTask: " + Arrays.toString(args)) {
-            @Override
-            public void run() {
-                try {
-                    String searchTerm = args[0];
-                    List<String> names = MiscUtils.getMatchingPlayerNames(searchTerm);
+        Processing.submitNonCritical(() -> {
+            try {
+                String searchTerm = args[0];
+                List<String> names = MiscUtils.getMatchingPlayerNames(searchTerm);
 
-                    boolean empty = Verify.isEmpty(names);
+                boolean empty = Verify.isEmpty(names);
 
-                    sender.sendMessage(locale.getString(CommandLang.HEADER_SEARCH, empty ? 0 : names.size(), searchTerm));
-                    // Results
-                    if (!empty) {
-                        sender.sendMessage(FormatUtils.collectionToStringNoBrackets(names));
-                    }
-
-                    sender.sendMessage(">");
-                } catch (DBOpException e) {
-                    sender.sendMessage("§cDatabase error occurred: " + e.getMessage());
-                    Log.toLog(this.getClass(), e);
-                } finally {
-                    this.cancel();
+                sender.sendMessage(locale.getString(CommandLang.HEADER_SEARCH, empty ? 0 : names.size(), searchTerm));
+                // Results
+                if (!empty) {
+                    sender.sendMessage(FormatUtils.collectionToStringNoBrackets(names));
                 }
+
+                sender.sendMessage(">");
+            } catch (DBOpException e) {
+                sender.sendMessage("§cDatabase error occurred: " + e.getMessage());
+                Log.toLog(this.getClass(), e);
             }
-        }).runTaskAsynchronously();
+        });
     }
 }

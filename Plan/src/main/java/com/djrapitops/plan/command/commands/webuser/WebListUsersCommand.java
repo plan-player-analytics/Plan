@@ -7,14 +7,13 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.comparators.WebUserComparator;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.List;
 
@@ -38,25 +37,20 @@ public class WebListUsersCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        RunnableFactory.createNew(new AbsRunnable("Web user List Task") {
-            @Override
-            public void run() {
-                try {
-                    List<WebUser> users = Database.getActive().fetch().getWebUsers();
-                    users.sort(new WebUserComparator());
-                    sender.sendMessage(locale.getString(CommandLang.HEADER_WEB_USERS, users.size()));
-                    for (WebUser user : users) {
-                        sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, user.getName(), user.getPermLevel()));
-                    }
-                    sender.sendMessage(">");
-                } catch (Exception e) {
-                    Log.toLog(this.getClass(), e);
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                } finally {
-                    this.cancel();
+        Processing.submitNonCritical(() -> {
+            try {
+                List<WebUser> users = Database.getActive().fetch().getWebUsers();
+                users.sort(new WebUserComparator());
+                sender.sendMessage(locale.getString(CommandLang.HEADER_WEB_USERS, users.size()));
+                for (WebUser user : users) {
+                    sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, user.getName(), user.getPermLevel()));
                 }
+                sender.sendMessage(">");
+            } catch (Exception e) {
+                Log.toLog(this.getClass(), e);
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
-        }).runTaskAsynchronously();
+        });
     }
 
 }

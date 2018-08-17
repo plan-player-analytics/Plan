@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
-import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.entity.Player;
@@ -80,7 +79,7 @@ public class PlayerOnlineListener implements Listener {
 
     private void actOnJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        NotificationCenter.checkNotifications(player);
+        // TODO Move update notification to the website.
 
         UUID uuid = player.getUniqueId();
         long time = System.currentTimeMillis();

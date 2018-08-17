@@ -9,7 +9,6 @@ import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.IOException;
-import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 /**
@@ -23,7 +22,6 @@ public class AnalysisExport extends SpecificExport {
     private final String serverName;
 
     public AnalysisExport(UUID serverUUID, String serverName) {
-        super("ServerPageExport:" + serverName);
         this.serverUUID = serverUUID;
         this.serverName = serverName;
     }
@@ -38,11 +36,6 @@ public class AnalysisExport extends SpecificExport {
             exportAvailableServerPage(serverUUID, serverName);
         } catch (IOException e) {
             Log.toLog(this.getClass(), e);
-        } finally {
-            try {
-                this.cancel();
-            } catch (ConcurrentModificationException | IllegalArgumentException ignore) {
-            }
         }
     }
 }

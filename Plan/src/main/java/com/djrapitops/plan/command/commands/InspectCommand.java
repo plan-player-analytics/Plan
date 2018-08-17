@@ -18,8 +18,6 @@ import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.UUID;
 
@@ -55,32 +53,27 @@ public class InspectCommand extends CommandNode {
     }
 
     private void runInspectTask(String playerName, ISender sender) {
-        RunnableFactory.createNew(new AbsRunnable("InspectTask") {
-            @Override
-            public void run() {
-                try {
-                    UUID uuid = UUIDUtility.getUUIDOf(playerName);
-                    if (uuid == null) {
-                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
-                        return;
-                    }
-
-                    Database activeDB = Database.getActive();
-                    if (!activeDB.check().isPlayerRegistered(uuid)) {
-                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
-                        return;
-                    }
-
-                    checkWebUserAndNotify(activeDB, sender);
-                    Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName, locale));
-                } catch (DBOpException e) {
-                    sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
-                    Log.toLog(this.getClass(), e);
-                } finally {
-                    this.cancel();
+        Processing.submitNonCritical(() -> {
+            try {
+                UUID uuid = UUIDUtility.getUUIDOf(playerName);
+                if (uuid == null) {
+                    sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
+                    return;
                 }
+
+                Database activeDB = Database.getActive();
+                if (!activeDB.check().isPlayerRegistered(uuid)) {
+                    sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
+                    return;
+                }
+
+                checkWebUserAndNotify(activeDB, sender);
+                Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName, locale));
+            } catch (DBOpException e) {
+                sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
+                Log.toLog(this.getClass(), e);
             }
-        }).runTaskAsynchronously();
+        });
     }
 
     private void checkWebUserAndNotify(Database activeDB, ISender sender) {

@@ -9,8 +9,6 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.Priority;
-import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -69,8 +67,6 @@ public class VersionCheckSystem implements SubSystem {
                     Log.infoColor("§a----------------------------------------");
                     Log.infoColor("§a" + notification);
                     Log.infoColor("§a----------------------------------------");
-                    NotificationCenter.getNotifications().clear();
-                    NotificationCenter.addNotification(newestVersion.isRelease() ? Priority.HIGH : Priority.MEDIUM, notification);
                 } else {
                     Log.info(locale.get().getString(PluginLang.VERSION_NEWEST));
                 }
@@ -99,7 +95,6 @@ public class VersionCheckSystem implements SubSystem {
                 Log.infoColor("§a----------------------------------------");
                 Log.infoColor("§a" + newVersionNotification);
                 Log.infoColor("§a----------------------------------------");
-                NotificationCenter.addNotification(Priority.HIGH, newVersionNotification);
             } else {
                 Log.info(locale.get().getString(PluginLang.VERSION_NEWEST));
             }

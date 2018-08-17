@@ -9,13 +9,12 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.File;
@@ -72,39 +71,34 @@ public class ManageRestoreCommand extends CommandNode {
     }
 
     private void runRestoreTask(String backupDbName, ISender sender, final Database database) {
-        RunnableFactory.createNew(new AbsRunnable("RestoreTask") {
-            @Override
-            public void run() {
-                try {
-                    String backupDBName = backupDbName;
-                    boolean containsDBFileExtension = backupDBName.endsWith(".db");
+        Processing.submitCritical(() -> {
+            try {
+                String backupDBName = backupDbName;
+                boolean containsDBFileExtension = backupDBName.endsWith(".db");
 
-                    File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (containsDBFileExtension ? "" : ".db"));
+                File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (containsDBFileExtension ? "" : ".db"));
 
-                    if (!backupDBFile.exists()) {
-                        sender.sendMessage(locale.getString(ManageLang.FAIL_FILE_NOT_FOUND, backupDBFile.getAbsolutePath()));
-                        return;
-                    }
-
-                    if (containsDBFileExtension) {
-                        backupDBName = backupDBName.substring(0, backupDBName.length() - 3);
-                    }
-
-                    SQLiteDB backupDB = new SQLiteDB(backupDBName, () -> locale);
-                    backupDB.init();
-
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-
-                    database.backup().restore(backupDB);
-
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
-                } catch (Exception e) {
-                    Log.toLog(this.getClass(), e);
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                } finally {
-                    this.cancel();
+                if (!backupDBFile.exists()) {
+                    sender.sendMessage(locale.getString(ManageLang.FAIL_FILE_NOT_FOUND, backupDBFile.getAbsolutePath()));
+                    return;
                 }
+
+                if (containsDBFileExtension) {
+                    backupDBName = backupDBName.substring(0, backupDBName.length() - 3);
+                }
+
+                SQLiteDB backupDB = new SQLiteDB(backupDBName, () -> locale);
+                backupDB.init();
+
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+
+                database.backup().restore(backupDB);
+
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            } catch (Exception e) {
+                Log.toLog(this.getClass(), e);
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
-        }).runTaskAsynchronously();
+        });
     }
 }

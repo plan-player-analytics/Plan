@@ -25,7 +25,6 @@ public class RegisterProcessor extends AbsRunnable {
     private final Runnable[] afterProcess;
 
     public RegisterProcessor(UUID uuid, Supplier<Long> registered, String name, Runnable... afterProcess) {
-        super(RegisterProcessor.class.getSimpleName());
         this.uuid = uuid;
         this.registered = registered;
         this.name = name;

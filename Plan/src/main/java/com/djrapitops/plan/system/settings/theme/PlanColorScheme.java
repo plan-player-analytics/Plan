@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.settings.theme;
 
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.command.ColorScheme;
 
 /**
  * ColorScheme that uses values in config settings specific to Plan or PlanBungee.

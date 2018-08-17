@@ -17,6 +17,7 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.GenericLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -24,8 +25,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,31 +69,26 @@ public class QInspectCommand extends CommandNode {
     }
 
     private void runInspectTask(String playerName, ISender sender) {
-        RunnableFactory.createNew(new AbsRunnable("InspectTask") {
-            @Override
-            public void run() {
-                try {
-                    UUID uuid = UUIDUtility.getUUIDOf(playerName);
-                    if (uuid == null) {
-                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
-                        return;
-                    }
-
-                    PlayerContainer container = Database.getActive().fetch().getPlayerContainer(uuid);
-                    if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
-                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
-                        return;
-                    }
-
-                    sendMessages(sender, container);
-                } catch (DBOpException e) {
-                    sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
-                    Log.toLog(this.getClass(), e);
-                } finally {
-                    this.cancel();
+        Processing.submitNonCritical(() -> {
+            try {
+                UUID uuid = UUIDUtility.getUUIDOf(playerName);
+                if (uuid == null) {
+                    sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
+                    return;
                 }
+
+                PlayerContainer container = Database.getActive().fetch().getPlayerContainer(uuid);
+                if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
+                    sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
+                    return;
+                }
+
+                sendMessages(sender, container);
+            } catch (DBOpException e) {
+                sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
+                Log.toLog(this.getClass(), e);
             }
-        }).runTaskAsynchronously();
+        });
     }
 
     private void sendMessages(ISender sender, PlayerContainer player) {

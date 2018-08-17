@@ -9,7 +9,6 @@ import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.IOException;
-import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 /**
@@ -23,7 +22,6 @@ public class PlayerExport extends SpecificExport {
     private final String name;
 
     public PlayerExport(UUID uuid, String name) {
-        super("PlayerPageExport:" + name);
         this.uuid = uuid;
         this.name = name;
     }
@@ -38,11 +36,6 @@ public class PlayerExport extends SpecificExport {
             exportAvailablePlayerPage(uuid, name);
         } catch (IOException e) {
             Log.toLog(this.getClass(), e);
-        } finally {
-            try {
-                this.cancel();
-            } catch (ConcurrentModificationException | IllegalArgumentException ignore) {
-            }
         }
     }
 }

@@ -7,8 +7,8 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plugin.utilities.ArrayUtil;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.Serializable;
@@ -73,7 +73,7 @@ public class PluginPlayersTable extends TableContainer {
             String name = profile.getValue(PlayerKeys.NAME).orElse("Unknown");
             String link = Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name);
 
-            String[] playerData = FormatUtils.mergeArrays(new String[]{link}, rows.getOrDefault(uuid, new String[]{}));
+            String[] playerData = ArrayUtil.merge(new String[]{link}, rows.getOrDefault(uuid, new String[]{}));
             addRow(ArrayUtils.addAll(playerData));
 
             i++;

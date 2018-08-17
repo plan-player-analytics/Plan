@@ -10,10 +10,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 
 public class PeriodicAnalysisTask extends AbsRunnable {
 
-    public PeriodicAnalysisTask() {
-        super(PeriodicAnalysisTask.class.getSimpleName());
-    }
-
     @Override
     public void run() {
         try {

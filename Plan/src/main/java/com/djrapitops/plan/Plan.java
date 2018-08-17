@@ -33,7 +33,7 @@ import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.command.ColorScheme;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.logging.Level;

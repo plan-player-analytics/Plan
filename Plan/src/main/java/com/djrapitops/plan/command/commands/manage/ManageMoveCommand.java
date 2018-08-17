@@ -8,13 +8,12 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Arrays;
@@ -75,27 +74,22 @@ public class ManageMoveCommand extends CommandNode {
     }
 
     private void runMoveTask(final Database fromDatabase, final Database toDatabase, ISender sender) {
-        RunnableFactory.createNew(new AbsRunnable("DBMoveTask") {
-            @Override
-            public void run() {
-                try {
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+        Processing.submitCritical(() -> {
+            try {
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                    fromDatabase.backup().backup(toDatabase);
+                fromDatabase.backup().backup(toDatabase);
 
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
 
-                    boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(Database.getActive().getConfigName());
-                    if (movingToCurrentDB) {
-                        sender.sendMessage(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getConfigName()));
-                    }
-                } catch (Exception e) {
-                    Log.toLog(this.getClass(), e);
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                } finally {
-                    this.cancel();
+                boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(Database.getActive().getConfigName());
+                if (movingToCurrentDB) {
+                    sender.sendMessage(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getConfigName()));
                 }
+            } catch (Exception e) {
+                Log.toLog(this.getClass(), e);
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
-        }).runTaskAsynchronously();
+        });
     }
 }

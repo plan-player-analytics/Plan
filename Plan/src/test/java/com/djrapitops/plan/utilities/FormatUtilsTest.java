@@ -1,5 +1,6 @@
 package com.djrapitops.plan.utilities;
 
+import com.djrapitops.plugin.utilities.ArrayUtil;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class FormatUtilsTest {
         String[][] arrays = new String[][]{new String[]{randomString1, randomString2}, new String[]{randomString3, randomString4}};
         String[] expResult = new String[]{randomString1, randomString2, randomString3, randomString4};
 
-        String[] result = FormatUtils.mergeArrays(arrays);
+        String[] result = ArrayUtil.merge(arrays);
 
         assertArrayEquals(expResult, result);
     }

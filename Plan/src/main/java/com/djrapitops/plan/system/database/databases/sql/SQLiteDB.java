@@ -7,7 +7,7 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.io.File;
@@ -23,7 +23,7 @@ public class SQLiteDB extends SQLDB {
     private final File databaseFile;
     private final String dbName;
     private Connection connection;
-    private ITask connectionPingTask;
+    private PluginTask connectionPingTask;
 
     public SQLiteDB(Supplier<Locale> locale) {
         this("database", locale);
@@ -78,7 +78,7 @@ public class SQLiteDB extends SQLDB {
         stopConnectionPingTask();
         try {
             // Maintains Connection.
-            connectionPingTask = RunnableFactory.createNew(new AbsRunnable("DBConnectionPingTask " + getName()) {
+            connectionPingTask = RunnableFactory.createNew("DBConnectionPingTask " + getName(), new AbsRunnable() {
                 @Override
                 public void run() {
                     Statement statement = null;

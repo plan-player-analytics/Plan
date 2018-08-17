@@ -7,7 +7,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.command.ColorScheme;
 
 import java.io.File;
 import java.io.InputStream;

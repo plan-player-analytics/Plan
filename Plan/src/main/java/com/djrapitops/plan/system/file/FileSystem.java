@@ -68,7 +68,7 @@ public class FileSystem implements SubSystem {
             Verify.isTrue((configFile.exists() && configFile.isFile()) || configFile.createNewFile(),
                     () -> new EnableException("Could not create config file at " + configFile.getAbsolutePath()));
 
-            RunnableFactory.createNew(new LogsFolderCleanTask(Log.getLogsFolder()))
+            RunnableFactory.createNew("Logs folder Clean Task", new LogsFolderCleanTask(Log.getLogsFolder()))
                     .runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 30L);
         } catch (IOException e) {
             throw new EnableException("Failed to create config.yml", e);

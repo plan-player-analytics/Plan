@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
 import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
@@ -8,8 +9,7 @@ import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.ITask;
-import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.task.PluginTask;
 
 /**
  * Abstracted TaskSystem implementation for both Bukkit and Sponge.
@@ -19,10 +19,10 @@ import com.djrapitops.plugin.task.RunnableFactory;
 public class ServerTaskSystem extends TaskSystem {
 
     protected final PlanPlugin plugin;
-    protected ITask bootAnalysisTask;
+    protected PluginTask bootAnalysisTask;
 
     public ServerTaskSystem(PlanPlugin plugin, TPSCountTimer tpsCountTimer) {
-        super(tpsCountTimer);
+        super(plugin, tpsCountTimer);
         this.plugin = plugin;
     }
 
@@ -47,7 +47,7 @@ public class ServerTaskSystem extends TaskSystem {
             registerTask(new PeriodicAnalysisTask()).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }
         if (Settings.ANALYSIS_EXPORT.isTrue()) {
-            RunnableFactory.createNew(new HtmlExport(plugin)).runTaskAsynchronously();
+            Processing.submitNonCritical(new HtmlExport(plugin));
         }
         Benchmark.stop("Enable", "Task Registration");
     }

@@ -7,13 +7,12 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Arrays;
@@ -45,24 +44,19 @@ public class WebCheckCommand extends CommandNode {
         Database database = Database.getActive();
         String user = args[0];
 
-        RunnableFactory.createNew(new AbsRunnable("Webuser Check Task: " + user) {
-            @Override
-            public void run() {
-                try {
-                    if (!database.check().doesWebUserExists(user)) {
-                        sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));
-                        return;
-                    }
-                    WebUser info = database.fetch().getWebUser(user);
-                    sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, info.getName(), info.getPermLevel()));
-                } catch (Exception e) {
-                    Log.toLog(this.getClass(), e);
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                } finally {
-                    this.cancel();
+        Processing.submitNonCritical(() -> {
+            try {
+                if (!database.check().doesWebUserExists(user)) {
+                    sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));
+                    return;
                 }
+                WebUser info = database.fetch().getWebUser(user);
+                sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, info.getName(), info.getPermLevel()));
+            } catch (Exception e) {
+                Log.toLog(this.getClass(), e);
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
-        }).runTaskAsynchronously();
+        });
     }
 
 }

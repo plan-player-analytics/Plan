@@ -7,10 +7,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 
 public class EnableConnectionTask extends AbsRunnable {
 
-    public EnableConnectionTask() {
-        super(EnableConnectionTask.class.getSimpleName());
-    }
-
     @Override
     public void run() {
         WebExceptionLogger.logIfOccurs(this.getClass(),

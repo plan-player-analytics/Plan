@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,13 +27,12 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public abstract class SpecificExport extends AbsRunnable {
+public abstract class SpecificExport implements Runnable {
 
     protected final File outputFolder;
     protected final boolean usingBungee;
 
-    protected SpecificExport(String taskName) {
-        super(taskName);
+    protected SpecificExport() {
         outputFolder = getFolder();
         usingBungee = Check.isBungeeAvailable();
     }

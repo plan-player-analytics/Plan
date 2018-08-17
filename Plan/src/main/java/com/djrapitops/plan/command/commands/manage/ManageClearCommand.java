@@ -10,13 +10,12 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Arrays;
@@ -66,22 +65,17 @@ public class ManageClearCommand extends CommandNode {
     }
 
     private void runClearTask(ISender sender, Database database) {
-        RunnableFactory.createNew(new AbsRunnable("DBClearTask") {
-            @Override
-            public void run() {
-                try {
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+        Processing.submitCritical(() -> {
+            try {
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                    database.remove().everything();
+                database.remove().everything();
 
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
-                } catch (DBOpException e) {
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                    Log.toLog(this.getClass(), e);
-                } finally {
-                    this.cancel();
-                }
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            } catch (DBOpException e) {
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
+                Log.toLog(this.getClass(), e);
             }
-        }).runTaskAsynchronously();
+        });
     }
 }

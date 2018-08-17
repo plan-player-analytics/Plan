@@ -16,7 +16,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -65,7 +65,7 @@ public abstract class SQLDB extends Database {
     private final SQLTransferOps transferOps;
 
     private final boolean usingMySQL;
-    private ITask dbCleanTask;
+    private PluginTask dbCleanTask;
 
     public SQLDB(Supplier<Locale> locale) {
         this.locale = locale;

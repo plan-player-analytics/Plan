@@ -6,9 +6,8 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plugin.api.systems.TaskCenter;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.IRunnable;
+import com.djrapitops.plugin.task.PluginRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 /**
@@ -20,24 +19,28 @@ import com.djrapitops.plugin.task.RunnableFactory;
  */
 public abstract class TaskSystem implements SubSystem {
 
+    protected final PlanPlugin plugin;
     protected TPSCountTimer tpsCountTimer;
+    protected final RunnableFactory runnableFactory;
 
-    public TaskSystem(TPSCountTimer tpsCountTimer) {
+    public TaskSystem(PlanPlugin plugin, TPSCountTimer tpsCountTimer) {
+        this.plugin = plugin;
         this.tpsCountTimer = tpsCountTimer;
+        runnableFactory = plugin.getRunnableFactory();
     }
 
-    protected IRunnable registerTask(AbsRunnable runnable) {
-        String taskName = runnable.getName();
-        return registerTask(taskName != null ? taskName : runnable.getClass().getSimpleName(), runnable);
+    protected PluginRunnable registerTask(AbsRunnable runnable) {
+        String taskName = runnable.getClass().getSimpleName();
+        return registerTask(taskName, runnable);
     }
 
-    protected IRunnable registerTask(String name, AbsRunnable runnable) {
-        return RunnableFactory.createNew(name, runnable);
+    protected PluginRunnable registerTask(String name, AbsRunnable runnable) {
+        return runnableFactory.create(name, runnable);
     }
 
     @Override
     public void disable() {
-        TaskCenter.cancelAllKnownTasks(PlanPlugin.getInstance().getClass());
+        runnableFactory.cancelAllKnownTasks();
     }
 
 }

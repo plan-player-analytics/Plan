@@ -94,16 +94,6 @@ public class FormatUtils {
     }
 
     /**
-     * Merges multiple arrays into one.
-     *
-     * @param arrays String arrays that need to be combined
-     * @return One array with contents of the multiple
-     */
-    public static String[] mergeArrays(String[]... arrays) {
-        return com.djrapitops.plugin.utilities.FormatUtils.mergeArrays(arrays);
-    }
-
-    /**
      * Remove extra decimals from the end of the double.
      *
      * @param d Double.

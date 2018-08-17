@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
-import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;
@@ -78,8 +77,6 @@ public class SpongePlayerListener {
 
     private void actOnJoinEvent(ClientConnectionEvent.Join event) {
         Player player = event.getTargetEntity();
-
-        NotificationCenter.checkNotifications(player);
 
         UUID uuid = player.getUniqueId();
         long time = System.currentTimeMillis();

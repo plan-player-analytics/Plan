@@ -4,12 +4,10 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
-import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;
-import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
 
 /**
  * TreeCommand for the /plan command, and all SubCommands.
@@ -48,7 +46,6 @@ public class PlanCommand extends TreeCmdNode {
                 new InfoCommand(plugin),
                 new ReloadCommand(plugin),
                 new ManageCommand(plugin, this),
-                new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
                 (Settings.DEV_MODE.isTrue() ? new DevCommand(plugin) : null),
 //                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
         };

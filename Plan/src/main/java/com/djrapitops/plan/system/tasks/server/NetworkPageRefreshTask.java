@@ -6,10 +6,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 
 public class NetworkPageRefreshTask extends AbsRunnable {
 
-    public NetworkPageRefreshTask() {
-        super(NetworkPageRefreshTask.class.getSimpleName());
-    }
-
     @Override
     public void run() {
         WebExceptionLogger.logIfOccurs(this.getClass(), () -> InfoSystem.getInstance().updateNetworkPage());

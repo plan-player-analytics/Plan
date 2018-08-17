@@ -8,6 +8,7 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -15,8 +16,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Arrays;
@@ -58,40 +57,35 @@ public class ManageRemoveCommand extends CommandNode {
     }
 
     private void runRemoveTask(String playerName, ISender sender, String[] args) {
-        RunnableFactory.createNew(new AbsRunnable("DBRemoveTask " + playerName) {
-            @Override
-            public void run() {
-                try {
-                    UUID uuid = UUIDUtility.getUUIDOf(playerName);
+        Processing.submitCritical(() -> {
+            try {
+                UUID uuid = UUIDUtility.getUUIDOf(playerName);
 
-                    if (uuid == null) {
-                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
-                        return;
-                    }
-
-                    Database database = Database.getActive();
-                    if (!database.check().isPlayerRegistered(uuid)) {
-                        sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
-                        return;
-                    }
-
-                    if (!Verify.contains("-a", args)) {
-                        sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_REMOVAL, database.getName())));
-                        return;
-                    }
-
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-
-                    database.remove().player(uuid);
-
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
-                } catch (DBOpException e) {
-                    Log.toLog(this.getClass(), e);
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                } finally {
-                    this.cancel();
+                if (uuid == null) {
+                    sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
+                    return;
                 }
+
+                Database database = Database.getActive();
+                if (!database.check().isPlayerRegistered(uuid)) {
+                    sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
+                    return;
+                }
+
+                if (!Verify.contains("-a", args)) {
+                    sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_REMOVAL, database.getName())));
+                    return;
+                }
+
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+
+                database.remove().player(uuid);
+
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            } catch (DBOpException e) {
+                Log.toLog(this.getClass(), e);
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
-        }).runTaskAsynchronously();
+        });
     }
 }

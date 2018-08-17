@@ -9,13 +9,13 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.File;
@@ -34,19 +34,20 @@ public class HtmlExport extends SpecificExport {
     private final PlanPlugin plugin;
 
     public HtmlExport(PlanPlugin plugin) {
-        super("HtmlExportTask");
         this.plugin = plugin;
     }
 
     public static void exportServer(UUID serverUUID) {
         Optional<String> serverName = Database.getActive().fetch().getServerName(serverUUID);
-        serverName.ifPresent(s -> RunnableFactory.createNew(new AnalysisExport(serverUUID, s)).runTaskAsynchronously());
+        serverName.ifPresent(name -> Processing.submitNonCritical(() -> {
+            new AnalysisExport(serverUUID, name);
+        }));
     }
 
     public static void exportPlayer(UUID playerUUID) {
         String playerName = Database.getActive().fetch().getPlayerName(playerUUID);
         if (playerName != null) {
-            RunnableFactory.createNew(new PlayerExport(playerUUID, playerName)).runTaskAsynchronously();
+            Processing.submitNonCritical(new PlayerExport(playerUUID, playerName));
         }
     }
 
@@ -66,11 +67,6 @@ public class HtmlExport extends SpecificExport {
             exportPlayersPage();
         } catch (IOException | DBOpException e) {
             Log.toLog(this.getClass(), e);
-        } finally {
-            try {
-                this.cancel();
-            } catch (ConcurrentModificationException | IllegalArgumentException ignore) {
-            }
         }
     }
 

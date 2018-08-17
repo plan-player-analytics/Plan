@@ -12,7 +12,7 @@ import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.command.ColorScheme;
 import com.google.inject.Inject;
 import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;

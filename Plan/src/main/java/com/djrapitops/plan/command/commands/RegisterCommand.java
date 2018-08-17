@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;
@@ -15,8 +16,6 @@ import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Arrays;
@@ -113,29 +112,22 @@ public class RegisterCommand extends CommandNode {
     }
 
     private void registerUser(WebUser webUser, ISender sender) {
-        RunnableFactory.createNew(new AbsRunnable("Register WebUser Task") {
-            @Override
-            public void run() {
-                final String existsMsg = locale.getString(CommandLang.FAIL_WEB_USER_EXISTS);
-                final String userName = webUser.getName();
-                final String successMsg = locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS);
-                try {
-                    Database database = Database.getActive();
-                    boolean userExists = database.check().doesWebUserExists(userName);
-                    if (userExists) {
-                        sender.sendMessage(existsMsg);
-                        return;
-                    }
-                    database.save().webUser(webUser);
-                    sender.sendMessage(successMsg);
-                    Log.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
-                } catch (Exception e) {
-                    Log.toLog(this.getClass(), e);
-                } finally {
-                    this.cancel();
+        Processing.submitCritical(() -> {
+            String userName = webUser.getName();
+            try {
+                Database database = Database.getActive();
+                boolean userExists = database.check().doesWebUserExists(userName);
+                if (userExists) {
+                    sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
+                    return;
                 }
+                database.save().webUser(webUser);
+                sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS));
+                Log.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
+            } catch (Exception e) {
+                Log.toLog(this.getClass(), e);
             }
-        }).runTaskAsynchronously();
+        });
     }
 
     /**

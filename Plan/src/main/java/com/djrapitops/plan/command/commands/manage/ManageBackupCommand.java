@@ -12,13 +12,12 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Arrays;
@@ -67,23 +66,17 @@ public class ManageBackupCommand extends CommandNode {
     }
 
     private void runBackupTask(ISender sender, String[] args, Database database) {
-        RunnableFactory.createNew(new AbsRunnable("BackupTask") {
-            @Override
-            public void run() {
-                try {
-                    Log.debug("Backup", "Start");
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-                    createNewBackup(args[0], database);
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
-                } catch (Exception e) {
-                    Log.toLog(ManageBackupCommand.class, e);
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                } finally {
-                    Log.logDebug("Backup");
-                    this.cancel();
-                }
+        Processing.submitCritical(() -> {
+            try {
+                Log.debug("Backup", "Start");
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+                createNewBackup(args[0], database);
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            } catch (Exception e) {
+                Log.toLog(ManageBackupCommand.class, e);
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
-        }).runTaskAsynchronously();
+        });
     }
 
     /**
