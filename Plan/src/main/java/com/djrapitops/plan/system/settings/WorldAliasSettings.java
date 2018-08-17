@@ -6,9 +6,9 @@ package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plugin.api.config.Config;
-import com.djrapitops.plugin.api.config.ConfigNode;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.config.Config;
+import com.djrapitops.plugin.config.ConfigNode;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.IOException;

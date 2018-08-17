@@ -10,8 +10,8 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.IOException;

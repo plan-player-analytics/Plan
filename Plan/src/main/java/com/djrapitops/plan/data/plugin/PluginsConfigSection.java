@@ -1,8 +1,8 @@
 package com.djrapitops.plan.data.plugin;
 
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plugin.api.config.ConfigNode;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.config.ConfigNode;
 
 import java.io.IOException;
 
