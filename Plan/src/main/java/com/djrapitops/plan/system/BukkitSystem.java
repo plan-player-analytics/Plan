@@ -10,8 +10,10 @@ import com.djrapitops.plan.api.ServerAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.ServerDBSystem;
+import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.ServerInfoSystem;
+import com.djrapitops.plan.system.info.connection.ServerConnectionSystem;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -23,6 +25,7 @@ import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 
+import javax.inject.Inject;
 import java.util.function.Supplier;
 
 /**
@@ -32,6 +35,7 @@ import java.util.function.Supplier;
  */
 public class BukkitSystem extends PlanSystem implements ServerSystem {
 
+    @Inject
     public BukkitSystem(Plan plugin) {
         setTestSystem(this);
 
@@ -42,15 +46,16 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
         configSystem = new ServerConfigSystem();
+        exportSystem = new ExportSystem(plugin);
         databaseSystem = new ServerDBSystem(localeSupplier);
         listenerSystem = new BukkitListenerSystem(plugin);
         taskSystem = new BukkitTaskSystem(plugin);
 
-        infoSystem = new ServerInfoSystem(localeSupplier);
+        infoSystem = new ServerInfoSystem(new ServerConnectionSystem(localeSupplier));
         serverInfo = new BukkitServerInfo(plugin);
 
         hookHandler = new HookHandler();
-        planAPI = new ServerAPI(this);
+        planAPI = new ServerAPI(hookHandler, databaseSystem.getActiveDatabase(), cacheSystem.getDataCache());
 
         StaticHolder.saveInstance(ShutdownHook.class, plugin.getClass());
         new ShutdownHook().register();

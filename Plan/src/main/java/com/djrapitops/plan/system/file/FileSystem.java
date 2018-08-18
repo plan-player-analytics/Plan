@@ -29,6 +29,7 @@ public class FileSystem implements SubSystem {
     private final File dataFolder;
     private File configFile;
 
+    @Deprecated
     public FileSystem(PlanPlugin plugin) {
         this(plugin.getDataFolder());
     }

@@ -9,6 +9,7 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -47,6 +48,7 @@ public abstract class PlanSystem implements SubSystem {
     protected VersionCheckSystem versionCheckSystem;
     protected FileSystem fileSystem;
     protected ConfigSystem configSystem;
+    protected ExportSystem exportSystem;
     protected DBSystem databaseSystem;
     protected InfoSystem infoSystem;
 
@@ -94,6 +96,7 @@ public abstract class PlanSystem implements SubSystem {
                 localeSystem,
                 versionCheckSystem,
                 databaseSystem,
+                exportSystem,
                 webServerSystem,
                 processing,
                 serverInfo,
@@ -118,6 +121,7 @@ public abstract class PlanSystem implements SubSystem {
                 hookHandler,
                 cacheSystem,
                 listenerSystem,
+                exportSystem,
                 processing,
                 databaseSystem,
                 webServerSystem,

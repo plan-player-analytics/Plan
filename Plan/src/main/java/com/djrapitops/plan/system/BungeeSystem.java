@@ -11,6 +11,7 @@ import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.cache.BungeeCacheSystem;
 import com.djrapitops.plan.system.database.BungeeDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.BungeeInfoSystem;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
@@ -42,10 +43,11 @@ public class BungeeSystem extends PlanSystem {
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
         configSystem = new BungeeConfigSystem();
+        exportSystem = new ExportSystem(plugin);
         databaseSystem = new BungeeDBSystem(localeSupplier);
         cacheSystem = new BungeeCacheSystem(this);
         listenerSystem = new BungeeListenerSystem(plugin);
-        taskSystem = new BungeeTaskSystem(plugin);
+        taskSystem = new BungeeTaskSystem(plugin.getRunnableFactory());
 
         infoSystem = new BungeeInfoSystem();
         serverInfo = new BungeeServerInfo(plugin);

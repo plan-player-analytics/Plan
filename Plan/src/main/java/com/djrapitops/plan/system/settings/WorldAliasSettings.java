@@ -42,7 +42,7 @@ public class WorldAliasSettings {
     }
 
     private static ConfigNode getAliasSection() {
-        Config config = ConfigSystem.getConfig();
+        Config config = ConfigSystem.getConfig_Old();
         return config.getConfigNode(Settings.WORLD_ALIASES.getPath());
     }
 

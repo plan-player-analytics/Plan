@@ -4,14 +4,12 @@
  */
 package com.djrapitops.plan.system.tasks;
 
-import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bungee.EnableConnectionTask;
 import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
-import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.RunnableFactory;
+import com.google.inject.Inject;
 
 /**
  * TaskSystem responsible for registering tasks for Bungee.
@@ -20,11 +18,9 @@ import com.djrapitops.plugin.api.TimeAmount;
  */
 public class BungeeTaskSystem extends TaskSystem {
 
-    private final PlanBungee plugin;
-
-    public BungeeTaskSystem(PlanBungee plugin) {
-        super(plugin, new BungeeTPSCountTimer(plugin));
-        this.plugin = plugin;
+    @Inject
+    public BungeeTaskSystem(RunnableFactory runnableFactory) {
+        super(runnableFactory, new BungeeTPSCountTimer());
     }
 
     @Override
@@ -36,8 +32,5 @@ public class BungeeTaskSystem extends TaskSystem {
         registerTask(new EnableConnectionTask()).runTaskAsynchronously();
         registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
         registerTask(new NetworkPageRefreshTask()).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
-        if (Settings.ANALYSIS_EXPORT.isTrue()) {
-            Processing.submitNonCritical(new HtmlExport(plugin));
-        }
     }
 }

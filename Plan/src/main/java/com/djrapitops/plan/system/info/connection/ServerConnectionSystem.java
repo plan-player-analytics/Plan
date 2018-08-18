@@ -18,6 +18,7 @@ import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 
+import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -35,6 +36,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     private Server mainServer;
 
+    @Inject
     public ServerConnectionSystem(Supplier<Locale> locale) {
         this.locale = locale;
         latestServerMapRefresh = 0;

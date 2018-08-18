@@ -10,6 +10,7 @@ import com.djrapitops.plan.api.ServerAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.ServerDBSystem;
+import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.ServerInfoSystem;
 import com.djrapitops.plan.system.info.server.SpongeServerInfo;
@@ -42,6 +43,7 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
         configSystem = new SpongeConfigSystem();
+        exportSystem = new ExportSystem(plugin);
         databaseSystem = new ServerDBSystem(localeSupplier);
         listenerSystem = new SpongeListenerSystem(plugin);
         taskSystem = new SpongeTaskSystem(plugin);

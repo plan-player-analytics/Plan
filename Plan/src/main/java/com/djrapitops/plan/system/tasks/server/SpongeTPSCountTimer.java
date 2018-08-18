@@ -12,12 +12,12 @@ import org.spongepowered.api.world.World;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
-public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
+public class SpongeTPSCountTimer extends TPSCountTimer {
 
     private long lastCheckNano;
 
     public SpongeTPSCountTimer(PlanSponge plugin) {
-        super(plugin);
+        super();
         lastCheckNano = -1;
     }
 

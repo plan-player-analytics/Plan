@@ -26,7 +26,7 @@ public class ServerSpecificSettings {
 
     public static void updateSettings(Map<String, String> settings) {
         Log.debug("Checking new settings..");
-        Config config = ConfigSystem.getConfig();
+        Config config = ConfigSystem.getConfig_Old();
 
         boolean changedSomething = false;
         for (Map.Entry<String, String> setting : settings.entrySet()) {
@@ -79,7 +79,7 @@ public class ServerSpecificSettings {
 
     public void addOriginalBukkitSettings(UUID serverUUID, Map<String, Object> settings) {
         try {
-            Config config = ConfigSystem.getConfig();
+            Config config = ConfigSystem.getConfig_Old();
             if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
                 return;
             }
@@ -111,25 +111,25 @@ public class ServerSpecificSettings {
     }
 
     public boolean getBoolean(UUID serverUUID, Settings setting) {
-        Config config = ConfigSystem.getConfig();
+        Config config = ConfigSystem.getConfig_Old();
         String path = getPath(serverUUID, setting);
         return config.getBoolean(path);
     }
 
     public String getString(UUID serverUUID, Settings setting) {
-        Config config = ConfigSystem.getConfig();
+        Config config = ConfigSystem.getConfig_Old();
         String path = getPath(serverUUID, setting);
         return config.getString(path);
     }
 
     public Integer getInt(UUID serverUUID, Settings setting) {
-        Config config = ConfigSystem.getConfig();
+        Config config = ConfigSystem.getConfig_Old();
         String path = getPath(serverUUID, setting);
         return config.getInt(path);
     }
 
     public void set(UUID serverUUID, Settings setting, Object value) throws IOException {
-        Config config = ConfigSystem.getConfig();
+        Config config = ConfigSystem.getConfig_Old();
         String path = getPath(serverUUID, setting);
         config.set(path, value);
         config.save();

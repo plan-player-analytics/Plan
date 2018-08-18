@@ -143,7 +143,7 @@ public enum Settings {
 
     public static void save() {
         try {
-            ConfigSystem.getConfig().save();
+            ConfigSystem.getConfig_Old().save();
         } catch (IOException e) {
             Log.toLog(Settings.class, e);
         }
@@ -197,7 +197,7 @@ public enum Settings {
     }
 
     private Config getConfig() {
-        Config config = ConfigSystem.getConfig();
+        Config config = ConfigSystem.getConfig_Old();
         Verify.nullCheck(config, () -> new IllegalStateException("Settings are not supposed to be called before ConfigSystem is Enabled!"));
         return config;
     }

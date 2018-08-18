@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -10,12 +11,13 @@ import org.bukkit.World;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
-public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
+public class BukkitTPSCountTimer extends TPSCountTimer {
 
+    protected final Plan plugin;
     private long lastCheckNano;
 
     public BukkitTPSCountTimer(Plan plugin) {
-        super(plugin);
+        this.plugin = plugin;
         lastCheckNano = -1;
     }
 
@@ -48,7 +50,7 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
         long totalMemory = runtime.totalMemory();
         long usedMemory = (totalMemory - runtime.freeMemory()) / 1000000;
 
-        int playersOnline = plugin.getServer().getOnlinePlayers().size();
+        int playersOnline = ServerInfo.getServerProperties().getOnlinePlayers();
         latestPlayersOnline = playersOnline;
         int loadedChunks = getLoadedChunks();
         int entityCount;

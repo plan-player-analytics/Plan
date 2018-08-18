@@ -6,16 +6,13 @@ package com.djrapitops.plan.system.info;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.connection.ServerConnectionSystem;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheNetworkPageContentRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plugin.api.utility.log.Log;
-
-import java.util.function.Supplier;
 
 /**
  * InfoSystem for Bukkit servers.
@@ -24,8 +21,8 @@ import java.util.function.Supplier;
  */
 public class ServerInfoSystem extends InfoSystem {
 
-    public ServerInfoSystem(Supplier<Locale> locale) {
-        super(new ServerConnectionSystem(locale));
+    public ServerInfoSystem(ConnectionSystem connectionSystem) {
+        super(connectionSystem);
     }
 
     @Override

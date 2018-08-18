@@ -1,16 +1,11 @@
 package com.djrapitops.plan.system.tasks.bungee;
 
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 
-public class BungeeTPSCountTimer extends TPSCountTimer<PlanBungee> {
-
-    public BungeeTPSCountTimer(PlanBungee plugin) {
-        super(plugin);
-    }
+public class BungeeTPSCountTimer extends TPSCountTimer {
 
     @Override
     public void addNewTPSEntry(long nanoTime, long now) {

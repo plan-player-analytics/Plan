@@ -21,23 +21,57 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
+import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.common.ExportModule;
+import com.djrapitops.plan.modules.common.FileSystemModule;
+import com.djrapitops.plan.modules.common.LocaleModule;
+import com.djrapitops.plan.modules.common.VersionCheckModule;
+import com.djrapitops.plan.modules.server.ServerCommandModule;
 import com.djrapitops.plan.system.BukkitSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.OfflinePlayerImporter;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBukkit;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
+import dagger.BindsInstance;
+import dagger.Component;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import javax.inject.Singleton;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+@Singleton
+@Component(modules = {
+        APFModule.class,
+        ServerCommandModule.class,
+        ExportModule.class,
+        VersionCheckModule.class,
+        FileSystemModule.class,
+        LocaleModule.class
+})
+interface PlanComponent {
+
+    PlanCommand planCommand();
+
+    BukkitSystem system();
+
+    @Component.Builder
+    interface Builder {
+
+        @BindsInstance
+        Builder plan(Plan plan);
+
+        PlanComponent build();
+    }
+}
 
 /**
  * Main class for Bukkit that manages the plugin.
@@ -62,35 +96,38 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
+        PlanComponent component = DaggerPlanComponent.builder().plan(this).build();
         try {
-            Benchmark.start("Enable");
-            system = new BukkitSystem(this);
+            timings.start("Enable");
+            system = component.system();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
+
+            String debugString = Settings.DEBUG.toString();
+            // TODO Set debug logger
 
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 
             new BStatsBukkit(this).registerMetrics();
 
-            Log.debug("Verbose debug messages are enabled.");
-            Benchmark.stop("Enable", "Enable");
-            Log.logDebug("Enable");
-            Log.info(locale.getString(PluginLang.ENABLED));
+            logger.debug("Verbose debug messages are enabled.");
+            String benchTime = " (" + timings.end("Enable").map(Benchmark::toDurationString).orElse("-") + ")";
+            logger.info(locale.getString(PluginLang.ENABLED) + benchTime);
         } catch (AbstractMethodError e) {
-            Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            Log.error("----------------------------------------");
-            Log.error("Error: " + e.getMessage());
-            Log.error("----------------------------------------");
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("----------------------------------------");
+            logger.error("Error: " + e.getMessage());
+            logger.error("----------------------------------------");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             onDisable();
         } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("plan", new PlanCommand(this));
+        registerCommand("plan", component.planCommand());
     }
 
     @Override
@@ -105,8 +142,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     public void onDisable() {
         system.disable();
 
-        Log.info(locale.getString(PluginLang.DISABLED));
-        Benchmark.pluginDisabled(Plan.class);
+        logger.info(locale.getString(PluginLang.DISABLED));
         DebugLog.pluginDisabled(Plan.class);
     }
 

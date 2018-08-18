@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.tasks;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.TPSInsertProcessor;
@@ -15,16 +14,14 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public abstract class TPSCountTimer<T extends PlanPlugin> extends AbsRunnable {
+public abstract class TPSCountTimer extends AbsRunnable {
 
-    protected final T plugin;
     protected final List<TPS> history;
 
     protected int latestPlayersOnline = 0;
 
-    public TPSCountTimer(T plugin) {
+    public TPSCountTimer() {
         super();
-        this.plugin = plugin;
         history = new ArrayList<>();
     }
 

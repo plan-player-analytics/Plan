@@ -18,12 +18,15 @@ import org.bukkit.Bukkit;
  */
 public class BukkitTaskSystem extends ServerTaskSystem {
 
+    private final Plan plugin;
+
     public BukkitTaskSystem(Plan plugin) {
-        super(plugin,
+        super(plugin.getRunnableFactory(),
                 Check.isPaperAvailable()
                         ? new PaperTPSCountTimer(plugin)
                         : new BukkitTPSCountTimer(plugin)
         );
+        this.plugin = plugin;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
         super.enable();
         try {
             PingCountTimer pingCountTimer = new PingCountTimer();
-            ((Plan) plugin).registerListener(pingCountTimer);
+            plugin.registerListener(pingCountTimer);
             registerTask("PingCountTimer", pingCountTimer)
                     .runTaskTimer(20L, PingCountTimer.PING_INTERVAL);
         } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {
@@ -42,6 +45,6 @@ public class BukkitTaskSystem extends ServerTaskSystem {
     @Override
     public void disable() {
         super.disable();
-        Bukkit.getScheduler().cancelTasks((Plan) plugin);
+        Bukkit.getScheduler().cancelTasks(plugin);
     }
 }

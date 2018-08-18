@@ -7,8 +7,11 @@ import org.spongepowered.api.scheduler.Task;
 
 public class SpongeTaskSystem extends ServerTaskSystem {
 
+    private final PlanSponge plugin;
+
     public SpongeTaskSystem(PlanSponge plugin) {
-        super(plugin, new SpongeTPSCountTimer(plugin));
+        super(plugin.getRunnableFactory(), new SpongeTPSCountTimer(plugin));
+        this.plugin = plugin;
     }
 
     @Override

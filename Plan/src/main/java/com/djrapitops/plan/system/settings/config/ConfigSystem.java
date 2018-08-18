@@ -36,8 +36,17 @@ public abstract class ConfigSystem implements SubSystem {
         return configSystem;
     }
 
-    public static Config getConfig() {
+    @Deprecated
+    public static Config getConfig_Old() {
         return getInstance().config;
+    }
+
+    public Config getConfig() {
+        return config;
+    }
+
+    public Theme getTheme() {
+        return theme;
     }
 
     public Theme getThemeSystem() {
