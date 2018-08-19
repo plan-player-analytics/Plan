@@ -51,7 +51,7 @@ public class LocaleSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        File localeFile = FileSystem.getLocaleFile();
+        File localeFile = FileSystem.getLocaleFile_Old();
 
         if (Settings.WRITE_NEW_LOCALE.isTrue()) {
             writeNewDefaultLocale(localeFile);

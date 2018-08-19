@@ -24,6 +24,7 @@ import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 
+import javax.inject.Inject;
 import java.util.function.Supplier;
 
 /**
@@ -33,26 +34,32 @@ import java.util.function.Supplier;
  */
 public class BungeeSystem extends PlanSystem {
 
-    public BungeeSystem(PlanBungee plugin) {
+    @Inject
+    public BungeeSystem(PlanBungee plugin,
+                        VersionCheckSystem versionCheckSystem,
+                        FileSystem fileSystem,
+                        BungeeCacheSystem bungeeCacheSystem,
+                        HookHandler hookHandler
+    ) {
         setTestSystem(this);
 
         Log.setErrorManager(new PlanErrorManager());
 
         Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
 
-        versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
-        fileSystem = new FileSystem(plugin);
+        this.versionCheckSystem = versionCheckSystem;
+        this.fileSystem = fileSystem;
         configSystem = new BungeeConfigSystem();
         exportSystem = new ExportSystem(plugin);
         databaseSystem = new BungeeDBSystem(localeSupplier);
-        cacheSystem = new BungeeCacheSystem(this);
+        cacheSystem = bungeeCacheSystem;
         listenerSystem = new BungeeListenerSystem(plugin);
         taskSystem = new BungeeTaskSystem(plugin.getRunnableFactory());
 
         infoSystem = new BungeeInfoSystem();
         serverInfo = new BungeeServerInfo(plugin);
 
-        hookHandler = new HookHandler();
+        this.hookHandler = hookHandler;
         planAPI = new BungeeAPI(this);
     }
 

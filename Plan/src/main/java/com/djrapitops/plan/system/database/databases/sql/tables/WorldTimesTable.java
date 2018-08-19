@@ -143,7 +143,7 @@ public class WorldTimesTable extends UserIDTable {
                     GMTimes gmTimes = entry.getValue();
                     statement.setString(1, uuid.toString());
                     statement.setString(2, worldName);
-                    String serverUUID = ServerInfo.getServerUUID().toString();
+                    String serverUUID = ServerInfo.getServerUUID_Old().toString();
                     statement.setString(3, serverUUID);
                     statement.setString(4, serverUUID);
                     statement.setInt(5, sessionID);

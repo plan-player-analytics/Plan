@@ -50,7 +50,7 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
         long totalMemory = runtime.totalMemory();
         long usedMemory = (totalMemory - runtime.freeMemory()) / 1000000;
 
-        int playersOnline = ServerInfo.getServerProperties().getOnlinePlayers();
+        int playersOnline = ServerInfo.getServerProperties_Old().getOnlinePlayers();
         latestPlayersOnline = playersOnline;
         int loadedChunks = getLoadedChunks();
         int entityCount;

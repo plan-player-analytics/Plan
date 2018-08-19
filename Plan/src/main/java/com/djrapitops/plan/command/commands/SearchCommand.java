@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -9,15 +9,16 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.utilities.FormatUtils;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,11 +30,16 @@ import java.util.List;
 public class SearchCommand extends CommandNode {
 
     private final Locale locale;
+    private final Database database;
+    private final ErrorHandler errorHandler;
 
-    public SearchCommand(PlanPlugin plugin) {
+    @Inject
+    public SearchCommand(Locale locale, Database database, ErrorHandler errorHandler) {
         super("search", Permissions.SEARCH.getPermission(), CommandType.PLAYER_OR_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.database = database;
+        this.errorHandler = errorHandler;
 
         setArguments("<text>");
         setShortHelp(locale.getString(CmdHelpLang.SEARCH));
@@ -54,20 +60,21 @@ public class SearchCommand extends CommandNode {
         Processing.submitNonCritical(() -> {
             try {
                 String searchTerm = args[0];
-                List<String> names = MiscUtils.getMatchingPlayerNames(searchTerm);
-
+                List<String> names = database.search().matchingPlayers(searchTerm);
+                Collections.sort(names);
                 boolean empty = Verify.isEmpty(names);
 
                 sender.sendMessage(locale.getString(CommandLang.HEADER_SEARCH, empty ? 0 : names.size(), searchTerm));
                 // Results
                 if (!empty) {
-                    sender.sendMessage(FormatUtils.collectionToStringNoBrackets(names));
+                    String message = names.toString();
+                    sender.sendMessage(message.substring(1, message.length() - 1));
                 }
 
                 sender.sendMessage(">");
             } catch (DBOpException e) {
                 sender.sendMessage("§cDatabase error occurred: " + e.getMessage());
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         });
     }

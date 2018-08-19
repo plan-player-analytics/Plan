@@ -18,7 +18,6 @@ public enum DeepHelpLang implements Lang {
     QINSPECT("In Depth Help - /plan qinspect ?", "> §2Quick Inspect Command\\  Displays some information about the player in game."),
     RELOAD("In Depth Help - /plan reload ?", "> §2Reload Command\\  Restarts the plugin using onDisable and onEnable.\\  §bDoes not support swapping jar on the fly"),
     SEARCH("In Depth Help - /plan search ?", "> §2Search Command\\  Get a list of Player names that match the given argument.\\§7  Example: /plan search 123 - Finds all users with 123 in their name."),
-    UPDATE("In Depth Help - /plan update ?", "> §2Update Command\\  Used to update the plugin on the next shutdown\\  /plan update - Changelog link\\  /plan update -u - Schedule update to happen on all network servers that are online, next time they reboot.\\  /plan update cancel - Cancel scheduled update on servers that haven't rebooted yet."),
     WEB("In Depth Help - /plan web ?", "< §2Web User Manage Command.\\  §2/plan web §fList subcommands\\  §2/plan web <subcommand> ? §fIn Depth help"),
 
     MANAGE_BACKUP("In Depth Help - /plan manage backup ?", "> §2Backup Subcommand\\  Creates a new SQLite database (.db file) with contents of currently active database in the Plan plugin folder."),

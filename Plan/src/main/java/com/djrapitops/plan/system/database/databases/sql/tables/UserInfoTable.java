@@ -69,7 +69,7 @@ public class UserInfoTable extends UserIDTable {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
                 statement.setLong(2, registered);
-                statement.setString(3, ServerInfo.getServerUUID().toString());
+                statement.setString(3, ServerInfo.getServerUUID_Old().toString());
             }
         });
     }
@@ -95,7 +95,7 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public boolean isRegistered(UUID uuid) {
-        return isRegistered(uuid, ServerInfo.getServerUUID());
+        return isRegistered(uuid, ServerInfo.getServerUUID_Old());
     }
 
     public void updateOpStatus(UUID uuid, boolean op) {
@@ -166,7 +166,7 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public UserInfo getUserInfo(UUID uuid) {
-        return getAllUserInfo(uuid).get(ServerInfo.getServerUUID());
+        return getAllUserInfo(uuid).get(ServerInfo.getServerUUID_Old());
     }
 
     public List<UserInfo> getServerUserInfo(UUID serverUUID) {
@@ -213,7 +213,7 @@ public class UserInfoTable extends UserIDTable {
      * @return List of UserInfo objects.
      */
     public List<UserInfo> getServerUserInfo() {
-        return getServerUserInfo(ServerInfo.getServerUUID());
+        return getServerUserInfo(ServerInfo.getServerUUID_Old());
     }
 
     public Map<UUID, List<UserInfo>> getAllUserInfo() {

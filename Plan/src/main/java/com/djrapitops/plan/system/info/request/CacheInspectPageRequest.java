@@ -61,7 +61,7 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
         String html = variables.get("html");
         Verify.nullCheck(html, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
-        Map<String, String> replace = Collections.singletonMap("networkName", ServerInfo.getServerName());
+        Map<String, String> replace = Collections.singletonMap("networkName", ServerInfo.getServerName_Old());
         boolean export = Settings.ANALYSIS_EXPORT.isTrue();
         cache(export, uuid, StringSubstitutor.replace(Base64Util.decode(html), replace));
 

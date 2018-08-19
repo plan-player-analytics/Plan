@@ -6,19 +6,18 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ShutdownHook;
-import com.djrapitops.plan.api.ServerAPI;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.database.ServerDBSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.info.ServerInfoSystem;
-import com.djrapitops.plan.system.info.connection.ServerConnectionSystem;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
-import com.djrapitops.plan.system.settings.config.ServerConfigSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
@@ -36,26 +35,35 @@ import java.util.function.Supplier;
 public class BukkitSystem extends PlanSystem implements ServerSystem {
 
     @Inject
-    public BukkitSystem(Plan plugin) {
+    public BukkitSystem(Plan plugin,
+                        VersionCheckSystem versionCheckSystem,
+                        FileSystem fileSystem,
+                        ConfigSystem serverConfigSystem,
+                        InfoSystem serverInfoSystem,
+                        HookHandler hookHandler,
+                        PlanAPI planAPI,
+                        ExportSystem exportSystem,
+                        DBSystem serverDBSystem
+    ) {
         setTestSystem(this);
 
         Log.setErrorManager(new PlanErrorManager());
 
         Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
 
-        versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
-        fileSystem = new FileSystem(plugin);
-        configSystem = new ServerConfigSystem();
-        exportSystem = new ExportSystem(plugin);
-        databaseSystem = new ServerDBSystem(localeSupplier);
+        this.versionCheckSystem = versionCheckSystem;
+        this.fileSystem = fileSystem;
+        this.configSystem = serverConfigSystem;
+        this.exportSystem = exportSystem;
+        this.databaseSystem = serverDBSystem;
         listenerSystem = new BukkitListenerSystem(plugin);
         taskSystem = new BukkitTaskSystem(plugin);
 
-        infoSystem = new ServerInfoSystem(new ServerConnectionSystem(localeSupplier));
+        infoSystem = serverInfoSystem;
         serverInfo = new BukkitServerInfo(plugin);
 
-        hookHandler = new HookHandler();
-        planAPI = new ServerAPI(hookHandler, databaseSystem.getActiveDatabase(), cacheSystem.getDataCache());
+        this.hookHandler = hookHandler;
+        this.planAPI = planAPI;
 
         StaticHolder.saveInstance(ShutdownHook.class, plugin.getClass());
         new ShutdownHook().register();

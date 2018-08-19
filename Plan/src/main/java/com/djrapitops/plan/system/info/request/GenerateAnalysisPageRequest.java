@@ -50,7 +50,7 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
         Verify.nullCheck(server, () -> new BadRequestException("Server UUID 'server' variable not supplied in the request."));
 
         UUID serverUUID = UUID.fromString(server);
-        if (!ServerInfo.getServerUUID().equals(serverUUID)) {
+        if (!ServerInfo.getServerUUID_Old().equals(serverUUID)) {
             throw new BadRequestException("Requested Analysis page from wrong server.");
         }
 
@@ -78,7 +78,7 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
     private String analyseAndGetHtml() throws InternalErrorException {
         try {
             runningAnalysis = true;
-            UUID serverUUID = ServerInfo.getServerUUID();
+            UUID serverUUID = ServerInfo.getServerUUID_Old();
             AnalysisContainer analysisContainer = new AnalysisContainer(Database.getActive().fetch().getServerContainer(serverUUID));
             return new AnalysisPage(analysisContainer).toHtml();
         } catch (DBOpException e) {

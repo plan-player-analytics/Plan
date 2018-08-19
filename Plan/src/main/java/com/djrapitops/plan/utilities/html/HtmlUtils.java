@@ -26,7 +26,7 @@ public class HtmlUtils {
         if (Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
             ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
         } else {
-            ip = ServerInfo.getServerProperties().getIp() + ":" + port;
+            ip = ServerInfo.getServerProperties_Old().getIp() + ":" + port;
         }
         return ip;
     }

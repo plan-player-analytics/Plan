@@ -18,7 +18,7 @@ public class SpongeConfigSystem extends ServerConfigSystem {
 
     @Override
     public void enable() throws EnableException {
-        firstInstall = !FileSystem.getConfigFile().exists();
+        firstInstall = !FileSystem.getConfigFile_Old().exists();
         super.enable();
     }
 

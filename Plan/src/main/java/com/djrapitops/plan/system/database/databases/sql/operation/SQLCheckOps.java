@@ -29,7 +29,7 @@ public class SQLCheckOps extends SQLOps implements CheckOperations {
 
     @Override
     public boolean isPlayerRegisteredOnThisServer(UUID player) {
-        return isPlayerRegistered(player, ServerInfo.getServerUUID());
+        return isPlayerRegistered(player, ServerInfo.getServerUUID_Old());
     }
 
     @Override

@@ -95,7 +95,7 @@ public class NetworkContainer extends DataContainer {
                         Settings.BUNGEE_NETWORK_NAME.toString() :
                         bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan")
         );
-        putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties()::getOnlinePlayers);
+        putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties_Old()::getOnlinePlayers);
         putRawData(NetworkKeys.WORLD_MAP_LOW_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_LOW));
         putRawData(NetworkKeys.WORLD_MAP_HIGH_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_HIGH));
         putRawData(NetworkKeys.PLAYERS_GRAPH_COLOR, Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));

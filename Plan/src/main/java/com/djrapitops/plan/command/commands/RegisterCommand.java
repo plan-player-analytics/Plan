@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
@@ -11,13 +10,16 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -34,14 +36,20 @@ import java.util.Arrays;
 public class RegisterCommand extends CommandNode {
 
     private final String notEnoughArgsMsg;
-    private final String hashErrorMsg;
     private final Locale locale;
+    private final PluginLogger logger;
+    private final Database database;
+    private final ErrorHandler errorHandler;
 
-    public RegisterCommand(PlanPlugin plugin) {
+    @Inject
+    public RegisterCommand(Locale locale, PluginLogger logger, Database database, ErrorHandler errorHandler) {
         // No Permission Requirement
         super("register", "", CommandType.PLAYER_OR_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.logger = logger;
+        this.database = database;
+        this.errorHandler = errorHandler;
 
         setArguments("<password>", "[name]", "[lvl]");
         setShortHelp(locale.getString(CmdHelpLang.WEB_REGISTER));
@@ -51,7 +59,6 @@ public class RegisterCommand extends CommandNode {
         }
 
         notEnoughArgsMsg = locale.getString(CommandLang.FAIL_REQ_ARGS, 3, Arrays.toString(getArguments()));
-        hashErrorMsg = "§cPassword hash error.";
     }
 
     @Override
@@ -63,12 +70,12 @@ public class RegisterCommand extends CommandNode {
                 consoleRegister(args, sender, notEnoughArgsMsg);
             }
         } catch (PassEncryptUtil.CannotPerformOperationException e) {
-            Log.toLog(this.getClass().getSimpleName(), e);
-            sender.sendMessage(hashErrorMsg);
+            errorHandler.log(L.WARN, this.getClass(), e);
+            sender.sendMessage("§cPassword hash error.");
         } catch (NumberFormatException e) {
             throw new NumberFormatException(args[2]);
         } catch (Exception e) {
-            Log.toLog(this.getClass().getSimpleName(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -115,7 +122,6 @@ public class RegisterCommand extends CommandNode {
         Processing.submitCritical(() -> {
             String userName = webUser.getName();
             try {
-                Database database = Database.getActive();
                 boolean userExists = database.check().doesWebUserExists(userName);
                 if (userExists) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
@@ -123,9 +129,9 @@ public class RegisterCommand extends CommandNode {
                 }
                 database.save().webUser(webUser);
                 sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS));
-                Log.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
+                logger.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
             } catch (Exception e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.WARN, this.getClass(), e);
             }
         });
     }

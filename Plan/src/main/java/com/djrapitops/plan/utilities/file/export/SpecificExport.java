@@ -103,7 +103,7 @@ public abstract class SpecificExport implements Runnable {
 
         File htmlLocation;
         if (usingBungee) {
-            if (serverUUID.equals(ServerInfo.getServerUUID())) {
+            if (serverUUID.equals(ServerInfo.getServerUUID_Old())) {
                 htmlLocation = new File(outputFolder, "network");
             } else {
                 htmlLocation = new File(getServerFolder(), serverName.replace(" ", "%20").replace(".", "%2E"));

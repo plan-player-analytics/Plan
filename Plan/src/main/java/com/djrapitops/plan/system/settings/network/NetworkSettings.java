@@ -33,6 +33,7 @@ public class NetworkSettings {
     private static final String SPLIT = ";;SETTING;;";
     private static final String VAL_SPLIT = ";;VALUE;;";
 
+    @Deprecated
     public static void loadSettingsFromDB() {
         if (Check.isBungeeAvailable()) {
             return;
@@ -51,6 +52,7 @@ public class NetworkSettings {
         });
     }
 
+    @Deprecated
     public static void placeSettingsToDB() {
         if (!Check.isBungeeAvailable()) {
             return;
@@ -86,7 +88,7 @@ public class NetworkSettings {
 
         Log.debug("NetworkSettings: Reading Config String..");
         String[] settings = configSettings.split(SPLIT);
-        UUID thisServerUUID = ServerInfo.getServerUUID();
+        UUID thisServerUUID = ServerInfo.getServerUUID_Old();
         for (String settingAndVal : settings) {
             String[] settingValSplit = settingAndVal.split(VAL_SPLIT);
             String setting = settingValSplit[0];

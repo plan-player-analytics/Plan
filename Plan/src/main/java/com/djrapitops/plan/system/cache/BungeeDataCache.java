@@ -1,7 +1,8 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.database.databases.Database;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -13,8 +14,9 @@ import java.util.UUID;
  */
 public class BungeeDataCache extends DataCache {
 
-    public BungeeDataCache(PlanSystem system) {
-        super(system);
+    @Inject
+    public BungeeDataCache(Database database) {
+        super(database);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class ServerPageHandler extends PageHandler {
         if (response != null) {
             return response;
         } else {
-            if (Check.isBungeeAvailable() && ServerInfo.getServerUUID().equals(serverUUID)) {
+            if (Check.isBungeeAvailable() && ServerInfo.getServerUUID_Old().equals(serverUUID)) {
                 try {
                     InfoSystem.getInstance().updateNetworkPage();
                 } catch (WebException e) {
@@ -56,7 +56,7 @@ public class ServerPageHandler extends PageHandler {
     }
 
     private UUID getServerUUID(List<String> target) {
-        UUID serverUUID = ServerInfo.getServerUUID();
+        UUID serverUUID = ServerInfo.getServerUUID_Old();
         if (!target.isEmpty()) {
             try {
                 String serverName = target.get(0).replace("%20", " ");

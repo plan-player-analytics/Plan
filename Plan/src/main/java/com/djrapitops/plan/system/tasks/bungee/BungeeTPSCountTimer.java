@@ -9,7 +9,7 @@ public class BungeeTPSCountTimer extends TPSCountTimer {
 
     @Override
     public void addNewTPSEntry(long nanoTime, long now) {
-        int onlineCount = ServerInfo.getServerProperties().getOnlinePlayers();
+        int onlineCount = ServerInfo.getServerProperties_Old().getOnlinePlayers();
         TPS tps = TPSBuilder.get()
                 .date(now)
                 .skipTPS()

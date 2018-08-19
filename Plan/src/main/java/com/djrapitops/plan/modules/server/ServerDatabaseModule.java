@@ -2,6 +2,7 @@ package com.djrapitops.plan.modules.server;
 
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.ServerDBSystem;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import dagger.Module;
 import dagger.Provides;
@@ -17,6 +18,11 @@ public class ServerDatabaseModule {
     @Provides
     DBSystem provideDatabaseSystem(Locale locale) {
         return new ServerDBSystem(() -> locale);
+    }
+
+    @Provides
+    Database provideDatabase(DBSystem dbSystem) {
+        return dbSystem.getActiveDatabase();
     }
 
 }

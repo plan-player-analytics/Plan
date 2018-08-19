@@ -13,6 +13,7 @@ import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Country;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,7 +24,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -36,28 +36,29 @@ import java.util.zip.GZIPInputStream;
  */
 public class GeolocationCache implements SubSystem {
 
-    private final Supplier<Locale> locale;
+    private final Locale locale;
     private final Map<String, String> cached;
     private File geolocationDB;
 
-    public GeolocationCache(Supplier<Locale> locale) {
+    @Inject
+    public GeolocationCache(Locale locale) {
         this.locale = locale;
         cached = new HashMap<>();
     }
 
     @Override
     public void enable() throws EnableException {
-        geolocationDB = new File(FileSystem.getDataFolder(), "GeoIP.dat");
+        geolocationDB = new File(FileSystem.getDataFolder_Old(), "GeoIP.dat");
         if (Settings.DATA_GEOLOCATIONS.isTrue()) {
             try {
                 GeolocationCache.checkDB();
             } catch (UnknownHostException e) {
-                Log.error(locale.get().getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED));
+                Log.error(locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED));
             } catch (IOException e) {
-                throw new EnableException(locale.get().getString(PluginLang.ENABLE_FAIL_GEODB_WRITE), e);
+                throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_GEODB_WRITE), e);
             }
         } else {
-            Log.infoColor("§e" + locale.get().getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_DISABLED));
+            Log.infoColor("§e" + locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_DISABLED));
         }
     }
 

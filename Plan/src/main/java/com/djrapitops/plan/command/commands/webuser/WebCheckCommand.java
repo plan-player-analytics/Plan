@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.webuser;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
@@ -9,12 +8,14 @@ import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -26,11 +27,16 @@ import java.util.Arrays;
 public class WebCheckCommand extends CommandNode {
 
     private final Locale locale;
+    private final Database database;
+    private final ErrorHandler errorHandler;
 
-    public WebCheckCommand(PlanPlugin plugin) {
+    @Inject
+    public WebCheckCommand(Locale locale, Database database, ErrorHandler errorHandler) {
         super("check", Permissions.MANAGE_WEB.getPerm(), CommandType.PLAYER_OR_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.database = database;
+        this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.WEB_CHECK));
         setArguments("<username>");
@@ -41,7 +47,6 @@ public class WebCheckCommand extends CommandNode {
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
-        Database database = Database.getActive();
         String user = args[0];
 
         Processing.submitNonCritical(() -> {
@@ -53,7 +58,7 @@ public class WebCheckCommand extends CommandNode {
                 WebUser info = database.fetch().getWebUser(user);
                 sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, info.getName(), info.getPermLevel()));
             } catch (Exception e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });

@@ -37,6 +37,6 @@ public class ServerInfoSystem extends InfoSystem {
     @Override
     public void updateNetworkPage() throws WebException {
         String html = HtmlStructure.createServerContainer();
-        sendRequest(new CacheNetworkPageContentRequest(ServerInfo.getServerUUID(), html));
+        sendRequest(new CacheNetworkPageContentRequest(ServerInfo.getServerUUID_Old(), html));
     }
 }

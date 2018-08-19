@@ -75,7 +75,7 @@ public abstract class InfoSystem implements SubSystem {
      */
     public void generateAnalysisPage(UUID serverUUID) throws WebException {
         GenerateAnalysisPageRequest request = new GenerateAnalysisPageRequest(serverUUID);
-        if (ServerInfo.getServerUUID().equals(serverUUID)) {
+        if (ServerInfo.getServerUUID_Old().equals(serverUUID)) {
             runLocally(request);
         } else {
             sendRequest(request);

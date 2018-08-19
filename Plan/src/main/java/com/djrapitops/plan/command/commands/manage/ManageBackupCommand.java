@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
@@ -18,8 +17,11 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -33,11 +35,16 @@ import java.util.UUID;
 public class ManageBackupCommand extends CommandNode {
 
     private final Locale locale;
+    private final DBSystem dbSystem;
+    private final ErrorHandler errorHandler;
 
-    public ManageBackupCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageBackupCommand(Locale locale, DBSystem dbSystem, ErrorHandler errorHandler) {
         super("backup", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.dbSystem = dbSystem;
+        this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_BACKUP));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_BACKUP));
@@ -57,7 +64,7 @@ public class ManageBackupCommand extends CommandNode {
             Verify.isTrue(isCorrectDB,
                     () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
-            Database database = DBSystem.getActiveDatabaseByName(dbName);
+            Database database = dbSystem.getActiveDatabaseByName(dbName);
 
             runBackupTask(sender, args, database);
         } catch (DBInitException e) {
@@ -73,7 +80,7 @@ public class ManageBackupCommand extends CommandNode {
                 createNewBackup(args[0], database);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {
-                Log.toLog(ManageBackupCommand.class, e);
+                errorHandler.log(L.ERROR, ManageBackupCommand.class, e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });
@@ -98,7 +105,7 @@ public class ManageBackupCommand extends CommandNode {
             backupDB.init();
             copyFromDB.backup().backup(backupDB);
         } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         } finally {
             if (backupDB != null) {
                 backupDB.close();

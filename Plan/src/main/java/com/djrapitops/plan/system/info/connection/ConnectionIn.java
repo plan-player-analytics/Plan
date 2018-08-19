@@ -47,7 +47,7 @@ public class ConnectionIn {
         Log.debug("ConnectionIn: " + infoRequest.getClass().getSimpleName());
 
         if (infoRequest instanceof SetupRequest) {
-            if (!ConnectionSystem.isSetupAllowed()) {
+            if (!ConnectionSystem.isSetupAllowed_Old()) {
                 throw new ForbiddenException("Setup not enabled on this server, use commands to enable.");
             }
         } else {

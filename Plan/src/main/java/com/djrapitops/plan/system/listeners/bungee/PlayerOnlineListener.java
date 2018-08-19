@@ -46,7 +46,7 @@ public class PlayerOnlineListener implements Listener {
                     new IPUpdateProcessor(uuid, address, now))
             );
             Processing.submit(new PlayerPageUpdateProcessor(uuid));
-            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
+            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID_Old()));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
@@ -60,7 +60,7 @@ public class PlayerOnlineListener implements Listener {
 
             SessionCache.getInstance().endSession(uuid, System.currentTimeMillis());
             Processing.submit(new PlayerPageUpdateProcessor(uuid));
-            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
+            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID_Old()));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }

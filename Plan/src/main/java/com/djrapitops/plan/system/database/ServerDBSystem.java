@@ -31,6 +31,6 @@ public class ServerDBSystem extends DBSystem {
         databases.add(new SQLiteDB(locale));
 
         String dbType = Settings.DB_TYPE.toString().toLowerCase().trim();
-        db = getActiveDatabaseByName(dbType);
+        db = getActiveDatabaseByName_Old(dbType);
     }
 }

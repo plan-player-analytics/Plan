@@ -2,6 +2,9 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
+import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.common.*;
+import com.djrapitops.plan.modules.server.*;
 import com.djrapitops.plan.system.SpongeSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -13,7 +16,13 @@ import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.command.CommandNode;
+import com.djrapitops.plugin.logging.L;
 import com.google.inject.Inject;
+import dagger.BindsInstance;
+import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.config.ConfigDir;
@@ -22,8 +31,57 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.InputStream;
+
+@Singleton
+@Component(modules = {
+        SpongePlanModule.class,
+        APFModule.class,
+        ExportModule.class,
+        VersionCheckModule.class,
+        FileSystemModule.class,
+        ServerConfigModule.class,
+        LocaleModule.class,
+        ServerDatabaseModule.class,
+        ServerDataCacheModule.class,
+        WebServerSystemModule.class,
+        ServerInfoSystemModule.class,
+        PluginHookModule.class,
+        ServerAPIModule.class,
+})
+interface PlanSpongeComponent {
+
+    PlanCommand planCommand();
+
+    SpongeSystem system();
+
+    @Component.Builder
+    interface Builder {
+
+        @BindsInstance
+        Builder plan(PlanSponge plan);
+
+        PlanSpongeComponent build();
+    }
+}
+
+@Module
+class SpongePlanModule {
+
+    @Provides
+    PlanPlugin providePlanPlugin(PlanSponge plan) {
+        return plan;
+    }
+
+    @Provides
+    @Named("mainCommand")
+    CommandNode provideMainCommand(PlanCommand command) {
+        return command;
+    }
+}
 
 @Plugin(id = "plan", name = "Plan", version = "4.4.3", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
@@ -57,29 +115,30 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
+        PlanSpongeComponent component = DaggerPlanSpongeComponent.builder().plan(this).build();
         try {
-            system = new SpongeSystem(this);
+            system = component.system();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
             new BStatsSponge(metrics).registerMetrics();
 
-            Log.info(locale.getString(PluginLang.ENABLED));
+            logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
-            Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            Log.error("----------------------------------------");
-            Log.error("Error: " + e.getMessage());
-            Log.error("----------------------------------------");
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("----------------------------------------");
+            logger.error("Error: " + e.getMessage());
+            logger.error("----------------------------------------");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             onDisable();
         } catch (Exception e) {
-            Log.toLog(this.getClass().getSimpleName() + "-v" + getVersion(), e);
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("plan", new PlanCommand(this));
+        registerCommand("plan", component.planCommand());
     }
 
     @Override

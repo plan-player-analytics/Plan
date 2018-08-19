@@ -28,30 +28,48 @@ public abstract class ServerInfo implements SubSystem {
         this.serverProperties = serverProperties;
     }
 
+    @Deprecated
     public static ServerInfo getInstance() {
         ServerInfo serverInfo = PlanSystem.getInstance().getServerInfo();
         Verify.nullCheck(serverInfo, () -> new IllegalStateException("ServerInfo was not initialized."));
         return serverInfo;
     }
 
-    public static Server getServer() {
+    @Deprecated
+    public static Server getServer_Old() {
         return getInstance().server;
     }
 
-    public static ServerProperties getServerProperties() {
+    @Deprecated
+    public static ServerProperties getServerProperties_Old() {
         return getInstance().serverProperties;
     }
 
-    public static UUID getServerUUID() {
+    @Deprecated
+    public static UUID getServerUUID_Old() {
+        return getServer_Old().getUuid();
+    }
+
+    @Deprecated
+    public static String getServerName_Old() {
+        return getServer_Old().getName();
+    }
+
+    @Deprecated
+    public static int getServerID_Old() {
+        return getServer_Old().getId();
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public UUID getServerUUID() {
         return getServer().getUuid();
     }
 
-    public static String getServerName() {
-        return getServer().getName();
-    }
-
-    public static int getServerID() {
-        return getServer().getId();
+    public ServerProperties getServerProperties() {
+        return serverProperties;
     }
 
     @Override

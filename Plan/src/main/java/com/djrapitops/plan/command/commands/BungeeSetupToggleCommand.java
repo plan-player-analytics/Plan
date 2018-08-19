@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -14,6 +13,8 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+
+import javax.inject.Inject;
 
 /**
  * Command for Toggling whether or not BungeeCord accepts set up requests.
@@ -25,11 +26,14 @@ import com.djrapitops.plugin.command.ISender;
 public class BungeeSetupToggleCommand extends CommandNode {
 
     private final Locale locale;
+    private final ConnectionSystem connectionSystem;
 
-    public BungeeSetupToggleCommand(PlanPlugin plugin) {
+    @Inject
+    public BungeeSetupToggleCommand(Locale locale, ConnectionSystem connectionSystem) {
         super("setup", Permissions.MANAGE.getPermission(), CommandType.ALL);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.connectionSystem = connectionSystem;
 
         setShortHelp(locale.getString(CmdHelpLang.SETUP));
         setInDepthHelp(locale.getArray(DeepHelpLang.SETUP));
@@ -37,15 +41,13 @@ public class BungeeSetupToggleCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String s, String[] strings) {
-        boolean setupAllowed = ConnectionSystem.isSetupAllowed();
-        ConnectionSystem connectionSystem = ConnectionSystem.getInstance();
-
-        if (setupAllowed) {
+        if (connectionSystem.isSetupAllowed()) {
             connectionSystem.setSetupAllowed(false);
         } else {
             connectionSystem.setSetupAllowed(true);
         }
-        String msg = locale.getString(!setupAllowed ? CommandLang.SETUP_ALLOWED : CommandLang.CONNECT_FORBIDDEN);
+
+        String msg = locale.getString(connectionSystem.isSetupAllowed() ? CommandLang.SETUP_ALLOWED : CommandLang.CONNECT_FORBIDDEN);
         sender.sendMessage(msg);
     }
 }

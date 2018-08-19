@@ -40,8 +40,13 @@ public class VersionCheckSystem implements SubSystem {
         return versionCheckSystem;
     }
 
-    public static boolean isNewVersionAvailable() {
+    @Deprecated
+    public static boolean isNewVersionAvailable_Old() {
         return getInstance().newVersionAvailable != null;
+    }
+
+    public boolean isNewVersionAvailable() {
+        return newVersionAvailable != null;
     }
 
     public static String getCurrentVersion() {
@@ -50,31 +55,27 @@ public class VersionCheckSystem implements SubSystem {
 
     @Override
     public void enable() {
-        if (Settings.ALLOW_UPDATE.isTrue()) {
-            try {
-                List<VersionInfo> versions = VersionInfoLoader.load();
-                if (Settings.NOTIFY_ABOUT_DEV_RELEASES.isFalse()) {
-                    versions = versions.stream().filter(VersionInfo::isRelease).collect(Collectors.toList());
-                }
-                VersionInfo newestVersion = versions.get(0);
-                if (Version.isNewVersionAvailable(new Version(currentVersion), newestVersion.getVersion())) {
-                    newVersionAvailable = newestVersion;
-                    String notification = locale.get().getString(
-                            PluginLang.VERSION_AVAILABLE,
-                            newestVersion.getVersion().toString(),
-                            newestVersion.getChangeLogUrl()
-                    ) + (newestVersion.isRelease() ? "" : locale.get().getString(PluginLang.VERSION_AVAILABLE_DEV));
-                    Log.infoColor("§a----------------------------------------");
-                    Log.infoColor("§a" + notification);
-                    Log.infoColor("§a----------------------------------------");
-                } else {
-                    Log.info(locale.get().getString(PluginLang.VERSION_NEWEST));
-                }
-            } catch (IOException e) {
-                Log.error(locale.get().getString(PluginLang.VERSION_FAIL_READ_VERSIONS));
+        try {
+            List<VersionInfo> versions = VersionInfoLoader.load();
+            if (Settings.NOTIFY_ABOUT_DEV_RELEASES.isFalse()) {
+                versions = versions.stream().filter(VersionInfo::isRelease).collect(Collectors.toList());
             }
-        } else {
-            checkForNewVersion();
+            VersionInfo newestVersion = versions.get(0);
+            if (Version.isNewVersionAvailable(new Version(currentVersion), newestVersion.getVersion())) {
+                newVersionAvailable = newestVersion;
+                String notification = locale.get().getString(
+                        PluginLang.VERSION_AVAILABLE,
+                        newestVersion.getVersion().toString(),
+                        newestVersion.getChangeLogUrl()
+                ) + (newestVersion.isRelease() ? "" : locale.get().getString(PluginLang.VERSION_AVAILABLE_DEV));
+                Log.infoColor("§a----------------------------------------");
+                Log.infoColor("§a" + notification);
+                Log.infoColor("§a----------------------------------------");
+            } else {
+                Log.info(locale.get().getString(PluginLang.VERSION_NEWEST));
+            }
+        } catch (IOException e) {
+            Log.error(locale.get().getString(PluginLang.VERSION_FAIL_READ_VERSIONS));
         }
     }
 

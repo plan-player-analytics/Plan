@@ -56,7 +56,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
         long usedMemory = (totalMemory - runtime.freeMemory()) / 1000000;
 
         double tps = Sponge.getGame().getServer().getTicksPerSecond();
-        int playersOnline = ServerInfo.getServerProperties().getOnlinePlayers();
+        int playersOnline = ServerInfo.getServerProperties_Old().getOnlinePlayers();
         latestPlayersOnline = playersOnline;
         int loadedChunks = -1; // getLoadedChunks();
         int entityCount = getEntityCount();

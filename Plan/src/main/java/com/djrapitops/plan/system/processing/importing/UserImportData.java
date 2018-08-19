@@ -197,7 +197,7 @@ public class UserImportData {
 
         public UserImportDataBuilder nicknames(String... nicknames) {
             long time = System.currentTimeMillis();
-            UUID serverUUID = ServerInfo.getServerUUID();
+            UUID serverUUID = ServerInfo.getServerUUID_Old();
 
             Arrays.stream(nicknames)
                     .map(nick -> new Nickname(nick, time, serverUUID))

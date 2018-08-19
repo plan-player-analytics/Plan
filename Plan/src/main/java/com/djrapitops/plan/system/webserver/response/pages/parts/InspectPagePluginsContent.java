@@ -40,8 +40,8 @@ public class InspectPagePluginsContent extends Response {
     public static InspectPagePluginsContent generateForThisServer(UUID playerUUID) {
         HookHandler hookHandler = HookHandler.getInstance();
         Map<PluginData, InspectContainer> containers = hookHandler.getInspectContainersFor(playerUUID);
-        String serverName = ServerInfo.getServerName();
-        String actualServerName = serverName.equals("Plan") ? "Server " + ServerInfo.getServerID() : serverName;
+        String serverName = ServerInfo.getServerName_Old();
+        String actualServerName = serverName.equals("Plan") ? "Server " + ServerInfo.getServerID_Old() : serverName;
         if (containers.isEmpty()) {
             return new InspectPagePluginsContent(playerUUID, "<li><a>" + actualServerName + " (No Data)</a></li>",
                     "<div class=\"tab\"><div class=\"row clearfix\">" +
@@ -64,7 +64,7 @@ public class InspectPagePluginsContent extends Response {
 
         tab.append("</div></div>");
 
-        return new InspectPagePluginsContent(ServerInfo.getServerUUID(), nav, tab.toString());
+        return new InspectPagePluginsContent(ServerInfo.getServerUUID_Old(), nav, tab.toString());
     }
 
     public void addTab(UUID serverUUID, String nav, String html) {

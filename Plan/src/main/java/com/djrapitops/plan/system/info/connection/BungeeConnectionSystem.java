@@ -46,7 +46,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
         Server server = null;
         if (infoRequest instanceof CacheRequest || infoRequest instanceof GenerateInspectPageRequest) {
             // Run locally
-            return ServerInfo.getServer();
+            return ServerInfo.getServer_Old();
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
             server = bukkitServers.get(serverUUID);

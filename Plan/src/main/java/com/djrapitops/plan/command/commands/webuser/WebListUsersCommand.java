@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.webuser;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
@@ -10,11 +9,13 @@ import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.comparators.WebUserComparator;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -26,11 +27,16 @@ import java.util.List;
 public class WebListUsersCommand extends CommandNode {
 
     private final Locale locale;
+    private final Database database;
+    private final ErrorHandler errorHandler;
 
-    public WebListUsersCommand(PlanPlugin plugin) {
+    @Inject
+    public WebListUsersCommand(Locale locale, Database database, ErrorHandler errorHandler) {
         super("list", Permissions.MANAGE_WEB.getPerm(), CommandType.CONSOLE);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.database = database;
+        this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.WEB_LIST));
     }
@@ -39,7 +45,7 @@ public class WebListUsersCommand extends CommandNode {
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         Processing.submitNonCritical(() -> {
             try {
-                List<WebUser> users = Database.getActive().fetch().getWebUsers();
+                List<WebUser> users = database.fetch().getWebUsers();
                 users.sort(new WebUserComparator());
                 sender.sendMessage(locale.getString(CommandLang.HEADER_WEB_USERS, users.size()));
                 for (WebUser user : users) {
@@ -47,7 +53,7 @@ public class WebListUsersCommand extends CommandNode {
                 }
                 sender.sendMessage(">");
             } catch (Exception e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });

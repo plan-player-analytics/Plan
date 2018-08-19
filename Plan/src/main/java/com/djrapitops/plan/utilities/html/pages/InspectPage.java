@@ -63,7 +63,7 @@ public class InspectPage implements Page {
             if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
                 throw new IllegalStateException("Player is not registered");
             }
-            UUID serverUUID = ServerInfo.getServerUUID();
+            UUID serverUUID = ServerInfo.getServerUUID_Old();
             Map<UUID, String> serverNames = db.fetch().getServerNames();
 
             Benchmark.stop("Inspect Parse, Fetch");

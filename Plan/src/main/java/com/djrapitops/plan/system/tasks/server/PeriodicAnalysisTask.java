@@ -14,7 +14,7 @@ public class PeriodicAnalysisTask extends AbsRunnable {
     public void run() {
         try {
             WebExceptionLogger.logIfOccurs(this.getClass(), () ->
-                    InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID()))
+                    InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID_Old()))
             );
         } catch (IllegalStateException e) {
             if (!PlanPlugin.getInstance().isReloading()) {

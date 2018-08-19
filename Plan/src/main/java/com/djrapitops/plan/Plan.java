@@ -22,11 +22,8 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.common.ExportModule;
-import com.djrapitops.plan.modules.common.FileSystemModule;
-import com.djrapitops.plan.modules.common.LocaleModule;
-import com.djrapitops.plan.modules.common.VersionCheckModule;
-import com.djrapitops.plan.modules.server.ServerCommandModule;
+import com.djrapitops.plan.modules.common.*;
+import com.djrapitops.plan.modules.server.*;
 import com.djrapitops.plan.system.BukkitSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -40,22 +37,33 @@ import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.command.CommandNode;
 import dagger.BindsInstance;
 import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Singleton
 @Component(modules = {
+        BukkitPlanModule.class,
         APFModule.class,
-        ServerCommandModule.class,
         ExportModule.class,
         VersionCheckModule.class,
         FileSystemModule.class,
-        LocaleModule.class
+        ServerConfigModule.class,
+        LocaleModule.class,
+        ServerDatabaseModule.class,
+        ServerDataCacheModule.class,
+        WebServerSystemModule.class,
+        ServerInfoSystemModule.class,
+        PluginHookModule.class,
+        ServerAPIModule.class
 })
 interface PlanComponent {
 
@@ -70,6 +78,21 @@ interface PlanComponent {
         Builder plan(Plan plan);
 
         PlanComponent build();
+    }
+}
+
+@Module
+class BukkitPlanModule {
+
+    @Provides
+    PlanPlugin providePlanPlugin(Plan plan) {
+        return plan;
+    }
+
+    @Provides
+    @Named("mainCommand")
+    CommandNode provideMainCommand(PlanCommand command) {
+        return command;
     }
 }
 

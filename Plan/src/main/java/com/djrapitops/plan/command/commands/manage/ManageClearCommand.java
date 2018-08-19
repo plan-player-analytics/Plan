@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -12,12 +11,14 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -29,11 +30,16 @@ import java.util.Arrays;
 public class ManageClearCommand extends CommandNode {
 
     private final Locale locale;
+    private final DBSystem dbSystem;
+    private final ErrorHandler errorHandler;
 
-    public ManageClearCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageClearCommand(Locale locale, DBSystem dbSystem, ErrorHandler errorHandler) {
         super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.dbSystem = dbSystem;
+        this.errorHandler = errorHandler;
 
         setArguments("<DB>", "[-a]");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_CLEAR));
@@ -57,7 +63,7 @@ public class ManageClearCommand extends CommandNode {
         }
 
         try {
-            Database database = DBSystem.getActiveDatabaseByName(dbName);
+            Database database = dbSystem.getActiveDatabaseByName(dbName);
             runClearTask(sender, database);
         } catch (DBInitException e) {
             sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
@@ -74,7 +80,7 @@ public class ManageClearCommand extends CommandNode {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         });
     }

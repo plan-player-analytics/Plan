@@ -32,7 +32,7 @@ public class NetworkPage implements Page {
     @Override
     public String toHtml() throws ParseException {
         try {
-            networkContainer.putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties()::getOnlinePlayers);
+            networkContainer.putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties_Old()::getOnlinePlayers);
 
             PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
             placeholderReplacer.addAllPlaceholdersFrom(networkContainer,

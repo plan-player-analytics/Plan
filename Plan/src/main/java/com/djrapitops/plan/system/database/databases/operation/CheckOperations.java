@@ -13,7 +13,7 @@ public interface CheckOperations {
     boolean doesWebUserExists(String username);
 
     default boolean isPlayerRegisteredOnThisServer(UUID player) {
-        return isPlayerRegistered(player, ServerInfo.getServerUUID());
+        return isPlayerRegistered(player, ServerInfo.getServerUUID_Old());
     }
 
     boolean isServerInDatabase(UUID serverUUID);

@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.listeners.bukkit.PlayerOnlineListener;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -12,6 +11,7 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -24,10 +24,11 @@ public class ManageDisableCommand extends CommandNode {
 
     private final Locale locale;
 
-    public ManageDisableCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageDisableCommand(Locale locale) {
         super("disable", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
 
         setArguments("<feature>");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_DISABLE));

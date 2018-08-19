@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
@@ -10,12 +9,14 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -29,11 +30,16 @@ import java.util.Arrays;
 public class ManageMoveCommand extends CommandNode {
 
     private final Locale locale;
+    private final DBSystem dbSystem;
+    private final ErrorHandler errorHandler;
 
-    public ManageMoveCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageMoveCommand(Locale locale, DBSystem dbSystem, ErrorHandler errorHandler) {
         super("move", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.dbSystem = dbSystem;
+        this.errorHandler = errorHandler;
 
         setArguments("<fromDB>", "<toDB>", "[-a]");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_MOVE));
@@ -64,8 +70,8 @@ public class ManageMoveCommand extends CommandNode {
         }
 
         try {
-            final Database fromDatabase = DBSystem.getActiveDatabaseByName(fromDB);
-            final Database toDatabase = DBSystem.getActiveDatabaseByName(toDB);
+            final Database fromDatabase = dbSystem.getActiveDatabaseByName(fromDB);
+            final Database toDatabase = dbSystem.getActiveDatabaseByName(toDB);
 
             runMoveTask(fromDatabase, toDatabase, sender);
         } catch (Exception e) {
@@ -82,12 +88,12 @@ public class ManageMoveCommand extends CommandNode {
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
 
-                boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(Database.getActive().getConfigName());
+                boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(dbSystem.getActiveDatabase().getConfigName());
                 if (movingToCurrentDB) {
                     sender.sendMessage(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getConfigName()));
                 }
             } catch (Exception e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });

@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -12,11 +11,13 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,11 +31,18 @@ import java.util.UUID;
 public class ManageUninstalledCommand extends CommandNode {
 
     private final Locale locale;
+    private final Database database;
+    private final ErrorHandler errorHandler;
+    private final ConnectionSystem connectionSystem;
 
-    public ManageUninstalledCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageUninstalledCommand(Locale locale, Database database, ConnectionSystem connectionSystem, ErrorHandler errorHandler) {
         super("uninstalled", Permissions.MANAGE.getPermission(), CommandType.ALL_WITH_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.database = database;
+        this.connectionSystem = connectionSystem;
+        this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_UNINSTALLED));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_UNINSTALLED));
@@ -54,23 +62,23 @@ public class ManageUninstalledCommand extends CommandNode {
                 }
                 Server server = serverOptional.get();
                 UUID serverUUID = server.getUuid();
-                if (ServerInfo.getServerUUID().equals(serverUUID)) {
+                if (ServerInfo.getServerUUID_Old().equals(serverUUID)) {
                     sender.sendMessage(locale.getString(ManageLang.UNINSTALLING_SAME_SERVER));
                     return;
                 }
 
-                Database.getActive().save().setAsUninstalled(serverUUID);
+                database.save().setAsUninstalled(serverUUID);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         });
     }
 
     private Optional<Server> getServer(String[] args) {
-        if (args.length >= 1 && ConnectionSystem.getInstance().isServerAvailable()) {
-            Map<UUID, Server> bukkitServers = Database.getActive().fetch().getBukkitServers();
+        if (args.length >= 1 && connectionSystem.isServerAvailable()) {
+            Map<UUID, Server> bukkitServers = database.fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);
             for (Map.Entry<UUID, Server> entry : bukkitServers.entrySet()) {
                 Server server = entry.getValue();

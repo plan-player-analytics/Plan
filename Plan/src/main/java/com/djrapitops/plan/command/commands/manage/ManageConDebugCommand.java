@@ -1,9 +1,8 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.CheckConnectionRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -14,6 +13,7 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.command.ColorScheme;
@@ -21,6 +21,7 @@ import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,17 +34,26 @@ import java.util.UUID;
 public class ManageConDebugCommand extends CommandNode {
 
     private final Locale locale;
+    private final ConnectionSystem connectionSystem;
+    private final WebServer webServer;
+    private final Database database;
+    private final ColorScheme colorScheme;
 
-    public ManageConDebugCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageConDebugCommand(ColorScheme colorScheme, Locale locale, ConnectionSystem connectionSystem, WebServer webServer, Database database) {
         super("con", Permissions.MANAGE.getPermission(), CommandType.ALL);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.colorScheme = colorScheme;
+        this.locale = locale;
+        this.connectionSystem = connectionSystem;
+        this.webServer = webServer;
+        this.database = database;
 
         setShortHelp(locale.getString(Check.isBungeeAvailable() ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
     }
 
-    public static boolean testServer(ISender sender, String accessAddress, Server server, Locale locale) {
+    private void testServer(ISender sender, String accessAddress, Server server, Locale locale) {
         String address = server.getWebAddress().toLowerCase();
         boolean usingHttps = address.startsWith("https");
         boolean local = address.contains("localhost")
@@ -52,11 +62,8 @@ public class ManageConDebugCommand extends CommandNode {
                 || address.contains("127.0.0.1");
 
         try {
-
-            InfoSystem.getInstance().getConnectionSystem().sendInfoRequest(new CheckConnectionRequest(accessAddress), server);
+            connectionSystem.sendInfoRequest(new CheckConnectionRequest(accessAddress), server);
             sender.sendMessage(getMsgFor(address, usingHttps, local, true, true));
-            return true;
-
         } catch (ForbiddenException | BadRequestException | InternalErrorException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
             sender.sendMessage(locale.getString(ManageLang.CON_EXCEPTION, e.getClass().getSimpleName()));
@@ -78,7 +85,6 @@ public class ManageConDebugCommand extends CommandNode {
             sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
             sender.sendMessage(locale.getString(ManageLang.CON_EXCEPTION, e.getClass().getSimpleName()));
         }
-        return false;
     }
 
     @Override
@@ -92,14 +98,14 @@ public class ManageConDebugCommand extends CommandNode {
     }
 
     private void testServers(ISender sender) {
-        List<Server> servers = Database.getActive().fetch().getServers();
+        List<Server> servers = database.fetch().getServers();
 
         if (servers.isEmpty()) {
             sender.sendMessage(locale.getString(ManageLang.CON_NO_SERVERS));
         }
 
-        String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
-        UUID thisServer = ServerInfo.getServerUUID();
+        String accessAddress = webServer.getAccessAddress();
+        UUID thisServer = ServerInfo.getServerUUID_Old();
         for (Server server : servers) {
             if (thisServer.equals(server.getUuid())) {
                 continue;
@@ -108,10 +114,9 @@ public class ManageConDebugCommand extends CommandNode {
         }
     }
 
-    private static String getMsgFor(String address, boolean usingHttps, boolean local, boolean successTo, boolean successFrom) {
-        ColorScheme cs = PlanPlugin.getInstance().getColorScheme();
-        String tCol = cs.getTertiaryColor();
-        String sCol = cs.getSecondaryColor();
+    private String getMsgFor(String address, boolean usingHttps, boolean local, boolean successTo, boolean successFrom) {
+        String tCol = colorScheme.getTertiaryColor();
+        String sCol = colorScheme.getSecondaryColor();
         return tCol + address + sCol + ": "
                 + (usingHttps ? "HTTPS" : "HTTP") + " : "
                 + (local ? "Local" : "External") + " : "

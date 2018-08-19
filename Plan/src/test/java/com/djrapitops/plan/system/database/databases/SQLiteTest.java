@@ -39,7 +39,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import utilities.*;
 import utilities.mocks.SystemMockUtil;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.reflect.Field;
@@ -98,7 +97,7 @@ public class SQLiteTest {
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));
-        assertEquals(ServerInfo.getServerUUID(), TestConstants.SERVER_UUID);
+        assertEquals(ServerInfo.getServerUUID_Old(), TestConstants.SERVER_UUID);
         System.out.println("--     Clear Complete     --\n");
     }
 
@@ -403,7 +402,7 @@ public class SQLiteTest {
             System.out.println(" " + entry.getValue());
         }
 
-        List<Session> savedSessions = sessions.get(ServerInfo.getServerUUID());
+        List<Session> savedSessions = sessions.get(ServerInfo.getServerUUID_Old());
 
         assertNotNull(savedSessions);
         assertEquals(1, savedSessions.size());
@@ -435,7 +434,7 @@ public class SQLiteTest {
         assertEquals(playerUUID, userInfo.getUuid());
         assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
         assertEquals(123456789L, userInfo.getRegistered());
-        assertEquals(1, userInfoTable.getServerUserCount(ServerInfo.getServerUUID()));
+        assertEquals(1, userInfoTable.getServerUserCount(ServerInfo.getServerUUID_Old()));
         assertEquals("Waiting for Update..", userInfo.getName());
         assertFalse(userInfo.isBanned());
         assertFalse(userInfo.isOperator());
@@ -566,7 +565,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testRemovalEverything() throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void testRemovalEverything() throws NoSuchAlgorithmException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
@@ -747,7 +746,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testBackupAndRestore() throws DBException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void testBackupAndRestore() throws DBException, NoSuchAlgorithmException {
         System.out.println("- Creating Backup Database -");
         SQLiteDB backup = new SQLiteDB("debug-backup" + System.currentTimeMillis(), Locale::new);
         backup.init();
@@ -810,7 +809,7 @@ public class SQLiteTest {
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
         sessionMap.put(playerUUID, sessions);
-        map.put(ServerInfo.getServerUUID(), sessionMap);
+        map.put(ServerInfo.getServerUUID_Old(), sessionMap);
 
         worldTimesTable.saveWorldTimes(map);
 
@@ -833,7 +832,7 @@ public class SQLiteTest {
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
         sessionMap.put(playerUUID, sessions);
-        UUID serverUUID = ServerInfo.getServerUUID();
+        UUID serverUUID = ServerInfo.getServerUUID_Old();
         map.put(serverUUID, sessionMap);
 
         sessionsTable.insertSessions(map, true);
@@ -885,7 +884,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testWorldTableGetWorldNamesNoException() throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void testWorldTableGetWorldNamesNoException() throws NoSuchAlgorithmException {
         saveAllData(db);
         Set<String> worldNames = db.getWorldTable().getWorldNames(TestConstants.SERVER_UUID);
         assertEquals(new HashSet<>(worlds), worldNames);
@@ -931,7 +930,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testNewContainerForPlayer() throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void testNewContainerForPlayer() throws NoSuchAlgorithmException {
         saveAllData(db);
 
         long start = System.nanoTime();
@@ -986,7 +985,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void playerContainerSupportsAllPlayerKeys() throws UnsupportedEncodingException, NoSuchAlgorithmException, IllegalAccessException {
+    public void playerContainerSupportsAllPlayerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
         saveAllData(db);
 
         PlayerContainer playerContainer = db.fetch().getPlayerContainer(TestConstants.PLAYER_ONE_UUID);
@@ -1008,7 +1007,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void serverContainerSupportsAllServerKeys() throws UnsupportedEncodingException, NoSuchAlgorithmException, IllegalAccessException {
+    public void serverContainerSupportsAllServerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
         saveAllData(db);
 
         ServerContainer serverContainer = db.fetch().getServerContainer(TestConstants.SERVER_UUID);
@@ -1028,7 +1027,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void analysisContainerSupportsAllAnalysisKeys() throws IllegalAccessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void analysisContainerSupportsAllAnalysisKeys() throws IllegalAccessException, NoSuchAlgorithmException {
         serverContainerSupportsAllServerKeys();
         AnalysisContainer analysisContainer = new AnalysisContainer(db.fetch().getServerContainer(TestConstants.SERVER_UUID));
 
@@ -1047,7 +1046,7 @@ public class SQLiteTest {
     }
 
     @Test
-    public void networkContainerSupportsAllNetworkKeys() throws IllegalAccessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void networkContainerSupportsAllNetworkKeys() throws IllegalAccessException, NoSuchAlgorithmException {
         serverContainerSupportsAllServerKeys();
         NetworkContainer networkContainer = db.fetch().getNetworkContainer();
 

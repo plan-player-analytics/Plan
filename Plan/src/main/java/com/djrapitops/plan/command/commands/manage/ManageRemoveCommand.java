@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
@@ -12,12 +11,14 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -30,11 +31,16 @@ import java.util.UUID;
 public class ManageRemoveCommand extends CommandNode {
 
     private final Locale locale;
+    private final Database database;
+    private final ErrorHandler errorHandler;
 
-    public ManageRemoveCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageRemoveCommand(Locale locale, Database database, ErrorHandler errorHandler) {
         super("remove|delete", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.database = database;
+        this.errorHandler = errorHandler;
 
         setArguments("<player>", "[-a]");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_REMOVE));
@@ -66,7 +72,6 @@ public class ManageRemoveCommand extends CommandNode {
                     return;
                 }
 
-                Database database = Database.getActive();
                 if (!database.check().isPlayerRegistered(uuid)) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                     return;
@@ -83,7 +88,7 @@ public class ManageRemoveCommand extends CommandNode {
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
         });

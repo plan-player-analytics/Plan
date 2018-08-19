@@ -123,7 +123,7 @@ public class WebServer implements SubSystem {
     private boolean startHttpsServer() {
         String keyStorePath = Settings.WEBSERVER_CERTIFICATE_PATH.toString();
         if (!Paths.get(keyStorePath).isAbsolute()) {
-            keyStorePath = FileSystem.getDataFolder() + File.separator + keyStorePath;
+            keyStorePath = FileSystem.getDataFolder_Old() + File.separator + keyStorePath;
         }
 
         char[] storepass = Settings.WEBSERVER_CERTIFICATE_STOREPASS.toString().toCharArray();

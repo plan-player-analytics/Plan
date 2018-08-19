@@ -15,6 +15,8 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -29,36 +31,53 @@ public class FileSystem implements SubSystem {
     private final File dataFolder;
     private File configFile;
 
-    @Deprecated
-    public FileSystem(PlanPlugin plugin) {
-        this(plugin.getDataFolder());
-    }
-
-    public FileSystem(File dataFolder) {
+    @Inject
+    public FileSystem(@Named("dataFolder") File dataFolder) {
         this.dataFolder = dataFolder;
         configFile = new File(dataFolder, "config.yml");
     }
 
+    @Deprecated
     public static FileSystem getInstance() {
         FileSystem fileSystem = PlanSystem.getInstance().getFileSystem();
         Verify.nullCheck(fileSystem, () -> new IllegalStateException("File system was not initialized."));
         return fileSystem;
     }
 
-    public static File getDataFolder() {
+    @Deprecated
+    public static File getDataFolder_Old() {
         return getInstance().dataFolder;
     }
 
-    public static File getConfigFile() {
+    @Deprecated
+    public static File getConfigFile_Old() {
         return getInstance().configFile;
     }
 
-    public static File getLocaleFile() {
-        return new File(getInstance().dataFolder, "locale.txt");
+    @Deprecated
+    public static File getLocaleFile_Old() {
+        return getInstance().getLocaleFile();
     }
 
+    @Deprecated
     public static List<String> readFromResource(String fileName) throws IOException {
         return FileUtil.lines(PlanPlugin.getInstance(), fileName);
+    }
+
+    public File getDataFolder() {
+        return dataFolder;
+    }
+
+    public File getConfigFile() {
+        return configFile;
+    }
+
+    public File getLocaleFile() {
+        return getFileFromPluginFolder("locale.txt");
+    }
+
+    public File getFileFromPluginFolder(String name) {
+        return new File(dataFolder, name);
     }
 
     @Override

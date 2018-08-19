@@ -56,7 +56,7 @@ public class PingInsertProcessor implements CriticalRunnable {
 
         int maxValue = max.getAsInt();
 
-        Ping ping = new Ping(lastDate, ServerInfo.getServerUUID(),
+        Ping ping = new Ping(lastDate, ServerInfo.getServerUUID_Old(),
                 minValue,
                 maxValue,
                 avgValue);

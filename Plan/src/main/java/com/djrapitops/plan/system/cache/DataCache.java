@@ -1,12 +1,12 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -24,22 +24,22 @@ import java.util.*;
  */
 public class DataCache extends SessionCache implements SubSystem {
 
-    private Database db;
+    private Database database;
     private final Map<UUID, String> playerNames;
     private final Map<String, UUID> uuids;
     private final Map<UUID, String> displayNames;
 
-    public DataCache(PlanSystem system) {
-        super(system);
-
+    @Inject
+    public DataCache(Database database) {
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
         uuids = new HashMap<>();
+
+        this.database = database;
     }
 
     @Override
     public void enable() {
-        db = system.getDatabaseSystem().getActiveDatabase();
     }
 
     @Override
@@ -87,7 +87,7 @@ public class DataCache extends SessionCache implements SubSystem {
         String name = playerNames.get(uuid);
         if (name == null) {
             try {
-                name = db.fetch().getPlayerName(uuid);
+                name = database.fetch().getPlayerName(uuid);
                 playerNames.put(uuid, name);
             } catch (DBOpException e) {
                 Log.toLog(this.getClass(), e);
@@ -110,7 +110,7 @@ public class DataCache extends SessionCache implements SubSystem {
         if (cached == null) {
             List<String> nicknames;
             try {
-                nicknames = db.fetch().getNicknames(uuid);
+                nicknames = database.fetch().getNicknames(uuid);
                 if (!nicknames.isEmpty()) {
                     return nicknames.get(nicknames.size() - 1);
                 }

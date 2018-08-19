@@ -93,7 +93,7 @@ public abstract class Importer {
             return;
         }
 
-        UUID uuid = ServerInfo.getServerUUID();
+        UUID uuid = ServerInfo.getServerUUID_Old();
         Database db = Database.getActive();
 
         ExecutorService service = Executors.newCachedThreadPool();
@@ -137,7 +137,7 @@ public abstract class Importer {
         UserImportRefiner userImportRefiner = new UserImportRefiner(Plan.getInstance(), userImportData);
         userImportData = userImportRefiner.refineData();
 
-        UUID serverUUID = ServerInfo.getServerUUID();
+        UUID serverUUID = ServerInfo.getServerUUID_Old();
         Database db = Database.getActive();
 
         Set<UUID> existingUUIDs = db.fetch().getSavedUUIDs();
@@ -216,7 +216,7 @@ public abstract class Importer {
         int mobKills = userImportData.getMobKills();
         int deaths = userImportData.getDeaths();
 
-        Session session = new Session(0, userImportData.getUuid(), ServerInfo.getServerUUID(), 0L, 0L, mobKills, deaths, 0);
+        Session session = new Session(0, userImportData.getUuid(), ServerInfo.getServerUUID_Old(), 0L, 0L, mobKills, deaths, 0);
 
         session.setPlayerKills(userImportData.getKills());
         session.setWorldTimes(new WorldTimes(userImportData.getWorldTimes()));

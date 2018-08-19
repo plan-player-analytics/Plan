@@ -73,7 +73,7 @@ public class PingTable extends UserIDTable {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setString(2, ServerInfo.getServerUUID().toString());
+                statement.setString(2, ServerInfo.getServerUUID_Old().toString());
                 statement.setLong(3, ping.getDate());
                 statement.setInt(4, ping.getMin());
                 statement.setInt(5, ping.getMax());

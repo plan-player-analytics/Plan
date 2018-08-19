@@ -6,12 +6,15 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
+
+import javax.inject.Inject;
 
 /**
  * This SubCommand is used to reload the plugin.
@@ -23,12 +26,17 @@ public class ReloadCommand extends CommandNode {
 
     private final PlanPlugin plugin;
     private final Locale locale;
+    private final ErrorHandler errorHandler;
+    private final RunnableFactory runnableFactory;
 
-    public ReloadCommand(PlanPlugin plugin) {
+    @Inject
+    public ReloadCommand(PlanPlugin plugin, Locale locale, RunnableFactory runnableFactory, ErrorHandler errorHandler) {
         super("reload", Permissions.RELOAD.getPermission(), CommandType.CONSOLE);
-        this.plugin = plugin;
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.plugin = plugin;
+        this.locale = locale;
+        this.runnableFactory = runnableFactory;
+        this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.RELOAD));
         setInDepthHelp(locale.getArray(DeepHelpLang.RELOAD));
@@ -36,13 +44,13 @@ public class ReloadCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        RunnableFactory.createNew("Reload task", new AbsRunnable() {
+        runnableFactory.create("Reload task", new AbsRunnable() {
             @Override
             public void run() {
                 try {
                     plugin.reloadPlugin(true);
                 } catch (Exception e) {
-                    Log.toLog(this.getClass(), e);
+                    errorHandler.log(L.CRITICAL, this.getClass(), e);
                     sender.sendMessage(locale.getString(CommandLang.RELOAD_FAILED));
                 }
                 sender.sendMessage(locale.getString(CommandLang.RELOAD_COMPLETE));

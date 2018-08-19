@@ -6,24 +6,23 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.ShutdownHook;
-import com.djrapitops.plan.api.ServerAPI;
+import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.database.ServerDBSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.info.ServerInfoSystem;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.SpongeServerInfo;
 import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.PlanErrorManager;
-import com.djrapitops.plan.system.settings.config.SpongeConfigSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.utility.log.Log;
 
+import javax.inject.Inject;
 import java.util.function.Supplier;
 
 /**
@@ -33,26 +32,34 @@ import java.util.function.Supplier;
  */
 public class SpongeSystem extends PlanSystem implements ServerSystem {
 
-    public SpongeSystem(PlanSponge plugin) {
+    @Inject
+    public SpongeSystem(PlanSponge plugin,
+                        VersionCheckSystem versionCheckSystem,
+                        FileSystem fileSystem,
+                        ConfigSystem serverConfigSystem,
+                        InfoSystem serverInfoSystem,
+                        HookHandler hookHandler,
+                        PlanAPI planAPI,
+                        ExportSystem exportSystem,
+                        DBSystem serverDBSystem
+    ) {
         setTestSystem(this);
 
         Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
 
-        Log.setErrorManager(new PlanErrorManager());
-
-        versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
-        fileSystem = new FileSystem(plugin);
-        configSystem = new SpongeConfigSystem();
-        exportSystem = new ExportSystem(plugin);
-        databaseSystem = new ServerDBSystem(localeSupplier);
+        this.versionCheckSystem = versionCheckSystem;
+        this.fileSystem = fileSystem;
+        this.configSystem = serverConfigSystem;
+        this.exportSystem = exportSystem;
+        this.databaseSystem = serverDBSystem;
         listenerSystem = new SpongeListenerSystem(plugin);
         taskSystem = new SpongeTaskSystem(plugin);
 
-        infoSystem = new ServerInfoSystem(localeSupplier);
+        infoSystem = serverInfoSystem;
         serverInfo = new SpongeServerInfo();
 
-        hookHandler = new HookHandler();
-        planAPI = new ServerAPI(this);
+        this.hookHandler = hookHandler;
+        this.planAPI = planAPI;
 
         StaticHolder.saveInstance(ShutdownHook.class, plugin.getClass());
         new ShutdownHook().register();

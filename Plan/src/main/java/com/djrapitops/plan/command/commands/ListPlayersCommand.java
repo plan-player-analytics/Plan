@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -12,6 +11,8 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 
+import javax.inject.Inject;
+
 /**
  * Command used to display url to the player list page.
  *
@@ -21,11 +22,14 @@ import com.djrapitops.plugin.command.ISender;
 public class ListPlayersCommand extends CommandNode {
 
     private final Locale locale;
+    private final ConnectionSystem connectionSystem;
 
-    public ListPlayersCommand(PlanPlugin plugin) {
+    @Inject
+    public ListPlayersCommand(Locale locale, ConnectionSystem connectionSystem) {
         super("players|pl|playerlist|list", Permissions.INSPECT_OTHER.getPermission(), CommandType.CONSOLE);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.connectionSystem = connectionSystem;
 
         setShortHelp(locale.getString(CmdHelpLang.PLAYERS));
         setInDepthHelp(locale.getArray(DeepHelpLang.PLAYERS));
@@ -40,7 +44,7 @@ public class ListPlayersCommand extends CommandNode {
         sender.sendMessage(locale.getString(CommandLang.HEADER_PLAYERS));
 
         // Link
-        String url = ConnectionSystem.getAddress() + "/players/";
+        String url = connectionSystem.getMainAddress() + "/players/";
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {

@@ -41,7 +41,7 @@ public class BungeeInfoSystem extends InfoSystem {
 
     @Override
     public void updateNetworkPage() {
-        ResponseCache.cacheResponse(PageId.SERVER.of(ServerInfo.getServerUUID()), () -> {
+        ResponseCache.cacheResponse(PageId.SERVER.of(ServerInfo.getServerUUID_Old()), () -> {
             try {
                 return new NetworkPageResponse();
             } catch (ParseException e) {

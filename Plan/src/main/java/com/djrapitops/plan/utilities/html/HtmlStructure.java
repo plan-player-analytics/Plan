@@ -64,12 +64,12 @@ public class HtmlStructure {
 
     // TODO Rework into NetworkPage generation
     public static String createServerContainer() {
-        ServerProperties properties = ServerInfo.getServerProperties();
+        ServerProperties properties = ServerInfo.getServerProperties_Old();
         int maxPlayers = properties.getMaxPlayers();
         int online = properties.getOnlinePlayers();
         String refresh = FormatUtils.formatTimeStampClock(System.currentTimeMillis());
 
-        Server server = ServerInfo.getServer();
+        Server server = ServerInfo.getServer_Old();
 
         String serverName = server.getName();
         String serverType = properties.getVersion();

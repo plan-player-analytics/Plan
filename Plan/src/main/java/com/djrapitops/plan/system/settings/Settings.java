@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.config.Setting;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.config.Config;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author Rsl1122
  * @since 2.3.2
  */
-public enum Settings {
+public enum Settings implements Setting {
     // Boolean
     BUNGEE_COPY_CONFIG("Plugin.Bungee-Override.CopyBungeeConfig"),
     BUNGEE_OVERRIDE_STANDALONE_MODE("Plugin.Bungee-Override.StandaloneMode"),
@@ -37,7 +38,6 @@ public enum Settings {
     DISPLAY_PLAYER_IPS("Customization.Display.PlayerIPs"),
     DISPLAY_GAPS_IN_GRAPH_DATA("Customization.Display.GapsInGraphData"),
     DATA_GEOLOCATIONS("Data.Geolocations"),
-    ALLOW_UPDATE("Plugin.Allow-Update-Command"),
     NOTIFY_ABOUT_DEV_RELEASES("Plugin.Notify-About-DEV-Releases"),
 
     // Integer
@@ -117,6 +117,7 @@ public enum Settings {
         this.configPath = path;
     }
 
+    @Deprecated
     public static ServerSpecificSettings serverSpecific() {
         if (!Check.isBungeeAvailable()) {
             throw new IllegalStateException("Not supposed to call this method on Bukkit");
@@ -125,22 +126,7 @@ public enum Settings {
         return serverSpecificSettings;
     }
 
-    /**
-     * If the settings is a boolean, this method should be used.
-     *
-     * @return Boolean value of the config setting, false if not boolean.
-     */
-    public boolean isTrue() {
-        if (tempValue != null) {
-            return (Boolean) tempValue;
-        }
-        return getConfig().getBoolean(configPath);
-    }
-
-    public boolean isFalse() {
-        return !isTrue();
-    }
-
+    @Deprecated
     public static void save() {
         try {
             ConfigSystem.getConfig_Old().save();
@@ -150,11 +136,30 @@ public enum Settings {
     }
 
     /**
+     * If the settings is a boolean, this method should be used.
+     *
+     * @return Boolean value of the config setting, false if not boolean.
+     */
+    @Deprecated
+    public boolean isTrue() {
+        if (tempValue != null) {
+            return (Boolean) tempValue;
+        }
+        return getConfig().getBoolean(configPath);
+    }
+
+    @Deprecated
+    public boolean isFalse() {
+        return !isTrue();
+    }
+
+    /**
      * If the settings is a String, this method should be used.
      *
      * @return String value of the config setting.
      */
     @Override
+    @Deprecated
     public String toString() {
         if (tempValue != null) {
             return String.valueOf(tempValue);
@@ -167,6 +172,7 @@ public enum Settings {
      *
      * @return Integer value of the config setting
      */
+    @Deprecated
     public int getNumber() {
         if (tempValue != null) {
             return (Integer) tempValue;

@@ -37,22 +37,27 @@ public abstract class DBSystem implements SubSystem {
         databases = new HashSet<>();
     }
 
+    @Deprecated
     public static DBSystem getInstance() {
         DBSystem dbSystem = PlanSystem.getInstance().getDatabaseSystem();
         Verify.nullCheck(dbSystem, () -> new IllegalStateException("Database system was not initialized."));
         return dbSystem;
     }
 
-    public static Database getActiveDatabaseByName(String dbName) throws DBInitException {
-        DBSystem system = getInstance();
-        for (Database database : system.getDatabases()) {
+    @Deprecated
+    public static Database getActiveDatabaseByName_Old(String dbName) throws DBInitException {
+        return getInstance().getActiveDatabaseByName(dbName);
+    }
+
+    public Database getActiveDatabaseByName(String dbName) throws DBInitException {
+        for (Database database : getDatabases()) {
             String dbConfigName = database.getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
                 database.init();
                 return database;
             }
         }
-        throw new DBInitException(system.locale.get().getString(PluginLang.ENABLE_FAIL_WRONG_DB, dbName));
+        throw new DBInitException(locale.get().getString(PluginLang.ENABLE_FAIL_WRONG_DB, dbName));
     }
 
     protected abstract void initDatabase() throws DBInitException;

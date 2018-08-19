@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.system.PlanSystem;
+import javax.inject.Inject;
 
 /**
  * CacheSystem for Bungee.
@@ -11,8 +11,9 @@ import com.djrapitops.plan.system.PlanSystem;
  */
 public class BungeeCacheSystem extends CacheSystem {
 
-    public BungeeCacheSystem(PlanSystem system) {
-        super(new BungeeDataCache(system), system);
+    @Inject
+    public BungeeCacheSystem(BungeeDataCache dataCache, GeolocationCache geolocationCache) {
+        super(dataCache, geolocationCache);
     }
 
 }

@@ -180,7 +180,7 @@ public class DebugPage implements Page {
 
     private void appendServerInformation(StringBuilder content) {
         PlanPlugin plugin = PlanPlugin.getInstance();
-        ServerProperties variable = ServerInfo.getServerProperties();
+        ServerProperties variable = ServerInfo.getServerProperties_Old();
 
         content.append("<pre>### Server Information<br>")
                 .append("**Plan Version:** ").append(plugin.getVersion()).append("<br>");

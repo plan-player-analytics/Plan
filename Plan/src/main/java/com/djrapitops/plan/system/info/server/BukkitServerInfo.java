@@ -43,7 +43,7 @@ public class BukkitServerInfo extends ServerInfo {
         database = Database.getActive();
 
         try {
-            serverInfoFile = new ServerInfoFile(FileSystem.getDataFolder());
+            serverInfoFile = new ServerInfoFile(FileSystem.getDataFolder_Old());
         } catch (IOException e) {
             throw new EnableException("Failed to read ServerInfoFile.yml", e);
         }
@@ -87,7 +87,7 @@ public class BukkitServerInfo extends ServerInfo {
     private Server registerServer(UUID serverUUID) throws IOException {
         String webAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
         String name = Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_");
-        int maxPlayers = ServerInfo.getServerProperties().getMaxPlayers();
+        int maxPlayers = ServerInfo.getServerProperties_Old().getMaxPlayers();
 
         Server server = new Server(-1, serverUUID, name, webAddress, maxPlayers);
         database.save().serverInfoForThisServer(server);

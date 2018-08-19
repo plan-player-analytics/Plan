@@ -11,7 +11,6 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.IOException;
@@ -23,13 +22,14 @@ import java.io.IOException;
  */
 public abstract class ConfigSystem implements SubSystem {
 
-    protected Config config;
+    protected PlanConfig config;
     protected final Theme theme;
 
     public ConfigSystem() {
         theme = new Theme();
     }
 
+    @Deprecated
     public static ConfigSystem getInstance() {
         ConfigSystem configSystem = PlanSystem.getInstance().getConfigSystem();
         Verify.nullCheck(configSystem, () -> new IllegalStateException("Config System has not been initialized."));
@@ -37,11 +37,11 @@ public abstract class ConfigSystem implements SubSystem {
     }
 
     @Deprecated
-    public static Config getConfig_Old() {
+    public static PlanConfig getConfig_Old() {
         return getInstance().config;
     }
 
-    public Config getConfig() {
+    public PlanConfig getConfig() {
         return config;
     }
 
@@ -49,13 +49,14 @@ public abstract class ConfigSystem implements SubSystem {
         return theme;
     }
 
+    @Deprecated
     public Theme getThemeSystem() {
         return getInstance().theme;
     }
 
     @Override
     public void enable() throws EnableException {
-        config = new Config(FileSystem.getConfigFile());
+        config = new PlanConfig(FileSystem.getConfigFile_Old());
         try {
             copyDefaults();
             config.save();

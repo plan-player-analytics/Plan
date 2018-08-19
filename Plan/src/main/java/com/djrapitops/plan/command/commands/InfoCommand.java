@@ -13,6 +13,8 @@ import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 
+import javax.inject.Inject;
+
 /**
  * This SubCommand is used to view the version and the database type in use.
  *
@@ -23,14 +25,19 @@ public class InfoCommand extends CommandNode {
 
     private final PlanPlugin plugin;
     private final Locale locale;
+    private final ConnectionSystem connectionSystem;
+    private final VersionCheckSystem versionCheckSystem;
 
-    public InfoCommand(PlanPlugin plugin) {
+    @Inject
+    public InfoCommand(PlanPlugin plugin, Locale locale, ConnectionSystem connectionSystem, VersionCheckSystem versionCheckSystem) {
         super("info", Permissions.INFO.getPermission(), CommandType.CONSOLE);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.plugin = plugin;
+        this.locale = locale;
+        this.connectionSystem = connectionSystem;
+        this.versionCheckSystem = versionCheckSystem;
 
         setShortHelp(locale.get(CmdHelpLang.INFO).toString());
-        this.plugin = plugin;
     }
 
     @Override
@@ -38,8 +45,8 @@ public class InfoCommand extends CommandNode {
         String yes = locale.getString(GenericLang.YES);
         String no = locale.getString(GenericLang.NO);
 
-        String updateAvailable = VersionCheckSystem.isNewVersionAvailable() ? yes : no;
-        String connectedToBungee = ConnectionSystem.getInstance().isServerAvailable() ? yes : no;
+        String updateAvailable = versionCheckSystem.isNewVersionAvailable() ? yes : no;
+        String connectedToBungee = connectionSystem.isServerAvailable() ? yes : no;
         String[] messages = {
                 locale.getString(CommandLang.HEADER_INFO),
                 "",

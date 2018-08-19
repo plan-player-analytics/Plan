@@ -24,7 +24,7 @@ public class MultiBanCombiner {
     }
 
     public void combine(Set<UUID> banned) {
-        combine(Collections.singletonMap(ServerInfo.getServerUUID(), banned));
+        combine(Collections.singletonMap(ServerInfo.getServerUUID_Old(), banned));
     }
 
     public void combine(Map<UUID, Set<UUID>> perServerBanned) {

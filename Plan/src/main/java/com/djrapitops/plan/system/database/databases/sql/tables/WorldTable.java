@@ -73,7 +73,7 @@ public class WorldTable extends Table {
     }
 
     public List<String> getWorlds() {
-        return getWorlds(ServerInfo.getServerUUID());
+        return getWorlds(ServerInfo.getServerUUID_Old());
     }
 
     public List<String> getWorlds(UUID serverUUID) {
@@ -100,7 +100,7 @@ public class WorldTable extends Table {
     }
 
     public void saveWorlds(Collection<String> worlds) {
-        saveWorlds(worlds, ServerInfo.getServerUUID());
+        saveWorlds(worlds, ServerInfo.getServerUUID_Old());
     }
 
     /**

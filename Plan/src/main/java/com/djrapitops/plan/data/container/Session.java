@@ -56,7 +56,7 @@ public class Session extends DataContainer implements DateHolder {
         putSupplier(SessionKeys.LENGTH, () ->
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
         putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
-        putSupplier(SessionKeys.SERVER_UUID, ServerInfo::getServerUUID);
+        putSupplier(SessionKeys.SERVER_UUID, ServerInfo::getServerUUID_Old);
 
         putSupplier(SessionKeys.LONGEST_WORLD_PLAYED, this::getLongestWorldPlayed);
     }

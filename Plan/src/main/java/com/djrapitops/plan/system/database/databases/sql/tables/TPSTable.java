@@ -105,7 +105,7 @@ public class TPSTable extends Table {
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() {
-        return getTPSData(ServerInfo.getServerUUID());
+        return getTPSData(ServerInfo.getServerUUID_Old());
     }
 
     /**
@@ -138,7 +138,7 @@ public class TPSTable extends Table {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setString(1, ServerInfo.getServerUUID_Old().toString());
                 statement.setLong(2, tps.getDate());
                 statement.setDouble(3, tps.getTicksPerSecond());
                 statement.setInt(4, tps.getPlayers());
@@ -194,7 +194,7 @@ public class TPSTable extends Table {
     }
 
     public Optional<TPS> getPeakPlayerCount(long afterDate) {
-        return getPeakPlayerCount(ServerInfo.getServerUUID(), afterDate);
+        return getPeakPlayerCount(ServerInfo.getServerUUID_Old(), afterDate);
     }
 
     public Map<UUID, List<TPS>> getAllTPS() {

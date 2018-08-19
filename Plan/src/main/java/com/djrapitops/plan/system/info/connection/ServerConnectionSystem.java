@@ -99,7 +99,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     @Override
     public String getMainAddress() {
-        return isServerAvailable() ? mainServer.getWebAddress() : ServerInfo.getServer().getWebAddress();
+        return isServerAvailable() ? mainServer.getWebAddress() : ServerInfo.getServer_Old().getWebAddress();
 
     }
 
@@ -110,7 +110,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
         boolean usingBungeeWebServer = ConnectionSystem.getInstance().isServerAvailable();
         boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
 
-        if (!usingAlternativeIP && ServerInfo.getServerProperties().getIp().isEmpty()) {
+        if (!usingAlternativeIP && ServerInfo.getServerProperties_Old().getIp().isEmpty()) {
             Log.infoColor("§e" + locale.get().getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
         }
         if (usingBungeeWebServer && usingAlternativeIP) {

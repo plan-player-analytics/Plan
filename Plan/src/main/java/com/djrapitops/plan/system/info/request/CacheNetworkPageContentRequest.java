@@ -31,7 +31,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
 
     public CacheNetworkPageContentRequest(UUID serverUUID, String html) {
         Verify.nullCheck(serverUUID, html);
-        variables.put("serverName", ServerInfo.getServerName());
+        variables.put("serverName", ServerInfo.getServerName_Old());
         variables.put("html", Base64Util.encode(html));
         this.html = html;
     }
@@ -52,7 +52,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
         NetworkPageContent serversTab = getNetworkPageContent();
         serversTab.addElement(serverName, Base64Util.decode(html));
 
-        ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
+        ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID_Old()));
 
         return DefaultResponses.SUCCESS.get();
     }
@@ -63,7 +63,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
 
     @Override
     public void runLocally() {
-        getNetworkPageContent().addElement(ServerInfo.getServerName(), html);
+        getNetworkPageContent().addElement(ServerInfo.getServerName_Old(), html);
     }
 
     public static CacheNetworkPageContentRequest createHandler() {

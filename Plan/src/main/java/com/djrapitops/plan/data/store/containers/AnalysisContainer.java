@@ -105,7 +105,7 @@ public class AnalysisContainer extends DataContainer {
                 getUnsafe(serverNames).getOrDefault(serverContainer.getUnsafe(ServerKeys.SERVER_UUID), "Plan")
         );
 
-        ServerProperties serverProperties = ServerInfo.getServerProperties();
+        ServerProperties serverProperties = ServerInfo.getServerProperties_Old();
         putRawData(AnalysisKeys.PLAYERS_MAX, serverProperties.getMaxPlayers());
         putRawData(AnalysisKeys.PLAYERS_ONLINE, serverProperties.getOnlinePlayers());
     }

@@ -31,14 +31,14 @@ public class SessionCacheTest {
 
     @Before
     public void setUp() {
-        sessionCache = new SessionCache(null);
+        sessionCache = new SessionCache();
         session = new Session(uuid, 12345L, "World1", "SURVIVAL");
         sessionCache.cacheSession(uuid, session);
     }
 
     @Test
     public void testAtomity() {
-        SessionCache reloaded = new SessionCache(null);
+        SessionCache reloaded = new SessionCache();
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         assertTrue(cachedSession.isPresent());
         assertEquals(session, cachedSession.get());

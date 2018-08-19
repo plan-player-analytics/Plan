@@ -1,9 +1,9 @@
-package com.djrapitops.plan.modules.server.bukkit;
+package com.djrapitops.plan.modules.server;
 
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.config.ServerConfigSystem;
 import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plugin.config.Config;
 import dagger.Module;
 import dagger.Provides;
 
@@ -13,7 +13,7 @@ import dagger.Provides;
  * @author Rsl1122
  */
 @Module
-public class BukkitConfigModule {
+public class ServerConfigModule {
 
     @Provides
     ConfigSystem provideConfigSystem() {
@@ -21,7 +21,7 @@ public class BukkitConfigModule {
     }
 
     @Provides
-    Config provideConfig(ConfigSystem configSystem) {
+    PlanConfig provideConfig(ConfigSystem configSystem) {
         return configSystem.getConfig();
     }
 

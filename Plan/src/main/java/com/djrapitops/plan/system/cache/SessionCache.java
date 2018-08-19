@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -22,11 +21,6 @@ import java.util.UUID;
 public class SessionCache {
 
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
-    protected final PlanSystem system;
-
-    public SessionCache(PlanSystem system) {
-        this.system = system;
-    }
 
     public static SessionCache getInstance() {
         SessionCache dataCache = CacheSystem.getInstance().getDataCache();

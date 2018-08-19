@@ -9,6 +9,8 @@ import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+
 /**
  * System that holds data caches of the plugin.
  *
@@ -19,13 +21,10 @@ public class CacheSystem implements SubSystem {
     private final DataCache dataCache;
     private final GeolocationCache geolocationCache;
 
-    public CacheSystem(PlanSystem system) {
-        this(new DataCache(system), system);
-    }
-
-    protected CacheSystem(DataCache dataCache, PlanSystem system) {
+    @Inject
+    public CacheSystem(DataCache dataCache, GeolocationCache geolocationCache) {
         this.dataCache = dataCache;
-        geolocationCache = new GeolocationCache(() -> system.getLocaleSystem().getLocale());
+        this.geolocationCache = geolocationCache;
     }
 
     public static CacheSystem getInstance() {

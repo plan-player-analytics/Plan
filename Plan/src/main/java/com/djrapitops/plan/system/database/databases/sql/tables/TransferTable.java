@@ -90,7 +90,7 @@ public class TransferTable extends Table {
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setString(1, ServerInfo.getServerUUID_Old().toString());
                 statement.setString(2, "onlineStatus");
             }
         });
@@ -100,7 +100,7 @@ public class TransferTable extends Table {
         execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setString(1, ServerInfo.getServerUUID_Old().toString());
                 statement.setLong(2, System.currentTimeMillis() + TimeAmount.HOUR.ms());
                 statement.setString(3, "configSettings");
                 statement.setString(4, null);

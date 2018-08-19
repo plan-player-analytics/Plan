@@ -72,6 +72,6 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
 
     @Override
     public void runLocally() {
-        getPluginsTab(player).addTab(ServerInfo.getServerUUID(), variables.get("nav"), html);
+        getPluginsTab(player).addTab(ServerInfo.getServerUUID_Old(), variables.get("nav"), html);
     }
 }

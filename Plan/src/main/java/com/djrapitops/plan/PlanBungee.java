@@ -6,6 +6,11 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
+import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.common.*;
+import com.djrapitops.plan.modules.server.ServerConfigModule;
+import com.djrapitops.plan.modules.server.ServerDatabaseModule;
+import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -15,12 +20,62 @@ import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.DebugLog;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.command.CommandNode;
+import com.djrapitops.plugin.logging.L;
+import dagger.BindsInstance;
+import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+@Singleton
+@Component(modules = {
+        BungeePlanModule.class,
+        APFModule.class,
+        ExportModule.class,
+        VersionCheckModule.class,
+        FileSystemModule.class,
+        ServerConfigModule.class,
+        LocaleModule.class,
+        ServerDatabaseModule.class,
+        WebServerSystemModule.class,
+        ServerInfoSystemModule.class,
+        PluginHookModule.class
+})
+interface PlanBungeeComponent {
+
+    PlanBungeeCommand planCommand();
+
+    BungeeSystem system();
+
+    @Component.Builder
+    interface Builder {
+
+        @BindsInstance
+        Builder plan(PlanBungee plan);
+
+        PlanBungeeComponent build();
+    }
+}
+
+@Module
+class BungeePlanModule {
+
+    @Provides
+    PlanPlugin providePlanPlugin(PlanBungee plan) {
+        return plan;
+    }
+
+    @Provides
+    @Named("mainCommand")
+    CommandNode provideMainCommand(PlanBungeeCommand command) {
+        return command;
+    }
+}
 
 /**
  * Bungee Main class.
@@ -39,36 +94,37 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
+        PlanBungeeComponent component = DaggerPlanBungeeComponent.builder().plan(this).build();
         try {
-            system = new BungeeSystem(this);
+            system = component.system();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
             new BStatsBungee(this).registerMetrics();
 
-            Log.info(locale.getString(PluginLang.ENABLED));
+            logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
-            Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            Log.error("----------------------------------------");
-            Log.error("Error: " + e.getMessage());
-            Log.error("----------------------------------------");
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+            logger.error("----------------------------------------");
+            logger.error("Error: " + e.getMessage());
+            logger.error("----------------------------------------");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
             onDisable();
         } catch (Exception e) {
-            Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
-            Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("planbungee", new PlanBungeeCommand(this));
+        registerCommand("planbungee", component.planCommand());
     }
 
     @Override
     public void onDisable() {
         system.disable();
 
-        Log.info(locale.getString(PluginLang.DISABLED));
+        logger.info(locale.getString(PluginLang.DISABLED));
         Benchmark.pluginDisabled(PlanBungee.class);
         DebugLog.pluginDisabled(PlanBungee.class);
     }

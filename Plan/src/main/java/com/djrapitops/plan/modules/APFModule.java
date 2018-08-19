@@ -1,7 +1,9 @@
 package com.djrapitops.plan.modules;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -16,6 +18,15 @@ import dagger.Provides;
  */
 @Module
 public class APFModule {
+    @Provides
+    IPlugin provideIPlugin(PlanPlugin plugin) {
+        return plugin;
+    }
+
+    @Provides
+    ColorScheme provideColorScheme(PlanPlugin plugin) {
+        return plugin.getColorScheme();
+    }
 
     @Provides
     DebugLogger provideDebugLogger(IPlugin plugin) {

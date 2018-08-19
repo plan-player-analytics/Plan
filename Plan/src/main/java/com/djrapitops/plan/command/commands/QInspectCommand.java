@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
@@ -21,11 +20,13 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,17 +41,17 @@ import java.util.UUID;
 public class QInspectCommand extends CommandNode {
 
     private final Locale locale;
+    private final Database database;
+    private final ErrorHandler errorHandler;
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public QInspectCommand(PlanPlugin plugin) {
+    @Inject
+    public QInspectCommand(Locale locale, Database database, ErrorHandler errorHandler) {
         super("qinspect", Permissions.QUICK_INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
         setArguments("<player>");
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.database = database;
+        this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.QINSPECT));
         setInDepthHelp(locale.getArray(DeepHelpLang.QINSPECT));
@@ -77,7 +78,7 @@ public class QInspectCommand extends CommandNode {
                     return;
                 }
 
-                PlayerContainer container = Database.getActive().fetch().getPlayerContainer(uuid);
+                PlayerContainer container = database.fetch().getPlayerContainer(uuid);
                 if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                     return;
@@ -86,7 +87,7 @@ public class QInspectCommand extends CommandNode {
                 sendMessages(sender, container);
             } catch (DBOpException e) {
                 sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.WARN, this.getClass(), e);
             }
         });
     }

@@ -27,6 +27,7 @@ public class Theme implements SubSystem {
 
     private ThemeConfig config;
 
+    @Deprecated
     public static Theme getInstance() {
         Theme themeSystem = ConfigSystem.getInstance().getThemeSystem();
         Verify.nullCheck(themeSystem, () -> new IllegalStateException("Theme System has not been initialized."));

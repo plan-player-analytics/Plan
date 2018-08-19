@@ -32,6 +32,7 @@ public class UUIDUtility {
      * @param playerName Player's name
      * @return UUID of the player.
      */
+    @Deprecated
     public static UUID getUUIDOf(String playerName) {
         try {
             return getUUIDOf(playerName, Database.getActive());

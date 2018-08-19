@@ -55,7 +55,7 @@ public class BungeeServerInfo extends ServerInfo {
     }
 
     private void checkIfDefaultIP() throws EnableException {
-        String ip = ServerInfo.getServerProperties().getIp();
+        String ip = ServerInfo.getServerProperties_Old().getIp();
         if ("0.0.0.0".equals(ip)) {
             Log.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
             Log.info("Player Analytics partially enabled (Use /planbungee to reload config)");
@@ -64,7 +64,7 @@ public class BungeeServerInfo extends ServerInfo {
     }
 
     private Server registerBungeeInfo(Database db) throws EnableException {
-        ServerProperties properties = ServerInfo.getServerProperties();
+        ServerProperties properties = ServerInfo.getServerProperties_Old();
         UUID serverUUID = generateNewUUID(properties);
         String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
 

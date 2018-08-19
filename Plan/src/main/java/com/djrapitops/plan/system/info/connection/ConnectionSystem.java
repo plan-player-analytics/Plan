@@ -36,14 +36,21 @@ public abstract class ConnectionSystem implements SubSystem {
         connectionLog = new ConnectionLog();
     }
 
+    @Deprecated
     public static ConnectionSystem getInstance() {
         ConnectionSystem connectionSystem = InfoSystem.getInstance().getConnectionSystem();
         Verify.nullCheck(connectionSystem, () -> new IllegalStateException("Connection System was not initialized"));
         return connectionSystem;
     }
 
-    public static boolean isSetupAllowed() {
+    @Deprecated
+    public static boolean isSetupAllowed_Old() {
         return getInstance().setupAllowed;
+    }
+
+    @Deprecated
+    public static String getAddress() {
+        return getInstance().getMainAddress();
     }
 
     public InfoRequest getInfoRequest(String name) {
@@ -60,8 +67,8 @@ public abstract class ConnectionSystem implements SubSystem {
 
     protected abstract Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException;
 
-    public static String getAddress() {
-        return getInstance().getMainAddress();
+    public boolean isSetupAllowed() {
+        return setupAllowed;
     }
 
     public void sendInfoRequest(InfoRequest infoRequest) throws WebException {
@@ -70,10 +77,10 @@ public abstract class ConnectionSystem implements SubSystem {
     }
 
     public void sendInfoRequest(InfoRequest infoRequest, Server toServer) throws WebException {
-        if (ServerInfo.getServerUUID().equals(toServer.getUuid())) {
+        if (ServerInfo.getServerUUID_Old().equals(toServer.getUuid())) {
             InfoSystem.getInstance().runLocally(infoRequest);
         } else {
-            new ConnectionOut(toServer, ServerInfo.getServerUUID(), infoRequest).sendRequest();
+            new ConnectionOut(toServer, ServerInfo.getServerUUID_Old(), infoRequest).sendRequest();
         }
     }
 
@@ -103,8 +110,6 @@ public abstract class ConnectionSystem implements SubSystem {
         putRequest(requests, SendDBSettingsRequest.createHandler());
         putRequest(requests, CheckConnectionRequest.createHandler());
 
-//        putRequest(requests, UpdateRequest.createHandler());
-//        putRequest(requests, UpdateCancelRequest.createHandler());
         return requests;
     }
 

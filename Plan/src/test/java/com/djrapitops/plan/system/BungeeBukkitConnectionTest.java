@@ -91,7 +91,7 @@ public class BungeeBukkitConnectionTest {
         bukkitSystem = new BukkitSystem(bukkitMock);
         bukkitSystem.enable();
 
-        bukkitUUID = ServerInfo.getServerUUID();
+        bukkitUUID = ServerInfo.getServerUUID_Old();
 
         bungeeSystem = new BungeeSystem(bungeeMock);
 
@@ -102,7 +102,7 @@ public class BungeeBukkitConnectionTest {
 
         bungeeSystem.enable();
 
-        bungeeUUID = ServerInfo.getServerUUID();
+        bungeeUUID = ServerInfo.getServerUUID_Old();
 
         System.out.println("------------------------------");
         System.out.println("Enable Complete");

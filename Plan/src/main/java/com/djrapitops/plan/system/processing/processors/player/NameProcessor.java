@@ -27,7 +27,7 @@ public class NameProcessor implements CriticalRunnable {
     public NameProcessor(UUID uuid, String playerName, String displayName) {
         this.uuid = uuid;
         this.playerName = playerName;
-        this.nickname = new Nickname(displayName, System.currentTimeMillis(), ServerInfo.getServerUUID());
+        this.nickname = new Nickname(displayName, System.currentTimeMillis(), ServerInfo.getServerUUID_Old());
     }
 
     @Override

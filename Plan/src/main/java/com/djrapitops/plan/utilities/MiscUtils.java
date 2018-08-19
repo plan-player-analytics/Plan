@@ -81,6 +81,7 @@ public class MiscUtils {
      * @param search Part of a name to search for.
      * @return Alphabetically sorted list of matching player names.
      */
+    @Deprecated
     public static List<String> getMatchingPlayerNames(String search) {
         Database db = Database.getActive();
         List<String> matches = db.search().matchingPlayers(search);

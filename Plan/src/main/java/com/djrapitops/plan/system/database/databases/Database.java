@@ -18,6 +18,7 @@ public abstract class Database {
 
     protected boolean open = false;
 
+    @Deprecated
     public static Database getActive() {
         Database database = DBSystem.getInstance().getActiveDatabase();
         Verify.nullCheck(database, () -> new IllegalStateException("Database was not initialized."));

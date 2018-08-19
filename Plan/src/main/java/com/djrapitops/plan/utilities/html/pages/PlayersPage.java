@@ -30,7 +30,7 @@ public class PlayersPage implements Page {
 
             placeholderReplacer.put("version", PlanPlugin.getInstance().getVersion());
             if (Check.isBukkitAvailable()) {
-                placeholderReplacer.put("networkName", ServerInfo.getServerName());
+                placeholderReplacer.put("networkName", ServerInfo.getServerName_Old());
             } else {
                 placeholderReplacer.put("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
             }

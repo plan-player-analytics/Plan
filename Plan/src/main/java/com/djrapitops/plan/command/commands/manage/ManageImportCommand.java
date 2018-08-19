@@ -1,21 +1,20 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.Importer;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -28,10 +27,11 @@ public class ManageImportCommand extends CommandNode {
 
     private final Locale locale;
 
-    public ManageImportCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageImportCommand(Locale locale) {
         super("import", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
 
         setArguments("<plugin>/list", "[import args]");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_IMPORT));
@@ -60,15 +60,6 @@ public class ManageImportCommand extends CommandNode {
             return;
         }
 
-        RunnableFactory.createNew("Import:" + importArg, new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    importer.processImport();
-                } finally {
-                    cancel();
-                }
-            }
-        }).runTaskAsynchronously();
+        Processing.submitNonCritical(importer::processImport);
     }
 }

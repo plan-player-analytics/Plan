@@ -179,7 +179,7 @@ public class KillsTable extends UserIDTable {
 
                     statement.setString(1, uuid.toString());
                     statement.setString(2, victim.toString());
-                    statement.setString(3, ServerInfo.getServerUUID().toString());
+                    statement.setString(3, ServerInfo.getServerUUID_Old().toString());
                     statement.setInt(4, sessionID);
                     statement.setLong(5, date);
                     statement.setString(6, weapon);

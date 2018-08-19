@@ -2,7 +2,6 @@ package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
-import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
@@ -56,11 +55,11 @@ public class NetworkSettingsTest {
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));
-        assertEquals(ServerInfo.getServerUUID(), TestConstants.SERVER_UUID);
+        assertEquals(ServerInfo.getServerUUID_Old(), TestConstants.SERVER_UUID);
     }
 
     @Test
-    public void testTransfer() throws DBException, UnsupportedTransferDatabaseException {
+    public void testTransfer() throws UnsupportedTransferDatabaseException {
         NetworkSettings networkSettings = new NetworkSettings();
         networkSettings.placeToDatabase();
         networkSettings.loadFromDatabase();

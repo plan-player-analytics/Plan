@@ -1,13 +1,16 @@
 package com.djrapitops.plan.command;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;
+
+import javax.inject.Inject;
 
 /**
  * TreeCommand for the /plan command, and all SubCommands.
@@ -19,35 +22,49 @@ import com.djrapitops.plugin.command.TreeCmdNode;
  */
 public class PlanCommand extends TreeCmdNode {
 
-    public PlanCommand(PlanPlugin plugin) {
+    @Inject
+    public PlanCommand(ColorScheme colorScheme, Locale locale, PlanConfig config,
+                       // Group 1
+                       InspectCommand inspectCommand,
+                       QInspectCommand qInspectCommand,
+                       SearchCommand searchCommand,
+                       ListPlayersCommand listPlayersCommand,
+                       AnalyzeCommand analyzeCommand,
+                       NetworkCommand networkCommand,
+                       ListServersCommand listServersCommand,
+                       // Group 2
+                       WebUserCommand webUserCommand,
+                       RegisterCommand registerCommand,
+                       // Group 3
+                       InfoCommand infoCommand,
+                       ReloadCommand reloadCommand,
+                       ManageCommand manageCommand,
+                       DevCommand devCommand
+    ) {
         super("plan", "", CommandType.CONSOLE, null);
         super.setDefaultCommand("inspect");
-        super.setColorScheme(plugin.getColorScheme());
-
-        Locale locale = plugin.getSystem().getLocaleSystem().getLocale();
+        super.setColorScheme(colorScheme);
 
         setInDepthHelp(locale.getArray(DeepHelpLang.PLAN));
 
-        RegisterCommand registerCommand = new RegisterCommand(plugin);
         CommandNode[] analyticsGroup = {
-                new InspectCommand(plugin),
-                new QInspectCommand(plugin),
-                new SearchCommand(plugin),
-                new ListPlayersCommand(plugin),
-                new AnalyzeCommand(plugin),
-                new NetworkCommand(plugin),
-                new ListServersCommand(plugin)
+                inspectCommand,
+                qInspectCommand,
+                searchCommand,
+                listPlayersCommand,
+                analyzeCommand,
+                networkCommand,
+                listServersCommand
         };
         CommandNode[] webGroup = {
-                new WebUserCommand(plugin, registerCommand, this),
+                webUserCommand,
                 registerCommand
         };
         CommandNode[] manageGroup = {
-                new InfoCommand(plugin),
-                new ReloadCommand(plugin),
-                new ManageCommand(plugin, this),
-                (Settings.DEV_MODE.isTrue() ? new DevCommand(plugin) : null),
-//                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
+                infoCommand,
+                reloadCommand,
+                manageCommand,
+                config.isTrue(Settings.DEV_MODE) ? devCommand : null
         };
         setNodeGroups(analyticsGroup, webGroup, manageGroup);
     }
