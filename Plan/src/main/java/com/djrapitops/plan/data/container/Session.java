@@ -182,14 +182,8 @@ public class Session extends DataContainer implements DateHolder {
                 getValue(SessionKeys.END).orElse(-1L).equals(session.getValue(SessionKeys.END).orElse(-1L)) &&
                 mobKills == session.mobKills &&
                 deaths == session.deaths &&
-                Objects.equals(
-                        getValue(SessionKeys.WORLD_TIMES).orElse(null),
-                        session.getValue(SessionKeys.WORLD_TIMES).orElse(null)
-                ) &&
-                Objects.equals(
-                        getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()),
-                        session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>())
-                );
+                Objects.equals(playerKills, session.playerKills) &&
+                Objects.equals(worldTimes, session.worldTimes);
     }
 
     @Override
@@ -251,5 +245,17 @@ public class Session extends DataContainer implements DateHolder {
         double quotient = longest * 1.0 / total;
 
         return theWorld + " (" + Formatters.percentage().apply(quotient) + ")";
+    }
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "sessionStart=" + sessionStart +
+                ", worldTimes=" + worldTimes +
+                ", playerKills=" + playerKills +
+                ", mobKills=" + mobKills +
+                ", deaths=" + deaths +
+                ", afkTime=" + afkTime +
+                '}';
     }
 }

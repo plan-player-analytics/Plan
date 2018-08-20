@@ -1,10 +1,7 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import utilities.TestConstants;
 import utilities.mocks.SystemMockUtil;
@@ -34,6 +31,11 @@ public class SessionCacheTest {
         sessionCache = new SessionCache(null);
         session = new Session(uuid, 12345L, "World1", "SURVIVAL");
         sessionCache.cacheSession(uuid, session);
+    }
+
+    @After
+    public void tearDown() {
+        SessionCache.clear();
     }
 
     @Test
