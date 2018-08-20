@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.BukkitSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plugin.StaticHolder;
+import org.junit.Assume;
 
 import java.io.File;
 
@@ -48,6 +49,7 @@ public class SystemMockUtil {
                 .withServer()
                 .getPlanMock();
         bukkitSystem = null; //TODO
+        Assume.assumeNotNull(bukkitSystem);
         return this;
     }
 
