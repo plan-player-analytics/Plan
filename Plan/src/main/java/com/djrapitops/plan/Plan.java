@@ -168,7 +168,9 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
      */
     @Override
     public void onDisable() {
-        system.disable();
+        if (system != null) {
+            system.disable();
+        }
 
         logger.info(locale.getString(PluginLang.DISABLED));
         DebugLog.pluginDisabled(Plan.class);

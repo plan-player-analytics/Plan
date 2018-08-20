@@ -54,7 +54,7 @@ public class SpongeSystemTest {
     public void testEnable() throws EnableException {
         Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
-        spongeSystem = new SpongeSystem(planMock);
+        spongeSystem = null; //TODO
         spongeSystem.enable();
     }
 }

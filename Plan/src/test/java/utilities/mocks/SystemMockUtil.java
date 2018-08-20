@@ -47,7 +47,7 @@ public class SystemMockUtil {
                 .withPluginDescription()
                 .withServer()
                 .getPlanMock();
-        bukkitSystem = new BukkitSystem(planMock);
+        bukkitSystem = null; //TODO
         return this;
     }
 

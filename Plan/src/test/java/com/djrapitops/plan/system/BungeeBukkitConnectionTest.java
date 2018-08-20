@@ -88,12 +88,12 @@ public class BungeeBukkitConnectionTest {
     public void enable() throws EnableException {
         Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
-        bukkitSystem = new BukkitSystem(bukkitMock);
+        bukkitSystem = null; // TODO
         bukkitSystem.enable();
 
         bukkitUUID = ServerInfo.getServerUUID_Old();
 
-        bungeeSystem = new BungeeSystem(bungeeMock);
+        bungeeSystem = null; // TODO
 
         Settings.WEBSERVER_PORT.setTemporaryValue(9250);
         Settings.BUNGEE_IP.setTemporaryValue("localhost");

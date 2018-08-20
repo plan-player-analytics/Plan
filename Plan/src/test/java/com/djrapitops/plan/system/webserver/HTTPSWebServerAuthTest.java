@@ -50,7 +50,7 @@ public class HTTPSWebServerAuthTest {
 
         Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
-        bukkitSystem = new BukkitSystem(planMock);
+        bukkitSystem = null; //TODO
         bukkitSystem.enable();
 
         bukkitSystem.getDatabaseSystem().getActiveDatabase().save()
