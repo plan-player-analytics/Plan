@@ -43,4 +43,16 @@ public class SessionCacheTest {
         assertTrue(cachedSession.isPresent());
         assertEquals(session, cachedSession.get());
     }
+
+    @Test
+    public void testBungeeReCaching() {
+        SessionCache cache = new BungeeDataCache(null);
+        cache.cacheSession(uuid, session);
+        Session expected = new Session(uuid, 0, "", "");
+        cache.cacheSession(uuid, expected);
+
+        Optional<Session> result = SessionCache.getCachedSession(uuid);
+        assertTrue(result.isPresent());
+        assertEquals(expected, result.get());
+    }
 }
