@@ -2,13 +2,15 @@ package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.NameProcessor;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -18,11 +20,13 @@ import java.util.UUID;
  */
 public class ChatListener implements Listener {
 
-    /**
-     * ChatEvent listener.
-     *
-     * @param event Fired Event
-     */
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public ChatListener(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(AsyncPlayerChatEvent event) {
         if (event.isCancelled()) {
@@ -32,7 +36,7 @@ public class ChatListener implements Listener {
         try {
             actOnChatEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 

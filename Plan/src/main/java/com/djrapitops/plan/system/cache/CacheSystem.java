@@ -27,6 +27,7 @@ public class CacheSystem implements SubSystem {
         this.geolocationCache = geolocationCache;
     }
 
+    @Deprecated
     public static CacheSystem getInstance() {
         CacheSystem cacheSystem = PlanSystem.getInstance().getCacheSystem();
         Verify.nullCheck(cacheSystem, () -> new IllegalStateException("Cache System was not initialized."));

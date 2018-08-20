@@ -22,6 +22,7 @@ public class SessionCache {
 
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
 
+    @Deprecated
     public static SessionCache getInstance() {
         SessionCache dataCache = CacheSystem.getInstance().getDataCache();
         Verify.nullCheck(dataCache, () -> new IllegalStateException("Data Cache was not initialized."));

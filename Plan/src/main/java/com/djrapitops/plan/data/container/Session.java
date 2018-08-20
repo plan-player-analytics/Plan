@@ -222,7 +222,7 @@ public class Session extends DataContainer implements DateHolder {
     }
 
     private String getLongestWorldPlayed() {
-        Map<String, String> aliases = WorldAliasSettings.getAliases();
+        Map<String, String> aliases = WorldAliasSettings.getAliases_Old();
         if (worldTimes == null) {
             return "No World Time Data";
         }

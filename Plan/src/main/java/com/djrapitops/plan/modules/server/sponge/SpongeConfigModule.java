@@ -1,8 +1,8 @@
-package com.djrapitops.plan.modules.server;
+package com.djrapitops.plan.modules.server.sponge;
 
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.config.ServerConfigSystem;
+import com.djrapitops.plan.system.settings.config.SpongeConfigSystem;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import dagger.Module;
 import dagger.Provides;
@@ -13,11 +13,11 @@ import dagger.Provides;
  * @author Rsl1122
  */
 @Module
-public class ServerConfigModule {
+public class SpongeConfigModule {
 
     @Provides
-    ConfigSystem provideConfigSystem() {
-        return new ServerConfigSystem();
+    ConfigSystem provideConfigSystem(SpongeConfigSystem spongeConfigSystem) {
+        return spongeConfigSystem;
     }
 
     @Provides

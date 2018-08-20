@@ -43,7 +43,7 @@ public class SpongeWorldChangeListener {
         String worldName = event.getToTransform().getExtent().getName();
         String gameMode = getGameMode(player);
 
-        WorldAliasSettings.addWorld(worldName);
+        WorldAliasSettings.addWorld_Old(worldName);
 
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));

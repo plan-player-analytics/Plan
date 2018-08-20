@@ -3,13 +3,15 @@ package com.djrapitops.plan.system.listeners.bukkit;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
+import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,13 +20,15 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class GamemodeChangeListener implements Listener {
+public class GameModeChangeListener implements Listener {
 
-    /**
-     * GM Change Event Listener.
-     *
-     * @param event Fired Event.
-     */
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public GameModeChangeListener(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGameModeChange(PlayerGameModeChangeEvent event) {
         if (event.isCancelled()) {
@@ -33,7 +37,7 @@ public class GamemodeChangeListener implements Listener {
         try {
             actOnEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -44,7 +48,7 @@ public class GamemodeChangeListener implements Listener {
         String gameMode = event.getNewGameMode().name();
         String worldName = player.getWorld().getName();
 
-        WorldAliasSettings.addWorld(worldName);
+        WorldAliasSettings.addWorld_Old(worldName);
 
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));

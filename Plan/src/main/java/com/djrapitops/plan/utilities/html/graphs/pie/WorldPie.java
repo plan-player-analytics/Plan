@@ -47,7 +47,7 @@ public class WorldPie extends AbstractPieChartWithDrilldown {
     }
 
     private Map<String, GMTimes> getGMTimesPerAlias() {
-        Map<String, String> aliases = WorldAliasSettings.getAliases();
+        Map<String, String> aliases = WorldAliasSettings.getAliases_Old();
 
         Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();
 
@@ -59,7 +59,7 @@ public class WorldPie extends AbstractPieChartWithDrilldown {
 
             if (!aliases.containsKey(worldName)) {
                 aliases.put(worldName, worldName);
-                WorldAliasSettings.addWorld(worldName);
+                WorldAliasSettings.addWorld_Old(worldName);
             }
 
             String alias = aliases.get(worldName);

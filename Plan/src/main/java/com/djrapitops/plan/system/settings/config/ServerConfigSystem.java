@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.system.file.FileSystem;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 /**
@@ -17,8 +18,15 @@ import java.io.IOException;
  */
 public class ServerConfigSystem extends ConfigSystem {
 
+    protected final FileSystem fileSystem;
+
+    @Inject
+    public ServerConfigSystem(FileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
     @Override
     protected void copyDefaults() throws IOException {
-        config.copyDefaults(FileSystem.readFromResource_Old("config.yml"));
+        config.copyDefaults(fileSystem.readFromResource("config.yml"));
     }
 }

@@ -9,7 +9,10 @@ import com.djrapitops.plan.system.tasks.server.BukkitTPSCountTimer;
 import com.djrapitops.plan.system.tasks.server.PaperTPSCountTimer;
 import com.djrapitops.plan.system.tasks.server.PingCountTimer;
 import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
+
+import javax.inject.Inject;
 
 /**
  * TaskSystem responsible for registering tasks for Bukkit.
@@ -20,8 +23,9 @@ public class BukkitTaskSystem extends ServerTaskSystem {
 
     private final Plan plugin;
 
-    public BukkitTaskSystem(Plan plugin) {
-        super(plugin.getRunnableFactory(),
+    @Inject
+    public BukkitTaskSystem(Plan plugin, RunnableFactory runnableFactory) {
+        super(runnableFactory,
                 Check.isPaperAvailable()
                         ? new PaperTPSCountTimer(plugin)
                         : new BukkitTPSCountTimer(plugin)

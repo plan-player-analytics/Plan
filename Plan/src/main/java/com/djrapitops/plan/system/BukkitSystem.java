@@ -30,16 +30,17 @@ import javax.inject.Inject;
 public class BukkitSystem extends PlanSystem implements ServerSystem {
 
     @Inject
-    public BukkitSystem(Plan plugin,
-                        VersionCheckSystem versionCheckSystem,
+    public BukkitSystem(VersionCheckSystem versionCheckSystem,
                         FileSystem fileSystem,
                         ConfigSystem serverConfigSystem,
                         InfoSystem serverInfoSystem,
                         BukkitServerInfo serverInfo,
+                        DBSystem serverDBSystem,
+                        BukkitListenerSystem bukkitListenerSystem,
+                        BukkitTaskSystem bukkitTaskSystem,
+                        ExportSystem exportSystem,
                         HookHandler hookHandler,
                         PlanAPI planAPI,
-                        ExportSystem exportSystem,
-                        DBSystem serverDBSystem,
                         ShutdownHook shutdownHook
     ) {
         this.versionCheckSystem = versionCheckSystem;
@@ -47,8 +48,8 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
         this.configSystem = serverConfigSystem;
         this.exportSystem = exportSystem;
         this.databaseSystem = serverDBSystem;
-        listenerSystem = new BukkitListenerSystem(plugin);
-        taskSystem = new BukkitTaskSystem(plugin);
+        listenerSystem = bukkitListenerSystem;
+        taskSystem = bukkitTaskSystem;
 
         infoSystem = serverInfoSystem;
         this.serverInfo = serverInfo;

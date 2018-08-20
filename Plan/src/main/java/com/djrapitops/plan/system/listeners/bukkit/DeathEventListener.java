@@ -5,7 +5,8 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.KillProcessor;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Format;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -17,6 +18,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
+import javax.inject.Inject;
+
 /**
  * Event Listener for EntityDeathEvents.
  *
@@ -24,11 +27,13 @@ import org.bukkit.projectiles.ProjectileSource;
  */
 public class DeathEventListener implements Listener {
 
-    /**
-     * Command use listener.
-     *
-     * @param event Fired event.
-     */
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public DeathEventListener(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(EntityDeathEvent event) {
@@ -51,7 +56,7 @@ public class DeathEventListener implements Listener {
 
             handleKill(time, dead, killerEntity);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 

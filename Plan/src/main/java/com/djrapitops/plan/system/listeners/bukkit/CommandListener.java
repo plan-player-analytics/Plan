@@ -5,36 +5,32 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.CommandProcessor;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.command.Command;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import javax.inject.Inject;
+
 /**
  * Event Listener for PlayerCommandPreprocessEvents.
  *
  * @author Rsl1122
  */
-public class CommandPreprocessListener implements Listener {
+public class CommandListener implements Listener {
 
     private final Plan plugin;
+    private final ErrorHandler errorHandler;
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public CommandPreprocessListener(Plan plugin) {
+    @Inject
+    public CommandListener(Plan plugin, ErrorHandler errorHandler) {
         this.plugin = plugin;
+        this.errorHandler = errorHandler;
     }
 
-    /**
-     * Command use listener.
-     *
-     * @param event Fired event.
-     */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         boolean hasIgnorePermission = event.getPlayer().hasPermission(Permissions.IGNORE_COMMAND_USE.getPermission());
@@ -45,7 +41,7 @@ public class CommandPreprocessListener implements Listener {
         try {
             actOnCommandEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 

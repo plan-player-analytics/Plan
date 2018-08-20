@@ -4,7 +4,11 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.common.*;
-import com.djrapitops.plan.modules.server.*;
+import com.djrapitops.plan.modules.server.ServerAPIModule;
+import com.djrapitops.plan.modules.server.ServerDataCacheModule;
+import com.djrapitops.plan.modules.server.ServerDatabaseModule;
+import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
+import com.djrapitops.plan.modules.server.bukkit.BukkitConfigModule;
 import com.djrapitops.plan.modules.server.sponge.SpongeInfoModule;
 import com.djrapitops.plan.system.SpongeSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -43,7 +47,7 @@ import java.io.InputStream;
         APFModule.class,
         ExportModule.class,
         VersionCheckModule.class,
-        ServerConfigModule.class,
+        BukkitConfigModule.class,
         LocaleModule.class,
         ServerDatabaseModule.class,
         ServerDataCacheModule.class,

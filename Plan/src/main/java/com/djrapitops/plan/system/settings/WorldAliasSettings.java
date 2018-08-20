@@ -21,17 +21,14 @@ import java.util.Map;
  * @author Rsl1122
  */
 public class WorldAliasSettings {
-
-    private WorldAliasSettings() {
-        /* Hide Constructor */
-    }
     
     /**
      * Used to get all World aliases in the config
      *
      * @return Map: Original name, Alias
      */
-    public static Map<String, String> getAliases() {
+    @Deprecated
+    public static Map<String, String> getAliases_Old() {
         ConfigNode aliasSect = getAliasSection();
 
         Map<String, String> aliasMap = new HashMap<>();
@@ -53,7 +50,8 @@ public class WorldAliasSettings {
      *
      * @param world World name
      */
-    public static void addWorld(String world) {
+    @Deprecated
+    public static void addWorld_Old(String world) {
         ConfigNode aliasSect = getAliasSection();
 
         String previousValue = aliasSect.getConfigNode(world).getValue();

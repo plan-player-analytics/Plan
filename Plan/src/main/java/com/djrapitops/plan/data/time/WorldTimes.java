@@ -177,7 +177,7 @@ public class WorldTimes {
                         entry -> entry.getValue().getTotal() // GMTimes.getTotal
                 ));
 
-        Map<String, String> aliases = WorldAliasSettings.getAliases();
+        Map<String, String> aliases = WorldAliasSettings.getAliases_Old();
 
         Map<String, Long> playtimePerAlias = new HashMap<>();
         for (Map.Entry<String, Long> entry : playtimePerWorld.entrySet()) {
@@ -186,7 +186,7 @@ public class WorldTimes {
 
             if (!aliases.containsKey(worldName)) {
                 aliases.put(worldName, worldName);
-                WorldAliasSettings.addWorld(worldName);
+                WorldAliasSettings.addWorld_Old(worldName);
             }
 
             String alias = aliases.get(worldName);
