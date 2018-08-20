@@ -170,8 +170,11 @@ public class WorldTimes {
     }
 
     public Map<String, Long> getPlaytimePerAlias() {
-        Map<String, Long> playtimePerWorld = getWorldTimes() // WorldTimes Map<String, GMTimes>
-                .entrySet().stream()
+        if (times.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        Map<String, Long> playtimePerWorld = times.entrySet().stream() // WorldTimes Map<String, GMTimes>
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().getTotal() // GMTimes.getTotal

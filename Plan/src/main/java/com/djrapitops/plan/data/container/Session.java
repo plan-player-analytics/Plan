@@ -154,11 +154,11 @@ public class Session extends DataContainer implements DateHolder {
     }
 
     public void setWorldTimes(WorldTimes worldTimes) {
-        putRawData(SessionKeys.WORLD_TIMES, worldTimes);
+        this.worldTimes = worldTimes;
     }
 
     public void setPlayerKills(List<PlayerKill> playerKills) {
-        putRawData(SessionKeys.PLAYER_KILLS, playerKills);
+        this.playerKills = playerKills;
     }
 
     public boolean isFetchedFromDB() {
@@ -231,7 +231,6 @@ public class Session extends DataContainer implements DateHolder {
         }
 
         Map<String, Long> playtimePerAlias = worldTimes.getPlaytimePerAlias();
-        long total = worldTimes.getTotal();
 
         long longest = 0;
         String theWorld = "-";
@@ -244,6 +243,11 @@ public class Session extends DataContainer implements DateHolder {
             }
         }
 
+        long total = worldTimes.getTotal();
+        // Prevent arithmetic error if 0
+        if (total <= 0) {
+            total = -1;
+        }
         double quotient = longest * 1.0 / total;
 
         return theWorld + " (" + Formatters.percentage().apply(quotient) + ")";
