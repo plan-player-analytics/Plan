@@ -9,6 +9,7 @@ import javax.inject.Inject;
 public class BukkitListenerSystem extends ListenerSystem {
 
     private final Plan plugin;
+
     private final PlayerOnlineListener playerOnlineListener;
     private final ChatListener chatListener;
     private final GameModeChangeListener gamemodeChangeListener;

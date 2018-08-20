@@ -5,7 +5,8 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.SpongeKillProcessor;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Format;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
@@ -22,6 +23,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
+import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +33,13 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class SpongeDeathListener {
+
+    private ErrorHandler errorHandler;
+
+    @Inject
+    public SpongeDeathListener(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
 
     @Listener
     public void onEntityDeath(DestructEntityEvent.Death event) {
@@ -50,7 +59,7 @@ public class SpongeDeathListener {
                 handleKill(time, dead, killerEntity);
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 

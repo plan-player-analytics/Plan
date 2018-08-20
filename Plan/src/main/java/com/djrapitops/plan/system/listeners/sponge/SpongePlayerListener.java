@@ -6,7 +6,8 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
 import com.djrapitops.plan.system.processing.processors.player.*;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -20,6 +21,7 @@ import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ProviderRegistration;
 import org.spongepowered.api.service.ban.BanService;
 
+import javax.inject.Inject;
 import java.net.InetAddress;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,12 +33,23 @@ import java.util.UUID;
  */
 public class SpongePlayerListener {
 
+    private SessionCache sessionCache;
+    private RunnableFactory runnableFactory;
+    private ErrorHandler errorHandler;
+
+    @Inject
+    public SpongePlayerListener(SessionCache sessionCache, RunnableFactory runnableFactory, ErrorHandler errorHandler) {
+        this.sessionCache = sessionCache;
+        this.runnableFactory = runnableFactory;
+        this.errorHandler = errorHandler;
+    }
+
     @Listener(order = Order.POST)
     public void onLogin(ClientConnectionEvent.Login event) {
         try {
             actOnLoginEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -53,7 +66,7 @@ public class SpongePlayerListener {
             UUID uuid = event.getTargetEntity().getUniqueId();
             Processing.submit(new KickProcessor(uuid));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -71,7 +84,7 @@ public class SpongePlayerListener {
         try {
             actOnJoinEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -95,9 +108,9 @@ public class SpongePlayerListener {
         String playerName = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
 
-        SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
+        sessionCache.cacheSession(uuid, new Session(uuid, time, world, gm));
 
-        RunnableFactory.createNew("Player Register: " + uuid,
+        runnableFactory.create("Player Register: " + uuid,
                 new RegisterProcessor(uuid, () -> time, playerName,
                         new IPUpdateProcessor(uuid, address, time),
                         new NameProcessor(uuid, playerName, displayName),
@@ -112,7 +125,7 @@ public class SpongePlayerListener {
         try {
             actOnQuitEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 

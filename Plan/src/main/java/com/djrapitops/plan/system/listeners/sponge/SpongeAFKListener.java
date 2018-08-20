@@ -2,7 +2,8 @@ package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.system.afk.AFKTracker;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -13,6 +14,7 @@ import org.spongepowered.api.event.entity.living.humanoid.player.TargetPlayerEve
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -25,6 +27,13 @@ import java.util.UUID;
  */
 public class SpongeAFKListener {
 
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public SpongeAFKListener(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
     // Static so that /reload does not cause afk tracking to fail.
     public static final AFKTracker AFK_TRACKER = new AFKTracker();
 
@@ -32,7 +41,7 @@ public class SpongeAFKListener {
         try {
             performedAction(event.getTargetEntity());
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -60,7 +69,7 @@ public class SpongeAFKListener {
     @Listener(order = Order.POST)
     public void onPlayerCommand(SendCommandEvent event, @First Player player) {
         performedAction(player);
-        
+
         boolean isAfkCommand = event.getCommand().toLowerCase().startsWith("afk");
         if (isAfkCommand) {
             AFK_TRACKER.usedAfkCommand(player.getUniqueId(), System.currentTimeMillis());

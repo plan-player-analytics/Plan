@@ -36,10 +36,12 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
                         ConfigSystem serverConfigSystem,
                         InfoSystem serverInfoSystem,
                         SpongeServerInfo serverInfo,
+                        SpongeListenerSystem spongeListenerSystem,
+                        SpongeTaskSystem spongeTaskSystem,
+                        DBSystem serverDBSystem,
+                        ExportSystem exportSystem,
                         HookHandler hookHandler,
                         PlanAPI planAPI,
-                        ExportSystem exportSystem,
-                        DBSystem serverDBSystem,
                         ShutdownHook shutdownHook
     ) {
         setTestSystem(this);
@@ -49,8 +51,8 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
         this.configSystem = serverConfigSystem;
         this.exportSystem = exportSystem;
         this.databaseSystem = serverDBSystem;
-        listenerSystem = new SpongeListenerSystem(plugin);
-        taskSystem = new SpongeTaskSystem(plugin);
+        listenerSystem = spongeListenerSystem;
+        taskSystem = spongeTaskSystem;
 
         infoSystem = serverInfoSystem;
         this.serverInfo = serverInfo;

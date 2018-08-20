@@ -4,7 +4,8 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.CommandProcessor;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.entity.living.player.Player;
@@ -13,6 +14,7 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -21,6 +23,13 @@ import java.util.Optional;
  * @author Rsl1122
  */
 public class SpongeCommandListener {
+
+    private ErrorHandler errorHandler;
+
+    @Inject
+    public SpongeCommandListener(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
 
     @Listener(order = Order.POST)
     public void onPlayerCommand(SendCommandEvent event, @First Player player) {
@@ -31,7 +40,7 @@ public class SpongeCommandListener {
         try {
             actOnCommandEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 

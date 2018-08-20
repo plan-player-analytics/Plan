@@ -2,13 +2,15 @@ package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.NameProcessor;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -17,6 +19,13 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class SpongeChatListener {
+
+    private ErrorHandler errorHandler;
+
+    @Inject
+    public SpongeChatListener(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
 
     @Listener(order = Order.POST)
     public void onPlayerChat(MessageChannelEvent.Chat event, @First Player player) {
@@ -27,7 +36,7 @@ public class SpongeChatListener {
         try {
             actOnChatEvent(player);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
