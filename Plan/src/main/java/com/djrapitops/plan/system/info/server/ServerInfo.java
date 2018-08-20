@@ -74,10 +74,8 @@ public abstract class ServerInfo implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        // ServerProperties are required when creating Server
-        Verify.nullCheck(serverProperties, () -> new IllegalStateException("Server Properties did not load!"));
         server = loadServerInfo();
-        Verify.nullCheck(server, () -> new IllegalStateException("Server information did not load!"));
+        Verify.nullCheck(server, () -> new EnableException("Server information did not load!"));
     }
 
     protected abstract Server loadServerInfo() throws EnableException;

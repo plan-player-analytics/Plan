@@ -15,15 +15,12 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.SpongeServerInfo;
 import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
-import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plugin.StaticHolder;
 
 import javax.inject.Inject;
-import java.util.function.Supplier;
 
 /**
  * Represents PlanSystem for PlanSponge.
@@ -38,14 +35,14 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
                         FileSystem fileSystem,
                         ConfigSystem serverConfigSystem,
                         InfoSystem serverInfoSystem,
+                        SpongeServerInfo serverInfo,
                         HookHandler hookHandler,
                         PlanAPI planAPI,
                         ExportSystem exportSystem,
-                        DBSystem serverDBSystem
+                        DBSystem serverDBSystem,
+                        ShutdownHook shutdownHook
     ) {
         setTestSystem(this);
-
-        Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
 
         this.versionCheckSystem = versionCheckSystem;
         this.fileSystem = fileSystem;
@@ -56,13 +53,12 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
         taskSystem = new SpongeTaskSystem(plugin);
 
         infoSystem = serverInfoSystem;
-        serverInfo = new SpongeServerInfo();
+        this.serverInfo = serverInfo;
 
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;
 
-        StaticHolder.saveInstance(ShutdownHook.class, plugin.getClass());
-        new ShutdownHook().register();
+        shutdownHook.register();
     }
 
     public static SpongeSystem getInstance() {

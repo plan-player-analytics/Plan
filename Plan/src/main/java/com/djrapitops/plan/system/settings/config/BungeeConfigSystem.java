@@ -19,6 +19,6 @@ public class BungeeConfigSystem extends ConfigSystem {
 
     @Override
     protected void copyDefaults() throws IOException {
-        config.copyDefaults(FileSystem.readFromResource("bungeeconfig.yml"));
+        config.copyDefaults(FileSystem.readFromResource_Old("bungeeconfig.yml"));
     }
 }

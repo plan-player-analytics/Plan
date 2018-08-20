@@ -24,6 +24,7 @@ import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.common.*;
 import com.djrapitops.plan.modules.server.*;
+import com.djrapitops.plan.modules.server.bukkit.BukkitInfoModule;
 import com.djrapitops.plan.system.BukkitSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -55,9 +56,9 @@ import java.util.logging.Logger;
         APFModule.class,
         ExportModule.class,
         VersionCheckModule.class,
-        FileSystemModule.class,
         ServerConfigModule.class,
         LocaleModule.class,
+        BukkitInfoModule.class,
         ServerDatabaseModule.class,
         ServerDataCacheModule.class,
         WebServerSystemModule.class,

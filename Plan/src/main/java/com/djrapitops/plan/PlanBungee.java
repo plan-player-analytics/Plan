@@ -38,7 +38,6 @@ import java.io.InputStream;
         APFModule.class,
         ExportModule.class,
         VersionCheckModule.class,
-        FileSystemModule.class,
         ServerConfigModule.class,
         LocaleModule.class,
         ServerDatabaseModule.class,

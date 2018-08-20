@@ -5,6 +5,7 @@ import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.common.*;
 import com.djrapitops.plan.modules.server.*;
+import com.djrapitops.plan.modules.server.sponge.SpongeInfoModule;
 import com.djrapitops.plan.system.SpongeSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -42,13 +43,13 @@ import java.io.InputStream;
         APFModule.class,
         ExportModule.class,
         VersionCheckModule.class,
-        FileSystemModule.class,
         ServerConfigModule.class,
         LocaleModule.class,
         ServerDatabaseModule.class,
         ServerDataCacheModule.class,
         WebServerSystemModule.class,
         ServerInfoSystemModule.class,
+        SpongeInfoModule.class,
         PluginHookModule.class,
         ServerAPIModule.class,
 })

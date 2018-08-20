@@ -15,17 +15,12 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import javax.inject.Inject;
-import java.util.function.Supplier;
 
 /**
  * Represents PlanSystem for Plan.
@@ -40,17 +35,13 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
                         FileSystem fileSystem,
                         ConfigSystem serverConfigSystem,
                         InfoSystem serverInfoSystem,
+                        BukkitServerInfo serverInfo,
                         HookHandler hookHandler,
                         PlanAPI planAPI,
                         ExportSystem exportSystem,
-                        DBSystem serverDBSystem
+                        DBSystem serverDBSystem,
+                        ShutdownHook shutdownHook
     ) {
-        setTestSystem(this);
-
-        Log.setErrorManager(new PlanErrorManager());
-
-        Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
-
         this.versionCheckSystem = versionCheckSystem;
         this.fileSystem = fileSystem;
         this.configSystem = serverConfigSystem;
@@ -60,15 +51,15 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
         taskSystem = new BukkitTaskSystem(plugin);
 
         infoSystem = serverInfoSystem;
-        serverInfo = new BukkitServerInfo(plugin);
+        this.serverInfo = serverInfo;
 
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;
 
-        StaticHolder.saveInstance(ShutdownHook.class, plugin.getClass());
-        new ShutdownHook().register();
+        shutdownHook.register();
     }
 
+    @Deprecated
     public static BukkitSystem getInstance() {
         return Plan.getInstance().getSystem();
     }

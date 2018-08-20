@@ -19,6 +19,6 @@ public class ServerConfigSystem extends ConfigSystem {
 
     @Override
     protected void copyDefaults() throws IOException {
-        config.copyDefaults(FileSystem.readFromResource("config.yml"));
+        config.copyDefaults(FileSystem.readFromResource_Old("config.yml"));
     }
 }

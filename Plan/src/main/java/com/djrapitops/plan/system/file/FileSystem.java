@@ -16,7 +16,6 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -29,11 +28,13 @@ import java.util.List;
 public class FileSystem implements SubSystem {
 
     private final File dataFolder;
+    private final PlanPlugin plugin;
     private File configFile;
 
     @Inject
-    public FileSystem(@Named("dataFolder") File dataFolder) {
-        this.dataFolder = dataFolder;
+    public FileSystem(PlanPlugin plugin) {
+        this.dataFolder = plugin.getDataFolder();
+        this.plugin = plugin;
         configFile = new File(dataFolder, "config.yml");
     }
 
@@ -60,8 +61,12 @@ public class FileSystem implements SubSystem {
     }
 
     @Deprecated
-    public static List<String> readFromResource(String fileName) throws IOException {
+    public static List<String> readFromResource_Old(String fileName) throws IOException {
         return FileUtil.lines(PlanPlugin.getInstance(), fileName);
+    }
+
+    public List<String> readFromResource(String fileName) throws IOException {
+        return FileUtil.lines(plugin, fileName);
     }
 
     public File getDataFolder() {
