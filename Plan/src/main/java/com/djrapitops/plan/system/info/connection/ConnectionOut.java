@@ -144,6 +144,7 @@ public class ConnectionOut {
 
         post.setHeader("Content-Type", "application/x-www-form-urlencoded");
         post.setHeader("charset", "UTF-8");
+        post.setHeader("Connection", "close");
 
         byte[] toSend = parameters.getBytes();
         post.setEntity(new ByteArrayEntity(toSend));
