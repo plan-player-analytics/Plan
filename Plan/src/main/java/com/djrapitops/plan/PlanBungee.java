@@ -7,6 +7,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.bungee.BungeeAPIModule;
 import com.djrapitops.plan.modules.bungee.BungeeConfigModule;
 import com.djrapitops.plan.modules.bungee.BungeeDatabaseModule;
 import com.djrapitops.plan.modules.common.*;
@@ -43,7 +44,8 @@ import java.io.InputStream;
         BungeeDatabaseModule.class,
         WebServerSystemModule.class,
         ServerInfoSystemModule.class,
-        PluginHookModule.class
+        PluginHookModule.class,
+        BungeeAPIModule.class
 })
 interface PlanBungeeComponent {
 
@@ -54,6 +56,7 @@ interface PlanBungeeComponent {
     @Component.Builder
     interface Builder {
 
+        @Singleton
         @BindsInstance
         Builder plan(PlanBungee plan);
 

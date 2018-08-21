@@ -8,10 +8,11 @@ package com.djrapitops.plan.utilities.uuid;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -19,11 +20,15 @@ import java.util.UUID;
  */
 public class UUIDUtility {
 
-    /**
-     * Constructor used to hide the public constructor
-     */
-    private UUIDUtility() {
-        throw new IllegalStateException("Utility class");
+    private final DataCache dataCache;
+    private final Database database;
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public UUIDUtility(DataCache dataCache, Database database, ErrorHandler errorHandler) {
+        this.dataCache = dataCache;
+        this.database = database;
+        this.errorHandler = errorHandler;
     }
 
     /**
@@ -33,9 +38,9 @@ public class UUIDUtility {
      * @return UUID of the player.
      */
     @Deprecated
-    public static UUID getUUIDOf(String playerName) {
+    public static UUID getUUIDOf_Old(String playerName) {
         try {
-            return getUUIDOf(playerName, Database.getActive());
+            return Database.getActive().fetch().getUuidOf(playerName);
         } catch (Exception e) {
             return null;
         }
@@ -45,21 +50,18 @@ public class UUIDUtility {
      * Get UUID of a player.
      *
      * @param playerName Player's name
-     * @param db         Database to check from.
      * @return UUID of the player
      */
-    private static UUID getUUIDOf(String playerName, Database db) {
+    public UUID getUUIDOf(String playerName) {
         UUID uuid = null;
-        if (Check.isBukkitAvailable()) {
-            UUID uuidOf = DataCache.getInstance().getUUIDof(playerName);
-            if (uuidOf != null) {
-                return uuidOf;
-            }
+        UUID uuidOf = dataCache.getUUIDof(playerName);
+        if (uuidOf != null) {
+            return uuidOf;
         }
         try {
-            uuid = db.fetch().getUuidOf(playerName);
+            uuid = database.fetch().getUuidOf(playerName);
         } catch (DBOpException e) {
-            Log.toLog(UUIDUtility.class, e);
+            errorHandler.log(L.ERROR, UUIDUtility.class, e);
         }
         try {
             if (uuid == null) {

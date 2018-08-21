@@ -69,6 +69,7 @@ public abstract class PlanSystem implements SubSystem {
         localeSystem = new LocaleSystem();
     }
 
+    @Deprecated
     public static PlanSystem getInstance() {
         boolean bukkitAvailable = Check.isBukkitAvailable();
         boolean bungeeAvailable = Check.isBungeeAvailable();

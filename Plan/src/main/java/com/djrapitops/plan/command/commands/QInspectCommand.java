@@ -42,15 +42,22 @@ public class QInspectCommand extends CommandNode {
 
     private final Locale locale;
     private final Database database;
+    private UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public QInspectCommand(Locale locale, Database database, ErrorHandler errorHandler) {
+    public QInspectCommand(
+            Locale locale,
+            Database database,
+            UUIDUtility uuidUtility,
+            ErrorHandler errorHandler
+    ) {
         super("qinspect", Permissions.QUICK_INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
         setArguments("<player>");
 
         this.locale = locale;
         this.database = database;
+        this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.QINSPECT));
@@ -72,7 +79,7 @@ public class QInspectCommand extends CommandNode {
     private void runInspectTask(String playerName, ISender sender) {
         Processing.submitNonCritical(() -> {
             try {
-                UUID uuid = UUIDUtility.getUUIDOf(playerName);
+                UUID uuid = uuidUtility.getUUIDOf(playerName);
                 if (uuid == null) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
                     return;

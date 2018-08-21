@@ -33,16 +33,24 @@ public class InspectCommand extends CommandNode {
     private final Locale locale;
     private final Database database;
     private final WebServer webServer;
+    private UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public InspectCommand(Locale locale, Database database, WebServer webServer, ErrorHandler errorHandler) {
+    public InspectCommand(
+            Locale locale,
+            Database database,
+            WebServer webServer,
+            UUIDUtility uuidUtility,
+            ErrorHandler errorHandler
+    ) {
         super("inspect", Permissions.INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
         setArguments("<player>");
 
         this.locale = locale;
         this.database = database;
         this.webServer = webServer;
+        this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.INSPECT));
@@ -63,7 +71,7 @@ public class InspectCommand extends CommandNode {
     private void runInspectTask(String playerName, ISender sender) {
         Processing.submitNonCritical(() -> {
             try {
-                UUID uuid = UUIDUtility.getUUIDOf(playerName);
+                UUID uuid = uuidUtility.getUUIDOf(playerName);
                 if (uuid == null) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));
                     return;

@@ -9,6 +9,8 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
+import com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -25,7 +27,14 @@ public class ServerAPI extends CommonAPI {
     private final DataCache dataCache;
 
     @Inject
-    public ServerAPI(HookHandler hookHandler, Database activeDatabase, DataCache dataCache) {
+    public ServerAPI(
+            UUIDUtility uuidUtility,
+            HookHandler hookHandler,
+            Database activeDatabase,
+            DataCache dataCache,
+            ErrorHandler errorHandler
+    ) {
+        super(uuidUtility, errorHandler);
         this.hookHandler = hookHandler;
         this.activeDatabase = activeDatabase;
         this.dataCache = dataCache;

@@ -9,7 +9,7 @@ import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.database.BukkitDBSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
@@ -35,7 +35,7 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
                         ConfigSystem serverConfigSystem,
                         InfoSystem serverInfoSystem,
                         BukkitServerInfo serverInfo,
-                        BukkitDBSystem bukkitDBSystem,
+                        DBSystem databaseSystem,
                         BukkitListenerSystem bukkitListenerSystem,
                         BukkitTaskSystem bukkitTaskSystem,
                         ExportSystem exportSystem,
@@ -47,7 +47,7 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
         this.fileSystem = fileSystem;
         this.configSystem = serverConfigSystem;
         this.exportSystem = exportSystem;
-        this.databaseSystem = bukkitDBSystem;
+        this.databaseSystem = databaseSystem;
         listenerSystem = bukkitListenerSystem;
         taskSystem = bukkitTaskSystem;
 

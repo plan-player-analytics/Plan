@@ -39,7 +39,7 @@ public class PlayerPageHandler extends PageHandler {
         }
 
         String playerName = target.get(0);
-        UUID uuid = UUIDUtility.getUUIDOf(playerName);
+        UUID uuid = UUIDUtility.getUUIDOf_Old(playerName);
         Locale locale = request.getLocale();
 
         boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");

@@ -32,14 +32,21 @@ public class ManageRemoveCommand extends CommandNode {
 
     private final Locale locale;
     private final Database database;
+    private UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public ManageRemoveCommand(Locale locale, Database database, ErrorHandler errorHandler) {
+    public ManageRemoveCommand(
+            Locale locale,
+            Database database,
+            UUIDUtility uuidUtility,
+            ErrorHandler errorHandler
+    ) {
         super("remove|delete", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
         this.database = database;
+        this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
 
         setArguments("<player>", "[-a]");
@@ -65,7 +72,7 @@ public class ManageRemoveCommand extends CommandNode {
     private void runRemoveTask(String playerName, ISender sender, String[] args) {
         Processing.submitCritical(() -> {
             try {
-                UUID uuid = UUIDUtility.getUUIDOf(playerName);
+                UUID uuid = uuidUtility.getUUIDOf(playerName);
 
                 if (uuid == null) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_VALID));

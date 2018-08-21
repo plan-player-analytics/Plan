@@ -4,10 +4,15 @@
  */
 package com.djrapitops.plan.api;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.BungeeSystem;
+import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
+import com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -17,24 +22,37 @@ import java.util.UUID;
  */
 public class BungeeAPI extends CommonAPI {
 
-    private final BungeeSystem bungeeSystem;
+    private final HookHandler hookHandler;
+    private final Database database;
+    private final DataCache dataCache;
 
-    public BungeeAPI(BungeeSystem bungeeSystem) {
-        this.bungeeSystem = bungeeSystem;
+    @Inject
+    public BungeeAPI(
+            UUIDUtility uuidUtility,
+            Database database,
+            DataCache dataCache,
+            HookHandler hookHandler,
+            ErrorHandler errorHandler
+    ) {
+        super(uuidUtility, errorHandler);
+
+        this.database = database;
+        this.dataCache = dataCache;
+        this.hookHandler = hookHandler;
     }
 
     @Override
     public void addPluginDataSource(PluginData pluginData) {
-        bungeeSystem.getHookHandler().addPluginDataSource(pluginData);
+        hookHandler.addPluginDataSource(pluginData);
     }
 
     @Override
     public String getPlayerName(UUID uuid) {
-        return bungeeSystem.getCacheSystem().getDataCache().getName(uuid);
+        return dataCache.getName(uuid);
     }
 
     @Override
     public FetchOperations fetchFromPlanDB() {
-        return bungeeSystem.getDatabaseSystem().getActiveDatabase().fetch();
+        return database.fetch();
     }
 }
