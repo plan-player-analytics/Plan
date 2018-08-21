@@ -67,6 +67,9 @@ Data:
     LogUnknownCommands: false
     CombineCommandAliases: true
   Geolocations: true
+  Ping:
+    ServerEnableDelaySeconds: 300
+    PlayerLoginDelaySeconds: 30
   KeepInactivePlayerDataForDays: 180
 # -----------------------------------------------------
 Customization:

@@ -26,6 +26,7 @@ package com.djrapitops.plan.system.tasks.server;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.PingInsertProcessor;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.java.Reflection;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -160,7 +161,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
                     addPlayer(player);
                 }
             }
-        }).runTaskLater(TimeAmount.SECOND.ticks() * 15L);
+        }).runTaskLater(TimeAmount.SECOND.ticks() * (long) Settings.PING_PLAYER_LOGIN_DELAY.getNumber());
     }
 
     @EventHandler

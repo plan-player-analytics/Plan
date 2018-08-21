@@ -5,10 +5,12 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.tasks.server.BukkitTPSCountTimer;
 import com.djrapitops.plan.system.tasks.server.PaperTPSCountTimer;
 import com.djrapitops.plan.system.tasks.server.PingCountTimer;
 import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
 
@@ -33,8 +35,9 @@ public class BukkitTaskSystem extends ServerTaskSystem {
         try {
             PingCountTimer pingCountTimer = new PingCountTimer();
             ((Plan) plugin).registerListener(pingCountTimer);
+            long startDelay = TimeAmount.SECOND.ms() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
             RunnableFactory.createNew("PingCountTimer", pingCountTimer)
-                    .runTaskTimer(20L, PingCountTimer.PING_INTERVAL);
+                    .runTaskTimer(startDelay, PingCountTimer.PING_INTERVAL);
         } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {
             // Running CraftBukkit
         }
