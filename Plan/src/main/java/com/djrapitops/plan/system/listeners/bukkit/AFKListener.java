@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.system.afk.AFKTracker;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;
@@ -27,13 +28,21 @@ import java.util.UUID;
 public class AFKListener implements Listener {
 
     // Static so that /reload does not cause afk tracking to fail.
-    static final AFKTracker AFK_TRACKER = new AFKTracker();
+    static AFKTracker AFK_TRACKER;
 
     private final ErrorHandler errorHandler;
 
     @Inject
-    public AFKListener(ErrorHandler errorHandler) {
+    public AFKListener(PlanConfig config, ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
+
+        AFKListener.assignAFKTracker(config);
+    }
+
+    private static void assignAFKTracker(PlanConfig config) {
+        if (AFK_TRACKER == null) {
+            AFK_TRACKER = new AFKTracker(config);
+        }
     }
 
     private void event(PlayerEvent event) {

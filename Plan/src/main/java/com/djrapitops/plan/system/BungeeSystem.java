@@ -16,16 +16,12 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.BungeeInfoSystem;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import javax.inject.Inject;
-import java.util.function.Supplier;
 
 /**
  * Represents PlanSystem for PlanBungee.
@@ -38,20 +34,19 @@ public class BungeeSystem extends PlanSystem {
     public BungeeSystem(PlanBungee plugin,
                         VersionCheckSystem versionCheckSystem,
                         FileSystem fileSystem,
+                        BungeeConfigSystem bungeeConfigSystem,
                         BungeeCacheSystem bungeeCacheSystem,
-                        HookHandler hookHandler
+                        BungeeDBSystem bungeeDBSystem,
+                        HookHandler hookHandler,
+                        ExportSystem exportSystem
     ) {
         setTestSystem(this);
 
-        Log.setErrorManager(new PlanErrorManager());
-
-        Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
-
         this.versionCheckSystem = versionCheckSystem;
         this.fileSystem = fileSystem;
-        configSystem = new BungeeConfigSystem();
-        exportSystem = new ExportSystem(plugin);
-        databaseSystem = new BungeeDBSystem(localeSupplier);
+        configSystem = bungeeConfigSystem;
+        this.exportSystem = exportSystem;
+        databaseSystem = bungeeDBSystem;
         cacheSystem = bungeeCacheSystem;
         listenerSystem = new BungeeListenerSystem(plugin);
         taskSystem = new BungeeTaskSystem(plugin.getRunnableFactory());

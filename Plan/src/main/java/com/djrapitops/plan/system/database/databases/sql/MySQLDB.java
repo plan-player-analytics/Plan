@@ -5,16 +5,21 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * @author Rsl1122
@@ -25,8 +30,10 @@ public class MySQLDB extends SQLDB {
 
     protected volatile DataSource dataSource;
 
-    public MySQLDB(Supplier<Locale> locale) {
-        super(locale);
+    @Inject
+    public MySQLDB(Locale locale, PlanConfig config,
+                   RunnableFactory runnableFactory, PluginLogger pluginLogger, ErrorHandler errorHandler) {
+        super(locale, config, runnableFactory, pluginLogger, errorHandler);
     }
 
     private static synchronized void increment() {
@@ -47,33 +54,33 @@ public class MySQLDB extends SQLDB {
     @Override
     public void setupDataSource() throws DBInitException {
         try {
-            HikariConfig config = new HikariConfig();
+            HikariConfig hikariConfig = new HikariConfig();
 
-            String host = Settings.DB_HOST.toString();
-            String port = Integer.toString(Settings.DB_PORT.getNumber());
-            String database = Settings.DB_DATABASE.toString();
-            String launchOptions = Settings.DB_LAUNCH_OPTIONS.toString();
+            String host = config.getString(Settings.DB_HOST);
+            String port = config.getString(Settings.DB_PORT);
+            String database = config.getString(Settings.DB_DATABASE);
+            String launchOptions = config.getString(Settings.DB_LAUNCH_OPTIONS);
             if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
-                Log.error(locale.get().getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
+                Log.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
-            config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
+            hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
-            String username = Settings.DB_USER.toString();
-            String password = Settings.DB_PASS.toString();
+            String username = config.getString(Settings.DB_USER);
+            String password = config.getString(Settings.DB_PASS);
 
-            config.setUsername(username);
-            config.setPassword(password);
+            hikariConfig.setUsername(username);
+            hikariConfig.setPassword(password);
 
-            config.setPoolName("Plan Connection Pool-" + increment);
+            hikariConfig.setPoolName("Plan Connection Pool-" + increment);
             increment();
 
-            config.setAutoCommit(true);
-            config.setMaximumPoolSize(8);
-            config.setMaxLifetime(25L * TimeAmount.MINUTE.ms());
-            config.setLeakDetectionThreshold(10L * TimeAmount.MINUTE.ms());
+            hikariConfig.setAutoCommit(true);
+            hikariConfig.setMaximumPoolSize(8);
+            hikariConfig.setMaxLifetime(25L * TimeAmount.MINUTE.ms());
+            hikariConfig.setLeakDetectionThreshold(10L * TimeAmount.MINUTE.ms());
 
-            this.dataSource = new HikariDataSource(config);
+            this.dataSource = new HikariDataSource(hikariConfig);
 
             getConnection();
         } catch (SQLException e) {
@@ -115,7 +122,7 @@ public class MySQLDB extends SQLDB {
                 connection.close();
             }
         } catch (SQLException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 

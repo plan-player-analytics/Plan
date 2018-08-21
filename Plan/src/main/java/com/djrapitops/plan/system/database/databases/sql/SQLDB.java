@@ -13,8 +13,11 @@ import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -27,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +40,11 @@ import java.util.stream.Collectors;
  */
 public abstract class SQLDB extends Database {
 
-    protected final Supplier<Locale> locale;
+    protected final Locale locale;
+    protected final PlanConfig config;
+    protected final RunnableFactory runnableFactory;
+    protected final PluginLogger logger;
+    protected ErrorHandler errorHandler;
 
     private final UsersTable usersTable;
     private final UserInfoTable userInfoTable;
@@ -67,8 +73,13 @@ public abstract class SQLDB extends Database {
     private final boolean usingMySQL;
     private PluginTask dbCleanTask;
 
-    public SQLDB(Supplier<Locale> locale) {
+    public SQLDB(Locale locale, PlanConfig config, RunnableFactory runnableFactory, PluginLogger logger, ErrorHandler errorHandler) {
         this.locale = locale;
+        this.config = config;
+        this.runnableFactory = runnableFactory;
+        this.logger = logger;
+        this.errorHandler = errorHandler;
+
         usingMySQL = this instanceof MySQLDB;
 
         serverTable = new ServerTable(this);
@@ -117,7 +128,7 @@ public abstract class SQLDB extends Database {
 
     @Override
     public void scheduleClean(long secondsDelay) {
-        dbCleanTask = RunnableFactory.createNew("DB Clean Task", new AbsRunnable() {
+        dbCleanTask = runnableFactory.create("DB Clean Task", new AbsRunnable() {
             @Override
             public void run() {
                 try {
@@ -125,7 +136,7 @@ public abstract class SQLDB extends Database {
                         clean();
                     }
                 } catch (DBOpException e) {
-                    Log.toLog(this.getClass(), e);
+                    errorHandler.log(L.ERROR, this.getClass(), e);
                     cancel();
                 }
             }
@@ -157,7 +168,7 @@ public abstract class SQLDB extends Database {
                     new VersionTableRemovalPatch(this)
             };
 
-            RunnableFactory.createNew("Database Patch", new AbsRunnable() {
+            runnableFactory.create("Database Patch", new AbsRunnable() {
                 @Override
                 public void run() {
                     try {
@@ -165,19 +176,19 @@ public abstract class SQLDB extends Database {
                         for (Patch patch : patches) {
                             if (!patch.hasBeenApplied()) {
                                 String patchName = patch.getClass().getSimpleName();
-                                Log.info(locale.get().getString(PluginLang.DB_APPLY_PATCH, patchName));
+                                logger.info(locale.getString(PluginLang.DB_APPLY_PATCH, patchName));
                                 patch.apply();
                                 applied = true;
                             }
                         }
-                        Log.info(locale.get().getString(
+                        logger.info(locale.getString(
                                 applied ? PluginLang.DB_APPLIED_PATCHES : PluginLang.DB_APPLIED_PATCHES_ALREADY
                         ));
                     } catch (Exception e) {
-                        Log.error("----------------------------------------------------");
-                        Log.error(locale.get().getString(PluginLang.ENABLE_FAIL_DB_PATCH));
-                        Log.error("----------------------------------------------------");
-                        Log.toLog(this.getClass(), e);
+                        logger.error("----------------------------------------------------");
+                        logger.error(locale.getString(PluginLang.ENABLE_FAIL_DB_PATCH));
+                        logger.error("----------------------------------------------------");
+                        errorHandler.log(L.ERROR, this.getClass(), e);
                         PlanPlugin.getInstance().onDisable();
                     }
                 }
@@ -242,7 +253,7 @@ public abstract class SQLDB extends Database {
         pingTable.clean();
 
         long now = System.currentTimeMillis();
-        long keepActiveAfter = now - TimeAmount.DAY.ms() * Settings.KEEP_INACTIVE_PLAYERS_DAYS.getNumber();
+        long keepActiveAfter = now - TimeAmount.DAY.ms() * config.getNumber(Settings.KEEP_INACTIVE_PLAYERS_DAYS);
 
         List<UUID> inactivePlayers = sessionsTable.getLastSeenForAllPlayers().entrySet().stream()
                 .filter(entry -> entry.getValue() < keepActiveAfter)
@@ -253,7 +264,7 @@ public abstract class SQLDB extends Database {
         }
         int removed = inactivePlayers.size();
         if (removed > 0) {
-            Log.info(locale.get().getString(PluginLang.DB_NOTIFY_CLEAN, removed));
+            logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
         }
     }
 
@@ -307,8 +318,8 @@ public abstract class SQLDB extends Database {
             try {
                 execute(statement);
             } catch (DBOpException e) {
-                if (Settings.DEV_MODE.isTrue()) {
-                    Log.toLog(this.getClass(), e);
+                if (config.isTrue(Settings.DEV_MODE)) {
+                    errorHandler.log(L.ERROR, this.getClass(), e);
                 }
             }
         }

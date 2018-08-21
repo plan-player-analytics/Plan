@@ -3,6 +3,7 @@ package com.djrapitops.plan.system.afk;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
@@ -18,10 +19,10 @@ public class AFKTracker {
     private final Map<UUID, Long> lastMovement;
     private final long afkThresholdMs;
 
-    public AFKTracker() {
+    public AFKTracker(PlanConfig config) {
         usedAFKCommand = new HashSet<>();
         lastMovement = new HashMap<>();
-        afkThresholdMs = Settings.AFK_THRESHOLD_MINUTES.getNumber() * TimeAmount.MINUTE.ms();
+        afkThresholdMs = config.getNumber(Settings.AFK_THRESHOLD_MINUTES) * TimeAmount.MINUTE.ms();
     }
 
     public void hasIgnorePermission(UUID uuid) {

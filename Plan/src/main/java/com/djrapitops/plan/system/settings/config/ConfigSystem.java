@@ -22,10 +22,14 @@ import java.io.IOException;
  */
 public abstract class ConfigSystem implements SubSystem {
 
+    protected FileSystem fileSystem;
     protected PlanConfig config;
     protected final Theme theme;
 
-    public ConfigSystem() {
+    public ConfigSystem(FileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+
+        config = new PlanConfig(fileSystem.getConfigFile());
         theme = new Theme();
     }
 
@@ -56,11 +60,10 @@ public abstract class ConfigSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        config = new PlanConfig(FileSystem.getConfigFile_Old());
         try {
             copyDefaults();
             config.save();
-            Log.setDebugMode(Settings.DEBUG.toString());
+            Log.setDebugMode(config.getString(Settings.DEBUG));
         } catch (IOException e) {
             throw new EnableException("Failed to save default config.", e);
         }

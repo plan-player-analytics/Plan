@@ -3,14 +3,17 @@ package com.djrapitops.plan.system.database.databases.sql;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
+import com.djrapitops.plugin.task.RunnableFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.sql.SqlService;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * MySQLDB implementation for Sponge since default driver is not available.
@@ -19,8 +22,10 @@ import java.util.function.Supplier;
  */
 public class SpongeMySQLDB extends MySQLDB {
 
-    public SpongeMySQLDB(Supplier<Locale> locale) {
-        super(locale);
+    @Inject
+    public SpongeMySQLDB(Locale locale, PlanConfig config,
+                         RunnableFactory runnableFactory, PluginLogger pluginLogger, ErrorHandler errorHandler) {
+        super(locale, config, runnableFactory, pluginLogger, errorHandler);
     }
 
     @Override
@@ -30,18 +35,18 @@ public class SpongeMySQLDB extends MySQLDB {
             return;
         }
 
-        String host = Settings.DB_HOST.toString();
-        String port = Integer.toString(Settings.DB_PORT.getNumber());
-        String database = Settings.DB_DATABASE.toString();
-        String launchOptions = Settings.DB_LAUNCH_OPTIONS.toString();
+        String host = config.getString(Settings.DB_HOST);
+        String port = config.getString(Settings.DB_PORT);
+        String database = config.getString(Settings.DB_DATABASE);
+        String launchOptions = config.getString(Settings.DB_LAUNCH_OPTIONS);
         if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
-            Log.error("Launch Options were faulty, using default (?rewriteBatchedStatements=true&useSSL=false)");
+            logger.error("Launch Options were faulty, using default (?rewriteBatchedStatements=true&useSSL=false)");
             launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
         }
 
         String url = host + ":" + port + "/" + database + launchOptions;
-        String username = Settings.DB_USER.toString();
-        String password = Settings.DB_PASS.toString();
+        String username = config.getString(Settings.DB_USER);
+        String password = config.getString(Settings.DB_PASS);
         try {
             this.dataSource = sqlServiceProvider.get().getDataSource(
                     "jdbc:mysql://" + username + ":" + password + "@" + url

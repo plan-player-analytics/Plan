@@ -5,7 +5,10 @@
 package com.djrapitops.plan.system.database;
 
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
+import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -13,17 +16,21 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import javax.inject.Inject;
 
 /**
- * Bungee Database system that initializes MySQL object.
+ * Bukkit Database system that initializes SQLite and MySQL database objects.
  *
  * @author Rsl1122
  */
-public class BungeeDBSystem extends DBSystem {
+public class BukkitDBSystem extends DBSystem {
 
     @Inject
-    public BungeeDBSystem(Locale locale, MySQLDB mySQLDB,
+    public BukkitDBSystem(Locale locale, MySQLDB mySQLDB, SQLiteDB.Factory sqLiteDB, PlanConfig config,
                           PluginLogger logger, Timings timings, ErrorHandler errorHandler) {
         super(locale, logger, timings, errorHandler);
+
         databases.add(mySQLDB);
-        db = mySQLDB;
+        databases.add(sqLiteDB.usingDefaultFile());
+
+        String dbType = config.getString(Settings.DB_TYPE).toLowerCase().trim();
+        db = getActiveDatabaseByName(dbType);
     }
 }

@@ -1,19 +1,23 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.sql.*;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * @author Rsl1122
@@ -25,16 +29,9 @@ public class SQLiteDB extends SQLDB {
     private Connection connection;
     private PluginTask connectionPingTask;
 
-    public SQLiteDB(Supplier<Locale> locale) {
-        this("database", locale);
-    }
-
-    public SQLiteDB(String dbName, Supplier<Locale> locale) {
-        this(new File(PlanPlugin.getInstance().getDataFolder(), dbName + ".db"), locale);
-    }
-
-    public SQLiteDB(File databaseFile, Supplier<Locale> locale) {
-        super(locale);
+    public SQLiteDB(File databaseFile, Locale locale, PlanConfig config,
+                    RunnableFactory runnableFactory, PluginLogger logger, ErrorHandler errorHandler) {
+        super(locale, config, runnableFactory, logger, errorHandler);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
     }
@@ -53,14 +50,14 @@ public class SQLiteDB extends SQLDB {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
             return null; // Should never happen.
         }
 
         String dbFilePath = dbFile.getAbsolutePath();
 
         Connection newConnection = getConnectionFor(dbFilePath);
-        Log.debug("SQLite " + dbName + ": Opened a new Connection");
+        logger.debug("SQLite " + dbName + ": Opened a new Connection");
         newConnection.setAutoCommit(false);
         return newConnection;
     }
@@ -69,7 +66,7 @@ public class SQLiteDB extends SQLDB {
         try {
             return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath + "?journal_mode=WAL");
         } catch (SQLException ignored) {
-            Log.info(locale.get().getString(PluginLang.DB_NOTIFY_SQLITE_WAL));
+            logger.info(locale.getString(PluginLang.DB_NOTIFY_SQLITE_WAL));
             return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
         }
     }
@@ -78,7 +75,7 @@ public class SQLiteDB extends SQLDB {
         stopConnectionPingTask();
         try {
             // Maintains Connection.
-            connectionPingTask = RunnableFactory.createNew("DBConnectionPingTask " + getName(), new AbsRunnable() {
+            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getName(), new AbsRunnable() {
                 @Override
                 public void run() {
                     Statement statement = null;
@@ -93,8 +90,8 @@ public class SQLiteDB extends SQLDB {
                         try {
                             connection = getNewConnection(databaseFile);
                         } catch (SQLException e1) {
-                            Log.toLog(this.getClass(), e1);
-                            Log.error("SQLite connection maintaining task had to be closed due to exception.");
+                            errorHandler.log(L.ERROR, this.getClass(), e1);
+                            logger.error("SQLite connection maintaining task had to be closed due to exception.");
                             this.cancel();
                         }
                     } finally {
@@ -135,7 +132,7 @@ public class SQLiteDB extends SQLDB {
     public void close() {
         stopConnectionPingTask();
         if (connection != null) {
-            Log.debug("SQLite " + dbName + ": Closed Connection");
+            logger.debug("SQLite " + dbName + ": Closed Connection");
             MiscUtils.close(connection);
         }
         super.close();
@@ -147,7 +144,7 @@ public class SQLiteDB extends SQLDB {
             connection.commit();
         } catch (SQLException e) {
             if (!e.getMessage().contains("cannot commit")) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         }
     }
@@ -169,5 +166,39 @@ public class SQLiteDB extends SQLDB {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), dbName);
+    }
+
+    public static class Factory {
+
+        private final Locale locale;
+        private final PlanConfig config;
+        private final RunnableFactory runnableFactory;
+        private final PluginLogger logger;
+        private final ErrorHandler errorHandler;
+        private FileSystem fileSystem;
+
+        @Inject
+        public Factory(Locale locale, PlanConfig config, FileSystem fileSystem,
+                       RunnableFactory runnableFactory, PluginLogger logger, ErrorHandler errorHandler) {
+            this.locale = locale;
+            this.config = config;
+            this.fileSystem = fileSystem;
+            this.runnableFactory = runnableFactory;
+            this.logger = logger;
+            this.errorHandler = errorHandler;
+        }
+
+        public SQLiteDB usingDefaultFile() {
+            return usingFileCalled("database");
+        }
+
+        public SQLiteDB usingFileCalled(String fileName) {
+            return usingFile(fileSystem.getFileFromPluginFolder(fileName + ".db"));
+        }
+
+        public SQLiteDB usingFile(File databaseFile) {
+            return new SQLiteDB(databaseFile, locale, config, runnableFactory, logger, errorHandler);
+        }
+
     }
 }

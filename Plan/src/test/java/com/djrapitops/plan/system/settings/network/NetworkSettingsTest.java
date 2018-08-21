@@ -3,11 +3,9 @@ package com.djrapitops.plan.system.settings.network;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -33,7 +31,7 @@ public class NetworkSettingsTest {
 
         SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
-        db = new SQLiteDB(Locale::new);
+        db = null; // TODO
         mockUtil.enableDatabaseSystem(db)
                 .enableServerInfoSystem();
 

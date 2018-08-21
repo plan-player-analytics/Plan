@@ -16,13 +16,11 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
-public class ServerConfigSystem extends ConfigSystem {
-
-    protected final FileSystem fileSystem;
+public class BukkitConfigSystem extends ConfigSystem {
 
     @Inject
-    public ServerConfigSystem(FileSystem fileSystem) {
-        this.fileSystem = fileSystem;
+    public BukkitConfigSystem(FileSystem fileSystem) {
+        super(fileSystem);
     }
 
     @Override

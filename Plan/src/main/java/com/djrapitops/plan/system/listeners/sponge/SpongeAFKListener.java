@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.system.afk.AFKTracker;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.entity.living.player.Player;
@@ -27,15 +28,23 @@ import java.util.UUID;
  */
 public class SpongeAFKListener {
 
+    // Static so that /reload does not cause afk tracking to fail.
+    static AFKTracker AFK_TRACKER;
+
     private final ErrorHandler errorHandler;
 
     @Inject
-    public SpongeAFKListener(ErrorHandler errorHandler) {
+    public SpongeAFKListener(PlanConfig config, ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
+
+        SpongeAFKListener.assignAFKTracker(config);
     }
 
-    // Static so that /reload does not cause afk tracking to fail.
-    public static final AFKTracker AFK_TRACKER = new AFKTracker();
+    private static void assignAFKTracker(PlanConfig config) {
+        if (AFK_TRACKER == null) {
+            AFK_TRACKER = new AFKTracker(config);
+        }
+    }
 
     private void event(TargetPlayerEvent event) {
         try {

@@ -12,13 +12,14 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * System that holds the active databases.
@@ -27,13 +28,19 @@ import java.util.function.Supplier;
  */
 public abstract class DBSystem implements SubSystem {
 
-    protected final Supplier<Locale> locale;
+    protected final Locale locale;
+    protected final PluginLogger logger;
+    protected final Timings timings;
+    protected final ErrorHandler errorHandler;
 
     protected Database db;
     protected Set<Database> databases;
 
-    public DBSystem(Supplier<Locale> locale) {
+    public DBSystem(Locale locale, PluginLogger logger, Timings timings, ErrorHandler errorHandler) {
         this.locale = locale;
+        this.logger = logger;
+        this.timings = timings;
+        this.errorHandler = errorHandler;
         databases = new HashSet<>();
     }
 
@@ -44,23 +51,15 @@ public abstract class DBSystem implements SubSystem {
         return dbSystem;
     }
 
-    @Deprecated
-    public static Database getActiveDatabaseByName_Old(String dbName) throws DBInitException {
-        return getInstance().getActiveDatabaseByName(dbName);
-    }
-
-    public Database getActiveDatabaseByName(String dbName) throws DBInitException {
+    public Database getActiveDatabaseByName(String dbName) {
         for (Database database : getDatabases()) {
             String dbConfigName = database.getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
-                database.init();
                 return database;
             }
         }
-        throw new DBInitException(locale.get().getString(PluginLang.ENABLE_FAIL_WRONG_DB, dbName));
+        throw new IllegalArgumentException(locale.getString(PluginLang.ENABLE_FAIL_WRONG_DB, dbName));
     }
-
-    protected abstract void initDatabase() throws DBInitException;
 
     public Set<Database> getDatabases() {
         return databases;
@@ -84,11 +83,9 @@ public abstract class DBSystem implements SubSystem {
     @Override
     public void enable() throws EnableException {
         try {
-            Benchmark.start("Init Database");
-            initDatabase();
+            db.init();
             db.scheduleClean(1L);
-            Log.info(locale.get().getString(PluginLang.ENABLED_DATABASE, db.getName()));
-            Benchmark.stop("Enable", "Init Database");
+            Log.info(locale.getString(PluginLang.ENABLED_DATABASE, db.getName()));
         } catch (DBInitException e) {
             Throwable cause = e.getCause();
             String message = cause == null ? e.getMessage() : cause.getMessage();

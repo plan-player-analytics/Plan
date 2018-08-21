@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
-public class SpongeConfigSystem extends ServerConfigSystem {
+public class SpongeConfigSystem extends BukkitConfigSystem {
 
     private final PluginLogger logger;
 

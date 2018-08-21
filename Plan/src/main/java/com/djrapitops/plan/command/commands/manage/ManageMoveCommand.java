@@ -72,6 +72,8 @@ public class ManageMoveCommand extends CommandNode {
         try {
             final Database fromDatabase = dbSystem.getActiveDatabaseByName(fromDB);
             final Database toDatabase = dbSystem.getActiveDatabaseByName(toDB);
+            fromDatabase.init();
+            toDatabase.init();
 
             runMoveTask(fromDatabase, toDatabase, sender);
         } catch (Exception e) {

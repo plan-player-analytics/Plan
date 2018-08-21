@@ -33,14 +33,16 @@ public class ManageRestoreCommand extends CommandNode {
     private final Locale locale;
     private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
+    private SQLiteDB.Factory sqliteFactory;
     private final FileSystem fileSystem;
 
     @Inject
-    public ManageRestoreCommand(Locale locale, DBSystem dbSystem, FileSystem fileSystem, ErrorHandler errorHandler) {
+    public ManageRestoreCommand(Locale locale, DBSystem dbSystem, SQLiteDB.Factory sqliteFactory, FileSystem fileSystem, ErrorHandler errorHandler) {
         super("restore", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
         this.dbSystem = dbSystem;
+        this.sqliteFactory = sqliteFactory;
         this.fileSystem = fileSystem;
         this.errorHandler = errorHandler;
 
@@ -63,8 +65,10 @@ public class ManageRestoreCommand extends CommandNode {
 
         try {
             Database database = dbSystem.getActiveDatabaseByName(dbName);
+
             Verify.isFalse(backupDbName.contains("database") && database instanceof SQLiteDB,
                     () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB)));
+            database.init();
 
             if (!Verify.contains("-a", args)) {
                 sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_OVERWRITE, database.getName())));
@@ -94,7 +98,7 @@ public class ManageRestoreCommand extends CommandNode {
                     backupDBName = backupDBName.substring(0, backupDBName.length() - 3);
                 }
 
-                SQLiteDB backupDB = new SQLiteDB(backupDBName, () -> locale);
+                SQLiteDB backupDB = sqliteFactory.usingFile(backupDBFile);
                 backupDB.init();
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));

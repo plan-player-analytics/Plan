@@ -1,6 +1,6 @@
-package com.djrapitops.plan.modules.server.bukkit;
+package com.djrapitops.plan.modules.bungee;
 
-import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
+import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -13,11 +13,11 @@ import dagger.Provides;
  * @author Rsl1122
  */
 @Module
-public class BukkitConfigModule {
+public class BungeeConfigModule {
 
     @Provides
-    ConfigSystem provideConfigSystem(BukkitConfigSystem bukkitConfigSystem) {
-        return bukkitConfigSystem;
+    ConfigSystem provideConfigSystem(BungeeConfigSystem bungeeConfigSystem) {
+        return bungeeConfigSystem;
     }
 
     @Provides

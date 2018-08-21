@@ -1,23 +1,22 @@
-package com.djrapitops.plan.modules.server;
+package com.djrapitops.plan.modules.server.bukkit;
 
+import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.database.ServerDBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.locale.Locale;
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * Dagger module for server database.
+ * Dagger module for bukkit database.
  *
  * @author Rsl1122
  */
 @Module
-public class ServerDatabaseModule {
+public class BukkitDatabaseModule {
 
     @Provides
-    DBSystem provideDatabaseSystem(Locale locale) {
-        return new ServerDBSystem(() -> locale);
+    DBSystem provideDatabaseSystem(BukkitDBSystem dbSystem) {
+        return dbSystem;
     }
 
     @Provides

@@ -13,7 +13,6 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -36,14 +35,16 @@ public class ManageBackupCommand extends CommandNode {
 
     private final Locale locale;
     private final DBSystem dbSystem;
+    private SQLiteDB.Factory sqliteFactory;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public ManageBackupCommand(Locale locale, DBSystem dbSystem, ErrorHandler errorHandler) {
+    public ManageBackupCommand(Locale locale, DBSystem dbSystem, SQLiteDB.Factory sqliteFactory, ErrorHandler errorHandler) {
         super("backup", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
         this.dbSystem = dbSystem;
+        this.sqliteFactory = sqliteFactory;
         this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_BACKUP));
@@ -65,6 +66,7 @@ public class ManageBackupCommand extends CommandNode {
                     () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
             Database database = dbSystem.getActiveDatabaseByName(dbName);
+            database.init();
 
             runBackupTask(sender, args, database);
         } catch (DBInitException e) {
@@ -75,7 +77,6 @@ public class ManageBackupCommand extends CommandNode {
     private void runBackupTask(ISender sender, String[] args, Database database) {
         Processing.submitCritical(() -> {
             try {
-                Log.debug("Backup", "Start");
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
                 createNewBackup(args[0], database);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
@@ -97,7 +98,7 @@ public class ManageBackupCommand extends CommandNode {
         try {
             String timeStamp = Formatters.iso8601NoClock().apply(System::currentTimeMillis);
             String fileName = dbName + "-backup-" + timeStamp;
-            backupDB = new SQLiteDB(fileName, () -> locale);
+            backupDB = sqliteFactory.usingFileCalled(fileName);
             Collection<UUID> uuids = copyFromDB.fetch().getSavedUUIDs();
             if (uuids.isEmpty()) {
                 return;

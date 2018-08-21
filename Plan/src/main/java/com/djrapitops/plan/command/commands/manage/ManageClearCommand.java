@@ -64,6 +64,7 @@ public class ManageClearCommand extends CommandNode {
 
         try {
             Database database = dbSystem.getActiveDatabaseByName(dbName);
+            database.init();
             runClearTask(sender, database);
         } catch (DBInitException e) {
             sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));

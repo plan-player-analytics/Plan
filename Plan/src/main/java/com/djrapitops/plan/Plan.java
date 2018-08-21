@@ -25,16 +25,15 @@ import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.common.*;
 import com.djrapitops.plan.modules.server.ServerAPIModule;
 import com.djrapitops.plan.modules.server.ServerDataCacheModule;
-import com.djrapitops.plan.modules.server.ServerDatabaseModule;
 import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
 import com.djrapitops.plan.modules.server.bukkit.BukkitConfigModule;
+import com.djrapitops.plan.modules.server.bukkit.BukkitDatabaseModule;
 import com.djrapitops.plan.modules.server.bukkit.BukkitInfoModule;
 import com.djrapitops.plan.system.BukkitSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
 import com.djrapitops.plan.system.processing.importing.importers.OfflinePlayerImporter;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBukkit;
 import com.djrapitops.plugin.BukkitPlugin;
@@ -63,7 +62,7 @@ import java.util.logging.Logger;
         BukkitConfigModule.class,
         LocaleModule.class,
         BukkitInfoModule.class,
-        ServerDatabaseModule.class,
+        BukkitDatabaseModule.class,
         ServerDataCacheModule.class,
         WebServerSystemModule.class,
         ServerInfoSystemModule.class,
@@ -131,9 +130,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            String debugString = Settings.DEBUG.toString();
-            // TODO Set debug logger
-
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 
             new BStatsBukkit(this).registerMetrics();
@@ -172,7 +168,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             system.disable();
         }
 
-        logger.info(locale.getString(PluginLang.DISABLED));
+        logger.info(locale != null ? locale.getString(PluginLang.DISABLED) : PluginLang.DISABLED.getDefault());
         DebugLog.pluginDisabled(Plan.class);
     }
 

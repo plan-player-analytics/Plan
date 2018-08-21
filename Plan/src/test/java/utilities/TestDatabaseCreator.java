@@ -1,13 +1,10 @@
 package utilities;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.io.File;
@@ -29,17 +26,17 @@ public class TestDatabaseCreator {
             "840b0c0e-a65c-4269-8d5c-d3e1de349557"
     }).map(UUID::fromString).collect(Collectors.toList());
     private static final String[] gms = GMTimes.getGMKeyArray();
-    private final SQLDB db;
+    private final SQLDB db = null; // TODO
     private final Random r;
     private Map<UUID, List<String>> worlds;
 
-    public TestDatabaseCreator() throws DBInitException {
+    public TestDatabaseCreator() {
         File testDB = new File("src/test/resources/testDB.db".replace("/", File.separator));
 
         boolean oldDB = testDB.exists();
 
-        db = new SQLiteDB(testDB, Locale::new);
-        db.init();
+//        db = new SQLiteDB(testDB, Locale::new);
+//        db.init();
 
         r = new Random();
 

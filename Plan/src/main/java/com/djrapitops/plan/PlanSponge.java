@@ -6,9 +6,9 @@ import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.common.*;
 import com.djrapitops.plan.modules.server.ServerAPIModule;
 import com.djrapitops.plan.modules.server.ServerDataCacheModule;
-import com.djrapitops.plan.modules.server.ServerDatabaseModule;
 import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
 import com.djrapitops.plan.modules.server.bukkit.BukkitConfigModule;
+import com.djrapitops.plan.modules.server.sponge.SpongeDatabaseModule;
 import com.djrapitops.plan.modules.server.sponge.SpongeInfoModule;
 import com.djrapitops.plan.system.SpongeSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -49,7 +49,7 @@ import java.io.InputStream;
         VersionCheckModule.class,
         BukkitConfigModule.class,
         LocaleModule.class,
-        ServerDatabaseModule.class,
+        SpongeDatabaseModule.class,
         ServerDataCacheModule.class,
         WebServerSystemModule.class,
         ServerInfoSystemModule.class,

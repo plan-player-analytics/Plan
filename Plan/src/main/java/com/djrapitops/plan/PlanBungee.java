@@ -7,10 +7,10 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.bungee.BungeeConfigModule;
+import com.djrapitops.plan.modules.bungee.BungeeDatabaseModule;
 import com.djrapitops.plan.modules.common.*;
-import com.djrapitops.plan.modules.server.ServerDatabaseModule;
 import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
-import com.djrapitops.plan.modules.server.bukkit.BukkitConfigModule;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -38,9 +38,9 @@ import java.io.InputStream;
         APFModule.class,
         ExportModule.class,
         VersionCheckModule.class,
-        BukkitConfigModule.class,
+        BungeeConfigModule.class,
         LocaleModule.class,
-        ServerDatabaseModule.class,
+        BungeeDatabaseModule.class,
         WebServerSystemModule.class,
         ServerInfoSystemModule.class,
         PluginHookModule.class

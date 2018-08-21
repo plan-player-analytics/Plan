@@ -8,10 +8,8 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.database.ServerDBSystem;
 import com.djrapitops.plan.system.info.request.GenerateInspectPluginsTabRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -98,7 +96,7 @@ public class BungeeBukkitConnectionTest {
         Settings.WEBSERVER_PORT.setTemporaryValue(9250);
         Settings.BUNGEE_IP.setTemporaryValue("localhost");
         Settings.DB_TYPE.setTemporaryValue("sqlite");
-        bungeeSystem.setDatabaseSystem(new ServerDBSystem(Locale::new));
+//        bungeeSystem.setDatabaseSystem(new BukkitDBSystem(new Locale()));
 
         bungeeSystem.enable();
 

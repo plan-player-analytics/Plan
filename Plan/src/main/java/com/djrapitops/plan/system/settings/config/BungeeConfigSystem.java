@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.system.file.FileSystem;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 /**
@@ -17,8 +18,13 @@ import java.io.IOException;
  */
 public class BungeeConfigSystem extends ConfigSystem {
 
+    @Inject
+    public BungeeConfigSystem(FileSystem fileSystem) {
+        super(fileSystem);
+    }
+
     @Override
     protected void copyDefaults() throws IOException {
-        config.copyDefaults(FileSystem.readFromResource_Old("bungeeconfig.yml"));
+        config.copyDefaults(fileSystem.readFromResource("bungeeconfig.yml"));
     }
 }
