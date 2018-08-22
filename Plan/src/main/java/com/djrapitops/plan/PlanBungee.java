@@ -10,7 +10,11 @@ import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.bungee.BungeeAPIModule;
 import com.djrapitops.plan.modules.bungee.BungeeConfigModule;
 import com.djrapitops.plan.modules.bungee.BungeeDatabaseModule;
-import com.djrapitops.plan.modules.common.*;
+import com.djrapitops.plan.modules.bungee.BungeeInfoModule;
+import com.djrapitops.plan.modules.common.ExportModule;
+import com.djrapitops.plan.modules.common.LocaleModule;
+import com.djrapitops.plan.modules.common.PluginHookModule;
+import com.djrapitops.plan.modules.common.VersionCheckModule;
 import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -41,8 +45,8 @@ import java.io.InputStream;
         VersionCheckModule.class,
         BungeeConfigModule.class,
         LocaleModule.class,
+        BungeeInfoModule.class,
         BungeeDatabaseModule.class,
-        WebServerSystemModule.class,
         ServerInfoSystemModule.class,
         PluginHookModule.class,
         BungeeAPIModule.class

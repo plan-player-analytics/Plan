@@ -61,11 +61,11 @@ public abstract class PlanSystem implements SubSystem {
     // Not a SubSystem.
     protected PlanAPI planAPI;
 
-    public PlanSystem() {
+    public PlanSystem(WebServerSystem webServerSystem) {
+        this.webServerSystem = webServerSystem;
         Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
 
         processing = new Processing(localeSupplier);
-        webServerSystem = new WebServerSystem(localeSupplier);
         localeSystem = new LocaleSystem();
     }
 

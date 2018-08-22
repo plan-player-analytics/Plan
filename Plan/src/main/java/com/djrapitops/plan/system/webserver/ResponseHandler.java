@@ -14,8 +14,11 @@ import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pages.*;
 import com.djrapitops.plan.system.webserver.response.*;
 import com.djrapitops.plan.system.webserver.response.errors.*;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,15 +29,22 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ResponseHandler extends TreePageHandler {
 
-    private final WebServer webServer;
+    private final ErrorHandler errorHandler;
 
-    public ResponseHandler(WebServer webServer) {
-        this.webServer = webServer;
+    private WebServer webServer;
+
+    @Inject
+    public ResponseHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+
+        registerWebAPIPages();
+        registerDefaultPages();
     }
 
-    public void registerDefaultPages() {
+    private void registerDefaultPages() {
         registerPage("favicon.ico", new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"), 5);
         registerPage("debug", new DebugPageHandler());
         registerPage("players", new PlayersPageHandler());
@@ -44,7 +54,7 @@ public class ResponseHandler extends TreePageHandler {
         registerPage("network", serverPageHandler);
         registerPage("server", serverPageHandler);
         registerPage("", webServer.isAuthRequired()
-                ? new RootPageHandler(this)
+                ? new RootPageHandler()
                 : new PageHandler() {
             @Override
             public Response getResponse(Request request, List<String> target) {
@@ -53,7 +63,7 @@ public class ResponseHandler extends TreePageHandler {
         });
     }
 
-    public void registerWebAPIPages() {
+    private void registerWebAPIPages() {
         registerPage("info", new InfoRequestPageHandler());
     }
 
@@ -84,7 +94,7 @@ public class ResponseHandler extends TreePageHandler {
                 return new InternalErrorResponse(request.getTarget(), e);
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
             return new InternalErrorResponse(request.getTarget(), e);
         }
     }
@@ -106,7 +116,7 @@ public class ResponseHandler extends TreePageHandler {
                 if (webServer.isUsingHTTPS()) {
                     return DefaultResponses.BASIC_AUTH.get();
                 } else {
-                    return forbiddenResponse();
+                    return DefaultResponses.FORBIDDEN.get();
                 }
             }
         }
@@ -118,13 +128,11 @@ public class ResponseHandler extends TreePageHandler {
             if (!isAuthRequired || isAuthorized) {
                 return pageHandler.getResponse(request, target);
             }
-            return forbiddenResponse();
+            return DefaultResponses.FORBIDDEN.get();
         }
     }
 
-    public Response forbiddenResponse() {
-        return ResponseCache.loadResponse(PageId.FORBIDDEN.id(), () ->
-                new ForbiddenResponse("Your user is not authorized to view this page.<br>"
-                        + "If you believe this is an error contact staff to change your access level."));
+    public void setWebServer(WebServer webServer) {
+        this.webServer = webServer;
     }
 }

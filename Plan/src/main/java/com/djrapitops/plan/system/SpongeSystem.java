@@ -19,6 +19,7 @@ import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.webserver.WebServerSystem;
 
 import javax.inject.Inject;
 
@@ -36,14 +37,16 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
                         ConfigSystem serverConfigSystem,
                         InfoSystem serverInfoSystem,
                         SpongeServerInfo serverInfo,
+                        DBSystem databaseSystem,
+                        WebServerSystem webServerSystem,
                         SpongeListenerSystem spongeListenerSystem,
                         SpongeTaskSystem spongeTaskSystem,
-                        DBSystem databaseSystem,
                         ExportSystem exportSystem,
                         HookHandler hookHandler,
                         PlanAPI planAPI,
                         ShutdownHook shutdownHook
     ) {
+        super(webServerSystem);
         setTestSystem(this);
 
         this.versionCheckSystem = versionCheckSystem;

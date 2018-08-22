@@ -19,6 +19,7 @@ import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.webserver.WebServerSystem;
 
 import javax.inject.Inject;
 
@@ -34,12 +35,15 @@ public class BungeeSystem extends PlanSystem {
                         VersionCheckSystem versionCheckSystem,
                         FileSystem fileSystem,
                         BungeeConfigSystem bungeeConfigSystem,
+                        BungeeServerInfo bungeeServerInfo,
                         BungeeCacheSystem bungeeCacheSystem,
                         DBSystem databaseSystem,
+                        WebServerSystem webServerSystem,
                         HookHandler hookHandler,
                         ExportSystem exportSystem,
                         PlanAPI planAPI
     ) {
+        super(webServerSystem);
         setTestSystem(this);
 
         this.versionCheckSystem = versionCheckSystem;
@@ -52,7 +56,7 @@ public class BungeeSystem extends PlanSystem {
         taskSystem = new BungeeTaskSystem(plugin.getRunnableFactory());
 
         infoSystem = new BungeeInfoSystem();
-        serverInfo = new BungeeServerInfo(plugin);
+        serverInfo = bungeeServerInfo;
 
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;

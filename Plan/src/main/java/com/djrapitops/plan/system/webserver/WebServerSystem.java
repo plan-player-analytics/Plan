@@ -7,11 +7,10 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.benchmarking.Timings;
 
-import java.util.function.Supplier;
+import javax.inject.Inject;
 
 /**
  * WebServer subsystem for managing WebServer initialization.
@@ -20,16 +19,21 @@ import java.util.function.Supplier;
  */
 public class WebServerSystem implements SubSystem {
 
-    private WebServer webServer;
+    private final WebServer webServer;
+    private Timings timings;
 
-    public WebServerSystem(Supplier<Locale> locale) {
-        webServer = new WebServer(locale);
+    @Inject
+    public WebServerSystem(WebServer webServer, Timings timings) {
+        this.webServer = webServer;
+        this.timings = timings;
     }
 
+    @Deprecated
     public static WebServerSystem getInstance() {
         return PlanSystem.getInstance().getWebServerSystem();
     }
 
+    @Deprecated
     public static boolean isWebServerEnabled() {
         WebServer webServer = getInstance().webServer;
         return webServer != null && webServer.isEnabled();
@@ -37,12 +41,9 @@ public class WebServerSystem implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        Benchmark.start("WebServer Initialization");
+        timings.start("WebServer Initialization");
         webServer.enable();
-        ResponseHandler responseHandler = webServer.getResponseHandler();
-        responseHandler.registerWebAPIPages();
-        responseHandler.registerDefaultPages();
-        Benchmark.stop("Enable", "WebServer Initialization");
+        timings.end("WebServer Initialization");
     }
 
     @Override

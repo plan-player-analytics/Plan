@@ -17,29 +17,32 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * HttpHandler for WebServer request management.
  *
  * @author Rsl1122
  */
+@Singleton
 public class RequestHandler implements HttpHandler {
 
-    private final Supplier<Locale> locale;
+    private final Locale locale;
     private final ResponseHandler responseHandler;
 
-    RequestHandler(WebServer webServer) {
-        responseHandler = new ResponseHandler(webServer);
-        locale = webServer.getLocaleSupplier();
+    @Inject
+    RequestHandler(Locale locale, ResponseHandler responseHandler) {
+        this.locale = locale;
+        this.responseHandler = responseHandler;
     }
 
     @Override
     public void handle(HttpExchange exchange) {
         Headers requestHeaders = exchange.getRequestHeaders();
         Headers responseHeaders = exchange.getResponseHeaders();
-        Request request = new Request(exchange, locale.get());
+        Request request = new Request(exchange, locale);
         request.setAuth(getAuthorization(requestHeaders));
 
         String requestString = request.toString();
@@ -53,7 +56,7 @@ public class RequestHandler implements HttpHandler {
             }
 
             response.setResponseHeaders(responseHeaders);
-            response.send(exchange, locale.get());
+            response.send(exchange, locale);
         } catch (Exception e) {
             if (Settings.DEV_MODE.isTrue()) {
                 Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");

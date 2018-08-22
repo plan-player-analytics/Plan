@@ -19,6 +19,7 @@ import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
+import com.djrapitops.plan.system.webserver.WebServerSystem;
 
 import javax.inject.Inject;
 
@@ -36,6 +37,7 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
                         InfoSystem serverInfoSystem,
                         BukkitServerInfo serverInfo,
                         DBSystem databaseSystem,
+                        WebServerSystem webServerSystem,
                         BukkitListenerSystem bukkitListenerSystem,
                         BukkitTaskSystem bukkitTaskSystem,
                         ExportSystem exportSystem,
@@ -43,6 +45,7 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
                         PlanAPI planAPI,
                         ShutdownHook shutdownHook
     ) {
+        super(webServerSystem);
         this.versionCheckSystem = versionCheckSystem;
         this.fileSystem = fileSystem;
         this.configSystem = serverConfigSystem;

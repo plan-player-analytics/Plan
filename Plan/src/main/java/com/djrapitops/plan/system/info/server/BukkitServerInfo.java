@@ -10,7 +10,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plan.system.webserver.WebServer;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -26,15 +26,23 @@ import java.util.UUID;
  */
 public class BukkitServerInfo extends ServerInfo {
 
+    private final WebServer webServer;
     private final PlanConfig config;
     private ServerInfoFile serverInfoFile;
     private Database database;
 
     @Inject
-    public BukkitServerInfo(ServerProperties serverProperties, ServerInfoFile serverInfoFile, Database database, PlanConfig config) {
+    public BukkitServerInfo(
+            ServerProperties serverProperties,
+            ServerInfoFile serverInfoFile,
+            Database database,
+            WebServer webServer,
+            PlanConfig config
+    ) {
         super(serverProperties);
         this.serverInfoFile = serverInfoFile;
         this.database = database;
+        this.webServer = webServer;
         this.config = config;
     }
 
@@ -67,7 +75,7 @@ public class BukkitServerInfo extends ServerInfo {
             return registerServer(serverUUID);
         }
         String name = config.getString(Settings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
-        String webAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        String webAddress = webServer.getAccessAddress();
         if ("plan".equalsIgnoreCase(name)) {
             name = "Server " + serverID.get();
         }
@@ -83,7 +91,7 @@ public class BukkitServerInfo extends ServerInfo {
     }
 
     private Server registerServer(UUID serverUUID) throws IOException {
-        String webAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        String webAddress = webServer.getAccessAddress();
         String name = config.getString(Settings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
         int maxPlayers = serverProperties.getMaxPlayers();
 
@@ -103,7 +111,12 @@ public class BukkitServerInfo extends ServerInfo {
     }
 
     private UUID generateNewUUID() {
-        String seed = serverProperties.getServerId() + serverProperties.getName() + serverProperties.getIp() + serverProperties.getPort() + serverProperties.getVersion() + serverProperties.getImplVersion();
+        String seed = serverProperties.getServerId() +
+                serverProperties.getName() +
+                serverProperties.getIp() +
+                serverProperties.getPort() +
+                serverProperties.getVersion() +
+                serverProperties.getImplVersion();
         return UUID.nameUUIDFromBytes(seed.getBytes());
     }
 }

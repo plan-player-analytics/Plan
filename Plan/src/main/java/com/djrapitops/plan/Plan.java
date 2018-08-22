@@ -22,7 +22,10 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.common.*;
+import com.djrapitops.plan.modules.common.ExportModule;
+import com.djrapitops.plan.modules.common.LocaleModule;
+import com.djrapitops.plan.modules.common.PluginHookModule;
+import com.djrapitops.plan.modules.common.VersionCheckModule;
 import com.djrapitops.plan.modules.server.ServerAPIModule;
 import com.djrapitops.plan.modules.server.ServerDataCacheModule;
 import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
@@ -64,7 +67,6 @@ import java.util.logging.Logger;
         BukkitInfoModule.class,
         BukkitDatabaseModule.class,
         ServerDataCacheModule.class,
-        WebServerSystemModule.class,
         ServerInfoSystemModule.class,
         PluginHookModule.class,
         ServerAPIModule.class

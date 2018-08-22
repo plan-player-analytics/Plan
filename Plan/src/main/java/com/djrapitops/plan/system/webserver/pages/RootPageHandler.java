@@ -7,12 +7,11 @@ package com.djrapitops.plan.system.webserver.pages;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.webserver.Request;
-import com.djrapitops.plan.system.webserver.ResponseHandler;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
+import com.djrapitops.plan.system.webserver.response.RedirectResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +23,6 @@ import java.util.Optional;
  * @author Rsl1122
  */
 public class RootPageHandler extends PageHandler {
-
-    private final ResponseHandler responseHandler;
-
-    public RootPageHandler(ResponseHandler responseHandler) {
-        this.responseHandler = responseHandler;
-    }
 
     @Override
     public Response getResponse(Request request, List<String> target) throws WebException {
@@ -43,13 +36,13 @@ public class RootPageHandler extends PageHandler {
         int permLevel = webUser.getPermLevel();
         switch (permLevel) {
             case 0:
-                return responseHandler.getPageHandler("server").getResponse(request, Collections.emptyList());
+                return new RedirectResponse("/server");
             case 1:
-                return responseHandler.getPageHandler("players").getResponse(request, Collections.emptyList());
+                return new RedirectResponse("/players");
             case 2:
-                return responseHandler.getPageHandler("player").getResponse(request, Collections.singletonList(webUser.getName()));
+                return new RedirectResponse("/player/" + webUser.getName());
             default:
-                return responseHandler.forbiddenResponse();
+                return DefaultResponses.FORBIDDEN.get();
         }
     }
 
