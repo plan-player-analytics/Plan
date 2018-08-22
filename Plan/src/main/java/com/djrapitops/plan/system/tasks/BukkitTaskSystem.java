@@ -35,7 +35,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
         try {
             PingCountTimer pingCountTimer = new PingCountTimer();
             ((Plan) plugin).registerListener(pingCountTimer);
-            long startDelay = TimeAmount.SECOND.ms() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
+            long startDelay = TimeAmount.SECOND.ticks() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
             RunnableFactory.createNew("PingCountTimer", pingCountTimer)
                     .runTaskTimer(startDelay, PingCountTimer.PING_INTERVAL);
         } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {
