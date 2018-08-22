@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -157,31 +156,12 @@ public abstract class SQLDB extends Database {
                     new VersionTableRemovalPatch(this)
             };
 
-            RunnableFactory.createNew("Database Patch", new AbsRunnable() {
-                @Override
-                public void run() {
-                    try {
-                        boolean applied = false;
-                        for (Patch patch : patches) {
-                            if (!patch.hasBeenApplied()) {
-                                String patchName = patch.getClass().getSimpleName();
-                                Log.info(locale.get().getString(PluginLang.DB_APPLY_PATCH, patchName));
-                                patch.apply();
-                                applied = true;
-                            }
-                        }
-                        Log.info(locale.get().getString(
-                                applied ? PluginLang.DB_APPLIED_PATCHES : PluginLang.DB_APPLIED_PATCHES_ALREADY
-                        ));
-                    } catch (Exception e) {
-                        Log.error("----------------------------------------------------");
-                        Log.error(locale.get().getString(PluginLang.ENABLE_FAIL_DB_PATCH));
-                        Log.error("----------------------------------------------------");
-                        Log.toLog(this.getClass(), e);
-                        PlanPlugin.getInstance().onDisable();
-                    }
-                }
-            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
+            try {
+                RunnableFactory.createNew("Database Patch", new PatchTask(patches, locale))
+                        .runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
+            } catch (Exception ignore) {
+                // Task failed to register because plugin is being disabled
+            }
         } catch (DBOpException e) {
             throw new DBInitException("Failed to set-up Database", e);
         }
