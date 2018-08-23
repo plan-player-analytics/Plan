@@ -10,10 +10,12 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -23,19 +25,35 @@ import java.util.UUID;
  */
 public class BungeeConnectionSystem extends ConnectionSystem {
 
+    private final Database database;
+    private final ServerInfo serverInfo;
+    private final WebServer webServer;
+    private ErrorHandler errorHandler;
+
     private long latestServerMapRefresh;
 
-    public BungeeConnectionSystem() {
+    @Inject
+    public BungeeConnectionSystem(
+            Database database,
+            ServerInfo serverInfo,
+            WebServer webServer,
+            ErrorHandler errorHandler
+    ) {
+        this.database = database;
+        this.serverInfo = serverInfo;
+        this.webServer = webServer;
+        this.errorHandler = errorHandler;
+
         latestServerMapRefresh = 0;
     }
 
     private void refreshServerMap() {
         if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
             try {
-                bukkitServers = Database.getActive().fetch().getBukkitServers();
+                bukkitServers = database.fetch().getBukkitServers();
                 latestServerMapRefresh = System.currentTimeMillis();
             } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         }
     }
@@ -46,7 +64,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
         Server server = null;
         if (infoRequest instanceof CacheRequest || infoRequest instanceof GenerateInspectPageRequest) {
             // Run locally
-            return ServerInfo.getServer_Old();
+            return serverInfo.getServer();
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
             server = bukkitServers.get(serverUUID);
@@ -75,7 +93,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
 
     @Override
     public String getMainAddress() {
-        return WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        return webServer.getAccessAddress();
     }
 
     @Override

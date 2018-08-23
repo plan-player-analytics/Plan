@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.info;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.connection.BungeeConnectionSystem;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
@@ -17,6 +17,8 @@ import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
 
+import javax.inject.Inject;
+
 /**
  * InfoSystem for Bungee.
  *
@@ -24,8 +26,13 @@ import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
  */
 public class BungeeInfoSystem extends InfoSystem {
 
-    public BungeeInfoSystem() {
-        super(new BungeeConnectionSystem());
+    private final ServerInfo serverInfo;
+
+    @Inject
+    public BungeeInfoSystem(ConnectionSystem connectionSystem, ServerInfo serverInfo) {
+        super(connectionSystem);
+
+        this.serverInfo = serverInfo;
     }
 
     @Override
@@ -41,7 +48,7 @@ public class BungeeInfoSystem extends InfoSystem {
 
     @Override
     public void updateNetworkPage() {
-        ResponseCache.cacheResponse(PageId.SERVER.of(ServerInfo.getServerUUID_Old()), () -> {
+        ResponseCache.cacheResponse(PageId.SERVER.of(serverInfo.getServerUUID()), () -> {
             try {
                 return new NetworkPageResponse();
             } catch (ParseException e) {

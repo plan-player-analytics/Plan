@@ -12,8 +12,8 @@ import com.djrapitops.plan.system.cache.BungeeCacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.info.BungeeInfoSystem;
-import com.djrapitops.plan.system.info.server.BungeeServerInfo;
+import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
@@ -31,17 +31,19 @@ import javax.inject.Inject;
 public class BungeeSystem extends PlanSystem {
 
     @Inject
-    public BungeeSystem(PlanBungee plugin,
-                        VersionCheckSystem versionCheckSystem,
-                        FileSystem fileSystem,
-                        BungeeConfigSystem bungeeConfigSystem,
-                        BungeeServerInfo bungeeServerInfo,
-                        BungeeCacheSystem bungeeCacheSystem,
-                        DBSystem databaseSystem,
-                        WebServerSystem webServerSystem,
-                        HookHandler hookHandler,
-                        ExportSystem exportSystem,
-                        PlanAPI planAPI
+    public BungeeSystem(
+            PlanBungee plugin,
+            VersionCheckSystem versionCheckSystem,
+            FileSystem fileSystem,
+            BungeeConfigSystem bungeeConfigSystem,
+            InfoSystem infoSystem,
+            ServerInfo serverInfo,
+            BungeeCacheSystem bungeeCacheSystem,
+            DBSystem databaseSystem,
+            WebServerSystem webServerSystem,
+            HookHandler hookHandler,
+            ExportSystem exportSystem,
+            PlanAPI planAPI
     ) {
         super(webServerSystem);
         setTestSystem(this);
@@ -55,8 +57,8 @@ public class BungeeSystem extends PlanSystem {
         listenerSystem = new BungeeListenerSystem(plugin);
         taskSystem = new BungeeTaskSystem(plugin.getRunnableFactory());
 
-        infoSystem = new BungeeInfoSystem();
-        serverInfo = bungeeServerInfo;
+        this.infoSystem = infoSystem;
+        this.serverInfo = serverInfo;
 
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;

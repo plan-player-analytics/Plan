@@ -1,6 +1,8 @@
 package com.djrapitops.plan.modules.bungee;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.system.info.server.BungeeServerInfo;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.BungeeServerProperties;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import dagger.Module;
@@ -13,6 +15,11 @@ import dagger.Provides;
  */
 @Module
 public class BungeeInfoModule {
+
+    @Provides
+    ServerInfo provideBungeeServerInfo(BungeeServerInfo bungeeServerInfo) {
+        return bungeeServerInfo;
+    }
 
     @Provides
     ServerProperties provideServerProperties(PlanBungee plugin) {

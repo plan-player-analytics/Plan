@@ -7,15 +7,11 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.bungee.BungeeAPIModule;
-import com.djrapitops.plan.modules.bungee.BungeeConfigModule;
-import com.djrapitops.plan.modules.bungee.BungeeDatabaseModule;
-import com.djrapitops.plan.modules.bungee.BungeeInfoModule;
+import com.djrapitops.plan.modules.bungee.*;
 import com.djrapitops.plan.modules.common.ExportModule;
 import com.djrapitops.plan.modules.common.LocaleModule;
 import com.djrapitops.plan.modules.common.PluginHookModule;
 import com.djrapitops.plan.modules.common.VersionCheckModule;
-import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -34,10 +30,8 @@ import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 import java.io.InputStream;
 
-@Singleton
 @Component(modules = {
         BungeePlanModule.class,
         APFModule.class,
@@ -45,9 +39,9 @@ import java.io.InputStream;
         VersionCheckModule.class,
         BungeeConfigModule.class,
         LocaleModule.class,
+        BungeeInfoSystemModule.class,
         BungeeInfoModule.class,
         BungeeDatabaseModule.class,
-        ServerInfoSystemModule.class,
         PluginHookModule.class,
         BungeeAPIModule.class
 })
@@ -60,7 +54,6 @@ interface PlanBungeeComponent {
     @Component.Builder
     interface Builder {
 
-        @Singleton
         @BindsInstance
         Builder plan(PlanBungee plan);
 
