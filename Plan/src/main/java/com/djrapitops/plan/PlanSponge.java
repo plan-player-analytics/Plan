@@ -25,7 +25,7 @@ import org.spongepowered.api.plugin.Plugin;
 import java.io.File;
 import java.io.InputStream;
 
-@Plugin(id = "plan", name = "Plan", version = "4.4.3", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
+@Plugin(id = "plan", name = "Plan", version = "4.4.4", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Inject
