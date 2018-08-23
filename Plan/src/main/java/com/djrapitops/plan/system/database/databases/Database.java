@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases;
 
-import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -69,5 +68,5 @@ public abstract class Database {
 
     public abstract void scheduleClean(long delay);
 
-    public abstract TransferOperations transfer() throws UnsupportedTransferDatabaseException;
+    public abstract TransferOperations transfer();
 }

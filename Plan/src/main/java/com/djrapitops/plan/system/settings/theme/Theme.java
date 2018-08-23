@@ -4,14 +4,14 @@
  */
 package com.djrapitops.plan.system.settings.theme;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 
 import static com.djrapitops.plan.system.settings.theme.ThemeVal.*;
@@ -23,9 +23,17 @@ import static com.djrapitops.plan.system.settings.theme.ThemeVal.*;
  *
  * @author Rsl1122
  */
+@Singleton
 public class Theme implements SubSystem {
 
-    private ThemeConfig config;
+    private final ThemeConfig config;
+    private final PluginLogger logger;
+
+    @Inject
+    public Theme(ThemeConfig config, PluginLogger logger) {
+        this.config = config;
+        this.logger = logger;
+    }
 
     @Deprecated
     public static Theme getInstance() {
@@ -34,6 +42,7 @@ public class Theme implements SubSystem {
         return themeSystem;
     }
 
+    @Deprecated
     public static String getValue(ThemeVal variable) {
         try {
             return getInstance().getThemeValue(variable);
@@ -42,17 +51,17 @@ public class Theme implements SubSystem {
         }
     }
 
+    @Deprecated
     public static String replaceColors(String resourceString) {
         return getInstance().replaceThemeColors(resourceString);
     }
 
     @Override
     public void enable() throws EnableException {
-        String themeName = Settings.THEME_BASE.toString();
         try {
-            config = new ThemeConfig(themeName);
+            config.save();
         } catch (IOException e) {
-            throw new EnableException("Default theme could not be loaded.", e);
+            throw new EnableException("theme.yml could not be saved.", e);
         }
     }
 
@@ -71,12 +80,8 @@ public class Theme implements SubSystem {
             } else {
                 return value;
             }
-        } catch (IllegalStateException e) {
-            if (!PlanPlugin.getInstance().isReloading()) {
-                Log.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
-            }
         } catch (Exception | NoSuchFieldError e) {
-            Log.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
+            logger.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
         }
         return variable.getDefaultValue();
     }

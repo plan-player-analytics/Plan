@@ -15,7 +15,7 @@ import utilities.Teardown;
 import utilities.mocks.BukkitMockUtil;
 
 /**
- * Test for BukkitSystem.
+ * Test for Bukkit PlanSystem.
  *
  * @author Rsl1122
  */
@@ -25,7 +25,7 @@ public class BukkitSystemTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private static Plan planMock;
-    private BukkitSystem bukkitSystem;
+    private PlanSystem bukkitSystem;
 
     @BeforeClass
     public static void setUpClass() throws Exception {

@@ -16,7 +16,7 @@ import utilities.Teardown;
 import utilities.mocks.BungeeMockUtil;
 
 /**
- * Test for BukkitSystem.
+ * Test for Bungee PlanSystem.
  *
  * @author Rsl1122
  */
@@ -28,7 +28,7 @@ public class BungeeSystemTest {
     private static PlanBungee planMock;
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    private BungeeSystem bungeeSystem;
+    private PlanSystem bungeeSystem;
 
     @BeforeClass
     public static void setUpClass() throws Exception {

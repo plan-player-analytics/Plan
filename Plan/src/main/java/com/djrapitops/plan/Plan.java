@@ -22,14 +22,13 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.common.LocaleModule;
-import com.djrapitops.plan.modules.server.ServerAPIModule;
-import com.djrapitops.plan.modules.server.ServerDataCacheModule;
-import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
-import com.djrapitops.plan.modules.server.bukkit.BukkitConfigModule;
-import com.djrapitops.plan.modules.server.bukkit.BukkitDatabaseModule;
+import com.djrapitops.plan.modules.FileSystemModule;
+import com.djrapitops.plan.modules.SuperClassBindingModule;
+import com.djrapitops.plan.modules.SystemObjectBindingModule;
+import com.djrapitops.plan.modules.server.ServerSuperClassBindingModule;
 import com.djrapitops.plan.modules.server.bukkit.BukkitInfoModule;
-import com.djrapitops.plan.system.BukkitSystem;
+import com.djrapitops.plan.modules.server.bukkit.BukkitSuperClassBindingModule;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.importing.ImporterManager;
@@ -56,20 +55,19 @@ import java.util.logging.Logger;
 @Singleton
 @Component(modules = {
         BukkitPlanModule.class,
+        SuperClassBindingModule.class,
+        SystemObjectBindingModule.class,
         APFModule.class,
-        BukkitConfigModule.class,
-        LocaleModule.class,
+        FileSystemModule.class,
         BukkitInfoModule.class,
-        BukkitDatabaseModule.class,
-        ServerDataCacheModule.class,
-        ServerInfoSystemModule.class,
-        ServerAPIModule.class
+        ServerSuperClassBindingModule.class,
+        BukkitSuperClassBindingModule.class
 })
 interface PlanComponent {
 
     PlanCommand planCommand();
 
-    BukkitSystem system();
+    PlanSystem system();
 
     @Component.Builder
     interface Builder {
@@ -104,7 +102,7 @@ class BukkitPlanModule {
  */
 public class Plan extends BukkitPlugin implements PlanPlugin {
 
-    private BukkitSystem system;
+    private PlanSystem system;
     private Locale locale;
 
     /**
@@ -220,7 +218,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     }
 
     @Override
-    public BukkitSystem getSystem() {
+    public PlanSystem getSystem() {
         return system;
     }
 }

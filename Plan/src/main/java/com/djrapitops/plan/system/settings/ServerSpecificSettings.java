@@ -5,11 +5,11 @@
 package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.config.Config;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
@@ -24,9 +24,20 @@ import java.util.UUID;
  */
 public class ServerSpecificSettings {
 
-    public static void updateSettings(Map<String, String> settings) {
-        Log.debug("Checking new settings..");
-        Config config = ConfigSystem.getConfig_Old();
+    private final PluginLogger logger;
+    private PlanConfig config;
+
+    @Inject
+    public ServerSpecificSettings(PluginLogger logger) {
+        this.logger = logger;
+    }
+
+    public void setConfig(PlanConfig config) {
+        this.config = config;
+    }
+
+    public void updateSettings(Map<String, String> settings) throws IOException {
+        logger.debug("Checking new settings..");
 
         boolean changedSomething = false;
         for (Map.Entry<String, String> setting : settings.entrySet()) {
@@ -42,28 +53,24 @@ public class ServerSpecificSettings {
                     continue;
                 }
                 config.set(path, value);
-                Log.debug("  " + path + ": " + value);
+                logger.debug("  " + path + ": " + value);
             } catch (NullPointerException ignored) {
             }
             changedSomething = true;
         }
 
         if (changedSomething) {
-            try {
-                config.save();
-            } catch (IOException e) {
-                Log.toLog(ServerSpecificSettings.class, e);
-            }
-            Log.info("----------------------------------");
-            Log.info("The Received Bungee Settings changed the config values, restarting Plan..");
-            Log.info("----------------------------------");
+            config.save();
+            logger.info("----------------------------------");
+            logger.info("The Received Bungee Settings changed the config values, restarting Plan..");
+            logger.info("----------------------------------");
             PlanPlugin.getInstance().reloadPlugin(true);
         } else {
-            Log.debug("Settings up to date");
+            logger.debug("Settings up to date");
         }
     }
 
-    private static Object getValue(String value) {
+    private Object getValue(String value) {
         try {
             return Integer.parseInt(value);
         } catch (Exception ignored) {
@@ -77,19 +84,14 @@ public class ServerSpecificSettings {
         return value;
     }
 
-    public void addOriginalBukkitSettings(UUID serverUUID, Map<String, Object> settings) {
-        try {
-            Config config = ConfigSystem.getConfig_Old();
-            if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
-                return;
-            }
-            for (Map.Entry<String, Object> entry : settings.entrySet()) {
-                config.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
-            }
-            config.save();
-        } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
+    public void addOriginalBukkitSettings(UUID serverUUID, Map<String, Object> settings) throws IOException {
+        if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
+            return;
         }
+        for (Map.Entry<String, Object> entry : settings.entrySet()) {
+            config.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
+        }
+        config.save();
     }
 
     private String getPath(UUID serverUUID, Settings setting) {
@@ -111,25 +113,21 @@ public class ServerSpecificSettings {
     }
 
     public boolean getBoolean(UUID serverUUID, Settings setting) {
-        Config config = ConfigSystem.getConfig_Old();
         String path = getPath(serverUUID, setting);
         return config.getBoolean(path);
     }
 
     public String getString(UUID serverUUID, Settings setting) {
-        Config config = ConfigSystem.getConfig_Old();
         String path = getPath(serverUUID, setting);
         return config.getString(path);
     }
 
     public Integer getInt(UUID serverUUID, Settings setting) {
-        Config config = ConfigSystem.getConfig_Old();
         String path = getPath(serverUUID, setting);
         return config.getInt(path);
     }
 
     public void set(UUID serverUUID, Settings setting, Object value) throws IOException {
-        Config config = ConfigSystem.getConfig_Old();
         String path = getPath(serverUUID, setting);
         config.set(path, value);
         config.save();

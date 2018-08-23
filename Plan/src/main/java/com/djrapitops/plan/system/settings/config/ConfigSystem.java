@@ -11,6 +11,8 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Singleton;
@@ -24,15 +26,20 @@ import java.io.IOException;
 @Singleton
 public abstract class ConfigSystem implements SubSystem {
 
-    protected FileSystem fileSystem;
-    protected PlanConfig config;
+    protected final FileSystem fileSystem;
+    protected final PlanConfig config;
     protected final Theme theme;
+    protected final ErrorHandler errorHandler;
 
-    public ConfigSystem(FileSystem fileSystem) {
+    public ConfigSystem(
+            FileSystem fileSystem,
+            PlanConfig config,
+            Theme theme, ErrorHandler errorHandler
+    ) {
         this.fileSystem = fileSystem;
-
-        config = new PlanConfig(fileSystem.getConfigFile());
-        theme = new Theme();
+        this.config = config;
+        this.theme = theme;
+        this.errorHandler = errorHandler;
     }
 
     @Deprecated
@@ -88,7 +95,7 @@ public abstract class ConfigSystem implements SubSystem {
         try {
             config.read();
         } catch (IOException e) {
-            Log.toLog(ConfigSystem.class, e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 }

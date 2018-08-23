@@ -1,8 +1,11 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.data.plugin.PluginsConfigSection;
+import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plugin.config.Config;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.util.List;
 
@@ -14,9 +17,18 @@ import java.util.List;
 public class PlanConfig extends Config {
 
     private final PluginsConfigSection pluginsConfigSection;
+    private final NetworkSettings networkSettings;
 
-    public PlanConfig(File file) {
+    @Inject
+    public PlanConfig(
+            @Named("configFile") File file,
+            NetworkSettings networkSettings
+    ) {
         super(file);
+
+        this.networkSettings = networkSettings;
+        networkSettings.setConfig(this);
+
         pluginsConfigSection = new PluginsConfigSection(this);
     }
 
@@ -56,5 +68,9 @@ public class PlanConfig extends Config {
 
     public PluginsConfigSection getPluginsConfigSection() {
         return pluginsConfigSection;
+    }
+
+    public NetworkSettings getNetworkSettings() {
+        return networkSettings;
     }
 }

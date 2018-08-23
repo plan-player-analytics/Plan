@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.*;
-import com.djrapitops.plan.system.BukkitSystem;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.Base64Util;
 import org.junit.*;
@@ -25,7 +25,7 @@ public class HTTPSWebServerAuthTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    private static BukkitSystem bukkitSystem;
+    private static PlanSystem bukkitSystem;
 
     @BeforeClass
     public static void setUpClass() throws Exception {

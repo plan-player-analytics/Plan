@@ -37,8 +37,8 @@ public class BungeeBukkitConnectionTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private BukkitSystem bukkitSystem;
-    private BungeeSystem bungeeSystem;
+    private PlanSystem bukkitSystem;
+    private PlanSystem bungeeSystem;
 
     private UUID bukkitUUID;
     private UUID bungeeUUID;

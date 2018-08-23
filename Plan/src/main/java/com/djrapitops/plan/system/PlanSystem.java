@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
@@ -14,18 +15,16 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.LocaleSystem;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
 
-import java.util.function.Supplier;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * PlanSystem contains everything Plan needs to run.
@@ -34,62 +33,69 @@ import java.util.function.Supplier;
  *
  * @author Rsl1122
  */
-public abstract class PlanSystem implements SubSystem {
+@Singleton
+public class PlanSystem implements SubSystem {
 
-    protected static PlanSystem testSystem;
+    private final FileSystem fileSystem;
+    private final ConfigSystem configSystem;
+    private final VersionCheckSystem versionCheckSystem;
+    private final LocaleSystem localeSystem;
+    private final DBSystem databaseSystem;
+    private final CacheSystem cacheSystem;
+    private final ListenerSystem listenerSystem;
+    private final TaskSystem taskSystem;
+    private final InfoSystem infoSystem;
+    private final ServerInfo serverInfo;
+    private final WebServerSystem webServerSystem;
 
-    // Initialized in this class
-    private Processing processing;
-    protected final WebServerSystem webServerSystem;
-    protected final LocaleSystem localeSystem;
-    protected CacheSystem cacheSystem;
+    private final Processing processing;
 
-    // These need to be initialized in the sub class.
-    protected VersionCheckSystem versionCheckSystem;
-    protected FileSystem fileSystem;
-    protected ConfigSystem configSystem;
-    protected ExportSystem exportSystem;
-    protected DBSystem databaseSystem;
-    protected InfoSystem infoSystem;
+    private final ExportSystem exportSystem;
+    private final HookHandler hookHandler;
+    private final PlanAPI planAPI;
 
-    protected ListenerSystem listenerSystem;
-    protected TaskSystem taskSystem;
-    protected ServerInfo serverInfo;
-
-    protected HookHandler hookHandler;
-
-    // Not a SubSystem.
-    protected PlanAPI planAPI;
-
-    public PlanSystem(WebServerSystem webServerSystem, LocaleSystem localeSystem) {
-        this.webServerSystem = webServerSystem;
+    @Inject
+    public PlanSystem(
+            FileSystem fileSystem,
+            ConfigSystem configSystem,
+            VersionCheckSystem versionCheckSystem,
+            LocaleSystem localeSystem,
+            DBSystem databaseSystem,
+            CacheSystem cacheSystem,
+            ListenerSystem listenerSystem,
+            TaskSystem taskSystem,
+            InfoSystem infoSystem,
+            ServerInfo serverInfo,
+            WebServerSystem webServerSystem,
+            //Processing processing,
+            ExportSystem exportSystem,
+            HookHandler hookHandler,
+            PlanAPI planAPI
+    ) {
+        this.fileSystem = fileSystem;
+        this.configSystem = configSystem;
+        this.versionCheckSystem = versionCheckSystem;
         this.localeSystem = localeSystem;
-        Supplier<Locale> localeSupplier = () -> getLocaleSystem().getLocale();
-
-        processing = new Processing(localeSupplier);
+        this.databaseSystem = databaseSystem;
+        this.cacheSystem = cacheSystem;
+        this.listenerSystem = listenerSystem;
+        this.taskSystem = taskSystem;
+        this.infoSystem = infoSystem;
+        this.serverInfo = serverInfo;
+        this.webServerSystem = webServerSystem;
+        this.processing = new Processing(localeSystem::getLocale);
+        this.exportSystem = exportSystem;
+        this.hookHandler = hookHandler;
+        this.planAPI = planAPI;
     }
 
     @Deprecated
     public static PlanSystem getInstance() {
-        boolean bukkitAvailable = Check.isBukkitAvailable();
-        boolean bungeeAvailable = Check.isBungeeAvailable();
-        boolean spongeAvailable = Check.isSpongeAvailable();
-        if (bukkitAvailable && bungeeAvailable) {
-            return testSystem;
-        } else if (bungeeAvailable) {
-            return BungeeSystem.getInstance();
-        } else if (bukkitAvailable) {
-            return BukkitSystem.getInstance();
-        } else if (spongeAvailable) {
-            return SpongeSystem.getInstance();
-        }
-        throw new IllegalAccessError("PlanSystem is not available on this platform.");
+        return PlanPlugin.getInstance().getSystem();
     }
 
     @Override
     public void enable() throws EnableException {
-        checkSubSystemInitialization();
-
         enableSystems(
                 fileSystem,
                 configSystem,
@@ -146,24 +152,6 @@ public abstract class PlanSystem implements SubSystem {
         }
     }
 
-    private void checkSubSystemInitialization() throws EnableException {
-        try {
-            Verify.nullCheck(versionCheckSystem, () -> new IllegalStateException("Version Check system was not initialized."));
-            Verify.nullCheck(fileSystem, () -> new IllegalStateException("File system was not initialized."));
-            Verify.nullCheck(configSystem, () -> new IllegalStateException("Config system was not initialized."));
-            Verify.nullCheck(localeSystem, () -> new IllegalStateException("Locale system was not initialized."));
-            Verify.nullCheck(databaseSystem, () -> new IllegalStateException("Database system was not initialized."));
-            Verify.nullCheck(infoSystem, () -> new IllegalStateException("Info system was not initialized."));
-            Verify.nullCheck(serverInfo, () -> new IllegalStateException("ServerInfo was not initialized."));
-            Verify.nullCheck(listenerSystem, () -> new IllegalStateException("Listener system was not initialized."));
-            Verify.nullCheck(taskSystem, () -> new IllegalStateException("Task system was not initialized."));
-            Verify.nullCheck(hookHandler, () -> new IllegalStateException("Plugin Hooks were not initialized."));
-            Verify.nullCheck(planAPI, () -> new IllegalStateException("Plan API was not initialized."));
-        } catch (Exception e) {
-            throw new EnableException("One of the subsystems is not initialized on enable for " + this.getClass().getSimpleName() + ": " + e.getMessage());
-        }
-    }
-
     // Accessor methods.
 
     public VersionCheckSystem getVersionCheckSystem() {
@@ -216,10 +204,6 @@ public abstract class PlanSystem implements SubSystem {
 
     public Processing getProcessing() {
         return processing;
-    }
-
-    static void setTestSystem(PlanSystem testSystem) {
-        PlanSystem.testSystem = testSystem;
     }
 
     public LocaleSystem getLocaleSystem() {

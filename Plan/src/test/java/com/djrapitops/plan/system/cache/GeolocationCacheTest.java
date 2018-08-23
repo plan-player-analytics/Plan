@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.BukkitSystem;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.StaticHolder;
 import org.junit.*;
@@ -45,7 +45,7 @@ public class GeolocationCacheTest {
     @Ignore
     public void testGeolocationCache() throws EnableException {
         Settings.WEBSERVER_PORT.setTemporaryValue(9005);
-        BukkitSystem system = null; //TODO
+        PlanSystem system = null; //TODO
         try {
             system.enable();
 

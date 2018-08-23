@@ -2,7 +2,6 @@ package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.config.Setting;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.utilities.Verify;
@@ -108,22 +107,11 @@ public enum Settings implements Setting {
     BUNGEE_IP("Server.IP"),
     BUNGEE_NETWORK_NAME("Network.Name");
 
-    private static final ServerSpecificSettings serverSpecificSettings = new ServerSpecificSettings();
-
     private final String configPath;
     private Object tempValue;
 
     Settings(String path) {
         this.configPath = path;
-    }
-
-    @Deprecated
-    public static ServerSpecificSettings serverSpecific() {
-        if (!Check.isBungeeAvailable()) {
-            throw new IllegalStateException("Not supposed to call this method on Bukkit");
-        }
-
-        return serverSpecificSettings;
     }
 
     @Deprecated
@@ -198,6 +186,7 @@ public enum Settings implements Setting {
         this.tempValue = value;
     }
 
+    @Deprecated
     public void set(Object value) {
         getConfig().set(getPath(), value);
     }

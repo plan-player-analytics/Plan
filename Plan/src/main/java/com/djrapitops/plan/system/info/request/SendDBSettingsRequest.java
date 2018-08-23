@@ -93,6 +93,8 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
         settings.put("WebServerPort", webServerPort);
         settings.put("ServerName", serverName);
         settings.put("ThemeBase", themeBase);
-        Settings.serverSpecific().addOriginalBukkitSettings(serverUUID, settings);
+
+        // TODO Config
+        // Settings.serverSpecific().addOriginalBukkitSettings(serverUUID, settings);
     }
 }

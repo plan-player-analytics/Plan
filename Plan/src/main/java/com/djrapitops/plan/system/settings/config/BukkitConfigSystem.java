@@ -4,7 +4,10 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,12 +24,23 @@ import java.io.IOException;
 public class BukkitConfigSystem extends ConfigSystem {
 
     @Inject
-    public BukkitConfigSystem(FileSystem fileSystem) {
-        super(fileSystem);
+    public BukkitConfigSystem(
+            FileSystem fileSystem,
+            PlanConfig config,
+            Theme theme,
+            ErrorHandler errorHandler
+    ) {
+        super(fileSystem, config, theme, errorHandler);
     }
 
     @Override
     protected void copyDefaults() throws IOException {
         config.copyDefaults(fileSystem.readFromResource("config.yml"));
+    }
+
+    @Override
+    public void enable() throws EnableException {
+        super.enable();
+        config.getNetworkSettings().loadSettingsFromDB();
     }
 }

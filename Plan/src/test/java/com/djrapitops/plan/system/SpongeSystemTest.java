@@ -15,7 +15,7 @@ import utilities.Teardown;
 import utilities.mocks.SpongeMockUtil;
 
 /**
- * Test for BukkitSystem.
+ * Test for Sponge PlanSystem.
  *
  * @author Rsl1122
  */
@@ -25,7 +25,7 @@ public class SpongeSystemTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private static PlanSponge planMock;
-    private SpongeSystem spongeSystem;
+    private PlanSystem spongeSystem;
 
     @BeforeClass
     public static void setUpClass() throws Exception {

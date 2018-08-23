@@ -18,6 +18,7 @@ import java.io.InputStream;
  * @author Rsl1122
  */
 public interface PlanPlugin extends IPlugin {
+    @Deprecated
     static PlanPlugin getInstance() {
         boolean bukkitAvailable = Check.isBukkitAvailable();
         boolean bungeeAvailable = Check.isBungeeAvailable();

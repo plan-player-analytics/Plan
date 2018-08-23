@@ -4,14 +4,18 @@
  */
 package com.djrapitops.plan.system.settings.theme;
 
-import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.utilities.file.FileUtil;
-import com.djrapitops.plugin.api.config.Config;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.config.Config;
+import com.djrapitops.plugin.config.ConfigNode;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,26 +23,35 @@ import java.util.List;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ThemeConfig extends Config {
 
-    private ThemeConfig(File file, List<String> defaults) {
-        super(file, defaults);
+    @Inject
+    public ThemeConfig(FileSystem fileSystem, PlanConfig config, PluginLogger logger) {
+        this(getConfigFile(fileSystem), getDefaults(fileSystem, config, logger));
     }
 
-    public ThemeConfig(String fileName) throws IOException {
-        this(getConfigFile(), getDefaults(fileName));
-        save();
+    private ThemeConfig(File configFile, List<String> defaults) {
+        super(configFile, defaults);
+
+        if (defaults.isEmpty()) {
+            ConfigNode util = new ConfigNode("", null, "");
+            for (ThemeVal themeVal : ThemeVal.values()) {
+                util.set(themeVal.getThemePath(), themeVal.getDefaultValue());
+            }
+            copyDefaults(util);
+        }
     }
 
-    private static List<String> getDefaults(String fileName) throws IOException {
+    private static List<String> getDefaults(FileSystem fileSystem, PlanConfig config, PluginLogger logger) {
+        String fileName = config.getString(Settings.THEME_BASE);
         String fileLocation = getFileLocation(fileName);
 
-        PlanPlugin plugin = PlanPlugin.getInstance();
         try {
-            return FileUtil.lines(plugin, fileLocation);
+            return fileSystem.readFromResource(fileLocation);
         } catch (IOException e) {
-            Log.error("Could not find theme " + fileLocation + ". Attempting to use default.");
-            return FileUtil.lines(plugin, "themes/theme.yml");
+            logger.error("Could not find theme " + fileLocation + ". Attempting to use default.");
+            return new ArrayList<>();
         }
     }
 
@@ -69,15 +82,7 @@ public class ThemeConfig extends Config {
         }
     }
 
-    private static File getConfigFile() throws IOException {
-        File folder = PlanPlugin.getInstance().getDataFolder();
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        File themeFile = new File(folder, "theme.yml");
-        if (!themeFile.exists() && !themeFile.createNewFile()) {
-            throw new FileNotFoundException("Failed to create theme.yml");
-        }
-        return themeFile;
+    private static File getConfigFile(FileSystem fileSystem) {
+        return fileSystem.getFileFromPluginFolder("theme.yml");
     }
 }

@@ -7,9 +7,12 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.bungee.*;
-import com.djrapitops.plan.modules.common.LocaleModule;
-import com.djrapitops.plan.system.BungeeSystem;
+import com.djrapitops.plan.modules.FileSystemModule;
+import com.djrapitops.plan.modules.SuperClassBindingModule;
+import com.djrapitops.plan.modules.SystemObjectBindingModule;
+import com.djrapitops.plan.modules.bungee.BungeeInfoModule;
+import com.djrapitops.plan.modules.bungee.BungeeSuperClassBindingModule;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
@@ -33,20 +36,18 @@ import java.io.InputStream;
 @Singleton
 @Component(modules = {
         BungeePlanModule.class,
+        SuperClassBindingModule.class,
+        SystemObjectBindingModule.class,
         APFModule.class,
-        BungeeConfigModule.class,
-        LocaleModule.class,
-        BungeeInfoSystemModule.class,
-        BungeeInfoModule.class,
-        BungeeDataCacheModule.class,
-        BungeeDatabaseModule.class,
-        BungeeAPIModule.class
+        FileSystemModule.class,
+        BungeeSuperClassBindingModule.class,
+        BungeeInfoModule.class
 })
 interface PlanBungeeComponent {
 
     PlanBungeeCommand planCommand();
 
-    BungeeSystem system();
+    PlanSystem system();
 
     @Component.Builder
     interface Builder {
@@ -80,7 +81,7 @@ class BungeePlanModule {
  */
 public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
-    private BungeeSystem system;
+    private PlanSystem system;
     private Locale locale;
 
     public static PlanBungee getInstance() {
@@ -146,7 +147,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     }
 
     @Override
-    public BungeeSystem getSystem() {
+    public PlanSystem getSystem() {
         return system;
     }
 

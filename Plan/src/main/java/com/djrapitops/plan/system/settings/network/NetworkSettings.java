@@ -4,18 +4,22 @@
  */
 package com.djrapitops.plan.system.settings.network;
 
-import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.ServerSpecificSettings;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
+import dagger.Lazy;
 
+import javax.inject.Inject;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,62 +37,80 @@ public class NetworkSettings {
     private static final String SPLIT = ";;SETTING;;";
     private static final String VAL_SPLIT = ";;VALUE;;";
 
-    @Deprecated
-    public static void loadSettingsFromDB() {
+    private final Lazy<Database> database;
+    private final Lazy<ServerInfo> serverInfo;
+    private final PluginLogger logger;
+    private final ErrorHandler errorHandler;
+    private final ServerSpecificSettings serverSpecificSettings;
+    private PlanConfig config;
+
+    @Inject
+    public NetworkSettings(
+            ServerSpecificSettings serverSpecificSettings,
+            Lazy<Database> database,
+            Lazy<ServerInfo> serverInfo,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        this.serverSpecificSettings = serverSpecificSettings;
+        this.database = database;
+        this.serverInfo = serverInfo;
+        this.logger = logger;
+        this.errorHandler = errorHandler;
+    }
+
+    public void setConfig(PlanConfig config) {
+        this.config = config;
+        serverSpecificSettings.setConfig(config);
+    }
+
+    public void loadSettingsFromDB() {
         if (Check.isBungeeAvailable()) {
             return;
         }
 
-        if (BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue() || BUNGEE_COPY_CONFIG.isFalse()) {
+        if (config.isTrue(BUNGEE_OVERRIDE_STANDALONE_MODE) || config.isFalse(BUNGEE_COPY_CONFIG)) {
+            // Don't load settings if they are overridden.
             return;
         }
 
-        Processing.submitNonCritical(() -> {
-            try {
-                new NetworkSettings().loadFromDatabase();
-            } catch (UnsupportedTransferDatabaseException e) {
-                Log.toLog(NetworkSettings.class, e);
-            }
-        });
+        Processing.submitNonCritical(this::loadFromDatabase);
     }
 
-    @Deprecated
-    public static void placeSettingsToDB() {
+    public void placeSettingsToDB() {
         if (!Check.isBungeeAvailable()) {
             return;
         }
 
-        Processing.submitCritical(() -> {
-            try {
-                new NetworkSettings().placeToDatabase();
-            } catch (DBOpException | UnsupportedTransferDatabaseException e) {
-                Log.toLog(NetworkSettings.class, e);
-            }
-        });
+        Processing.submitCritical(this::placeToDatabase);
     }
 
-    public void loadFromDatabase() throws UnsupportedTransferDatabaseException {
-        Log.debug("NetworkSettings: Fetch Config settings from database..");
-        Optional<String> encodedConfigSettings = Database.getActive().transfer().getEncodedConfigSettings();
+    void loadFromDatabase() {
+        logger.debug("NetworkSettings: Fetch Config settings from database..");
+        Optional<String> encodedConfigSettings = database.get().transfer().getEncodedConfigSettings();
 
         if (!encodedConfigSettings.isPresent()) {
-            Log.debug("NetworkSettings: No Config settings in database.");
+            logger.debug("NetworkSettings: No Config settings in database.");
             return;
         }
 
         String configSettings = Base64Util.decode(encodedConfigSettings.get());
         Map<String, String> pathValueMap = getPathsAndValues(configSettings);
 
-        Log.debug("NetworkSettings: Updating Settings");
-        ServerSpecificSettings.updateSettings(pathValueMap);
+        logger.debug("NetworkSettings: Updating Settings");
+        try {
+            serverSpecificSettings.updateSettings(pathValueMap);
+        } catch (IOException e) {
+            errorHandler.log(L.ERROR, this.getClass(), e);
+        }
     }
 
     private Map<String, String> getPathsAndValues(String configSettings) {
         Map<String, String> pathValueMap = new HashMap<>();
 
-        Log.debug("NetworkSettings: Reading Config String..");
+        logger.debug("NetworkSettings: Reading Config String..");
         String[] settings = configSettings.split(SPLIT);
-        UUID thisServerUUID = ServerInfo.getServerUUID_Old();
+        UUID thisServerUUID = serverInfo.get().getServerUUID();
         for (String settingAndVal : settings) {
             String[] settingValSplit = settingAndVal.split(VAL_SPLIT);
             String setting = settingValSplit[0];
@@ -110,10 +132,10 @@ public class NetworkSettings {
         return pathValueMap;
     }
 
-    public void placeToDatabase() throws UnsupportedTransferDatabaseException {
+    void placeToDatabase() {
         Map<String, Object> configValues = getConfigValues();
 
-        Log.debug("NetworkSettings: Building Base64 String..");
+        logger.debug("NetworkSettings: Building Base64 String..");
         StringBuilder transferBuilder = new StringBuilder();
         int size = configValues.size();
         int i = 0;
@@ -131,12 +153,12 @@ public class NetworkSettings {
 
         String base64 = Base64Util.encode(transferBuilder.toString());
 
-        Log.debug("NetworkSettings: Saving Config settings to database..");
-        Database.getActive().transfer().storeConfigSettings(base64);
+        logger.debug("NetworkSettings: Saving Config settings to database..");
+        database.get().transfer().storeConfigSettings(base64);
     }
 
     private Map<String, Object> getConfigValues() {
-        Log.debug("NetworkSettings: Loading Config Values..");
+        logger.debug("NetworkSettings: Loading Config Values..");
         Map<String, Object> configValues = new HashMap<>();
         addConfigValue(configValues, DB_TYPE, "mysql");
         Settings[] sameStrings = new Settings[]{
@@ -178,11 +200,11 @@ public class NetworkSettings {
                 KEEP_LOGS_DAYS,
                 KEEP_INACTIVE_PLAYERS_DAYS
         };
-        Log.debug("NetworkSettings: Adding Config Values..");
+        logger.debug("NetworkSettings: Adding Config Values..");
         for (Settings setting : sameStrings) {
-            addConfigValue(configValues, setting, setting.toString());
+            addConfigValue(configValues, setting, config.getString(setting));
         }
-        addConfigValue(configValues, DB_PORT, DB_PORT.getNumber());
+        addConfigValue(configValues, DB_PORT, config.getNumber(DB_PORT));
         addServerSpecificValues(configValues);
         return configValues;
     }
@@ -200,13 +222,12 @@ public class NetworkSettings {
     }
 
     private void addServerSpecificValues(Map<String, Object> configValues) {
-        Log.debug("NetworkSettings: Adding Server-specific Config Values..");
-        ServerSpecificSettings settings = Settings.serverSpecific();
+        logger.debug("NetworkSettings: Adding Server-specific Config Values..");
 
-        for (UUID serverUUID : Database.getActive().fetch().getServerUUIDs()) {
-            String theme = settings.getString(serverUUID, THEME_BASE);
-            Integer port = settings.getInt(serverUUID, WEBSERVER_PORT);
-            String name = settings.getString(serverUUID, SERVER_NAME);
+        for (UUID serverUUID : database.get().fetch().getServerUUIDs()) {
+            String theme = serverSpecificSettings.getString(serverUUID, THEME_BASE);
+            Integer port = serverSpecificSettings.getInt(serverUUID, WEBSERVER_PORT);
+            String name = serverSpecificSettings.getString(serverUUID, SERVER_NAME);
 
             if (!Verify.isEmpty(theme)) {
                 addConfigValue(configValues, serverUUID, THEME_BASE, theme);
@@ -218,5 +239,9 @@ public class NetworkSettings {
                 addConfigValue(configValues, serverUUID, SERVER_NAME, name);
             }
         }
+    }
+
+    public ServerSpecificSettings getServerSpecificSettings() {
+        return serverSpecificSettings;
     }
 }

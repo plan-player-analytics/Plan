@@ -3,14 +3,13 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.common.LocaleModule;
-import com.djrapitops.plan.modules.server.ServerAPIModule;
-import com.djrapitops.plan.modules.server.ServerDataCacheModule;
-import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
-import com.djrapitops.plan.modules.server.bukkit.BukkitConfigModule;
-import com.djrapitops.plan.modules.server.sponge.SpongeDatabaseModule;
+import com.djrapitops.plan.modules.FileSystemModule;
+import com.djrapitops.plan.modules.SuperClassBindingModule;
+import com.djrapitops.plan.modules.SystemObjectBindingModule;
+import com.djrapitops.plan.modules.server.ServerSuperClassBindingModule;
 import com.djrapitops.plan.modules.server.sponge.SpongeInfoModule;
-import com.djrapitops.plan.system.SpongeSystem;
+import com.djrapitops.plan.modules.server.sponge.SpongeSuperClassBindingModule;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
@@ -44,20 +43,19 @@ import java.io.InputStream;
 @Singleton
 @Component(modules = {
         SpongePlanModule.class,
+        SuperClassBindingModule.class,
+        SystemObjectBindingModule.class,
         APFModule.class,
-        BukkitConfigModule.class,
-        LocaleModule.class,
-        SpongeDatabaseModule.class,
-        ServerDataCacheModule.class,
-        ServerInfoSystemModule.class,
-        SpongeInfoModule.class,
-        ServerAPIModule.class,
+        FileSystemModule.class,
+        ServerSuperClassBindingModule.class,
+        SpongeSuperClassBindingModule.class,
+        SpongeInfoModule.class
 })
 interface PlanSpongeComponent {
 
     PlanCommand planCommand();
 
-    SpongeSystem system();
+    PlanSystem system();
 
     @Component.Builder
     interface Builder {
@@ -96,7 +94,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     @Inject
     @ConfigDir(sharedRoot = false)
     private File dataFolder;
-    private SpongeSystem system;
+    private PlanSystem system;
     private Locale locale;
 
     @Listener
@@ -189,7 +187,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     }
 
     @Override
-    public SpongeSystem getSystem() {
+    public PlanSystem getSystem() {
         return system;
     }
 }
