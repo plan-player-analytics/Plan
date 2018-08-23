@@ -6,6 +6,7 @@ import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.aac.AdvancedAntiCheatHook;
 import com.djrapitops.pluginbridge.plan.advancedachievements.AdvancedAchievementsHook;
+import com.djrapitops.pluginbridge.plan.advancedban.AdvancedBanHook;
 import com.djrapitops.pluginbridge.plan.askyblock.ASkyBlockHook;
 import com.djrapitops.pluginbridge.plan.banmanager.BanManagerHook;
 import com.djrapitops.pluginbridge.plan.buycraft.BuyCraftHook;
@@ -64,13 +65,16 @@ public class Bridge {
     }
 
     private static Hook[] getBungeeHooks(HookHandler h) {
-        return new Hook[0];
+        return new Hook[]{
+                new AdvancedBanHook(h)
+        };
     }
 
     private static Hook[] getBukkitHooks(HookHandler h) {
         return new Hook[]{
                 new AdvancedAntiCheatHook(h),
                 new AdvancedAchievementsHook(h),
+                new AdvancedBanHook(h),
                 new ASkyBlockHook(h),
                 new BanManagerHook(h),
                 new BuyCraftHook(h),

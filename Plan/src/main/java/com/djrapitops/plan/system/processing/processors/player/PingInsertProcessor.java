@@ -9,10 +9,12 @@ import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
+import com.djrapitops.plan.utilities.analysis.Median;
 
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Processes 60s values of a Ping list.
@@ -37,30 +39,35 @@ public class PingInsertProcessor implements CriticalRunnable {
         long lastDate = history.get(history.size() - 1).getDate();
         OptionalInt max = history.stream()
                 .mapToInt(DateObj::getValue)
-                .filter(i -> i >= 0)
+                .filter(i -> i > 0 && i < 4000)
                 .max();
 
         if (!max.isPresent()) {
             return;
         }
 
-        int minValue = history.stream()
-                .mapToInt(DateObj::getValue)
-                .filter(i -> i >= 0)
-                .min().orElse(-1);
+        int minValue = getMinValue(history);
 
-        double avgValue = history.stream()
-                .mapToInt(DateObj::getValue)
-                .filter(i -> i >= 0)
-                .average().orElse(-1);
+        int meanValue = getMeanValue(history);
 
         int maxValue = max.getAsInt();
 
         Ping ping = new Ping(lastDate, ServerInfo.getServerUUID(),
                 minValue,
                 maxValue,
-                avgValue);
+                meanValue);
 
         Database.getActive().save().ping(uuid, ping);
+    }
+
+    int getMinValue(List<DateObj<Integer>> history) {
+        return history.stream()
+                .mapToInt(DateObj::getValue)
+                .filter(i -> i > 0 && i < 4000)
+                .min().orElse(-1);
+    }
+
+    int getMeanValue(List<DateObj<Integer>> history) {
+        return (int) Median.forInt(history.stream().map(DateObj::getValue).collect(Collectors.toList())).calculate();
     }
 }

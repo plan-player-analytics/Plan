@@ -117,7 +117,7 @@ public class KillsTable extends UserIDTable {
                     UUID victim = UUID.fromString(uuidS);
                     long date = set.getLong(Col.DATE.get());
                     String weapon = set.getString(Col.WEAPON.get());
-                    session.getUnsafe(SessionKeys.PLAYER_KILLS).add(new PlayerKill(victim, weapon, date));
+                    session.getPlayerKills().add(new PlayerKill(victim, weapon, date));
                 }
                 return null;
             }
@@ -286,7 +286,7 @@ public class KillsTable extends UserIDTable {
                         for (Session session : sessions) {
                             int sessionID = session.getUnsafe(SessionKeys.DB_ID);
                             // Every kill
-                            for (PlayerKill kill : session.getUnsafe(SessionKeys.PLAYER_KILLS)) {
+                            for (PlayerKill kill : session.getPlayerKills()) {
                                 UUID victim = kill.getVictim();
                                 long date = kill.getDate();
                                 String weapon = kill.getWeapon();

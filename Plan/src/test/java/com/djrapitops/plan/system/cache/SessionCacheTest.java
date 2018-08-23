@@ -1,10 +1,7 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import utilities.TestConstants;
 import utilities.mocks.SystemMockUtil;
@@ -36,11 +33,28 @@ public class SessionCacheTest {
         sessionCache.cacheSession(uuid, session);
     }
 
+    @After
+    public void tearDown() {
+        SessionCache.clear();
+    }
+
     @Test
     public void testAtomity() {
         SessionCache reloaded = new SessionCache(null);
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         assertTrue(cachedSession.isPresent());
         assertEquals(session, cachedSession.get());
+    }
+
+    @Test
+    public void testBungeeReCaching() {
+        SessionCache cache = new BungeeDataCache(null);
+        cache.cacheSession(uuid, session);
+        Session expected = new Session(uuid, 0, "", "");
+        cache.cacheSession(uuid, expected);
+
+        Optional<Session> result = SessionCache.getCachedSession(uuid);
+        assertTrue(result.isPresent());
+        assertEquals(expected, result.get());
     }
 }

@@ -14,6 +14,7 @@ import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.google.inject.Inject;
+import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
@@ -24,8 +25,11 @@ import org.spongepowered.api.plugin.Plugin;
 import java.io.File;
 import java.io.InputStream;
 
-@Plugin(id = "plan", name = "Plan", version = "4.4.3", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
+@Plugin(id = "plan", name = "Plan", version = "4.4.4", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
+
+    @Inject
+    private Metrics metrics;
 
     @Inject
     private Logger logger;
@@ -58,7 +62,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            new BStatsSponge().registerMetrics();
+            new BStatsSponge(metrics).registerMetrics();
 
             Log.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {

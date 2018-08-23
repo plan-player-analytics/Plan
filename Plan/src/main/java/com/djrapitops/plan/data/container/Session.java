@@ -154,11 +154,11 @@ public class Session extends DataContainer implements DateHolder {
     }
 
     public void setWorldTimes(WorldTimes worldTimes) {
-        putRawData(SessionKeys.WORLD_TIMES, worldTimes);
+        this.worldTimes = worldTimes;
     }
 
     public void setPlayerKills(List<PlayerKill> playerKills) {
-        putRawData(SessionKeys.PLAYER_KILLS, playerKills);
+        this.playerKills = playerKills;
     }
 
     public boolean isFetchedFromDB() {
@@ -182,14 +182,8 @@ public class Session extends DataContainer implements DateHolder {
                 getValue(SessionKeys.END).orElse(-1L).equals(session.getValue(SessionKeys.END).orElse(-1L)) &&
                 mobKills == session.mobKills &&
                 deaths == session.deaths &&
-                Objects.equals(
-                        getValue(SessionKeys.WORLD_TIMES).orElse(null),
-                        session.getValue(SessionKeys.WORLD_TIMES).orElse(null)
-                ) &&
-                Objects.equals(
-                        getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()),
-                        session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>())
-                );
+                Objects.equals(playerKills, session.playerKills) &&
+                Objects.equals(worldTimes, session.worldTimes);
     }
 
     @Override
@@ -205,7 +199,7 @@ public class Session extends DataContainer implements DateHolder {
         return worldTimes;
     }
 
-    private List<PlayerKill> getPlayerKills() {
+    public List<PlayerKill> getPlayerKills() {
         return playerKills;
     }
 
@@ -231,7 +225,6 @@ public class Session extends DataContainer implements DateHolder {
         }
 
         Map<String, Long> playtimePerAlias = worldTimes.getPlaytimePerAlias();
-        long total = worldTimes.getTotal();
 
         long longest = 0;
         String theWorld = "-";
@@ -244,8 +237,25 @@ public class Session extends DataContainer implements DateHolder {
             }
         }
 
+        long total = worldTimes.getTotal();
+        // Prevent arithmetic error if 0
+        if (total <= 0) {
+            total = -1;
+        }
         double quotient = longest * 1.0 / total;
 
         return theWorld + " (" + Formatters.percentage().apply(quotient) + ")";
+    }
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "sessionStart=" + sessionStart +
+                ", worldTimes=" + worldTimes +
+                ", playerKills=" + playerKills +
+                ", mobKills=" + mobKills +
+                ", deaths=" + deaths +
+                ", afkTime=" + afkTime +
+                '}';
     }
 }

@@ -160,7 +160,7 @@ public class SessionAccordion extends AbstractAccordion {
         sessions.sort(new DateHolderRecentComparator());
 
         int i = 0;
-        for (Session session : sessions) {
+        for (Session session : new ArrayList<>(sessions)) {
             if (i >= maxSessions) {
                 break;
             }

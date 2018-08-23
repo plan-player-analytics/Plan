@@ -5,18 +5,22 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bstats.sponge.Metrics;
 
-import javax.inject.Inject;
 import java.io.Serializable;
 
 public class BStatsSponge {
 
-    @Inject
-    private Metrics metrics;
+    private final Metrics metrics;
+
+    public BStatsSponge(Metrics metrics) {
+        this.metrics = metrics;
+    }
 
     public void registerMetrics() {
         Log.logDebug("Enable", "Enabling bStats Metrics.");
         if (metrics != null) {
             registerConfigSettingGraphs();
+        } else {
+            Log.debug("Metrics not injected properly.");
         }
     }
 

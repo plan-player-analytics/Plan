@@ -32,7 +32,7 @@ public class PlayerPageUpdateProcessor implements Runnable {
                         cancel();
                     }
                 }
-            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 20);
+            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5);
         }
     }
 }
