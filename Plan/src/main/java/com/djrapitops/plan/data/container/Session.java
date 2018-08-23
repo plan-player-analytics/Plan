@@ -199,7 +199,7 @@ public class Session extends DataContainer implements DateHolder {
         return worldTimes;
     }
 
-    private List<PlayerKill> getPlayerKills() {
+    public List<PlayerKill> getPlayerKills() {
         return playerKills;
     }
 
