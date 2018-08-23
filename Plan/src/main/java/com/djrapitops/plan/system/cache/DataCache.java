@@ -7,6 +7,7 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
@@ -22,6 +23,7 @@ import java.util.*;
  * @author Rsl1122
  * @since 4.0.0
  */
+@Singleton
 public class DataCache extends SessionCache implements SubSystem {
 
     private Database database;

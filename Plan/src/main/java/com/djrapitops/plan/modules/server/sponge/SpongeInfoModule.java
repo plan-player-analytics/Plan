@@ -8,6 +8,8 @@ import dagger.Module;
 import dagger.Provides;
 import org.spongepowered.api.Sponge;
 
+import javax.inject.Singleton;
+
 /**
  * Dagger module for Sponge ServerInfo.
  *
@@ -17,11 +19,13 @@ import org.spongepowered.api.Sponge;
 public class SpongeInfoModule {
 
     @Provides
+    @Singleton
     ServerInfo provideSpongeServerInfo(SpongeServerInfo spongeServerInfo) {
         return spongeServerInfo;
     }
 
     @Provides
+    @Singleton
     ServerProperties provideServerProperties() {
         return new SpongeServerProperties(Sponge.getGame());
     }

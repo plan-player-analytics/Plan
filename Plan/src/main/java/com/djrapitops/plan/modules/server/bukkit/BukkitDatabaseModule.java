@@ -6,6 +6,8 @@ import com.djrapitops.plan.system.database.databases.Database;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 /**
  * Dagger module for bukkit database.
  *
@@ -15,11 +17,13 @@ import dagger.Provides;
 public class BukkitDatabaseModule {
 
     @Provides
+    @Singleton
     DBSystem provideDatabaseSystem(BukkitDBSystem dbSystem) {
         return dbSystem;
     }
 
     @Provides
+    @Singleton
     Database provideDatabase(DBSystem dbSystem) {
         return dbSystem.getActiveDatabase();
     }

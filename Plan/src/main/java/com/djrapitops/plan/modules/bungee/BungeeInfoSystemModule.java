@@ -10,7 +10,7 @@ import dagger.Provides;
 import javax.inject.Singleton;
 
 /**
- * Dagger module for InfoSystem.
+ * Dagger module for Bungee InfoSystem.
  *
  * @author Rsl1122
  */

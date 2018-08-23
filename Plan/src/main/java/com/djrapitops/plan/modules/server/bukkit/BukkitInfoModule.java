@@ -8,6 +8,8 @@ import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 /**
  * Dagger module for Bukkit ServerInfo.
  *
@@ -17,11 +19,13 @@ import dagger.Provides;
 public class BukkitInfoModule {
 
     @Provides
+    @Singleton
     ServerInfo provideBukkitServerInfo(BukkitServerInfo bukkitServerInfo) {
         return bukkitServerInfo;
     }
 
     @Provides
+    @Singleton
     ServerProperties provideServerProperties(Plan plugin) {
         return new BukkitServerProperties(plugin.getServer());
     }

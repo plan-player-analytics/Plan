@@ -5,6 +5,8 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 /**
  * Dagger module for Server CacheSystem.
  *
@@ -14,6 +16,7 @@ import dagger.Provides;
 public class ServerDataCacheModule {
 
     @Provides
+    @Singleton
     SessionCache provideSessionCache(DataCache cache) {
         return cache;
     }

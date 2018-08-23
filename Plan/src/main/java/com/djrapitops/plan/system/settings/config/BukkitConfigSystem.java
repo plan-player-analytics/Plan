@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.settings.config;
 import com.djrapitops.plan.system.file.FileSystem;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 
 /**
@@ -16,6 +17,7 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BukkitConfigSystem extends ConfigSystem {
 
     @Inject

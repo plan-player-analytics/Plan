@@ -16,6 +16,7 @@ import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -23,6 +24,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BungeeConnectionSystem extends ConnectionSystem {
 
     private final Database database;

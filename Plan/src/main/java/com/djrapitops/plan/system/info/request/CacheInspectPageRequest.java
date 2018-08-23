@@ -71,7 +71,7 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
     private void cache(boolean export, UUID uuid, String html) {
         ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
         if (export) {
-            Processing.submitNonCritical(() -> HtmlExport.exportPlayer(uuid));
+            Processing.submitNonCritical(() -> HtmlExport.exportPlayer_Old(uuid));
         }
     }
 

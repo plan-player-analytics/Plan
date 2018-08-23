@@ -5,6 +5,8 @@ import com.djrapitops.plan.api.PlanAPI;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 /**
  * Dagger module for Bungee PlanAPI.
  *
@@ -14,6 +16,7 @@ import dagger.Provides;
 public class BungeeAPIModule {
 
     @Provides
+    @Singleton
     PlanAPI providePlanAPI(BungeeAPI bungeeAPI) {
         return bungeeAPI;
     }

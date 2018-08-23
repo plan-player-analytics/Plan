@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Singleton;
 import java.io.IOException;
 
 /**
@@ -20,6 +21,7 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
+@Singleton
 public abstract class ConfigSystem implements SubSystem {
 
     protected FileSystem fileSystem;

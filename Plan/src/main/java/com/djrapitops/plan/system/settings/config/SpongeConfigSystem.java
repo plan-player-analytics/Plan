@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 
 /**
@@ -13,6 +14,7 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
+@Singleton
 public class SpongeConfigSystem extends BukkitConfigSystem {
 
     private final PluginLogger logger;

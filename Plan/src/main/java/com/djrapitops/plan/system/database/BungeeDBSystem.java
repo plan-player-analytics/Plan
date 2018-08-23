@@ -11,12 +11,14 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Bungee Database system that initializes MySQL object.
  *
  * @author Rsl1122
  */
+@Singleton
 public class BungeeDBSystem extends DBSystem {
 
     @Inject

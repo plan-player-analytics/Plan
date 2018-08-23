@@ -15,6 +15,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
+import com.djrapitops.plan.system.locale.LocaleSystem;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
@@ -35,6 +36,7 @@ public class BungeeSystem extends PlanSystem {
             VersionCheckSystem versionCheckSystem,
             FileSystem fileSystem,
             BungeeConfigSystem bungeeConfigSystem,
+            LocaleSystem localeSystem,
             InfoSystem infoSystem,
             ServerInfo serverInfo,
             BungeeCacheSystem bungeeCacheSystem,
@@ -46,7 +48,7 @@ public class BungeeSystem extends PlanSystem {
             ExportSystem exportSystem,
             PlanAPI planAPI
     ) {
-        super(webServerSystem);
+        super(webServerSystem, localeSystem);
         setTestSystem(this);
 
         this.versionCheckSystem = versionCheckSystem;

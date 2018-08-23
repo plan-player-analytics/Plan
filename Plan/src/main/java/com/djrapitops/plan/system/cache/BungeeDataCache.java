@@ -3,6 +3,7 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.system.database.databases.Database;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -12,6 +13,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BungeeDataCache extends DataCache {
 
     @Inject

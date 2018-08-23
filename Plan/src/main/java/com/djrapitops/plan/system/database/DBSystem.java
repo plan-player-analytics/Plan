@@ -18,6 +18,7 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import java.util.Set;
  *
  * @author Rsl1122
  */
+@Singleton
 public abstract class DBSystem implements SubSystem {
 
     protected final Locale locale;

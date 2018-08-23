@@ -8,8 +8,10 @@ import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 /**
- * Dagger module for Bukkit ServerInfo.
+ * Dagger module for Bungee ServerInfo.
  *
  * @author Rsl1122
  */
@@ -17,11 +19,13 @@ import dagger.Provides;
 public class BungeeInfoModule {
 
     @Provides
+    @Singleton
     ServerInfo provideBungeeServerInfo(BungeeServerInfo bungeeServerInfo) {
         return bungeeServerInfo;
     }
 
     @Provides
+    @Singleton
     ServerProperties provideServerProperties(PlanBungee plugin) {
         return new BungeeServerProperties(plugin.getProxy());
     }

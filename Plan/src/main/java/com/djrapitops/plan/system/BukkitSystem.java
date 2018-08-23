@@ -15,6 +15,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.BukkitServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
+import com.djrapitops.plan.system.locale.LocaleSystem;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.BukkitTaskSystem;
@@ -34,6 +35,7 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
     public BukkitSystem(VersionCheckSystem versionCheckSystem,
                         FileSystem fileSystem,
                         ConfigSystem serverConfigSystem,
+                        LocaleSystem localeSystem,
                         InfoSystem serverInfoSystem,
                         BukkitServerInfo serverInfo,
                         DBSystem databaseSystem,
@@ -45,7 +47,7 @@ public class BukkitSystem extends PlanSystem implements ServerSystem {
                         PlanAPI planAPI,
                         ShutdownHook shutdownHook
     ) {
-        super(webServerSystem);
+        super(webServerSystem, localeSystem);
         this.versionCheckSystem = versionCheckSystem;
         this.fileSystem = fileSystem;
         this.configSystem = serverConfigSystem;

@@ -14,38 +14,57 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * Connection system for Bukkit servers.
  *
  * @author Rsl1122
  */
+@Singleton
 public class ServerConnectionSystem extends ConnectionSystem {
 
-    private final Supplier<Locale> locale;
+    private final Locale locale;
+    private final PlanConfig config;
+    private final Database database;
+    private final WebServer webServer;
+    private final ServerInfo serverInfo;
+    private final PluginLogger pluginLogger;
 
     private long latestServerMapRefresh;
 
     private Server mainServer;
 
     @Inject
-    public ServerConnectionSystem(Supplier<Locale> locale) {
+    public ServerConnectionSystem(
+            Locale locale,
+            PlanConfig config,
+            Database database,
+            WebServer webServer,
+            ServerInfo serverInfo,
+            PluginLogger pluginLogger
+    ) {
         this.locale = locale;
+        this.config = config;
+        this.database = database;
+        this.webServer = webServer;
+        this.serverInfo = serverInfo;
+        this.pluginLogger = pluginLogger;
         latestServerMapRefresh = 0;
     }
 
     private void refreshServerMap() {
         Processing.submitNonCritical(() -> {
             if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
-                Database database = Database.getActive();
                 Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
                 bungeeInformation.ifPresent(server -> mainServer = server);
                 bukkitServers = database.fetch().getBukkitServers();
@@ -94,12 +113,12 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     @Override
     public boolean isServerAvailable() {
-        return mainServer != null && Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse();
+        return mainServer != null && config.isFalse(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE);
     }
 
     @Override
     public String getMainAddress() {
-        return isServerAvailable() ? mainServer.getWebAddress() : ServerInfo.getServer_Old().getWebAddress();
+        return isServerAvailable() ? mainServer.getWebAddress() : serverInfo.getServer().getWebAddress();
 
     }
 
@@ -107,15 +126,15 @@ public class ServerConnectionSystem extends ConnectionSystem {
     public void enable() {
         refreshServerMap();
 
-        boolean usingBungeeWebServer = ConnectionSystem.getInstance().isServerAvailable();
-        boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+        boolean usingBungeeWebServer = isServerAvailable();
+        boolean usingAlternativeIP = config.isTrue(Settings.SHOW_ALTERNATIVE_IP);
 
-        if (!usingAlternativeIP && ServerInfo.getServerProperties_Old().getIp().isEmpty()) {
-            Log.infoColor("§e" + locale.get().getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
+        if (!usingAlternativeIP && serverInfo.getServerProperties().getIp().isEmpty()) {
+            pluginLogger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
         }
         if (usingBungeeWebServer && usingAlternativeIP) {
-            String webServerAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
-            Log.info(locale.get().getString(PluginLang.ENABLE_NOTIFY_ADDRESS_CONFIRMATION, webServerAddress));
+            String webServerAddress = webServer.getAccessAddress();
+            pluginLogger.info(locale.getString(PluginLang.ENABLE_NOTIFY_ADDRESS_CONFIRMATION, webServerAddress));
         }
     }
 }

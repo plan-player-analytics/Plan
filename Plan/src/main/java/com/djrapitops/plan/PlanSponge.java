@@ -3,10 +3,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.common.ExportModule;
 import com.djrapitops.plan.modules.common.LocaleModule;
-import com.djrapitops.plan.modules.common.PluginHookModule;
-import com.djrapitops.plan.modules.common.VersionCheckModule;
 import com.djrapitops.plan.modules.server.ServerAPIModule;
 import com.djrapitops.plan.modules.server.ServerDataCacheModule;
 import com.djrapitops.plan.modules.server.ServerInfoSystemModule;
@@ -48,15 +45,12 @@ import java.io.InputStream;
 @Component(modules = {
         SpongePlanModule.class,
         APFModule.class,
-        ExportModule.class,
-        VersionCheckModule.class,
         BukkitConfigModule.class,
         LocaleModule.class,
         SpongeDatabaseModule.class,
         ServerDataCacheModule.class,
         ServerInfoSystemModule.class,
         SpongeInfoModule.class,
-        PluginHookModule.class,
         ServerAPIModule.class,
 })
 interface PlanSpongeComponent {

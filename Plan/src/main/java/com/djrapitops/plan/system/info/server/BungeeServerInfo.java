@@ -12,6 +12,7 @@ import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BungeeServerInfo extends ServerInfo {
 
     private final Database database;

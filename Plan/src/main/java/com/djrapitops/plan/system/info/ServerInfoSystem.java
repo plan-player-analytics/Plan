@@ -14,15 +14,23 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plugin.api.utility.log.Log;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * InfoSystem for Bukkit servers.
  *
  * @author Rsl1122
  */
+@Singleton
 public class ServerInfoSystem extends InfoSystem {
 
-    public ServerInfoSystem(ConnectionSystem connectionSystem) {
+    private final ServerInfo serverInfo;
+
+    @Inject
+    public ServerInfoSystem(ConnectionSystem connectionSystem, ServerInfo serverInfo) {
         super(connectionSystem);
+        this.serverInfo = serverInfo;
     }
 
     @Override
@@ -37,6 +45,6 @@ public class ServerInfoSystem extends InfoSystem {
     @Override
     public void updateNetworkPage() throws WebException {
         String html = HtmlStructure.createServerContainer();
-        sendRequest(new CacheNetworkPageContentRequest(ServerInfo.getServerUUID_Old(), html));
+        sendRequest(new CacheNetworkPageContentRequest(serverInfo.getServerUUID(), html));
     }
 }

@@ -1,10 +1,12 @@
 package com.djrapitops.plan.system.export;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
+
+import javax.inject.Inject;
 
 /**
  * System in charge of exporting html.
@@ -13,16 +15,22 @@ import com.djrapitops.plan.utilities.file.export.HtmlExport;
  */
 public class ExportSystem implements SubSystem {
 
-    private final PlanPlugin plugin;
+    private PlanConfig config;
+    private HtmlExport htmlExport;
 
-    public ExportSystem(PlanPlugin plugin) {
-        this.plugin = plugin;
+    @Inject
+    public ExportSystem(
+            PlanConfig config,
+            HtmlExport htmlExport
+    ) {
+        this.config = config;
+        this.htmlExport = htmlExport;
     }
 
     @Override
     public void enable() {
-        if (Settings.ANALYSIS_EXPORT.isTrue()) {
-            Processing.submitNonCritical(new HtmlExport(plugin));
+        if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
+            Processing.submitNonCritical(htmlExport);
         }
     }
 

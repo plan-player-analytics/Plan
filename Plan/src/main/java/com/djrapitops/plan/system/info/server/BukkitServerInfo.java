@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.WebServer;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +25,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BukkitServerInfo extends ServerInfo {
 
     private final WebServer webServer;

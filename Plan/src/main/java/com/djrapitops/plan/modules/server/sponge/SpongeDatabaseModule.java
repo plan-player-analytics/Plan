@@ -7,7 +7,7 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Dagger module for bukkit database.
+ * Dagger module for sponge database.
  *
  * @author Rsl1122
  */

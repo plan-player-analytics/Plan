@@ -10,12 +10,14 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * DBSystem for Sponge.
  *
  * @author Rsl1122
  */
+@Singleton
 public class SpongeDBSystem extends DBSystem {
 
     @Inject

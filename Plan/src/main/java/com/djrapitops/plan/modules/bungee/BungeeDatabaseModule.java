@@ -6,8 +6,10 @@ import com.djrapitops.plan.system.database.databases.Database;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 /**
- * Dagger module for bukkit database.
+ * Dagger module for bungee database.
  *
  * @author Rsl1122
  */
@@ -15,11 +17,13 @@ import dagger.Provides;
 public class BungeeDatabaseModule {
 
     @Provides
+    @Singleton
     DBSystem provideDatabaseSystem(BungeeDBSystem dbSystem) {
         return dbSystem;
     }
 
     @Provides
+    @Singleton
     Database provideDatabase(DBSystem dbSystem) {
         return dbSystem.getActiveDatabase();
     }

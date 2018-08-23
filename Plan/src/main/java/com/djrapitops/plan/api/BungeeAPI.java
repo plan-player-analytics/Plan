@@ -13,6 +13,7 @@ import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -20,6 +21,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BungeeAPI extends CommonAPI {
 
     private final HookHandler hookHandler;

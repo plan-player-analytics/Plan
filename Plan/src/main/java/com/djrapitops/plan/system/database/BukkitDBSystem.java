@@ -14,12 +14,14 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Bukkit Database system that initializes SQLite and MySQL database objects.
  *
  * @author Rsl1122
  */
+@Singleton
 public class BukkitDBSystem extends DBSystem {
 
     @Inject

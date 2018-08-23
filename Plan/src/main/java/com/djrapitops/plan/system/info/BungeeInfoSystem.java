@@ -18,12 +18,14 @@ import com.djrapitops.plan.system.webserver.response.errors.InternalErrorRespons
 import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * InfoSystem for Bungee.
  *
  * @author Rsl1122
  */
+@Singleton
 public class BungeeInfoSystem extends InfoSystem {
 
     private final ServerInfo serverInfo;

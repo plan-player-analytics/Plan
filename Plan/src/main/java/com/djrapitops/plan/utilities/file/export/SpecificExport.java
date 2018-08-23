@@ -7,11 +7,11 @@ package com.djrapitops.plan.utilities.file.export;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +29,15 @@ import java.util.UUID;
  */
 public abstract class SpecificExport implements Runnable {
 
-    protected final File outputFolder;
-    protected final boolean usingBungee;
+    private final PlanConfig config;
+    private final ServerInfo serverInfo;
 
-    protected SpecificExport() {
+    protected final File outputFolder;
+    private final boolean usingBungee;
+
+    protected SpecificExport(PlanConfig config, ServerInfo serverInfo) {
+        this.config = config;
+        this.serverInfo = serverInfo;
         outputFolder = getFolder();
         usingBungee = Check.isBungeeAvailable();
     }
@@ -40,9 +45,7 @@ public abstract class SpecificExport implements Runnable {
     protected File getFolder() {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
 
-        Log.logDebug("Export", "Path: " + path);
         boolean isAbsolute = Paths.get(path).isAbsolute();
-        Log.logDebug("Export", "Absolute: " + (isAbsolute ? "Yes" : "No"));
         if (isAbsolute) {
             File folder = new File(path);
             if (!folder.exists() || !folder.isDirectory()) {

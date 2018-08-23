@@ -17,11 +17,6 @@ public class LocaleModule {
 
     @Provides
     @Singleton
-    LocaleSystem provideLocaleSystem() {
-        return new LocaleSystem();
-    }
-
-    @Provides
     Locale provideLocale(LocaleSystem localeSystem) {
         return localeSystem.getLocale();
     }

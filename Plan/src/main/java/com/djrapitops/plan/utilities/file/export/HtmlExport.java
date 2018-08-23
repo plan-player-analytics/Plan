@@ -9,15 +9,20 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,32 +34,72 @@ import java.util.*;
  *
  * @author Rsl1122
  */
+@Singleton
 public class HtmlExport extends SpecificExport {
 
     private final PlanPlugin plugin;
+    private final Database database;
+    private final ConnectionSystem connectionSystem;
+    private final ErrorHandler errorHandler;
 
-    public HtmlExport(PlanPlugin plugin) {
+    @Inject
+    public HtmlExport(
+            PlanPlugin plugin,
+            PlanConfig config,
+            Database database,
+            ServerInfo serverInfo,
+            ConnectionSystem connectionSystem,
+            ErrorHandler errorHandler
+    ) {
+        super(config, serverInfo);
         this.plugin = plugin;
+        this.database = database;
+        this.connectionSystem = connectionSystem;
+        this.errorHandler = errorHandler;
     }
 
-    public static void exportServer(UUID serverUUID) {
-        Optional<String> serverName = Database.getActive().fetch().getServerName(serverUUID);
+    @Deprecated
+    public static void exportServer_Old(UUID serverUUID) {
+    }
+
+    @Deprecated
+    public static void exportPlayer_Old(UUID playerUUID) {
+    }
+
+    public void exportServer(UUID serverUUID) {
+        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+            return;
+        }
+        Optional<String> serverName = database.fetch().getServerName(serverUUID);
         serverName.ifPresent(name -> Processing.submitNonCritical(() -> {
-            new AnalysisExport(serverUUID, name);
+            try {
+                exportAvailableServerPage(serverUUID, name);
+            } catch (IOException e) {
+                errorHandler.log(L.WARN, this.getClass(), e);
+            }
         }));
     }
 
-    public static void exportPlayer(UUID playerUUID) {
-        String playerName = Database.getActive().fetch().getPlayerName(playerUUID);
+    public void exportPlayer(UUID uuid) {
+        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+            return;
+        }
+        String playerName = database.fetch().getPlayerName(uuid);
         if (playerName != null) {
-            Processing.submitNonCritical(new PlayerExport(playerUUID, playerName));
+            Processing.submitNonCritical(() -> {
+                try {
+                    exportAvailablePlayerPage(uuid, playerName);
+                } catch (IOException e) {
+                    errorHandler.log(L.WARN, this.getClass(), e);
+                }
+            });
         }
     }
 
     @Override
     public void run() {
         try {
-            if (Check.isBukkitAvailable() && ConnectionSystem.getInstance().isServerAvailable()) {
+            if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
                 return;
             }
 
@@ -66,7 +111,7 @@ public class HtmlExport extends SpecificExport {
             exportAvailablePlayers();
             exportPlayersPage();
         } catch (IOException | DBOpException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -88,13 +133,13 @@ public class HtmlExport extends SpecificExport {
     }
 
     private void exportAvailablePlayers() throws IOException {
-        for (Map.Entry<UUID, UserInfo> entry : Database.getActive().fetch().getUsers().entrySet()) {
+        for (Map.Entry<UUID, UserInfo> entry : database.fetch().getUsers().entrySet()) {
             exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
         }
     }
 
     private void exportAvailableServerPages() throws IOException {
-        Map<UUID, String> serverNames = Database.getActive().fetch().getServerNames();
+        Map<UUID, String> serverNames = database.fetch().getServerNames();
 
         for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
             exportAvailableServerPage(entry.getKey(), entry.getValue());
@@ -145,7 +190,7 @@ public class HtmlExport extends SpecificExport {
                     () -> new FileNotFoundException("Output folder could not be created at" + outputFolder.getAbsolutePath()));
             export(new File(outputFolder, "demo.js"), lines);
         } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -172,7 +217,7 @@ public class HtmlExport extends SpecificExport {
             try {
                 copyFromJar(resource);
             } catch (IOException e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.WARN, this.getClass(), e);
             }
         }
     }

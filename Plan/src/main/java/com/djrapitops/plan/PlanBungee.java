@@ -8,10 +8,7 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.bungee.*;
-import com.djrapitops.plan.modules.common.ExportModule;
 import com.djrapitops.plan.modules.common.LocaleModule;
-import com.djrapitops.plan.modules.common.PluginHookModule;
-import com.djrapitops.plan.modules.common.VersionCheckModule;
 import com.djrapitops.plan.system.BungeeSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -37,15 +34,12 @@ import java.io.InputStream;
 @Component(modules = {
         BungeePlanModule.class,
         APFModule.class,
-        ExportModule.class,
-        VersionCheckModule.class,
         BungeeConfigModule.class,
         LocaleModule.class,
         BungeeInfoSystemModule.class,
         BungeeInfoModule.class,
         BungeeDataCacheModule.class,
         BungeeDatabaseModule.class,
-        PluginHookModule.class,
         BungeeAPIModule.class
 })
 interface PlanBungeeComponent {

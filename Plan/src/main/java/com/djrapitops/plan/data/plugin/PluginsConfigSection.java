@@ -1,6 +1,6 @@
 package com.djrapitops.plan.data.plugin;
 
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.config.ConfigNode;
 
@@ -15,6 +15,12 @@ import java.io.IOException;
  */
 public class PluginsConfigSection {
 
+    private final PlanConfig config;
+
+    public PluginsConfigSection(PlanConfig config) {
+        this.config = config;
+    }
+
     public boolean hasSection(PluginData dataSource) {
         ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
@@ -23,7 +29,7 @@ public class PluginsConfigSection {
     }
 
     private ConfigNode getPluginsSection() {
-        return ConfigSystem.getConfig_Old().getConfigNode("Plugins");
+        return config.getConfigNode("Plugins");
     }
 
     public void createSection(PluginData dataSource) {

@@ -15,6 +15,7 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.SpongeServerInfo;
 import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
+import com.djrapitops.plan.system.locale.LocaleSystem;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
@@ -35,6 +36,7 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
                         VersionCheckSystem versionCheckSystem,
                         FileSystem fileSystem,
                         ConfigSystem serverConfigSystem,
+                        LocaleSystem localeSystem,
                         InfoSystem serverInfoSystem,
                         SpongeServerInfo serverInfo,
                         DBSystem databaseSystem,
@@ -46,7 +48,7 @@ public class SpongeSystem extends PlanSystem implements ServerSystem {
                         PlanAPI planAPI,
                         ShutdownHook shutdownHook
     ) {
-        super(webServerSystem);
+        super(webServerSystem, localeSystem);
         setTestSystem(this);
 
         this.versionCheckSystem = versionCheckSystem;

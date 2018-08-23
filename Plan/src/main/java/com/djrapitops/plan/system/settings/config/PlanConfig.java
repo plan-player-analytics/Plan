@@ -1,5 +1,6 @@
 package com.djrapitops.plan.system.settings.config;
 
+import com.djrapitops.plan.data.plugin.PluginsConfigSection;
 import com.djrapitops.plugin.config.Config;
 
 import java.io.File;
@@ -12,8 +13,11 @@ import java.util.List;
  */
 public class PlanConfig extends Config {
 
+    private final PluginsConfigSection pluginsConfigSection;
+
     public PlanConfig(File file) {
         super(file);
+        pluginsConfigSection = new PluginsConfigSection(this);
     }
 
     public boolean isTrue(Setting setting) {
@@ -48,5 +52,9 @@ public class PlanConfig extends Config {
 
     public void set(Setting setting, Object value) {
         set(setting.getPath(), value);
+    }
+
+    public PluginsConfigSection getPluginsConfigSection() {
+        return pluginsConfigSection;
     }
 }

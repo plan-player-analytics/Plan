@@ -4,12 +4,13 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.ServerInfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.connection.ServerConnectionSystem;
-import com.djrapitops.plan.system.locale.Locale;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 /**
- * Dagger module for InfoSystem.
+ * Dagger module for Server InfoSystem.
  *
  * @author Rsl1122
  */
@@ -17,13 +18,15 @@ import dagger.Provides;
 public class ServerInfoSystemModule {
 
     @Provides
-    InfoSystem provideServerInfoSystem(ConnectionSystem connectionSystem) {
-        return new ServerInfoSystem(connectionSystem);
+    @Singleton
+    InfoSystem provideServerInfoSystem(ServerInfoSystem serverInfoSystem) {
+        return serverInfoSystem;
     }
 
     @Provides
-    ConnectionSystem provideServerConnectionSystem(Locale locale) {
-        return new ServerConnectionSystem(() -> locale); // TODO Remove supplier
+    @Singleton
+    ConnectionSystem provideServerConnectionSystem(ServerConnectionSystem serverConnectionSystem) {
+        return serverConnectionSystem;
     }
 
 }
