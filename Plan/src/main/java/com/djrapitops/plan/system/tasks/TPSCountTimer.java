@@ -3,7 +3,9 @@ package com.djrapitops.plan.system.tasks;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.TPSInsertProcessor;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import java.util.ArrayList;
@@ -17,11 +19,14 @@ import java.util.List;
 public abstract class TPSCountTimer extends AbsRunnable {
 
     protected final List<TPS> history;
+    protected final PluginLogger logger;
+    protected final ErrorHandler errorHandler;
 
     protected int latestPlayersOnline = 0;
 
-    public TPSCountTimer() {
-        super();
+    public TPSCountTimer(PluginLogger logger, ErrorHandler errorHandler) {
+        this.logger = logger;
+        this.errorHandler = errorHandler;
         history = new ArrayList<>();
     }
 
@@ -38,8 +43,8 @@ public abstract class TPSCountTimer extends AbsRunnable {
                 history.clear();
             }
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-            Log.error("TPS Count Task Disabled due to error, reload Plan to re-enable.");
-            Log.toLog(this.getClass(), e);
+            logger.error("TPS Count Task Disabled due to error, reload Plan to re-enable.");
+            errorHandler.log(L.ERROR, this.getClass(), e);
             cancel();
         }
     }

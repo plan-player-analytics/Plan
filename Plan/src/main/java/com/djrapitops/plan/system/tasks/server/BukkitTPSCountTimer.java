@@ -2,22 +2,34 @@ package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.World;
 
+import javax.inject.Inject;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
 public class BukkitTPSCountTimer extends TPSCountTimer {
 
     protected final Plan plugin;
+    private ServerProperties serverProperties;
     private long lastCheckNano;
 
-    public BukkitTPSCountTimer(Plan plugin) {
+    @Inject
+    public BukkitTPSCountTimer(
+            Plan plugin,
+            ServerProperties serverProperties,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        super(logger, errorHandler);
         this.plugin = plugin;
+        this.serverProperties = serverProperties;
         lastCheckNano = -1;
     }
 
@@ -50,7 +62,7 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
         long totalMemory = runtime.totalMemory();
         long usedMemory = (totalMemory - runtime.freeMemory()) / 1000000;
 
-        int playersOnline = ServerInfo.getServerProperties_Old().getOnlinePlayers();
+        int playersOnline = serverProperties.getOnlinePlayers();
         latestPlayersOnline = playersOnline;
         int loadedChunks = getLoadedChunks();
         int entityCount;

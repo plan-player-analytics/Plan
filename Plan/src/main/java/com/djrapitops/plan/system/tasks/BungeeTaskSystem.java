@@ -9,7 +9,8 @@ import com.djrapitops.plan.system.tasks.bungee.EnableConnectionTask;
 import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
-import com.google.inject.Inject;
+
+import javax.inject.Inject;
 
 /**
  * TaskSystem responsible for registering tasks for Bungee.
@@ -18,9 +19,20 @@ import com.google.inject.Inject;
  */
 public class BungeeTaskSystem extends TaskSystem {
 
+    private final EnableConnectionTask enableConnectionTask;
+    private final NetworkPageRefreshTask networkPageRefreshTask;
+
     @Inject
-    public BungeeTaskSystem(RunnableFactory runnableFactory) {
-        super(runnableFactory, new BungeeTPSCountTimer());
+    public BungeeTaskSystem(
+            RunnableFactory runnableFactory,
+            BungeeTPSCountTimer bungeeTPSCountTimer,
+            EnableConnectionTask enableConnectionTask,
+            NetworkPageRefreshTask networkPageRefreshTask
+    ) {
+        super(runnableFactory, bungeeTPSCountTimer);
+
+        this.enableConnectionTask = enableConnectionTask;
+        this.networkPageRefreshTask = networkPageRefreshTask;
     }
 
     @Override
@@ -29,8 +41,8 @@ public class BungeeTaskSystem extends TaskSystem {
     }
 
     private void registerTasks() {
-        registerTask(new EnableConnectionTask()).runTaskAsynchronously();
+        registerTask(enableConnectionTask).runTaskAsynchronously();
         registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
-        registerTask(new NetworkPageRefreshTask()).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
+        registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
     }
 }

@@ -1,23 +1,28 @@
 package com.djrapitops.plan.system.tasks.server;
 
-import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
 public class SpongeTPSCountTimer extends TPSCountTimer {
 
     private long lastCheckNano;
+    private ServerProperties serverProperties;
 
-    public SpongeTPSCountTimer(PlanSponge plugin) {
-        super();
+    @Inject
+    public SpongeTPSCountTimer(ServerProperties serverProperties, PluginLogger logger, ErrorHandler errorHandler) {
+        super(logger, errorHandler);
+        this.serverProperties = serverProperties;
         lastCheckNano = -1;
     }
 
@@ -56,7 +61,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
         long usedMemory = (totalMemory - runtime.freeMemory()) / 1000000;
 
         double tps = Sponge.getGame().getServer().getTicksPerSecond();
-        int playersOnline = ServerInfo.getServerProperties_Old().getOnlinePlayers();
+        int playersOnline = serverProperties.getOnlinePlayers();
         latestPlayersOnline = playersOnline;
         int loadedChunks = -1; // getLoadedChunks();
         int entityCount = getEntityCount();

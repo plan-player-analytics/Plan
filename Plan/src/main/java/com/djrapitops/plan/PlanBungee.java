@@ -30,8 +30,10 @@ import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.InputStream;
 
+@Singleton
 @Component(modules = {
         BungeePlanModule.class,
         APFModule.class,
@@ -41,6 +43,7 @@ import java.io.InputStream;
         LocaleModule.class,
         BungeeInfoSystemModule.class,
         BungeeInfoModule.class,
+        BungeeDataCacheModule.class,
         BungeeDatabaseModule.class,
         PluginHookModule.class,
         BungeeAPIModule.class

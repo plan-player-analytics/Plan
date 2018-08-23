@@ -1,12 +1,11 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
 import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
-import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 /**
@@ -14,12 +13,26 @@ import com.djrapitops.plugin.task.RunnableFactory;
  *
  * @author Rsl1122
  */
-public class ServerTaskSystem extends TaskSystem {
+public abstract class ServerTaskSystem extends TaskSystem {
 
-    protected PluginTask bootAnalysisTask;
+    private final PlanConfig config;
+    private final NetworkPageRefreshTask networkPageRefreshTask;
+    private final PeriodicAnalysisTask periodicAnalysisTask;
+    protected BootAnalysisTask bootAnalysisTask;
 
-    public ServerTaskSystem(RunnableFactory runnableFactory, TPSCountTimer tpsCountTimer) {
+    public ServerTaskSystem(
+            RunnableFactory runnableFactory,
+            TPSCountTimer tpsCountTimer,
+            PlanConfig config,
+            NetworkPageRefreshTask networkPageRefreshTask,
+            BootAnalysisTask bootAnalysisTask,
+            PeriodicAnalysisTask periodicAnalysisTask
+    ) {
         super(runnableFactory, tpsCountTimer);
+        this.config = config;
+        this.networkPageRefreshTask = networkPageRefreshTask;
+        this.bootAnalysisTask = bootAnalysisTask;
+        this.periodicAnalysisTask = periodicAnalysisTask;
     }
 
     @Override
@@ -28,21 +41,18 @@ public class ServerTaskSystem extends TaskSystem {
     }
 
     private void registerTasks() {
-        Benchmark.start("Task Registration");
-
         // Analysis refresh settings
-        int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
+        int analysisRefreshMinutes = config.getNumber(Settings.ANALYSIS_AUTO_REFRESH);
         boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
         long analysisPeriod = analysisRefreshMinutes * TimeAmount.MINUTE.ticks();
 
         registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
-        registerTask(new NetworkPageRefreshTask()).runTaskTimerAsynchronously(20L, 5L * TimeAmount.MINUTE.ticks());
-        bootAnalysisTask = registerTask(new BootAnalysisTask()).runTaskLaterAsynchronously(30L * TimeAmount.SECOND.ticks());
+        registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(20L, 5L * TimeAmount.MINUTE.ticks());
+        registerTask(bootAnalysisTask).runTaskLaterAsynchronously(30L * TimeAmount.SECOND.ticks());
 
         if (analysisRefreshTaskIsEnabled) {
-            registerTask(new PeriodicAnalysisTask()).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
+            registerTask(periodicAnalysisTask).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }
-        Benchmark.stop("Enable", "Task Registration");
     }
 
     public void cancelBootAnalysis() {

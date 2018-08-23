@@ -42,6 +42,7 @@ public abstract class InfoSystem implements SubSystem {
         this.connectionSystem = connectionSystem;
     }
 
+    @Deprecated
     public static InfoSystem getInstance() {
         InfoSystem infoSystem = PlanSystem.getInstance().getInfoSystem();
         Verify.nullCheck(infoSystem, () -> new IllegalStateException("Info System was not initialized."));

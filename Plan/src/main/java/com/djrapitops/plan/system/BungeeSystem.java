@@ -32,7 +32,6 @@ public class BungeeSystem extends PlanSystem {
 
     @Inject
     public BungeeSystem(
-            PlanBungee plugin,
             VersionCheckSystem versionCheckSystem,
             FileSystem fileSystem,
             BungeeConfigSystem bungeeConfigSystem,
@@ -41,6 +40,8 @@ public class BungeeSystem extends PlanSystem {
             BungeeCacheSystem bungeeCacheSystem,
             DBSystem databaseSystem,
             WebServerSystem webServerSystem,
+            BungeeListenerSystem bungeeListenerSystem,
+            BungeeTaskSystem bungeeTaskSystem,
             HookHandler hookHandler,
             ExportSystem exportSystem,
             PlanAPI planAPI
@@ -54,8 +55,8 @@ public class BungeeSystem extends PlanSystem {
         this.exportSystem = exportSystem;
         this.databaseSystem = databaseSystem;
         cacheSystem = bungeeCacheSystem;
-        listenerSystem = new BungeeListenerSystem(plugin);
-        taskSystem = new BungeeTaskSystem(plugin.getRunnableFactory());
+        listenerSystem = bungeeListenerSystem;
+        taskSystem = bungeeTaskSystem;
 
         this.infoSystem = infoSystem;
         this.serverInfo = serverInfo;

@@ -5,9 +5,8 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.tasks.server.BukkitTPSCountTimer;
-import com.djrapitops.plan.system.tasks.server.PaperTPSCountTimer;
-import com.djrapitops.plan.system.tasks.server.PingCountTimer;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.tasks.server.*;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
@@ -24,11 +23,25 @@ public class BukkitTaskSystem extends ServerTaskSystem {
     private final Plan plugin;
 
     @Inject
-    public BukkitTaskSystem(Plan plugin, RunnableFactory runnableFactory) {
-        super(runnableFactory,
+    public BukkitTaskSystem(
+            Plan plugin,
+            PlanConfig config,
+            RunnableFactory runnableFactory,
+            PaperTPSCountTimer paperTPSCountTimer,
+            BukkitTPSCountTimer bukkitTPSCountTimer,
+            NetworkPageRefreshTask networkPageRefreshTask,
+            BootAnalysisTask bootAnalysisTask,
+            PeriodicAnalysisTask periodicAnalysisTask
+    ) {
+        super(
+                runnableFactory,
                 Check.isPaperAvailable()
-                        ? new PaperTPSCountTimer(plugin)
-                        : new BukkitTPSCountTimer(plugin)
+                        ? paperTPSCountTimer
+                        : bukkitTPSCountTimer,
+                config,
+                networkPageRefreshTask,
+                bootAnalysisTask,
+                periodicAnalysisTask
         );
         this.plugin = plugin;
     }
@@ -37,7 +50,8 @@ public class BukkitTaskSystem extends ServerTaskSystem {
     public void enable() {
         super.enable();
         try {
-            PingCountTimer pingCountTimer = new PingCountTimer();
+            PingCountTimer pingCountTimer = new PingCountTimer(runnableFactory);
+
             plugin.registerListener(pingCountTimer);
             registerTask("PingCountTimer", pingCountTimer)
                     .runTaskTimer(20L, PingCountTimer.PING_INTERVAL);
