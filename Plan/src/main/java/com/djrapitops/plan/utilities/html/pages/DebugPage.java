@@ -14,7 +14,6 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -23,11 +22,9 @@ import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
-import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -52,10 +49,9 @@ public class DebugPage implements Page {
         TabsElement.Tab info = new TabsElement.Tab(Icon.called("server") + " Server Information", createServerInfoContent());
         TabsElement.Tab errors = new TabsElement.Tab(Icon.called("exclamation-circle") + " Errors", createErrorContent());
         TabsElement.Tab debugLog = new TabsElement.Tab(Icon.called("bug") + " Debug Log", createDebugLogContent());
-        TabsElement.Tab config = new TabsElement.Tab(Icon.called("cogs") + " Plan Config", createConfigContent());
         TabsElement.Tab caches = new TabsElement.Tab(Icon.called("archive") + " Plan Caches", createCacheContent());
 
-        TabsElement tabs = new TabsElement(info, errors, debugLog, config, caches);
+        TabsElement tabs = new TabsElement(info, errors, debugLog, caches);
 
         return preContent + tabs.toHtmlFull();
     }
@@ -103,12 +99,6 @@ public class DebugPage implements Page {
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
         }
-    }
-
-    private String createConfigContent() {
-        StringBuilder content = new StringBuilder();
-        appendConfig(content);
-        return content.toString();
     }
 
     private String createDebugLogContent() {
@@ -219,21 +209,6 @@ public class DebugPage implements Page {
         content.append("**Java VM Flags:** ").append(javaVMFlags).append("<br>");
 
         content.append("</pre>");
-    }
-
-    private void appendConfig(StringBuilder content) {
-        try {
-            File configFile = new File(PlanPlugin.getInstance().getDataFolder(), "config.yml");
-            if (configFile.exists()) {
-                content.append("<pre>### config.yml<br>&#96;&#96;&#96;<br>");
-                FileUtil.lines(configFile, Charset.forName("UTF-8"))
-                        .stream().filter(line -> !line.toLowerCase().contains("pass") && !line.toLowerCase().contains("secret"))
-                        .forEach(line -> content.append(line).append("<br>"));
-                content.append("&#96;&#96;&#96;</pre>");
-            }
-        } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
-        }
     }
 
     private void appendBenchmarks(StringBuilder content) {
