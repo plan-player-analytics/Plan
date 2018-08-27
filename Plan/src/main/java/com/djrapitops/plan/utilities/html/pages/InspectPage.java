@@ -107,9 +107,9 @@ public class InspectPage implements Page {
 
         Map<UUID, WorldTimes> worldTimesPerServer = perServerMutator.worldTimesPerServer();
         replacer.put("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
-        replacer.put("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
-        replacer.put("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
-        replacer.put("serverPieColors", Theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
+        replacer.put("worldPieColors", Theme.getValue_Old(ThemeVal.GRAPH_WORLD_PIE));
+        replacer.put("gmPieColors", Theme.getValue_Old(ThemeVal.GRAPH_GM_PIE));
+        replacer.put("serverPieColors", Theme.getValue_Old(ThemeVal.GRAPH_SERVER_PREF_PIE));
 
         String favoriteServer = serverNames.getOrDefault(perServerMutator.favoriteServer(), "Unknown");
         replacer.put("favoriteServer", favoriteServer);

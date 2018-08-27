@@ -111,18 +111,18 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addThemeColors() {
-        putRawData(AnalysisKeys.ACTIVITY_PIE_COLORS, Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE));
-        putRawData(AnalysisKeys.GM_PIE_COLORS, Theme.getValue(ThemeVal.GRAPH_GM_PIE));
-        putRawData(AnalysisKeys.PLAYERS_GRAPH_COLOR, Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
-        putRawData(AnalysisKeys.TPS_LOW_COLOR, Theme.getValue(ThemeVal.GRAPH_TPS_LOW));
-        putRawData(AnalysisKeys.TPS_MEDIUM_COLOR, Theme.getValue(ThemeVal.GRAPH_TPS_MED));
-        putRawData(AnalysisKeys.TPS_HIGH_COLOR, Theme.getValue(ThemeVal.GRAPH_TPS_HIGH));
-        putRawData(AnalysisKeys.WORLD_MAP_LOW_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_LOW));
-        putRawData(AnalysisKeys.WORLD_MAP_HIGH_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_HIGH));
-        putRawData(AnalysisKeys.WORLD_PIE_COLORS, Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
-        putRawData(AnalysisKeys.AVG_PING_COLOR, Theme.getValue(ThemeVal.GRAPH_AVG_PING));
-        putRawData(AnalysisKeys.MAX_PING_COLOR, Theme.getValue(ThemeVal.GRAPH_MAX_PING));
-        putRawData(AnalysisKeys.MIN_PING_COLOR, Theme.getValue(ThemeVal.GRAPH_MIN_PING));
+        putRawData(AnalysisKeys.ACTIVITY_PIE_COLORS, Theme.getValue_Old(ThemeVal.GRAPH_ACTIVITY_PIE));
+        putRawData(AnalysisKeys.GM_PIE_COLORS, Theme.getValue_Old(ThemeVal.GRAPH_GM_PIE));
+        putRawData(AnalysisKeys.PLAYERS_GRAPH_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_PLAYERS_ONLINE));
+        putRawData(AnalysisKeys.TPS_LOW_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_TPS_LOW));
+        putRawData(AnalysisKeys.TPS_MEDIUM_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_TPS_MED));
+        putRawData(AnalysisKeys.TPS_HIGH_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_TPS_HIGH));
+        putRawData(AnalysisKeys.WORLD_MAP_LOW_COLOR, Theme.getValue_Old(ThemeVal.WORLD_MAP_LOW));
+        putRawData(AnalysisKeys.WORLD_MAP_HIGH_COLOR, Theme.getValue_Old(ThemeVal.WORLD_MAP_HIGH));
+        putRawData(AnalysisKeys.WORLD_PIE_COLORS, Theme.getValue_Old(ThemeVal.GRAPH_WORLD_PIE));
+        putRawData(AnalysisKeys.AVG_PING_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_AVG_PING));
+        putRawData(AnalysisKeys.MAX_PING_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_MAX_PING));
+        putRawData(AnalysisKeys.MIN_PING_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_MIN_PING));
     }
 
     private void addPlayerSuppliers() {

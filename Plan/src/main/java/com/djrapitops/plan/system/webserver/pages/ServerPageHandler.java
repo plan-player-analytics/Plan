@@ -14,10 +14,11 @@ import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
-import com.djrapitops.plan.system.webserver.response.pages.RawServerDataResponse;
 import com.djrapitops.plugin.api.Check;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,7 +28,25 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class ServerPageHandler extends PageHandler {
+public class ServerPageHandler implements PageHandler {
+
+    private final ResponseFactory responseFactory;
+    private final Database database;
+    private final ServerInfo serverInfo;
+    private final InfoSystem infoSystem;
+
+    @Inject
+    public ServerPageHandler(
+            ResponseFactory responseFactory,
+            Database database,
+            ServerInfo serverInfo,
+            InfoSystem infoSystem
+    ) {
+        this.responseFactory = responseFactory;
+        this.database = database;
+        this.serverInfo = serverInfo;
+        this.infoSystem = infoSystem;
+    }
 
     @Override
     public Response getResponse(Request request, List<String> target) {
@@ -35,7 +54,7 @@ public class ServerPageHandler extends PageHandler {
 
         boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
         if (raw) {
-            return ResponseCache.loadResponse(PageId.RAW_SERVER.of(serverUUID), () -> new RawServerDataResponse(serverUUID));
+            return ResponseCache.loadResponse(PageId.RAW_SERVER.of(serverUUID), () -> responseFactory.rawServerPageResponse(serverUUID));
         }
 
         Response response = ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
@@ -43,9 +62,9 @@ public class ServerPageHandler extends PageHandler {
         if (response != null) {
             return response;
         } else {
-            if (Check.isBungeeAvailable() && ServerInfo.getServerUUID_Old().equals(serverUUID)) {
+            if (Check.isBungeeAvailable() && serverInfo.getServerUUID().equals(serverUUID)) {
                 try {
-                    InfoSystem.getInstance().updateNetworkPage();
+                    infoSystem.updateNetworkPage();
                 } catch (WebException e) {
                     /*Ignore, should not occur*/
                 }
@@ -56,11 +75,13 @@ public class ServerPageHandler extends PageHandler {
     }
 
     private UUID getServerUUID(List<String> target) {
-        UUID serverUUID = ServerInfo.getServerUUID_Old();
+        // Default to current server's page
+        UUID serverUUID = serverInfo.getServerUUID();
+
         if (!target.isEmpty()) {
             try {
                 String serverName = target.get(0).replace("%20", " ");
-                Optional<UUID> serverUUIDOptional = Database.getActive().fetch().getServerUUID(serverName);
+                Optional<UUID> serverUUIDOptional = database.fetch().getServerUUID(serverName);
                 if (serverUUIDOptional.isPresent()) {
                     serverUUID = serverUUIDOptional.get();
                 }

@@ -21,7 +21,7 @@ import java.util.Map;
  *
  * @author Rsl1122
  */
-public abstract class TreePageHandler extends PageHandler {
+public abstract class TreePageHandler implements PageHandler {
 
     private Map<String, PageHandler> pages;
 

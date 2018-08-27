@@ -24,7 +24,7 @@ public class ActivityPie extends AbstractPieChart {
     }
 
     private static List<PieSlice> turnToSlices(Map<String, Set<UUID>> activityData) {
-        String[] colors = Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
+        String[] colors = Theme.getValue_Old(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
 
         List<PieSlice> slices = new ArrayList<>();

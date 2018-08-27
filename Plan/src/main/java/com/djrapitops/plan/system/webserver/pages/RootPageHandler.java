@@ -22,7 +22,7 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public class RootPageHandler extends PageHandler {
+public class RootPageHandler implements PageHandler {
 
     @Override
     public Response getResponse(Request request, List<String> target) throws WebException {

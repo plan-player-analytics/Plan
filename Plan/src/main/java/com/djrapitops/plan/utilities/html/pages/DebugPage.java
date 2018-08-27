@@ -1,6 +1,5 @@
 package com.djrapitops.plan.utilities.html.pages;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
@@ -19,15 +18,19 @@ import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.benchmarking.Benchmark;
+import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plugin.logging.FolderTimeStampFileLogger;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.debug.CombineDebugLogger;
+import com.djrapitops.plugin.logging.debug.DebugLogger;
+import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
+import com.djrapitops.plugin.logging.error.DefaultErrorHandler;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
+import com.djrapitops.plugin.logging.error.FolderTimeStampErrorFileLogger;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
-import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -36,6 +39,31 @@ import java.util.*;
  * @author Rsl1122
  */
 public class DebugPage implements Page {
+
+    private final String version;
+    private final Database database;
+    private final ServerInfo serverInfo;
+    private final ConnectionSystem connectionSystem;
+    private final CombineDebugLogger debugLogger;
+    private final Timings timings;
+    private final DefaultErrorHandler errorHandler;
+
+    public DebugPage(
+            String version,
+            Database database,
+            ServerInfo serverInfo,
+            ConnectionSystem connectionSystem, DebugLogger debugLogger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
+        this.version = version;
+        this.database = database;
+        this.serverInfo = serverInfo;
+        this.connectionSystem = connectionSystem;
+        this.debugLogger = (CombineDebugLogger) debugLogger;
+        this.timings = timings;
+        this.errorHandler = (DefaultErrorHandler) errorHandler;
+    }
 
     @Override
     public String toHtml() {
@@ -52,10 +80,9 @@ public class DebugPage implements Page {
         TabsElement.Tab info = new TabsElement.Tab(Icon.called("server") + " Server Information", createServerInfoContent());
         TabsElement.Tab errors = new TabsElement.Tab(Icon.called("exclamation-circle") + " Errors", createErrorContent());
         TabsElement.Tab debugLog = new TabsElement.Tab(Icon.called("bug") + " Debug Log", createDebugLogContent());
-        TabsElement.Tab config = new TabsElement.Tab(Icon.called("cogs") + " Plan Config", createConfigContent());
         TabsElement.Tab caches = new TabsElement.Tab(Icon.called("archive") + " Plan Caches", createCacheContent());
 
-        TabsElement tabs = new TabsElement(info, errors, debugLog, config, caches);
+        TabsElement tabs = new TabsElement(info, errors, debugLog, caches);
 
         return preContent + tabs.toHtmlFull();
     }
@@ -101,14 +128,8 @@ public class DebugPage implements Page {
             }
             content.append("</pre>");
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
-    }
-
-    private String createConfigContent() {
-        StringBuilder content = new StringBuilder();
-        appendConfig(content);
-        return content.toString();
     }
 
     private String createDebugLogContent() {
@@ -163,39 +184,35 @@ public class DebugPage implements Page {
             content.append("</pre>");
 
             content.append("<pre>### Servers:<br><br>");
-            List<Server> servers = ConnectionSystem.getInstance().getBukkitServers();
-            content.append("Server Name | Address | UUID <br>")
+            List<Server> servers = connectionSystem.getBukkitServers();
+            content.append("Server Name | Address <br>")
                     .append("-- | -- | --<br>");
             for (Server server : servers) {
                 content.append(server.getName()).append(" | ")
-                        .append(server.getWebAddress()).append(" | ")
-                        .append(server.getUuid()).append("<br>");
+                        .append(server.getWebAddress()).append("<br>");
             }
             content.append("</pre>");
 
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
     private void appendServerInformation(StringBuilder content) {
-        PlanPlugin plugin = PlanPlugin.getInstance();
-        ServerProperties variable = ServerInfo.getServerProperties_Old();
+        ServerProperties serverProperties = serverInfo.getServerProperties();
 
         content.append("<pre>### Server Information<br>")
-                .append("**Plan Version:** ").append(plugin.getVersion()).append("<br>");
+                .append("**Plan Version:** ").append(version).append("<br>");
 
         content.append("**Server:** ");
-        content.append(variable.getName())
-                .append(" ").append(variable.getImplVersion())
-                .append(" ").append(variable.getVersion());
-        content.append("<br>");
+        content.append(serverProperties.getName())
+                .append(" ").append(serverProperties.getImplVersion())
+                .append(" (").append(serverProperties.getVersion());
+        content.append(")<br>");
 
-        Database database = Database.getActive();
         content.append("**Database:** ").append(database.getName());
         content.append("<br><br>");
 
-        RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
         Properties properties = System.getProperties();
 
         String osName = properties.getProperty("os.name");
@@ -208,7 +225,6 @@ public class DebugPage implements Page {
         String javaVMVendor = properties.getProperty("java.vm.vendor");
         String javaVMName = properties.getProperty("java.vm.name");
         String javaVMVersion = properties.getProperty("java.vm.version");
-        List<String> javaVMFlags = runtimeMxBean.getInputArguments();
 
         content.append("**Operating SubSystem:** ").append(osName).append(" (").append(osArch)
                 .append(") version ").append(osVersion).append("<br>");
@@ -216,31 +232,15 @@ public class DebugPage implements Page {
         content.append("**Java Version:** ").append(javaVersion).append(", ").append(javaVendor).append("<br>");
         content.append("**Java VM Version:** ").append(javaVMName).append(" version ").append(javaVMVersion)
                 .append(", ").append(javaVMVendor).append("<br>");
-        content.append("**Java VM Flags:** ").append(javaVMFlags).append("<br>");
 
         content.append("</pre>");
-    }
-
-    private void appendConfig(StringBuilder content) {
-        try {
-            File configFile = new File(PlanPlugin.getInstance().getDataFolder(), "config.yml");
-            if (configFile.exists()) {
-                content.append("<pre>### config.yml<br>&#96;&#96;&#96;<br>");
-                FileUtil.lines(configFile, Charset.forName("UTF-8"))
-                        .stream().filter(line -> !line.toLowerCase().contains("pass") && !line.toLowerCase().contains("secret"))
-                        .forEach(line -> content.append(line).append("<br>"));
-                content.append("&#96;&#96;&#96;</pre>");
-            }
-        } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
-        }
     }
 
     private void appendBenchmarks(StringBuilder content) {
         content.append("<pre>### Benchmarks<br>&#96;&#96;&#96;<br>");
         try {
-            for (String line : Benchmark.getAverages().asStringArray()) {
-                content.append(line).append("<br>");
+            for (Benchmark result : timings.getAverageResults()) {
+                content.append(result.toString()).append("<br>");
             }
         } catch (Exception e) {
             content.append("Exception on Benchmark.getAverages().asStringArray()");
@@ -249,42 +249,67 @@ public class DebugPage implements Page {
     }
 
     private void appendLoggedErrors(StringBuilder content) {
-        try {
-            content.append("<pre>### Logged Errors<br>");
+        content.append("<pre>### Logged Errors<br>");
 
-            SortedMap<String, List<String>> errors = ErrorLogger.getLoggedErrors(PlanPlugin.getInstance());
+        List<String> lines = errorHandler.getErrorHandler(FolderTimeStampErrorFileLogger.class)
+                .flatMap(FolderTimeStampFileLogger::getCurrentFile)
+                .map(file -> {
+                    try {
+                        return FileUtil.lines(file);
+                    } catch (IOException e) {
+                        errorHandler.log(L.WARN, this.getClass(), e);
+                        return new ArrayList<String>();
+                    }
+                }).orElse(new ArrayList<>());
+        SortedMap<String, List<String>> errors = FolderTimeStampErrorFileLogger.splitByError(lines);
 
-            if (!errors.isEmpty()) {
-                List<String> errorLines = new ArrayList<>();
-                for (Map.Entry<String, List<String>> entry : errors.entrySet()) {
-                    StringBuilder errorLineBuilder = new StringBuilder();
-                    for (String line : entry.getValue()) {
-                        errorLineBuilder.append(line).append("<br>");
-                    }
-                    String error = errorLineBuilder.toString();
-                    if (!errorLines.contains(error)) {
-                        errorLines.add(error);
-                    }
+        if (!errors.isEmpty()) {
+            List<String> errorLines = new ArrayList<>();
+            for (Map.Entry<String, List<String>> entry : errors.entrySet()) {
+                StringBuilder errorLineBuilder = new StringBuilder();
+                for (String line : entry.getValue()) {
+                    errorLineBuilder.append(line).append("<br>");
                 }
-                for (String error : errorLines) {
-                    content.append("</pre><pre>&#96;&#96;&#96;<br>")
-                            .append(error)
-                            .append("&#96;&#96;&#96;");
+                String error = errorLineBuilder.toString();
+                if (!errorLines.contains(error)) {
+                    errorLines.add(error);
                 }
-            } else {
-                content.append("**No Errors logged.**<br>");
             }
-            content.append("</pre>");
-        } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
+            for (String error : errorLines) {
+                content.append("</pre><pre>&#96;&#96;&#96;<br>")
+                        .append(error)
+                        .append("&#96;&#96;&#96;");
+            }
+        } else {
+            content.append("**No Errors logged.**<br>");
         }
+        content.append("</pre>");
     }
 
     private void appendDebugLog(StringBuilder content) {
-        content.append("<pre>### Debug Log<br>&#96;&#96;&#96;<br>");
-        for (String line : Log.getDebugLogInMemory()) {
+        Optional<MemoryDebugLogger> memoryDebugLogger = this.debugLogger.getDebugLogger(MemoryDebugLogger.class);
+        Map<String, List<String>> channels = memoryDebugLogger.map(MemoryDebugLogger::getChannels).orElse(new HashMap<>());
+
+        if (channels.isEmpty()) {
+            content.append("Incompatible Debug Logger in use (No MemoryDebugLogger)");
+            return;
+        }
+
+        TabsElement.Tab[] tabs = channels.entrySet().stream()
+                .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getKey(), two.getKey()))
+                .map(channel -> new TabsElement.Tab(channel.getKey(), debugChannelContent(channel.getKey(), channel.getValue())))
+                .toArray(TabsElement.Tab[]::new);
+
+        content.append(new TabsElement(tabs).toHtmlFull());
+    }
+
+    private String debugChannelContent(String channelName, List<String> lines) {
+        StringBuilder content = new StringBuilder();
+        content.append("<pre>### Debug (").append(channelName).append(")<br>&#96;&#96;&#96;<br>");
+        for (String line : lines) {
             content.append(line).append("<br>");
         }
         content.append("&#96;&#96;&#96;</pre>");
+        return content.toString();
     }
 }

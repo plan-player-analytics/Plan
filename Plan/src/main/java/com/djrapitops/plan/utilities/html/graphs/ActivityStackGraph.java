@@ -39,7 +39,7 @@ public class ActivityStackGraph extends AbstractStackGraph {
 
     private static StackDataSet[] getDataSets(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
         String[] groups = ActivityIndex.getGroups();
-        String[] colors = Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
+        String[] colors = Theme.getValue_Old(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
         StackDataSet[] dataSets = new StackDataSet[groups.length];
 

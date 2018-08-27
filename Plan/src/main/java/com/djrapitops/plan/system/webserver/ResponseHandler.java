@@ -7,7 +7,6 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.connection.InfoRequestPageHandler;
-import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -32,39 +31,40 @@ import java.util.Optional;
 @Singleton
 public class ResponseHandler extends TreePageHandler {
 
+    private final ResponseFactory responseFactory;
+
     private final ErrorHandler errorHandler;
 
     private WebServer webServer;
 
     @Inject
-    public ResponseHandler(ErrorHandler errorHandler) {
+    public ResponseHandler(
+            ResponseFactory responseFactory,
+
+            DebugPageHandler debugPageHandler,
+            PlayersPageHandler playersPageHandler,
+            PlayerPageHandler playerPageHandler,
+            ServerPageHandler serverPageHandler,
+            InfoRequestPageHandler infoRequestPageHandler,
+
+            ErrorHandler errorHandler
+    ) {
+        this.responseFactory = responseFactory;
         this.errorHandler = errorHandler;
 
-        registerWebAPIPages();
-        registerDefaultPages();
-    }
+        registerPage("favicon.ico", responseFactory.redirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"), 5);
+        registerPage("debug", debugPageHandler);
+        registerPage("players", playersPageHandler);
+        registerPage("player", playerPageHandler);
 
-    private void registerDefaultPages() {
-        registerPage("favicon.ico", new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"), 5);
-        registerPage("debug", new DebugPageHandler());
-        registerPage("players", new PlayersPageHandler());
-        registerPage("player", new PlayerPageHandler());
-
-        ServerPageHandler serverPageHandler = new ServerPageHandler();
         registerPage("network", serverPageHandler);
         registerPage("server", serverPageHandler);
+
         registerPage("", webServer.isAuthRequired()
                 ? new RootPageHandler()
-                : new PageHandler() {
-            @Override
-            public Response getResponse(Request request, List<String> target) {
-                return new RedirectResponse("/server");
-            }
-        });
-    }
+                : (request, target) -> new RedirectResponse("/server"));
 
-    private void registerWebAPIPages() {
-        registerPage("info", new InfoRequestPageHandler());
+        registerPage("info", infoRequestPageHandler);
     }
 
     public Response getResponse(Request request) {
@@ -103,10 +103,10 @@ public class ResponseHandler extends TreePageHandler {
         Optional<Authentication> authentication = Optional.empty();
 
         if (targetString.endsWith(".css")) {
-            return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> new CSSResponse(targetString));
+            return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> responseFactory.cssResponse(targetString));
         }
         if (targetString.endsWith(".js")) {
-            return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
+            return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> responseFactory.javaScriptResponse(targetString));
         }
         boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
         boolean isAuthRequired = webServer.isAuthRequired() && isNotInfoRequest;
@@ -122,7 +122,7 @@ public class ResponseHandler extends TreePageHandler {
         }
         PageHandler pageHandler = getPageHandler(target);
         if (pageHandler == null) {
-            return new NotFoundResponse(request.getLocale().getString(ErrorPageLang.UNKNOWN_PAGE_404));
+            return responseFactory.pageNotFound404();
         } else {
             boolean isAuthorized = authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target);
             if (!isAuthRequired || isAuthorized) {

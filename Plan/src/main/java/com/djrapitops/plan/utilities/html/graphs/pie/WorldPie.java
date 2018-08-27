@@ -25,7 +25,7 @@ public class WorldPie extends AbstractPieChartWithDrilldown {
     }
 
     private static List<PieSlice> turnIntoSlices(WorldTimes worldTimes) {
-        String[] colors = Theme.getValue(ThemeVal.GRAPH_WORLD_PIE).split(", ");
+        String[] colors = Theme.getValue_Old(ThemeVal.GRAPH_WORLD_PIE).split(", ");
         int colLength = colors.length;
 
         Map<String, Long> playtimePerAlias = worldTimes.getPlaytimePerAlias();

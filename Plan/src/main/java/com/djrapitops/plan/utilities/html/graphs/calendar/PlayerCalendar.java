@@ -65,7 +65,7 @@ public class PlayerCalendar {
 
             series.append(",{title: 'Playtime: ").append(Formatters.timeAmount().apply(playtime))
                     .append("',start:'").append(day)
-                    .append("',color: '").append(Theme.getValue(ThemeVal.GREEN)).append("'")
+                    .append("',color: '").append(Theme.getValue_Old(ThemeVal.GREEN)).append("'")
                     .append("}");
 
             series.append(",{title: 'Sessions: ").append(sessionCount)
@@ -105,7 +105,7 @@ public class PlayerCalendar {
                 series.append(",{title: 'Killed: ").append(kill.getVictim())
                         .append("',start:").append(time)
                         .append(",end:").append(time + fiveMinutes)
-                        .append(",color: '").append(Theme.getValue(ThemeVal.RED)).append("'")
+                        .append(",color: '").append(Theme.getValue_Old(ThemeVal.RED)).append("'")
                         .append("}");
             }
         }
@@ -115,6 +115,6 @@ public class PlayerCalendar {
         String registered = FormatUtils.formatTimeStampYear(this.registered);
 
         series.append("{title: 'Registered: ").append(registered).append("'," +
-                "start: ").append(this.registered).append(",color: '").append(Theme.getValue(ThemeVal.LIGHT_GREEN)).append("'}");
+                "start: ").append(this.registered).append(",color: '").append(Theme.getValue_Old(ThemeVal.LIGHT_GREEN)).append("'}");
     }
 }

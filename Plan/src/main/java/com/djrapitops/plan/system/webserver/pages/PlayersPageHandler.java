@@ -10,8 +10,9 @@ import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -19,11 +20,18 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class PlayersPageHandler extends PageHandler {
+public class PlayersPageHandler implements PageHandler {
+
+    private final ResponseFactory responseFactory;
+
+    @Inject
+    public PlayersPageHandler(ResponseFactory responseFactory) {
+        this.responseFactory = responseFactory;
+    }
 
     @Override
     public Response getResponse(Request request, List<String> target) {
-        return ResponseCache.loadResponse(PageId.PLAYERS.id(), PlayersPageResponse::new);
+        return ResponseCache.loadResponse(PageId.PLAYERS.id(), responseFactory::playersPageResponse);
     }
 
     @Override

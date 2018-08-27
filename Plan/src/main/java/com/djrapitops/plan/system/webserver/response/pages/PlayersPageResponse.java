@@ -12,10 +12,10 @@ import com.djrapitops.plugin.api.utility.log.Log;
  */
 public class PlayersPageResponse extends Response {
 
-    public PlayersPageResponse() {
+    public PlayersPageResponse(PlayersPage playersPage) {
         super.setHeader("HTTP/1.1 200 OK");
         try {
-            super.setContent(new PlayersPage().toHtml());
+            super.setContent(playersPage.toHtml());
         } catch (ParseException e) {
             Log.toLog(this.getClass(), e);
             setContent(new InternalErrorResponse("/players", e).getContent());

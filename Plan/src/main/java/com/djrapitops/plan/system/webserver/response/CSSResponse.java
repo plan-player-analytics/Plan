@@ -8,9 +8,9 @@ import com.djrapitops.plan.system.settings.theme.Theme;
  */
 public class CSSResponse extends FileResponse {
 
-    public CSSResponse(String fileName) {
+    public CSSResponse(String fileName, Theme theme) {
         super(format(fileName));
         super.setType(ResponseType.CSS);
-        setContent(Theme.replaceColors(getContent()));
+        setContent(theme.replaceThemeColors(getContent()));
     }
 }

@@ -22,6 +22,7 @@ public class FileUtil {
         throw new IllegalStateException("Utility class");
     }
 
+    @Deprecated
     public static String getStringFromResource(String fileName) throws IOException {
         StringBuilder html = new StringBuilder();
         PlanPlugin plugin = PlanPlugin.getInstance();

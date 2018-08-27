@@ -146,7 +146,7 @@ public class SessionAccordion extends AbstractAccordion {
                     "<i class=\"material-icons\">person</i><span>INSPECT PAGE</span></button></a>";
 
             addElement(new AccordionElement(htmlID, title)
-                    .setColor(Theme.getValue(ThemeVal.PARSED_SESSION_ACCORDION))
+                    .setColor(Theme.getValue_Old(ThemeVal.PARSED_SESSION_ACCORDION))
                     .setLeftSide(leftSide + leftBottom)
                     .setRightSide(rightSide + rightBottom));
             i++;
@@ -214,7 +214,7 @@ public class SessionAccordion extends AbstractAccordion {
             String leftBottom = new KillsTable(session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()), null).parseHtml();
 
             addElement(new AccordionElement(htmlID, title)
-                    .setColor(Theme.getValue(ThemeVal.PARSED_SESSION_ACCORDION))
+                    .setColor(Theme.getValue_Old(ThemeVal.PARSED_SESSION_ACCORDION))
                     .setLeftSide(leftSide + leftBottom)
                     .setRightSide(rightSide));
 

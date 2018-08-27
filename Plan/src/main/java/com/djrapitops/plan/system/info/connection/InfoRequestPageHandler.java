@@ -15,6 +15,7 @@ import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -26,7 +27,14 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class InfoRequestPageHandler extends PageHandler {
+public class InfoRequestPageHandler implements PageHandler {
+
+    private final ConnectionSystem connectionSystem;
+
+    @Inject
+    public InfoRequestPageHandler(ConnectionSystem connectionSystem) {
+        this.connectionSystem = connectionSystem;
+    }
 
     @Override
     public Response getResponse(Request request, List<String> target) throws WebException {
@@ -42,7 +50,7 @@ public class InfoRequestPageHandler extends PageHandler {
             }
 
             String requestName = target.get(0);
-            InfoRequest infoRequest = ConnectionSystem.getInstance().getInfoRequest(requestName);
+            InfoRequest infoRequest = connectionSystem.getInfoRequest(requestName);
 
             Verify.nullCheck(infoRequest, () -> new NotFoundException("Info Request has not been registered."));
 

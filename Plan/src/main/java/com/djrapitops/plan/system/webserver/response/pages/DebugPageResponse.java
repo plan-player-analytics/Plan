@@ -15,10 +15,10 @@ import com.djrapitops.plan.utilities.html.pages.DebugPage;
  */
 public class DebugPageResponse extends ErrorResponse {
 
-    public DebugPageResponse() {
+    public DebugPageResponse(DebugPage debugPage) {
         super.setHeader("HTTP/1.1 200 OK");
         super.setTitle(Icon.called("bug") + " Debug Information");
-        super.setParagraph(new DebugPage().toHtml());
+        super.setParagraph(debugPage.toHtml());
         replacePlaceholders();
     }
 

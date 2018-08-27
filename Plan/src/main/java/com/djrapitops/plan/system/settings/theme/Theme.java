@@ -43,9 +43,17 @@ public class Theme implements SubSystem {
     }
 
     @Deprecated
-    public static String getValue(ThemeVal variable) {
+    public static String getValue_Old(ThemeVal variable) {
         try {
             return getInstance().getThemeValue(variable);
+        } catch (NullPointerException | IllegalStateException e) {
+            return variable.getDefaultValue();
+        }
+    }
+
+    public String getValue(ThemeVal variable) {
+        try {
+            return getThemeValue(variable);
         } catch (NullPointerException | IllegalStateException e) {
             return variable.getDefaultValue();
         }

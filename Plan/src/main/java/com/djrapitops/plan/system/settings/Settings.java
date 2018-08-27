@@ -182,6 +182,7 @@ public enum Settings implements Setting {
         return configPath;
     }
 
+    @Deprecated
     public void setTemporaryValue(Object value) {
         this.tempValue = value;
     }

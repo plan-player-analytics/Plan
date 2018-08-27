@@ -123,7 +123,7 @@ public class ServerAccordion extends AbstractAccordion {
                     "</script>";
 
             addElement(new AccordionElement(htmlID, title)
-                    .setColor(Theme.getValue(ThemeVal.PARSED_SERVER_ACCORDION))
+                    .setColor(Theme.getValue_Old(ThemeVal.PARSED_SERVER_ACCORDION))
                     .setLeftSide(leftSide)
                     .setRightSide(rightSide));
 

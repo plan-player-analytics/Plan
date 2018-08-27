@@ -20,6 +20,7 @@ import java.util.UUID;
  */
 public class AnalysisPageResponse extends Response {
 
+    @Deprecated
     public static AnalysisPageResponse refreshNow(UUID serverUUID) {
         Processing.submitNonCritical(() -> {
             try {

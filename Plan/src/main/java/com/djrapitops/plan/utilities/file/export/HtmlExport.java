@@ -183,7 +183,7 @@ public class HtmlExport extends SpecificExport {
 
         try {
             String demo = FileUtil.getStringFromResource("web/js/demo.js")
-                    .replace("${defaultTheme}", Theme.getValue(ThemeVal.THEME_DEFAULT));
+                    .replace("${defaultTheme}", Theme.getValue_Old(ThemeVal.THEME_DEFAULT));
             List<String> lines = Arrays.asList(demo.split("\n"));
             File outputFolder = new File(this.outputFolder, "js");
             Verify.isTrue(outputFolder.exists() && outputFolder.isDirectory() || outputFolder.mkdirs(),
