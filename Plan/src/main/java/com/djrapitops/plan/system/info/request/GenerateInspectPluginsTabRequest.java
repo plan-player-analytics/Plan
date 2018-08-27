@@ -22,20 +22,29 @@ import java.util.UUID;
  */
 public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables implements GenerateRequest, WideRequest {
 
-    private final UUID playerUUID;
+    private final InfoSystem infoSystem;
+    private final InfoRequestFactory infoRequestFactory;
 
-    private GenerateInspectPluginsTabRequest() {
-        playerUUID = null;
+    private UUID playerUUID;
+
+    GenerateInspectPluginsTabRequest(
+            InfoSystem infoSystem,
+            InfoRequestFactory infoRequestFactory
+    ) {
+        this.infoSystem = infoSystem;
+        this.infoRequestFactory = infoRequestFactory;
     }
 
-    public GenerateInspectPluginsTabRequest(UUID uuid) {
+    public GenerateInspectPluginsTabRequest(
+            UUID uuid,
+            InfoSystem infoSystem,
+            InfoRequestFactory infoRequestFactory
+    ) {
+        this.infoSystem = infoSystem;
+        this.infoRequestFactory = infoRequestFactory;
         Verify.nullCheck(uuid);
         playerUUID = uuid;
         variables.put("player", uuid.toString());
-    }
-
-    public static GenerateInspectPluginsTabRequest createHandler() {
-        return new GenerateInspectPluginsTabRequest();
     }
 
     @Override
@@ -54,7 +63,7 @@ public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables i
 
     private void generateAndCache(UUID uuid) throws WebException {
         String[] navAndHtml = InspectPagePluginsContent.generateForThisServer(uuid).getContents();
-        InfoSystem.getInstance().sendRequest(new CacheInspectPluginsTabRequest(uuid, navAndHtml[0], navAndHtml[1]));
+        infoSystem.sendRequest(infoRequestFactory.cacheInspectPluginsTabRequest(uuid, navAndHtml[0], navAndHtml[1]));
     }
 
     @Override

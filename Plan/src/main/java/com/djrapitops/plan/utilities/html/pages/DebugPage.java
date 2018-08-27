@@ -48,7 +48,7 @@ public class DebugPage implements Page {
     private final Timings timings;
     private final DefaultErrorHandler errorHandler;
 
-    public DebugPage(
+    DebugPage(
             String version,
             Database database,
             ServerInfo serverInfo,

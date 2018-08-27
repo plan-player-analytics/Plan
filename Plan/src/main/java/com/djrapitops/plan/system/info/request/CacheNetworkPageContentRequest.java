@@ -27,18 +27,24 @@ import java.util.UUID;
  */
 public class CacheNetworkPageContentRequest extends InfoRequestWithVariables implements CacheRequest {
 
-    private final String html;
+    private final ServerInfo serverInfo;
 
-    public CacheNetworkPageContentRequest(UUID serverUUID, String html) {
+    private String html;
+
+    CacheNetworkPageContentRequest(ServerInfo serverInfo) {
+        this.serverInfo = serverInfo;
+    }
+
+    CacheNetworkPageContentRequest(UUID serverUUID, String html, ServerInfo serverInfo) {
+        this.serverInfo = serverInfo;
+
         Verify.nullCheck(serverUUID, html);
-        variables.put("serverName", ServerInfo.getServerName_Old());
+        variables.put("serverName", serverInfo.getServer().getName());
         variables.put("html", Base64Util.encode(html));
         this.html = html;
     }
 
-    private CacheNetworkPageContentRequest() {
-        html = null;
-    }
+
 
     @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
@@ -52,7 +58,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
         NetworkPageContent serversTab = getNetworkPageContent();
         serversTab.addElement(serverName, Base64Util.decode(html));
 
-        ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID_Old()));
+        ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
 
         return DefaultResponses.SUCCESS.get();
     }
@@ -63,10 +69,7 @@ public class CacheNetworkPageContentRequest extends InfoRequestWithVariables imp
 
     @Override
     public void runLocally() {
-        getNetworkPageContent().addElement(ServerInfo.getServerName_Old(), html);
+        getNetworkPageContent().addElement(serverInfo.getServer().getName(), html);
     }
 
-    public static CacheNetworkPageContentRequest createHandler() {
-        return new CacheNetworkPageContentRequest();
-    }
 }

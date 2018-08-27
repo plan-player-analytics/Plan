@@ -18,18 +18,20 @@ import java.util.Map;
  */
 public class GenerateNetworkPageContentRequest implements WideRequest, GenerateRequest {
 
-    public static GenerateNetworkPageContentRequest createHandler() {
-        return new GenerateNetworkPageContentRequest();
+    private final InfoSystem infoSystem;
+
+    GenerateNetworkPageContentRequest(InfoSystem infoSystem) {
+        this.infoSystem = infoSystem;
     }
 
     @Override
     public Response handleRequest(Map<String, String> variables) throws WebException {
-        InfoSystem.getInstance().updateNetworkPage();
+        runLocally();
         return DefaultResponses.SUCCESS.get();
     }
 
     @Override
     public void runLocally() throws WebException {
-        InfoSystem.getInstance().updateNetworkPage();
+        infoSystem.updateNetworkPage();
     }
 }

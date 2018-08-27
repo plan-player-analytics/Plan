@@ -7,12 +7,12 @@ package com.djrapitops.plan.system.info;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.request.CacheNetworkPageContentRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,11 +26,18 @@ import javax.inject.Singleton;
 public class ServerInfoSystem extends InfoSystem {
 
     private final ServerInfo serverInfo;
+    private final PluginLogger logger;
 
     @Inject
-    public ServerInfoSystem(ConnectionSystem connectionSystem, ServerInfo serverInfo) {
-        super(connectionSystem);
+    public ServerInfoSystem(
+            ConnectionSystem connectionSystem,
+            ServerInfo serverInfo,
+            InfoRequestFactory infoRequestFactory,
+            PluginLogger logger
+    ) {
+        super(infoRequestFactory, connectionSystem);
         this.serverInfo = serverInfo;
+        this.logger = logger;
     }
 
     @Override
@@ -38,13 +45,13 @@ public class ServerInfoSystem extends InfoSystem {
         if (infoRequest instanceof SetupRequest) {
             throw new NoServersException("Set-up requests can not be run locally.");
         }
-        Log.debug("LocalRun: " + infoRequest.getClass().getSimpleName());
+        logger.debug("LocalRun: " + infoRequest.getClass().getSimpleName());
         infoRequest.runLocally();
     }
 
     @Override
     public void updateNetworkPage() throws WebException {
         String html = HtmlStructure.createServerContainer();
-        sendRequest(new CacheNetworkPageContentRequest(serverInfo.getServerUUID(), html));
+        sendRequest(infoRequestFactory.cacheNetworkPageContentRequest(serverInfo.getServerUUID(), html));
     }
 }

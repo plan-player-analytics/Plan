@@ -8,6 +8,7 @@ import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
@@ -27,23 +28,25 @@ import java.util.UUID;
  */
 public class CacheAnalysisPageRequest extends InfoRequestWithVariables implements CacheRequest {
 
-    private final UUID serverUUID;
-    private final String html;
+    private final PlanConfig config;
+    private final HtmlExport htmlExport;
 
-    private CacheAnalysisPageRequest() {
-        serverUUID = null;
-        html = null;
+    private UUID serverUUID;
+    private String html;
+
+    CacheAnalysisPageRequest(PlanConfig config, HtmlExport htmlExport) {
+        this.config = config;
+        this.htmlExport = htmlExport;
     }
 
-    public CacheAnalysisPageRequest(UUID serverUUID, String html) {
+    CacheAnalysisPageRequest(UUID serverUUID, String html, PlanConfig config, HtmlExport htmlExport) {
+        this.config = config;
+        this.htmlExport = htmlExport;
+
         Verify.nullCheck(serverUUID, html);
         this.serverUUID = serverUUID;
         variables.put("html", Base64Util.encode(html));
         this.html = html;
-    }
-
-    public static CacheAnalysisPageRequest createHandler() {
-        return new CacheAnalysisPageRequest();
     }
 
     @Override
@@ -55,20 +58,20 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
         String sentHtml = variables.get("html");
         Verify.nullCheck(sentHtml, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
-        boolean export = Settings.ANALYSIS_EXPORT.isTrue();
-        cache(export, sender, Base64Util.decode(sentHtml));
+        cache(sender, Base64Util.decode(sentHtml));
         return DefaultResponses.SUCCESS.get();
     }
 
-    private void cache(boolean export, UUID serverUUID, String html) {
+    private void cache(UUID serverUUID, String html) {
         ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
-        if (export) {
-            Processing.submitNonCritical(() -> HtmlExport.exportServer_Old(serverUUID));
+
+        if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
+            Processing.submitNonCritical(() -> htmlExport.exportServer(serverUUID));
         }
     }
 
     @Override
     public void runLocally() {
-        cache(Settings.ANALYSIS_EXPORT.isTrue(), serverUUID, html);
+        cache(serverUUID, html);
     }
 }

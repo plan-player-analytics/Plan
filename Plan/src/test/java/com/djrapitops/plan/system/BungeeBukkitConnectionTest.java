@@ -7,8 +7,6 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.request.GenerateInspectPluginsTabRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import org.junit.*;
@@ -17,7 +15,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import utilities.Teardown;
-import utilities.TestConstants;
 import utilities.mocks.BukkitMockUtil;
 import utilities.mocks.BungeeMockUtil;
 
@@ -111,10 +108,10 @@ public class BungeeBukkitConnectionTest {
 
     @Test
     @Ignore("Causes next BungeeSystem test to fail")
-    public void testRequest() throws EnableException, WebException {
+    public void testRequest() throws EnableException {
         enable();
 
         System.out.println("Sending request");
-        bungeeSystem.getInfoSystem().getConnectionSystem().sendWideInfoRequest(new GenerateInspectPluginsTabRequest(TestConstants.PLAYER_ONE_UUID));
+//        bungeeSystem.getInfoSystem().getConnectionSystem().sendWideInfoRequest(new GenerateInspectPluginsTabRequest(infoSystem, infoRequestFactory, TestConstants.PLAYER_ONE_UUID));
     }
 }

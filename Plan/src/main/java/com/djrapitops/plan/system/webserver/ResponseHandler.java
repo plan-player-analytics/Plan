@@ -11,7 +11,10 @@ import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pages.*;
-import com.djrapitops.plan.system.webserver.response.*;
+import com.djrapitops.plan.system.webserver.response.DefaultResponses;
+import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;
+import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.webserver.response.errors.*;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -60,9 +63,11 @@ public class ResponseHandler extends TreePageHandler {
         registerPage("network", serverPageHandler);
         registerPage("server", serverPageHandler);
 
-        registerPage("", webServer.isAuthRequired()
-                ? new RootPageHandler()
-                : (request, target) -> new RedirectResponse("/server"));
+        if (webServer.isAuthRequired()) {
+            registerPage("", new RootPageHandler());
+        } else {
+            registerPage("", responseFactory.redirectResponse("/server"), 5);
+        }
 
         registerPage("info", infoRequestPageHandler);
     }

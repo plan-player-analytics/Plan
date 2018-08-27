@@ -28,7 +28,7 @@ public class PlayersPage implements Page {
 
     private final Timings timings;
 
-    public PlayersPage(
+    PlayersPage(
             String version,
             PlanConfig config,
             Database database,

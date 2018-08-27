@@ -1,9 +1,8 @@
 package com.djrapitops.plan.system.tasks.server;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
-import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
+import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -15,6 +14,7 @@ import javax.inject.Inject;
 public class PeriodicAnalysisTask extends AbsRunnable {
 
     private final InfoSystem infoSystem;
+    private final InfoRequestFactory infoRequestFactory;
     private final ServerInfo serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
@@ -22,11 +22,12 @@ public class PeriodicAnalysisTask extends AbsRunnable {
     @Inject
     public PeriodicAnalysisTask(
             InfoSystem infoSystem,
-            ServerInfo serverInfo,
+            InfoRequestFactory infoRequestFactory, ServerInfo serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         this.infoSystem = infoSystem;
+        this.infoRequestFactory = infoRequestFactory;
         this.serverInfo = serverInfo;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -36,12 +37,10 @@ public class PeriodicAnalysisTask extends AbsRunnable {
     public void run() {
         try {
             WebExceptionLogger.logIfOccurs(this.getClass(), () ->
-                    infoSystem.sendRequest(new GenerateAnalysisPageRequest(serverInfo.getServerUUID()))
+                    infoSystem.sendRequest(infoRequestFactory.generateAnalysisPageRequest(serverInfo.getServerUUID()))
             );
-        } catch (IllegalStateException e) {
-            if (!PlanPlugin.getInstance().isReloading()) {
-                errorHandler.log(L.WARN, this.getClass(), e);
-            }
+        } catch (IllegalStateException ignore) {
+            /* Plugin was reloading */
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
             logger.error("Periodic Analysis Task Disabled due to error, reload Plan to re-enable.");
             errorHandler.log(L.ERROR, this.getClass(), e);

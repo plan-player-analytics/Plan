@@ -12,10 +12,9 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
-import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
+import com.djrapitops.plan.system.info.request.GenerateRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.system.info.request.SendDBSettingsRequest;
+import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
@@ -36,9 +35,11 @@ import java.util.UUID;
  */
 public abstract class InfoSystem implements SubSystem {
 
+    protected final InfoRequestFactory infoRequestFactory;
     protected final ConnectionSystem connectionSystem;
 
-    protected InfoSystem(ConnectionSystem connectionSystem) {
+    protected InfoSystem(InfoRequestFactory infoRequestFactory, ConnectionSystem connectionSystem) {
+        this.infoRequestFactory = infoRequestFactory;
         this.connectionSystem = connectionSystem;
     }
 
@@ -58,7 +59,7 @@ public abstract class InfoSystem implements SubSystem {
      * @throws WebException If fails.
      */
     public void generateAndCachePlayerPage(UUID player) throws WebException {
-        GenerateInspectPageRequest infoRequest = new GenerateInspectPageRequest(player);
+        GenerateRequest infoRequest = infoRequestFactory.generateInspectPageRequest(player);
         try {
             sendRequest(infoRequest);
         } catch (ConnectionFailException e) {
@@ -75,7 +76,7 @@ public abstract class InfoSystem implements SubSystem {
      * @throws WebException If fails.
      */
     public void generateAnalysisPage(UUID serverUUID) throws WebException {
-        GenerateAnalysisPageRequest request = new GenerateAnalysisPageRequest(serverUUID);
+        GenerateRequest request = infoRequestFactory.generateAnalysisPageRequest(serverUUID);
         if (ServerInfo.getServerUUID_Old().equals(serverUUID)) {
             runLocally(request);
         } else {
@@ -158,6 +159,6 @@ public abstract class InfoSystem implements SubSystem {
         String addressOfThisServer = WebServerSystem.getInstance().getWebServer().getAccessAddress();
 
         connectionSystem.setSetupAllowed(true);
-        connectionSystem.sendInfoRequest(new SendDBSettingsRequest(addressOfThisServer), bungee);
+        connectionSystem.sendInfoRequest(infoRequestFactory.sendDBSettingsRequest(addressOfThisServer), bungee);
     }
 }

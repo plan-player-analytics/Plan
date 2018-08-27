@@ -27,7 +27,7 @@ public class AnalysisPage implements Page {
     private final AnalysisContainer analysisContainer;
     private static final String DEBUG = "Analysis";
 
-    public AnalysisPage(AnalysisContainer analysisContainer) {
+    AnalysisPage(AnalysisContainer analysisContainer) {
         this.analysisContainer = analysisContainer;
     }
 

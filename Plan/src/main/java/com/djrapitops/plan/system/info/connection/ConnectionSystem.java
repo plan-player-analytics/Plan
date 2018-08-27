@@ -8,7 +8,8 @@ import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.request.*;
+import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.request.WideRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
@@ -29,10 +30,10 @@ public abstract class ConnectionSystem implements SubSystem {
     protected Map<UUID, Server> bukkitServers;
     private boolean setupAllowed;
 
-    public ConnectionSystem() {
+    public ConnectionSystem(Map<String, InfoRequest> dataRequests) {
         setupAllowed = false;
         bukkitServers = new HashMap<>();
-        dataRequests = loadDataRequests();
+        this.dataRequests = dataRequests;
         connectionLog = new ConnectionLog();
     }
 
@@ -61,8 +62,8 @@ public abstract class ConnectionSystem implements SubSystem {
         this.setupAllowed = setupAllowed;
     }
 
-    private void putRequest(Map<String, InfoRequest> requests, InfoRequest request) {
-        requests.put(request.getClass().getSimpleName().toLowerCase(), request);
+    private void putRequest(InfoRequest request) {
+        dataRequests.put(request.getClass().getSimpleName().toLowerCase(), request);
     }
 
     protected abstract Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException;
@@ -93,25 +94,6 @@ public abstract class ConnectionSystem implements SubSystem {
     public abstract String getMainAddress();
 
     public abstract void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException;
-
-    private Map<String, InfoRequest> loadDataRequests() {
-        Map<String, InfoRequest> requests = new HashMap<>();
-        putRequest(requests, CacheInspectPageRequest.createHandler());
-        putRequest(requests, CacheInspectPluginsTabRequest.createHandler());
-        putRequest(requests, CacheAnalysisPageRequest.createHandler());
-        putRequest(requests, CacheNetworkPageContentRequest.createHandler());
-
-        putRequest(requests, GenerateAnalysisPageRequest.createHandler());
-        putRequest(requests, GenerateInspectPageRequest.createHandler());
-        putRequest(requests, GenerateInspectPluginsTabRequest.createHandler());
-        putRequest(requests, GenerateNetworkPageContentRequest.createHandler());
-
-        putRequest(requests, SaveDBSettingsRequest.createHandler());
-        putRequest(requests, SendDBSettingsRequest.createHandler());
-        putRequest(requests, CheckConnectionRequest.createHandler());
-
-        return requests;
-    }
 
     public List<Server> getBukkitServers() {
         return new ArrayList<>(bukkitServers.values());

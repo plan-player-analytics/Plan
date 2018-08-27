@@ -1,37 +1,38 @@
 package com.djrapitops.plan.system.tasks.server;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
-import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
+import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import javax.inject.Inject;
 
 public class BootAnalysisTask extends AbsRunnable {
 
-    private InfoSystem infoSystem;
-    private ErrorHandler errorHandler;
+    private final InfoSystem infoSystem;
+    private final InfoRequestFactory infoRequestFactory;
+    private final ServerInfo serverInfo;
 
     @Inject
-    public BootAnalysisTask(InfoSystem infoSystem, ErrorHandler errorHandler) {
+    public BootAnalysisTask(
+            InfoSystem infoSystem,
+            InfoRequestFactory infoRequestFactory,
+            ServerInfo serverInfo
+    ) {
         this.infoSystem = infoSystem;
-        this.errorHandler = errorHandler;
+        this.infoRequestFactory = infoRequestFactory;
+        this.serverInfo = serverInfo;
     }
 
     @Override
     public void run() {
         try {
             WebExceptionLogger.logIfOccurs(this.getClass(), () ->
-                    infoSystem.sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID_Old()))
+                    infoSystem.sendRequest(infoRequestFactory.generateAnalysisPageRequest(serverInfo.getServerUUID()))
             );
-        } catch (IllegalStateException e) {
-            if (!PlanPlugin.getInstance().isReloading()) {
-                errorHandler.log(L.WARN, this.getClass(), e);
-            }
+        } catch (IllegalStateException ignore) {
+            /* Plugin was reloading */
         } finally {
             cancel();
         }

@@ -51,8 +51,10 @@ public class ServerConnectionSystem extends ConnectionSystem {
             Database database,
             WebServer webServer,
             ServerInfo serverInfo,
+            InfoRequests infoRequests,
             PluginLogger pluginLogger
     ) {
+        super(infoRequests);
         this.locale = locale;
         this.config = config;
         this.database = database;

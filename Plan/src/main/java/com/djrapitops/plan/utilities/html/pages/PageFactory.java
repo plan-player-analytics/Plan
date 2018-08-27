@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities.html.pages;
 
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.data.store.containers.AnalysisContainer;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -8,10 +9,13 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Factory for creating different {@link Page} objects.
@@ -21,29 +25,26 @@ import javax.inject.Singleton;
 @Singleton
 public class PageFactory {
 
-    private final PlanPlugin plugin;
     private final String version;
-    private final PlanConfig config;
-    private final Database database;
-    private final ServerInfo serverInfo;
-    private final ConnectionSystem connectionSystem;
-    private final DebugLogger debugLogger;
-    private final Timings timings;
-    private final ErrorHandler errorHandler;
+    private final Lazy<PlanConfig> config;
+    private final Lazy<Database> database;
+    private final Lazy<ServerInfo> serverInfo;
+    private final Lazy<ConnectionSystem> connectionSystem;
+    private final Lazy<DebugLogger> debugLogger;
+    private final Lazy<Timings> timings;
+    private final Lazy<ErrorHandler> errorHandler;
 
     @Inject
     public PageFactory(
-            PlanPlugin plugin,
             @Named("currentVersion") String version,
-            PlanConfig config,
-            Database database,
-            ServerInfo serverInfo,
-            ConnectionSystem connectionSystem,
-            DebugLogger debugLogger,
-            Timings timings,
-            ErrorHandler errorHandler
+            Lazy<PlanConfig> config,
+            Lazy<Database> database,
+            Lazy<ServerInfo> serverInfo,
+            Lazy<ConnectionSystem> connectionSystem,
+            Lazy<DebugLogger> debugLogger,
+            Lazy<Timings> timings,
+            Lazy<ErrorHandler> errorHandler
     ) {
-        this.plugin = plugin;
         this.version = version;
         this.config = config;
         this.database = database;
@@ -55,11 +56,22 @@ public class PageFactory {
     }
 
     public DebugPage debugPage() {
-        return new DebugPage(version, database, serverInfo, connectionSystem, debugLogger, timings, errorHandler);
+        return new DebugPage(version,
+                database.get(), serverInfo.get(), connectionSystem.get(),
+                debugLogger.get(), timings.get(), errorHandler.get());
     }
 
     public PlayersPage playersPage() {
-        return new PlayersPage(version, config, database, serverInfo, timings);
+        return new PlayersPage(version, config.get(), database.get(), serverInfo.get(), timings.get());
     }
 
+    public AnalysisPage analysisPage(UUID serverUUID) {
+        return new AnalysisPage(new AnalysisContainer(database.get().fetch().getServerContainer(serverUUID)));
+    }
+
+    public InspectPage inspectPage(UUID uuid) {
+        PlayerContainer player = database.get().fetch().getPlayerContainer(uuid);
+        Map<UUID, String> serverNames = database.get().fetch().getServerNames();
+        return new InspectPage(player, serverNames, config.get(), serverInfo.get(), timings.get());
+    }
 }

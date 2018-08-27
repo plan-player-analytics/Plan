@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.WebServer;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @Singleton
 public class BukkitServerInfo extends ServerInfo {
 
-    private final WebServer webServer;
+    private final Lazy<WebServer> webServer;
     private final PlanConfig config;
     private ServerInfoFile serverInfoFile;
     private Database database;
@@ -38,7 +39,7 @@ public class BukkitServerInfo extends ServerInfo {
             ServerProperties serverProperties,
             ServerInfoFile serverInfoFile,
             Database database,
-            WebServer webServer,
+            Lazy<WebServer> webServer,
             PlanConfig config
     ) {
         super(serverProperties);
@@ -77,7 +78,7 @@ public class BukkitServerInfo extends ServerInfo {
             return registerServer(serverUUID);
         }
         String name = config.getString(Settings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
-        String webAddress = webServer.getAccessAddress();
+        String webAddress = webServer.get().getAccessAddress();
         if ("plan".equalsIgnoreCase(name)) {
             name = "Server " + serverID.get();
         }
@@ -93,7 +94,7 @@ public class BukkitServerInfo extends ServerInfo {
     }
 
     private Server registerServer(UUID serverUUID) throws IOException {
-        String webAddress = webServer.getAccessAddress();
+        String webAddress = webServer.get().getAccessAddress();
         String name = config.getString(Settings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
         int maxPlayers = serverProperties.getMaxPlayers();
 

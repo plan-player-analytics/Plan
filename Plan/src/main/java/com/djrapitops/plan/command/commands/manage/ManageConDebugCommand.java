@@ -3,7 +3,7 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.request.CheckConnectionRequest;
+import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
@@ -14,7 +14,6 @@ import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
@@ -33,19 +32,30 @@ import java.util.UUID;
  */
 public class ManageConDebugCommand extends CommandNode {
 
+    private final ColorScheme colorScheme;
     private final Locale locale;
+    private final ServerInfo serverInfo;
     private final ConnectionSystem connectionSystem;
+    private final InfoRequestFactory infoRequestFactory;
     private final WebServer webServer;
     private final Database database;
-    private final ColorScheme colorScheme;
 
     @Inject
-    public ManageConDebugCommand(ColorScheme colorScheme, Locale locale, ConnectionSystem connectionSystem, WebServer webServer, Database database) {
+    public ManageConDebugCommand(
+            ColorScheme colorScheme,
+            Locale locale,
+            ServerInfo serverInfo, ConnectionSystem connectionSystem,
+            InfoRequestFactory infoRequestFactory,
+            WebServer webServer,
+            Database database
+    ) {
         super("con", Permissions.MANAGE.getPermission(), CommandType.ALL);
 
         this.colorScheme = colorScheme;
         this.locale = locale;
+        this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
+        this.infoRequestFactory = infoRequestFactory;
         this.webServer = webServer;
         this.database = database;
 
@@ -62,7 +72,7 @@ public class ManageConDebugCommand extends CommandNode {
                 || address.contains("127.0.0.1");
 
         try {
-            connectionSystem.sendInfoRequest(new CheckConnectionRequest(accessAddress), server);
+            connectionSystem.sendInfoRequest(infoRequestFactory.checkConnectionRequest(address), server);
             sender.sendMessage(getMsgFor(address, usingHttps, local, true, true));
         } catch (ForbiddenException | BadRequestException | InternalErrorException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
@@ -89,7 +99,7 @@ public class ManageConDebugCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!WebServerSystem.isWebServerEnabled()) {
+        if (!webServer.isEnabled()) {
             sender.sendMessage(locale.getString(CommandLang.CONNECT_WEBSERVER_NOT_ENABLED));
             return;
         }
@@ -105,7 +115,7 @@ public class ManageConDebugCommand extends CommandNode {
         }
 
         String accessAddress = webServer.getAccessAddress();
-        UUID thisServer = ServerInfo.getServerUUID_Old();
+        UUID thisServer = serverInfo.getServerUUID();
         for (Server server : servers) {
             if (thisServer.equals(server.getUuid())) {
                 continue;

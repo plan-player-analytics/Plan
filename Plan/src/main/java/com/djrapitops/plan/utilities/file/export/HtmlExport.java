@@ -5,6 +5,7 @@
 package com.djrapitops.plan.utilities.file.export;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -14,8 +15,8 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -39,6 +40,7 @@ public class HtmlExport extends SpecificExport {
 
     private final PlanPlugin plugin;
     private final Database database;
+    private final PageFactory pageFactory;
     private final ConnectionSystem connectionSystem;
     private final ErrorHandler errorHandler;
 
@@ -47,6 +49,7 @@ public class HtmlExport extends SpecificExport {
             PlanPlugin plugin,
             PlanConfig config,
             Database database,
+            PageFactory pageFactory,
             ServerInfo serverInfo,
             ConnectionSystem connectionSystem,
             ErrorHandler errorHandler
@@ -54,6 +57,7 @@ public class HtmlExport extends SpecificExport {
         super(config, serverInfo);
         this.plugin = plugin;
         this.database = database;
+        this.pageFactory = pageFactory;
         this.connectionSystem = connectionSystem;
         this.errorHandler = errorHandler;
     }
@@ -110,15 +114,13 @@ public class HtmlExport extends SpecificExport {
             exportAvailableServerPages();
             exportAvailablePlayers();
             exportPlayersPage();
-        } catch (IOException | DBOpException e) {
+        } catch (IOException | DBOpException | ParseException e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
-    private void exportPlayersPage() throws IOException {
-        PlayersPageResponse playersPageResponse = new PlayersPageResponse();
-
-        String html = playersPageResponse.getContent()
+    private void exportPlayersPage() throws IOException, ParseException {
+        String html = pageFactory.playersPage().toHtml()
                 .replace("href=\"plugins/", "href=\"../plugins/")
                 .replace("href=\"css/", "href=\"../css/")
                 .replace("src=\"plugins/", "src=\"../plugins/")

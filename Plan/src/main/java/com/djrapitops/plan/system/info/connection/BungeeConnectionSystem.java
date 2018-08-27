@@ -39,8 +39,10 @@ public class BungeeConnectionSystem extends ConnectionSystem {
             Database database,
             ServerInfo serverInfo,
             WebServer webServer,
+            InfoRequests infoRequests,
             ErrorHandler errorHandler
     ) {
+        super(infoRequests);
         this.database = database;
         this.serverInfo = serverInfo;
         this.webServer = webServer;

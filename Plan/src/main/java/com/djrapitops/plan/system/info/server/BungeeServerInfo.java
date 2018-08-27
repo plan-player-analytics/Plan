@@ -10,6 +10,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,14 +26,14 @@ import java.util.UUID;
 public class BungeeServerInfo extends ServerInfo {
 
     private final Database database;
-    private final WebServer webServer;
+    private final Lazy<WebServer> webServer;
     private final PluginLogger logger;
 
     @Inject
     public BungeeServerInfo(
             ServerProperties serverProperties,
             Database database,
-            WebServer webServer,
+            Lazy<WebServer> webServer,
             PluginLogger logger
     ) {
         super(serverProperties);
@@ -60,7 +61,7 @@ public class BungeeServerInfo extends ServerInfo {
     }
 
     private void updateServerInfo(Database db) {
-        String accessAddress = webServer.getAccessAddress();
+        String accessAddress = webServer.get().getAccessAddress();
         if (!accessAddress.equals(server.getWebAddress())) {
             server.setWebAddress(accessAddress);
             db.save().serverInfoForThisServer(server);
@@ -78,7 +79,7 @@ public class BungeeServerInfo extends ServerInfo {
 
     private Server registerBungeeInfo(Database db) throws EnableException {
         UUID serverUUID = generateNewUUID();
-        String accessAddress = webServer.getAccessAddress();
+        String accessAddress = webServer.get().getAccessAddress();
 
         Server bungeeCord = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
         db.save().serverInfoForThisServer(bungeeCord);

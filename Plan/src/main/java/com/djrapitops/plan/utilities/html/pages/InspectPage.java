@@ -15,9 +15,9 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -32,8 +32,8 @@ import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 import com.djrapitops.plan.utilities.html.tables.*;
-import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.benchmarking.Timings;
 
 import java.io.IOException;
 import java.util.*;
@@ -45,30 +45,38 @@ import java.util.*;
  */
 public class InspectPage implements Page {
 
-    private final UUID uuid;
+    private final PlayerContainer player;
+    private final Map<UUID, String> serverNames;
 
-    public InspectPage(UUID uuid) {
-        this.uuid = uuid;
+    private final PlanConfig config;
+    private final ServerInfo serverInfo;
+    private final Timings timings;
+
+    InspectPage(
+            PlayerContainer player, Map<UUID, String> serverNames,
+            PlanConfig config,
+            ServerInfo serverInfo,
+            Timings timings
+    ) {
+        this.player = player;
+        this.serverNames = serverNames;
+        this.config = config;
+        this.serverInfo = serverInfo;
+        this.timings = timings;
     }
 
     @Override
     public String toHtml() throws ParseException {
         try {
-            if (uuid == null) {
-                throw new IllegalStateException("UUID was null!");
-            }
-            Benchmark.start("Inspect Parse, Fetch");
-            Database db = Database.getActive();
-            PlayerContainer container = Database.getActive().fetch().getPlayerContainer(uuid);
-            if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
+            timings.start("Inspect Parse, Fetch");
+            if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
                 throw new IllegalStateException("Player is not registered");
             }
-            UUID serverUUID = ServerInfo.getServerUUID_Old();
-            Map<UUID, String> serverNames = db.fetch().getServerNames();
+            UUID serverUUID = serverInfo.getServerUUID();
 
-            Benchmark.stop("Inspect Parse, Fetch");
+            timings.end("Inspect Parse, Fetch");
 
-            return parse(container, serverUUID, serverNames);
+            return parse(player, serverUUID, serverNames);
         } catch (Exception e) {
             throw new ParseException(e);
         }
@@ -76,6 +84,7 @@ public class InspectPage implements Page {
 
     public String parse(PlayerContainer player, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
         long now = System.currentTimeMillis();
+        UUID uuid = player.getUnsafe(PlayerKeys.UUID);
 
         PlaceholderReplacer replacer = new PlaceholderReplacer();
 
@@ -190,7 +199,7 @@ public class InspectPage implements Page {
         String serverName = serverNames.get(serverUUID);
         replacer.put("networkName",
                 serverName.equalsIgnoreCase("bungeecord")
-                        ? Settings.BUNGEE_NETWORK_NAME.toString()
+                        ? config.getString(Settings.BUNGEE_NETWORK_NAME)
                         : serverName
         );
 

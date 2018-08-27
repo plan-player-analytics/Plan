@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -31,8 +32,8 @@ public class BungeeInfoSystem extends InfoSystem {
     private final ServerInfo serverInfo;
 
     @Inject
-    public BungeeInfoSystem(ConnectionSystem connectionSystem, ServerInfo serverInfo) {
-        super(connectionSystem);
+    public BungeeInfoSystem(InfoRequestFactory infoRequestFactory, ConnectionSystem connectionSystem, ServerInfo serverInfo) {
+        super(infoRequestFactory, connectionSystem);
 
         this.serverInfo = serverInfo;
     }
