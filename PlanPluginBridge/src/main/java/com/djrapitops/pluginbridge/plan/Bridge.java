@@ -16,14 +16,16 @@ import com.djrapitops.pluginbridge.plan.griefprevention.GriefPreventionHook;
 import com.djrapitops.pluginbridge.plan.griefprevention.plus.GriefPreventionPlusHook;
 import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
 import com.djrapitops.pluginbridge.plan.kingdoms.KingdomsHook;
-import com.djrapitops.pluginbridge.plan.litebans.LiteBansHook;
+import com.djrapitops.pluginbridge.plan.litebans.LiteBansBukkitHook;
+import com.djrapitops.pluginbridge.plan.litebans.LiteBansBungeeHook;
 import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
 import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
 import com.djrapitops.pluginbridge.plan.redprotect.RedProtectHook;
 import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.vault.VaultHook;
-import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionHook;
+import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionBukkitHook;
+import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionBungeeHook;
 
 /**
  * Manages connection to other plugins.
@@ -56,17 +58,30 @@ public class Bridge {
 
     private static Hook[] getHooks(HookHandler h) {
         Hook[] hooks;
-        if (Check.isBukkitAvailable()) {
-            hooks = getBukkitHooks(h);
-        } else {
+        if (Check.isBungeeAvailable()) {
             hooks = getBungeeHooks(h);
+        } else if (Check.isBukkitAvailable()) {
+            hooks = getBukkitHooks(h);
+        } else if (Check.isSpongeAvailable()) {
+            hooks = getSpongeHooks(h);
+        } else {
+            return new Hook[0];
         }
         return hooks;
     }
 
+    private static Hook[] getSpongeHooks(HookHandler h) {
+        return new Hook[]{
+                new BuyCraftHook(h)
+        };
+    }
+
     private static Hook[] getBungeeHooks(HookHandler h) {
         return new Hook[]{
-                new AdvancedBanHook(h)
+                new AdvancedBanHook(h),
+                new BuyCraftHook(h),
+                new LiteBansBungeeHook(h),
+                new ViaVersionBungeeHook(h)
         };
     }
 
@@ -84,7 +99,7 @@ public class Bridge {
                 new GriefPreventionPlusHook(h),
                 new JobsHook(h),
                 new KingdomsHook(h),
-                new LiteBansHook(h),
+                new LiteBansBukkitHook(h),
                 new McmmoHook(h),
                 new SuperbVoteHook(h),
                 new ProtocolSupportHook(h),
@@ -92,7 +107,7 @@ public class Bridge {
                 new RedProtectHook(h),
                 new TownyHook(h),
                 new VaultHook(h),
-                new ViaVersionHook(h)//,
+                new ViaVersionBukkitHook(h)//,
                 // new PlaceholderAPIHook(h)
         };
     }

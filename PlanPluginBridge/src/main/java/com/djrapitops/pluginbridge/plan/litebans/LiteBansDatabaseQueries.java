@@ -5,7 +5,6 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStat
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import litebans.api.Database;
-import org.bukkit.Bukkit;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,10 +29,9 @@ public class LiteBansDatabaseQueries extends Table {
 
     private final String selectSQL;
 
-    public LiteBansDatabaseQueries() {
+    public LiteBansDatabaseQueries(String tablePrefix) {
         super("litebans", null);
         database = Database.get();
-        String tablePrefix = Bukkit.getPluginManager().getPlugin("LiteBans").getConfig().getString("sql.table_prefix");
         banTable = tablePrefix + "bans";
         mutesTable = tablePrefix + "mutes";
         warningsTable = tablePrefix + "warnings";
