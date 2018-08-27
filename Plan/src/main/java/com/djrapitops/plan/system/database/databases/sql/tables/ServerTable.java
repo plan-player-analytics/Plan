@@ -367,7 +367,7 @@ public class ServerTable extends Table {
     }
 
     public void setAsUninstalled(UUID serverUUID) {
-        String sql = "UPDATE " + tableName + " SET (" + Col.INSTALLED + "=?) WHERE " + Col.SERVER_UUID + "=?";
+        String sql = "UPDATE " + tableName + " SET " + Col.INSTALLED + "=? WHERE " + Col.SERVER_UUID + "=?";
 
         execute(new ExecStatement(sql) {
             @Override

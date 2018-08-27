@@ -3,7 +3,6 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
@@ -69,7 +68,7 @@ public class ManageUninstalledCommand extends CommandNode {
     }
 
     private Optional<Server> getServer(String[] args) {
-        if (args.length >= 1 && ConnectionSystem.getInstance().isServerAvailable()) {
+        if (args.length >= 1) {
             Map<UUID, Server> bukkitServers = Database.getActive().fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);
             for (Map.Entry<UUID, Server> entry : bukkitServers.entrySet()) {
