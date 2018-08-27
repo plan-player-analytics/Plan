@@ -10,6 +10,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.connection.BungeeConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
+import com.djrapitops.plan.system.info.request.GenerateInspectPluginsTabRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.cache.PageId;
@@ -30,8 +31,10 @@ public class BungeeInfoSystem extends InfoSystem {
 
     @Override
     public void runLocally(InfoRequest infoRequest) throws WebException {
-        if (infoRequest instanceof CacheRequest ||
-                infoRequest instanceof GenerateInspectPageRequest) {
+        if (infoRequest instanceof CacheRequest
+                || infoRequest instanceof GenerateInspectPageRequest
+                || infoRequest instanceof GenerateInspectPluginsTabRequest
+        ) {
             infoRequest.runLocally();
         } else {
             // runLocally is called when ConnectionSystem has no servers.

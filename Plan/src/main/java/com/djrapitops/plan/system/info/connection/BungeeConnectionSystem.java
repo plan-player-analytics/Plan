@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info.connection;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -44,7 +45,9 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     protected Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException {
         refreshServerMap();
         Server server = null;
-        if (infoRequest instanceof CacheRequest || infoRequest instanceof GenerateInspectPageRequest) {
+        if (infoRequest instanceof CacheRequest
+                || infoRequest instanceof GenerateInspectPageRequest
+                || infoRequest instanceof GenerateInspectPluginsTabRequest) {
             // Run locally
             return ServerInfo.getServer();
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
@@ -65,6 +68,10 @@ public class BungeeConnectionSystem extends ConnectionSystem {
         }
         for (Server server : bukkitServers.values()) {
             WebExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
+        }
+        // Quick hack
+        if (infoRequest instanceof GenerateInspectPluginsTabRequest) {
+            WebExceptionLogger.logIfOccurs(this.getClass(), () -> InfoSystem.getInstance().sendRequest(infoRequest));
         }
     }
 

@@ -7,9 +7,6 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.World;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-
 public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
 
     private long lastCheckNano;
@@ -43,10 +40,7 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
     private TPS calculateTPS(long diff, long now) {
         double averageCPUUsage = getCPUUsage();
 
-        Runtime runtime = Runtime.getRuntime();
-
-        long totalMemory = runtime.totalMemory();
-        long usedMemory = (totalMemory - runtime.freeMemory()) / 1000000;
+        long usedMemory = getUsedMemory();
 
         int playersOnline = plugin.getServer().getOnlinePlayers().size();
         latestPlayersOnline = playersOnline;
@@ -58,22 +52,6 @@ public class BukkitTPSCountTimer extends TPSCountTimer<Plan> {
         return getTPS(diff, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline);
     }
 
-    private double getCPUUsage() {
-        double averageCPUUsage;
-
-        OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-        if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
-            com.sun.management.OperatingSystemMXBean nativeOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
-            averageCPUUsage = nativeOsBean.getSystemCpuLoad();
-        } else {
-            int availableProcessors = osBean.getAvailableProcessors();
-            averageCPUUsage = osBean.getSystemLoadAverage() / availableProcessors;
-        }
-        if (averageCPUUsage < 0) { // If unavailable, getSystemLoadAverage() returns -1
-            averageCPUUsage = -1;
-        }
-        return averageCPUUsage * 100.0;
-    }
 
     /**
      * Gets the TPS for Spigot / Bukkit

@@ -19,6 +19,10 @@ public class BungeeTPSCountTimer extends TPSCountTimer<PlanBungee> {
                 .date(now)
                 .skipTPS()
                 .playersOnline(onlineCount)
+                .usedCPU(getCPUUsage())
+                .usedMemory(getUsedMemory())
+                .entities(-1)
+                .chunksLoaded(-1)
                 .toTPS();
 
         history.add(tps);

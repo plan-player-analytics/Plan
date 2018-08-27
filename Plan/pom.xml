@@ -223,6 +223,7 @@
                             <exclude>org.mockito:*</exclude>
                             <exclude>org.easymock:*</exclude>
                             <exclude>junit:*</exclude>
+                            <!--<exclued>org.slf4j:*</exclued>-->
                         </excludes>
                     </artifactSet>
                     <relocations>
@@ -248,9 +249,6 @@
                         <relocation>
                             <pattern>org.slf4j</pattern>
                             <shadedPattern>plan.org.slf4j</shadedPattern>
-                            <excludes>
-                                <exclude>org.slf4j.Logger</exclude>
-                            </excludes>
                         </relocation>
                         <relocation>
                             <pattern>org.bstats</pattern>

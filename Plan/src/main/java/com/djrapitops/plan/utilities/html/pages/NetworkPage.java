@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.pages.parts.NetworkPageContent;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 
 import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
 
@@ -50,6 +51,13 @@ public class NetworkPage implements Page {
             NetworkPageContent networkPageContent = (NetworkPageContent)
                     ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
             placeholderReplacer.put("tabContentServers", networkPageContent.getContents());
+
+            String[] content = AnalysisPluginsTabContentCreator.createContent(networkContainer.getUnsafe(NetworkKeys.PLAYERS_MUTATOR), null);
+            String nav = content[0];
+            String tabs = content[1];
+
+            placeholderReplacer.put("navPluginsTabs", nav);
+            placeholderReplacer.put("tabsPlugins", tabs);
 
             return placeholderReplacer.apply(FileUtil.getStringFromResource("web/network.html"));
         } catch (Exception e) {

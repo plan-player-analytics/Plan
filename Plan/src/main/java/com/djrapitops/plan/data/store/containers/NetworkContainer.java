@@ -173,4 +173,7 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.PLAYERS_MONTH, () -> getUnsafe(uniqueMonth).count());
     }
 
+    public ServerContainer getBungeeContainer() {
+        return bungeeContainer;
+    }
 }
