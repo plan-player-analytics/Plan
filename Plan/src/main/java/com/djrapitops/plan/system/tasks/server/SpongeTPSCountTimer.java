@@ -9,9 +9,6 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.World;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-
 public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
 
     private long lastCheckNano;
@@ -42,18 +39,9 @@ public class SpongeTPSCountTimer extends TPSCountTimer<PlanSponge> {
      * @return the TPS
      */
     private TPS calculateTPS(long now) {
-        OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
-        int availableProcessors = operatingSystemMXBean.getAvailableProcessors();
-        double averageCPUUsage = operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0;
+        double averageCPUUsage = getCPUUsage();
 
-        if (averageCPUUsage < 0) { // If unavailable, getSystemLoadAverage() returns -1
-            averageCPUUsage = -1;
-        }
-
-        Runtime runtime = Runtime.getRuntime();
-
-        long totalMemory = runtime.totalMemory();
-        long usedMemory = (totalMemory - runtime.freeMemory()) / 1000000;
+        long usedMemory = getUsedMemory();
 
         double tps = Sponge.getGame().getServer().getTicksPerSecond();
         int playersOnline = ServerInfo.getServerProperties().getOnlinePlayers();
