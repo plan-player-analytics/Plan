@@ -39,21 +39,23 @@ public class NetworkSettings {
     private static final String SPLIT = ";;SETTING;;";
     private static final String VAL_SPLIT = ";;VALUE;;";
 
+    private final Lazy<PlanConfig> config;
     private final Lazy<Database> database;
     private final Lazy<ServerInfo> serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
     private final ServerSpecificSettings serverSpecificSettings;
-    private PlanConfig config;
 
     @Inject
     public NetworkSettings(
+            Lazy<PlanConfig> config,
             ServerSpecificSettings serverSpecificSettings,
             Lazy<Database> database,
             Lazy<ServerInfo> serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
+        this.config = config;
         this.serverSpecificSettings = serverSpecificSettings;
         this.database = database;
         this.serverInfo = serverInfo;
@@ -61,17 +63,13 @@ public class NetworkSettings {
         this.errorHandler = errorHandler;
     }
 
-    public void setConfig(PlanConfig config) {
-        this.config = config;
-        serverSpecificSettings.setConfig(config);
-    }
-
     public void loadSettingsFromDB() {
         if (Check.isBungeeAvailable()) {
             return;
         }
 
-        if (config.isTrue(BUNGEE_OVERRIDE_STANDALONE_MODE) || config.isFalse(BUNGEE_COPY_CONFIG)) {
+        PlanConfig planConfig = config.get();
+        if (planConfig.isTrue(BUNGEE_OVERRIDE_STANDALONE_MODE) || planConfig.isFalse(BUNGEE_COPY_CONFIG)) {
             // Don't load settings if they are overridden.
             return;
         }
@@ -203,10 +201,11 @@ public class NetworkSettings {
                 KEEP_INACTIVE_PLAYERS_DAYS
         };
         logger.debug("NetworkSettings: Adding Config Values..");
+        PlanConfig planConfig = config.get();
         for (Settings setting : sameStrings) {
-            addConfigValue(configValues, setting, config.getString(setting));
+            addConfigValue(configValues, setting, planConfig.getString(setting));
         }
-        addConfigValue(configValues, DB_PORT, config.getNumber(DB_PORT));
+        addConfigValue(configValues, DB_PORT, planConfig.getNumber(DB_PORT));
         addServerSpecificValues(configValues);
         return configValues;
     }

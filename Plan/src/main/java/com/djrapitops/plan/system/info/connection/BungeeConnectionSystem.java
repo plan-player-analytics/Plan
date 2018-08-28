@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info.connection;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -14,6 +15,7 @@ import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,7 +30,6 @@ import java.util.UUID;
 public class BungeeConnectionSystem extends ConnectionSystem {
 
     private final Database database;
-    private final ServerInfo serverInfo;
     private final WebServer webServer;
     private ErrorHandler errorHandler;
 
@@ -37,14 +38,15 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     @Inject
     public BungeeConnectionSystem(
             Database database,
-            ServerInfo serverInfo,
             WebServer webServer,
+            ConnectionLog connectionLog,
             InfoRequests infoRequests,
+            Lazy<InfoSystem> infoSystem,
+            ServerInfo serverInfo,
             ErrorHandler errorHandler
     ) {
-        super(infoRequests);
+        super(connectionLog, infoRequests, infoSystem, serverInfo);
         this.database = database;
-        this.serverInfo = serverInfo;
         this.webServer = webServer;
         this.errorHandler = errorHandler;
 

@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.info.request.WideRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
+import dagger.Lazy;
 
 import java.util.*;
 
@@ -27,14 +28,24 @@ public abstract class ConnectionSystem implements SubSystem {
 
     protected final ConnectionLog connectionLog;
     protected final Map<String, InfoRequest> dataRequests;
+    protected final Lazy<InfoSystem> infoSystem;
+    protected final ServerInfo serverInfo;
+
     protected Map<UUID, Server> bukkitServers;
     private boolean setupAllowed;
 
-    public ConnectionSystem(Map<String, InfoRequest> dataRequests) {
+    public ConnectionSystem(
+            ConnectionLog connectionLog,
+            Map<String, InfoRequest> dataRequests,
+            Lazy<InfoSystem> infoSystem,
+            ServerInfo serverInfo
+    ) {
+        this.connectionLog = connectionLog;
+        this.infoSystem = infoSystem;
+        this.serverInfo = serverInfo;
         setupAllowed = false;
         bukkitServers = new HashMap<>();
         this.dataRequests = dataRequests;
-        connectionLog = new ConnectionLog();
     }
 
     @Deprecated
@@ -44,26 +55,12 @@ public abstract class ConnectionSystem implements SubSystem {
         return connectionSystem;
     }
 
-    @Deprecated
-    public static boolean isSetupAllowed_Old() {
-        return getInstance().setupAllowed;
-    }
-
-    @Deprecated
-    public static String getAddress() {
-        return getInstance().getMainAddress();
-    }
-
     public InfoRequest getInfoRequest(String name) {
         return dataRequests.get(name.toLowerCase());
     }
 
     public void setSetupAllowed(boolean setupAllowed) {
         this.setupAllowed = setupAllowed;
-    }
-
-    private void putRequest(InfoRequest request) {
-        dataRequests.put(request.getClass().getSimpleName().toLowerCase(), request);
     }
 
     protected abstract Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException;
@@ -78,10 +75,11 @@ public abstract class ConnectionSystem implements SubSystem {
     }
 
     public void sendInfoRequest(InfoRequest infoRequest, Server toServer) throws WebException {
-        if (ServerInfo.getServerUUID_Old().equals(toServer.getUuid())) {
-            InfoSystem.getInstance().runLocally(infoRequest);
+        UUID serverUUID = serverInfo.getServerUUID();
+        if (serverUUID.equals(toServer.getUuid())) {
+            infoSystem.get().runLocally(infoRequest);
         } else {
-            new ConnectionOut(toServer, ServerInfo.getServerUUID_Old(), infoRequest).sendRequest();
+            new ConnectionOut(toServer, serverUUID, infoRequest, connectionLog).sendRequest();
         }
     }
 

@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info.connection;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -19,6 +20,7 @@ import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,7 +39,6 @@ public class ServerConnectionSystem extends ConnectionSystem {
     private final PlanConfig config;
     private final Database database;
     private final WebServer webServer;
-    private final ServerInfo serverInfo;
     private final PluginLogger pluginLogger;
 
     private long latestServerMapRefresh;
@@ -50,16 +51,17 @@ public class ServerConnectionSystem extends ConnectionSystem {
             PlanConfig config,
             Database database,
             WebServer webServer,
-            ServerInfo serverInfo,
+            ConnectionLog connectionLog,
             InfoRequests infoRequests,
+            Lazy<InfoSystem> infoSystem,
+            ServerInfo serverInfo,
             PluginLogger pluginLogger
     ) {
-        super(infoRequests);
+        super(connectionLog, infoRequests, infoSystem, serverInfo);
         this.locale = locale;
         this.config = config;
         this.database = database;
         this.webServer = webServer;
-        this.serverInfo = serverInfo;
         this.pluginLogger = pluginLogger;
         latestServerMapRefresh = 0;
     }

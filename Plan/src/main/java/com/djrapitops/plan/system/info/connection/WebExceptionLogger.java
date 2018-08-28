@@ -20,6 +20,7 @@ import java.util.Map;
  */
 public class WebExceptionLogger {
 
+    @Deprecated
     public static void logIfOccurs(Class c, ThrowingVoidFunction<WebException> function) {
         try {
             function.apply();
@@ -35,12 +36,13 @@ public class WebExceptionLogger {
         }
     }
 
+    @Deprecated
     private static boolean shouldLog(ConnectionFailException e) {
         String address = getAddress(e);
         if (address == null) {
             return true;
         }
-        Map<String, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries();
+        Map<String, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries_Old();
         Map<String, ConnectionLog.Entry> entries = logEntries.get("Out: " + address);
         if (entries != null) {
             List<ConnectionLog.Entry> connections = new ArrayList<>(entries.values());

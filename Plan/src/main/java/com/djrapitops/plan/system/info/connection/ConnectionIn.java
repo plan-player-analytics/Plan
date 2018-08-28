@@ -7,7 +7,6 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.ByteArrayOutputStream;
@@ -23,8 +22,16 @@ public class ConnectionIn {
 
     private final Map<String, String> variables;
     private final InfoRequest infoRequest;
+    private final Database database;
+    private final ConnectionSystem connectionSystem;
 
-    public ConnectionIn(Request httpRequest, InfoRequest infoRequest) throws WebException {
+    public ConnectionIn(
+            Request httpRequest, InfoRequest infoRequest,
+            Database database,
+            ConnectionSystem connectionSystem
+    ) throws WebException {
+        this.database = database;
+        this.connectionSystem = connectionSystem;
         Verify.nullCheck(httpRequest, infoRequest);
 
         this.variables = readVariables(httpRequest);
@@ -37,17 +44,15 @@ public class ConnectionIn {
         UUID serverUUID = getServerUUID();
 
         try {
-            if (Database.getActive().check().isServerInDatabase(serverUUID)) {
+            if (database.check().isServerInDatabase(serverUUID)) {
                 return;
             }
         } catch (DBOpException e) {
             throw new TransferDatabaseException(e);
         }
 
-        Log.debug("ConnectionIn: " + infoRequest.getClass().getSimpleName());
-
         if (infoRequest instanceof SetupRequest) {
-            if (!ConnectionSystem.isSetupAllowed_Old()) {
+            if (!connectionSystem.isSetupAllowed()) {
                 throw new ForbiddenException("Setup not enabled on this server, use commands to enable.");
             }
         } else {

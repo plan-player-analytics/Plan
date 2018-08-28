@@ -8,10 +8,8 @@ import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.InfoRequestWithVariables;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -57,14 +55,20 @@ public class ConnectionOut {
         }
     }
 
+    private final ConnectionLog connectionLog;
+
     /**
      * Constructor.
-     *
-     * @param toServer    Full address to another Plan webserver. (http://something:port)
+     *  @param toServer    Full address to another Plan webserver. (http://something:port)
      * @param serverUUID  UUID of server this outbound connection.
      * @param infoRequest Type of the action this connection wants to be performed.
+     * @param connectionLog
      */
-    public ConnectionOut(Server toServer, UUID serverUUID, InfoRequest infoRequest) {
+    public ConnectionOut(
+            Server toServer, UUID serverUUID, InfoRequest infoRequest,
+            ConnectionLog connectionLog
+    ) {
+        this.connectionLog = connectionLog;
         Verify.nullCheck(toServer, serverUUID, infoRequest);
         this.toServer = toServer;
         this.serverUUID = serverUUID;
@@ -91,14 +95,10 @@ public class ConnectionOut {
 
             handleResult(url, parameters, responseCode);
         } catch (SocketTimeoutException e) {
-            ConnectionLog.logConnectionTo(toServer, infoRequest, 0);
+            connectionLog.logConnectionTo(toServer, infoRequest, 0);
             throw new ConnectionFailException("Connection to " + address + " timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException | IOException e) {
-            if (Settings.DEV_MODE.isTrue()) {
-                Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                Log.toLog(this.getClass(), e);
-            }
-            ConnectionLog.logConnectionTo(toServer, infoRequest, -1);
+            connectionLog.logConnectionTo(toServer, infoRequest, -1);
             throw new ConnectionFailException("Connection failed to address: " + address + " - Make sure the server is online.", e);
         } finally {
             if (post != null) {
@@ -110,7 +110,7 @@ public class ConnectionOut {
     }
 
     private void handleResult(String url, String parameters, int responseCode) throws WebException {
-        ConnectionLog.logConnectionTo(toServer, infoRequest, responseCode);
+        connectionLog.logConnectionTo(toServer, infoRequest, responseCode);
         switch (responseCode) {
             case 200:
                 return;

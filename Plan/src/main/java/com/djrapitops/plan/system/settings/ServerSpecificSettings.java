@@ -8,6 +8,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,22 +27,24 @@ import java.util.UUID;
 @Singleton
 public class ServerSpecificSettings {
 
+    private final Lazy<PlanConfig> config;
+
     private final PluginLogger logger;
-    private PlanConfig config;
 
     @Inject
-    public ServerSpecificSettings(PluginLogger logger) {
-        this.logger = logger;
-    }
-
-    public void setConfig(PlanConfig config) {
+    public ServerSpecificSettings(
+            Lazy<PlanConfig> config,
+            PluginLogger logger
+    ) {
         this.config = config;
+        this.logger = logger;
     }
 
     public void updateSettings(Map<String, String> settings) throws IOException {
         logger.debug("Checking new settings..");
 
         boolean changedSomething = false;
+        PlanConfig planConfig = config.get();
         for (Map.Entry<String, String> setting : settings.entrySet()) {
             try {
                 String path = setting.getKey();
@@ -50,11 +53,11 @@ public class ServerSpecificSettings {
                 }
                 String stringValue = setting.getValue();
                 Object value = getValue(stringValue);
-                String currentValue = config.getString(path);
+                String currentValue = planConfig.getString(path);
                 if (stringValue.equals(currentValue)) {
                     continue;
                 }
-                config.set(path, value);
+                planConfig.set(path, value);
                 logger.debug("  " + path + ": " + value);
             } catch (NullPointerException ignored) {
             }
@@ -62,7 +65,7 @@ public class ServerSpecificSettings {
         }
 
         if (changedSomething) {
-            config.save();
+            planConfig.save();
             logger.info("----------------------------------");
             logger.info("The Received Bungee Settings changed the config values, restarting Plan..");
             logger.info("----------------------------------");
@@ -87,13 +90,14 @@ public class ServerSpecificSettings {
     }
 
     public void addOriginalBukkitSettings(UUID serverUUID, Map<String, Object> settings) throws IOException {
-        if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
+        PlanConfig planConfig = config.get();
+        if (!Verify.isEmpty(planConfig.getString("Servers." + serverUUID + ".ServerName"))) {
             return;
         }
         for (Map.Entry<String, Object> entry : settings.entrySet()) {
-            config.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
+            planConfig.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
         }
-        config.save();
+        planConfig.save();
     }
 
     private String getPath(UUID serverUUID, Settings setting) {
@@ -116,22 +120,23 @@ public class ServerSpecificSettings {
 
     public boolean getBoolean(UUID serverUUID, Settings setting) {
         String path = getPath(serverUUID, setting);
-        return config.getBoolean(path);
+        return config.get().getBoolean(path);
     }
 
     public String getString(UUID serverUUID, Settings setting) {
         String path = getPath(serverUUID, setting);
-        return config.getString(path);
+        return config.get().getString(path);
     }
 
     public Integer getInt(UUID serverUUID, Settings setting) {
         String path = getPath(serverUUID, setting);
-        return config.getInt(path);
+        return config.get().getInt(path);
     }
 
     public void set(UUID serverUUID, Settings setting, Object value) throws IOException {
         String path = getPath(serverUUID, setting);
-        config.set(path, value);
-        config.save();
+        PlanConfig planConfig = config.get();
+        planConfig.set(path, value);
+        planConfig.save();
     }
 }

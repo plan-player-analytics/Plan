@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.Request;
@@ -13,6 +14,7 @@ import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -31,11 +33,19 @@ import java.util.List;
 @Singleton
 public class InfoRequestPageHandler implements PageHandler {
 
+    private final Database database;
     private final ConnectionSystem connectionSystem;
+    private final PluginLogger logger;
 
     @Inject
-    public InfoRequestPageHandler(ConnectionSystem connectionSystem) {
+    public InfoRequestPageHandler(
+            Database database,
+            ConnectionSystem connectionSystem,
+            PluginLogger logger
+    ) {
+        this.database = database;
         this.connectionSystem = connectionSystem;
+        this.logger = logger;
     }
 
     @Override
@@ -56,12 +66,13 @@ public class InfoRequestPageHandler implements PageHandler {
 
             Verify.nullCheck(infoRequest, () -> new NotFoundException("Info Request has not been registered."));
 
-            return new ConnectionIn(request, infoRequest).handleRequest();
+            logger.debug("ConnectionIn: " + infoRequest.getClass().getSimpleName());
+            return new ConnectionIn(request, infoRequest, database, connectionSystem).handleRequest();
         } catch (WebException e) {
             responseCode = getResponseCodeFor(e);
             throw e;
         } finally {
-            ConnectionLog.logConnectionFrom(request.getRemoteAddress(), request.getTarget(), responseCode);
+            ConnectionLog.logConnectionFrom_Old(request.getRemoteAddress(), request.getTarget(), responseCode);
         }
     }
 

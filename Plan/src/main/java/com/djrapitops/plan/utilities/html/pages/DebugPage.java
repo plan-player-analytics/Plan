@@ -156,7 +156,7 @@ public class DebugPage implements Page {
 
     private void appendConnectionLog(StringBuilder content) {
         try {
-            Map<String, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries();
+            Map<String, Map<String, ConnectionLog.Entry>> logEntries = connectionSystem.getConnectionLog().getLogEntries();
 
             content.append("<pre>### Connection Log:<br><br>");
             content.append("Server Address | Request Type | Response | Sent<br>")

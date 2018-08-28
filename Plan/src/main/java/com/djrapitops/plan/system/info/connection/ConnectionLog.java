@@ -7,23 +7,28 @@ package com.djrapitops.plan.system.info.connection;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.debug.DebugLogger;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- * Class responsible for logging what ConnectionOut objects get in return.
+ * Class responsible for logging what {@link ConnectionOut} and {@link ConnectionIn} objects get as response.
  *
  * @author Rsl1122
  */
 public class ConnectionLog {
 
-    private Map<String, Map<String, Entry>> log;
+    private final DebugLogger debugLogger;
 
-    public ConnectionLog() {
-        this.log = new HashMap<>();
+    private final Map<String, Map<String, Entry>> log;
+
+    @Inject
+    public ConnectionLog(DebugLogger debugLogger) {
+        this.debugLogger = debugLogger;
+        log = new HashMap<>();
     }
 
     /**
@@ -31,34 +36,45 @@ public class ConnectionLog {
      *
      * @return {@code Map<"In:  "/"Out: "+Address, Map<InfoRequestClassname, ConnectionLog.Entry>>}
      */
-    public static Map<String, Map<String, Entry>> getLogEntries() {
-        return getInstance().getLog();
+    @Deprecated
+    public static Map<String, Map<String, Entry>> getLogEntries_Old() {
+        return getInstance().getLogEntries();
     }
 
-    public static void logConnectionTo(Server server, InfoRequest request, int responseCode) {
+    @Deprecated
+    public static void logConnectionTo_Old(Server server, InfoRequest request, int responseCode) {
+        getInstance().logConnectionTo(server, request, responseCode);
+    }
+
+    @Deprecated
+    public static void logConnectionFrom_Old(String server, String requestTarget, int responseCode) {
+        getInstance().logConnectionFrom(server, requestTarget, responseCode);
+    }
+
+    @Deprecated
+    private static ConnectionLog getInstance() {
+        return ConnectionSystem.getInstance().getConnectionLog();
+    }
+
+    public void logConnectionTo(Server server, InfoRequest request, int responseCode) {
         String requestName = request.getClass().getSimpleName();
         String address = server.getWebAddress();
         logConnection(address, "Out: " + requestName, responseCode);
-        Log.debug("ConnectionOut: " + requestName + " to " + address);
+        debugLogger.logOn("Connections", "ConnectionOut: " + requestName + " to " + address);
     }
 
-    public static void logConnectionFrom(String server, String requestTarget, int responseCode) {
+    public void logConnectionFrom(String server, String requestTarget, int responseCode) {
         logConnection(server, "In:  " + requestTarget, responseCode);
-        Log.debug("ConnectionIn: " + requestTarget + " from " + server);
+        debugLogger.logOn("Connections", "ConnectionIn: " + requestTarget + " from " + server);
     }
 
-    private static void logConnection(String address, String infoRequestName, int responseCode) {
-        Map<String, Map<String, Entry>> log = getInstance().log;
+    private void logConnection(String address, String infoRequestName, int responseCode) {
         Map<String, Entry> requestMap = log.getOrDefault(address, new HashMap<>());
         requestMap.put(infoRequestName, new Entry(responseCode, System.currentTimeMillis()));
         log.put(address, requestMap);
     }
 
-    private static ConnectionLog getInstance() {
-        return ConnectionSystem.getInstance().getConnectionLog();
-    }
-
-    public Map<String, Map<String, Entry>> getLog() {
+    public Map<String, Map<String, Entry>> getLogEntries() {
         return log;
     }
 
