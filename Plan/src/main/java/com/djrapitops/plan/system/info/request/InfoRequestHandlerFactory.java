@@ -12,12 +12,14 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Factory for {@link InfoRequest} objects that are used for handling received requests.
  *
  * @author Rsl1122
  */
+@Singleton
 public class InfoRequestHandlerFactory {
 
     private final Lazy<PlanPlugin> plugin;

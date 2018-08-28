@@ -16,6 +16,7 @@ import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
+@Singleton
 public class InfoRequestPageHandler implements PageHandler {
 
     private final ConnectionSystem connectionSystem;

@@ -19,6 +19,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import dagger.Lazy;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,7 @@ import static com.djrapitops.plan.system.settings.Settings.*;
  *
  * @author Rsl1122
  */
+@Singleton
 public class NetworkSettings {
 
     private static final String SPLIT = ";;SETTING;;";

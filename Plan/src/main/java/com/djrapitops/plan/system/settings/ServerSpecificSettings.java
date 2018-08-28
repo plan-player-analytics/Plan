@@ -10,6 +10,7 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ServerSpecificSettings {
 
     private final PluginLogger logger;

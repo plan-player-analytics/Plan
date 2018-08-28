@@ -13,6 +13,7 @@ import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
+@Singleton
 public class PlayersPageHandler implements PageHandler {
 
     private final ResponseFactory responseFactory;

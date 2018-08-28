@@ -19,6 +19,7 @@ import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plugin.api.Check;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ServerPageHandler implements PageHandler {
 
     private final ResponseFactory responseFactory;

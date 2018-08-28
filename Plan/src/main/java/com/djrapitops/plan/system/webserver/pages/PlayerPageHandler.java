@@ -21,6 +21,7 @@ import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +30,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class PlayerPageHandler implements PageHandler {
 
     private final ResponseFactory responseFactory;

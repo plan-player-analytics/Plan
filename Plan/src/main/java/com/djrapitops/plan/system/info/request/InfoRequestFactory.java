@@ -12,6 +12,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -19,6 +20,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class InfoRequestFactory {
 
     private final Lazy<PlanPlugin> plugin;

@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.info.request;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 
 /**
@@ -10,6 +11,7 @@ import java.util.HashMap;
  *
  * @author Rsl1122
  */
+@Singleton
 public class InfoRequests extends HashMap<String, InfoRequest> {
 
     @Inject
