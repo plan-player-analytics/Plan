@@ -23,6 +23,7 @@ public class BungeePlayerRegisterProcessor implements CriticalRunnable {
     private final Runnable[] afterProcess;
 
     private Processing processing;
+    private Database database;
 
     public BungeePlayerRegisterProcessor(UUID uuid, String name, long registered, Runnable... afterProcess) {
         this.uuid = uuid;
@@ -33,7 +34,6 @@ public class BungeePlayerRegisterProcessor implements CriticalRunnable {
 
     @Override
     public void run() {
-        Database database = Database.getActive();
         try {
             if (database.check().isPlayerRegistered(uuid)) {
                 return;

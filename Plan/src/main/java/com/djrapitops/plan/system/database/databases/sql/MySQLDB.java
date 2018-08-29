@@ -7,7 +7,7 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -31,9 +31,15 @@ public class MySQLDB extends SQLDB {
     protected volatile DataSource dataSource;
 
     @Inject
-    public MySQLDB(Locale locale, PlanConfig config,
-                   RunnableFactory runnableFactory, PluginLogger pluginLogger, ErrorHandler errorHandler) {
-        super(locale, config, runnableFactory, pluginLogger, errorHandler);
+    public MySQLDB(
+            Locale locale,
+            PlanConfig config,
+            RunnableFactory runnableFactory,
+            PluginLogger pluginLogger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
+        super(locale, config, runnableFactory, pluginLogger, timings, errorHandler);
     }
 
     private static synchronized void increment() {
@@ -62,7 +68,7 @@ public class MySQLDB extends SQLDB {
             String launchOptions = config.getString(Settings.DB_LAUNCH_OPTIONS);
             if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
-                Log.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
+                logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
             hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
@@ -129,6 +135,11 @@ public class MySQLDB extends SQLDB {
     @Override
     public void commit(Connection connection) {
         returnToPool(connection);
+    }
+
+    @Override
+    public boolean isUsingMySQL() {
+        return true;
     }
 
     @Override

@@ -25,15 +25,23 @@ public class InfoCommand extends CommandNode {
 
     private final PlanPlugin plugin;
     private final Locale locale;
+    private final Database database;
     private final ConnectionSystem connectionSystem;
     private final VersionCheckSystem versionCheckSystem;
 
     @Inject
-    public InfoCommand(PlanPlugin plugin, Locale locale, ConnectionSystem connectionSystem, VersionCheckSystem versionCheckSystem) {
+    public InfoCommand(
+            PlanPlugin plugin,
+            Locale locale,
+            Database database,
+            ConnectionSystem connectionSystem,
+            VersionCheckSystem versionCheckSystem
+    ) {
         super("info", Permissions.INFO.getPermission(), CommandType.CONSOLE);
 
         this.plugin = plugin;
         this.locale = locale;
+        this.database = database;
         this.connectionSystem = connectionSystem;
         this.versionCheckSystem = versionCheckSystem;
 
@@ -52,7 +60,7 @@ public class InfoCommand extends CommandNode {
                 "",
                 locale.getString(CommandLang.INFO_VERSION, plugin.getVersion()),
                 locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
-                locale.getString(CommandLang.INFO_DATABASE, Database.getActive().getName()),
+                locale.getString(CommandLang.INFO_DATABASE, database.getName()),
                 locale.getString(CommandLang.INFO_BUNGEE_CONNECTION, connectedToBungee),
                 "",
                 ">"

@@ -1,10 +1,12 @@
 package com.djrapitops.plan.system.webserver.response;
 
+import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
+import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.*;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
@@ -44,7 +46,19 @@ public class ResponseFactory {
     }
 
     public Response playersPageResponse() {
-        return new PlayersPageResponse(pageFactory.playersPage());
+        try {
+            return new PlayersPageResponse(pageFactory.playersPage());
+        } catch (ParseException e) {
+            return new InternalErrorResponse("Failed to parse players page", e);
+        }
+    }
+
+    public Response networkPageResponse() {
+        try {
+            return new NetworkPageResponse(pageFactory.networkPage());
+        } catch (ParseException e) {
+            return new InternalErrorResponse("Failed to parse network page", e);
+        }
     }
 
     public RawDataResponse rawPlayerPageResponse(UUID uuid) {

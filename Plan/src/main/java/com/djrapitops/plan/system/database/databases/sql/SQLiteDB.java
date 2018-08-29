@@ -6,7 +6,7 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -29,9 +29,16 @@ public class SQLiteDB extends SQLDB {
     private Connection connection;
     private PluginTask connectionPingTask;
 
-    public SQLiteDB(File databaseFile, Locale locale, PlanConfig config,
-                    RunnableFactory runnableFactory, PluginLogger logger, ErrorHandler errorHandler) {
-        super(locale, config, runnableFactory, logger, errorHandler);
+    public SQLiteDB(
+            File databaseFile,
+            Locale locale,
+            PlanConfig config,
+            RunnableFactory runnableFactory,
+            PluginLogger logger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
+        super(locale, config, runnableFactory, logger, timings, errorHandler);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
     }
@@ -86,7 +93,7 @@ public class SQLiteDB extends SQLDB {
                             resultSet = statement.executeQuery("/* ping */ SELECT 1");
                         }
                     } catch (SQLException e) {
-                        Log.debug("Something went wrong during SQLite Connection upkeep task.");
+                        logger.debug("Something went wrong during SQLite Connection upkeep task.");
                         try {
                             connection = getNewConnection(databaseFile);
                         } catch (SQLException e1) {
@@ -174,17 +181,26 @@ public class SQLiteDB extends SQLDB {
         private final PlanConfig config;
         private final RunnableFactory runnableFactory;
         private final PluginLogger logger;
+        private final Timings timings;
         private final ErrorHandler errorHandler;
         private FileSystem fileSystem;
 
         @Inject
-        public Factory(Locale locale, PlanConfig config, FileSystem fileSystem,
-                       RunnableFactory runnableFactory, PluginLogger logger, ErrorHandler errorHandler) {
+        public Factory(
+                Locale locale,
+                PlanConfig config,
+                FileSystem fileSystem,
+                RunnableFactory runnableFactory,
+                PluginLogger logger,
+                Timings timings,
+                ErrorHandler errorHandler
+        ) {
             this.locale = locale;
             this.config = config;
             this.fileSystem = fileSystem;
             this.runnableFactory = runnableFactory;
             this.logger = logger;
+            this.timings = timings;
             this.errorHandler = errorHandler;
         }
 
@@ -197,7 +213,7 @@ public class SQLiteDB extends SQLDB {
         }
 
         public SQLiteDB usingFile(File databaseFile) {
-            return new SQLiteDB(databaseFile, locale, config, runnableFactory, logger, errorHandler);
+            return new SQLiteDB(databaseFile, locale, config, runnableFactory, logger, timings, errorHandler);
         }
 
     }

@@ -1,6 +1,5 @@
 package com.djrapitops.plan.data.store.containers;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
@@ -12,9 +11,9 @@ import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -49,6 +48,12 @@ import java.util.stream.Collectors;
 public class AnalysisContainer extends DataContainer {
 
     private final ServerContainer serverContainer;
+
+    private String version;
+    private PlanConfig config;
+    private Theme theme;
+    private Database database;
+    private ServerProperties serverProperties;
 
     private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {}, "SERVER_NAMES");
 
@@ -90,11 +95,11 @@ public class AnalysisContainer extends DataContainer {
         putRawData(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO, now - TimeAmount.MONTH.ms());
         putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> Formatters.second().apply(() -> getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
 
-        putRawData(AnalysisKeys.VERSION, PlanPlugin.getInstance().getVersion());
+        putRawData(AnalysisKeys.VERSION, version);
         putSupplier(AnalysisKeys.TIME_ZONE, MiscUtils::getTimeZoneOffsetHours);
         putRawData(AnalysisKeys.FIRST_DAY, 1);
-        putRawData(AnalysisKeys.TPS_MEDIUM, Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber());
-        putRawData(AnalysisKeys.TPS_HIGH, Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH.getNumber());
+        putRawData(AnalysisKeys.TPS_MEDIUM, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED));
+        putRawData(AnalysisKeys.TPS_HIGH, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH));
 
         addServerProperties();
         addThemeColors();
@@ -105,24 +110,23 @@ public class AnalysisContainer extends DataContainer {
                 getUnsafe(serverNames).getOrDefault(serverContainer.getUnsafe(ServerKeys.SERVER_UUID), "Plan")
         );
 
-        ServerProperties serverProperties = ServerInfo.getServerProperties_Old();
         putRawData(AnalysisKeys.PLAYERS_MAX, serverProperties.getMaxPlayers());
         putRawData(AnalysisKeys.PLAYERS_ONLINE, serverProperties.getOnlinePlayers());
     }
 
     private void addThemeColors() {
-        putRawData(AnalysisKeys.ACTIVITY_PIE_COLORS, Theme.getValue_Old(ThemeVal.GRAPH_ACTIVITY_PIE));
-        putRawData(AnalysisKeys.GM_PIE_COLORS, Theme.getValue_Old(ThemeVal.GRAPH_GM_PIE));
-        putRawData(AnalysisKeys.PLAYERS_GRAPH_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_PLAYERS_ONLINE));
-        putRawData(AnalysisKeys.TPS_LOW_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_TPS_LOW));
-        putRawData(AnalysisKeys.TPS_MEDIUM_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_TPS_MED));
-        putRawData(AnalysisKeys.TPS_HIGH_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_TPS_HIGH));
-        putRawData(AnalysisKeys.WORLD_MAP_LOW_COLOR, Theme.getValue_Old(ThemeVal.WORLD_MAP_LOW));
-        putRawData(AnalysisKeys.WORLD_MAP_HIGH_COLOR, Theme.getValue_Old(ThemeVal.WORLD_MAP_HIGH));
-        putRawData(AnalysisKeys.WORLD_PIE_COLORS, Theme.getValue_Old(ThemeVal.GRAPH_WORLD_PIE));
-        putRawData(AnalysisKeys.AVG_PING_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_AVG_PING));
-        putRawData(AnalysisKeys.MAX_PING_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_MAX_PING));
-        putRawData(AnalysisKeys.MIN_PING_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_MIN_PING));
+        putRawData(AnalysisKeys.ACTIVITY_PIE_COLORS, theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE));
+        putRawData(AnalysisKeys.GM_PIE_COLORS, theme.getValue(ThemeVal.GRAPH_GM_PIE));
+        putRawData(AnalysisKeys.PLAYERS_GRAPH_COLOR, theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+        putRawData(AnalysisKeys.TPS_LOW_COLOR, theme.getValue(ThemeVal.GRAPH_TPS_LOW));
+        putRawData(AnalysisKeys.TPS_MEDIUM_COLOR, theme.getValue(ThemeVal.GRAPH_TPS_MED));
+        putRawData(AnalysisKeys.TPS_HIGH_COLOR, theme.getValue(ThemeVal.GRAPH_TPS_HIGH));
+        putRawData(AnalysisKeys.WORLD_MAP_LOW_COLOR, theme.getValue(ThemeVal.WORLD_MAP_LOW));
+        putRawData(AnalysisKeys.WORLD_MAP_HIGH_COLOR, theme.getValue(ThemeVal.WORLD_MAP_HIGH));
+        putRawData(AnalysisKeys.WORLD_PIE_COLORS, theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+        putRawData(AnalysisKeys.AVG_PING_COLOR, theme.getValue(ThemeVal.GRAPH_AVG_PING));
+        putRawData(AnalysisKeys.MAX_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MAX_PING));
+        putRawData(AnalysisKeys.MIN_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MIN_PING));
     }
 
     private void addPlayerSuppliers() {
@@ -260,7 +264,7 @@ public class AnalysisContainer extends DataContainer {
 
     private void addSessionSuppliers() {
         Key<SessionAccordion> sessionAccordion = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
-        putSupplier(serverNames, () -> Database.getActive().fetch().getServerNames());
+        putSupplier(serverNames, () -> database.fetch().getServerNames());
         putSupplier(sessionAccordion, () -> SessionAccordion.forServer(
                 getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
                 getSupplier(serverNames),

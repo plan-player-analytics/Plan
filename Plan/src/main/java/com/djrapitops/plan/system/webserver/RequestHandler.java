@@ -4,14 +4,19 @@
  */
 package com.djrapitops.plan.system.webserver;
 
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.auth.BasicAuthentication;
 import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.benchmarking.Benchmark;
+import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -30,12 +35,30 @@ import java.util.List;
 public class RequestHandler implements HttpHandler {
 
     private final Locale locale;
+    private final PlanConfig config;
+    private final Database database;
     private final ResponseHandler responseHandler;
+    private final Timings timings;
+    private final PluginLogger logger;
+    private final ErrorHandler errorHandler;
 
     @Inject
-    RequestHandler(Locale locale, ResponseHandler responseHandler) {
+    RequestHandler(
+            Locale locale,
+            PlanConfig config,
+            Database database,
+            ResponseHandler responseHandler,
+            Timings timings,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
         this.locale = locale;
+        this.config = config;
+        this.database = database;
         this.responseHandler = responseHandler;
+        this.timings = timings;
+        this.logger = logger;
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -46,8 +69,10 @@ public class RequestHandler implements HttpHandler {
         request.setAuth(getAuthorization(requestHeaders));
 
         String requestString = request.toString();
-        Benchmark.start("", requestString);
+        timings.start(requestString);
         int responseCode = -1;
+
+        boolean inDevMode = config.isTrue(Settings.DEV_MODE);
         try {
             Response response = responseHandler.getResponse(request);
             responseCode = response.getCode();
@@ -58,14 +83,14 @@ public class RequestHandler implements HttpHandler {
             response.setResponseHeaders(responseHeaders);
             response.send(exchange, locale);
         } catch (Exception e) {
-            if (Settings.DEV_MODE.isTrue()) {
-                Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                Log.toLog(this.getClass(), e);
+            if (inDevMode) {
+                logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
+                errorHandler.log(L.WARN, this.getClass(), e);
             }
         } finally {
             exchange.close();
-            if (Settings.DEV_MODE.isTrue()) {
-                Log.debug(requestString + " Response code: " + responseCode + " took " + Benchmark.stop("", requestString) + " ms");
+            if (inDevMode) {
+                logger.debug(requestString + " Response code: " + responseCode + timings.end(requestString).map(Benchmark::toString).orElse("-"));
             }
         }
     }
@@ -78,7 +103,7 @@ public class RequestHandler implements HttpHandler {
 
         String authLine = authorization.get(0);
         if (authLine.contains("Basic ")) {
-            return new BasicAuthentication(authLine.split(" ")[1]);
+            return new BasicAuthentication(authLine.split(" ")[1], database);
         }
         return null;
     }

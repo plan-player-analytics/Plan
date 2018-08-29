@@ -4,6 +4,7 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -23,9 +24,15 @@ import java.util.Optional;
 public class SpongeMySQLDB extends MySQLDB {
 
     @Inject
-    public SpongeMySQLDB(Locale locale, PlanConfig config,
-                         RunnableFactory runnableFactory, PluginLogger pluginLogger, ErrorHandler errorHandler) {
-        super(locale, config, runnableFactory, pluginLogger, errorHandler);
+    public SpongeMySQLDB(
+            Locale locale,
+            PlanConfig config,
+            RunnableFactory runnableFactory,
+            PluginLogger pluginLogger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
+        super(locale, config, runnableFactory, pluginLogger, timings, errorHandler);
     }
 
     @Override

@@ -31,8 +31,6 @@ import com.djrapitops.plan.modules.server.bukkit.BukkitSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.processing.importing.ImporterManager;
-import com.djrapitops.plan.system.processing.importing.importers.OfflinePlayerImporter;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBukkit;
 import com.djrapitops.plugin.BukkitPlugin;
@@ -83,11 +81,13 @@ interface PlanComponent {
 class BukkitPlanModule {
 
     @Provides
-    PlanPlugin providePlanPlugin(Plan plan) {
-        return plan;
+    @Singleton
+    PlanPlugin providePlanPlugin(Plan plugin) {
+        return plugin;
     }
 
     @Provides
+    @Singleton
     @Named("mainCommand")
     CommandNode provideMainCommand(PlanCommand command) {
         return command;
@@ -124,7 +124,8 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            ImporterManager.registerImporter(new OfflinePlayerImporter());
+            // TODO Refactor into ImportSystem
+            // ImporterManager.registerImporter(new OfflinePlayerImporter());
 
             new BStatsBukkit(this).registerMetrics();
 

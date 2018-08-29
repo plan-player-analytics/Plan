@@ -13,11 +13,15 @@ public class SQLBackupOps extends SQLOps implements BackupOperations {
 
     @Override
     public void backup(Database toDatabase) {
-        BatchOperationTable toDB = new BatchOperationTable((SQLDB) toDatabase);
-        BatchOperationTable fromDB = new BatchOperationTable(db);
+        if (toDatabase instanceof SQLDB) {
+            BatchOperationTable toDB = new BatchOperationTable((SQLDB) toDatabase);
+            BatchOperationTable fromDB = new BatchOperationTable(db);
 
-        toDB.removeAllData();
-        fromDB.copyEverything(toDB);
+            toDB.removeAllData();
+            fromDB.copyEverything(toDB);
+        } else {
+            throw new IllegalArgumentException("Database was not a SQL database - backup not implemented.");
+        }
     }
 
     @Override

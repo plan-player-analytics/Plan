@@ -5,6 +5,8 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.operation.CheckOperations;
+import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
@@ -25,6 +27,7 @@ public class RegisterProcessor extends AbsRunnable {
     private final Runnable[] afterProcess;
 
     private Processing processing;
+    private Database database;
 
     public RegisterProcessor(UUID uuid, Supplier<Long> registered, String name, Runnable... afterProcess) {
         this.uuid = uuid;
@@ -35,14 +38,16 @@ public class RegisterProcessor extends AbsRunnable {
 
     @Override
     public void run() {
-        Database db = Database.getActive();
         Verify.nullCheck(uuid, () -> new IllegalStateException("UUID was null"));
+
+        CheckOperations check = database.check();
+        SaveOperations save = database.save();
         try {
-            if (!db.check().isPlayerRegistered(uuid)) {
-                db.save().registerNewUser(uuid, registered.get(), name);
+            if (!check.isPlayerRegistered(uuid)) {
+                save.registerNewUser(uuid, registered.get(), name);
             }
-            if (!db.check().isPlayerRegisteredOnThisServer(uuid)) {
-                db.save().registerNewUserOnThisServer(uuid, registered.get());
+            if (!check.isPlayerRegisteredOnThisServer(uuid)) {
+                save.registerNewUserOnThisServer(uuid, registered.get());
             }
         } finally {
             for (Runnable runnable : afterProcess) {

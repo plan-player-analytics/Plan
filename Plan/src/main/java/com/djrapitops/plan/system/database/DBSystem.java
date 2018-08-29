@@ -7,13 +7,12 @@ package com.djrapitops.plan.system.database;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -38,19 +37,17 @@ public abstract class DBSystem implements SubSystem {
     protected Database db;
     protected Set<Database> databases;
 
-    public DBSystem(Locale locale, PluginLogger logger, Timings timings, ErrorHandler errorHandler) {
+    public DBSystem(
+            Locale locale,
+            PluginLogger logger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
         this.locale = locale;
         this.logger = logger;
         this.timings = timings;
         this.errorHandler = errorHandler;
         databases = new HashSet<>();
-    }
-
-    @Deprecated
-    public static DBSystem getInstance() {
-        DBSystem dbSystem = PlanSystem.getInstance().getDatabaseSystem();
-        Verify.nullCheck(dbSystem, () -> new IllegalStateException("Database system was not initialized."));
-        return dbSystem;
     }
 
     public Database getActiveDatabaseByName(String dbName) {
@@ -74,7 +71,7 @@ public abstract class DBSystem implements SubSystem {
                 db.close();
             }
         } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -87,7 +84,7 @@ public abstract class DBSystem implements SubSystem {
         try {
             db.init();
             db.scheduleClean(1L);
-            Log.info(locale.getString(PluginLang.ENABLED_DATABASE, db.getName()));
+            logger.info(locale.getString(PluginLang.ENABLED_DATABASE, db.getName()));
         } catch (DBInitException e) {
             Throwable cause = e.getCause();
             String message = cause == null ? e.getMessage() : cause.getMessage();

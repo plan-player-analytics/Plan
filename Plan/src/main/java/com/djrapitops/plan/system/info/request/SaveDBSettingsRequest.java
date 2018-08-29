@@ -64,7 +64,7 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
         if (Check.isBungeeAvailable()) {
             return new BadRequestResponse("Not supposed to be called on a Bungee server");
         }
-        if (Settings.BUNGEE_COPY_CONFIG.isFalse() || Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()) {
+        if (config.isFalse(Settings.BUNGEE_COPY_CONFIG) || config.isTrue(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE)) {
             return new BadRequestResponse("Bungee config settings overridden on this server.");
         }
 

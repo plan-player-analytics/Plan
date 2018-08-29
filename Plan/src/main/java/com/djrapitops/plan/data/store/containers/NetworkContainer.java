@@ -40,6 +40,8 @@ public class NetworkContainer extends DataContainer {
 
     private final ServerContainer bungeeContainer;
 
+    private Database database;
+
     private final Map<UUID, AnalysisContainer> serverContainers;
 
     public NetworkContainer(ServerContainer bungeeContainer) {
@@ -70,7 +72,7 @@ public class NetworkContainer extends DataContainer {
             return Optional.of(container);
         }
         try {
-            AnalysisContainer analysisContainer = new AnalysisContainer(Database.getActive().fetch().getServerContainer(serverUUID));
+            AnalysisContainer analysisContainer = new AnalysisContainer(database.fetch().getServerContainer(serverUUID));
             serverContainers.put(serverUUID, analysisContainer);
             return Optional.of(analysisContainer);
         } catch (DBOpException e) {

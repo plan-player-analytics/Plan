@@ -8,8 +8,6 @@ import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatemen
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.move.Version18TransferTable;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -83,10 +81,8 @@ public class IPAnonPatch extends Patch {
                     statement.setString(2, updatedInfo.getIpHash());
                     statement.setString(3, geoInfo.getIp());
                     statement.addBatch();
-                } catch (UnknownHostException | NoSuchAlgorithmException e) {
-                    if (Settings.DEV_MODE.isTrue()) {
-                        Log.toLog(this.getClass(), e);
-                    }
+                } catch (UnknownHostException | NoSuchAlgorithmException ignore) {
+                    // This ip is already anonymised or completely unusable.
                 }
             }
         });

@@ -63,11 +63,13 @@ interface PlanBungeeComponent {
 class BungeePlanModule {
 
     @Provides
-    PlanPlugin providePlanPlugin(PlanBungee plan) {
-        return plan;
+    @Singleton
+    PlanPlugin providePlanPlugin(PlanBungee plugin) {
+        return plugin;
     }
 
     @Provides
+    @Singleton
     @Named("mainCommand")
     CommandNode provideMainCommand(PlanBungeeCommand command) {
         return command;

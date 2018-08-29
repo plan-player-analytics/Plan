@@ -15,6 +15,7 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -44,7 +45,8 @@ public abstract class SQLDB extends Database {
     protected final PlanConfig config;
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
-    protected ErrorHandler errorHandler;
+    protected final Timings timings;
+    protected final ErrorHandler errorHandler;
 
     private final UsersTable usersTable;
     private final UserInfoTable userInfoTable;
@@ -70,17 +72,22 @@ public abstract class SQLDB extends Database {
     private final SQLSaveOps saveOps;
     private final SQLTransferOps transferOps;
 
-    private final boolean usingMySQL;
     private PluginTask dbCleanTask;
 
-    public SQLDB(Locale locale, PlanConfig config, RunnableFactory runnableFactory, PluginLogger logger, ErrorHandler errorHandler) {
+    public SQLDB(
+            Locale locale,
+            PlanConfig config,
+            RunnableFactory runnableFactory,
+            PluginLogger logger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
         this.locale = locale;
         this.config = config;
         this.runnableFactory = runnableFactory;
         this.logger = logger;
+        this.timings = timings;
         this.errorHandler = errorHandler;
-
-        usingMySQL = this instanceof MySQLDB;
 
         serverTable = new ServerTable(this);
         securityTable = new SecurityTable(this);
@@ -274,25 +281,12 @@ public abstract class SQLDB extends Database {
 
     public abstract void returnToPool(Connection connection);
 
-    /**
-     * Reverts transaction when using SQLite Database.
-     * <p>
-     * MySQL has Auto Commit enabled.
-     */
-    public void rollback(Connection connection) throws SQLException {
-        try {
-            if (!usingMySQL) {
-                connection.rollback();
-            }
-        } finally {
-            returnToPool(connection);
-        }
-    }
-
     public boolean execute(ExecStatement statement) {
         Connection connection = null;
         try {
             connection = getConnection();
+            // Inject Timings to the statement for benchmarking
+            statement.setTimings(timings);
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
                 return statement.execute(preparedStatement);
             }
@@ -329,6 +323,8 @@ public abstract class SQLDB extends Database {
         Connection connection = null;
         try {
             connection = getConnection();
+            // Inject Timings to the statement for benchmarking
+            statement.setTimings(timings);
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
                 statement.executeBatch(preparedStatement);
             }
@@ -343,6 +339,8 @@ public abstract class SQLDB extends Database {
         Connection connection = null;
         try {
             connection = getConnection();
+            // Inject Timings to the statement for benchmarking
+            statement.setTimings(timings);
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
                 return statement.executeQuery(preparedStatement);
             }
@@ -410,7 +408,7 @@ public abstract class SQLDB extends Database {
     }
 
     public boolean isUsingMySQL() {
-        return usingMySQL;
+        return false;
     }
 
     @Override
@@ -458,11 +456,11 @@ public abstract class SQLDB extends Database {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SQLDB sqldb = (SQLDB) o;
-        return usingMySQL == sqldb.usingMySQL && getName().equals(sqldb.getName());
+        return getName().equals(sqldb.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(usingMySQL, getName());
+        return Objects.hash(getName());
     }
 }

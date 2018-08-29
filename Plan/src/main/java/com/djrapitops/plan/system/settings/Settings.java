@@ -2,11 +2,9 @@ package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.config.Setting;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -114,15 +112,6 @@ public enum Settings implements Setting {
         this.configPath = path;
     }
 
-    @Deprecated
-    public static void save() {
-        try {
-            ConfigSystem.getConfig_Old().save();
-        } catch (IOException e) {
-            Log.toLog(Settings.class, e);
-        }
-    }
-
     /**
      * If the settings is a boolean, this method should be used.
      *
@@ -134,11 +123,6 @@ public enum Settings implements Setting {
             return (Boolean) tempValue;
         }
         return getConfig().getBoolean(configPath);
-    }
-
-    @Deprecated
-    public boolean isFalse() {
-        return !isTrue();
     }
 
     /**

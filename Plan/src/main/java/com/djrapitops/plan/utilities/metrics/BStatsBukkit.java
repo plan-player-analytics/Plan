@@ -1,7 +1,6 @@
 package com.djrapitops.plan.utilities.metrics;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.utility.log.Log;
 import org.bstats.bukkit.Metrics;
@@ -28,7 +27,7 @@ public class BStatsBukkit {
         if ("CraftBukkit".equals(serverType) && Check.isSpigotAvailable()) {
             serverType = "Spigot";
         }
-        String databaseType = Database.getActive().getName();
+        String databaseType = plugin.getSystem().getDatabaseSystem().getActiveDatabase().getName();
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);

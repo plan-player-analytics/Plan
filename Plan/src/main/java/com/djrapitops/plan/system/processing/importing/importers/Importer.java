@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.processing.importing.importers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.container.UserInfo;
@@ -19,7 +20,6 @@ import com.djrapitops.plan.system.processing.importing.ServerImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportRefiner;
 import com.djrapitops.plan.utilities.SHA256Hash;
-import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.collect.ImmutableMap;
@@ -37,6 +37,14 @@ import java.util.stream.Collectors;
  */
 public abstract class Importer {
 
+    private final Database database;
+    private final UUID serverUUID;
+
+    protected Importer(Database database, ServerInfo serverInfo) {
+        this.database = database;
+        this.serverUUID = serverInfo.getServerUUID();
+    }
+
     public abstract List<String> getNames();
 
     public abstract ServerImportData getServerImportData();
@@ -44,106 +52,56 @@ public abstract class Importer {
     public abstract List<UserImportData> getUserImportData();
 
     public final void processImport() {
-        String benchmarkName = "Import processing";
-        String serverBenchmarkName = "Server Data processing";
-        String userDataBenchmarkName = "User Data processing";
-
-        Benchmark.start(benchmarkName);
-
         ExecutorService service = Executors.newCachedThreadPool();
 
-        submitTo(service, () -> {
-            Benchmark.start(serverBenchmarkName);
-            processServerData();
-            Benchmark.stop(serverBenchmarkName);
-        });
-
-        submitTo(service, () -> {
-            Benchmark.start(userDataBenchmarkName);
-            processUserData();
-            Benchmark.stop(userDataBenchmarkName);
-        });
+        submitTo(service, this::processServerData);
+        submitTo(service, this::processUserData);
 
         service.shutdown();
-
         try {
-            service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            service.awaitTermination(20, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
-            Log.toLog(this.getClass(), e);
+            service.shutdownNow();
             Thread.currentThread().interrupt();
         }
 
-        Benchmark.stop(benchmarkName);
     }
 
     private void processServerData() {
-        String benchmarkName = "Processing Server Data";
-        String getDataBenchmarkName = "Getting Server Data";
-        String insertDataIntoDatabaseBenchmarkName = "Insert Server Data into Database";
-
-        Benchmark.start(benchmarkName);
-        Benchmark.start(getDataBenchmarkName);
-
         ServerImportData serverImportData = getServerImportData();
-
-        Benchmark.stop(getDataBenchmarkName);
 
         if (serverImportData == null) {
             Log.debug("Server Import Data null, skipping");
             return;
         }
 
-        UUID uuid = ServerInfo.getServerUUID_Old();
-        Database db = Database.getActive();
-
         ExecutorService service = Executors.newCachedThreadPool();
 
-        Benchmark.start(insertDataIntoDatabaseBenchmarkName);
-
-        SaveOperations save = db.save();
-        submitTo(service, () -> save.insertTPS(ImmutableMap.of(uuid, serverImportData.getTpsData())));
-        submitTo(service, () -> save.insertCommandUsage(ImmutableMap.of(uuid, serverImportData.getCommandUsages())));
+        SaveOperations save = database.save();
+        submitTo(service, () -> save.insertTPS(ImmutableMap.of(serverUUID, serverImportData.getTpsData())));
+        submitTo(service, () -> save.insertCommandUsage(ImmutableMap.of(serverUUID, serverImportData.getCommandUsages())));
 
         service.shutdown();
-
         try {
-            service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            service.awaitTermination(20, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
+            service.shutdownNow();
             Thread.currentThread().interrupt();
-            Log.toLog(this.getClass(), e);
         }
-
-        Benchmark.stop(insertDataIntoDatabaseBenchmarkName);
-        Benchmark.stop(benchmarkName);
     }
 
     private void processUserData() {
-        String benchmarkName = "Processing User Data";
-        String getDataBenchmarkName = "Getting User Data";
-        String insertDataIntoCollectionsBenchmarkName = "Insert User Data into Collections";
-        String insertDataIntoDatabaseBenchmarkName = "Insert User Data into Database";
-
-        Benchmark.start(benchmarkName);
-        Benchmark.start(getDataBenchmarkName);
-
         List<UserImportData> userImportData = getUserImportData();
-        Benchmark.stop(getDataBenchmarkName);
 
         if (Verify.isEmpty(userImportData)) {
-            Log.debug("User Import Data null or empty, skipping");
             return;
         }
 
         UserImportRefiner userImportRefiner = new UserImportRefiner(Plan.getInstance(), userImportData);
         userImportData = userImportRefiner.refineData();
 
-        UUID serverUUID = ServerInfo.getServerUUID_Old();
-        Database db = Database.getActive();
-
-        Set<UUID> existingUUIDs = db.fetch().getSavedUUIDs();
-        Set<UUID> existingUserInfoTableUUIDs = db.fetch().getSavedUUIDs(serverUUID);
-
-        Benchmark.start(insertDataIntoCollectionsBenchmarkName);
+        Set<UUID> existingUUIDs = database.fetch().getSavedUUIDs();
+        Set<UUID> existingUserInfoTableUUIDs = database.fetch().getSavedUUIDs(serverUUID);
 
         Map<UUID, UserInfo> users = new HashMap<>();
         List<UserInfo> userInfo = new ArrayList<>();
@@ -170,13 +128,9 @@ public abstract class Importer {
             sessions.put(uuid, Collections.singletonList(toSession(data)));
         });
 
-        Benchmark.stop(insertDataIntoCollectionsBenchmarkName);
-
         ExecutorService service = Executors.newCachedThreadPool();
 
-        Benchmark.start(insertDataIntoDatabaseBenchmarkName);
-
-        SaveOperations save = db.save();
+        SaveOperations save = database.save();
 
         save.insertUsers(users);
         submitTo(service, () -> save.insertSessions(ImmutableMap.of(serverUUID, sessions), true));
@@ -186,16 +140,12 @@ public abstract class Importer {
         submitTo(service, () -> save.insertAllGeoInfo(geoInfo));
 
         service.shutdown();
-
         try {
-            service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            service.awaitTermination(20, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
+            service.shutdownNow();
             Thread.currentThread().interrupt();
-            Log.toLog(this.getClass(), e);
         }
-
-        Benchmark.stop(insertDataIntoDatabaseBenchmarkName);
-        Benchmark.stop(benchmarkName);
     }
 
     private void submitTo(ExecutorService service, ImportExecutorHelper helper) {
@@ -216,7 +166,7 @@ public abstract class Importer {
         int mobKills = userImportData.getMobKills();
         int deaths = userImportData.getDeaths();
 
-        Session session = new Session(0, userImportData.getUuid(), ServerInfo.getServerUUID_Old(), 0L, 0L, mobKills, deaths, 0);
+        Session session = new Session(0, userImportData.getUuid(), serverUUID, 0L, 0L, mobKills, deaths, 0);
 
         session.setPlayerKills(userImportData.getKills());
         session.setWorldTimes(new WorldTimes(userImportData.getWorldTimes()));
@@ -242,14 +192,11 @@ public abstract class Importer {
         void execute() throws DBException;
 
         default void submit(ExecutorService service) {
-            service.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        execute();
-                    } catch (DBException e) {
-                        Log.toLog(this.getClass(), e);
-                    }
+            service.submit(() -> {
+                try {
+                    execute();
+                } catch (DBException e) {
+                    throw new DBOpException("Import Execution failed", e);
                 }
             });
         }

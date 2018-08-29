@@ -63,6 +63,7 @@ public class HtmlStructure {
     }
 
     // TODO Rework into NetworkPage generation
+    @Deprecated
     public static String createServerContainer() {
         ServerProperties properties = ServerInfo.getServerProperties_Old();
         int maxPlayers = properties.getMaxPlayers();
@@ -75,7 +76,7 @@ public class HtmlStructure {
         String serverType = properties.getVersion();
         String address = "../server/" + serverName;
 
-        Database db = Database.getActive();
+        Database db = null; // TODO
         UUID serverUUID = server.getUuid();
         String id = ThreadLocalRandom.current().nextInt(100) + serverUUID.toString().replace("-", "");
 

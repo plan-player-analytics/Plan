@@ -20,6 +20,8 @@ public class TPSInsertProcessor implements CriticalRunnable {
 
     private final List<TPS> tpsList;
 
+    private Database database;
+
     public TPSInsertProcessor(List<TPS> tpsList) {
         this.tpsList = tpsList;
     }
@@ -45,6 +47,6 @@ public class TPSInsertProcessor implements CriticalRunnable {
                 .chunksLoaded(averageChunksLoaded)
                 .toTPS();
 
-        Database.getActive().save().insertTPSforThisServer(tps);
+        database.save().insertTPSforThisServer(tps);
     }
 }

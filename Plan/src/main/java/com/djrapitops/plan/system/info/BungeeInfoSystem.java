@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.info;
 
-import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -16,8 +15,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
-import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import javax.inject.Inject;
@@ -31,17 +29,20 @@ import javax.inject.Singleton;
 @Singleton
 public class BungeeInfoSystem extends InfoSystem {
 
+    private final ResponseFactory responseFactory;
     private final ServerInfo serverInfo;
 
     @Inject
     public BungeeInfoSystem(
             InfoRequestFactory infoRequestFactory,
+            ResponseFactory responseFactory,
             ConnectionSystem connectionSystem,
             ServerInfo serverInfo,
             WebServer webServer,
             PluginLogger logger
     ) {
         super(infoRequestFactory, connectionSystem, serverInfo, webServer, logger);
+        this.responseFactory = responseFactory;
 
         this.serverInfo = serverInfo;
     }
@@ -59,12 +60,6 @@ public class BungeeInfoSystem extends InfoSystem {
 
     @Override
     public void updateNetworkPage() {
-        ResponseCache.cacheResponse(PageId.SERVER.of(serverInfo.getServerUUID()), () -> {
-            try {
-                return new NetworkPageResponse();
-            } catch (ParseException e) {
-                return new InternalErrorResponse("Network page parsing failed.", e);
-            }
-        });
+        ResponseCache.cacheResponse(PageId.SERVER.of(serverInfo.getServerUUID()), responseFactory::networkPageResponse);
     }
 }

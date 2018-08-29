@@ -4,11 +4,15 @@
  */
 package com.djrapitops.plan.system.processing.importing.importers;
 
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.importing.ServerImportData;
 import com.djrapitops.plan.system.processing.importing.UserImportData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +22,16 @@ import java.util.Set;
  * @author Fuzzlemann
  * @since 4.0.0
  */
+@Singleton
 public class OfflinePlayerImporter extends Importer {
+
+    @Inject
+    public OfflinePlayerImporter(
+            Database database,
+            ServerInfo serverInfo
+    ) {
+        super(database, serverInfo);
+    }
 
     @Override
     public List<String> getNames() {

@@ -33,6 +33,7 @@ public class DataCache extends SessionCache implements SubSystem {
 
     @Inject
     public DataCache(Database database) {
+        super(database);
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
         uuids = new HashMap<>();

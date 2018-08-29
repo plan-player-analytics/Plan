@@ -18,7 +18,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
  */
 public abstract class TaskSystem implements SubSystem {
 
-    protected TPSCountTimer tpsCountTimer;
+    protected final TPSCountTimer tpsCountTimer;
     protected final RunnableFactory runnableFactory;
 
     public TaskSystem(RunnableFactory runnableFactory, TPSCountTimer tpsCountTimer) {

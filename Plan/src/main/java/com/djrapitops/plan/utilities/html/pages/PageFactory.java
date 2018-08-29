@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
+import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
@@ -73,5 +74,10 @@ public class PageFactory {
         PlayerContainer player = database.get().fetch().getPlayerContainer(uuid);
         Map<UUID, String> serverNames = database.get().fetch().getServerNames();
         return new InspectPage(player, serverNames, config.get(), serverInfo.get(), timings.get());
+    }
+
+    public NetworkPage networkPage() {
+        NetworkContainer networkContainer = database.get().fetch().getNetworkContainer(); // Not cached, big.
+        return new NetworkPage(networkContainer, serverInfo.get().getServerProperties());
     }
 }

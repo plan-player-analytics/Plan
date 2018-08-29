@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.database.databases.Database;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -23,6 +24,8 @@ public class SessionCacheTest {
     private Session session;
     private final UUID uuid = TestConstants.PLAYER_ONE_UUID;
 
+    private Database database; // TODO
+
     @BeforeClass
     public static void setUpClass() throws Exception {
         SystemMockUtil.setUp(temporaryFolder.getRoot())
@@ -31,14 +34,14 @@ public class SessionCacheTest {
 
     @Before
     public void setUp() {
-        sessionCache = new SessionCache();
+        sessionCache = new SessionCache(database);
         session = new Session(uuid, 12345L, "World1", "SURVIVAL");
         sessionCache.cacheSession(uuid, session);
     }
 
     @Test
     public void testAtomity() {
-        SessionCache reloaded = new SessionCache();
+        SessionCache reloaded = new SessionCache(database);
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         assertTrue(cachedSession.isPresent());
         assertEquals(session, cachedSession.get());

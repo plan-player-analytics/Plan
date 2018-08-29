@@ -26,6 +26,8 @@ public class PingInsertProcessor implements CriticalRunnable {
     private final UUID uuid;
     private final List<DateObj<Integer>> pingList;
 
+    private Database database;
+
     public PingInsertProcessor(UUID uuid, List<DateObj<Integer>> pingList) {
         this.uuid = uuid;
         this.pingList = pingList;
@@ -61,6 +63,6 @@ public class PingInsertProcessor implements CriticalRunnable {
                 maxValue,
                 avgValue);
 
-        Database.getActive().save().ping(uuid, ping);
+        database.save().ping(uuid, ping);
     }
 }

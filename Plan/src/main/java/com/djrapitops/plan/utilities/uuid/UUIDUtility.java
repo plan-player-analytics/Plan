@@ -37,21 +37,6 @@ public class UUIDUtility {
      * Get UUID of a player.
      *
      * @param playerName Player's name
-     * @return UUID of the player.
-     */
-    @Deprecated
-    public static UUID getUUIDOf_Old(String playerName) {
-        try {
-            return Database.getActive().fetch().getUuidOf(playerName);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Get UUID of a player.
-     *
-     * @param playerName Player's name
      * @return UUID of the player
      */
     public UUID getUUIDOf(String playerName) {

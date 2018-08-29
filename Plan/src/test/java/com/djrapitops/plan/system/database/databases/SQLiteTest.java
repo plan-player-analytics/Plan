@@ -93,7 +93,6 @@ public class SQLiteTest {
 
     @Before
     public void setUp() {
-        assertEquals(db, Database.getActive());
         System.out.println("\n-- Clearing Test Database --");
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();

@@ -26,8 +26,7 @@ public class GeoInfo implements DateHolder, Serializable {
     private final String ipHash;
     private final long date;
 
-    public GeoInfo(InetAddress address, String geolocation, long lastUsed)
-            throws NoSuchAlgorithmException {
+    public GeoInfo(InetAddress address, String geolocation, long lastUsed) throws NoSuchAlgorithmException {
         this(FormatUtils.formatIP(address), geolocation, lastUsed, new SHA256Hash(address.getHostAddress()).create());
     }
 

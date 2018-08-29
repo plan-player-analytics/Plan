@@ -71,11 +71,13 @@ interface PlanSpongeComponent {
 class SpongePlanModule {
 
     @Provides
-    PlanPlugin providePlanPlugin(PlanSponge plan) {
-        return plan;
+    @Singleton
+    PlanPlugin providePlanPlugin(PlanSponge plugin) {
+        return plugin;
     }
 
     @Provides
+    @Singleton
     @Named("mainCommand")
     CommandNode provideMainCommand(PlanCommand command) {
         return command;

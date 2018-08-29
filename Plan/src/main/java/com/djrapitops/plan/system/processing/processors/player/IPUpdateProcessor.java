@@ -26,6 +26,8 @@ public class IPUpdateProcessor implements CriticalRunnable {
     private final InetAddress ip;
     private final long time;
 
+    private Database database;
+
     public IPUpdateProcessor(UUID uuid, InetAddress ip, long time) {
         this.uuid = uuid;
         this.ip = ip;
@@ -38,7 +40,7 @@ public class IPUpdateProcessor implements CriticalRunnable {
             String country = GeolocationCache.getCountry(ip.getHostAddress());
             try {
                 GeoInfo geoInfo = new GeoInfo(ip, country, time);
-                Database.getActive().save().geoInfo(uuid, geoInfo);
+                database.save().geoInfo(uuid, geoInfo);
             } catch (NoSuchAlgorithmException e) {
                 Log.toLog(this.getClass(), e);
             }

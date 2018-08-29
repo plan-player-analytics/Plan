@@ -1,10 +1,8 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.HashMap;
@@ -21,6 +19,12 @@ import java.util.UUID;
 public class SessionCache {
 
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
+
+    private final Database database;
+
+    public SessionCache(Database database) {
+        this.database = database;
+    }
 
     @Deprecated
     public static SessionCache getInstance() {
@@ -60,6 +64,13 @@ public class SessionCache {
         activeSessions.put(uuid, session);
     }
 
+    /**
+     * End a session and save it to database.
+     *
+     * @param uuid UUID of the player.
+     * @param time Time the session ended.
+     * @throws com.djrapitops.plan.api.exceptions.database.DBOpException If saving failed.
+     */
     public void endSession(UUID uuid, long time) {
         Session session = activeSessions.get(uuid);
         if (session == null) {
@@ -70,9 +81,8 @@ public class SessionCache {
         }
         try {
             session.endSession(time);
-            Database.getActive().save().session(uuid, session);
-        } catch (DBOpException e) {
-            Log.toLog(this.getClass(), e);
+            // Might throw a DBOpException
+            database.save().session(uuid, session);
         } finally {
             removeSessionFromCache(uuid);
         }
