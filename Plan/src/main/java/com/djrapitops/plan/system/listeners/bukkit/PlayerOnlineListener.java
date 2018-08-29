@@ -32,6 +32,7 @@ public class PlayerOnlineListener implements Listener {
 
     private static boolean countKicks = true;
 
+    private final Processing processing;
     private final SessionCache sessionCache;
     private final ErrorHandler errorHandler;
     private final RunnableFactory runnableFactory;
@@ -41,7 +42,13 @@ public class PlayerOnlineListener implements Listener {
     }
 
     @Inject
-    public PlayerOnlineListener(SessionCache sessionCache, RunnableFactory runnableFactory, ErrorHandler errorHandler) {
+    public PlayerOnlineListener(
+            Processing processing,
+            SessionCache sessionCache,
+            RunnableFactory runnableFactory,
+            ErrorHandler errorHandler
+    ) {
+        this.processing = processing;
         this.sessionCache = sessionCache;
         this.runnableFactory = runnableFactory;
         this.errorHandler = errorHandler;
@@ -54,7 +61,7 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             boolean op = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
-            Processing.submit(new BanAndOpProcessor(uuid, () -> banned, op));
+            processing.submit(new BanAndOpProcessor(uuid, () -> banned, op));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -75,7 +82,7 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
             UUID uuid = event.getPlayer().getUniqueId();
-            Processing.submit(new KickProcessor(uuid));
+            processing.submit(new KickProcessor(uuid));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -116,7 +123,7 @@ public class PlayerOnlineListener implements Listener {
                         new PlayerPageUpdateProcessor(uuid)
                 )
         ).runTaskAsynchronously();
-        Processing.submit(new NetworkPageUpdateProcessor());
+        processing.submit(new NetworkPageUpdateProcessor());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -135,9 +142,9 @@ public class PlayerOnlineListener implements Listener {
 
         AFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
-        Processing.submit(new BanAndOpProcessor(uuid, player::isBanned, player.isOp()));
-        Processing.submit(new EndSessionProcessor(uuid, time));
-        Processing.submit(new NetworkPageUpdateProcessor());
-        Processing.submit(new PlayerPageUpdateProcessor(uuid));
+        processing.submit(new BanAndOpProcessor(uuid, player::isBanned, player.isOp()));
+        processing.submit(new EndSessionProcessor(uuid, time));
+        processing.submit(new NetworkPageUpdateProcessor());
+        processing.submit(new PlayerPageUpdateProcessor(uuid));
     }
 }

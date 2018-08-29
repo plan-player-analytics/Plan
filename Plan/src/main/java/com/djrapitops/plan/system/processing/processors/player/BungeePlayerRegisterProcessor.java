@@ -22,6 +22,8 @@ public class BungeePlayerRegisterProcessor implements CriticalRunnable {
     private final long registered;
     private final Runnable[] afterProcess;
 
+    private Processing processing;
+
     public BungeePlayerRegisterProcessor(UUID uuid, String name, long registered, Runnable... afterProcess) {
         this.uuid = uuid;
         this.name = name;
@@ -39,9 +41,8 @@ public class BungeePlayerRegisterProcessor implements CriticalRunnable {
             database.save().registerNewUser(uuid, registered, name);
         } finally {
             for (Runnable process : afterProcess) {
-                Processing.submit(process);
+                processing.submit(process);
             }
-
         }
     }
 }

@@ -21,6 +21,7 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,10 +31,12 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.3.0
  */
+@Singleton
 public class ManageConDebugCommand extends CommandNode {
 
     private final ColorScheme colorScheme;
     private final Locale locale;
+    private final Processing processing;
     private final ServerInfo serverInfo;
     private final ConnectionSystem connectionSystem;
     private final InfoRequestFactory infoRequestFactory;
@@ -44,7 +47,9 @@ public class ManageConDebugCommand extends CommandNode {
     public ManageConDebugCommand(
             ColorScheme colorScheme,
             Locale locale,
-            ServerInfo serverInfo, ConnectionSystem connectionSystem,
+            Processing processing,
+            ServerInfo serverInfo,
+            ConnectionSystem connectionSystem,
             InfoRequestFactory infoRequestFactory,
             WebServer webServer,
             Database database
@@ -53,6 +58,7 @@ public class ManageConDebugCommand extends CommandNode {
 
         this.colorScheme = colorScheme;
         this.locale = locale;
+        this.processing = processing;
         this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
         this.infoRequestFactory = infoRequestFactory;
@@ -104,7 +110,7 @@ public class ManageConDebugCommand extends CommandNode {
             return;
         }
 
-        Processing.submitNonCritical(() -> testServers(sender));
+        processing.submitNonCritical(() -> testServers(sender));
     }
 
     private void testServers(ISender sender) {

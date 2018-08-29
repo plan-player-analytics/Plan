@@ -23,6 +23,7 @@ import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,22 +34,35 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.0.0
  */
+@Singleton
 public class AnalyzeCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final InfoSystem infoSystem;
+    private final ServerInfo serverInfo;
     private final WebServer webServer;
     private final Database database;
     private final ConnectionSystem connectionSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public AnalyzeCommand(Locale locale, InfoSystem infoSystem, WebServer webServer, Database database, ErrorHandler errorHandler) {
+    public AnalyzeCommand(
+            Locale locale,
+            Processing processing,
+            InfoSystem infoSystem,
+            ServerInfo serverInfo,
+            WebServer webServer,
+            Database database,
+            ErrorHandler errorHandler
+    ) {
         super("analyze|analyse|analysis|a", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
+        this.processing = processing;
         this.infoSystem = infoSystem;
         connectionSystem = infoSystem.getConnectionSystem();
+        this.serverInfo = serverInfo;
         this.webServer = webServer;
         this.database = database;
         this.errorHandler = errorHandler;
@@ -62,9 +76,9 @@ public class AnalyzeCommand extends CommandNode {
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
-                Server server = getServer(args).orElseGet(ServerInfo::getServer_Old);
+                Server server = getServer(args).orElseGet(serverInfo::getServer);
                 UUID serverUUID = server.getUuid();
 
                 infoSystem.generateAnalysisPage(serverUUID);

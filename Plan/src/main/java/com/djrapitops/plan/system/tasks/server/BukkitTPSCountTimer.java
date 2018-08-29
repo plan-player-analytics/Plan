@@ -3,6 +3,7 @@ package com.djrapitops.plan.system.tasks.server;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -11,9 +12,11 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.World;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
+@Singleton
 public class BukkitTPSCountTimer extends TPSCountTimer {
 
     protected final Plan plugin;
@@ -23,11 +26,12 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
     @Inject
     public BukkitTPSCountTimer(
             Plan plugin,
+            Processing processing,
             ServerProperties serverProperties,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(logger, errorHandler);
+        super(processing, logger, errorHandler);
         this.plugin = plugin;
         this.serverProperties = serverProperties;
         lastCheckNano = -1;

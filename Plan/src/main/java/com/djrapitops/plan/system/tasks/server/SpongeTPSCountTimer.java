@@ -3,6 +3,7 @@ package com.djrapitops.plan.system.tasks.server;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -11,17 +12,24 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.World;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
+@Singleton
 public class SpongeTPSCountTimer extends TPSCountTimer {
 
     private long lastCheckNano;
     private ServerProperties serverProperties;
 
     @Inject
-    public SpongeTPSCountTimer(ServerProperties serverProperties, PluginLogger logger, ErrorHandler errorHandler) {
-        super(logger, errorHandler);
+    public SpongeTPSCountTimer(
+            Processing processing,
+            ServerProperties serverProperties,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        super(processing, logger, errorHandler);
         this.serverProperties = serverProperties;
         lastCheckNano = -1;
     }
@@ -43,7 +51,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
     /**
      * Calculates the TPS
      *
-     * @param now  The time right now
+     * @param now The time right now
      * @return the TPS
      */
     private TPS calculateTPS(long now) {

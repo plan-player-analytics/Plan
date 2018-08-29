@@ -29,18 +29,30 @@ import java.util.UUID;
 public class CacheAnalysisPageRequest extends InfoRequestWithVariables implements CacheRequest {
 
     private final PlanConfig config;
+    private final Processing processing;
     private final HtmlExport htmlExport;
 
     private UUID serverUUID;
     private String html;
 
-    CacheAnalysisPageRequest(PlanConfig config, HtmlExport htmlExport) {
+    CacheAnalysisPageRequest(
+            PlanConfig config,
+            Processing processing,
+            HtmlExport htmlExport
+    ) {
         this.config = config;
+        this.processing = processing;
         this.htmlExport = htmlExport;
     }
 
-    CacheAnalysisPageRequest(UUID serverUUID, String html, PlanConfig config, HtmlExport htmlExport) {
+    CacheAnalysisPageRequest(
+            UUID serverUUID, String html,
+            PlanConfig config,
+            Processing processing,
+            HtmlExport htmlExport
+    ) {
         this.config = config;
+        this.processing = processing;
         this.htmlExport = htmlExport;
 
         Verify.nullCheck(serverUUID, html);
@@ -66,7 +78,7 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
         ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
 
         if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
-            Processing.submitNonCritical(() -> htmlExport.exportServer(serverUUID));
+            processing.submitNonCritical(() -> htmlExport.exportServer(serverUUID));
         }
     }
 

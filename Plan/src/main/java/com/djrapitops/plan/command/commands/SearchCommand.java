@@ -17,6 +17,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,17 +28,24 @@ import java.util.List;
  * @author Rsl1122
  * @since 2.0.0
  */
+@Singleton
 public class SearchCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final Database database;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public SearchCommand(Locale locale, Database database, ErrorHandler errorHandler) {
+    public SearchCommand(
+            Locale locale,
+            Processing processing,
+            Database database,
+            ErrorHandler errorHandler) {
         super("search", Permissions.SEARCH.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
+        this.processing = processing;
         this.database = database;
         this.errorHandler = errorHandler;
 
@@ -57,7 +65,7 @@ public class SearchCommand extends CommandNode {
     }
 
     private void runSearchTask(String[] args, ISender sender) {
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
                 String searchTerm = args[0];
                 List<String> names = database.search().matchingPlayers(searchTerm);

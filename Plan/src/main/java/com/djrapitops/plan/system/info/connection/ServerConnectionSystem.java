@@ -37,6 +37,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     private final Locale locale;
     private final PlanConfig config;
+    private final Processing processing;
     private final Database database;
     private final WebServer webServer;
     private final PluginLogger pluginLogger;
@@ -50,6 +51,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
     public ServerConnectionSystem(
             Locale locale,
             PlanConfig config,
+            Processing processing,
             Database database,
             WebServer webServer,
             ConnectionLog connectionLog,
@@ -62,6 +64,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
         super(connectionLog, infoRequests, infoSystem, serverInfo);
         this.locale = locale;
         this.config = config;
+        this.processing = processing;
         this.database = database;
         this.webServer = webServer;
         this.pluginLogger = pluginLogger;
@@ -70,7 +73,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
     }
 
     private void refreshServerMap() {
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
                 Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
                 bungeeInformation.ifPresent(server -> mainServer = server);

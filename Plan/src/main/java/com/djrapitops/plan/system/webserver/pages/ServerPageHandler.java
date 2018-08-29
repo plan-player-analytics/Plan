@@ -9,6 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
@@ -32,6 +33,7 @@ import java.util.UUID;
 @Singleton
 public class ServerPageHandler implements PageHandler {
 
+    private final Processing processing;
     private final ResponseFactory responseFactory;
     private final Database database;
     private final ServerInfo serverInfo;
@@ -39,11 +41,13 @@ public class ServerPageHandler implements PageHandler {
 
     @Inject
     public ServerPageHandler(
+            Processing processing,
             ResponseFactory responseFactory,
             Database database,
             ServerInfo serverInfo,
             InfoSystem infoSystem
     ) {
+        this.processing = processing;
         this.responseFactory = responseFactory;
         this.database = database;
         this.serverInfo = serverInfo;
@@ -72,7 +76,7 @@ public class ServerPageHandler implements PageHandler {
                 }
                 return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
             }
-            return AnalysisPageResponse.refreshNow(serverUUID, infoSystem);
+            return AnalysisPageResponse.refreshNow(serverUUID, processing, infoSystem);
         }
     }
 

@@ -6,16 +6,15 @@ package com.djrapitops.plan.system.file;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.tasks.LogsFolderCleanTask;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -25,44 +24,19 @@ import java.util.List;
  *
  * @author Rsl1122
  */
+@Singleton
 public class FileSystem implements SubSystem {
 
-    private final File dataFolder;
     private final PlanPlugin plugin;
-    private File configFile;
+
+    private final File dataFolder;
+    private final File configFile;
 
     @Inject
     public FileSystem(PlanPlugin plugin) {
         this.dataFolder = plugin.getDataFolder();
         this.plugin = plugin;
-        configFile = new File(dataFolder, "config.yml");
-    }
-
-    @Deprecated
-    public static FileSystem getInstance() {
-        FileSystem fileSystem = PlanSystem.getInstance().getFileSystem();
-        Verify.nullCheck(fileSystem, () -> new IllegalStateException("File system was not initialized."));
-        return fileSystem;
-    }
-
-    @Deprecated
-    public static File getDataFolder_Old() {
-        return getInstance().dataFolder;
-    }
-
-    @Deprecated
-    public static File getConfigFile_Old() {
-        return getInstance().configFile;
-    }
-
-    @Deprecated
-    public static File getLocaleFile_Old() {
-        return getInstance().getLocaleFile();
-    }
-
-    @Deprecated
-    public static List<String> readFromResource_Old(String fileName) throws IOException {
-        return FileUtil.lines(PlanPlugin.getInstance(), fileName);
+        this.configFile = getFileFromPluginFolder("config.yml");
     }
 
     public List<String> readFromResource(String fileName) throws IOException {
@@ -93,7 +67,7 @@ public class FileSystem implements SubSystem {
             Verify.isTrue((configFile.exists() && configFile.isFile()) || configFile.createNewFile(),
                     () -> new EnableException("Could not create config file at " + configFile.getAbsolutePath()));
 
-            RunnableFactory.createNew("Logs folder Clean Task", new LogsFolderCleanTask(Log.getLogsFolder()))
+            plugin.getRunnableFactory().create("Logs folder Clean Task", new LogsFolderCleanTask(Log.getLogsFolder()))
                     .runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 30L);
         } catch (IOException e) {
             throw new EnableException("Failed to create config.yml", e);
@@ -103,5 +77,14 @@ public class FileSystem implements SubSystem {
     @Override
     public void disable() {
         // No disable actions necessary.
+    }
+
+    public String readFromResourceFlat(String fileName) throws IOException {
+        List<String> lines = readFromResource(fileName);
+        StringBuilder flat = new StringBuilder();
+        for (String line : lines) {
+            flat.append(line).append("\r\n");
+        }
+        return flat.toString();
     }
 }

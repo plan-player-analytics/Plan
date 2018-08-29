@@ -24,6 +24,8 @@ public class RegisterProcessor extends AbsRunnable {
     private final String name;
     private final Runnable[] afterProcess;
 
+    private Processing processing;
+
     public RegisterProcessor(UUID uuid, Supplier<Long> registered, String name, Runnable... afterProcess) {
         this.uuid = uuid;
         this.registered = registered;
@@ -44,7 +46,7 @@ public class RegisterProcessor extends AbsRunnable {
             }
         } finally {
             for (Runnable runnable : afterProcess) {
-                Processing.submit(runnable);
+                processing.submit(runnable);
             }
             cancel();
         }

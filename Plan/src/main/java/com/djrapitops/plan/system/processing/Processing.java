@@ -1,36 +1,43 @@
 package com.djrapitops.plan.system.processing;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
+import dagger.Lazy;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.function.Supplier;
 
+@Singleton
 public class Processing implements SubSystem {
 
-    private final Supplier<Locale> locale;
+    private final Lazy<Locale> locale;
+    private final PluginLogger logger;
+    private final ErrorHandler errorHandler;
 
     private final ExecutorService nonCriticalExecutor;
     private final ExecutorService criticalExecutor;
 
-    public Processing(Supplier<Locale> locale) {
+    @Inject
+    public Processing(
+            Lazy<Locale> locale,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
         this.locale = locale;
+        this.logger = logger;
+        this.errorHandler = errorHandler;
         nonCriticalExecutor = Executors.newFixedThreadPool(6);
         criticalExecutor = Executors.newFixedThreadPool(2);
-        saveInstance(nonCriticalExecutor);
-        saveInstance(criticalExecutor);
-        saveInstance(this);
     }
 
-    public static void submit(Runnable runnable) {
+    public void submit(Runnable runnable) {
         if (runnable instanceof CriticalRunnable) {
             submitCritical(runnable);
             return;
@@ -38,54 +45,32 @@ public class Processing implements SubSystem {
         submitNonCritical(runnable);
     }
 
-    public static void saveInstance(Object obj) {
-        StaticHolder.saveInstance(obj.getClass(), PlanPlugin.getInstance().getClass());
-    }
-
-    public static void submitNonCritical(Runnable runnable) {
-        saveInstance(runnable);
-        ExecutorService executor = getInstance().nonCriticalExecutor;
-        if (executor.isShutdown()) {
+    public void submitNonCritical(Runnable runnable) {
+        if (nonCriticalExecutor.isShutdown()) {
             return;
         }
         CompletableFuture.supplyAsync(() -> {
             runnable.run();
             return true;
-        }, executor).handle(Processing::exceptionHandler);
+        }, nonCriticalExecutor).handle(this::exceptionHandlerNonCritical);
     }
 
-    public static void submitCritical(Runnable runnable) {
-        saveInstance(runnable);
+    public void submitCritical(Runnable runnable) {
         CompletableFuture.supplyAsync(() -> {
             runnable.run();
             return true;
-        }, getInstance().criticalExecutor).handle(Processing::exceptionHandler);
+        }, criticalExecutor).handle(this::exceptionHandlerCritical);
     }
 
-    public static void submitNonCritical(Runnable... runnables) {
-        for (Runnable runnable : runnables) {
-            submitNonCritical(runnable);
-        }
-    }
-
-    public static void submitCritical(Runnable... runnables) {
-        for (Runnable runnable : runnables) {
-            submitCritical(runnable);
-        }
-    }
-
-    public static <T> Future<T> submit(Callable<T> task) {
-        saveInstance(task);
+    public <T> Future<T> submit(Callable<T> task) {
         if (task instanceof CriticalCallable) {
             return submitCritical(task);
         }
         return submitNonCritical(task);
     }
 
-    public static <T> Future<T> submitNonCritical(Callable<T> task) {
-        saveInstance(task);
-        ExecutorService executor = getInstance().nonCriticalExecutor;
-        if (executor.isShutdown()) {
+    public <T> Future<T> submitNonCritical(Callable<T> task) {
+        if (nonCriticalExecutor.isShutdown()) {
             return null;
         }
         return CompletableFuture.supplyAsync(() -> {
@@ -94,31 +79,31 @@ public class Processing implements SubSystem {
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             }
-        }, getInstance().nonCriticalExecutor).handle(Processing::exceptionHandler);
+        }, nonCriticalExecutor).handle(this::exceptionHandlerNonCritical);
     }
 
-    private static <T> T exceptionHandler(T t, Throwable throwable) {
+    private <T> T exceptionHandlerNonCritical(T t, Throwable throwable) {
         if (throwable != null) {
-            Log.toLog(Processing.class, throwable.getCause());
+            errorHandler.log(L.WARN, Processing.class, throwable.getCause());
         }
         return t;
     }
 
-    public static <T> Future<T> submitCritical(Callable<T> task) {
-        saveInstance(task);
+    private <T> T exceptionHandlerCritical(T t, Throwable throwable) {
+        if (throwable != null) {
+            errorHandler.log(L.ERROR, Processing.class, throwable.getCause());
+        }
+        return t;
+    }
+
+    public <T> Future<T> submitCritical(Callable<T> task) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 return task.call();
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             }
-        }, getInstance().criticalExecutor).handle(Processing::exceptionHandler);
-    }
-
-    public static Processing getInstance() {
-        Processing processing = PlanSystem.getInstance().getProcessing();
-        Verify.nullCheck(processing, () -> new IllegalStateException("Processing System has not been initialized."));
-        return processing;
+        }, criticalExecutor).handle(this::exceptionHandlerCritical);
     }
 
     @Override
@@ -135,12 +120,12 @@ public class Processing implements SubSystem {
     public void disable() {
         nonCriticalExecutor.shutdown();
         List<Runnable> criticalTasks = criticalExecutor.shutdownNow();
-        Log.info(locale.get().getString(PluginLang.DISABLED_PROCESSING, criticalTasks.size()));
+        logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING, criticalTasks.size()));
         for (Runnable runnable : criticalTasks) {
             try {
                 runnable.run();
             } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.WARN, this.getClass(), e);
             }
         }
         if (!nonCriticalExecutor.isTerminated()) {
@@ -153,6 +138,6 @@ public class Processing implements SubSystem {
         if (!criticalExecutor.isTerminated()) {
             criticalExecutor.shutdownNow();
         }
-        Log.info(locale.get().getString(PluginLang.DISABLED_PROCESSING_COMPLETE));
+        logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING_COMPLETE));
     }
 }

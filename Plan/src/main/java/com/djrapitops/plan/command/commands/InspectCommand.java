@@ -34,6 +34,7 @@ public class InspectCommand extends CommandNode {
     private final Locale locale;
     private final Database database;
     private final WebServer webServer;
+    private final Processing processing;
     private final ConnectionSystem connectionSystem;
     private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
@@ -41,6 +42,7 @@ public class InspectCommand extends CommandNode {
     @Inject
     public InspectCommand(
             Locale locale,
+            Processing processing,
             Database database,
             WebServer webServer,
             ConnectionSystem connectionSystem,
@@ -48,6 +50,7 @@ public class InspectCommand extends CommandNode {
             ErrorHandler errorHandler
     ) {
         super("inspect", Permissions.INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
+        this.processing = processing;
         this.connectionSystem = connectionSystem;
         setArguments("<player>");
 
@@ -73,7 +76,7 @@ public class InspectCommand extends CommandNode {
     }
 
     private void runInspectTask(String playerName, ISender sender) {
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
                 UUID uuid = uuidUtility.getUUIDOf(playerName);
                 if (uuid == null) {
@@ -87,7 +90,7 @@ public class InspectCommand extends CommandNode {
                 }
 
                 checkWebUserAndNotify(sender);
-                Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName, this::sendInspectMsg));
+                processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName, this::sendInspectMsg));
             } catch (DBOpException e) {
                 sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
                 errorHandler.log(L.ERROR, this.getClass(), e);

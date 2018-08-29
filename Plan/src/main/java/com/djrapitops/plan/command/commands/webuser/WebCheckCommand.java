@@ -16,6 +16,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 
 /**
@@ -24,17 +25,24 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Singleton
 public class WebCheckCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final Database database;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public WebCheckCommand(Locale locale, Database database, ErrorHandler errorHandler) {
+    public WebCheckCommand(
+            Locale locale,
+            Processing processing,
+            Database database,
+            ErrorHandler errorHandler) {
         super("check", Permissions.MANAGE_WEB.getPerm(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
+        this.processing = processing;
         this.database = database;
         this.errorHandler = errorHandler;
 
@@ -49,7 +57,7 @@ public class WebCheckCommand extends CommandNode {
 
         String user = args[0];
 
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
                 if (!database.check().doesWebUserExists(user)) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));

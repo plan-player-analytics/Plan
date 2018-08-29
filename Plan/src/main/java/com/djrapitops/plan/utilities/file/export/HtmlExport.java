@@ -9,6 +9,7 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
@@ -39,6 +40,9 @@ import java.util.*;
 public class HtmlExport extends SpecificExport {
 
     private final PlanPlugin plugin;
+    private final Theme theme;
+    private final Processing processing;
+    private final FileSystem fileSystem;
     private final Database database;
     private final PageFactory pageFactory;
     private final ConnectionSystem connectionSystem;
@@ -48,6 +52,9 @@ public class HtmlExport extends SpecificExport {
     public HtmlExport(
             PlanPlugin plugin,
             PlanConfig config,
+            Theme theme,
+            Processing processing,
+            FileSystem fileSystem,
             Database database,
             PageFactory pageFactory,
             ServerInfo serverInfo,
@@ -56,18 +63,13 @@ public class HtmlExport extends SpecificExport {
     ) {
         super(config, serverInfo);
         this.plugin = plugin;
+        this.theme = theme;
+        this.processing = processing;
+        this.fileSystem = fileSystem;
         this.database = database;
         this.pageFactory = pageFactory;
         this.connectionSystem = connectionSystem;
         this.errorHandler = errorHandler;
-    }
-
-    @Deprecated
-    public static void exportServer_Old(UUID serverUUID) {
-    }
-
-    @Deprecated
-    public static void exportPlayer_Old(UUID playerUUID) {
     }
 
     public void exportServer(UUID serverUUID) {
@@ -75,7 +77,7 @@ public class HtmlExport extends SpecificExport {
             return;
         }
         Optional<String> serverName = database.fetch().getServerName(serverUUID);
-        serverName.ifPresent(name -> Processing.submitNonCritical(() -> {
+        serverName.ifPresent(name -> processing.submitNonCritical(() -> {
             try {
                 exportAvailableServerPage(serverUUID, name);
             } catch (IOException e) {
@@ -90,7 +92,7 @@ public class HtmlExport extends SpecificExport {
         }
         String playerName = database.fetch().getPlayerName(uuid);
         if (playerName != null) {
-            Processing.submitNonCritical(() -> {
+            processing.submitNonCritical(() -> {
                 try {
                     exportAvailablePlayerPage(uuid, playerName);
                 } catch (IOException e) {
@@ -184,8 +186,8 @@ public class HtmlExport extends SpecificExport {
         copyFromJar(resources);
 
         try {
-            String demo = FileUtil.getStringFromResource("web/js/demo.js")
-                    .replace("${defaultTheme}", Theme.getValue_Old(ThemeVal.THEME_DEFAULT));
+            String demo = fileSystem.readFromResourceFlat("web/js/demo.js")
+                    .replace("${defaultTheme}", theme.getValue(ThemeVal.THEME_DEFAULT));
             List<String> lines = Arrays.asList(demo.split("\n"));
             File outputFolder = new File(this.outputFolder, "js");
             Verify.isTrue(outputFolder.exists() && outputFolder.isDirectory() || outputFolder.mkdirs(),

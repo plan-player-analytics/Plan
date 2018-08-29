@@ -6,7 +6,9 @@ import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
@@ -14,6 +16,7 @@ import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Country;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,31 +37,44 @@ import java.util.zip.GZIPInputStream;
  * @author Fuzzlemann
  * @since 3.5.5
  */
+@Singleton
 public class GeolocationCache implements SubSystem {
 
     private final Locale locale;
+    private final FileSystem fileSystem;
+    private final PlanConfig config;
+    private final PluginLogger logger;
     private final Map<String, String> cached;
+
     private File geolocationDB;
 
     @Inject
-    public GeolocationCache(Locale locale) {
+    public GeolocationCache(
+            Locale locale,
+            FileSystem fileSystem,
+            PlanConfig config,
+            PluginLogger logger
+    ) {
         this.locale = locale;
+        this.fileSystem = fileSystem;
+        this.config = config;
+        this.logger = logger;
         cached = new HashMap<>();
     }
 
     @Override
     public void enable() throws EnableException {
-        geolocationDB = new File(FileSystem.getDataFolder_Old(), "GeoIP.dat");
-        if (Settings.DATA_GEOLOCATIONS.isTrue()) {
+        geolocationDB = fileSystem.getFileFromPluginFolder("GeoIP.dat");
+        if (config.isTrue(Settings.DATA_GEOLOCATIONS)) {
             try {
                 GeolocationCache.checkDB();
             } catch (UnknownHostException e) {
-                Log.error(locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED));
+                logger.error(locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED));
             } catch (IOException e) {
                 throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_GEODB_WRITE), e);
             }
         } else {
-            Log.infoColor("§e" + locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_DISABLED));
+            logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_DISABLED));
         }
     }
 

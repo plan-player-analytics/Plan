@@ -32,6 +32,7 @@ import java.util.UUID;
 public class CacheInspectPageRequest extends InfoRequestWithVariables implements CacheRequest {
 
     private final PlanConfig config;
+    private final Processing processing;
     private final ServerInfo serverInfo;
     private final HtmlExport htmlExport;
 
@@ -40,10 +41,12 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
 
     CacheInspectPageRequest(
             PlanConfig config,
+            Processing processing,
             ServerInfo serverInfo,
             HtmlExport htmlExport
     ) {
         this.config = config;
+        this.processing = processing;
         this.serverInfo = serverInfo;
         this.htmlExport = htmlExport;
     }
@@ -51,10 +54,12 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
     CacheInspectPageRequest(
             UUID player, String html,
             PlanConfig config,
+            Processing processing,
             ServerInfo serverInfo,
             HtmlExport htmlExport
     ) {
         this.config = config;
+        this.processing = processing;
         this.serverInfo = serverInfo;
         this.htmlExport = htmlExport;
 
@@ -85,7 +90,7 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
     private void cache(UUID uuid, String html) {
         ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
         if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
-            Processing.submitNonCritical(() -> htmlExport.exportPlayer(uuid));
+            processing.submitNonCritical(() -> htmlExport.exportPlayer(uuid));
         }
     }
 

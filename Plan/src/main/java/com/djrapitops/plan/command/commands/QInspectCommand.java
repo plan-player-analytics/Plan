@@ -27,6 +27,7 @@ import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,21 +39,25 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 1.0.0
  */
+@Singleton
 public class QInspectCommand extends CommandNode {
 
     private final Locale locale;
     private final Database database;
-    private UUIDUtility uuidUtility;
+    private final Processing processing;
+    private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
     @Inject
     public QInspectCommand(
             Locale locale,
+            Processing processing,
             Database database,
             UUIDUtility uuidUtility,
             ErrorHandler errorHandler
     ) {
         super("qinspect", Permissions.QUICK_INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
+        this.processing = processing;
         setArguments("<player>");
 
         this.locale = locale;
@@ -77,7 +82,7 @@ public class QInspectCommand extends CommandNode {
     }
 
     private void runInspectTask(String playerName, ISender sender) {
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
                 UUID uuid = uuidUtility.getUUIDOf(playerName);
                 if (uuid == null) {

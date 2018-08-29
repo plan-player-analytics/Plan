@@ -21,6 +21,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -31,18 +32,26 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.3.0
  */
+@Singleton
 public class ManageBackupCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final DBSystem dbSystem;
-    private SQLiteDB.Factory sqliteFactory;
+    private final SQLiteDB.Factory sqliteFactory;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public ManageBackupCommand(Locale locale, DBSystem dbSystem, SQLiteDB.Factory sqliteFactory, ErrorHandler errorHandler) {
+    public ManageBackupCommand(
+            Locale locale,
+            Processing processing,
+            DBSystem dbSystem,
+            SQLiteDB.Factory sqliteFactory,
+            ErrorHandler errorHandler) {
         super("backup", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
+        this.processing = processing;
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
         this.errorHandler = errorHandler;
@@ -75,7 +84,7 @@ public class ManageBackupCommand extends CommandNode {
     }
 
     private void runBackupTask(ISender sender, String[] args, Database database) {
-        Processing.submitCritical(() -> {
+        processing.submitCritical(() -> {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
                 createNewBackup(args[0], database);

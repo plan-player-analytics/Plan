@@ -40,6 +40,7 @@ public class NetworkSettings {
     private static final String VAL_SPLIT = ";;VALUE;;";
 
     private final Lazy<PlanConfig> config;
+    private final Processing processing;
     private final Lazy<Database> database;
     private final Lazy<ServerInfo> serverInfo;
     private final PluginLogger logger;
@@ -50,6 +51,7 @@ public class NetworkSettings {
     public NetworkSettings(
             Lazy<PlanConfig> config,
             ServerSpecificSettings serverSpecificSettings,
+            Processing processing,
             Lazy<Database> database,
             Lazy<ServerInfo> serverInfo,
             PluginLogger logger,
@@ -57,6 +59,7 @@ public class NetworkSettings {
     ) {
         this.config = config;
         this.serverSpecificSettings = serverSpecificSettings;
+        this.processing = processing;
         this.database = database;
         this.serverInfo = serverInfo;
         this.logger = logger;
@@ -74,7 +77,7 @@ public class NetworkSettings {
             return;
         }
 
-        Processing.submitNonCritical(this::loadFromDatabase);
+        processing.submitNonCritical(this::loadFromDatabase);
     }
 
     public void placeSettingsToDB() {
@@ -82,7 +85,7 @@ public class NetworkSettings {
             return;
         }
 
-        Processing.submitCritical(this::placeToDatabase);
+        processing.submitNonCritical(this::placeToDatabase);
     }
 
     void loadFromDatabase() {

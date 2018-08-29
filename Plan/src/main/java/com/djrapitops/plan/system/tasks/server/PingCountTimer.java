@@ -38,6 +38,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
@@ -52,6 +54,7 @@ import java.util.*;
  *
  * @author games647
  */
+@Singleton
 public class PingCountTimer extends AbsRunnable implements Listener {
 
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
@@ -88,9 +91,16 @@ public class PingCountTimer extends AbsRunnable implements Listener {
     }
 
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
+
+    private final Processing processing;
     private final RunnableFactory runnableFactory;
 
-    public PingCountTimer(RunnableFactory runnableFactory) {
+    @Inject
+    public PingCountTimer(
+            Processing processing,
+            RunnableFactory runnableFactory
+    ) {
+        this.processing = processing;
         this.runnableFactory = runnableFactory;
         playerHistory = new HashMap<>();
     }
@@ -119,7 +129,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
                 }
                 history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
-                    Processing.submit(new PingInsertProcessor(uuid, new ArrayList<>(history)));
+                    processing.submit(new PingInsertProcessor(uuid, new ArrayList<>(history)));
                     history.clear();
                 }
             } else {

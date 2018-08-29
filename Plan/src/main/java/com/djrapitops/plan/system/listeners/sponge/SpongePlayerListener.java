@@ -33,12 +33,19 @@ import java.util.UUID;
  */
 public class SpongePlayerListener {
 
+    private final Processing processing;
     private SessionCache sessionCache;
     private RunnableFactory runnableFactory;
     private ErrorHandler errorHandler;
 
     @Inject
-    public SpongePlayerListener(SessionCache sessionCache, RunnableFactory runnableFactory, ErrorHandler errorHandler) {
+    public SpongePlayerListener(
+            Processing processing,
+            SessionCache sessionCache,
+            RunnableFactory runnableFactory,
+            ErrorHandler errorHandler
+    ) {
+        this.processing = processing;
         this.sessionCache = sessionCache;
         this.runnableFactory = runnableFactory;
         this.errorHandler = errorHandler;
@@ -57,14 +64,14 @@ public class SpongePlayerListener {
         GameProfile profile = event.getProfile();
         UUID uuid = profile.getUniqueId();
         boolean banned = isBanned(profile);
-        Processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
+        processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
     }
 
     @Listener(order = Order.POST)
     public void onKick(KickPlayerEvent event) {
         try {
             UUID uuid = event.getTargetEntity().getUniqueId();
-            Processing.submit(new KickProcessor(uuid));
+            processing.submit(new KickProcessor(uuid));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -117,7 +124,7 @@ public class SpongePlayerListener {
                         new PlayerPageUpdateProcessor(uuid)
                 )
         ).runTaskAsynchronously();
-        Processing.submit(new NetworkPageUpdateProcessor());
+        processing.submit(new NetworkPageUpdateProcessor());
     }
 
     @Listener(order = Order.POST)
@@ -137,9 +144,9 @@ public class SpongePlayerListener {
         SpongeAFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
         boolean banned = isBanned(player.getProfile());
-        Processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
-        Processing.submit(new EndSessionProcessor(uuid, time));
-        Processing.submit(new NetworkPageUpdateProcessor());
-        Processing.submit(new PlayerPageUpdateProcessor(uuid));
+        processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
+        processing.submit(new EndSessionProcessor(uuid, time));
+        processing.submit(new NetworkPageUpdateProcessor());
+        processing.submit(new PlayerPageUpdateProcessor(uuid));
     }
 }

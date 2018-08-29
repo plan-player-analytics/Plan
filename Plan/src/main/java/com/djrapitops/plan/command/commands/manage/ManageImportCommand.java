@@ -15,6 +15,7 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 
 /**
@@ -23,15 +24,21 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 2.3.0
  */
+@Singleton
 public class ManageImportCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
 
     @Inject
-    public ManageImportCommand(Locale locale) {
+    public ManageImportCommand(
+            Locale locale,
+            Processing processing
+    ) {
         super("import", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
+        this.processing = processing;
 
         setArguments("<plugin>/list", "[import args]");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_IMPORT));
@@ -60,6 +67,6 @@ public class ManageImportCommand extends CommandNode {
             return;
         }
 
-        Processing.submitNonCritical(importer::processImport);
+        processing.submitNonCritical(importer::processImport);
     }
 }

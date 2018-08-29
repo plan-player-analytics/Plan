@@ -20,10 +20,15 @@ import java.util.UUID;
  */
 public class ChatListener implements Listener {
 
+    private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public ChatListener(ErrorHandler errorHandler) {
+    public ChatListener(
+            Processing processing,
+            ErrorHandler errorHandler
+    ) {
+        this.processing = processing;
         this.errorHandler = errorHandler;
     }
 
@@ -45,6 +50,6 @@ public class ChatListener implements Listener {
         UUID uuid = p.getUniqueId();
         String name = p.getName();
         String displayName = p.getDisplayName();
-        Processing.submit(new NameProcessor(uuid, name, displayName));
+        processing.submit(new NameProcessor(uuid, name, displayName));
     }
 }

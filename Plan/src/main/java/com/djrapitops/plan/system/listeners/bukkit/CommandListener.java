@@ -23,11 +23,17 @@ import javax.inject.Inject;
 public class CommandListener implements Listener {
 
     private final Plan plugin;
+    private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public CommandListener(Plan plugin, ErrorHandler errorHandler) {
+    public CommandListener(
+            Plan plugin,
+            Processing processing,
+            ErrorHandler errorHandler
+    ) {
         this.plugin = plugin;
+        this.processing = processing;
         this.errorHandler = errorHandler;
     }
 
@@ -61,7 +67,7 @@ public class CommandListener implements Listener {
                 commandName = command.getName();
             }
         }
-        Processing.submit(new CommandProcessor(commandName));
+        processing.submit(new CommandProcessor(commandName));
     }
 
     private Command getBukkitCommand(String commandName) {

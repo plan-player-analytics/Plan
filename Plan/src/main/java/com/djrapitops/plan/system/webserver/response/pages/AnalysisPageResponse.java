@@ -20,9 +20,10 @@ import java.util.UUID;
  */
 public class AnalysisPageResponse extends Response {
 
+    // TODO Split responsibility so that this method does not call system to refresh and also render a refresh page.
     @Deprecated
-    public static AnalysisPageResponse refreshNow(UUID serverUUID, InfoSystem infoSystem) {
-        Processing.submitNonCritical(() -> {
+    public static AnalysisPageResponse refreshNow(UUID serverUUID, Processing processing, InfoSystem infoSystem) {
+        processing.submitNonCritical(() -> {
             try {
                 infoSystem.generateAnalysisPage(serverUUID);
             } catch (NoServersException | ConnectionFailException e) {

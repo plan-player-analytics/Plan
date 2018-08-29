@@ -21,6 +21,7 @@ import javax.inject.Inject;
 public class BukkitTaskSystem extends ServerTaskSystem {
 
     private final Plan plugin;
+    private final PingCountTimer pingCountTimer;
 
     @Inject
     public BukkitTaskSystem(
@@ -31,7 +32,8 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             BukkitTPSCountTimer bukkitTPSCountTimer,
             NetworkPageRefreshTask networkPageRefreshTask,
             BootAnalysisTask bootAnalysisTask,
-            PeriodicAnalysisTask periodicAnalysisTask
+            PeriodicAnalysisTask periodicAnalysisTask,
+            PingCountTimer pingCountTimer
     ) {
         super(
                 runnableFactory,
@@ -44,14 +46,13 @@ public class BukkitTaskSystem extends ServerTaskSystem {
                 periodicAnalysisTask
         );
         this.plugin = plugin;
+        this.pingCountTimer = pingCountTimer;
     }
 
     @Override
     public void enable() {
         super.enable();
         try {
-            PingCountTimer pingCountTimer = new PingCountTimer(runnableFactory);
-
             plugin.registerListener(pingCountTimer);
             registerTask("PingCountTimer", pingCountTimer)
                     .runTaskTimer(20L, PingCountTimer.PING_INTERVAL);

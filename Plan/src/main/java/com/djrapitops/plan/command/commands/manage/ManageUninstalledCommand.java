@@ -18,6 +18,7 @@ import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,19 +29,31 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.0.0
  */
+@Singleton
 public class ManageUninstalledCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final Database database;
     private final ErrorHandler errorHandler;
+    private final ServerInfo serverInfo;
     private final ConnectionSystem connectionSystem;
 
     @Inject
-    public ManageUninstalledCommand(Locale locale, Database database, ConnectionSystem connectionSystem, ErrorHandler errorHandler) {
+    public ManageUninstalledCommand(
+            Locale locale,
+            Processing processing,
+            Database database,
+            ServerInfo serverInfo,
+            ConnectionSystem connectionSystem,
+            ErrorHandler errorHandler
+    ) {
         super("uninstalled", Permissions.MANAGE.getPermission(), CommandType.ALL_WITH_ARGS);
 
         this.locale = locale;
+        this.processing = processing;
         this.database = database;
+        this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
         this.errorHandler = errorHandler;
 
@@ -53,7 +66,7 @@ public class ManageUninstalledCommand extends CommandNode {
     public void onCommand(ISender sender, String commandLabel, String[] args) {
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
                 Optional<Server> serverOptional = getServer(args);
                 if (!serverOptional.isPresent()) {
@@ -62,7 +75,7 @@ public class ManageUninstalledCommand extends CommandNode {
                 }
                 Server server = serverOptional.get();
                 UUID serverUUID = server.getUuid();
-                if (ServerInfo.getServerUUID_Old().equals(serverUUID)) {
+                if (serverInfo.getServerUUID().equals(serverUUID)) {
                     sender.sendMessage(locale.getString(ManageLang.UNINSTALLING_SAME_SERVER));
                     return;
                 }

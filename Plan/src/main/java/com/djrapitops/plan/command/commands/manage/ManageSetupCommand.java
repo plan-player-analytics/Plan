@@ -19,6 +19,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 
 /**
@@ -27,20 +28,30 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 2.3.0
  */
+@Singleton
 public class ManageSetupCommand extends CommandNode {
 
     private final Locale locale;
     private final PlanConfig config;
+    private final Processing processing;
     private final InfoSystem infoSystem;
     private final WebServer webServer;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public ManageSetupCommand(Locale locale, PlanConfig config, InfoSystem infoSystem, WebServer webServer, ErrorHandler errorHandler) {
+    public ManageSetupCommand(
+            Locale locale,
+            PlanConfig config,
+            Processing processing,
+            InfoSystem infoSystem,
+            WebServer webServer,
+            ErrorHandler errorHandler
+    ) {
         super("setup", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
         this.config = config;
+        this.processing = processing;
         this.infoSystem = infoSystem;
         this.webServer = webServer;
         this.errorHandler = errorHandler;
@@ -72,7 +83,7 @@ public class ManageSetupCommand extends CommandNode {
     }
 
     private void requestSetup(ISender sender, String address) {
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
                 config.set(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE, false);
                 config.set(Settings.BUNGEE_COPY_CONFIG, true);

@@ -33,16 +33,19 @@ import java.util.UUID;
  */
 public class PlayerOnlineListener implements Listener {
 
+    private final Processing processing;
     private final SessionCache sessionCache;
     private final ServerInfo serverInfo;
     private final ErrorHandler errorHandler;
 
     @Inject
     public PlayerOnlineListener(
+            Processing processing,
             SessionCache sessionCache,
             ServerInfo serverInfo,
             ErrorHandler errorHandler
     ) {
+        this.processing = processing;
         this.sessionCache = sessionCache;
         this.serverInfo = serverInfo;
         this.errorHandler = errorHandler;
@@ -59,10 +62,10 @@ public class PlayerOnlineListener implements Listener {
 
             sessionCache.cacheSession(uuid, new Session(uuid, now, "", ""));
 
-            Processing.submit(new BungeePlayerRegisterProcessor(uuid, name, now,
+            processing.submit(new BungeePlayerRegisterProcessor(uuid, name, now,
                     new IPUpdateProcessor(uuid, address, now))
             );
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
+            processing.submit(new PlayerPageUpdateProcessor(uuid));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
@@ -76,7 +79,7 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = player.getUniqueId();
 
             sessionCache.endSession(uuid, System.currentTimeMillis());
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
+            processing.submit(new PlayerPageUpdateProcessor(uuid));
             ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
@@ -92,7 +95,7 @@ public class PlayerOnlineListener implements Listener {
             long now = System.currentTimeMillis();
             // Replaces the current session in the cache.
             sessionCache.cacheSession(uuid, new Session(uuid, now, "", ""));
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
+            processing.submit(new PlayerPageUpdateProcessor(uuid));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }

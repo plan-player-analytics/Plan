@@ -20,10 +20,15 @@ import java.util.UUID;
  */
 public class SpongeChatListener {
 
+    private final Processing processing;
     private ErrorHandler errorHandler;
 
     @Inject
-    public SpongeChatListener(ErrorHandler errorHandler) {
+    public SpongeChatListener(
+            Processing processing,
+            ErrorHandler errorHandler
+    ) {
+        this.processing = processing;
         this.errorHandler = errorHandler;
     }
 
@@ -44,7 +49,7 @@ public class SpongeChatListener {
         UUID uuid = player.getUniqueId();
         String name = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
-        Processing.submit(new NameProcessor(uuid, name, displayName));
+        processing.submit(new NameProcessor(uuid, name, displayName));
     }
 
 }

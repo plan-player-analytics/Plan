@@ -27,10 +27,15 @@ import javax.inject.Inject;
  */
 public class DeathEventListener implements Listener {
 
+    private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public DeathEventListener(ErrorHandler errorHandler) {
+    public DeathEventListener(
+            Processing processing,
+            ErrorHandler errorHandler
+    ) {
+        this.processing = processing;
         this.errorHandler = errorHandler;
     }
 
@@ -42,7 +47,7 @@ public class DeathEventListener implements Listener {
 
         if (dead instanceof Player) {
             // Process Death
-            Processing.submitCritical(() -> SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(Session::died));
+            SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(Session::died);
         }
 
         try {
@@ -70,7 +75,7 @@ public class DeathEventListener implements Listener {
             processor = handleProjectileKill(time, dead, (Projectile) killerEntity);
         }
         if (processor != null) {
-            Processing.submit(processor);
+            processing.submit(processor);
         }
     }
 

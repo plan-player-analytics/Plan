@@ -67,7 +67,7 @@ public class PlanSystem implements SubSystem {
             InfoSystem infoSystem,
             ServerInfo serverInfo,
             WebServerSystem webServerSystem,
-            //Processing processing,
+            Processing processing,
             ExportSystem exportSystem,
             HookHandler hookHandler,
             PlanAPI planAPI
@@ -83,7 +83,7 @@ public class PlanSystem implements SubSystem {
         this.infoSystem = infoSystem;
         this.serverInfo = serverInfo;
         this.webServerSystem = webServerSystem;
-        this.processing = new Processing(localeSystem::getLocale);
+        this.processing = processing;
         this.exportSystem = exportSystem;
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;

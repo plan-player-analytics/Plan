@@ -24,10 +24,15 @@ import java.util.Optional;
  */
 public class SpongeCommandListener {
 
+    private final Processing processing;
     private ErrorHandler errorHandler;
 
     @Inject
-    public SpongeCommandListener(ErrorHandler errorHandler) {
+    public SpongeCommandListener(
+            Processing processing,
+            ErrorHandler errorHandler
+    ) {
+        this.processing = processing;
         this.errorHandler = errorHandler;
     }
 
@@ -60,7 +65,7 @@ public class SpongeCommandListener {
                 commandName = existingCommand.get().getPrimaryAlias();
             }
         }
-        Processing.submit(new CommandProcessor(commandName));
+        processing.submit(new CommandProcessor(commandName));
     }
 
 }

@@ -19,12 +19,15 @@ import java.util.List;
 public abstract class TPSCountTimer extends AbsRunnable {
 
     protected final List<TPS> history;
+
+    protected final Processing processing;
     protected final PluginLogger logger;
     protected final ErrorHandler errorHandler;
 
     protected int latestPlayersOnline = 0;
 
-    public TPSCountTimer(PluginLogger logger, ErrorHandler errorHandler) {
+    public TPSCountTimer(Processing processing, PluginLogger logger, ErrorHandler errorHandler) {
+        this.processing = processing;
         this.logger = logger;
         this.errorHandler = errorHandler;
         history = new ArrayList<>();
@@ -39,7 +42,7 @@ public abstract class TPSCountTimer extends AbsRunnable {
             addNewTPSEntry(nanoTime, now);
 
             if (history.size() >= 60) {
-                Processing.submit(new TPSInsertProcessor(new ArrayList<>(history)));
+                processing.submit(new TPSInsertProcessor(new ArrayList<>(history)));
                 history.clear();
             }
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {

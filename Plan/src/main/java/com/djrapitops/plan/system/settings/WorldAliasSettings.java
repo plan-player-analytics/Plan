@@ -27,11 +27,17 @@ import java.util.Map;
 public class WorldAliasSettings {
 
     private final Lazy<PlanConfig> config;
+    private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public WorldAliasSettings(Lazy<PlanConfig> config, ErrorHandler errorHandler) {
+    public WorldAliasSettings(
+            Lazy<PlanConfig> config,
+            Processing processing,
+            ErrorHandler errorHandler
+    ) {
         this.config = config;
+        this.processing = processing;
         this.errorHandler = errorHandler;
     }
 
@@ -77,7 +83,7 @@ public class WorldAliasSettings {
         String previousValue = aliasSect.getConfigNode(world).getValue();
         if (Verify.isEmpty(previousValue)) {
             aliasSect.set(world, world);
-            Processing.submitNonCritical(() -> {
+            processing.submitNonCritical(() -> {
                 try {
                     aliasSect.save();
                 } catch (IOException e) {

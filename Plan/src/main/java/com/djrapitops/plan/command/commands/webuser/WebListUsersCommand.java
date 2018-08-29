@@ -16,6 +16,7 @@ import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
@@ -24,17 +25,25 @@ import java.util.List;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Singleton
 public class WebListUsersCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final Database database;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public WebListUsersCommand(Locale locale, Database database, ErrorHandler errorHandler) {
+    public WebListUsersCommand(
+            Locale locale,
+            Processing processing,
+            Database database,
+            ErrorHandler errorHandler
+    ) {
         super("list", Permissions.MANAGE_WEB.getPerm(), CommandType.CONSOLE);
 
         this.locale = locale;
+        this.processing = processing;
         this.database = database;
         this.errorHandler = errorHandler;
 
@@ -43,7 +52,7 @@ public class WebListUsersCommand extends CommandNode {
 
     @Override
     public void onCommand(ISender sender, String commandLabel, String[] args) {
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
                 List<WebUser> users = database.fetch().getWebUsers();
                 users.sort(new WebUserComparator());

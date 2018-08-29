@@ -31,16 +31,25 @@ import java.util.Arrays;
 public class ManageRestoreCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
-    private SQLiteDB.Factory sqliteFactory;
+    private final SQLiteDB.Factory sqliteFactory;
     private final FileSystem fileSystem;
 
     @Inject
-    public ManageRestoreCommand(Locale locale, DBSystem dbSystem, SQLiteDB.Factory sqliteFactory, FileSystem fileSystem, ErrorHandler errorHandler) {
+    public ManageRestoreCommand(
+            Locale locale,
+            Processing processing,
+            DBSystem dbSystem,
+            SQLiteDB.Factory sqliteFactory,
+            FileSystem fileSystem,
+            ErrorHandler errorHandler
+    ) {
         super("restore", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
+        this.processing = processing;
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
         this.fileSystem = fileSystem;
@@ -82,7 +91,7 @@ public class ManageRestoreCommand extends CommandNode {
     }
 
     private void runRestoreTask(String backupDbName, ISender sender, Database database) {
-        Processing.submitCritical(() -> {
+        processing.submitCritical(() -> {
             try {
                 String backupDBName = backupDbName;
                 boolean containsDBFileExtension = backupDBName.endsWith(".db");

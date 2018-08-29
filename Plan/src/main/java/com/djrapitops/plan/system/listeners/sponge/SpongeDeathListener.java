@@ -34,10 +34,15 @@ import java.util.UUID;
  */
 public class SpongeDeathListener {
 
+    private final Processing processing;
     private ErrorHandler errorHandler;
 
     @Inject
-    public SpongeDeathListener(ErrorHandler errorHandler) {
+    public SpongeDeathListener(
+            Processing processing,
+            ErrorHandler errorHandler
+    ) {
+        this.processing = processing;
         this.errorHandler = errorHandler;
     }
 
@@ -48,7 +53,7 @@ public class SpongeDeathListener {
 
         if (dead instanceof Player) {
             // Process Death
-            Processing.submitCritical(() -> SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(Session::died));
+            SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(Session::died);
         }
 
         try {
@@ -73,7 +78,7 @@ public class SpongeDeathListener {
             processor = handleProjectileKill(time, dead, (Projectile) killerEntity);
         }
         if (processor != null) {
-            Processing.submit(processor);
+            processing.submit(processor);
         }
     }
 

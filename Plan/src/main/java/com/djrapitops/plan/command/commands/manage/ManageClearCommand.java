@@ -19,6 +19,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 
 /**
@@ -27,17 +28,25 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 2.3.0
  */
+@Singleton
 public class ManageClearCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public ManageClearCommand(Locale locale, DBSystem dbSystem, ErrorHandler errorHandler) {
+    public ManageClearCommand(
+            Locale locale,
+            Processing processing,
+            DBSystem dbSystem,
+            ErrorHandler errorHandler
+    ) {
         super("clear", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
+        this.processing = processing;
         this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
 
@@ -72,7 +81,7 @@ public class ManageClearCommand extends CommandNode {
     }
 
     private void runClearTask(ISender sender, Database database) {
-        Processing.submitCritical(() -> {
+        processing.submitCritical(() -> {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 

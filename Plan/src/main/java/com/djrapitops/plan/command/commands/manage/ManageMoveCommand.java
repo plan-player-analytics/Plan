@@ -17,6 +17,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 
 /**
@@ -27,17 +28,25 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 2.3.0
  */
+@Singleton
 public class ManageMoveCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public ManageMoveCommand(Locale locale, DBSystem dbSystem, ErrorHandler errorHandler) {
+    public ManageMoveCommand(
+            Locale locale,
+            Processing processing,
+            DBSystem dbSystem,
+            ErrorHandler errorHandler
+    ) {
         super("move", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
+        this.processing = processing;
         this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
 
@@ -82,7 +91,7 @@ public class ManageMoveCommand extends CommandNode {
     }
 
     private void runMoveTask(final Database fromDatabase, final Database toDatabase, ISender sender) {
-        Processing.submitCritical(() -> {
+        processing.submitCritical(() -> {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 

@@ -20,6 +20,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 
 /**
@@ -33,20 +34,28 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Singleton
 public class RegisterCommand extends CommandNode {
 
     private final String notEnoughArgsMsg;
     private final Locale locale;
-    private final PluginLogger logger;
+    private final Processing processing;
     private final Database database;
+    private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public RegisterCommand(Locale locale, PluginLogger logger, Database database, ErrorHandler errorHandler) {
+    public RegisterCommand(
+            Locale locale,
+            Processing processing,
+            Database database,
+            PluginLogger logger,
+            ErrorHandler errorHandler) {
         // No Permission Requirement
         super("register", "", CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
+        this.processing = processing;
         this.logger = logger;
         this.database = database;
         this.errorHandler = errorHandler;
@@ -119,7 +128,7 @@ public class RegisterCommand extends CommandNode {
     }
 
     private void registerUser(WebUser webUser, ISender sender) {
-        Processing.submitCritical(() -> {
+        processing.submitCritical(() -> {
             String userName = webUser.getName();
             try {
                 boolean userExists = database.check().doesWebUserExists(userName);

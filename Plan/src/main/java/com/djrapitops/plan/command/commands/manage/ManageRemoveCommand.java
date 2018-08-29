@@ -19,6 +19,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -28,16 +29,19 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ManageRemoveCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
     private final Database database;
-    private UUIDUtility uuidUtility;
+    private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
     @Inject
     public ManageRemoveCommand(
             Locale locale,
+            Processing processing,
             Database database,
             UUIDUtility uuidUtility,
             ErrorHandler errorHandler
@@ -45,6 +49,7 @@ public class ManageRemoveCommand extends CommandNode {
         super("remove|delete", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
+        this.processing = processing;
         this.database = database;
         this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
@@ -70,7 +75,7 @@ public class ManageRemoveCommand extends CommandNode {
     }
 
     private void runRemoveTask(String playerName, ISender sender, String[] args) {
-        Processing.submitCritical(() -> {
+        processing.submitCritical(() -> {
             try {
                 UUID uuid = uuidUtility.getUUIDOf(playerName);
 
