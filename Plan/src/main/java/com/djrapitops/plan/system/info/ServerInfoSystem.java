@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
@@ -33,9 +34,10 @@ public class ServerInfoSystem extends InfoSystem {
             ConnectionSystem connectionSystem,
             ServerInfo serverInfo,
             InfoRequestFactory infoRequestFactory,
+            WebServer webServer,
             PluginLogger logger
     ) {
-        super(infoRequestFactory, connectionSystem);
+        super(infoRequestFactory, connectionSystem, serverInfo, webServer, logger);
         this.serverInfo = serverInfo;
         this.logger = logger;
     }

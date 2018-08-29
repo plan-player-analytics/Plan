@@ -97,7 +97,11 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            new BStatsBungee(this).registerMetrics();
+            new BStatsBungee(
+                    this,
+                    system.getDatabaseSystem().getActiveDatabase(),
+                    system.getInfoSystem().getConnectionSystem()
+            ).registerMetrics();
 
             logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {

@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.WideRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.utilities.Verify;
 import dagger.Lazy;
 
 import java.util.*;
@@ -46,13 +45,6 @@ public abstract class ConnectionSystem implements SubSystem {
         setupAllowed = false;
         bukkitServers = new HashMap<>();
         this.dataRequests = dataRequests;
-    }
-
-    @Deprecated
-    public static ConnectionSystem getInstance() {
-        ConnectionSystem connectionSystem = InfoSystem.getInstance().getConnectionSystem();
-        Verify.nullCheck(connectionSystem, () -> new IllegalStateException("Connection System was not initialized"));
-        return connectionSystem;
     }
 
     public InfoRequest getInfoRequest(String name) {

@@ -120,7 +120,10 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            new BStatsSponge(metrics).registerMetrics();
+            new BStatsSponge(
+                    metrics,
+                    system.getDatabaseSystem().getActiveDatabase()
+            ).registerMetrics();
 
             logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {

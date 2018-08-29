@@ -2,6 +2,7 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -33,7 +34,8 @@ public class InspectCommand extends CommandNode {
     private final Locale locale;
     private final Database database;
     private final WebServer webServer;
-    private UUIDUtility uuidUtility;
+    private final ConnectionSystem connectionSystem;
+    private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -41,10 +43,12 @@ public class InspectCommand extends CommandNode {
             Locale locale,
             Database database,
             WebServer webServer,
+            ConnectionSystem connectionSystem,
             UUIDUtility uuidUtility,
             ErrorHandler errorHandler
     ) {
         super("inspect", Permissions.INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
+        this.connectionSystem = connectionSystem;
         setArguments("<player>");
 
         this.locale = locale;
@@ -83,7 +87,7 @@ public class InspectCommand extends CommandNode {
                 }
 
                 checkWebUserAndNotify(sender);
-                Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName, locale));
+                Processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName, this::sendInspectMsg));
             } catch (DBOpException e) {
                 sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
                 errorHandler.log(L.ERROR, this.getClass(), e);
@@ -99,5 +103,22 @@ public class InspectCommand extends CommandNode {
                 sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
             }
         }
+    }
+
+    private void sendInspectMsg(ISender sender, String playerName) {
+        sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
+
+        String url = connectionSystem.getMainAddress() + "/player/" + playerName;
+        String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
+
+        boolean console = !CommandUtils.isPlayer(sender);
+        if (console) {
+            sender.sendMessage(linkPrefix + url);
+        } else {
+            sender.sendMessage(linkPrefix);
+            sender.sendLink("   ", locale.getString(CommandLang.LINK_CLICK_ME), url);
+        }
+
+        sender.sendMessage(">");
     }
 }

@@ -6,8 +6,12 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.utilities.java.ThrowingVoidFunction;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,31 +22,45 @@ import java.util.Map;
  *
  * @author Rsl1122
  */
+@Singleton
 public class WebExceptionLogger {
 
-    @Deprecated
-    public static void logIfOccurs(Class c, ThrowingVoidFunction<WebException> function) {
+    private final ConnectionLog connectionLog;
+    private final PluginLogger logger;
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public WebExceptionLogger(
+            ConnectionLog connectionLog,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        this.connectionLog = connectionLog;
+        this.logger = logger;
+        this.errorHandler = errorHandler;
+    }
+
+    public void logIfOccurs(Class definingClass, ThrowingVoidFunction<WebException> function) {
         try {
             function.apply();
         } catch (ConnectionFailException e) {
             if (shouldLog(e)) {
-                Log.debug(e.getMessage());
+                logger.debug(e.getMessage());
             }
         } catch (UnsupportedTransferDatabaseException | UnauthorizedServerException
                 | NotFoundException | NoServersException e) {
-            Log.debug(e.getMessage());
+            logger.debug(e.getMessage());
         } catch (WebException e) {
-            Log.toLog(c, e);
+            errorHandler.log(L.WARN, definingClass, e);
         }
     }
 
-    @Deprecated
-    private static boolean shouldLog(ConnectionFailException e) {
+    private boolean shouldLog(ConnectionFailException e) {
         String address = getAddress(e);
         if (address == null) {
             return true;
         }
-        Map<String, Map<String, ConnectionLog.Entry>> logEntries = ConnectionLog.getLogEntries_Old();
+        Map<String, Map<String, ConnectionLog.Entry>> logEntries = connectionLog.getLogEntries();
         Map<String, ConnectionLog.Entry> entries = logEntries.get("Out: " + address);
         if (entries != null) {
             List<ConnectionLog.Entry> connections = new ArrayList<>(entries.values());
@@ -63,9 +81,5 @@ public class WebExceptionLogger {
             }
         }
         return null;
-    }
-
-    private WebExceptionLogger() {
-        // Static method class.
     }
 }

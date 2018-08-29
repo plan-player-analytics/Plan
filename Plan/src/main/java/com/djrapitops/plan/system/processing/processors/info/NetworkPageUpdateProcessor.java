@@ -15,10 +15,12 @@ import com.djrapitops.plugin.api.utility.log.Log;
  */
 public class NetworkPageUpdateProcessor implements Runnable {
 
+    private InfoSystem infoSystem;
+
     @Override
     public void run() {
         try {
-            InfoSystem.getInstance().updateNetworkPage();
+            infoSystem.updateNetworkPage();
         } catch (WebException e) {
             Log.toLog(this.getClass(), e);
         }

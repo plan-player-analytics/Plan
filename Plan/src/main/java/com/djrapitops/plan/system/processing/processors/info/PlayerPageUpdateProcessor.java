@@ -13,20 +13,23 @@ public class PlayerPageUpdateProcessor implements Runnable {
 
     private final UUID uuid;
 
+    private InfoSystem infoSystem;
+    private WebExceptionLogger webExceptionLogger;
+
     public PlayerPageUpdateProcessor(UUID uuid) {
         this.uuid = uuid;
     }
 
     @Override
     public void run() {
-        if (!InfoSystem.getInstance().getConnectionSystem().isServerAvailable() || Check.isBungeeAvailable()) {
+        if (!infoSystem.getConnectionSystem().isServerAvailable() || Check.isBungeeAvailable()) {
             RunnableFactory.createNew("Generate Inspect page: " + uuid, new AbsRunnable() {
                 @Override
                 public void run() {
                     try {
 
-                        WebExceptionLogger.logIfOccurs(PlayerPageUpdateProcessor.class,
-                                () -> InfoSystem.getInstance().generateAndCachePlayerPage(uuid)
+                        webExceptionLogger.logIfOccurs(PlayerPageUpdateProcessor.class,
+                                () -> infoSystem.generateAndCachePlayerPage(uuid)
                         );
                     } finally {
                         cancel();

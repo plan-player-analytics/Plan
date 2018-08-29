@@ -9,7 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.GenerateRequest;
@@ -17,10 +17,9 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.util.UUID;
 
@@ -37,17 +36,22 @@ public abstract class InfoSystem implements SubSystem {
 
     protected final InfoRequestFactory infoRequestFactory;
     protected final ConnectionSystem connectionSystem;
+    protected final ServerInfo serverInfo;
+    protected final WebServer webServer;
+    protected final PluginLogger logger;
 
-    protected InfoSystem(InfoRequestFactory infoRequestFactory, ConnectionSystem connectionSystem) {
+    protected InfoSystem(
+            InfoRequestFactory infoRequestFactory,
+            ConnectionSystem connectionSystem,
+            ServerInfo serverInfo,
+            WebServer webServer,
+            PluginLogger logger
+    ) {
         this.infoRequestFactory = infoRequestFactory;
         this.connectionSystem = connectionSystem;
-    }
-
-    @Deprecated
-    public static InfoSystem getInstance() {
-        InfoSystem infoSystem = PlanSystem.getInstance().getInfoSystem();
-        Verify.nullCheck(infoSystem, () -> new IllegalStateException("Info System was not initialized."));
-        return infoSystem;
+        this.serverInfo = serverInfo;
+        this.webServer = webServer;
+        this.logger = logger;
     }
 
     /**
@@ -77,7 +81,7 @@ public abstract class InfoSystem implements SubSystem {
      */
     public void generateAnalysisPage(UUID serverUUID) throws WebException {
         GenerateRequest request = infoRequestFactory.generateAnalysisPageRequest(serverUUID);
-        if (ServerInfo.getServerUUID_Old().equals(serverUUID)) {
+        if (serverInfo.getServerUUID().equals(serverUUID)) {
             runLocally(request);
         } else {
             sendRequest(request);
@@ -95,14 +99,14 @@ public abstract class InfoSystem implements SubSystem {
     public void sendRequest(InfoRequest infoRequest) throws WebException {
         try {
             if (!connectionSystem.isServerAvailable()) {
-                Log.debug("Main server unavailable, running locally.");
+                logger.debug(DebugChannels.INFO_REQUESTS, "Main server unavailable, running locally.");
                 runLocally(infoRequest);
                 return;
             }
             connectionSystem.sendInfoRequest(infoRequest);
         } catch (WebException original) {
             try {
-                Log.debug("Exception during request: " + original.toString() + ", running locally.");
+                logger.debug(DebugChannels.INFO_REQUESTS, "Exception during request: " + original.toString() + ", running locally.");
                 runLocally(infoRequest);
             } catch (NoServersException e2) {
                 throw original;
@@ -156,7 +160,7 @@ public abstract class InfoSystem implements SubSystem {
             throw new BadRequestException("Method not available on Bungee.");
         }
         Server bungee = new Server(-1, null, "Bungee", addressToRequestServer, -1);
-        String addressOfThisServer = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        String addressOfThisServer = webServer.getAccessAddress();
 
         connectionSystem.setSetupAllowed(true);
         connectionSystem.sendInfoRequest(infoRequestFactory.sendDBSettingsRequest(addressOfThisServer), bungee);

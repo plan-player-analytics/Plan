@@ -31,7 +31,8 @@ public class BungeeConnectionSystem extends ConnectionSystem {
 
     private final Database database;
     private final WebServer webServer;
-    private ErrorHandler errorHandler;
+    private final ErrorHandler errorHandler;
+    private final WebExceptionLogger webExceptionLogger;
 
     private long latestServerMapRefresh;
 
@@ -43,12 +44,14 @@ public class BungeeConnectionSystem extends ConnectionSystem {
             InfoRequests infoRequests,
             Lazy<InfoSystem> infoSystem,
             ServerInfo serverInfo,
-            ErrorHandler errorHandler
+            ErrorHandler errorHandler,
+            WebExceptionLogger webExceptionLogger
     ) {
         super(connectionLog, infoRequests, infoSystem, serverInfo);
         this.database = database;
         this.webServer = webServer;
         this.errorHandler = errorHandler;
+        this.webExceptionLogger = webExceptionLogger;
 
         latestServerMapRefresh = 0;
     }
@@ -88,7 +91,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
             throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
         }
         for (Server server : bukkitServers.values()) {
-            WebExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
+            webExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
         }
     }
 

@@ -5,11 +5,13 @@
 package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +21,7 @@ import java.util.Objects;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ConnectionLog {
 
     private final DebugLogger debugLogger;
@@ -31,41 +34,16 @@ public class ConnectionLog {
         log = new HashMap<>();
     }
 
-    /**
-     * Get a map sorted by Addresses, then Requests and then Log entries.
-     *
-     * @return {@code Map<"In:  "/"Out: "+Address, Map<InfoRequestClassname, ConnectionLog.Entry>>}
-     */
-    @Deprecated
-    public static Map<String, Map<String, Entry>> getLogEntries_Old() {
-        return getInstance().getLogEntries();
-    }
-
-    @Deprecated
-    public static void logConnectionTo_Old(Server server, InfoRequest request, int responseCode) {
-        getInstance().logConnectionTo(server, request, responseCode);
-    }
-
-    @Deprecated
-    public static void logConnectionFrom_Old(String server, String requestTarget, int responseCode) {
-        getInstance().logConnectionFrom(server, requestTarget, responseCode);
-    }
-
-    @Deprecated
-    private static ConnectionLog getInstance() {
-        return ConnectionSystem.getInstance().getConnectionLog();
-    }
-
     public void logConnectionTo(Server server, InfoRequest request, int responseCode) {
         String requestName = request.getClass().getSimpleName();
         String address = server.getWebAddress();
         logConnection(address, "Out: " + requestName, responseCode);
-        debugLogger.logOn("Connections", "ConnectionOut: " + requestName + " to " + address);
+        debugLogger.logOn(DebugChannels.CONNECTIONS, "ConnectionOut: " + requestName + " to " + address);
     }
 
     public void logConnectionFrom(String server, String requestTarget, int responseCode) {
         logConnection(server, "In:  " + requestTarget, responseCode);
-        debugLogger.logOn("Connections", "ConnectionIn: " + requestTarget + " from " + server);
+        debugLogger.logOn(DebugChannels.CONNECTIONS, "ConnectionIn: " + requestTarget + " from " + server);
     }
 
     private void logConnection(String address, String infoRequestName, int responseCode) {

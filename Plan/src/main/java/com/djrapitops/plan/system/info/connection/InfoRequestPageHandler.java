@@ -72,7 +72,7 @@ public class InfoRequestPageHandler implements PageHandler {
             responseCode = getResponseCodeFor(e);
             throw e;
         } finally {
-            ConnectionLog.logConnectionFrom_Old(request.getRemoteAddress(), request.getTarget(), responseCode);
+            connectionSystem.getConnectionLog().logConnectionFrom(request.getRemoteAddress(), request.getTarget(), responseCode);
         }
     }
 

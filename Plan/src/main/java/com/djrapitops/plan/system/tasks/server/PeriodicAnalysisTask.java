@@ -10,7 +10,9 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class PeriodicAnalysisTask extends AbsRunnable {
 
     private final InfoSystem infoSystem;
@@ -18,25 +20,28 @@ public class PeriodicAnalysisTask extends AbsRunnable {
     private final ServerInfo serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
+    private final WebExceptionLogger webExceptionLogger;
 
     @Inject
     public PeriodicAnalysisTask(
             InfoSystem infoSystem,
             InfoRequestFactory infoRequestFactory, ServerInfo serverInfo,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorHandler errorHandler,
+            WebExceptionLogger webExceptionLogger
     ) {
         this.infoSystem = infoSystem;
         this.infoRequestFactory = infoRequestFactory;
         this.serverInfo = serverInfo;
         this.logger = logger;
         this.errorHandler = errorHandler;
+        this.webExceptionLogger = webExceptionLogger;
     }
 
     @Override
     public void run() {
         try {
-            WebExceptionLogger.logIfOccurs(this.getClass(), () ->
+            webExceptionLogger.logIfOccurs(this.getClass(), () ->
                     infoSystem.sendRequest(infoRequestFactory.generateAnalysisPageRequest(serverInfo.getServerUUID()))
             );
         } catch (IllegalStateException ignore) {

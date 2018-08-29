@@ -72,7 +72,7 @@ public class ServerPageHandler implements PageHandler {
                 }
                 return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
             }
-            return AnalysisPageResponse.refreshNow(serverUUID);
+            return AnalysisPageResponse.refreshNow(serverUUID, infoSystem);
         }
     }
 

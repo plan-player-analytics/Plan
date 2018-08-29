@@ -40,6 +40,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
     private final Database database;
     private final WebServer webServer;
     private final PluginLogger pluginLogger;
+    private final WebExceptionLogger webExceptionLogger;
 
     private long latestServerMapRefresh;
 
@@ -55,7 +56,8 @@ public class ServerConnectionSystem extends ConnectionSystem {
             InfoRequests infoRequests,
             Lazy<InfoSystem> infoSystem,
             ServerInfo serverInfo,
-            PluginLogger pluginLogger
+            PluginLogger pluginLogger,
+            WebExceptionLogger webExceptionLogger
     ) {
         super(connectionLog, infoRequests, infoSystem, serverInfo);
         this.locale = locale;
@@ -63,6 +65,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
         this.database = database;
         this.webServer = webServer;
         this.pluginLogger = pluginLogger;
+        this.webExceptionLogger = webExceptionLogger;
         latestServerMapRefresh = 0;
     }
 
@@ -105,7 +108,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
             throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
         }
         for (Server server : bukkitServers.values()) {
-            WebExceptionLogger.logIfOccurs(this.getClass(), () -> {
+            webExceptionLogger.logIfOccurs(this.getClass(), () -> {
                 try {
                     sendInfoRequest(infoRequest, server);
                 } catch (ConnectionFailException ignored) {

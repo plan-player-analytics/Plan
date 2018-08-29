@@ -12,7 +12,6 @@ import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
@@ -73,13 +72,6 @@ public class WebServer implements SubSystem {
 
         this.logger = logger;
         this.errorHandler = errorHandler;
-    }
-
-    @Deprecated
-    public static WebServer getInstance() {
-        WebServer webServer = WebServerSystem.getInstance().getWebServer();
-        Verify.nullCheck(webServer, () -> new IllegalStateException("WebServer was not initialized."));
-        return webServer;
     }
 
     @Override

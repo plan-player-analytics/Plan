@@ -21,10 +21,10 @@ import java.util.UUID;
 public class AnalysisPageResponse extends Response {
 
     @Deprecated
-    public static AnalysisPageResponse refreshNow(UUID serverUUID) {
+    public static AnalysisPageResponse refreshNow(UUID serverUUID, InfoSystem infoSystem) {
         Processing.submitNonCritical(() -> {
             try {
-                InfoSystem.getInstance().generateAnalysisPage(serverUUID);
+                infoSystem.generateAnalysisPage(serverUUID);
             } catch (NoServersException | ConnectionFailException e) {
                 ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new NotFoundResponse(e.getMessage()));
             } catch (WebException e) {
