@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.webserver.response.pages;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import org.apache.commons.text.StringSubstitutor;
@@ -16,7 +15,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class InspectPageResponse extends Response {
+public class InspectPageResponse extends PageResponse {
 
     private final UUID uuid;
 

@@ -7,7 +7,6 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.utilities.html.pages.AnalysisPage;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -18,7 +17,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class AnalysisPageResponse extends Response {
+public class AnalysisPageResponse extends PageResponse {
 
     public static AnalysisPageResponse refreshNow(UUID serverUUID) {
         Processing.submitNonCritical(() -> {

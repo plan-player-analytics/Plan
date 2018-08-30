@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.webserver.response.pages.parts;
 
-import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.pages.PageResponse;
 
 import java.util.*;
 
@@ -15,7 +15,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class NetworkPageContent extends Response {
+public class NetworkPageContent extends PageResponse {
 
     private final Map<String, String> content;
 

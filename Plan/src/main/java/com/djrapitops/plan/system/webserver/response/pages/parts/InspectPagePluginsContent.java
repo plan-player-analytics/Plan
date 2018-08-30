@@ -8,7 +8,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.pages.PageResponse;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
@@ -23,7 +23,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class InspectPagePluginsContent extends Response {
+public class InspectPagePluginsContent extends PageResponse {
 
     // ServerUUID, {nav, html}
     private final Map<UUID, String[]> pluginsTab;
