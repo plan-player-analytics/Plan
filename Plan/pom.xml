@@ -122,6 +122,13 @@
             <version>2.9.0</version>
         </dependency>
 
+        <!--        Cache with invalidation -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+
         <!--        Metrics -->
         <dependency>
             <groupId>org.bstats</groupId>

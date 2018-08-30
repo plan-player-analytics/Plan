@@ -307,10 +307,6 @@
           <groupId>com.google.inject</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>caffeine</artifactId>
-          <groupId>com.github.ben-manes.caffeine</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>guava</artifactId>
           <groupId>com.github.ben-manes.caffeine</groupId>
         </exclusion>

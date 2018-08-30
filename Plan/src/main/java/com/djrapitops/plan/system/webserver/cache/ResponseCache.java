@@ -1,10 +1,11 @@
 package com.djrapitops.plan.system.webserver.cache;
 
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
@@ -19,7 +20,9 @@ import java.util.function.Supplier;
  */
 public class ResponseCache {
 
-    private static final Map<String, Response> cache = new HashMap<>();
+    private static final Cache<String, Response> cache = Caffeine.newBuilder()
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .build();
 
     /**
      * Constructor used to hide the public constructor
@@ -41,17 +44,7 @@ public class ResponseCache {
      * @return The Response that was cached or created by the the {@link Response} {@link Supplier}
      */
     public static Response loadResponse(String identifier, Supplier<Response> loader) {
-        Response response = loadResponse(identifier);
-
-        if (response != null) {
-            return response;
-        }
-
-        response = loader.get();
-
-        cache.put(identifier, response);
-
-        return response;
+        return cache.get(identifier, k -> loader.get());
     }
 
     /**
@@ -61,7 +54,7 @@ public class ResponseCache {
      * @return The Response that was cached or {@code null} if it wasn't
      */
     public static Response loadResponse(String identifier) {
-        return cache.get(identifier);
+        return cache.getIfPresent(identifier);
     }
 
     /**
@@ -84,21 +77,25 @@ public class ResponseCache {
      * @return true if the page is cached
      */
     public static boolean isCached(String identifier) {
-        return cache.containsKey(identifier);
+        return cache.getIfPresent(identifier) != null;
     }
 
     /**
      * Clears the cache from all its contents.
      */
     public static void clearCache() {
-        cache.clear();
+        cache.invalidateAll();
     }
 
     public static Set<String> getCacheKeys() {
-        return cache.keySet();
+        return cache.asMap().keySet();
+    }
+
+    public static long getEstimatedSize() {
+        return cache.estimatedSize();
     }
 
     public static void clearResponse(String identifier) {
-        cache.remove(identifier);
+        cache.invalidate(identifier);
     }
 }
