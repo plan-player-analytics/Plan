@@ -34,7 +34,8 @@ public abstract class ConfigSystem implements SubSystem {
     public ConfigSystem(
             FileSystem fileSystem,
             PlanConfig config,
-            Theme theme, ErrorHandler errorHandler
+            Theme theme,
+            ErrorHandler errorHandler
     ) {
         this.fileSystem = fileSystem;
         this.config = config;

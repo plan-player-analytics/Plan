@@ -40,12 +40,12 @@ public class NetworkSettings {
     private static final String VAL_SPLIT = ";;VALUE;;";
 
     private final Lazy<PlanConfig> config;
+    private final ServerSpecificSettings serverSpecificSettings;
     private final Processing processing;
     private final Lazy<Database> database;
     private final Lazy<ServerInfo> serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
-    private final ServerSpecificSettings serverSpecificSettings;
 
     @Inject
     public NetworkSettings(
