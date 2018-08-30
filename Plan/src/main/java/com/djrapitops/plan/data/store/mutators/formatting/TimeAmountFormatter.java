@@ -83,7 +83,7 @@ public class TimeAmountFormatter implements Formatter<Long> {
     }
 
     private void appendSeconds(StringBuilder builder, long seconds, long minutes, long hours, String fHours, String fMinutes, String fSeconds) {
-        if (seconds != 0) {
+        if (seconds != 0 || fSeconds.contains(ZERO_PH)) {
             String s = fSeconds.replace(SECONDS_PH, String.valueOf(seconds));
             if (minutes == 0 && s.contains(MINUTES_PH)) {
                 if (hours == 0 && fMinutes.contains(HOURS_PH)) {

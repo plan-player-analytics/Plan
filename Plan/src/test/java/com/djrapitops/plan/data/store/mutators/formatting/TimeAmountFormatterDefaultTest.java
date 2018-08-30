@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Rsl1122
  */
-public class TimeAmountFormatterExtraZerosTest {
+public class TimeAmountFormatterDefaultTest {
 
     private TimeAmountFormatter timeAmountFormatter;
 
@@ -27,10 +27,10 @@ public class TimeAmountFormatterExtraZerosTest {
         Settings.FORMAT_MONTHS.setTemporaryValue("%months% months, ");
         Settings.FORMAT_DAY.setTemporaryValue("1d ");
         Settings.FORMAT_DAYS.setTemporaryValue("%days%d ");
-        Settings.FORMAT_HOURS.setTemporaryValue("%zero%%hours%:");
-        Settings.FORMAT_MINUTES.setTemporaryValue("%hours%%zero%%minutes%:");
-        Settings.FORMAT_SECONDS.setTemporaryValue("%minutes%%zero%%seconds%");
-        Settings.FORMAT_ZERO_SECONDS.setTemporaryValue("00:00:00");
+        Settings.FORMAT_HOURS.setTemporaryValue("%hours%h ");
+        Settings.FORMAT_MINUTES.setTemporaryValue("%minutes%m ");
+        Settings.FORMAT_SECONDS.setTemporaryValue("%seconds%s");
+        Settings.FORMAT_ZERO_SECONDS.setTemporaryValue("0s");
     }
 
     @AfterClass
@@ -45,7 +45,7 @@ public class TimeAmountFormatterExtraZerosTest {
 
     @Test
     public void exampleOne() {
-        String expected = "1 year, 1 month, 5d 12:30:20";
+        String expected = "1 year, 1 month, 5d 12h 30m 20s";
 
         long ms = TimeAmount.DAY.ms() * 400L +
                 TimeAmount.HOUR.ms() * 12L +
@@ -58,7 +58,7 @@ public class TimeAmountFormatterExtraZerosTest {
 
     @Test
     public void exampleTwo() {
-        String expected = "1 year, 1 month, 5d 00:00:00";
+        String expected = "1 year, 1 month, 5d ";
 
         long ms = TimeAmount.DAY.ms() * 400L;
         String result = timeAmountFormatter.apply(ms);
@@ -68,7 +68,7 @@ public class TimeAmountFormatterExtraZerosTest {
 
     @Test
     public void exampleThree() {
-        String expected = "12:00:20";
+        String expected = "12h 20s";
 
         long ms = TimeAmount.HOUR.ms() * 12L +
                 TimeAmount.SECOND.ms() * 20L;
@@ -79,7 +79,7 @@ public class TimeAmountFormatterExtraZerosTest {
 
     @Test
     public void exampleFour() {
-        String expected = "00:30:00";
+        String expected = "30m ";
 
         long ms = TimeAmount.MINUTE.ms() * 30L;
         String result = timeAmountFormatter.apply(ms);
@@ -89,7 +89,7 @@ public class TimeAmountFormatterExtraZerosTest {
 
     @Test
     public void exampleFive() {
-        String expected = "00:00:20";
+        String expected = "20s";
 
         long ms = TimeAmount.SECOND.ms() * 20L;
         String result = timeAmountFormatter.apply(ms);
@@ -109,7 +109,7 @@ public class TimeAmountFormatterExtraZerosTest {
 
     @Test
     public void exampleOneSecond() {
-        String expected = "00:00:01";
+        String expected = "1s";
 
         long ms = TimeAmount.SECOND.ms();
         String result = timeAmountFormatter.apply(ms);
@@ -119,7 +119,7 @@ public class TimeAmountFormatterExtraZerosTest {
 
     @Test
     public void exampleOneMinute() {
-        String expected = "00:01:00";
+        String expected = "1m ";
 
         long ms = TimeAmount.MINUTE.ms();
         String result = timeAmountFormatter.apply(ms);
