@@ -63,6 +63,10 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
             UUID uuid = event.getPlayer().getUniqueId();
+            if (AFKListener.AFK_TRACKER.isAfk(uuid)) {
+                return;
+            }
+
             Processing.submit(new KickProcessor(uuid));
         } catch (Exception e) {
             Log.toLog(this.getClass(), e);
