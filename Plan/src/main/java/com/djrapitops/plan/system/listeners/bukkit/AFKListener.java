@@ -41,7 +41,10 @@ public class AFKListener implements Listener {
             UUID uuid = player.getUniqueId();
             long time = System.currentTimeMillis();
 
-            boolean ignored = ignorePermissionInfo.getOrDefault(uuid, player.hasPermission(Permissions.IGNORE_AFK.getPermission()));
+            Boolean ignored = ignorePermissionInfo.get(uuid);
+            if (ignored == null) {
+                ignored = player.hasPermission(Permissions.IGNORE_AFK.getPermission());
+            }
             if (ignored) {
                 AFK_TRACKER.hasIgnorePermission(uuid);
                 ignorePermissionInfo.put(uuid, true);
