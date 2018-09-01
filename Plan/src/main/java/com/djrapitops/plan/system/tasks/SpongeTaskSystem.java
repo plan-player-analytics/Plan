@@ -18,15 +18,11 @@ public class SpongeTaskSystem extends ServerTaskSystem {
     @Override
     public void enable() {
         super.enable();
-        try {
-            PingCountTimerSponge pingCountTimer = new PingCountTimerSponge();
-            Sponge.getEventManager().registerListeners(plugin, pingCountTimer);
-            long startDelay = TimeAmount.SECOND.ticks() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
-            RunnableFactory.createNew("PingCountTimer", pingCountTimer)
-                    .runTaskTimer(startDelay, PingCountTimerSponge.PING_INTERVAL);
-        } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {
-            // Running CraftBukkit
-        }
+        PingCountTimerSponge pingCountTimer = new PingCountTimerSponge();
+        ((PlanSponge) plugin).registerListener(pingCountTimer);
+        long startDelay = TimeAmount.SECOND.ticks() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
+        RunnableFactory.createNew("PingCountTimer", pingCountTimer)
+                .runTaskTimer(startDelay, PingCountTimerSponge.PING_INTERVAL);
     }
 
     @Override
