@@ -10,7 +10,6 @@ import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bungee.EnableConnectionTask;
 import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.tasks.server.PingCountTimerBungee;
-import com.djrapitops.plan.system.tasks.server.PingCountTimerSponge;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -45,6 +44,6 @@ public class BungeeTaskSystem extends TaskSystem {
         plugin.registerListener(pingCountTimer);
         long startDelay = TimeAmount.SECOND.ticks() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
         RunnableFactory.createNew("PingCountTimer", pingCountTimer)
-                .runTaskTimer(startDelay, PingCountTimerSponge.PING_INTERVAL);
+                .runTaskTimer(startDelay, PingCountTimerBungee.PING_INTERVAL);
     }
 }
