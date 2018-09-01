@@ -5,7 +5,6 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bungee.EnableConnectionTask;
