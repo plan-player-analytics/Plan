@@ -53,7 +53,7 @@ import java.util.*;
  *
  * @author games647
  */
-public class PingCountTimer extends AbsRunnable implements Listener {
+public class PingCountTimerBukkit extends AbsRunnable implements Listener {
 
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
@@ -80,7 +80,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
 
                 localPing = lookup.findGetter(entityPlayer, "ping", Integer.TYPE);
             } catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException reflectiveEx) {
-                Log.toLog(PingCountTimer.class, reflectiveEx);
+                Log.toLog(PingCountTimerBukkit.class, reflectiveEx);
             }
         }
 
