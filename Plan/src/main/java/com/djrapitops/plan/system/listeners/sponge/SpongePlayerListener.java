@@ -3,9 +3,9 @@ package com.djrapitops.plan.system.listeners.sponge;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
-import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
-import com.djrapitops.plan.system.processing.processors.player.*;
+import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -33,6 +33,8 @@ import java.util.UUID;
  */
 public class SpongePlayerListener {
 
+    private final PlanConfig config;
+    private final Processors processors;
     private final Processing processing;
     private SessionCache sessionCache;
     private RunnableFactory runnableFactory;
@@ -40,11 +42,15 @@ public class SpongePlayerListener {
 
     @Inject
     public SpongePlayerListener(
+            PlanConfig config,
+            Processors processors,
             Processing processing,
             SessionCache sessionCache,
             RunnableFactory runnableFactory,
             ErrorHandler errorHandler
     ) {
+        this.config = config;
+        this.processors = processors;
         this.processing = processing;
         this.sessionCache = sessionCache;
         this.runnableFactory = runnableFactory;
@@ -64,14 +70,14 @@ public class SpongePlayerListener {
         GameProfile profile = event.getProfile();
         UUID uuid = profile.getUniqueId();
         boolean banned = isBanned(profile);
-        processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
+        processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, false));
     }
 
     @Listener(order = Order.POST)
     public void onKick(KickPlayerEvent event) {
         try {
             UUID uuid = event.getTargetEntity().getUniqueId();
-            processing.submit(new KickProcessor(uuid));
+            processing.submit(processors.player().kickProcessor(uuid));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -117,14 +123,16 @@ public class SpongePlayerListener {
 
         sessionCache.cacheSession(uuid, new Session(uuid, time, world, gm));
 
+        boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
+
         runnableFactory.create("Player Register: " + uuid,
-                new RegisterProcessor(uuid, () -> time, playerName,
-                        new IPUpdateProcessor(uuid, address, time),
-                        new NameProcessor(uuid, playerName, displayName),
-                        new PlayerPageUpdateProcessor(uuid)
+                processors.player().registerProcessor(uuid, () -> time, playerName,
+                        gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null,
+                        processors.player().nameProcessor(uuid, playerName, displayName),
+                        processors.info().playerPageUpdateProcessor(uuid)
                 )
         ).runTaskAsynchronously();
-        processing.submit(new NetworkPageUpdateProcessor());
+        processing.submit(processors.info().networkPageUpdateProcessor());
     }
 
     @Listener(order = Order.POST)
@@ -144,9 +152,9 @@ public class SpongePlayerListener {
         SpongeAFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
         boolean banned = isBanned(player.getProfile());
-        processing.submit(new BanAndOpProcessor(uuid, () -> banned, false));
-        processing.submit(new EndSessionProcessor(uuid, time));
-        processing.submit(new NetworkPageUpdateProcessor());
-        processing.submit(new PlayerPageUpdateProcessor(uuid));
+        processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, false));
+        processing.submit(processors.player().endSessionProcessor(uuid, time));
+        processing.submit(processors.info().networkPageUpdateProcessor());
+        processing.submit(processors.info().playerPageUpdateProcessor(uuid));
     }
 }

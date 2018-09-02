@@ -4,10 +4,10 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.player.KillProcessor;
+import com.djrapitops.plan.system.processing.processors.player.MobKillProcessor;
+import com.djrapitops.plan.system.processing.processors.player.PlayerKillProcessor;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.utilities.Format;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -19,6 +19,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
 import javax.inject.Inject;
+import java.util.UUID;
 
 /**
  * Event Listener for EntityDeathEvents.
@@ -59,27 +60,28 @@ public class DeathEventListener implements Listener {
             EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) entityDamageEvent;
             Entity killerEntity = entityDamageByEntityEvent.getDamager();
 
-            handleKill(time, dead, killerEntity);
+            UUID uuid = dead instanceof Player ? dead.getUniqueId() : null;
+            handleKill(time, uuid, killerEntity);
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
-    private void handleKill(long time, LivingEntity dead, Entity killerEntity) {
-        KillProcessor processor = null;
+    private void handleKill(long time, UUID victimUUID, Entity killerEntity) {
+        Runnable processor = null;
         if (killerEntity instanceof Player) {
-            processor = handlePlayerKill(time, dead, (Player) killerEntity);
+            processor = handlePlayerKill(time, victimUUID, (Player) killerEntity);
         } else if (killerEntity instanceof Tameable) {
-            processor = handlePetKill(time, dead, (Tameable) killerEntity);
+            processor = handlePetKill(time, victimUUID, (Tameable) killerEntity);
         } else if (killerEntity instanceof Projectile) {
-            processor = handleProjectileKill(time, dead, (Projectile) killerEntity);
+            processor = handleProjectileKill(time, victimUUID, (Projectile) killerEntity);
         }
         if (processor != null) {
             processing.submit(processor);
         }
     }
 
-    private KillProcessor handlePlayerKill(long time, LivingEntity dead, Player killer) {
+    private Runnable handlePlayerKill(long time, UUID victimUUID, Player killer) {
         Material itemInHand;
         try {
             itemInHand = killer.getInventory().getItemInMainHand().getType();
@@ -91,10 +93,14 @@ public class DeathEventListener implements Listener {
             }
         }
 
-        return new KillProcessor(killer.getUniqueId(), time, dead, Formatters.itemName().apply(itemInHand.name()));
+        String weaponName = Formatters.itemName().apply(itemInHand.name());
+
+        return victimUUID != null
+                ? new PlayerKillProcessor(killer.getUniqueId(), time, victimUUID, weaponName)
+                : new MobKillProcessor(killer.getUniqueId());
     }
 
-    private KillProcessor handlePetKill(long time, LivingEntity dead, Tameable tameable) {
+    private Runnable handlePetKill(long time, UUID victimUUID, Tameable tameable) {
         if (!tameable.isTamed()) {
             return null;
         }
@@ -112,22 +118,23 @@ public class DeathEventListener implements Listener {
             name = tameable.getClass().getSimpleName();
         }
 
-        return new KillProcessor(owner.getUniqueId(), time, dead,
-                new Format(name).removeNumbers().removeSymbols().capitalize().toString()
-        );
+        return victimUUID != null
+                ? new PlayerKillProcessor(owner.getUniqueId(), time, victimUUID, Formatters.entityName().apply(name))
+                : new MobKillProcessor(owner.getUniqueId());
     }
 
-    private KillProcessor handleProjectileKill(long time, LivingEntity dead, Projectile projectile) {
+    private Runnable handleProjectileKill(long time, UUID victimUUID, Projectile projectile) {
         ProjectileSource source = projectile.getShooter();
         if (!(source instanceof Player)) {
             return null;
         }
 
         Player player = (Player) source;
+        String projectileName = Formatters.entityName().apply(projectile.getType().name());
 
-        return new KillProcessor(player.getUniqueId(), time, dead,
-                new Format(projectile.getType().name()).capitalize().toString()
-        );
+        return victimUUID != null
+                ? new PlayerKillProcessor(player.getUniqueId(), time, victimUUID, projectileName)
+                : new MobKillProcessor(player.getUniqueId());
     }
 }
 

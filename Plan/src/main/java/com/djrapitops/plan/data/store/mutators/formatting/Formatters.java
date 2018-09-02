@@ -91,4 +91,8 @@ public class Formatters {
             return builder.toString();
         };
     }
+
+    public static Formatter<String> entityName() {
+        return name -> new Format(name).removeNumbers().removeSymbols().capitalize().toString();
+    }
 }

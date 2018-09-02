@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
-import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
@@ -15,28 +14,19 @@ import java.util.UUID;
  * Adds PlayerKill or a Mob kill to the active Session.
  *
  * @author Rsl1122
- * @since 4.3.0
+ * @since 4.0.0
  */
-public class SpongeKillProcessor implements CriticalRunnable {
+public class MobKillProcessor implements CriticalRunnable {
 
     private final UUID uuid;
-    private final UUID deadUUID;
-    private final String weaponName;
-    private final long time;
 
     /**
      * Constructor.
      *
      * @param uuid       UUID of the killer.
-     * @param time       Epoch ms the event occurred.
-     * @param deadUUID   Dead entity (Mob or Player)
-     * @param weaponName Weapon used.
      */
-    public SpongeKillProcessor(UUID uuid, long time, UUID deadUUID, String weaponName) {
+    public MobKillProcessor(UUID uuid) {
         this.uuid = uuid;
-        this.time = time;
-        this.deadUUID = deadUUID;
-        this.weaponName = weaponName;
     }
 
     @Override
@@ -47,10 +37,6 @@ public class SpongeKillProcessor implements CriticalRunnable {
         }
         Session session = cachedSession.get();
 
-        if (deadUUID != null) {
-            session.playerKilled(new PlayerKill(deadUUID, weaponName, time));
-        } else {
-            session.mobKilled();
-        }
+        session.mobKilled();
     }
 }

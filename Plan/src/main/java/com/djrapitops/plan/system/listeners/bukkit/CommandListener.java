@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.CommandProcessor;
+import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.logging.L;
@@ -23,16 +23,19 @@ import javax.inject.Inject;
 public class CommandListener implements Listener {
 
     private final Plan plugin;
+    private final Processors processors;
     private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
     public CommandListener(
             Plan plugin,
+            Processors processors,
             Processing processing,
             ErrorHandler errorHandler
     ) {
         this.plugin = plugin;
+        this.processors = processors;
         this.processing = processing;
         this.errorHandler = errorHandler;
     }
@@ -67,7 +70,7 @@ public class CommandListener implements Listener {
                 commandName = command.getName();
             }
         }
-        processing.submit(new CommandProcessor(commandName));
+        processing.submit(processors.commandProcessor(commandName));
     }
 
     private Command getBukkitCommand(String commandName) {

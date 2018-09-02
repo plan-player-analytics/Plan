@@ -18,10 +18,11 @@ public class KickProcessor implements CriticalRunnable {
 
     private final UUID uuid;
 
-    private Database database;
+    private final Database database;
 
-    public KickProcessor(UUID uuid) {
+    KickProcessor(UUID uuid, Database database) {
         this.uuid = uuid;
+        this.database = database;
     }
 
     @Override

@@ -15,20 +15,27 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BungeePlayerRegisterProcessor implements CriticalRunnable {
+public class BungeeRegisterProcessor implements CriticalRunnable {
 
     private final UUID uuid;
     private final String name;
     private final long registered;
     private final Runnable[] afterProcess;
 
-    private Processing processing;
-    private Database database;
+    private final Processing processing;
+    private final Database database;
 
-    public BungeePlayerRegisterProcessor(UUID uuid, String name, long registered, Runnable... afterProcess) {
+    BungeeRegisterProcessor(
+            UUID uuid, String name, long registered,
+            Processing processing,
+            Database database,
+            Runnable... afterProcess
+    ) {
         this.uuid = uuid;
         this.name = name;
         this.registered = registered;
+        this.processing = processing;
+        this.database = database;
         this.afterProcess = afterProcess;
     }
 

@@ -26,13 +26,19 @@ public class RegisterProcessor extends AbsRunnable {
     private final String name;
     private final Runnable[] afterProcess;
 
-    private Processing processing;
-    private Database database;
+    private final Processing processing;
+    private final Database database;
 
-    public RegisterProcessor(UUID uuid, Supplier<Long> registered, String name, Runnable... afterProcess) {
+    RegisterProcessor(
+            UUID uuid, Supplier<Long> registered, String name,
+            Processing processing, Database database,
+            Runnable... afterProcess
+    ) {
         this.uuid = uuid;
         this.registered = registered;
         this.name = name;
+        this.processing = processing;
+        this.database = database;
         this.afterProcess = afterProcess;
     }
 

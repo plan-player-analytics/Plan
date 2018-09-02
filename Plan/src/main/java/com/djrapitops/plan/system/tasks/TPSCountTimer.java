@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.TPSInsertProcessor;
+import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -20,13 +20,20 @@ public abstract class TPSCountTimer extends AbsRunnable {
 
     protected final List<TPS> history;
 
+    protected final Processors processors;
     protected final Processing processing;
     protected final PluginLogger logger;
     protected final ErrorHandler errorHandler;
 
     protected int latestPlayersOnline = 0;
 
-    public TPSCountTimer(Processing processing, PluginLogger logger, ErrorHandler errorHandler) {
+    public TPSCountTimer(
+            Processors processors,
+            Processing processing,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        this.processors = processors;
         this.processing = processing;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -42,7 +49,7 @@ public abstract class TPSCountTimer extends AbsRunnable {
             addNewTPSEntry(nanoTime, now);
 
             if (history.size() >= 60) {
-                processing.submit(new TPSInsertProcessor(new ArrayList<>(history)));
+                processing.submit(processors.tpsInsertProcessor(new ArrayList<>(history)));
                 history.clear();
             }
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {

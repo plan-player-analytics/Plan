@@ -21,12 +21,16 @@ public class BanAndOpProcessor implements Runnable {
     private final Supplier<Boolean> banned;
     private final boolean op;
 
-    private Database database;
+    private final Database database;
 
-    public BanAndOpProcessor(UUID uuid, Supplier<Boolean> banned, boolean op) {
+    BanAndOpProcessor(
+            UUID uuid, Supplier<Boolean> banned, boolean op,
+            Database database
+    ) {
         this.uuid = uuid;
         this.banned = banned;
         this.op = op;
+        this.database = database;
     }
 
     @Override

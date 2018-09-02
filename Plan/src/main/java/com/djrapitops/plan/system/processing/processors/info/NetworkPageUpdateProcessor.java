@@ -4,9 +4,8 @@
  */
 package com.djrapitops.plan.system.processing.processors.info;
 
-import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 
 /**
  * Processor for updating the network page.
@@ -15,14 +14,19 @@ import com.djrapitops.plugin.api.utility.log.Log;
  */
 public class NetworkPageUpdateProcessor implements Runnable {
 
-    private InfoSystem infoSystem;
+    private final InfoSystem infoSystem;
+    private final WebExceptionLogger webExceptionLogger;
+
+    NetworkPageUpdateProcessor(
+            InfoSystem infoSystem,
+            WebExceptionLogger webExceptionLogger
+    ) {
+        this.infoSystem = infoSystem;
+        this.webExceptionLogger = webExceptionLogger;
+    }
 
     @Override
     public void run() {
-        try {
-            infoSystem.updateNetworkPage();
-        } catch (WebException e) {
-            Log.toLog(this.getClass(), e);
-        }
+        webExceptionLogger.logIfOccurs(this.getClass(), infoSystem::updateNetworkPage);
     }
 }

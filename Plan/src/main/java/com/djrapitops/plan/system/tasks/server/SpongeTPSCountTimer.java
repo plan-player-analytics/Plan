@@ -4,6 +4,7 @@ import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -24,12 +25,13 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
 
     @Inject
     public SpongeTPSCountTimer(
+            Processors processors,
             Processing processing,
             ServerProperties serverProperties,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(processing, logger, errorHandler);
+        super(processors, processing, logger, errorHandler);
         this.serverProperties = serverProperties;
         lastCheckNano = -1;
     }

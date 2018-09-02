@@ -24,7 +24,6 @@ import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.processors.player.RegisterProcessor;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plugin.StaticHolder;
@@ -855,23 +854,6 @@ public class SQLiteTest {
         testSaveSessionsWorldTimes();
         WorldTimes worldTimesOfServer = db.getWorldTimesTable().getWorldTimesOfServer(TestConstants.SERVER_UUID);
         assertEquals(createWorldTimes(), worldTimesOfServer);
-    }
-
-    @Test
-    public void testRegisterProcessorRegisterException() {
-        assertFalse(db.getUsersTable().isRegistered(playerUUID));
-        assertFalse(db.getUserInfoTable().isRegistered(playerUUID));
-        System.out.println("\n- Running RegisterProcessors -");
-        List<RegisterProcessor> processors = new ArrayList<>();
-        for (int i = 0; i < 200; i++) {
-            processors.add(new RegisterProcessor(playerUUID, () -> 500L, "name"));
-        }
-        for (RegisterProcessor processor : processors) {
-            processor.run();
-        }
-        System.out.println("- RegisterProcessors Run -\n");
-        assertTrue(db.getUsersTable().isRegistered(playerUUID));
-        assertTrue(db.getUserInfoTable().isRegistered(playerUUID));
     }
 
     @Test

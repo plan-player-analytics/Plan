@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.CommandProcessor;
+import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.logging.L;
@@ -24,14 +24,17 @@ import java.util.Optional;
  */
 public class SpongeCommandListener {
 
+    private final Processors processors;
     private final Processing processing;
     private ErrorHandler errorHandler;
 
     @Inject
     public SpongeCommandListener(
+            Processors processors,
             Processing processing,
             ErrorHandler errorHandler
     ) {
+        this.processors = processors;
         this.processing = processing;
         this.errorHandler = errorHandler;
     }
@@ -65,7 +68,7 @@ public class SpongeCommandListener {
                 commandName = existingCommand.get().getPrimaryAlias();
             }
         }
-        processing.submit(new CommandProcessor(commandName));
+        processing.submit(processors.commandProcessor(commandName));
     }
 
 }

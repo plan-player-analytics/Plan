@@ -25,17 +25,23 @@ public class NameProcessor implements CriticalRunnable {
     private final String playerName;
     private final Nickname nickname;
 
-    private Database database;
+    private final Database database;
+    private final DataCache dataCache;
 
-    public NameProcessor(UUID uuid, String playerName, String displayName) {
+    NameProcessor(
+            UUID uuid, String playerName, String displayName,
+            Database database,
+            DataCache dataCache
+    ) {
         this.uuid = uuid;
         this.playerName = playerName;
         this.nickname = new Nickname(displayName, System.currentTimeMillis(), ServerInfo.getServerUUID_Old());
+        this.database = database;
+        this.dataCache = dataCache;
     }
 
     @Override
     public void run() {
-        DataCache dataCache = DataCache.getInstance();
         String cachedName = dataCache.getName(uuid);
         String cachedDisplayName = dataCache.getDisplayName(uuid);
 

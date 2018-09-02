@@ -13,17 +13,26 @@ public class PlayerPageUpdateProcessor implements Runnable {
 
     private final UUID uuid;
 
-    private InfoSystem infoSystem;
-    private WebExceptionLogger webExceptionLogger;
+    private final InfoSystem infoSystem;
+    private final WebExceptionLogger webExceptionLogger;
+    private final RunnableFactory runnableFactory;
 
-    public PlayerPageUpdateProcessor(UUID uuid) {
+    PlayerPageUpdateProcessor(
+            UUID uuid,
+            InfoSystem infoSystem,
+            WebExceptionLogger webExceptionLogger,
+            RunnableFactory runnableFactory
+    ) {
         this.uuid = uuid;
+        this.infoSystem = infoSystem;
+        this.webExceptionLogger = webExceptionLogger;
+        this.runnableFactory = runnableFactory;
     }
 
     @Override
     public void run() {
         if (!infoSystem.getConnectionSystem().isServerAvailable() || Check.isBungeeAvailable()) {
-            RunnableFactory.createNew("Generate Inspect page: " + uuid, new AbsRunnable() {
+            runnableFactory.create("Generate Inspect page: " + uuid, new AbsRunnable() {
                 @Override
                 public void run() {
                     try {

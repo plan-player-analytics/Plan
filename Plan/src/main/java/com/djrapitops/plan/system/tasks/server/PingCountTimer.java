@@ -25,7 +25,7 @@ package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.player.PingInsertProcessor;
+import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.utilities.java.Reflection;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -92,14 +92,17 @@ public class PingCountTimer extends AbsRunnable implements Listener {
 
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
+    private final Processors processors;
     private final Processing processing;
     private final RunnableFactory runnableFactory;
 
     @Inject
     public PingCountTimer(
+            Processors processors,
             Processing processing,
             RunnableFactory runnableFactory
     ) {
+        this.processors = processors;
         this.processing = processing;
         this.runnableFactory = runnableFactory;
         playerHistory = new HashMap<>();
@@ -129,7 +132,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
                 }
                 history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
-                    processing.submit(new PingInsertProcessor(uuid, new ArrayList<>(history)));
+                    processing.submit(processors.player().pingInsertProcessor(uuid, new ArrayList<>(history)));
                     history.clear();
                 }
             } else {

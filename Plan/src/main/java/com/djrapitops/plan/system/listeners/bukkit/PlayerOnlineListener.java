@@ -3,9 +3,9 @@ package com.djrapitops.plan.system.listeners.bukkit;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
-import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
-import com.djrapitops.plan.system.processing.processors.player.*;
+import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -32,6 +32,8 @@ public class PlayerOnlineListener implements Listener {
 
     private static boolean countKicks = true;
 
+    private final PlanConfig config;
+    private final Processors processors;
     private final Processing processing;
     private final SessionCache sessionCache;
     private final ErrorHandler errorHandler;
@@ -43,11 +45,15 @@ public class PlayerOnlineListener implements Listener {
 
     @Inject
     public PlayerOnlineListener(
+            PlanConfig config,
+            Processors processors,
             Processing processing,
             SessionCache sessionCache,
             RunnableFactory runnableFactory,
             ErrorHandler errorHandler
     ) {
+        this.config = config;
+        this.processors = processors;
         this.processing = processing;
         this.sessionCache = sessionCache;
         this.runnableFactory = runnableFactory;
@@ -61,7 +67,7 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             boolean op = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
-            processing.submit(new BanAndOpProcessor(uuid, () -> banned, op));
+            processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, op));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -82,7 +88,7 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
             UUID uuid = event.getPlayer().getUniqueId();
-            processing.submit(new KickProcessor(uuid));
+            processing.submit(processors.player().kickProcessor(uuid));
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
@@ -116,14 +122,16 @@ public class PlayerOnlineListener implements Listener {
 
         sessionCache.cacheSession(uuid, new Session(uuid, time, world, gm));
 
+        boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
+
         runnableFactory.create("Player Register: " + uuid,
-                new RegisterProcessor(uuid, player::getFirstPlayed, playerName,
-                        new IPUpdateProcessor(uuid, address, time),
-                        new NameProcessor(uuid, playerName, displayName),
-                        new PlayerPageUpdateProcessor(uuid)
+                processors.player().registerProcessor(uuid, player::getFirstPlayed, playerName,
+                        gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null,
+                        processors.player().nameProcessor(uuid, playerName, displayName),
+                        processors.info().playerPageUpdateProcessor(uuid)
                 )
         ).runTaskAsynchronously();
-        processing.submit(new NetworkPageUpdateProcessor());
+        processing.submit(processors.info().networkPageUpdateProcessor());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -142,9 +150,9 @@ public class PlayerOnlineListener implements Listener {
 
         AFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
-        processing.submit(new BanAndOpProcessor(uuid, player::isBanned, player.isOp()));
-        processing.submit(new EndSessionProcessor(uuid, time));
-        processing.submit(new NetworkPageUpdateProcessor());
-        processing.submit(new PlayerPageUpdateProcessor(uuid));
+        processing.submit(processors.player().banAndOpProcessor(uuid, player::isBanned, player.isOp()));
+        processing.submit(processors.player().endSessionProcessor(uuid, time));
+        processing.submit(processors.info().networkPageUpdateProcessor());
+        processing.submit(processors.info().playerPageUpdateProcessor(uuid));
     }
 }

@@ -9,7 +9,6 @@ import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
@@ -26,23 +25,27 @@ public class IPUpdateProcessor implements CriticalRunnable {
     private final InetAddress ip;
     private final long time;
 
-    private Database database;
+    private final Database database;
 
-    public IPUpdateProcessor(UUID uuid, InetAddress ip, long time) {
+    IPUpdateProcessor(
+            UUID uuid, InetAddress ip, long time,
+            Database database
+    ) {
         this.uuid = uuid;
         this.ip = ip;
         this.time = time;
+        this.database = database;
     }
 
     @Override
     public void run() {
         if (Settings.DATA_GEOLOCATIONS.isTrue()) {
-            String country = GeolocationCache.getCountry(ip.getHostAddress());
             try {
+                String country = GeolocationCache.getCountry(ip.getHostAddress());
                 GeoInfo geoInfo = new GeoInfo(ip, country, time);
                 database.save().geoInfo(uuid, geoInfo);
-            } catch (NoSuchAlgorithmException e) {
-                Log.toLog(this.getClass(), e);
+            } catch (NoSuchAlgorithmException ignore) {
+                // Ignored, SHA-256 should be available
             }
         }
     }

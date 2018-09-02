@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.listeners.sponge;
 
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.player.NameProcessor;
+import com.djrapitops.plan.system.processing.processors.player.PlayerProcessors;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.entity.living.player.Player;
@@ -20,14 +20,17 @@ import java.util.UUID;
  */
 public class SpongeChatListener {
 
+    private final PlayerProcessors processorFactory;
     private final Processing processing;
     private ErrorHandler errorHandler;
 
     @Inject
     public SpongeChatListener(
+            PlayerProcessors processorFactory,
             Processing processing,
             ErrorHandler errorHandler
     ) {
+        this.processorFactory = processorFactory;
         this.processing = processing;
         this.errorHandler = errorHandler;
     }
@@ -49,7 +52,7 @@ public class SpongeChatListener {
         UUID uuid = player.getUniqueId();
         String name = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
-        processing.submit(new NameProcessor(uuid, name, displayName));
+        processing.submit(processorFactory.nameProcessor(uuid, name, displayName));
     }
 
 }

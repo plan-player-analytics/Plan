@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.processing.processors.info;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plugin.command.ISender;
 
 import java.util.UUID;
@@ -25,31 +25,36 @@ public class InspectCacheRequestProcessor implements Runnable {
     private final String playerName;
     private final BiConsumer<ISender, String> msgSender;
 
-    private InfoSystem infoSystem;
+    private final InfoSystem infoSystem;
+    private final WebExceptionLogger webExceptionLogger;
 
-    public InspectCacheRequestProcessor(
+    InspectCacheRequestProcessor(
             UUID uuid,
             ISender sender,
             String playerName,
-            BiConsumer<ISender, String> msgSender
+            BiConsumer<ISender, String> msgSender,
+            InfoSystem infoSystem,
+            WebExceptionLogger webExceptionLogger
     ) {
         this.uuid = uuid;
         this.sender = sender;
         this.playerName = playerName;
         this.msgSender = msgSender;
+        this.infoSystem = infoSystem;
+        this.webExceptionLogger = webExceptionLogger;
     }
 
     @Override
     public void run() {
         SessionCache.refreshActiveSessionsState();
-        try {
-            infoSystem.generateAndCachePlayerPage(uuid);
-            msgSender.accept(sender, playerName);
-        } catch (ConnectionFailException | UnsupportedTransferDatabaseException | UnauthorizedServerException
-                | NotFoundException | NoServersException e) {
-            sender.sendMessage("§c" + e.getMessage());
-        } catch (WebException e) {
-            Log.toLog(this.getClass(), e);
-        }
+        webExceptionLogger.logIfOccurs(this.getClass(), () -> {
+            try {
+                infoSystem.generateAndCachePlayerPage(uuid);
+                msgSender.accept(sender, playerName);
+            } catch (ConnectionFailException | UnsupportedTransferDatabaseException | UnauthorizedServerException
+                    | NotFoundException | NoServersException e) {
+                sender.sendMessage("§c" + e.getMessage());
+            }
+        });
     }
 }

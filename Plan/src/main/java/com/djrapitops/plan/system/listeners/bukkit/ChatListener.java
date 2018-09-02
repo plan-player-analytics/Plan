@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.player.NameProcessor;
+import com.djrapitops.plan.system.processing.processors.player.PlayerProcessors;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;
@@ -20,14 +20,17 @@ import java.util.UUID;
  */
 public class ChatListener implements Listener {
 
+    private final PlayerProcessors processorFactory;
     private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
     public ChatListener(
+            PlayerProcessors processorFactory,
             Processing processing,
             ErrorHandler errorHandler
     ) {
+        this.processorFactory = processorFactory;
         this.processing = processing;
         this.errorHandler = errorHandler;
     }
@@ -50,6 +53,6 @@ public class ChatListener implements Listener {
         UUID uuid = p.getUniqueId();
         String name = p.getName();
         String displayName = p.getDisplayName();
-        processing.submit(new NameProcessor(uuid, name, displayName));
+        processing.submit(processorFactory.nameProcessor(uuid, name, displayName));
     }
 }

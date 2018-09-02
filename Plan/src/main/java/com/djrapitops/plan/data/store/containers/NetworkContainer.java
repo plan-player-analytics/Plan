@@ -1,7 +1,6 @@
 package com.djrapitops.plan.data.store.containers;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
@@ -22,7 +21,6 @@ import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,14 +69,9 @@ public class NetworkContainer extends DataContainer {
         if (container != null) {
             return Optional.of(container);
         }
-        try {
-            AnalysisContainer analysisContainer = new AnalysisContainer(database.fetch().getServerContainer(serverUUID));
-            serverContainers.put(serverUUID, analysisContainer);
-            return Optional.of(analysisContainer);
-        } catch (DBOpException e) {
-            Log.toLog(this.getClass(), e);
-        }
-        return Optional.empty();
+        AnalysisContainer analysisContainer = new AnalysisContainer(database.fetch().getServerContainer(serverUUID));
+        serverContainers.put(serverUUID, analysisContainer);
+        return Optional.of(analysisContainer);
     }
 
     private void addConstants() {

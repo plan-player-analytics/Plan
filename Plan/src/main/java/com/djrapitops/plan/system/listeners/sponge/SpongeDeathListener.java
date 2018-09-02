@@ -4,10 +4,10 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.player.SpongeKillProcessor;
+import com.djrapitops.plan.system.processing.processors.player.MobKillProcessor;
+import com.djrapitops.plan.system.processing.processors.player.PlayerKillProcessor;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.utilities.Format;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Entity;
@@ -69,26 +69,29 @@ public class SpongeDeathListener {
     }
 
     private void handleKill(long time, Living dead, Entity killerEntity) {
-        SpongeKillProcessor processor = null;
+        Runnable processor = null;
+        UUID victimUUID = getUUID(dead);
         if (killerEntity instanceof Player) {
-            processor = handlePlayerKill(time, dead, (Player) killerEntity);
+            processor = handlePlayerKill(time, victimUUID, (Player) killerEntity);
         } else if (killerEntity instanceof Wolf) {
-            processor = handleWolfKill(time, dead, (Wolf) killerEntity);
+            processor = handleWolfKill(time, victimUUID, (Wolf) killerEntity);
         } else if (killerEntity instanceof Projectile) {
-            processor = handleProjectileKill(time, dead, (Projectile) killerEntity);
+            processor = handleProjectileKill(time, victimUUID, (Projectile) killerEntity);
         }
         if (processor != null) {
             processing.submit(processor);
         }
     }
 
-    private SpongeKillProcessor handlePlayerKill(long time, Living dead, Player killer) {
+    private Runnable handlePlayerKill(long time, UUID victimUUID, Player killer) {
 
         Optional<ItemStack> inMainHand = killer.getItemInHand(HandTypes.MAIN_HAND);
         ItemStack inHand = inMainHand.orElse(killer.getItemInHand(HandTypes.OFF_HAND).orElse(ItemStack.empty()));
         ItemType type = inHand.isEmpty() ? ItemTypes.AIR : inHand.getType();
 
-        return new SpongeKillProcessor(killer.getUniqueId(), time, getUUID(dead), Formatters.itemName().apply(type.getName()));
+        return victimUUID != null
+                ? new PlayerKillProcessor(killer.getUniqueId(), time, victimUUID, Formatters.itemName().apply(type.getName()))
+                : new MobKillProcessor(killer.getUniqueId());
     }
 
     private UUID getUUID(Living dead) {
@@ -98,26 +101,33 @@ public class SpongeDeathListener {
         return null;
     }
 
-    private SpongeKillProcessor handleWolfKill(long time, Living dead, Wolf wolf) {
+    private Runnable handleWolfKill(long time, UUID victimUUID, Wolf wolf) {
         Optional<Optional<UUID>> owner = wolf.get(Keys.TAMED_OWNER);
 
-        return owner.map(ownerUUID -> ownerUUID.map(
-                uuid -> new SpongeKillProcessor(uuid, time, getUUID(dead), "Wolf")
-        ).orElse(null)).orElse(null);
+        // Has been tamed
+        return owner.map(ownerUUID ->
+                // Has tame owner
+                ownerUUID.map(uuid ->
+                        // Player or mob
+                        victimUUID != null
+                                ? new PlayerKillProcessor(uuid, time, victimUUID, "Wolf")
+                                : new MobKillProcessor(uuid)
+                ).orElse(null)).orElse(null);
 
     }
 
-    private SpongeKillProcessor handleProjectileKill(long time, Living dead, Projectile projectile) {
+    private Runnable handleProjectileKill(long time, UUID victimUUID, Projectile projectile) {
         ProjectileSource source = projectile.getShooter();
         if (!(source instanceof Player)) {
             return null;
         }
 
         Player player = (Player) source;
+        String projectileName = Formatters.entityName().apply(projectile.getType().getName());
 
-        return new SpongeKillProcessor(player.getUniqueId(), time, getUUID(dead),
-                new Format(projectile.getType().getName()).capitalize().toString()
-        );
+        return victimUUID != null
+                ? new PlayerKillProcessor(player.getUniqueId(), time, victimUUID, projectileName)
+                : new MobKillProcessor(player.getUniqueId());
     }
 
 }

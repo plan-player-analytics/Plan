@@ -52,6 +52,7 @@ public class DataCache extends SessionCache implements SubSystem {
         displayNames.clear();
     }
 
+    @Deprecated
     public static DataCache getInstance() {
         DataCache dataCache = CacheSystem.getInstance().getDataCache();
         Verify.nullCheck(dataCache, () -> new IllegalStateException("Data Cache was not initialized."));

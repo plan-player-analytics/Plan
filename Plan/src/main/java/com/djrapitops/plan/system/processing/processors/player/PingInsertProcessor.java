@@ -26,11 +26,15 @@ public class PingInsertProcessor implements CriticalRunnable {
     private final UUID uuid;
     private final List<DateObj<Integer>> pingList;
 
-    private Database database;
+    private final Database database;
 
-    public PingInsertProcessor(UUID uuid, List<DateObj<Integer>> pingList) {
+    public PingInsertProcessor(
+            UUID uuid, List<DateObj<Integer>> pingList,
+            Database database
+    ) {
         this.uuid = uuid;
         this.pingList = pingList;
+        this.database = database;
     }
 
     @Override

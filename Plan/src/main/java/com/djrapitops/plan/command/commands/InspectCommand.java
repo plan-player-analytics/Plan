@@ -8,7 +8,7 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.info.InspectCacheRequestProcessor;
+import com.djrapitops.plan.system.processing.processors.info.InfoProcessors;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -34,6 +34,7 @@ public class InspectCommand extends CommandNode {
     private final Locale locale;
     private final Database database;
     private final WebServer webServer;
+    private final InfoProcessors processorFactory;
     private final Processing processing;
     private final ConnectionSystem connectionSystem;
     private final UUIDUtility uuidUtility;
@@ -42,6 +43,7 @@ public class InspectCommand extends CommandNode {
     @Inject
     public InspectCommand(
             Locale locale,
+            InfoProcessors processorFactory,
             Processing processing,
             Database database,
             WebServer webServer,
@@ -50,6 +52,7 @@ public class InspectCommand extends CommandNode {
             ErrorHandler errorHandler
     ) {
         super("inspect", Permissions.INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
+        this.processorFactory = processorFactory;
         this.processing = processing;
         this.connectionSystem = connectionSystem;
         setArguments("<player>");
@@ -90,7 +93,7 @@ public class InspectCommand extends CommandNode {
                 }
 
                 checkWebUserAndNotify(sender);
-                processing.submit(new InspectCacheRequestProcessor(uuid, sender, playerName, this::sendInspectMsg));
+                processing.submit(processorFactory.inspectCacheRequestProcessor(uuid, sender, playerName, this::sendInspectMsg));
             } catch (DBOpException e) {
                 sender.sendMessage("§eDatabase exception occurred: " + e.getMessage());
                 errorHandler.log(L.ERROR, this.getClass(), e);
