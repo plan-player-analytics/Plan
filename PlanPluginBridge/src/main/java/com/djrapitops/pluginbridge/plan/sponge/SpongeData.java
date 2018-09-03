@@ -4,7 +4,9 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
+import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -53,13 +55,15 @@ public class SpongeData extends PluginData {
             return inspectContainer;
         
         Optional<UniqueAccount> uOpt = economyService.getOrCreateAccount(uuid);
-        if (uOpt.isPresent()) {
-            UniqueAccount acc = uOpt.get();
-            
-            for(Currency currency : economyService.getCurrencies()) {
-                BigDecimal balance = acc.getBalance(currency);
-                inspectContainer.addValue(getWithIcon(currency.getName(), moneyIconColored), currency.format(balance).toPlain());
-            }
+        
+        if (!uOpt.isPresent())
+            return inspectContainer;
+       
+        UniqueAccount acc = uOpt.get();
+        
+        for(Currency currency : economyService.getCurrencies()) {
+            BigDecimal balance = acc.getBalance(currency);
+            inspectContainer.addValue(getWithIcon(currency.getName(), moneyIconColored), currency.format(balance).toPlain());
         }
 
         return inspectContainer;
@@ -67,6 +71,27 @@ public class SpongeData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
+        List<UniqueAccount> players = analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR)
+                .map(PlayersMutator::all).orElse(new ArrayList<>()).stream()
+                .map(container -> container.getValue(PlayerKeys.UUID)).filter(Optional::isPresent)
+                .map(Optional::get).map(economyService::getOrCreateAccount)
+                .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+        
+        for(Currency currency : economyService.getCurrencies()) {
+            BigDecimal totalBalance = BigDecimal.ZERO;
+            Map<UUID, String> playerBalances = new HashMap<>();
+        
+            for (UniqueAccount player : players) {
+                BigDecimal balance = player.getBalance(currency);
+                
+                totalBalance = totalBalance.add(balance);
+                playerBalances.put(player.getUniqueId(), currency.format(balance).toPlain());
+            }
+        
+            analysisContainer.addValue(getWithIcon("Total Server Balance " + currency.getName(), moneyIconColored), currency.format(totalBalance).toPlain());
+            analysisContainer.addPlayerTableValues(getWithIcon("Balance " + currency.getName(), moneyIcon), playerBalances);
+        }
+
         return analysisContainer;
     }
 }
