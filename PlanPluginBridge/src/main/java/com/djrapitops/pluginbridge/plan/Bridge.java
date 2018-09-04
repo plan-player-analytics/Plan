@@ -19,6 +19,7 @@ import com.djrapitops.pluginbridge.plan.kingdoms.KingdomsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBukkitHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBungeeHook;
 import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
+import com.djrapitops.pluginbridge.plan.nucleus.NucleusHook;
 import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
 import com.djrapitops.pluginbridge.plan.redprotect.RedProtectHook;
 import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
@@ -72,7 +73,8 @@ public class Bridge {
 
     private static Hook[] getSpongeHooks(HookHandler h) {
         return new Hook[]{
-                new BuyCraftHook(h)
+                new BuyCraftHook(h),
+                new NucleusHook(h)
         };
     }
 
