@@ -54,6 +54,10 @@
             <url>https://repo.destroystokyo.com/repository/maven-public/</url>
         </repository>
         <repository>
+            <id>sponge-repo</id>
+            <url>https://repo.spongepowered.org/maven</url>
+        </repository>
+        <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
@@ -76,6 +80,10 @@
         <repository>
             <id>advanced-achievements-repo</id>
             <url>https://raw.github.com/PyvesB/AdvancedAchievements/mvn-repo/</url>
+        </repository>
+        <repository>
+            <id>nucleus-repo</id>
+            <url>http://repo.drnaylor.co.uk/artifactory/list/minecraft</url>
         </repository>
     </repositories>
 
@@ -105,6 +113,13 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.12-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongeapi</artifactId>
+            <version>7.0.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -144,6 +159,12 @@
             <groupId>us.myles</groupId>
             <artifactId>viaversion</artifactId>
             <version>1.5.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.nucleuspowered</groupId>
+            <artifactId>nucleus-api</artifactId>
+            <version>1.6.0-PR1-S7.0</version>
             <scope>provided</scope>
         </dependency>
 
