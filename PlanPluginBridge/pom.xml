@@ -81,6 +81,10 @@
             <id>advanced-achievements-repo</id>
             <url>https://raw.github.com/PyvesB/AdvancedAchievements/mvn-repo/</url>
         </repository>
+        <repository>
+            <id>nucleus-repo</id>
+            <url>http://repo.drnaylor.co.uk/artifactory/list/minecraft</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -155,6 +159,12 @@
             <groupId>us.myles</groupId>
             <artifactId>viaversion</artifactId>
             <version>1.5.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.nucleuspowered</groupId>
+            <artifactId>nucleus-api</artifactId>
+            <version>1.6.0-PR1-S7.0</version>
             <scope>provided</scope>
         </dependency>
 
