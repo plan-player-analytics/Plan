@@ -48,13 +48,15 @@ public class SpongeEconomyData extends PluginData {
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         String name = DataCache.getInstance().getName(uuid);
         
-        if (name == null)
+        if (name == null) {
             return inspectContainer;
+        }
         
         Optional<UniqueAccount> uOpt = economyService.getOrCreateAccount(uuid);
         
-        if (!uOpt.isPresent())
+        if (!uOpt.isPresent()) {
             return inspectContainer;
+        }
        
         UniqueAccount acc = uOpt.get();
         
@@ -68,27 +70,28 @@ public class SpongeEconomyData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
-        List<UniqueAccount> players = analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR)
-                .map(PlayersMutator::all).orElse(new ArrayList<>()).stream()
-                .map(container -> container.getValue(PlayerKeys.UUID)).filter(Optional::isPresent)
-                .map(Optional::get).map(economyService::getOrCreateAccount)
+        List<UniqueAccount> players = uuids.stream().map(economyService::getOrCreateAccount)
                 .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
         
         for(Currency currency : economyService.getCurrencies()) {
-            BigDecimal totalBalance = BigDecimal.ZERO;
-            Map<UUID, String> playerBalances = new HashMap<>();
-        
-            for (UniqueAccount player : players) {
-                BigDecimal balance = player.getBalance(currency);
-                
-                totalBalance = totalBalance.add(balance);
-                playerBalances.put(player.getUniqueId(), currency.format(balance).toPlain());
-            }
-        
-            analysisContainer.addValue(getWithIcon("Total Server Balance " + currency.getName(), moneyIconColored), currency.format(totalBalance).toPlain());
-            analysisContainer.addPlayerTableValues(getWithIcon("Balance " + currency.getName(), moneyIcon), playerBalances);
+            addCurrencyToContainer(currency, players, analysisContainer);
         }
 
         return analysisContainer;
+    }
+    
+    private void addCurrencyToContainer(Currency currency, List<UniqueAccount> players, AnalysisContainer analysisContainer) {
+        BigDecimal totalBalance = BigDecimal.ZERO;
+        Map<UUID, String> playerBalances = new HashMap<>();
+    
+        for (UniqueAccount player : players) {
+            BigDecimal balance = player.getBalance(currency);
+            
+            totalBalance = totalBalance.add(balance);
+            playerBalances.put(player.getUniqueId(), currency.format(balance).toPlain());
+        }
+    
+        analysisContainer.addValue(getWithIcon("Total Server Balance " + currency.getName(), moneyIconColored), currency.format(totalBalance).toPlain());
+        analysisContainer.addPlayerTableValues(getWithIcon("Balance " + currency.getName(), moneyIcon), playerBalances);
     }
 }
