@@ -4,15 +4,12 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
-import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
@@ -31,7 +28,7 @@ import java.util.stream.Collectors;
  *
  * @author BrainStone
  */
-public class SpongeData extends PluginData {
+public class SpongeEconomyData extends PluginData {
     private static final Color color = Color.AMBER;
     private static final String nameMoneyIcon = "money-bill-wave";
     private static final Icon moneyIcon = Icon.called(nameMoneyIcon).build();
@@ -39,7 +36,7 @@ public class SpongeData extends PluginData {
     
     private final EconomyService economyService;
     
-    public SpongeData(EconomyService economyService) {
+    public SpongeEconomyData(EconomyService economyService) {
         super(ContainerSize.THIRD, "Sponge Economy");
         
         this.economyService = economyService;

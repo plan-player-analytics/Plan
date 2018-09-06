@@ -12,8 +12,8 @@ import java.util.Optional;
  * @author BrainStone
  * @since 4.4.6
  */
-public class SpongeHook extends Hook {
-    public SpongeHook(HookHandler hookHandler) {
+public class SpongeEconomyHook extends Hook {
+    public SpongeEconomyHook(HookHandler hookHandler) {
         super("org.spongepowered.api.Sponge", hookHandler);
         
         try {
@@ -27,7 +27,7 @@ public class SpongeHook extends Hook {
     @Override
     public void hook() {
         if (enabled) {
-            addPluginDataSource(new SpongeData(Sponge.getServiceManager().provide(EconomyService.class).get()));
+            addPluginDataSource(new SpongeEconomyData(Sponge.getServiceManager().provide(EconomyService.class).get()));
         }
     }
 }
