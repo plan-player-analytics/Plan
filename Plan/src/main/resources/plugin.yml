@@ -51,13 +51,13 @@ permissions:
   plan.?:
     description: Help command
     default: true
-  plan.inspect:
+  plan.inspect.base:
     description: Allows you to check your player data. 
     default: true
   plan.inspect.other:
     description: Allows you to check other players' player data.
     default: op
-  plan.qinspect:
+  plan.qinspect.base:
     description: Allows you to check your player data.
     default: op
   plan.qinspect.other:
@@ -93,8 +93,8 @@ permissions:
   plan.basic:
     children:
       plan.?: true
-      plan.inspect: true  
-      plan.qinspect: true
+      plan.inspect.base: true  
+      plan.qinspect.base: true
   plan.advanced:
     childer:
       plan.basic: true
