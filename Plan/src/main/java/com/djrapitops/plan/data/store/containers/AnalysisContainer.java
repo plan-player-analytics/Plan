@@ -62,9 +62,9 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addAnalysisSuppliers() {
-        putSupplier(AnalysisKeys.SESSIONS_MUTATOR, () -> SessionsMutator.forContainer(serverContainer));
-        putSupplier(AnalysisKeys.TPS_MUTATOR, () -> TPSMutator.forContainer(serverContainer));
-        putSupplier(AnalysisKeys.PLAYERS_MUTATOR, () -> PlayersMutator.forContainer(serverContainer));
+        putCachingSupplier(AnalysisKeys.SESSIONS_MUTATOR, () -> SessionsMutator.forContainer(serverContainer));
+        putCachingSupplier(AnalysisKeys.TPS_MUTATOR, () -> TPSMutator.forContainer(serverContainer));
+        putCachingSupplier(AnalysisKeys.PLAYERS_MUTATOR, () -> PlayersMutator.forContainer(serverContainer));
 
         addConstants();
         addPlayerSuppliers();
@@ -101,7 +101,7 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addServerProperties() {
-        putSupplier(AnalysisKeys.SERVER_NAME, () ->
+        putCachingSupplier(AnalysisKeys.SERVER_NAME, () ->
                 getUnsafe(serverNames).getOrDefault(serverContainer.getUnsafe(ServerKeys.SERVER_UUID), "Plan")
         );
 
@@ -126,7 +126,7 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addPlayerSuppliers() {
-        putSupplier(AnalysisKeys.PLAYER_NAMES, () -> serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())
+        putCachingSupplier(AnalysisKeys.PLAYER_NAMES, () -> serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())
                 .stream().collect(Collectors.toMap(
                         p -> p.getUnsafe(PlayerKeys.UUID), p -> p.getValue(PlayerKeys.NAME).orElse("?"))
                 )
@@ -169,22 +169,22 @@ public class AnalysisContainer extends DataContainer {
         Key<PlayersMutator> uniqueDay = new Key<>(PlayersMutator.class, "UNIQUE_DAY");
         Key<PlayersMutator> uniqueWeek = new Key<>(PlayersMutator.class, "UNIQUE_WEEK");
         Key<PlayersMutator> uniqueMonth = new Key<>(PlayersMutator.class, "UNIQUE_MONTH");
-        putSupplier(newDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(newDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(newWeek, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(newWeek, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(newMonth, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(newMonth, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(uniqueDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(uniqueDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterPlayedBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(uniqueWeek, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(uniqueWeek, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterPlayedBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(uniqueMonth, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(uniqueMonth, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                 .filterPlayedBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
 
@@ -212,7 +212,7 @@ public class AnalysisContainer extends DataContainer {
 
         Key<Integer> retentionDay = new Key<>(Integer.class, "RETENTION_DAY");
         // compareAndFindThoseLikelyToBeRetained can throw exception.
-        putSupplier(retentionDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).compareAndFindThoseLikelyToBeRetained(
+        putCachingSupplier(retentionDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).compareAndFindThoseLikelyToBeRetained(
                 getUnsafe(newDay).all(), getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
                 getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER)
                 ).count()
@@ -224,13 +224,13 @@ public class AnalysisContainer extends DataContainer {
                 return 0;
             }
         });
-        putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK, () ->
+        putCachingSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK, () ->
                 getUnsafe(newWeek).filterRetained(
                         getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO),
                         getUnsafe(AnalysisKeys.ANALYSIS_TIME)
                 ).count()
         );
-        putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH, () ->
+        putCachingSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH, () ->
                 getUnsafe(newMonth).filterRetained(
                         getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
                         getUnsafe(AnalysisKeys.ANALYSIS_TIME)
@@ -260,8 +260,8 @@ public class AnalysisContainer extends DataContainer {
 
     private void addSessionSuppliers() {
         Key<SessionAccordion> sessionAccordion = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
-        putSupplier(serverNames, () -> Database.getActive().fetch().getServerNames());
-        putSupplier(sessionAccordion, () -> SessionAccordion.forServer(
+        putCachingSupplier(serverNames, () -> Database.getActive().fetch().getServerNames());
+        putCachingSupplier(sessionAccordion, () -> SessionAccordion.forServer(
                 getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
                 getSupplier(serverNames),
                 () -> getUnsafe(AnalysisKeys.PLAYER_NAMES)
@@ -301,13 +301,13 @@ public class AnalysisContainer extends DataContainer {
         Key<SessionsMutator> sessionsDay = new Key<>(SessionsMutator.class, "SESSIONS_DAY");
         Key<SessionsMutator> sessionsWeek = new Key<>(SessionsMutator.class, "SESSIONS_WEEK");
         Key<SessionsMutator> sessionsMonth = new Key<>(SessionsMutator.class, "SESSIONS_MONTH");
-        putSupplier(sessionsDay, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
+        putCachingSupplier(sessionsDay, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
                 .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(sessionsWeek, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
+        putCachingSupplier(sessionsWeek, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
                 .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(sessionsMonth, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
+        putCachingSupplier(sessionsMonth, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR)
                 .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
 
@@ -320,7 +320,7 @@ public class AnalysisContainer extends DataContainer {
 
     private void addGraphSuppliers() {
         Key<WorldPie> worldPie = new Key<>(WorldPie.class, "WORLD_PIE");
-        putSupplier(worldPie, () -> new WorldPie(serverContainer.getValue(ServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()))));
+        putCachingSupplier(worldPie, () -> new WorldPie(serverContainer.getValue(ServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()))));
         putSupplier(AnalysisKeys.WORLD_PIE_SERIES, () -> getUnsafe(worldPie).toHighChartsSeries());
         putSupplier(AnalysisKeys.GM_PIE_SERIES, () -> getUnsafe(worldPie).toHighChartsDrilldown());
         putSupplier(AnalysisKeys.PLAYERS_ONLINE_SERIES, () ->
@@ -335,12 +335,12 @@ public class AnalysisContainer extends DataContainer {
                 new WorldMap(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).getGeolocations()).toHighChartsSeries()
         );
         Key<GeolocationBarGraph> geolocationBarChart = new Key<>(GeolocationBarGraph.class, "GEOLOCATION_BAR_CHART");
-        putSupplier(geolocationBarChart, () -> new GeolocationBarGraph(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)));
+        putCachingSupplier(geolocationBarChart, () -> new GeolocationBarGraph(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)));
         putSupplier(AnalysisKeys.COUNTRY_CATEGORIES, () -> getUnsafe(geolocationBarChart).toHighChartsCategories());
         putSupplier(AnalysisKeys.COUNTRY_SERIES, () -> getUnsafe(geolocationBarChart).toHighChartsSeries());
 
         Key<PingGraph> pingGraph = new Key<>(PingGraph.class, "PING_GRAPH");
-        putSupplier(pingGraph, () -> new PingGraph(
+        putCachingSupplier(pingGraph, () -> new PingGraph(
                 PingMutator.forContainer(serverContainer).mutateToByMinutePings().all()
         ));
         putSupplier(AnalysisKeys.AVG_PING_SERIES, () -> getUnsafe(pingGraph).toAvgSeries());
@@ -353,9 +353,9 @@ public class AnalysisContainer extends DataContainer {
                 getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY)
         ).toCalendarSeries());
 
-        putSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
+        putCachingSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
         Key<ActivityStackGraph> activityStackGraph = new Key<>(ActivityStackGraph.class, "ACTIVITY_STACK_GRAPH");
-        putSupplier(activityStackGraph, () -> new ActivityStackGraph(getUnsafe(AnalysisKeys.ACTIVITY_DATA)));
+        putCachingSupplier(activityStackGraph, () -> new ActivityStackGraph(getUnsafe(AnalysisKeys.ACTIVITY_DATA)));
         putSupplier(AnalysisKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
         putSupplier(AnalysisKeys.ACTIVITY_STACK_SERIES, () -> getUnsafe(activityStackGraph).toHighChartsSeries());
         putSupplier(AnalysisKeys.ACTIVITY_PIE_SERIES, () ->
@@ -376,17 +376,17 @@ public class AnalysisContainer extends DataContainer {
         Key<TPSMutator> tpsWeek = new Key<>(TPSMutator.class, "TPS_WEEK");
         Key<TPSMutator> tpsDay = new Key<>(TPSMutator.class, "TPS_DAY");
 
-        putSupplier(tpsMonth, () -> getUnsafe(AnalysisKeys.TPS_MUTATOR)
+        putCachingSupplier(tpsMonth, () -> getUnsafe(AnalysisKeys.TPS_MUTATOR)
                 .filterDataBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(tpsWeek, () -> getUnsafe(AnalysisKeys.TPS_MUTATOR)
+        putCachingSupplier(tpsWeek, () -> getUnsafe(AnalysisKeys.TPS_MUTATOR)
                 .filterDataBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
-        putSupplier(tpsDay, () -> getUnsafe(AnalysisKeys.TPS_MUTATOR)
+        putCachingSupplier(tpsDay, () -> getUnsafe(AnalysisKeys.TPS_MUTATOR)
                 .filterDataBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_DAY_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
 
-        putSupplier(AnalysisKeys.PLAYERS_ONLINE_RESOLVER, () -> new PlayersOnlineResolver(getUnsafe(AnalysisKeys.TPS_MUTATOR)));
+        putCachingSupplier(AnalysisKeys.PLAYERS_ONLINE_RESOLVER, () -> new PlayersOnlineResolver(getUnsafe(AnalysisKeys.TPS_MUTATOR)));
 
         putSupplier(AnalysisKeys.TPS_SPIKE_MONTH, () -> getUnsafe(tpsMonth).lowTpsSpikeCount());
         putSupplier(AnalysisKeys.AVG_TPS_MONTH, () -> getUnsafe(tpsMonth).averageTPS());
@@ -416,7 +416,7 @@ public class AnalysisContainer extends DataContainer {
 
     private void addServerHealth() {
         Key<HealthInformation> healthInformation = new Key<>(HealthInformation.class, "HEALTH_INFORMATION");
-        putSupplier(healthInformation, () -> new HealthInformation(this));
+        putCachingSupplier(healthInformation, () -> new HealthInformation(this));
         putSupplier(AnalysisKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
         putSupplier(AnalysisKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
     }
@@ -424,13 +424,13 @@ public class AnalysisContainer extends DataContainer {
     private void addPluginSuppliers() {
         // TODO Refactor into a system that supports running the analysis on Bungee
         Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {}, "NAV_AND_TABS");
-        putSupplier(navAndTabs, () ->
+        putCachingSupplier(navAndTabs, () ->
                 AnalysisPluginsTabContentCreator.createContent(
                         getUnsafe(AnalysisKeys.PLAYERS_MUTATOR),
                         this
                 )
         );
-        putSupplier(AnalysisKeys.BAN_DATA, () -> new ServerBanDataReader().readBanDataForContainer(this));
+        putCachingSupplier(AnalysisKeys.BAN_DATA, () -> new ServerBanDataReader().readBanDataForContainer(this));
         putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(navAndTabs)[0]);
         putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(navAndTabs)[1]);
     }
