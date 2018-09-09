@@ -5,8 +5,8 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -33,7 +33,7 @@ public class RecentLoginList {
     public String toHtml() {
         List<RecentLogin> recentLogins = getMostRecentLogins();
 
-        Formatter<DateHolder> formatter = Formatters.second();
+        Formatter<DateHolder> formatter = Formatters.second_Old();
 
         if (recentLogins.isEmpty()) {
             return "<li>No Recent Logins</li>";

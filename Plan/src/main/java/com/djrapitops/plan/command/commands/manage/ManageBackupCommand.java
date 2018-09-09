@@ -2,7 +2,7 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
@@ -105,7 +105,7 @@ public class ManageBackupCommand extends CommandNode {
     private void createNewBackup(String dbName, Database copyFromDB) {
         SQLiteDB backupDB = null;
         try {
-            String timeStamp = Formatters.iso8601NoClock().apply(System::currentTimeMillis);
+            String timeStamp = Formatters.iso8601NoClock_Old().apply(System::currentTimeMillis);
             String fileName = dbName + "-backup-" + timeStamp;
             backupDB = sqliteFactory.usingFileCalled(fileName);
             Collection<UUID> uuids = copyFromDB.fetch().getSavedUUIDs();

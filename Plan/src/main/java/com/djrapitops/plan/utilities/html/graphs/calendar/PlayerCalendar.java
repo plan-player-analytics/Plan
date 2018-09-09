@@ -9,8 +9,8 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -63,7 +63,7 @@ public class PlayerCalendar {
             int sessionCount = sessions.size();
             long playtime = sessions.stream().mapToLong(Session::getLength).sum();
 
-            series.append(",{title: 'Playtime: ").append(Formatters.timeAmount().apply(playtime))
+            series.append(",{title: 'Playtime: ").append(Formatters.timeAmount_Old().apply(playtime))
                     .append("',start:'").append(day)
                     .append("',color: '").append(Theme.getValue_Old(ThemeVal.GREEN)).append("'")
                     .append("}");
@@ -77,7 +77,7 @@ public class PlayerCalendar {
     private Map<String, List<Session>> getSessionsByDay() {
         Map<String, List<Session>> sessionsByDay = new HashMap<>();
         for (Session session : allSessions) {
-            String day = Formatters.iso8601NoClock().apply(session);
+            String day = Formatters.iso8601NoClock_Old().apply(session);
 
             List<Session> sessionsOfDay = sessionsByDay.getOrDefault(day, new ArrayList<>());
             sessionsOfDay.add(session);
@@ -89,7 +89,7 @@ public class PlayerCalendar {
     private void appendSessionsAndKills(StringBuilder series) {
         long fiveMinutes = TimeAmount.MINUTE.ms() * 5L;
 
-        Formatter<Long> timeFormatter = Formatters.timeAmount();
+        Formatter<Long> timeFormatter = Formatters.timeAmount_Old();
         for (Session session : allSessions) {
             String length = timeFormatter.apply(session.getLength());
 

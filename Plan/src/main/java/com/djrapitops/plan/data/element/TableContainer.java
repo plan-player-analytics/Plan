@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.data.element;
 
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plugin.utilities.ArrayUtil;

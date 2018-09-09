@@ -6,7 +6,7 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.Html;
 
@@ -52,9 +52,9 @@ public class PlayerSessionTable extends TableContainer {
                 break;
             }
 
-            String start = Formatters.year().apply(session);
+            String start = Formatters.year_Old().apply(session);
             String length = session.supports(SessionKeys.END)
-                    ? Formatters.timeAmount().apply(session.getValue(SessionKeys.LENGTH).orElse(0L))
+                    ? Formatters.timeAmount_Old().apply(session.getValue(SessionKeys.LENGTH).orElse(0L))
                     : "Online";
             String world = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
 

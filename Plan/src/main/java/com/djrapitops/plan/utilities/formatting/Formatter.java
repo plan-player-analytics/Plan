@@ -1,4 +1,4 @@
-package com.djrapitops.plan.data.store.mutators.formatting;
+package com.djrapitops.plan.utilities.formatting;
 
 import java.util.function.Function;
 

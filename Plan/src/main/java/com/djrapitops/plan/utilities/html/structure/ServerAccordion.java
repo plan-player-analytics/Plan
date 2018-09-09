@@ -10,8 +10,8 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
@@ -61,7 +61,7 @@ public class ServerAccordion extends AbstractAccordion {
     private void addElements() {
         int i = 0;
 
-        Formatter<Long> timeFormatter = Formatters.timeAmount();
+        Formatter<Long> timeFormatter = Formatters.timeAmount_Old();
 
         for (Map.Entry<UUID, DataContainer> entry : perServer.entrySet()) {
             UUID serverUUID = entry.getKey();
@@ -103,7 +103,7 @@ public class ServerAccordion extends AbstractAccordion {
             String leftSide = new AccordionElementContentBuilder()
                     .addRowBold(Icons.OPERATOR, "Operator", operator ? "Yes" : "No")
                     .addRowBold(Icons.BANNED, "Banned", banned ? "Yes" : "No")
-                    .addRowBold(Icon.called("user-plus").of(Color.LIGHT_GREEN), "Registered", Formatters.year().apply(() -> registered))
+                    .addRowBold(Icon.called("user-plus").of(Color.LIGHT_GREEN), "Registered", Formatters.year_Old().apply(() -> registered))
                     .addBreak()
                     .addRowBold(Icons.SESSION_COUNT, "Sessions", sessionCount)
                     .addRowBold(Icons.PLAYTIME, "Server Playtime", play)

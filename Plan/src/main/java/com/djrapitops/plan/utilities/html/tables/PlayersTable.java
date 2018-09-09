@@ -8,7 +8,7 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.PlayerContainerLastPlayedComparator;
 import com.djrapitops.plan.utilities.html.Html;
@@ -31,7 +31,7 @@ public class PlayersTable extends TableContainer {
         super(
                 Icon.called("user") + " Name",
                 Icon.called("check") + " Activity Index",
-                Icon.called("clock").of(Family.REGULAR) + " Playtime",
+                Icon.called("clock_Old").of(Family.REGULAR) + " Playtime",
                 Icon.called("calendar-plus").of(Family.REGULAR) + " Sessions",
                 Icon.called("user-plus") + " Registered",
                 Icon.called("calendar-check").of(Family.REGULAR) + " Last Seen",
@@ -41,9 +41,9 @@ public class PlayersTable extends TableContainer {
         this.maxPlayers = maxPlayers;
         useJqueryDataTables("player-table");
 
-        setFormatter(2, Formatters.timeAmount());
-        setFormatter(4, Formatters.yearLongValue());
-        setFormatter(5, Formatters.yearLongValue());
+        setFormatter(2, Formatters.timeAmount_Old());
+        setFormatter(4, Formatters.yearLongValue_Old());
+        setFormatter(5, Formatters.yearLongValue_Old());
         addRows();
     }
 

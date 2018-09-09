@@ -7,8 +7,8 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
@@ -45,6 +45,7 @@ public class QInspectCommand extends CommandNode {
     private final Locale locale;
     private final Database database;
     private final Processing processing;
+    private final Formatters formatters;
     private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
@@ -54,10 +55,12 @@ public class QInspectCommand extends CommandNode {
             Processing processing,
             Database database,
             UUIDUtility uuidUtility,
+            Formatters formatters,
             ErrorHandler errorHandler
     ) {
         super("qinspect", Permissions.QUICK_INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
         this.processing = processing;
+        this.formatters = formatters;
         setArguments("<player>");
 
         this.locale = locale;
@@ -107,8 +110,8 @@ public class QInspectCommand extends CommandNode {
     private void sendMessages(ISender sender, PlayerContainer player) {
         long now = System.currentTimeMillis();
 
-        Formatter<DateHolder> timestamp = Formatters.year();
-        Formatter<Long> length = Formatters.timeAmount();
+        Formatter<DateHolder> timestamp = formatters.year();
+        Formatter<Long> length = formatters.timeAmount();
 
         String playerName = player.getValue(PlayerKeys.NAME).orElse(locale.getString(GenericLang.UNKNOWN));
 

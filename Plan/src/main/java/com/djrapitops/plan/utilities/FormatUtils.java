@@ -24,12 +24,14 @@ public class FormatUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    @Deprecated
     public static String formatTimeStampISO8601NoClock(long epochMs) {
         String format = "yyyy-MM-dd";
 
         return format(epochMs, format);
     }
 
+    @Deprecated
     public static String formatTimeStampDay(long epochMs) {
         String format = "MMMMM d";
 
@@ -40,6 +42,7 @@ public class FormatUtils {
         return format(epochMs, format);
     }
 
+    @Deprecated
     public static String formatTimeStampClock(long epochMs) {
         String format = Settings.FORMAT_DATE_CLOCK.toString();
 
@@ -56,6 +59,7 @@ public class FormatUtils {
         return dateFormat.format(epochMs);
     }
 
+    @Deprecated
     public static String formatTimeStampSecond(long epochMs) {
         String format = Settings.FORMAT_DATE_FULL.toString();
 
@@ -84,6 +88,7 @@ public class FormatUtils {
         return format;
     }
 
+    @Deprecated
     public static String formatTimeStampYear(long epochMs) {
         String format = Settings.FORMAT_DATE_NO_SECONDS.toString();
 
@@ -99,6 +104,7 @@ public class FormatUtils {
      * @param d Double.
      * @return String format of the double.
      */
+    @Deprecated
     public static String cutDecimals(double d) {
         return new DecimalFormat(Settings.FORMAT_DECIMALS.toString()).format(d);
     }

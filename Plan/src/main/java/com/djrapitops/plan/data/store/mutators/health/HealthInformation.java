@@ -10,8 +10,8 @@ import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.icon.Icons;
@@ -80,10 +80,10 @@ public class HealthInformation extends AbstractHealthInfo {
         if (playersNewMonth != 0) {
             double retainPercentage = playersRetainedMonth * 1.0 / playersNewMonth;
             if (retainPercentage >= 0.25) {
-                addNote(Icons.GREEN_THUMB + " " + Formatters.percentage().apply(retainPercentage)
+                addNote(Icons.GREEN_THUMB + " " + Formatters.percentage_Old().apply(retainPercentage)
                         + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
             } else {
-                addNote(Icons.YELLOW_FLAG + " " + Formatters.percentage().apply(retainPercentage)
+                addNote(Icons.YELLOW_FLAG + " " + Formatters.percentage_Old().apply(retainPercentage)
                         + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
             }
         }
@@ -126,7 +126,7 @@ public class HealthInformation extends AbstractHealthInfo {
             serverHealth *= 0.8;
         }
 
-        Formatter<Long> formatter = Formatters.timeAmount();
+        Formatter<Long> formatter = Formatters.timeAmount_Old();
         if (serverDownTime <= TimeAmount.DAY.ms()) {
             addNote(Icons.GREEN_THUMB + " Total Server downtime (No Data) was " + formatter.apply(serverDownTime));
         } else if (serverDownTime <= TimeAmount.WEEK.ms()) {

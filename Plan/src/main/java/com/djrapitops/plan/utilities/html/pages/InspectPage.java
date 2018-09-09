@@ -10,9 +10,9 @@ import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
-import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -104,7 +104,7 @@ public class InspectPage implements Page {
         String playerName = player.getValue(PlayerKeys.NAME).orElse("Unknown");
         int timesKicked = player.getValue(PlayerKeys.KICK_COUNT).orElse(0);
 
-        replacer.addAllPlaceholdersFrom(player, Formatters.yearLongValue(),
+        replacer.addAllPlaceholdersFrom(player, Formatters.yearLongValue_Old(),
                 PlayerKeys.REGISTERED, PlayerKeys.LAST_SEEN
         );
 
@@ -239,7 +239,7 @@ public class InspectPage implements Page {
         long sessionAverageWeek = weekSessionsMutator.toAverageSessionLength();
         long sessionAverageMonth = monthSessionsMutator.toAverageSessionLength();
 
-        Formatter<Long> formatter = Formatters.timeAmount();
+        Formatter<Long> formatter = Formatters.timeAmount_Old();
         replacer.put("playtimeTotal", formatter.apply(playtime));
         replacer.put("playtimeDay", formatter.apply(playtimeDay));
         replacer.put("playtimeWeek", formatter.apply(playtimeWeek));

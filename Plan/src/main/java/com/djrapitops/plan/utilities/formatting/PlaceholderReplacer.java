@@ -1,4 +1,4 @@
-package com.djrapitops.plan.data.store.mutators.formatting;
+package com.djrapitops.plan.utilities.formatting;
 
 import com.djrapitops.plan.data.store.PlaceholderKey;
 import com.djrapitops.plan.data.store.containers.DataContainer;

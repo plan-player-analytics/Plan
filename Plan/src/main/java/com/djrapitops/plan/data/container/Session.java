@@ -2,7 +2,7 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -246,6 +246,6 @@ public class Session extends DataContainer implements DateHolder {
 
         double quotient = longest * 1.0 / total;
 
-        return theWorld + " (" + Formatters.percentage().apply(quotient) + ")";
+        return theWorld + " (" + Formatters.percentage_Old().apply(quotient) + ")";
     }
 }

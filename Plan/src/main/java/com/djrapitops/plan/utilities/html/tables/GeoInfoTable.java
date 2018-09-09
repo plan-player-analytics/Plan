@@ -6,8 +6,8 @@ package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
@@ -35,7 +35,7 @@ public class GeoInfoTable extends TableContainer {
         geoInfo.sort(new DateHolderRecentComparator());
         
         boolean displayIP = Settings.DISPLAY_PLAYER_IPS.isTrue();
-        Formatter<DateHolder> formatter = Formatters.year();
+        Formatter<DateHolder> formatter = Formatters.year_Old();
 
         for (GeoInfo info : geoInfo) {
             addRow(

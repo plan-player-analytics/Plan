@@ -3,7 +3,7 @@ package com.djrapitops.plan.data.store.mutators.health;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -113,8 +113,8 @@ public abstract class AbstractHealthInfo {
         if (activeCount != 0) {
             long avgFourToTwoWeeks = totalFourToTwoWeeks / (long) activeCount;
             long avgLastTwoWeeks = totalLastTwoWeeks / (long) activeCount;
-            String avgLastTwoWeeksString = Formatters.timeAmount().apply(avgLastTwoWeeks);
-            String avgFourToTwoWeeksString = Formatters.timeAmount().apply(avgFourToTwoWeeks);
+            String avgLastTwoWeeksString = Formatters.timeAmount_Old().apply(avgLastTwoWeeks);
+            String avgFourToTwoWeeksString = Formatters.timeAmount_Old().apply(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
                 addNote(Icons.GREEN_THUMB + " Active players seem to have things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString

@@ -3,8 +3,8 @@ package com.djrapitops.plan.utilities.html.tables;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.PlayerDeath;
 import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
@@ -20,7 +20,7 @@ import java.util.List;
 public class DeathsTable extends TableContainer {
 
     public DeathsTable(List<PlayerDeath> playerPlayerDeaths) {
-        super(Icon.called("clock").of(Family.REGULAR) + " Time", "Killed by", "With");
+        super(Icon.called("clock_Old").of(Family.REGULAR) + " Time", "Killed by", "With");
         setColor("red");
 
         if (playerPlayerDeaths.isEmpty()) {
@@ -32,7 +32,7 @@ public class DeathsTable extends TableContainer {
 
     private void addValues(List<PlayerDeath> playerPlayerDeaths) {
         playerPlayerDeaths.sort(new DateHolderRecentComparator());
-        Formatter<DateHolder> timestamp = Formatters.year();
+        Formatter<DateHolder> timestamp = Formatters.year_Old();
 
         int i = 0;
         DataCache dataCache = DataCache.getInstance();

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.data.store.mutators;
 
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.api.TimeAmount;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -30,7 +30,7 @@ public class FormattersTest {
     @Test
     public void formatTimeAmount() {
         String expResult = "1s";
-        String result = Formatters.timeAmount().apply(TimeAmount.SECOND.ms());
+        String result = Formatters.timeAmount_Old().apply(TimeAmount.SECOND.ms());
 
         assertEquals(expResult, result);
     }
@@ -38,7 +38,7 @@ public class FormattersTest {
     @Test
     public void formatTimeAmountMonths() {
         long time = TimeAmount.DAY.ms() * 40L;
-        assertEquals("1 month, 10d ", Formatters.timeAmount().apply(time));
+        assertEquals("1 month, 10d ", Formatters.timeAmount_Old().apply(time));
     }
 
 }

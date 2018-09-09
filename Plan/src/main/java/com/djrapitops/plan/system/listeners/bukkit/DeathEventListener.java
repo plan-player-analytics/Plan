@@ -1,11 +1,12 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.system.processing.processors.player.PlayerKillProcessor;
+import com.djrapitops.plan.utilities.formatting.EntityNameFormatter;
+import com.djrapitops.plan.utilities.formatting.ItemNameFormatter;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.Material;
@@ -93,7 +94,7 @@ public class DeathEventListener implements Listener {
             }
         }
 
-        String weaponName = Formatters.itemName().apply(itemInHand.name());
+        String weaponName = new ItemNameFormatter().apply(itemInHand.name());
 
         return victimUUID != null
                 ? new PlayerKillProcessor(killer.getUniqueId(), time, victimUUID, weaponName)
@@ -119,7 +120,7 @@ public class DeathEventListener implements Listener {
         }
 
         return victimUUID != null
-                ? new PlayerKillProcessor(owner.getUniqueId(), time, victimUUID, Formatters.entityName().apply(name))
+                ? new PlayerKillProcessor(owner.getUniqueId(), time, victimUUID, new EntityNameFormatter().apply(name))
                 : new MobKillProcessor(owner.getUniqueId());
     }
 
@@ -130,7 +131,7 @@ public class DeathEventListener implements Listener {
         }
 
         Player player = (Player) source;
-        String projectileName = Formatters.entityName().apply(projectile.getType().name());
+        String projectileName = new EntityNameFormatter().apply(projectile.getType().name());
 
         return victimUUID != null
                 ? new PlayerKillProcessor(player.getUniqueId(), time, victimUUID, projectileName)

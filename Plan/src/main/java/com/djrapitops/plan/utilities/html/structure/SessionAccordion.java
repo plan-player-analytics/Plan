@@ -3,8 +3,8 @@ package com.djrapitops.plan.utilities.html.structure;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.Settings;
@@ -81,8 +81,8 @@ public class SessionAccordion extends AbstractAccordion {
     private void addElementsForServer() {
         Map<UUID, String> serverNames = serverNamesSupplier.get();
         Map<UUID, String> playerNames = playerNamesSupplier.get();
-        Formatter<Long> timeFormatter = Formatters.timeAmount();
-        Formatter<DateHolder> timeStampFormatter = Formatters.year();
+        Formatter<Long> timeFormatter = Formatters.timeAmount_Old();
+        Formatter<DateHolder> timeStampFormatter = Formatters.year_Old();
         sessions.sort(new DateHolderRecentComparator());
         
         int i = 0;
@@ -155,8 +155,8 @@ public class SessionAccordion extends AbstractAccordion {
 
     private void addElementsForPlayer() {
         Map<UUID, String> serverNames = serverNamesSupplier.get();
-        Formatter<Long> timeFormatter = Formatters.timeAmount();
-        Formatter<DateHolder> timeStampFormatter = Formatters.year();
+        Formatter<Long> timeFormatter = Formatters.timeAmount_Old();
+        Formatter<DateHolder> timeStampFormatter = Formatters.year_Old();
         sessions.sort(new DateHolderRecentComparator());
 
         int i = 0;

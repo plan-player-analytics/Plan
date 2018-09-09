@@ -7,7 +7,7 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.store.mutators.combiners.MultiBanCombiner;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -93,7 +93,7 @@ public class AnalysisContainer extends DataContainer {
         putRawData(AnalysisKeys.ANALYSIS_TIME_DAY_AGO, now - TimeAmount.DAY.ms());
         putRawData(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO, now - TimeAmount.WEEK.ms());
         putRawData(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO, now - TimeAmount.MONTH.ms());
-        putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> Formatters.second().apply(() -> getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
+        putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> Formatters.second_Old().apply(() -> getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
 
         putRawData(AnalysisKeys.VERSION, version);
         putSupplier(AnalysisKeys.TIME_ZONE, MiscUtils::getTimeZoneOffsetHours);
@@ -146,11 +146,11 @@ public class AnalysisContainer extends DataContainer {
         );
         putSupplier(AnalysisKeys.LAST_PEAK_TIME_F, () ->
                 serverContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS)
-                        .map(dateObj -> Formatters.year().apply(dateObj)).orElse("-")
+                        .map(dateObj -> Formatters.year_Old().apply(dateObj)).orElse("-")
         );
         putSupplier(AnalysisKeys.ALL_TIME_PEAK_TIME_F, () ->
                 serverContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS)
-                        .map(dateObj -> Formatters.year().apply(dateObj)).orElse("-")
+                        .map(dateObj -> Formatters.year_Old().apply(dateObj)).orElse("-")
         );
         putSupplier(AnalysisKeys.OPERATORS, () -> serverContainer.getValue(ServerKeys.OPERATORS).map(List::size).orElse(0));
         putSupplier(AnalysisKeys.PLAYERS_TABLE, () ->
@@ -243,20 +243,20 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY_PERC, () -> {
             try {
                 Integer playersNewDay = getUnsafe(AnalysisKeys.PLAYERS_NEW_DAY);
-                return playersNewDay != 0 ? Formatters.percentage().apply(1.0 * getUnsafe(retentionDay) / playersNewDay) : "-";
+                return playersNewDay != 0 ? Formatters.percentage_Old().apply(1.0 * getUnsafe(retentionDay) / playersNewDay) : "-";
             } catch (IllegalStateException noPlayersAfterDateFiltering) {
                 return "Not enough data";
             }
         });
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK_PERC, () -> {
                     Integer playersNewWeek = getUnsafe(AnalysisKeys.PLAYERS_NEW_WEEK);
-                    return playersNewWeek != 0 ? Formatters.percentage().apply(
+                    return playersNewWeek != 0 ? Formatters.percentage_Old().apply(
                             1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
                 }
         );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH_PERC, () -> {
                     Integer playersNewMonth = getUnsafe(AnalysisKeys.PLAYERS_NEW_MONTH);
-                    return playersNewMonth != 0 ? Formatters.percentage().apply(
+                    return playersNewMonth != 0 ? Formatters.percentage_Old().apply(
                             1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth) : "-";
                 }
         );
@@ -281,7 +281,7 @@ public class AnalysisContainer extends DataContainer {
                 getUnsafe(AnalysisKeys.PLAYER_NAMES), getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all()).parseHtml()
         );
 
-        putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount()
+        putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount_Old()
                 .apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
         );
         putSupplier(AnalysisKeys.SESSION_COUNT, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).count());
@@ -289,16 +289,16 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.DEATHS, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toDeathCount());
         putSupplier(AnalysisKeys.MOB_KILL_COUNT, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toMobKillCount());
         putSupplier(AnalysisKeys.PLAYER_KILL_COUNT, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toPlayerKillCount());
-        putSupplier(AnalysisKeys.PLAYTIME_F, () -> Formatters.timeAmount()
+        putSupplier(AnalysisKeys.PLAYTIME_F, () -> Formatters.timeAmount_Old()
                 .apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL))
         );
         putSupplier(AnalysisKeys.AVERAGE_PLAYTIME_F, () -> {
                     long players = getUnsafe(AnalysisKeys.PLAYERS_TOTAL);
-                    return players != 0 ? Formatters.timeAmount()
+                    return players != 0 ? Formatters.timeAmount_Old()
                             .apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL) / players) : "-";
                 }
         );
-        putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount()
+        putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount_Old()
                 .apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
         );
 

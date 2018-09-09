@@ -2,8 +2,8 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -116,7 +116,7 @@ public class DebugPage implements Page {
             content.append("<pre>### Session Cache:<br><br>");
             content.append("UUID | Session Started <br>")
                     .append("-- | -- <br>");
-            Formatter<Long> timeStamp = Formatters.yearLongValue();
+            Formatter<Long> timeStamp = Formatters.yearLongValue_Old();
             Set<Map.Entry<UUID, Session>> sessions = SessionCache.getActiveSessions().entrySet();
             if (sessions.isEmpty()) {
                 content.append("Empty");
@@ -162,7 +162,7 @@ public class DebugPage implements Page {
             content.append("Server Address | Request Type | Response | Sent<br>")
                     .append("-- | -- | -- | --<br>");
 
-            Formatter<DateHolder> formatter = Formatters.second();
+            Formatter<DateHolder> formatter = Formatters.second_Old();
 
             if (logEntries.isEmpty()) {
                 content.append("**No Connections Logged**<br>");

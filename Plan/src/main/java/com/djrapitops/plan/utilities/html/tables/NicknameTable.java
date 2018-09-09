@@ -5,8 +5,8 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
@@ -36,7 +36,7 @@ public class NicknameTable extends TableContainer {
     private void addValues(List<Nickname> nicknames, Map<UUID, String> serverNames) {
         nicknames.sort(new DateHolderRecentComparator());
 
-        Formatter<DateHolder> formatter = Formatters.year();
+        Formatter<DateHolder> formatter = Formatters.year_Old();
         for (Nickname nickname : nicknames) {
             UUID serverUUID = nickname.getServerUUID();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");

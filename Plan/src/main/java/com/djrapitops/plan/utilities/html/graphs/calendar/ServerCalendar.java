@@ -7,7 +7,7 @@ package com.djrapitops.plan.utilities.html.graphs.calendar;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -80,7 +80,7 @@ public class ServerCalendar {
             long playtime = dayMutator.toPlaytime();
             long uniquePlayers = entry.getValue();
 
-            series.append(",{title: 'Playtime: ").append(Formatters.timeAmount().apply(playtime))
+            series.append(",{title: 'Playtime: ").append(Formatters.timeAmount_Old().apply(playtime))
                     .append("',start:'").append(day)
                     .append("',color: '").append(Theme.getValue_Old(ThemeVal.GREEN)).append("'")
                     .append("}");
