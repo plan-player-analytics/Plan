@@ -10,19 +10,19 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
 
 public class SpongeTaskSystem extends ServerTaskSystem {
-    
-    private final PlanSponge plugin;
+
+    private final PlanSponge planSponge;
 
     public SpongeTaskSystem(PlanSponge plugin) {
         super(plugin, new SpongeTPSCountTimer(plugin));
-        this.plugin = plugin;
+        this.planSponge = plugin;
     }
     
     @Override
     public void enable() {
         super.enable();
         PingCountTimerSponge pingCountTimer = new PingCountTimerSponge();
-        plugin.registerListener(pingCountTimer);
+        planSponge.registerListener(pingCountTimer);
         long startDelay = TimeAmount.SECOND.ticks() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
         RunnableFactory.createNew("PingCountTimer", pingCountTimer)
                 .runTaskTimer(startDelay, PingCountTimerSponge.PING_INTERVAL);
@@ -31,7 +31,7 @@ public class SpongeTaskSystem extends ServerTaskSystem {
     @Override
     public void disable() {
         super.disable();
-        for (Task task : Sponge.getScheduler().getScheduledTasks(plugin)) {
+        for (Task task : Sponge.getScheduler().getScheduledTasks(planSponge)) {
             task.cancel();
         }
     }

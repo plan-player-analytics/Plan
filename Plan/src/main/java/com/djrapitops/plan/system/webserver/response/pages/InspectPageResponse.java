@@ -9,6 +9,7 @@ import org.apache.commons.text.StringSubstitutor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -47,5 +48,19 @@ public class InspectPageResponse extends PageResponse {
         refreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"2\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Page will refresh automatically..");
         refreshPage.replacePlaceholders();
         return new InspectPageResponse(null, refreshPage.getContent());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof InspectPageResponse)) return false;
+        if (!super.equals(o)) return false;
+        InspectPageResponse that = (InspectPageResponse) o;
+        return Objects.equals(uuid, that.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), uuid);
     }
 }
