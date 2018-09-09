@@ -2,6 +2,8 @@ package com.djrapitops.plan.modules.server.bukkit;
 
 import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.importing.BukkitImportSystem;
+import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
@@ -43,6 +45,12 @@ public class BukkitSuperClassBindingModule {
     @Singleton
     ListenerSystem provideBukkitListenerSystem(BukkitListenerSystem bukkitListenerSystem) {
         return bukkitListenerSystem;
+    }
+
+    @Provides
+    @Singleton
+    ImportSystem provideImportSsytem(BukkitImportSystem bukkitImportSystem) {
+        return bukkitImportSystem;
     }
 
 }

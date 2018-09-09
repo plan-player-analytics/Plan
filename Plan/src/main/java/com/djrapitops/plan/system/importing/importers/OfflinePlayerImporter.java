@@ -2,12 +2,12 @@
  * License is provided in the jar as LICENSE also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
-package com.djrapitops.plan.system.processing.importing.importers;
+package com.djrapitops.plan.system.importing.importers;
 
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.importing.data.ServerImportData;
+import com.djrapitops.plan.system.importing.data.UserImportData;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.importing.ServerImportData;
-import com.djrapitops.plan.system.processing.importing.UserImportData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -30,12 +30,7 @@ public class OfflinePlayerImporter extends Importer {
             Database database,
             ServerInfo serverInfo
     ) {
-        super(database, serverInfo);
-    }
-
-    @Override
-    public List<String> getNames() {
-        return Arrays.asList("offline", "offlineplayer");
+        super(database, serverInfo, "offline");
     }
 
     @Override

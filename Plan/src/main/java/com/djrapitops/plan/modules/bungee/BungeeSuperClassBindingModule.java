@@ -4,6 +4,8 @@ import com.djrapitops.plan.api.BungeeAPI;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.system.database.BungeeDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.importing.EmptyImportSystem;
+import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.info.BungeeInfoSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.BungeeConnectionSystem;
@@ -67,6 +69,12 @@ public class BungeeSuperClassBindingModule {
     @Singleton
     ListenerSystem provideBungeeListenerSystem(BungeeListenerSystem bungeeListenerSystem) {
         return bungeeListenerSystem;
+    }
+
+    @Provides
+    @Singleton
+    ImportSystem provideImportSystem() {
+        return new EmptyImportSystem();
     }
 
 }

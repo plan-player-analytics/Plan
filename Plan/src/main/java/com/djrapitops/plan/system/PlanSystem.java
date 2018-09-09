@@ -12,6 +12,7 @@ import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.ExportSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
@@ -50,6 +51,7 @@ public class PlanSystem implements SubSystem {
 
     private final Processing processing;
 
+    private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
     private final HookHandler hookHandler;
     private final PlanAPI planAPI;
@@ -68,6 +70,7 @@ public class PlanSystem implements SubSystem {
             ServerInfo serverInfo,
             WebServerSystem webServerSystem,
             Processing processing,
+            ImportSystem importSystem,
             ExportSystem exportSystem,
             HookHandler hookHandler,
             PlanAPI planAPI
@@ -84,6 +87,7 @@ public class PlanSystem implements SubSystem {
         this.serverInfo = serverInfo;
         this.webServerSystem = webServerSystem;
         this.processing = processing;
+        this.importSystem = importSystem;
         this.exportSystem = exportSystem;
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;
@@ -180,6 +184,14 @@ public class PlanSystem implements SubSystem {
 
     public WebServerSystem getWebServerSystem() {
         return webServerSystem;
+    }
+
+    public ImportSystem getImportSystem() {
+        return importSystem;
+    }
+
+    public ExportSystem getExportSystem() {
+        return exportSystem;
     }
 
     public ServerInfo getServerInfo() {

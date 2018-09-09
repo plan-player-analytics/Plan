@@ -2,6 +2,8 @@ package com.djrapitops.plan.modules.server.sponge;
 
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.SpongeDBSystem;
+import com.djrapitops.plan.system.importing.EmptyImportSystem;
+import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
@@ -43,6 +45,12 @@ public class SpongeSuperClassBindingModule {
     @Singleton
     ListenerSystem provideSpongeListenerSystem(SpongeListenerSystem spongeListenerSystem) {
         return spongeListenerSystem;
+    }
+
+    @Provides
+    @Singleton
+    ImportSystem provideImportSystem() {
+        return new EmptyImportSystem();
     }
 
 }

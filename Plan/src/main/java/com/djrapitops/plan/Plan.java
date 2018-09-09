@@ -124,9 +124,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            // TODO Refactor into ImportSystem
-            // ImporterManager.registerImporter(new OfflinePlayerImporter());
-
             new BStatsBukkit(this).registerMetrics();
 
             logger.debug("Verbose debug messages are enabled.");

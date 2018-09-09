@@ -2,7 +2,7 @@
  * License is provided in the jar as LICENSE also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
-package com.djrapitops.plan.system.processing.importing.importers;
+package com.djrapitops.plan.system.importing.importers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
@@ -15,10 +15,10 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
+import com.djrapitops.plan.system.importing.data.ServerImportData;
+import com.djrapitops.plan.system.importing.data.UserImportData;
+import com.djrapitops.plan.system.importing.data.UserImportRefiner;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.importing.ServerImportData;
-import com.djrapitops.plan.system.processing.importing.UserImportData;
-import com.djrapitops.plan.system.processing.importing.UserImportRefiner;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
@@ -40,12 +40,23 @@ public abstract class Importer {
     private final Database database;
     private final UUID serverUUID;
 
-    protected Importer(Database database, ServerInfo serverInfo) {
+    private final String name;
+
+    protected Importer(Database database, ServerInfo serverInfo, String name) {
         this.database = database;
         this.serverUUID = serverInfo.getServerUUID();
+
+        this.name = name;
     }
 
-    public abstract List<String> getNames();
+    @Deprecated
+    public List<String> getNames() {
+        return new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public abstract ServerImportData getServerImportData();
 

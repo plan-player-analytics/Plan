@@ -2,7 +2,7 @@
  * License is provided in the jar as LICENSE also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
-package com.djrapitops.plan.data.additional.importer;
+package com.djrapitops.plan.system.importing.data;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.PlayerKill;
@@ -11,8 +11,6 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.system.database.databases.SQLiteTest;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.processing.importing.ServerImportData;
-import com.djrapitops.plan.system.processing.importing.UserImportData;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.collect.ImmutableMap;
