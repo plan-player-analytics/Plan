@@ -3,11 +3,11 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -43,6 +43,7 @@ public class WebServer implements SubSystem {
     private final FileSystem fileSystem;
     private final PlanConfig config;
 
+    private final ServerProperties serverProperties;
     private final RequestHandler requestHandler;
 
     private final PluginLogger logger;
@@ -59,6 +60,7 @@ public class WebServer implements SubSystem {
             Locale locale,
             FileSystem fileSystem,
             PlanConfig config,
+            ServerProperties serverProperties,
             PluginLogger logger,
             ErrorHandler errorHandler,
             RequestHandler requestHandler
@@ -66,6 +68,7 @@ public class WebServer implements SubSystem {
         this.locale = locale;
         this.fileSystem = fileSystem;
         this.config = config;
+        this.serverProperties = serverProperties;
 
         this.requestHandler = requestHandler;
 
@@ -228,6 +231,12 @@ public class WebServer implements SubSystem {
     }
 
     public String getAccessAddress() {
-        return isEnabled() ? getProtocol() + "://" + HtmlUtils.getIP() : config.getString(Settings.EXTERNAL_WEBSERVER_LINK);
+        return isEnabled() ? getProtocol() + "://" + getIP() : config.getString(Settings.EXTERNAL_WEBSERVER_LINK);
+    }
+
+    private String getIP() {
+        return config.isTrue(Settings.SHOW_ALTERNATIVE_IP)
+                ? config.getString(Settings.ALTERNATIVE_IP).replace("%port%", String.valueOf(port))
+                : serverProperties.getIp() + ":" + port;
     }
 }

@@ -150,7 +150,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Override
     public ColorScheme getColorScheme() {
-        return PlanColorScheme.create();
+        return PlanColorScheme.create(system.getConfigSystem().getConfig(), logger);
     }
 
     @Override

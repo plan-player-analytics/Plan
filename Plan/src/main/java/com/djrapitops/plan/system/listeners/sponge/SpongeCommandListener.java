@@ -4,6 +4,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.Sponge;
@@ -24,16 +25,19 @@ import java.util.Optional;
  */
 public class SpongeCommandListener {
 
+    private final PlanConfig config;
     private final Processors processors;
     private final Processing processing;
     private ErrorHandler errorHandler;
 
     @Inject
     public SpongeCommandListener(
+            PlanConfig config,
             Processors processors,
             Processing processing,
             ErrorHandler errorHandler
     ) {
+        this.config = config;
         this.processors = processors;
         this.processing = processing;
         this.errorHandler = errorHandler;
@@ -55,8 +59,8 @@ public class SpongeCommandListener {
     private void actOnCommandEvent(SendCommandEvent event) {
         String commandName = event.getCommand();
 
-        boolean logUnknownCommands = Settings.LOG_UNKNOWN_COMMANDS.isTrue();
-        boolean combineCommandAliases = Settings.COMBINE_COMMAND_ALIASES.isTrue();
+        boolean logUnknownCommands = config.isTrue(Settings.LOG_UNKNOWN_COMMANDS);
+        boolean combineCommandAliases = config.isTrue(Settings.COMBINE_COMMAND_ALIASES);
 
         if (!logUnknownCommands || combineCommandAliases) {
             Optional<? extends CommandMapping> existingCommand = Sponge.getCommandManager().get(commandName);

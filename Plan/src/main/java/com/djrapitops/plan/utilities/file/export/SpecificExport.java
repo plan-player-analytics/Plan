@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.utilities.file.export;
 
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -29,13 +29,19 @@ import java.util.UUID;
  */
 public abstract class SpecificExport implements Runnable {
 
+    private final FileSystem fileSystem;
     private final PlanConfig config;
     private final ServerInfo serverInfo;
 
     protected final File outputFolder;
     private final boolean usingBungee;
 
-    protected SpecificExport(PlanConfig config, ServerInfo serverInfo) {
+    protected SpecificExport(
+            FileSystem fileSystem,
+            PlanConfig config,
+            ServerInfo serverInfo
+    ) {
+        this.fileSystem = fileSystem;
         this.config = config;
         this.serverInfo = serverInfo;
         outputFolder = getFolder();
@@ -43,19 +49,20 @@ public abstract class SpecificExport implements Runnable {
     }
 
     protected File getFolder() {
-        String path = Settings.ANALYSIS_EXPORT_PATH.toString();
+        File folder;
 
+        String path = config.getString(Settings.ANALYSIS_EXPORT_PATH);
         boolean isAbsolute = Paths.get(path).isAbsolute();
         if (isAbsolute) {
-            File folder = new File(path);
-            if (!folder.exists() || !folder.isDirectory()) {
-                folder.mkdirs();
-            }
-            return folder;
+            folder = new File(path);
+        } else {
+            File dataFolder = fileSystem.getDataFolder();
+            folder = new File(dataFolder, path);
         }
-        File dataFolder = PlanPlugin.getInstance().getDataFolder();
-        File folder = new File(dataFolder, path);
-        folder.mkdirs();
+
+        if (!folder.exists() || !folder.isDirectory()) {
+            folder.mkdirs();
+        }
         return folder;
     }
 
@@ -106,7 +113,7 @@ public abstract class SpecificExport implements Runnable {
 
         File htmlLocation;
         if (usingBungee) {
-            if (serverUUID.equals(ServerInfo.getServerUUID_Old())) {
+            if (serverUUID.equals(serverInfo.getServerUUID())) {
                 htmlLocation = new File(outputFolder, "network");
             } else {
                 htmlLocation = new File(getServerFolder(), serverName.replace(" ", "%20").replace(".", "%2E"));

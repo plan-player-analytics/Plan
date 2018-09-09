@@ -145,7 +145,7 @@ public class InspectPage implements Page {
         if (allSessions.isEmpty()) {
             replacer.put("accordionSessions", "<div class=\"body\">" + "<p>No Sessions</p>" + "</div>");
         } else {
-            if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
+            if (config.isTrue(Settings.DISPLAY_SESSIONS_AS_TABLE)) {
                 replacer.put("accordionSessions", new PlayerSessionTable(playerName, allSessions).parseHtml());
             } else {
                 SessionAccordion sessionAccordion = SessionAccordion.forPlayer(allSessions, () -> serverNames);

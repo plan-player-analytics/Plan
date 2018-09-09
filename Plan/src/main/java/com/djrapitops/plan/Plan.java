@@ -149,7 +149,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
     @Override
     public ColorScheme getColorScheme() {
-        return PlanColorScheme.create();
+        return PlanColorScheme.create(system.getConfigSystem().getConfig(), logger);
     }
 
     /**

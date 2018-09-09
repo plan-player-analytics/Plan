@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
-import com.djrapitops.plan.system.settings.Settings;
 
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
@@ -39,14 +38,12 @@ public class IPUpdateProcessor implements CriticalRunnable {
 
     @Override
     public void run() {
-        if (Settings.DATA_GEOLOCATIONS.isTrue()) {
-            try {
-                String country = GeolocationCache.getCountry(ip.getHostAddress());
-                GeoInfo geoInfo = new GeoInfo(ip, country, time);
-                database.save().geoInfo(uuid, geoInfo);
-            } catch (NoSuchAlgorithmException ignore) {
-                // Ignored, SHA-256 should be available
-            }
+        try {
+            String country = GeolocationCache.getCountry(ip.getHostAddress());
+            GeoInfo geoInfo = new GeoInfo(ip, country, time);
+            database.save().geoInfo(uuid, geoInfo);
+        } catch (NoSuchAlgorithmException ignore) {
+            // Ignored, SHA-256 should be available
         }
     }
 }

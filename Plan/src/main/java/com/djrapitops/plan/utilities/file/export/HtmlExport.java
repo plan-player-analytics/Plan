@@ -51,17 +51,17 @@ public class HtmlExport extends SpecificExport {
     @Inject
     public HtmlExport(
             PlanPlugin plugin,
+            FileSystem fileSystem,
             PlanConfig config,
             Theme theme,
             Processing processing,
-            FileSystem fileSystem,
             Database database,
             PageFactory pageFactory,
             ServerInfo serverInfo,
             ConnectionSystem connectionSystem,
             ErrorHandler errorHandler
     ) {
-        super(config, serverInfo);
+        super(fileSystem, config, serverInfo);
         this.plugin = plugin;
         this.theme = theme;
         this.processing = processing;
