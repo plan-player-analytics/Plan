@@ -80,6 +80,7 @@ class SpongePlanModule {
     @Singleton
     @Named("mainCommand")
     CommandNode provideMainCommand(PlanCommand command) {
+        command.registerCommands();
         return command;
     }
 }

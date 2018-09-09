@@ -39,7 +39,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
     private final PlanConfig config;
     private final Processing processing;
     private final Database database;
-    private final WebServer webServer;
+    private final Lazy<WebServer> webServer;
     private final PluginLogger pluginLogger;
     private final WebExceptionLogger webExceptionLogger;
 
@@ -53,7 +53,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
             PlanConfig config,
             Processing processing,
             Database database,
-            WebServer webServer,
+            Lazy<WebServer> webServer,
             ConnectionLog connectionLog,
             InfoRequests infoRequests,
             Lazy<InfoSystem> infoSystem,
@@ -134,6 +134,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     @Override
     public void enable() {
+        super.enable();
         refreshServerMap();
 
         boolean usingBungeeWebServer = isServerAvailable();
@@ -143,7 +144,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
             pluginLogger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
         }
         if (usingBungeeWebServer && usingAlternativeIP) {
-            String webServerAddress = webServer.getAccessAddress();
+            String webServerAddress = webServer.get().getAccessAddress();
             pluginLogger.info(locale.getString(PluginLang.ENABLE_NOTIFY_ADDRESS_CONFIRMATION, webServerAddress));
         }
     }

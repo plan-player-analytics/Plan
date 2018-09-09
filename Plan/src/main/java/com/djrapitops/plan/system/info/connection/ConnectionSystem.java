@@ -9,6 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.request.InfoRequests;
 import com.djrapitops.plan.system.info.request.WideRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -26,7 +27,7 @@ import java.util.*;
 public abstract class ConnectionSystem implements SubSystem {
 
     protected final ConnectionLog connectionLog;
-    protected final Map<String, InfoRequest> dataRequests;
+    protected final InfoRequests infoRequests;
     protected final Lazy<InfoSystem> infoSystem;
     protected final ServerInfo serverInfo;
 
@@ -35,7 +36,7 @@ public abstract class ConnectionSystem implements SubSystem {
 
     public ConnectionSystem(
             ConnectionLog connectionLog,
-            Map<String, InfoRequest> dataRequests,
+            InfoRequests infoRequests,
             Lazy<InfoSystem> infoSystem,
             ServerInfo serverInfo
     ) {
@@ -44,11 +45,11 @@ public abstract class ConnectionSystem implements SubSystem {
         this.serverInfo = serverInfo;
         setupAllowed = false;
         bukkitServers = new HashMap<>();
-        this.dataRequests = dataRequests;
+        this.infoRequests = infoRequests;
     }
 
     public InfoRequest getInfoRequest(String name) {
-        return dataRequests.get(name.toLowerCase());
+        return infoRequests.get(name.toLowerCase());
     }
 
     public void setSetupAllowed(boolean setupAllowed) {
@@ -90,9 +91,14 @@ public abstract class ConnectionSystem implements SubSystem {
     }
 
     @Override
+    public void enable() {
+        infoRequests.initializeRequests();
+    }
+
+    @Override
     public void disable() {
         setupAllowed = false;
         bukkitServers.clear();
-        dataRequests.clear();
+        infoRequests.clear();
     }
 }

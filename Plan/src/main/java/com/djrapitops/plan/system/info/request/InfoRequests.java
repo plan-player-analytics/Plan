@@ -14,8 +14,14 @@ import java.util.HashMap;
 @Singleton
 public class InfoRequests extends HashMap<String, InfoRequest> {
 
+    private final InfoRequestHandlerFactory handlers;
+
     @Inject
     public InfoRequests(InfoRequestHandlerFactory handlers) {
+        this.handlers = handlers;
+    }
+
+    public void initializeRequests() {
         putRequest(handlers.cacheAnalysisPageRequest());
         putRequest(handlers.cacheInspectPageRequest());
         putRequest(handlers.cacheInspectPluginsTabRequest());

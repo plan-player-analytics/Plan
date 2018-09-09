@@ -18,6 +18,7 @@ import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.webserver.response.errors.*;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,13 +37,19 @@ public class ResponseHandler extends TreePageHandler {
 
     private final ResponseFactory responseFactory;
 
+    private final DebugPageHandler debugPageHandler;
+    private final PlayersPageHandler playersPageHandler;
+    private final PlayerPageHandler playerPageHandler;
+    private final ServerPageHandler serverPageHandler;
+    private final InfoRequestPageHandler infoRequestPageHandler;
     private final ErrorHandler errorHandler;
 
-    private WebServer webServer;
+    private Lazy<WebServer> webServer;
 
     @Inject
     public ResponseHandler(
             ResponseFactory responseFactory,
+            Lazy<WebServer> webServer,
 
             DebugPageHandler debugPageHandler,
             PlayersPageHandler playersPageHandler,
@@ -52,9 +59,17 @@ public class ResponseHandler extends TreePageHandler {
 
             ErrorHandler errorHandler
     ) {
+        this.webServer = webServer;
         this.responseFactory = responseFactory;
+        this.debugPageHandler = debugPageHandler;
+        this.playersPageHandler = playersPageHandler;
+        this.playerPageHandler = playerPageHandler;
+        this.serverPageHandler = serverPageHandler;
+        this.infoRequestPageHandler = infoRequestPageHandler;
         this.errorHandler = errorHandler;
+    }
 
+    public void registerPages() {
         registerPage("favicon.ico", responseFactory.redirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"), 5);
         registerPage("debug", debugPageHandler);
         registerPage("players", playersPageHandler);
@@ -63,7 +78,7 @@ public class ResponseHandler extends TreePageHandler {
         registerPage("network", serverPageHandler);
         registerPage("server", serverPageHandler);
 
-        if (webServer.isAuthRequired()) {
+        if (webServer.get().isAuthRequired()) {
             registerPage("", new RootPageHandler());
         } else {
             registerPage("", responseFactory.redirectResponse("/server"), 5);
@@ -114,11 +129,11 @@ public class ResponseHandler extends TreePageHandler {
             return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> responseFactory.javaScriptResponse(targetString));
         }
         boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
-        boolean isAuthRequired = webServer.isAuthRequired() && isNotInfoRequest;
+        boolean isAuthRequired = webServer.get().isAuthRequired() && isNotInfoRequest;
         if (isAuthRequired) {
             authentication = request.getAuth();
             if (!authentication.isPresent()) {
-                if (webServer.isUsingHTTPS()) {
+                if (webServer.get().isUsingHTTPS()) {
                     return DefaultResponses.BASIC_AUTH.get();
                 } else {
                     return DefaultResponses.FORBIDDEN.get();
@@ -135,9 +150,5 @@ public class ResponseHandler extends TreePageHandler {
             }
             return DefaultResponses.FORBIDDEN.get();
         }
-    }
-
-    public void setWebServer(WebServer webServer) {
-        this.webServer = webServer;
     }
 }

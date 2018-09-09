@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.info;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
@@ -20,6 +19,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import dagger.Lazy;
 
 import java.util.UUID;
 
@@ -37,14 +37,14 @@ public abstract class InfoSystem implements SubSystem {
     protected final InfoRequestFactory infoRequestFactory;
     protected final ConnectionSystem connectionSystem;
     protected final ServerInfo serverInfo;
-    protected final WebServer webServer;
+    protected final Lazy<WebServer> webServer;
     protected final PluginLogger logger;
 
     protected InfoSystem(
             InfoRequestFactory infoRequestFactory,
             ConnectionSystem connectionSystem,
             ServerInfo serverInfo,
-            WebServer webServer,
+            Lazy<WebServer> webServer,
             PluginLogger logger
     ) {
         this.infoRequestFactory = infoRequestFactory;
@@ -125,7 +125,7 @@ public abstract class InfoSystem implements SubSystem {
     public abstract void runLocally(InfoRequest infoRequest) throws WebException;
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         connectionSystem.enable();
     }
 
@@ -160,7 +160,7 @@ public abstract class InfoSystem implements SubSystem {
             throw new BadRequestException("Method not available on Bungee.");
         }
         Server bungee = new Server(-1, null, "Bungee", addressToRequestServer, -1);
-        String addressOfThisServer = webServer.getAccessAddress();
+        String addressOfThisServer = webServer.get().getAccessAddress();
 
         connectionSystem.setSetupAllowed(true);
         connectionSystem.sendInfoRequest(infoRequestFactory.sendDBSettingsRequest(addressOfThisServer), bungee);

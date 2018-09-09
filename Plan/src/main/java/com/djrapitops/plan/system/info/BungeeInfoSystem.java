@@ -17,6 +17,7 @@ import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,7 +39,7 @@ public class BungeeInfoSystem extends InfoSystem {
             ResponseFactory responseFactory,
             ConnectionSystem connectionSystem,
             ServerInfo serverInfo,
-            WebServer webServer,
+            Lazy<WebServer> webServer,
             PluginLogger logger
     ) {
         super(infoRequestFactory, connectionSystem, serverInfo, webServer, logger);

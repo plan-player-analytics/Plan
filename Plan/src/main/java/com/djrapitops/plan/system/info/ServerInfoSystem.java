@@ -14,6 +14,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,7 +35,7 @@ public class ServerInfoSystem extends InfoSystem {
             ConnectionSystem connectionSystem,
             ServerInfo serverInfo,
             InfoRequestFactory infoRequestFactory,
-            WebServer webServer,
+            Lazy<WebServer> webServer,
             PluginLogger logger
     ) {
         super(infoRequestFactory, connectionSystem, serverInfo, webServer, logger);

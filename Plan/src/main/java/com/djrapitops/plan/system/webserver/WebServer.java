@@ -68,7 +68,6 @@ public class WebServer implements SubSystem {
         this.config = config;
 
         this.requestHandler = requestHandler;
-        requestHandler.getResponseHandler().setWebServer(this);
 
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -90,6 +89,8 @@ public class WebServer implements SubSystem {
                 logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_PORT_BIND, port));
             }
         }
+
+        requestHandler.getResponseHandler().registerPages();
     }
 
     /**

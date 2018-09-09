@@ -72,6 +72,7 @@ class BungeePlanModule {
     @Singleton
     @Named("mainCommand")
     CommandNode provideMainCommand(PlanBungeeCommand command) {
+        command.registerCommands();
         return command;
     }
 }

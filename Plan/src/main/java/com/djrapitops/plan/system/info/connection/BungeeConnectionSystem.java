@@ -30,7 +30,7 @@ import java.util.UUID;
 public class BungeeConnectionSystem extends ConnectionSystem {
 
     private final Database database;
-    private final WebServer webServer;
+    private final Lazy<WebServer> webServer;
     private final ErrorHandler errorHandler;
     private final WebExceptionLogger webExceptionLogger;
 
@@ -39,7 +39,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     @Inject
     public BungeeConnectionSystem(
             Database database,
-            WebServer webServer,
+            Lazy<WebServer> webServer,
             ConnectionLog connectionLog,
             InfoRequests infoRequests,
             Lazy<InfoSystem> infoSystem,
@@ -102,11 +102,12 @@ public class BungeeConnectionSystem extends ConnectionSystem {
 
     @Override
     public String getMainAddress() {
-        return webServer.getAccessAddress();
+        return webServer.get().getAccessAddress();
     }
 
     @Override
     public void enable() {
+        super.enable();
         refreshServerMap();
     }
 
