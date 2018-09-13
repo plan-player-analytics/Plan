@@ -2,7 +2,6 @@ package com.djrapitops.plan.utilities.metrics;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
 import org.bstats.bukkit.Metrics;
 
 public class BStatsBukkit {
@@ -15,7 +14,6 @@ public class BStatsBukkit {
     }
 
     public void registerMetrics() {
-        Log.logDebug("Enable", "Enabling bStats Metrics.");
         if (metrics == null) {
             metrics = new Metrics(plugin);
         }

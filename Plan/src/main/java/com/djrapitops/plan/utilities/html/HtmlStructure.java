@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.utilities.html;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -14,7 +13,6 @@ import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
-import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.UUID;
@@ -82,12 +80,8 @@ public class HtmlStructure {
 
         int playerCount = 0;
         String playerData = "[]";
-        try {
-            playerCount = db.count().getServerPlayerCount(serverUUID);
-            playerData = new OnlineActivityGraph(db.fetch().getTPSData(serverUUID)).toHighChartsSeries();
-        } catch (DBOpException e) {
-            Log.toLog(HtmlStructure.class, e);
-        }
+        playerCount = db.count().getServerPlayerCount(serverUUID);
+        playerData = new OnlineActivityGraph(db.fetch().getTPSData(serverUUID)).toHighChartsSeries();
 
         return "<div class=\"col-xs-12 col-sm-12 col-md-6 col-lg-6\">" +
                 "<div class=\"card\">" +

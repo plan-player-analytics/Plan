@@ -28,7 +28,6 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.utilities.java.Reflection;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
@@ -45,6 +44,8 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Task that handles player ping calculation on Bukkit based servers.
@@ -82,7 +83,11 @@ public class PingCountTimer extends AbsRunnable implements Listener {
 
                 localPing = lookup.findGetter(entityPlayer, "ping", Integer.TYPE);
             } catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException reflectiveEx) {
-                Log.toLog(PingCountTimer.class, reflectiveEx);
+                Logger.getGlobal().log(
+                        Level.WARNING,
+                        "Reflective exception in static initializer of Plan PingCountTimer",
+                        reflectiveEx
+                );
             }
         }
 

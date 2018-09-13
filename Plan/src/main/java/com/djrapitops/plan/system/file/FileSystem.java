@@ -10,7 +10,6 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.tasks.LogsFolderCleanTask;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -18,6 +17,7 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Abstracts File methods of Plugin classes so that they can be tested without Mocks.
@@ -47,6 +47,12 @@ public class FileSystem implements SubSystem {
         return dataFolder;
     }
 
+    private File getLogsFolder() {
+        File folder = getFileFromPluginFolder("logs");
+        folder.mkdirs();
+        return folder;
+    }
+
     public File getConfigFile() {
         return configFile;
     }
@@ -67,8 +73,9 @@ public class FileSystem implements SubSystem {
             Verify.isTrue((configFile.exists() && configFile.isFile()) || configFile.createNewFile(),
                     () -> new EnableException("Could not create config file at " + configFile.getAbsolutePath()));
 
-            plugin.getRunnableFactory().create("Logs folder Clean Task", new LogsFolderCleanTask(Log.getLogsFolder()))
-                    .runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 30L);
+            plugin.getRunnableFactory().create("Logs folder Clean Task",
+                    new LogsFolderCleanTask(getLogsFolder(), plugin.getPluginLogger())
+            ).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
         } catch (IOException e) {
             throw new EnableException("Failed to create config.yml", e);
         }

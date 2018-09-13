@@ -5,7 +5,6 @@
  */
 package com.djrapitops.plan.system.database.databases;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
@@ -26,15 +25,16 @@ import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.*;
+import utilities.OptionalAssert;
+import utilities.RandomData;
+import utilities.Teardown;
+import utilities.TestConstants;
 import utilities.mocks.SystemMockUtil;
 
 import java.lang.management.ManagementFactory;
@@ -71,12 +71,6 @@ public class SQLiteTest {
 
         mockUtil.enableDatabaseSystem(db)
                 .enableServerInfoSystem();
-        StaticHolder.saveInstance(SQLDB.class, Plan.class);
-        StaticHolder.saveInstance(SQLiteTest.class, Plan.class);
-
-        Log.setErrorManager(new TestErrorManager());
-        Log.setDebugMode("console");
-//        Settings.DEV_MODE.setTemporaryValue(true);
 
         db.init();
         System.out.println("--- Class Setup Complete ---\n");

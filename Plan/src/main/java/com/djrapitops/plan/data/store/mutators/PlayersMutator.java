@@ -125,7 +125,7 @@ public class PlayersMutator {
 
     public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date) {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
-        for (long time = date; time >= date - TimeAmount.MONTH.ms() * 2L; time -= TimeAmount.WEEK.ms()) {
+        for (long time = date; time >= date - TimeAmount.MONTH.toMillis(2L); time -= TimeAmount.WEEK.toMillis(1L)) {
             Map<String, Set<UUID>> map = activityData.getOrDefault(time, new HashMap<>());
             if (!players.isEmpty()) {
                 for (PlayerContainer player : players) {
@@ -189,8 +189,8 @@ public class PlayersMutator {
                 continue;
             }
 
-            long monthAfterRegister = registered + TimeAmount.MONTH.ms();
-            long half = registered + (TimeAmount.MONTH.ms() / 2L);
+            long monthAfterRegister = registered + TimeAmount.MONTH.toMillis(1L);
+            long half = registered + (TimeAmount.MONTH.toMillis(1L) / 2L);
             if (player.playedBetween(registered, half) && player.playedBetween(half, monthAfterRegister)) {
                 retainedAfterMonth.add(player);
             } else {

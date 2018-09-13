@@ -22,7 +22,8 @@ import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,6 +56,7 @@ public class PlanSystem implements SubSystem {
     private final ExportSystem exportSystem;
     private final HookHandler hookHandler;
     private final PlanAPI planAPI;
+    private final ErrorHandler errorHandler;
 
     @Inject
     public PlanSystem(
@@ -73,7 +75,8 @@ public class PlanSystem implements SubSystem {
             ImportSystem importSystem,
             ExportSystem exportSystem,
             HookHandler hookHandler,
-            PlanAPI planAPI
+            PlanAPI planAPI,
+            ErrorHandler errorHandler
     ) {
         this.fileSystem = fileSystem;
         this.configSystem = configSystem;
@@ -91,6 +94,7 @@ public class PlanSystem implements SubSystem {
         this.exportSystem = exportSystem;
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;
+        this.errorHandler = errorHandler;
     }
 
     @Deprecated
@@ -151,7 +155,7 @@ public class PlanSystem implements SubSystem {
                     system.disable();
                 }
             } catch (Exception e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.WARN, this.getClass(), e);
             }
         }
     }

@@ -5,9 +5,9 @@
 package com.djrapitops.plan.system.importing.data;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.benchmarking.Timings;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class UserImportRefiner {
 
     private final Plan plugin;
+    private final Timings timings;
     private final boolean onlineMode;
 
     private final List<UserImportData> importers = new ArrayList<>();
@@ -39,6 +40,7 @@ public class UserImportRefiner {
 
     public UserImportRefiner(Plan plugin, List<UserImportData> importers) {
         this.plugin = plugin;
+        this.timings = plugin.getTimings();
         this.importers.addAll(importers);
 
         onlineMode = plugin.getServer().getOnlineMode();
@@ -47,10 +49,10 @@ public class UserImportRefiner {
     public List<UserImportData> refineData() {
         String benchmarkName = "Refining UserImportData";
 
-        Benchmark.start(benchmarkName);
+        timings.start(benchmarkName);
         processMissingIdentifiers();
         processOldWorlds();
-        Benchmark.stop(benchmarkName);
+        timings.end(DebugChannels.IMPORTING, benchmarkName);
 
         return importers;
     }
@@ -58,7 +60,7 @@ public class UserImportRefiner {
     private void processOldWorlds() {
         String benchmarkName = "Processing old worlds";
 
-        Benchmark.start(benchmarkName);
+        timings.start(benchmarkName);
 
         importers.parallelStream()
                 .flatMap(importer -> importer.getWorldTimes().keySet().stream())
@@ -73,7 +75,7 @@ public class UserImportRefiner {
         importers.parallelStream()
                 .forEach(importer -> importer.getWorldTimes().keySet().removeAll(worlds.keySet()));
 
-        Benchmark.stop(benchmarkName);
+        timings.end(DebugChannels.IMPORTING, benchmarkName);
     }
 
     private void checkOldWorld(String worldName) {
@@ -90,7 +92,7 @@ public class UserImportRefiner {
     private void processMissingIdentifiers() {
         String benchmarkName = "Processing missing identifiers";
 
-        Benchmark.start(benchmarkName);
+        timings.start(benchmarkName);
 
         List<UserImportData> invalidData = new ArrayList<>();
 
@@ -115,13 +117,13 @@ public class UserImportRefiner {
         processMissingUUIDs();
         processMissingNames();
 
-        Benchmark.stop(benchmarkName);
+        timings.end(DebugChannels.IMPORTING, benchmarkName);
     }
 
     private void processMissingUUIDs() {
         String benchmarkName = "Processing missing UUIDs";
 
-        Benchmark.start(benchmarkName);
+        timings.start(benchmarkName);
 
         if (onlineMode) {
             addMissingUUIDsOverFetcher();
@@ -141,7 +143,7 @@ public class UserImportRefiner {
 
         importers.removeAll(uuidsMissing.keySet());
 
-        Benchmark.stop(benchmarkName);
+        timings.end(DebugChannels.IMPORTING, benchmarkName);
     }
 
     private void addMissingUUIDsOverFetcher() {
@@ -153,7 +155,6 @@ public class UserImportRefiner {
             result = uuidFetcher.call().entrySet().parallelStream()
                     .collect(Collectors.toMap(entry -> entry.getValue().toString(), Map.Entry::getKey));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
             return;
         }
 
@@ -206,7 +207,7 @@ public class UserImportRefiner {
     private void processMissingNames() {
         String benchmarkNames = "Processing missing names";
 
-        Benchmark.start(benchmarkNames);
+        timings.start(benchmarkNames);
 
         addMissingNames();
 
@@ -214,7 +215,7 @@ public class UserImportRefiner {
 
         importers.removeAll(namesMissing.keySet());
 
-        Benchmark.stop(benchmarkNames);
+        timings.end(DebugChannels.IMPORTING, benchmarkNames);
     }
 
     private void addMissingNames() {

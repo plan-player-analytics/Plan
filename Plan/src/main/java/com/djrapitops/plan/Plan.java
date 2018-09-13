@@ -35,7 +35,6 @@ import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBukkit;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
@@ -162,7 +161,6 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         }
 
         logger.info(locale != null ? locale.getString(PluginLang.DISABLED) : PluginLang.DISABLED.getDefault());
-        DebugLog.pluginDisabled(Plan.class);
     }
 
     @Override

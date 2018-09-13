@@ -20,7 +20,6 @@ import com.djrapitops.plan.system.importing.data.UserImportData;
 import com.djrapitops.plan.system.importing.data.UserImportRefiner;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.SHA256Hash;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.collect.ImmutableMap;
 
@@ -82,7 +81,6 @@ public abstract class Importer {
         ServerImportData serverImportData = getServerImportData();
 
         if (serverImportData == null) {
-            Log.debug("Server Import Data null, skipping");
             return;
         }
 

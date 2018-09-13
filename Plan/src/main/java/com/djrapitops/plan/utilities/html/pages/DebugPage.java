@@ -2,8 +2,6 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -14,11 +12,12 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.FolderTimeStampFileLogger;
@@ -107,7 +106,7 @@ public class DebugPage implements Page {
             }
             content.append("</pre>");
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 

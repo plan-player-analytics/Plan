@@ -11,6 +11,9 @@ import java.util.*;
 
 public class ServerBanDataReader {
 
+    public ServerBanDataReader() {
+    }
+
     public Set<UUID> readBanDataForContainer(DataContainer container) {
         return readBanData(
                 container.getValue(AnalysisKeys.PLAYERS_MUTATOR)

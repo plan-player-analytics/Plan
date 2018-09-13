@@ -6,10 +6,7 @@ import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.collect.Iterables;
 import org.json.simple.parser.ParseException;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -81,11 +78,9 @@ public class HastebinTest {
     }
 
     @Test
-    public void testUpload() {
-        if (!testLink.get()) {
-            Log.info("Hastebin not available, skipping testUpload()");
-            return;
-        }
+    public void testUpload() throws IOException, ParseException {
+        // Hastebin not available, skipping testUpload()
+        Assume.assumeTrue(testLink.get());
 
         String link = Hastebin.safeUpload(RandomData.randomString(10));
         assertNotNull(link);

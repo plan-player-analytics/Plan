@@ -16,9 +16,6 @@ import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsSponge;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.DebugLog;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.logging.L;
@@ -152,9 +149,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             system.disable();
         }
 
-        Log.info(locale.getString(PluginLang.DISABLED));
-        Benchmark.pluginDisabled(PlanSponge.class);
-        DebugLog.pluginDisabled(PlanSponge.class);
+        logger.info(locale.getString(PluginLang.DISABLED));
     }
 
     @Override

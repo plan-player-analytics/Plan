@@ -5,7 +5,6 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.api.Benchmark;
 
 import java.util.Optional;
 
@@ -37,7 +36,6 @@ public class Version10Patch extends Patch {
     }
 
     public void alterTablesToV10() throws DBInitException {
-        Benchmark.start("Schema copy from 8 to 10");
         copyCommandUsage();
 
         copyTPS();
@@ -56,7 +54,6 @@ public class Version10Patch extends Patch {
         dropTable("temp_nicks");
         dropTable("temp_kills");
         dropTable("temp_users");
-        Benchmark.stop("Schema copy from 8 to 10");
     }
 
     private void copyUsers() throws DBInitException {

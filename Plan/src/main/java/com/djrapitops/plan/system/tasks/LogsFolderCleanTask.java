@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import java.io.File;
@@ -18,9 +18,11 @@ import java.util.Objects;
 public class LogsFolderCleanTask extends AbsRunnable {
 
     private final File folder;
+    private final PluginLogger logger;
 
-    public LogsFolderCleanTask(File folder) {
+    public LogsFolderCleanTask(File folder, PluginLogger logger) {
         this.folder = folder;
+        this.logger = logger;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class LogsFolderCleanTask extends AbsRunnable {
                 try {
                     Files.delete(file.toPath());
                 } catch (IOException e) {
-                    Log.warn("Could not delete log file at: " + file.getAbsolutePath() + ", " + e.getMessage());
+                    logger.warn("Could not delete log file at: " + file.getAbsolutePath() + ", " + e.getMessage());
                 }
             }
         }

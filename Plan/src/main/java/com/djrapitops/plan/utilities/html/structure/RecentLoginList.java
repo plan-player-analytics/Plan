@@ -5,15 +5,15 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
-import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility class for creating recent login list html.
@@ -81,7 +81,7 @@ public class RecentLoginList {
                 continue;
             }
             long mostRecentStart = session.getUnsafe(SessionKeys.START);
-            boolean isFirstSession = Math.abs(registerDate - mostRecentStart) < TimeAmount.SECOND.ms() * 10L;
+            boolean isFirstSession = Math.abs(registerDate - mostRecentStart) < TimeUnit.SECONDS.toMillis(10L);
             recentLogins.add(new RecentLogin(mostRecentStart, isFirstSession, name));
         }
         return recentLogins;

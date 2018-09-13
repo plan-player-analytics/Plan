@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.Sponge;
@@ -43,7 +42,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
         lastCheckNano = nanoTime;
 
         if (diff > nanoTime) { // First run's diff = nanoTime + 1, no calc possible.
-            Log.debug("First run of TPSCountTimer Task.");
+            logger.debug("First run of TPSCountTimer Task.");
             return;
         }
 

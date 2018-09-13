@@ -7,7 +7,6 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.store.mutators.combiners.MultiBanCombiner;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -18,6 +17,7 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.ServerBanDataReader;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
 import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
 import com.djrapitops.plan.utilities.html.graphs.WorldMap;
@@ -36,6 +36,7 @@ import com.djrapitops.plan.utilities.html.tables.ServerSessionTable;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -90,9 +91,9 @@ public class AnalysisContainer extends DataContainer {
     private void addConstants() {
         long now = System.currentTimeMillis();
         putRawData(AnalysisKeys.ANALYSIS_TIME, now);
-        putRawData(AnalysisKeys.ANALYSIS_TIME_DAY_AGO, now - TimeAmount.DAY.ms());
-        putRawData(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO, now - TimeAmount.WEEK.ms());
-        putRawData(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO, now - TimeAmount.MONTH.ms());
+        putRawData(AnalysisKeys.ANALYSIS_TIME_DAY_AGO, now - TimeUnit.DAYS.toMillis(1L));
+        putRawData(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO, now - TimeAmount.WEEK.toMillis(1L));
+        putRawData(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO, now - TimeAmount.MONTH.toMillis(1L));
         putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> Formatters.second_Old().apply(() -> getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
 
         putRawData(AnalysisKeys.VERSION, version);

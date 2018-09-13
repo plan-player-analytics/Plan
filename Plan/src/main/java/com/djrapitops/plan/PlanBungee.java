@@ -19,8 +19,6 @@ import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBungee;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.logging.L;
@@ -129,8 +127,6 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         system.disable();
 
         logger.info(locale.getString(PluginLang.DISABLED));
-        Benchmark.pluginDisabled(PlanBungee.class);
-        DebugLog.pluginDisabled(PlanBungee.class);
     }
 
     @Override
