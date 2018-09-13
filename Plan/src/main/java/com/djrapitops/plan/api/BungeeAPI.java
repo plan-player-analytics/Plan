@@ -6,7 +6,6 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -26,20 +25,17 @@ public class BungeeAPI extends CommonAPI {
 
     private final HookHandler hookHandler;
     private final Database database;
-    private final DataCache dataCache;
 
     @Inject
     public BungeeAPI(
             UUIDUtility uuidUtility,
             Database database,
-            DataCache dataCache,
             HookHandler hookHandler,
             ErrorHandler errorHandler
     ) {
         super(uuidUtility, errorHandler);
 
         this.database = database;
-        this.dataCache = dataCache;
         this.hookHandler = hookHandler;
     }
 
@@ -50,7 +46,7 @@ public class BungeeAPI extends CommonAPI {
 
     @Override
     public String getPlayerName(UUID uuid) {
-        return dataCache.getName(uuid);
+        return database.fetch().getPlayerName(uuid);
     }
 
     @Override

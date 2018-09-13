@@ -90,11 +90,13 @@ public class KillsTable extends UserIDTable {
     public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as victim_uuid";
+        String usersNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as victim_name";
         String sql = "SELECT " +
                 Col.SESSION_ID + ", " +
                 Col.DATE + ", " +
                 Col.WEAPON + ", " +
-                usersUUIDColumn +
+                usersUUIDColumn + ", " +
+                usersNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.VICTIM_ID +
                 " WHERE " + Col.KILLER_ID + "=" + usersTable.statementSelectID;
@@ -113,11 +115,11 @@ public class KillsTable extends UserIDTable {
                     if (session == null) {
                         continue;
                     }
-                    String uuidS = set.getString("victim_uuid");
-                    UUID victim = UUID.fromString(uuidS);
+                    UUID victim = UUID.fromString(set.getString("victim_uuid"));
+                    String victimName = set.getString("victim_name");
                     long date = set.getLong(Col.DATE.get());
                     String weapon = set.getString(Col.WEAPON.get());
-                    session.getUnsafe(SessionKeys.PLAYER_KILLS).add(new PlayerKill(victim, weapon, date));
+                    session.getUnsafe(SessionKeys.PLAYER_KILLS).add(new PlayerKill(victim, weapon, date, victimName));
                 }
                 return null;
             }
@@ -127,11 +129,13 @@ public class KillsTable extends UserIDTable {
     public void addDeathsToSessions(UUID uuid, Map<Integer, Session> sessions) {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as killer_uuid";
+        String usersNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as killer_name";
         String sql = "SELECT " +
                 Col.SESSION_ID + ", " +
                 Col.DATE + ", " +
                 Col.WEAPON + ", " +
-                usersUUIDColumn +
+                usersUUIDColumn + ", " +
+                usersNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.KILLER_ID +
                 " WHERE " + Col.VICTIM_ID + "=" + usersTable.statementSelectID;
@@ -150,11 +154,11 @@ public class KillsTable extends UserIDTable {
                     if (session == null) {
                         continue;
                     }
-                    String uuidS = set.getString("killer_uuid");
-                    UUID killer = UUID.fromString(uuidS);
+                    UUID killer = UUID.fromString(set.getString("killer_uuid"));
+                    String name = set.getString("killer_name");
                     long date = set.getLong(Col.DATE.get());
                     String weapon = set.getString(Col.WEAPON.get());
-                    session.getUnsafe(SessionKeys.PLAYER_DEATHS).add(new PlayerDeath(killer, weapon, date));
+                    session.getUnsafe(SessionKeys.PLAYER_DEATHS).add(new PlayerDeath(killer, name, weapon, date));
                 }
                 return null;
             }
@@ -193,11 +197,13 @@ public class KillsTable extends UserIDTable {
         String usersVictimIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersKillerIDColumn = "a." + UsersTable.Col.ID;
         String usersVictimUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as victim_uuid";
+        String usersVictimNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as victim_name";
         String usersKillerUUIDColumn = "a." + UsersTable.Col.UUID + " as killer_uuid";
         String sql = "SELECT " +
                 Col.DATE + ", " +
                 Col.WEAPON + ", " +
                 usersVictimUUIDColumn + ", " +
+                usersVictimNameColumn + ", " +
                 usersKillerUUIDColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + usersTable + " on " + usersVictimIDColumn + "=" + Col.VICTIM_ID +
@@ -210,10 +216,12 @@ public class KillsTable extends UserIDTable {
                 while (set.next()) {
                     UUID killer = UUID.fromString(set.getString("killer_uuid"));
                     UUID victim = UUID.fromString(set.getString("victim_uuid"));
+                    String victimName = set.getString("victim_name");
                     long date = set.getLong(Col.DATE.get());
                     String weapon = set.getString(Col.WEAPON.get());
+
                     List<PlayerKill> kills = allKills.getOrDefault(killer, new ArrayList<>());
-                    kills.add(new PlayerKill(victim, weapon, date));
+                    kills.add(new PlayerKill(victim, weapon, date, victimName));
                     allKills.put(killer, kills);
                 }
                 return allKills;
@@ -224,11 +232,13 @@ public class KillsTable extends UserIDTable {
     public Map<Integer, List<PlayerKill>> getAllPlayerKillsBySessionID() {
         String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
         String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as victim_uuid";
+        String usersNameColumn = usersTable + "." + UsersTable.Col.USER_NAME + " as victim_name";
         String sql = "SELECT " +
                 Col.SESSION_ID + ", " +
                 Col.DATE + ", " +
                 Col.WEAPON + ", " +
-                usersUUIDColumn +
+                usersUUIDColumn + ", " +
+                usersNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.VICTIM_ID;
 
@@ -241,11 +251,11 @@ public class KillsTable extends UserIDTable {
 
                     List<PlayerKill> playerKills = allPlayerKills.getOrDefault(sessionID, new ArrayList<>());
 
-                    String uuidS = set.getString("victim_uuid");
-                    UUID victim = UUID.fromString(uuidS);
+                    UUID victim = UUID.fromString(set.getString("victim_uuid"));
+                    String victimName = set.getString("victim_name");
                     long date = set.getLong(Col.DATE.get());
                     String weapon = set.getString(Col.WEAPON.get());
-                    playerKills.add(new PlayerKill(victim, weapon, date));
+                    playerKills.add(new PlayerKill(victim, weapon, date, victimName));
 
                     allPlayerKills.put(sessionID, playerKills);
                 }

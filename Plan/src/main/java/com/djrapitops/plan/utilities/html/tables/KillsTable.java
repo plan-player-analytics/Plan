@@ -3,11 +3,10 @@ package com.djrapitops.plan.utilities.html.tables;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.data.store.objects.DateHolder;
-import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -39,16 +38,15 @@ public class KillsTable extends TableContainer {
         Formatter<DateHolder> timestamp = Formatters.year_Old();
 
         int i = 0;
-        DataCache dataCache = DataCache.getInstance();
         for (PlayerKill kill : playerKills) {
             if (i >= 40) {
                 break;
             }
 
-            String name = dataCache.getName(kill.getVictim());
+            String victimName = kill.getVictimName().orElse("Unknown");
             addRow(
                     timestamp.apply(kill),
-                    Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
+                    Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(victimName), victimName),
                     kill.getWeapon()
             );
 

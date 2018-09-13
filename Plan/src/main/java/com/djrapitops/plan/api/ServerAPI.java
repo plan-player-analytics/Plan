@@ -6,7 +6,6 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -25,21 +24,18 @@ import java.util.UUID;
 public class ServerAPI extends CommonAPI {
 
     private final HookHandler hookHandler;
-    private final Database activeDatabase;
-    private final DataCache dataCache;
+    private final Database database;
 
     @Inject
     public ServerAPI(
             UUIDUtility uuidUtility,
             HookHandler hookHandler,
-            Database activeDatabase,
-            DataCache dataCache,
+            Database database,
             ErrorHandler errorHandler
     ) {
         super(uuidUtility, errorHandler);
         this.hookHandler = hookHandler;
-        this.activeDatabase = activeDatabase;
-        this.dataCache = dataCache;
+        this.database = database;
     }
 
     @Override
@@ -49,11 +45,11 @@ public class ServerAPI extends CommonAPI {
 
     @Override
     public String getPlayerName(UUID uuid) {
-        return dataCache.getName(uuid);
+        return database.fetch().getPlayerName(uuid);
     }
 
     @Override
     public FetchOperations fetchFromPlanDB() {
-        return activeDatabase.fetch();
+        return database.fetch();
     }
 }
