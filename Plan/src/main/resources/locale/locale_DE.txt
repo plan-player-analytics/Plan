@@ -38,7 +38,7 @@ Cmd Qinspect - Times Kicked                     ||   §2Kicks: §f${0}
 Cmd Setup - Allowed                             || §aSetupmodus wurde aktiviert.
 Cmd Setup - Bad Request                         || §eVerbindung hergestellt. Der empfangende Server ist kein Bungeecordserver. Nutze stattdessen die Bungeecord-Adresse.
 Cmd Setup - Disallowed                          || §cSet-up wurde deaktiviert.
-Cmd Setup - Forbidden                           || §eVerbindung hergestelltaber der Bungeecordserver hat den Setupmodus nicht aktiviert. Nutze '/planbungee setup' um ihn zu aktivieren.
+Cmd Setup - Forbidden                           || §eVerbindung hergestellt aber der Bungeecordserver hat den Setupmodus nicht aktiviert. Nutze '/planbungee setup' um ihn zu aktivieren.
 Cmd Setup - Gateway Error                       || §eVerbindung hergestellt, aber der Bungeecordserver konnte sich nicht mit diesem Server verbinden (Wurde der aktuelle Server neugestartet?). Nutze /plan m con & /planbungee con zum debuggen.
 Cmd Setup - Generic Fail                        || §eVerbindung fehlgeschlagen: ${0}
 Cmd Setup - Internal Error                      || §eVerbindung hergestellt. ${0}, eventuelle Fehler kannst du dem Error-Log auf der Debugseite des empfangenden Servers entnehmen.
