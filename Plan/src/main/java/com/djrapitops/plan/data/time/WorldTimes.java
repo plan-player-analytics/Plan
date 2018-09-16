@@ -1,11 +1,8 @@
 package com.djrapitops.plan.data.time;
 
-import com.djrapitops.plan.system.settings.WorldAliasSettings;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Class that tracks the time spent in each World based on GMTimes.
@@ -169,30 +166,4 @@ public class WorldTimes {
         }
     }
 
-    public Map<String, Long> getPlaytimePerAlias() {
-        Map<String, Long> playtimePerWorld = getWorldTimes() // WorldTimes Map<String, GMTimes>
-                .entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue().getTotal() // GMTimes.getTotal
-                ));
-
-        Map<String, String> aliases = WorldAliasSettings.getAliases_Old();
-
-        Map<String, Long> playtimePerAlias = new HashMap<>();
-        for (Map.Entry<String, Long> entry : playtimePerWorld.entrySet()) {
-            String worldName = entry.getKey();
-            long playtime = entry.getValue();
-
-            if (!aliases.containsKey(worldName)) {
-                aliases.put(worldName, worldName);
-                WorldAliasSettings.addWorld_Old(worldName);
-            }
-
-            String alias = aliases.get(worldName);
-
-            playtimePerAlias.put(alias, playtimePerAlias.getOrDefault(alias, 0L) + playtime);
-        }
-        return playtimePerAlias;
-    }
 }

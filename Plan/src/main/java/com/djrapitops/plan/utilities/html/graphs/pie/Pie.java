@@ -7,7 +7,6 @@ package com.djrapitops.plan.utilities.html.graphs.pie;
 import com.djrapitops.plan.utilities.html.graphs.HighChart;
 import org.apache.commons.text.TextStringBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,15 +15,11 @@ import java.util.List;
  * @author Rsl1122
  * @since 4.2.0
  */
-public class AbstractPieChart implements HighChart {
+public class Pie implements HighChart {
 
-    protected List<PieSlice> slices;
+    protected final List<PieSlice> slices;
 
-    public AbstractPieChart() {
-        slices = new ArrayList<>();
-    }
-
-    public AbstractPieChart(List<PieSlice> slices) {
+    public Pie(List<PieSlice> slices) {
         this.slices = slices;
     }
 
@@ -33,13 +28,5 @@ public class AbstractPieChart implements HighChart {
         TextStringBuilder series = new TextStringBuilder("[");
         series.appendWithSeparators(slices, ",");
         return series.append("]").toString();
-    }
-
-    public void setSlices(List<PieSlice> slices) {
-        this.slices = slices;
-    }
-
-    public void addSlices(List<PieSlice> slices) {
-        this.slices.addAll(slices);
     }
 }

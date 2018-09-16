@@ -1,6 +1,7 @@
-package com.djrapitops.plan.utilities.html.graphs;
+package com.djrapitops.plan.utilities.html.graphs.special;
 
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.utilities.html.graphs.HighChart;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.HashMap;
@@ -17,12 +18,8 @@ public class WorldMap implements HighChart {
 
     private final List<String> geoLocations;
 
-    public WorldMap(List<String> geoLocations) {
-        this.geoLocations = geoLocations;
-    }
-
-    public WorldMap(PlayersMutator mutator) {
-        this(mutator.getGeolocations());
+    WorldMap(PlayersMutator mutator) {
+        this.geoLocations = mutator.getGeolocations();
     }
 
     private static Map<String, String> getGeoCodes(Map<String, Integer> geoCodeCounts) {

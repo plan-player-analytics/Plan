@@ -4,12 +4,13 @@
  */
 package com.djrapitops.plan.utilities.html;
 
+import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
@@ -81,7 +82,8 @@ public class HtmlStructure {
         int playerCount = 0;
         String playerData = "[]";
         playerCount = db.count().getServerPlayerCount(serverUUID);
-        playerData = new OnlineActivityGraph(db.fetch().getTPSData(serverUUID)).toHighChartsSeries();
+        Graphs graphs = null; // TODO
+        playerData = graphs.line().playersOnlineGraph(new TPSMutator(db.fetch().getTPSData(serverUUID))).toHighChartsSeries();
 
         return "<div class=\"col-xs-12 col-sm-12 col-md-6 col-lg-6\">" +
                 "<div class=\"card\">" +

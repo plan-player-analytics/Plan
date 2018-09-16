@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.djrapitops.plan.utilities.html.graphs;
+package com.djrapitops.plan.utilities.html.graphs.special;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.utilities.html.graphs.HighChart;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -20,16 +21,16 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 4.2.0
  */
-public class PunchCardGraph implements HighChart {
+public class PunchCard implements HighChart {
 
     private final Collection<Session> sessions;
 
     /**
-     * Constuctor for the graph.
+     * Constructor for the graph.
      *
      * @param sessions All sessions of All users this PunchCard represents.
      */
-    public PunchCardGraph(Collection<Session> sessions) {
+    PunchCard(Collection<Session> sessions) {
         this.sessions = sessions;
     }
 
@@ -37,7 +38,7 @@ public class PunchCardGraph implements HighChart {
      * First number signifies the Day of Week. (0 = Monday, 6 = Sunday)
      * Second number signifies the Hour of Day. (0 = 0 AM, 23 = 11 PM)
      */
-    private static List<int[]> getDaysAndHours(Collection<Long> sessionStarts) {
+    private List<int[]> getDaysAndHours(Collection<Long> sessionStarts) {
         return sessionStarts.stream().map((Long start) -> {
             Calendar day = Calendar.getInstance();
             day.setTimeInMillis(start);
@@ -57,7 +58,7 @@ public class PunchCardGraph implements HighChart {
         }).collect(Collectors.toList());
     }
 
-    private static int[][] turnIntoArray(Collection<Long> sessionStarts) {
+    private int[][] turnIntoArray(Collection<Long> sessionStarts) {
         List<int[]> daysAndHours = getDaysAndHours(sessionStarts);
         int[][] dataArray = createEmptyArray();
         for (int[] dAndH : daysAndHours) {
@@ -96,7 +97,7 @@ public class PunchCardGraph implements HighChart {
         return arrayBuilder.toString();
     }
 
-    private static List<Long> getSessionStarts(Collection<Session> data) {
+    private List<Long> getSessionStarts(Collection<Session> data) {
         return data.stream()
                 .filter(Objects::nonNull)
                 .map(s -> s.getUnsafe(SessionKeys.START))
@@ -104,7 +105,7 @@ public class PunchCardGraph implements HighChart {
                 .collect(Collectors.toList());
     }
 
-    private static int[][] createEmptyArray() {
+    private int[][] createEmptyArray() {
         int[][] dataArray = new int[7][24];
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 24; j++) {
@@ -114,7 +115,7 @@ public class PunchCardGraph implements HighChart {
         return dataArray;
     }
 
-    private static int findBiggestValue(int[][] dataArray) {
+    private int findBiggestValue(int[][] dataArray) {
         int highest = 1;
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 24; j++) {
@@ -127,8 +128,7 @@ public class PunchCardGraph implements HighChart {
         return highest;
     }
 
-    private static int[][] scale(int[][] dataArray, int big) {
-
+    private int[][] scale(int[][] dataArray, int big) {
         int[][] scaled = new int[7][24];
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 24; j++) {

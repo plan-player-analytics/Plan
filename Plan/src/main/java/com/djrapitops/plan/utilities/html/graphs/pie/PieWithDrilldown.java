@@ -11,12 +11,9 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public abstract class AbstractPieChartWithDrilldown extends AbstractPieChart {
+public abstract class PieWithDrilldown extends Pie {
 
-    public AbstractPieChartWithDrilldown() {
-    }
-
-    public AbstractPieChartWithDrilldown(List<PieSlice> slices) {
+    public PieWithDrilldown(List<PieSlice> slices) {
         super(slices);
     }
 

@@ -2,15 +2,10 @@
  * License is provided in the jar as LICENSE also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
-package com.djrapitops.plan.utilities.html.graphs;
+package com.djrapitops.plan.utilities.html.graphs.stack;
 
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.html.graphs.stack.AbstractStackGraph;
-import com.djrapitops.plan.utilities.html.graphs.stack.StackDataSet;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.*;
 
@@ -21,25 +16,20 @@ import java.util.*;
  * @see ActivityIndex
  * @since 4.2.0
  */
-public class ActivityStackGraph extends AbstractStackGraph {
+class ActivityStackGraph extends StackGraph {
 
-    public ActivityStackGraph(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
-        super(getLabels(activityData.navigableKeySet()), getDataSets(activityData));
+    ActivityStackGraph(TreeMap<Long, Map<String, Set<UUID>>> activityData, String[] colors, Formatter<Long> dayFormatter) {
+        super(getLabels(activityData.navigableKeySet(), dayFormatter), getDataSets(activityData, colors));
     }
 
-    public ActivityStackGraph(long date, PlayersMutator mutator) {
-        this(mutator.toActivityDataMap(date));
-    }
-
-    private static String[] getLabels(NavigableSet<Long> dates) {
+    private static String[] getLabels(Collection<Long> dates, Formatter<Long> dayFormatter) {
         return dates.stream()
-                .map(FormatUtils::formatTimeStampDay)
+                .map(dayFormatter)
                 .toArray(String[]::new);
     }
 
-    private static StackDataSet[] getDataSets(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
+    private static StackDataSet[] getDataSets(TreeMap<Long, Map<String, Set<UUID>>> activityData, String[] colors) {
         String[] groups = ActivityIndex.getGroups();
-        String[] colors = Theme.getValue_Old(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         int maxCol = colors.length;
         StackDataSet[] dataSets = new StackDataSet[groups.length];
 

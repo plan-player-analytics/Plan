@@ -3,15 +3,16 @@ package com.djrapitops.plan.utilities.html.structure;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plan.utilities.html.tables.KillsTable;
@@ -35,6 +36,8 @@ public class SessionAccordion extends AbstractAccordion {
     private final StringBuilder viewScript;
     private final boolean appendWorldPercentage;
     private int maxSessions;
+
+    private Graphs graphs;
 
     private SessionAccordion(boolean forPlayer, List<Session> sessions,
                              Supplier<Map<UUID, String>> serverNamesSupplier,
@@ -84,7 +87,7 @@ public class SessionAccordion extends AbstractAccordion {
         Formatter<Long> timeFormatter = Formatters.timeAmount_Old();
         Formatter<DateHolder> timeStampFormatter = Formatters.year_Old();
         sessions.sort(new DateHolderRecentComparator());
-        
+
         int i = 0;
         for (Session session : sessions) {
             if (i >= maxSessions) {
@@ -96,7 +99,7 @@ public class SessionAccordion extends AbstractAccordion {
             String sessionStart = timeStampFormatter.apply(session);
 
             WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
-            WorldPie worldPie = new WorldPie(worldTimes);
+            WorldPie worldPie = graphs.pie().worldPie(worldTimes);
             String longestWorldPlayed = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
 
             boolean hasEnded = session.supports(SessionKeys.END);
@@ -169,7 +172,7 @@ public class SessionAccordion extends AbstractAccordion {
             String sessionStart = timeStampFormatter.apply(session);
 
             WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
-            WorldPie worldPie = new WorldPie(worldTimes);
+            WorldPie worldPie = graphs.pie().worldPie(worldTimes);
             String longestWorldPlayed = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
 
             boolean hasEnded = session.supports(SessionKeys.END);

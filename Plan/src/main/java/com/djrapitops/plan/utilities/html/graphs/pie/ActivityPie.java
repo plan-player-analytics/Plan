@@ -5,8 +5,6 @@
 package com.djrapitops.plan.utilities.html.graphs.pie;
 
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.settings.theme.ThemeVal;
 
 import java.util.*;
 
@@ -17,14 +15,13 @@ import java.util.*;
  * @see ActivityIndex
  * @since 4.2.0
  */
-public class ActivityPie extends AbstractPieChart {
+public class ActivityPie extends Pie {
 
-    public ActivityPie(Map<String, Set<UUID>> activityData) {
-        super(turnToSlices(activityData));
+    ActivityPie(Map<String, Set<UUID>> activityData, String[] colors) {
+        super(turnToSlices(activityData, colors));
     }
 
-    private static List<PieSlice> turnToSlices(Map<String, Set<UUID>> activityData) {
-        String[] colors = Theme.getValue_Old(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
+    private static List<PieSlice> turnToSlices(Map<String, Set<UUID>> activityData, String[] colors) {
         int maxCol = colors.length;
 
         List<PieSlice> slices = new ArrayList<>();

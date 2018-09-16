@@ -9,11 +9,11 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class PlayerCalendar {
     private final List<Session> allSessions;
     private final long registered;
 
-    public PlayerCalendar(PlayerContainer container) {
+    PlayerCalendar(PlayerContainer container) {
         this(
                 container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()),
                 container.getValue(PlayerKeys.REGISTERED).orElse(0L)

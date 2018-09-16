@@ -18,14 +18,11 @@ import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.ServerBanDataReader;
 import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
-import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
-import com.djrapitops.plan.utilities.html.graphs.WorldMap;
-import com.djrapitops.plan.utilities.html.graphs.bar.GeolocationBarGraph;
-import com.djrapitops.plan.utilities.html.graphs.calendar.ServerCalendar;
-import com.djrapitops.plan.utilities.html.graphs.line.*;
-import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
+import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
+import com.djrapitops.plan.utilities.html.graphs.line.PingGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
@@ -50,11 +47,13 @@ public class AnalysisContainer extends DataContainer {
 
     private final ServerContainer serverContainer;
 
+    // TODO
     private String version;
     private PlanConfig config;
     private Theme theme;
     private Database database;
     private ServerProperties serverProperties;
+    private Graphs graphs;
 
     private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {}, "SERVER_NAMES");
 
@@ -206,13 +205,11 @@ public class AnalysisContainer extends DataContainer {
 
         putSupplier(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).uniqueJoinsPerDay());
         putSupplier(AnalysisKeys.NEW_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay());
-        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_SERIES, () -> new AbstractLineGraph(
-                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY))
-                ).toHighChartsSeries()
+        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_SERIES, () -> graphs.line().lineGraph(
+                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY))).toHighChartsSeries()
         );
-        putSupplier(AnalysisKeys.NEW_PLAYERS_SERIES, () -> new AbstractLineGraph(
-                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY))
-                ).toHighChartsSeries()
+        putSupplier(AnalysisKeys.NEW_PLAYERS_SERIES, () -> graphs.line().lineGraph(
+                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY))).toHighChartsSeries()
         );
 
         Key<Integer> retentionDay = new Key<>(Integer.class, "RETENTION_DAY");
@@ -316,7 +313,7 @@ public class AnalysisContainer extends DataContainer {
                 .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
 
-        putSupplier(AnalysisKeys.PUNCHCARD_SERIES, () -> new PunchCardGraph(getUnsafe(sessionsMonth).all()).toHighChartsSeries());
+        putSupplier(AnalysisKeys.PUNCHCARD_SERIES, () -> graphs.special().punchCard(getUnsafe(sessionsMonth).all()).toHighChartsSeries());
         putSupplier(AnalysisKeys.AVG_PLAYERS, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_DAY, () -> getUnsafe(sessionsDay).toAverageUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toAverageUniqueJoinsPerDay());
@@ -325,46 +322,48 @@ public class AnalysisContainer extends DataContainer {
 
     private void addGraphSuppliers() {
         Key<WorldPie> worldPie = new Key<>(WorldPie.class, "WORLD_PIE");
-        putSupplier(worldPie, () -> new WorldPie(serverContainer.getValue(ServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()))));
+        putSupplier(worldPie, () -> graphs.pie().worldPie(
+                serverContainer.getValue(ServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()))
+        ));
         putSupplier(AnalysisKeys.WORLD_PIE_SERIES, () -> getUnsafe(worldPie).toHighChartsSeries());
         putSupplier(AnalysisKeys.GM_PIE_SERIES, () -> getUnsafe(worldPie).toHighChartsDrilldown());
         putSupplier(AnalysisKeys.PLAYERS_ONLINE_SERIES, () ->
-                new OnlineActivityGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries()
+                graphs.line().playersOnlineGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries()
         );
-        putSupplier(AnalysisKeys.TPS_SERIES, () -> new TPSGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
-        putSupplier(AnalysisKeys.CPU_SERIES, () -> new CPUGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
-        putSupplier(AnalysisKeys.RAM_SERIES, () -> new RamGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
-        putSupplier(AnalysisKeys.ENTITY_SERIES, () -> new EntityGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
-        putSupplier(AnalysisKeys.CHUNK_SERIES, () -> new ChunkGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.TPS_SERIES, () -> graphs.line().tpsGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.CPU_SERIES, () -> graphs.line().cpuGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.RAM_SERIES, () -> graphs.line().ramGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.ENTITY_SERIES, () -> graphs.line().entityGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.CHUNK_SERIES, () -> graphs.line().cpuGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.WORLD_MAP_SERIES, () ->
-                new WorldMap(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).getGeolocations()).toHighChartsSeries()
+                graphs.special().worldMap(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).toHighChartsSeries()
         );
-        Key<GeolocationBarGraph> geolocationBarChart = new Key<>(GeolocationBarGraph.class, "GEOLOCATION_BAR_CHART");
-        putSupplier(geolocationBarChart, () -> new GeolocationBarGraph(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)));
+        Key<BarGraph> geolocationBarChart = new Key<>(BarGraph.class, "GEOLOCATION_BAR_GRAPH");
+        putSupplier(geolocationBarChart, () -> graphs.bar().geolocationBarGraph(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)));
         putSupplier(AnalysisKeys.COUNTRY_CATEGORIES, () -> getUnsafe(geolocationBarChart).toHighChartsCategories());
         putSupplier(AnalysisKeys.COUNTRY_SERIES, () -> getUnsafe(geolocationBarChart).toHighChartsSeries());
 
         Key<PingGraph> pingGraph = new Key<>(PingGraph.class, "PING_GRAPH");
-        putSupplier(pingGraph, () -> new PingGraph(
-                PingMutator.forContainer(serverContainer).mutateToByMinutePings().all()
-        ));
+        putSupplier(pingGraph, () ->
+                graphs.line().pingGraph(PingMutator.forContainer(serverContainer).mutateToByMinutePings().all())
+        );
         putSupplier(AnalysisKeys.AVG_PING_SERIES, () -> getUnsafe(pingGraph).toAvgSeries());
         putSupplier(AnalysisKeys.MAX_PING_SERIES, () -> getUnsafe(pingGraph).toMaxSeries());
         putSupplier(AnalysisKeys.MIN_PING_SERIES, () -> getUnsafe(pingGraph).toMinSeries());
 
-        putSupplier(AnalysisKeys.CALENDAR_SERIES, () -> new ServerCalendar(
+        putSupplier(AnalysisKeys.CALENDAR_SERIES, () -> graphs.calendar().serverCalendar(
                 getUnsafe(AnalysisKeys.PLAYERS_MUTATOR),
                 getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY),
                 getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY)
         ).toCalendarSeries());
 
         putSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
-        Key<ActivityStackGraph> activityStackGraph = new Key<>(ActivityStackGraph.class, "ACTIVITY_STACK_GRAPH");
-        putSupplier(activityStackGraph, () -> new ActivityStackGraph(getUnsafe(AnalysisKeys.ACTIVITY_DATA)));
+        Key<StackGraph> activityStackGraph = new Key<>(StackGraph.class, "ACTIVITY_STACK_GRAPH");
+        putSupplier(activityStackGraph, () -> graphs.stack().activityStackGraph(getUnsafe(AnalysisKeys.ACTIVITY_DATA)));
         putSupplier(AnalysisKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
         putSupplier(AnalysisKeys.ACTIVITY_STACK_SERIES, () -> getUnsafe(activityStackGraph).toHighChartsSeries());
-        putSupplier(AnalysisKeys.ACTIVITY_PIE_SERIES, () ->
-                new ActivityPie(getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME))).toHighChartsSeries()
+        putSupplier(AnalysisKeys.ACTIVITY_PIE_SERIES, () -> graphs.pie().activityPie(
+                getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME))).toHighChartsSeries()
         );
         putSupplier(AnalysisKeys.PLAYERS_REGULAR, () -> {
             Map<String, Set<UUID>> activityNow = getUnsafe(AnalysisKeys.ACTIVITY_DATA)

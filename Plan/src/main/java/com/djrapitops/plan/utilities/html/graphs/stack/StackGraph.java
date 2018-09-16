@@ -11,12 +11,12 @@ import com.djrapitops.plan.utilities.html.graphs.HighChart;
  *
  * @author Rsl1122
  */
-public class AbstractStackGraph implements HighChart {
+public class StackGraph implements HighChart {
 
     private final StackDataSet[] dataSets;
     private final String[] labels;
 
-    public AbstractStackGraph(String[] labels, StackDataSet... dataSets) {
+    public StackGraph(String[] labels, StackDataSet... dataSets) {
         this.dataSets = dataSets;
         this.labels = labels;
     }

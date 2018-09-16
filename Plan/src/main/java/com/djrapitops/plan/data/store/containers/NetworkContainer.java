@@ -6,7 +6,6 @@ import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -14,11 +13,10 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
-import com.djrapitops.plan.utilities.html.graphs.WorldMap;
-import com.djrapitops.plan.utilities.html.graphs.bar.GeolocationBarGraph;
-import com.djrapitops.plan.utilities.html.graphs.line.OnlineActivityGraph;
-import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
+import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
+import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
+import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -38,7 +36,9 @@ public class NetworkContainer extends DataContainer {
 
     private final ServerContainer bungeeContainer;
 
+    // TODO
     private Database database;
+    private Graphs graphs;
 
     private final Map<UUID, AnalysisContainer> serverContainers;
 
@@ -99,23 +99,23 @@ public class NetworkContainer extends DataContainer {
     private void addPlayerInformation() {
         putSupplier(NetworkKeys.PLAYERS_TOTAL, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).count());
         putSupplier(NetworkKeys.WORLD_MAP_SERIES, () ->
-                new WorldMap(PlayersMutator.forContainer(bungeeContainer)).toHighChartsSeries()
+                graphs.special().worldMap(PlayersMutator.forContainer(bungeeContainer)).toHighChartsSeries()
         );
-        Key<GeolocationBarGraph> geolocationBarChart = new Key<>(GeolocationBarGraph.class, "GEOLOCATION_BAR_CHART");
-        putSupplier(geolocationBarChart, () -> new GeolocationBarGraph(getUnsafe(NetworkKeys.PLAYERS_MUTATOR)));
+        Key<BarGraph> geolocationBarChart = new Key<>(BarGraph.class, "GEOLOCATION_BAR_GRAPH");
+        putSupplier(geolocationBarChart, () -> graphs.bar().geolocationBarGraph(getUnsafe(NetworkKeys.PLAYERS_MUTATOR)));
         putSupplier(NetworkKeys.COUNTRY_CATEGORIES, () -> getUnsafe(geolocationBarChart).toHighChartsCategories());
         putSupplier(NetworkKeys.COUNTRY_SERIES, () -> getUnsafe(geolocationBarChart).toHighChartsSeries());
 
         putSupplier(NetworkKeys.PLAYERS_ONLINE_SERIES, () ->
-                new OnlineActivityGraph(TPSMutator.forContainer(bungeeContainer)).toHighChartsSeries()
+                graphs.line().playersOnlineGraph(TPSMutator.forContainer(bungeeContainer)).toHighChartsSeries()
         );
-        Key<ActivityStackGraph> activityStackGraph = new Key<>(ActivityStackGraph.class, "ACTIVITY_STACK_GRAPH");
+        Key<StackGraph> activityStackGraph = new Key<>(StackGraph.class, "ACTIVITY_STACK_GRAPH");
         putSupplier(NetworkKeys.ACTIVITY_DATA, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(NetworkKeys.REFRESH_TIME)));
-        putSupplier(activityStackGraph, () -> new ActivityStackGraph(getUnsafe(NetworkKeys.ACTIVITY_DATA)));
+        putSupplier(activityStackGraph, () -> graphs.stack().activityStackGraph(getUnsafe(NetworkKeys.ACTIVITY_DATA)));
         putSupplier(NetworkKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
         putSupplier(NetworkKeys.ACTIVITY_STACK_SERIES, () -> getUnsafe(activityStackGraph).toHighChartsSeries());
-        putSupplier(NetworkKeys.ACTIVITY_PIE_SERIES, () ->
-                new ActivityPie(getUnsafe(NetworkKeys.ACTIVITY_DATA).get(getUnsafe(NetworkKeys.REFRESH_TIME))).toHighChartsSeries()
+        putSupplier(NetworkKeys.ACTIVITY_PIE_SERIES, () -> graphs.pie().activityPie(
+                getUnsafe(NetworkKeys.ACTIVITY_DATA).get(getUnsafe(NetworkKeys.REFRESH_TIME))).toHighChartsSeries()
         );
 
         putSupplier(NetworkKeys.ALL_TIME_PEAK_TIME_F, () ->

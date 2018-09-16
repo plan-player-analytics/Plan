@@ -2,11 +2,11 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import java.util.*;
 
@@ -230,7 +230,7 @@ public class Session extends DataContainer implements DateHolder {
             return "Current: " + aliases.get(worldTimes.getCurrentWorld());
         }
 
-        Map<String, Long> playtimePerAlias = worldTimes.getPlaytimePerAlias();
+        Map<String, Long> playtimePerAlias = new HashMap<>(); //TODO Call WorldAliasSettings#getPlaytimePerAlias(WorldTimes)
         long total = worldTimes.getTotal();
 
         long longest = 0;

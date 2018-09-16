@@ -10,9 +10,6 @@ import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -24,10 +21,12 @@ import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
-import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.calendar.PlayerCalendar;
-import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
@@ -49,18 +48,21 @@ public class InspectPage implements Page {
     private final Map<UUID, String> serverNames;
 
     private final PlanConfig config;
+    private final Graphs graphs;
     private final ServerInfo serverInfo;
     private final Timings timings;
 
     InspectPage(
             PlayerContainer player, Map<UUID, String> serverNames,
             PlanConfig config,
+            Graphs graphs,
             ServerInfo serverInfo,
             Timings timings
     ) {
         this.player = player;
         this.serverNames = serverNames;
         this.config = config;
+        this.graphs = graphs;
         this.serverInfo = serverInfo;
         this.timings = timings;
     }
@@ -115,7 +117,7 @@ public class InspectPage implements Page {
         PerServerMutator perServerMutator = new PerServerMutator(perServerContainer);
 
         Map<UUID, WorldTimes> worldTimesPerServer = perServerMutator.worldTimesPerServer();
-        replacer.put("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
+        replacer.put("serverPieSeries", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
         replacer.put("worldPieColors", Theme.getValue_Old(ThemeVal.GRAPH_WORLD_PIE));
         replacer.put("gmPieColors", Theme.getValue_Old(ThemeVal.GRAPH_GM_PIE));
         replacer.put("serverPieColors", Theme.getValue_Old(ThemeVal.GRAPH_SERVER_PREF_PIE));
@@ -156,7 +158,7 @@ public class InspectPage implements Page {
 
         ServerAccordion serverAccordion = new ServerAccordion(player, serverNames);
 
-        PlayerCalendar playerCalendar = new PlayerCalendar(player);
+        PlayerCalendar playerCalendar = graphs.calendar().playerCalendar(player);
 
         replacer.put("calendarSeries", playerCalendar.toCalendarSeries());
         replacer.put("firstDay", 1);
@@ -174,10 +176,10 @@ public class InspectPage implements Page {
 
         sessionsAndPlaytime(replacer, sessionsMutator, daySessionsMutator, weekSessionsMutator, monthSessionsMutator);
 
-        String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
+        String punchCardData = graphs.special().punchCard(allSessions).toHighChartsSeries();
         WorldTimes worldTimes = player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
 
-        WorldPie worldPie = new WorldPie(worldTimes);
+        WorldPie worldPie = graphs.pie().worldPie(worldTimes);
 
         replacer.put("worldPieSeries", worldPie.toHighChartsSeries());
         replacer.put("gmSeries", worldPie.toHighChartsDrilldown());

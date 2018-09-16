@@ -1,34 +1,34 @@
 package com.djrapitops.plan.utilities.html.graphs.pie;
 
 import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
-public class WorldPie extends AbstractPieChartWithDrilldown {
+public class WorldPie extends PieWithDrilldown {
 
-    private WorldTimes worldTimes;
+    private final Map<String, GMTimes> gmTimesAliasMap;
 
-    public WorldPie(WorldTimes worldTimes) {
-        super(turnIntoSlices(worldTimes));
+    WorldPie(
+            Map<String, Long> playtimePerAlias,
+            Map<String, GMTimes> gmTimesAliasMap,
+            String[] colors,
+            boolean orderByPercentage
+    ) {
+        super(turnIntoSlices(playtimePerAlias, colors));
 
-        this.worldTimes = worldTimes;
+        this.gmTimesAliasMap = gmTimesAliasMap;
 
-        if (Settings.ORDER_WORLD_PIE_BY_PERC.isTrue()) {
+        if (orderByPercentage) {
             slices.sort(new PieSliceComparator());
         }
     }
 
-    private static List<PieSlice> turnIntoSlices(WorldTimes worldTimes) {
-        String[] colors = Theme.getValue_Old(ThemeVal.GRAPH_WORLD_PIE).split(", ");
+    private static List<PieSlice> turnIntoSlices(Map<String, Long> playtimePerAlias, String[] colors) {
         int colLength = colors.length;
-
-        Map<String, Long> playtimePerAlias = worldTimes.getPlaytimePerAlias();
 
         List<String> worlds = new ArrayList<>(playtimePerAlias.keySet());
         Collections.sort(worlds);
@@ -46,44 +46,16 @@ public class WorldPie extends AbstractPieChartWithDrilldown {
         return slices;
     }
 
-    private Map<String, GMTimes> getGMTimesPerAlias() {
-        Map<String, String> aliases = WorldAliasSettings.getAliases_Old();
-
-        Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();
-
-        String[] gms = GMTimes.getGMKeyArray();
-
-        for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
-            String worldName = entry.getKey();
-            GMTimes gmTimes = entry.getValue();
-
-            if (!aliases.containsKey(worldName)) {
-                aliases.put(worldName, worldName);
-                WorldAliasSettings.addWorld_Old(worldName);
-            }
-
-            String alias = aliases.get(worldName);
-
-            GMTimes aliasGMTimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
-            for (String gm : gms) {
-                aliasGMTimes.addTime(gm, gmTimes.getTime(gm));
-            }
-            gmTimesPerAlias.put(alias, aliasGMTimes);
-        }
-        return gmTimesPerAlias;
-    }
-
     @Override
     public String toHighChartsDrilldown() {
         StringBuilder drilldownBuilder = new StringBuilder();
         int i = 0;
 
-        Map<String, GMTimes> gmTimesAliasMap = getGMTimesPerAlias();
         if (gmTimesAliasMap.isEmpty()) {
             return "[]";
         }
         int size = gmTimesAliasMap.size();
-        
+
         drilldownBuilder.append("[");
         for (Map.Entry<String, GMTimes> worldAlias : gmTimesAliasMap.entrySet()) {
             drilldownBuilder.append("{name:'").append(worldAlias.getKey())

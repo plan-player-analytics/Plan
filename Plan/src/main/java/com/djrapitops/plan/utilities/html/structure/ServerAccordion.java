@@ -10,11 +10,12 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PerServerKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -37,6 +38,8 @@ public class ServerAccordion extends AbstractAccordion {
 
     private final Map<UUID, String> serverNames;
     private PerServerContainer perServer;
+
+    private Graphs graphs;
 
     public ServerAccordion(PlayerContainer container, Map<UUID, String> serverNames) {
         super("server_accordion");
@@ -96,7 +99,7 @@ public class ServerAccordion extends AbstractAccordion {
 
             String worldId = "worldPieServer" + sanitizedServerName;
 
-            WorldPie worldPie = new WorldPie(worldTimes);
+            WorldPie worldPie = graphs.pie().worldPie(worldTimes);
 
             String title = serverName + "<span class=\"pull-right\">" + play + "</span>";
 
