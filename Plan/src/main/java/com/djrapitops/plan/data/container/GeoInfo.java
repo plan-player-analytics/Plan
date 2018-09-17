@@ -6,11 +6,11 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.DateMap;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
 
@@ -27,7 +27,7 @@ public class GeoInfo implements DateHolder, Serializable {
     private final long date;
 
     public GeoInfo(InetAddress address, String geolocation, long lastUsed) throws NoSuchAlgorithmException {
-        this(FormatUtils.formatIP(address), geolocation, lastUsed, new SHA256Hash(address.getHostAddress()).create());
+        this(formatIP(address), geolocation, lastUsed, new SHA256Hash(address.getHostAddress()).create());
     }
 
     public GeoInfo(String ip, String geolocation, long date, String ipHash) {
@@ -43,6 +43,42 @@ public class GeoInfo implements DateHolder, Serializable {
             map.put(info.date, info);
         }
         return map;
+    }
+
+    static String formatIP(InetAddress address) {
+        String ip = address.getHostAddress();
+        if ("localhost".equals(ip)) {
+            return ip;
+        }
+        if (address instanceof Inet6Address) {
+            StringBuilder b = new StringBuilder();
+            int i = 0;
+            for (String part : ip.split(":")) {
+                if (i >= 3) {
+                    break;
+                }
+
+                b.append(part).append(':');
+
+                i++;
+            }
+
+            return b.append("xx..").toString();
+        } else {
+            StringBuilder b = new StringBuilder();
+            int i = 0;
+            for (String part : ip.split("\\.")) {
+                if (i >= 2) {
+                    break;
+                }
+
+                b.append(part).append('.');
+
+                i++;
+            }
+
+            return b.append("xx.xx").toString();
+        }
     }
 
     public String getIp() {

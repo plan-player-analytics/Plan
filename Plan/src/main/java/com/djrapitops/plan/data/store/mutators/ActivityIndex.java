@@ -4,7 +4,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.List;
@@ -110,7 +110,8 @@ public class ActivityIndex {
     }
 
     public String getFormattedValue() {
-        return FormatUtils.cutDecimals(value);
+        Formatter<Double> decimalFormatter = null; // TODO Add as method parameter
+        return decimalFormatter.apply(value);
     }
 
     public String getGroup() {

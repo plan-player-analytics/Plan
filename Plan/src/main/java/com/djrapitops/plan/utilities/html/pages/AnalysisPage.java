@@ -6,10 +6,10 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
-import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -24,11 +24,15 @@ import static com.djrapitops.plan.data.store.keys.AnalysisKeys.*;
  */
 public class AnalysisPage implements Page {
 
-    private final AnalysisContainer analysisContainer;
     private static final String DEBUG = "Analysis";
 
-    AnalysisPage(AnalysisContainer analysisContainer) {
+    private final AnalysisContainer analysisContainer;
+
+    private final Formatter<Double> decimalFormatter;
+
+    AnalysisPage(AnalysisContainer analysisContainer, Formatter<Double> decimalFormatter) {
         this.analysisContainer = analysisContainer;
+        this.decimalFormatter = decimalFormatter;
     }
 
     public static String getRefreshingHtml() {
@@ -137,14 +141,14 @@ public class AnalysisPage implements Page {
         placeholderReplacer.addAllPlaceholdersFrom(analysisContainer,
                 TPS_SPIKE_MONTH, TPS_SPIKE_WEEK, TPS_SPIKE_DAY
         );
-        placeholderReplacer.addAllPlaceholdersFrom(analysisContainer, FormatUtils::cutDecimals,
+        placeholderReplacer.addAllPlaceholdersFrom(analysisContainer, decimalFormatter,
                 AVG_TPS_MONTH, AVG_TPS_WEEK, AVG_TPS_DAY,
                 AVG_RAM_MONTH, AVG_RAM_WEEK, AVG_RAM_DAY,
                 AVG_ENTITY_MONTH, AVG_ENTITY_WEEK, AVG_ENTITY_DAY,
                 AVG_CHUNK_MONTH, AVG_CHUNK_WEEK, AVG_CHUNK_DAY
         );
         placeholderReplacer.addAllPlaceholdersFrom(analysisContainer,
-                value -> value != -1 ? FormatUtils.cutDecimals(value) : "Unavailable",
+                value -> value != -1 ? decimalFormatter.apply(value) : "Unavailable",
                 AVG_CPU_MONTH, AVG_CPU_WEEK, AVG_CPU_DAY
         );
         Benchmark.stop(DEBUG, DEBUG + " Performance Numbers");

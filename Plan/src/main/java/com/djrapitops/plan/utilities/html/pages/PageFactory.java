@@ -77,7 +77,7 @@ public class PageFactory {
     }
 
     public AnalysisPage analysisPage(UUID serverUUID) {
-        return new AnalysisPage(new AnalysisContainer(database.get().fetch().getServerContainer(serverUUID)));
+        return new AnalysisPage(new AnalysisContainer(database.get().fetch().getServerContainer(serverUUID)), decimalFormatter);
     }
 
     public InspectPage inspectPage(UUID uuid) {

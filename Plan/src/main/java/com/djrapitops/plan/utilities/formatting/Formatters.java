@@ -15,62 +15,93 @@ import javax.inject.Singleton;
 @Singleton
 public class Formatters {
 
-    private PlanConfig config;
+    private final DateHolderFormatter yearFormatter;
+    private final DateHolderFormatter dayFormatter;
+    private final DateHolderFormatter secondFormatter;
+    private final DateHolderFormatter clockFormatter;
+    private final DateHolderFormatter iso8601NoClockFormatter;
+
+    private final YearFormatter yearLongFormatter;
+    private final DayFormatter dayLongFormatter;
+    private final SecondFormatter secondLongFormatter;
+    private final ClockFormatter clockLongFormatter;
+    private final ISO8601NoClockFormatter iso8601NoClockLongFormatter;
+
+    private final TimeAmountFormatter timeAmountFormatter;
+
+    private final DecimalFormatter decimalFormatter;
+    private final PercentageFormatter percentageFormatter;
 
     @Inject
     public Formatters(PlanConfig config) {
-        this.config = config;
+        yearLongFormatter = new YearFormatter(config);
+        dayLongFormatter = new DayFormatter(config);
+        clockLongFormatter = new ClockFormatter(config);
+        secondLongFormatter = new SecondFormatter(config);
+        iso8601NoClockLongFormatter = new ISO8601NoClockFormatter(config);
+
+        yearFormatter = new DateHolderFormatter(yearLongFormatter);
+        dayFormatter = new DateHolderFormatter(dayLongFormatter);
+        secondFormatter = new DateHolderFormatter(secondLongFormatter);
+        clockFormatter = new DateHolderFormatter(clockLongFormatter);
+        iso8601NoClockFormatter = new DateHolderFormatter(iso8601NoClockLongFormatter);
+
+        timeAmountFormatter = new TimeAmountFormatter(config);
+
+        decimalFormatter = new DecimalFormatter(config);
+        percentageFormatter = new PercentageFormatter(decimalFormatter);
+
     }
 
     public Formatter<DateHolder> year() {
-        return new DateHolderFormatter(yearLong());
+        return this.yearFormatter;
     }
 
     public Formatter<Long> yearLong() {
-        return new YearFormatter(config);
+        return yearLongFormatter;
     }
 
     public Formatter<DateHolder> day() {
-        return new DateHolderFormatter(dayLong());
+        return dayFormatter;
     }
 
     public Formatter<Long> dayLong() {
-        return new DayFormatter(config);
+        return dayLongFormatter;
     }
 
     public Formatter<DateHolder> second() {
-        return new DateHolderFormatter(secondLong());
+        return secondFormatter;
     }
 
     public Formatter<Long> secondLong() {
-        return new SecondFormatter(config);
+        return secondLongFormatter;
     }
 
     public Formatter<DateHolder> clock() {
-        return new DateHolderFormatter(clockLong());
+        return clockFormatter;
     }
 
     public Formatter<Long> clockLong() {
-        return new ClockFormatter(config);
+        return clockLongFormatter;
     }
 
     public Formatter<DateHolder> iso8601NoClock() {
-        return new DateHolderFormatter(iso8601NoClockLong());
+        return iso8601NoClockFormatter;
     }
 
     public Formatter<Long> iso8601NoClockLong() {
-        return new ISO8601NoClockFormatter(config);
+        return iso8601NoClockLongFormatter;
     }
 
     public Formatter<Long> timeAmount() {
-        return new TimeAmountFormatter(config);
+        return timeAmountFormatter;
     }
 
     public Formatter<Double> percentage() {
-        return new PercentageFormatter(decimals());
+        return percentageFormatter;
     }
 
     public Formatter<Double> decimals() {
-        return new DecimalFormatter(config);
+        return decimalFormatter;
     }
 }

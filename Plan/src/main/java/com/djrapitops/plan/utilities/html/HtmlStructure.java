@@ -9,7 +9,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -67,7 +67,8 @@ public class HtmlStructure {
         ServerProperties properties = ServerInfo.getServerProperties_Old();
         int maxPlayers = properties.getMaxPlayers();
         int online = properties.getOnlinePlayers();
-        String refresh = FormatUtils.formatTimeStampClock(System.currentTimeMillis());
+        Formatter<Long> clockLongFormatter = null; //TODO
+        String refresh = clockLongFormatter.apply(System.currentTimeMillis());
 
         Server server = ServerInfo.getServer_Old();
 

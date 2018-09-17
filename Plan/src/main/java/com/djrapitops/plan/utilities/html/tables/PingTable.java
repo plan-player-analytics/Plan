@@ -3,12 +3,15 @@ package com.djrapitops.plan.utilities.html.tables;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.mutators.PingMutator;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.util.*;
 
 public class PingTable extends TableContainer {
+
+    // TODO
+    private Formatter<Double> decimalFormatter;
 
     public PingTable(Map<String, List<Ping>> pingPerCountry) {
         super(
@@ -44,7 +47,7 @@ public class PingTable extends TableContainer {
             Integer minimum = min.get(country);
             addRow(
                     country,
-                    average >= 0 ? FormatUtils.cutDecimals(average) + " ms" : "-",
+                    average >= 0 ? decimalFormatter.apply(average) + " ms" : "-",
                     maximum >= 0 ? maximum + " ms" : "-",
                     minimum >= 0 ? minimum + " ms" : "-"
             );

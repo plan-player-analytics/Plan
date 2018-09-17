@@ -11,7 +11,6 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -66,10 +65,10 @@ public class HealthInformation extends AbstractHealthInfo {
                 .average().orElse(0);
         if (avgOnlineOnRegister >= 1) {
             addNote(Icons.GREEN_THUMB + " New Players have players to play with when they join ("
-                    + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)");
+                    + decimalFormatter.apply(avgOnlineOnRegister) + " on average)");
         } else {
             addNote(Icons.YELLOW_FLAG + " New Players may not have players to play with when they join ("
-                    + FormatUtils.cutDecimals(avgOnlineOnRegister) + " on average)");
+                    + decimalFormatter.apply(avgOnlineOnRegister) + " on average)");
             serverHealth -= 5;
         }
 
@@ -106,7 +105,7 @@ public class HealthInformation extends AbstractHealthInfo {
             serverHealth *= 0.6;
         }
         avgLowThresholdString += " Average TPS was above Low Threshold "
-                + FormatUtils.cutDecimals(aboveThreshold * 100.0) + "% of the time";
+                + decimalFormatter.apply(aboveThreshold * 100.0) + "% of the time";
 
         int threshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
         if (tpsSpikeMonth <= 5) {

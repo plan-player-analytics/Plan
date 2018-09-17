@@ -21,6 +21,7 @@ public abstract class AbstractHealthInfo {
 
     // TODO
     protected Formatter<Long> timeAmountFormatter;
+    protected Formatter<Double> decimalFormatter;
     protected Formatter<Double> percentageFormatter;
 
     public AbstractHealthInfo(long now, long monthAgo) {
