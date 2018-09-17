@@ -17,7 +17,6 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.file.FileUtil;
@@ -52,11 +51,16 @@ public class InspectPage implements Page {
     private final ServerInfo serverInfo;
     private final Timings timings;
 
+    private final Formatter<Long> timeAmountFormatter;
+    private final Formatter<Long> clockLongFormatter;
+    private final Formatter<Long> yearLongFormatter;
+    private final Formatter<Double> decimalFormatter;
+
     InspectPage(
             PlayerContainer player, Map<UUID, String> serverNames,
             PlanConfig config,
             Graphs graphs,
-            ServerInfo serverInfo,
+            Formatters formatters, ServerInfo serverInfo,
             Timings timings
     ) {
         this.player = player;
@@ -65,6 +69,11 @@ public class InspectPage implements Page {
         this.graphs = graphs;
         this.serverInfo = serverInfo;
         this.timings = timings;
+
+        timeAmountFormatter = formatters.timeAmount();
+        clockLongFormatter = formatters.clockLong();
+        yearLongFormatter = formatters.yearLong();
+        decimalFormatter = formatters.decimals();
     }
 
     @Override
@@ -90,7 +99,7 @@ public class InspectPage implements Page {
 
         PlaceholderReplacer replacer = new PlaceholderReplacer();
 
-        replacer.put("refresh", FormatUtils.formatTimeStampClock(now));
+        replacer.put("refresh", clockLongFormatter.apply(now));
         replacer.put("version", MiscUtils.getPlanVersion());
         replacer.put("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
@@ -106,7 +115,7 @@ public class InspectPage implements Page {
         String playerName = player.getValue(PlayerKeys.NAME).orElse("Unknown");
         int timesKicked = player.getValue(PlayerKeys.KICK_COUNT).orElse(0);
 
-        replacer.addAllPlaceholdersFrom(player, Formatters.yearLongValue_Old(),
+        replacer.addAllPlaceholdersFrom(player, yearLongFormatter,
                 PlayerKeys.REGISTERED, PlayerKeys.LAST_SEEN
         );
 
@@ -135,7 +144,7 @@ public class InspectPage implements Page {
         int minPing = pingMutator.min();
         int maxPing = pingMutator.max();
         String unavailable = "Unavailable";
-        replacer.put("avgPing", averagePing != -1 ? FormatUtils.cutDecimals(averagePing) + " ms" : unavailable);
+        replacer.put("avgPing", averagePing != -1 ? decimalFormatter.apply(averagePing) + " ms" : unavailable);
         replacer.put("minPing", minPing != -1 ? minPing + " ms" : unavailable);
         replacer.put("maxPing", maxPing != -1 ? maxPing + " ms" : unavailable);
 
@@ -241,7 +250,7 @@ public class InspectPage implements Page {
         long sessionAverageWeek = weekSessionsMutator.toAverageSessionLength();
         long sessionAverageMonth = monthSessionsMutator.toAverageSessionLength();
 
-        Formatter<Long> formatter = Formatters.timeAmount_Old();
+        Formatter<Long> formatter = timeAmountFormatter;
         replacer.put("playtimeTotal", formatter.apply(playtime));
         replacer.put("playtimeDay", formatter.apply(playtimeDay));
         replacer.put("playtimeWeek", formatter.apply(playtimeWeek));
@@ -291,23 +300,23 @@ public class InspectPage implements Page {
         replacer.put("playerDeathCount", pvpInfoMutator.playerCausedDeaths());
         replacer.put("mobDeathCount", pvpInfoMutator.mobCausedDeaths());
         replacer.put("deathCount", pvpInfoMutator.deaths());
-        replacer.put("KDR", FormatUtils.cutDecimals(pvpInfoMutator.killDeathRatio()));
-        replacer.put("mobKDR", FormatUtils.cutDecimals(pvpInfoMutator.mobKillDeathRatio()));
+        replacer.put("KDR", decimalFormatter.apply(pvpInfoMutator.killDeathRatio()));
+        replacer.put("mobKDR", decimalFormatter.apply(pvpInfoMutator.mobKillDeathRatio()));
 
         replacer.put("playerKillCountMonth", pvpInfoMutatorMonth.playerKills());
         replacer.put("mobKillCountMonth", pvpInfoMutatorMonth.mobKills());
         replacer.put("playerDeathCountMonth", pvpInfoMutatorMonth.playerCausedDeaths());
         replacer.put("mobDeathCountMonth", pvpInfoMutatorMonth.mobCausedDeaths());
         replacer.put("deathCountMonth", pvpInfoMutatorMonth.deaths());
-        replacer.put("KDRMonth", FormatUtils.cutDecimals(pvpInfoMutatorMonth.killDeathRatio()));
-        replacer.put("mobKDRMonth", FormatUtils.cutDecimals(pvpInfoMutatorMonth.mobKillDeathRatio()));
+        replacer.put("KDRMonth", decimalFormatter.apply(pvpInfoMutatorMonth.killDeathRatio()));
+        replacer.put("mobKDRMonth", decimalFormatter.apply(pvpInfoMutatorMonth.mobKillDeathRatio()));
 
         replacer.put("playerKillCountWeek", pvpInfoMutatorWeek.playerKills());
         replacer.put("mobKillCountWeek", pvpInfoMutatorWeek.mobKills());
         replacer.put("playerDeathCountWeek", pvpInfoMutatorWeek.playerCausedDeaths());
         replacer.put("mobDeathCountWeek", pvpInfoMutatorWeek.mobCausedDeaths());
         replacer.put("deathCountWeek", pvpInfoMutatorWeek.deaths());
-        replacer.put("KDRWeek", FormatUtils.cutDecimals(pvpInfoMutatorWeek.killDeathRatio()));
-        replacer.put("mobKDRWeek", FormatUtils.cutDecimals(pvpInfoMutatorWeek.mobKillDeathRatio()));
+        replacer.put("KDRWeek", decimalFormatter.apply(pvpInfoMutatorWeek.killDeathRatio()));
+        replacer.put("mobKDRWeek", decimalFormatter.apply(pvpInfoMutatorWeek.mobKillDeathRatio()));
     }
 }

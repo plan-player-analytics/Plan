@@ -3,8 +3,7 @@ package com.djrapitops.plan.data.store.mutators.health;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -19,6 +18,10 @@ public abstract class AbstractHealthInfo {
     protected final long monthAgo;
 
     protected double serverHealth;
+
+    // TODO
+    protected Formatter<Long> timeAmountFormatter;
+    protected Formatter<Double> percentageFormatter;
 
     public AbstractHealthInfo(long now, long monthAgo) {
         this.now = now;
@@ -63,7 +66,7 @@ public abstract class AbstractHealthInfo {
         regularRemainCompareSet.removeAll(veryActiveNow);
         int notRegularAnymore = regularRemainCompareSet.size();
         int remain = activeFWAGNum - notRegularAnymore;
-        double percRemain = activeFWAGNum != 0 ? remain * 100.0 / activeFWAGNum : 100.0;
+        double percRemain = activeFWAGNum != 0 ? remain / activeFWAGNum : 1.0;
 
         int newActive = getNewActive(veryActiveNow, activeNow, regularNow, veryActiveFWAG, activeFWAG, regularFWAG);
 
@@ -72,16 +75,16 @@ public abstract class AbstractHealthInfo {
         String remainNote = "";
         if (activeFWAGNum != 0) {
             remainNote = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            if (percRemain > 50) {
+            if (percRemain > 0.5) {
                 remainNote += Icons.GREEN_THUMB;
-            } else if (percRemain > 20) {
+            } else if (percRemain > 0.2) {
                 remainNote += Icons.YELLOW_FLAG;
             } else {
                 remainNote += Icons.RED_WARN;
                 serverHealth -= 2.5;
             }
 
-            remainNote += " " + FormatUtils.cutDecimals(percRemain) + "% of regular players have remained active ("
+            remainNote += " " + percentageFormatter.apply(percRemain) + " of regular players have remained active ("
                     + remain + "/" + activeFWAGNum + ")";
         }
         if (change > 0) {
@@ -113,8 +116,8 @@ public abstract class AbstractHealthInfo {
         if (activeCount != 0) {
             long avgFourToTwoWeeks = totalFourToTwoWeeks / (long) activeCount;
             long avgLastTwoWeeks = totalLastTwoWeeks / (long) activeCount;
-            String avgLastTwoWeeksString = Formatters.timeAmount_Old().apply(avgLastTwoWeeks);
-            String avgFourToTwoWeeksString = Formatters.timeAmount_Old().apply(avgFourToTwoWeeks);
+            String avgLastTwoWeeksString = timeAmountFormatter.apply(avgLastTwoWeeks);
+            String avgFourToTwoWeeksString = timeAmountFormatter.apply(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
                 addNote(Icons.GREEN_THUMB + " Active players seem to have things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString

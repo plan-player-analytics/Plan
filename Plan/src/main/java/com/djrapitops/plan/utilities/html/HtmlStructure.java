@@ -107,7 +107,7 @@ public class HtmlStructure {
                 "<p><i class=\"col-deep-orange far fa-compass\"></i> Type " +
                 "<span class=\"pull-right\">" + serverType + "</span></p></div>" +
                 "<div class=\"col-md-4\">" +
-                "<p><i class=\"far fa-clock_Old\"></i> Last Updated" +
+                "<p><i class=\"far fa-clock\"></i> Last Updated" +
                 "<span class=\"pull-right\"><b>" + refresh + "</b></span></p>" +
                 "<br>" +
                 "<a href=\"" + address + "\"><button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-light-green waves-effect\">" +

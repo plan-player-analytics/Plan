@@ -60,7 +60,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
     private void uniquePlayersNote(int serverCount, Key<Server> serverKey, List<DataContainer> perServerContainers) {
         Icon icon;
-        String uniquePlayersNote = " players visit on servers per day_Old/server on average.";
+        String uniquePlayersNote = " players visit on servers per day/server on average.";
         double average = perServerContainers.stream()
                 .mapToInt(c -> c.getUnsafe(AnalysisKeys.AVG_PLAYERS_MONTH))
                 .average().orElse(0.0);
@@ -87,7 +87,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
     private void newPlayersNote(int serverCount, Key<Server> serverKey, List<DataContainer> perServerContainers) {
         Icon icon;
-        String newPlayersNote = " players register on servers per day_Old/server on average.";
+        String newPlayersNote = " players register on servers per day/server on average.";
         double average = perServerContainers.stream()
                 .mapToInt(c -> c.getUnsafe(AnalysisKeys.AVG_PLAYERS_NEW_MONTH))
                 .average().orElse(0.0);

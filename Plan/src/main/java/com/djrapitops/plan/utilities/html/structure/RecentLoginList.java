@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class RecentLoginList {
 
+    // TODO
+    private Formatter<DateHolder> secondFormatter;
+
     private final List<PlayerContainer> players;
 
     public RecentLoginList(List<PlayerContainer> players) {
@@ -32,8 +34,6 @@ public class RecentLoginList {
 
     public String toHtml() {
         List<RecentLogin> recentLogins = getMostRecentLogins();
-
-        Formatter<DateHolder> formatter = Formatters.second_Old();
 
         if (recentLogins.isEmpty()) {
             return "<li>No Recent Logins</li>";
@@ -49,7 +49,7 @@ public class RecentLoginList {
             String name = recentLogin.name;
             String url = PlanAPI.getInstance().getPlayerInspectPageLink(name);
             boolean isNew = recentLogin.isNew;
-            String start = formatter.apply(recentLogin);
+            String start = secondFormatter.apply(recentLogin);
 
             html.append("<li><a class=\"col-").append(isNew ? "light-green" : "blue").append(" font-bold\" href=\"").append(url)
                     .append("\">").append(name).append("</a><span class=\"pull-right\">").append(start).append("</span></li>");

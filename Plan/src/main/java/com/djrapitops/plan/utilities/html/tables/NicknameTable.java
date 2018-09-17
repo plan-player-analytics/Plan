@@ -5,11 +5,10 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
@@ -22,6 +21,9 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class NicknameTable extends TableContainer {
+
+    // TODO
+    private Formatter<DateHolder> yearFormatter;
 
     public NicknameTable(List<Nickname> nicknames, Map<UUID, String> serverNames) {
         super("Nickname", "Server", "Last Seen");
@@ -36,14 +38,13 @@ public class NicknameTable extends TableContainer {
     private void addValues(List<Nickname> nicknames, Map<UUID, String> serverNames) {
         nicknames.sort(new DateHolderRecentComparator());
 
-        Formatter<DateHolder> formatter = Formatters.year_Old();
         for (Nickname nickname : nicknames) {
             UUID serverUUID = nickname.getServerUUID();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
             addRow(
                     HtmlUtils.swapColorsToSpan(HtmlUtils.removeXSS(nickname.getName())),
                     serverName,
-                    formatter.apply(nickname)
+                    yearFormatter.apply(nickname)
             );
         }
     }

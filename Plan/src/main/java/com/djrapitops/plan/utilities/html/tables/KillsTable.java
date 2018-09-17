@@ -6,7 +6,6 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -18,12 +17,15 @@ import java.util.List;
  */
 public class KillsTable extends TableContainer {
 
+    // TODO
+    private Formatter<DateHolder> yearFormatter;
+
     public KillsTable(List<PlayerKill> playerKills) {
         this(playerKills, "red");
     }
 
     public KillsTable(List<PlayerKill> playerKills, String color) {
-        super(Icon.called("clock_Old").of(Family.REGULAR) + " Time", "Killed", "With");
+        super(Icon.called("clock").of(Family.REGULAR) + " Time", "Killed", "With");
         setColor(color);
 
         if (playerKills.isEmpty()) {
@@ -35,7 +37,6 @@ public class KillsTable extends TableContainer {
 
     private void addValues(List<PlayerKill> playerKills) {
         playerKills.sort(new DateHolderRecentComparator());
-        Formatter<DateHolder> timestamp = Formatters.year_Old();
 
         int i = 0;
         for (PlayerKill kill : playerKills) {
@@ -45,7 +46,7 @@ public class KillsTable extends TableContainer {
 
             String victimName = kill.getVictimName().orElse("Unknown");
             addRow(
-                    timestamp.apply(kill),
+                    yearFormatter.apply(kill),
                     Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(victimName), victimName),
                     kill.getWeapon()
             );

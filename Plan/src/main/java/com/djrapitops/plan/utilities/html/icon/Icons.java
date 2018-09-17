@@ -7,9 +7,9 @@ package com.djrapitops.plan.utilities.html.icon;
  */
 public class Icons {
 
-    public static final Icon PLAYTIME = Icon.called("clock_Old").of(Color.GREEN).of(Family.REGULAR).build();
-    public static final Icon SESSION_LENGTH = Icon.called("clock_Old").of(Color.TEAL).of(Family.REGULAR).build();
-    public static final Icon AFK_LENGTH = Icon.called("clock_Old").of(Color.GREY).of(Family.REGULAR).build();
+    public static final Icon PLAYTIME = Icon.called("clock").of(Color.GREEN).of(Family.REGULAR).build();
+    public static final Icon SESSION_LENGTH = Icon.called("clock").of(Color.TEAL).of(Family.REGULAR).build();
+    public static final Icon AFK_LENGTH = Icon.called("clock").of(Color.GREY).of(Family.REGULAR).build();
     public static final Icon PLAYER_KILLS = Icon.called("crosshairs").of(Color.RED).build();
     public static final Icon MOB_KILLS = Icon.called("crosshairs").of(Color.GREEN).build();
     public static final Icon DEATHS = Icon.called("skull").build();

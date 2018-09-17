@@ -65,7 +65,7 @@ public class ServerCalendar {
 
             series.append(",{title: 'New: ").append(newPlayers)
                     .append("',start:'").append(day)
-                    .append("',color: '").append(theme.getThemeValue(ThemeVal.LIGHT_GREEN)).append("'")
+                    .append("',color: '").append(theme.getValue(ThemeVal.LIGHT_GREEN)).append("'")
                     .append("}");
         }
 
@@ -91,12 +91,12 @@ public class ServerCalendar {
 
             series.append(",{title: 'Playtime: ").append(timeAmountFormatter.apply(playtime))
                     .append("',start:'").append(day)
-                    .append("',color: '").append(theme.getThemeValue(ThemeVal.GREEN)).append("'")
+                    .append("',color: '").append(theme.getValue(ThemeVal.GREEN)).append("'")
                     .append("}");
 
             series.append(",{title: 'Sessions: ").append(sessionCount)
                     .append("',start:'").append(day)
-                    .append("',color: '").append(theme.getThemeValue(ThemeVal.TEAL)).append("'")
+                    .append("',color: '").append(theme.getValue(ThemeVal.TEAL)).append("'")
                     .append("}");
 
             series.append(",{title: 'Unique: ").append(uniquePlayers)

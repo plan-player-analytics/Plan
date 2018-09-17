@@ -124,7 +124,7 @@ public class Theme implements SubSystem {
         return replaced;
     }
 
-    public String getThemeValue(ThemeVal color) {
+    private String getThemeValue(ThemeVal color) {
         return config.getString(color.getThemePath());
     }
 }

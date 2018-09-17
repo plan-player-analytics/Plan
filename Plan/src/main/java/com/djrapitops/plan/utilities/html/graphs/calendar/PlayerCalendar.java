@@ -9,11 +9,10 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
@@ -28,19 +27,28 @@ import java.util.Map;
  */
 public class PlayerCalendar {
 
+    private final Formatter<Long> timeAmountFormatter;
+    private final Formatter<Long> yearLongFormatter;
+    private final Formatter<DateHolder> iso8601Formatter;
+    private final Theme theme;
+
     private final List<Session> allSessions;
     private final long registered;
 
-    PlayerCalendar(PlayerContainer container) {
-        this(
-                container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()),
-                container.getValue(PlayerKeys.REGISTERED).orElse(0L)
-        );
-    }
+    PlayerCalendar(
+            PlayerContainer container,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Long> yearLongFormatter,
+            Formatter<DateHolder> iso8601Formatter,
+            Theme theme
+    ) {
+        this.allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
+        this.registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
 
-    private PlayerCalendar(List<Session> allSessions, long registered) {
-        this.allSessions = allSessions;
-        this.registered = registered;
+        this.timeAmountFormatter = timeAmountFormatter;
+        this.yearLongFormatter = yearLongFormatter;
+        this.iso8601Formatter = iso8601Formatter;
+        this.theme = theme;
     }
 
     public String toCalendarSeries() {
@@ -63,7 +71,7 @@ public class PlayerCalendar {
             int sessionCount = sessions.size();
             long playtime = sessions.stream().mapToLong(Session::getLength).sum();
 
-            series.append(",{title: 'Playtime: ").append(Formatters.timeAmount_Old().apply(playtime))
+            series.append(",{title: 'Playtime: ").append(timeAmountFormatter.apply(playtime))
                     .append("',start:'").append(day)
                     .append("',color: '").append(Theme.getValue_Old(ThemeVal.GREEN)).append("'")
                     .append("}");
@@ -77,7 +85,7 @@ public class PlayerCalendar {
     private Map<String, List<Session>> getSessionsByDay() {
         Map<String, List<Session>> sessionsByDay = new HashMap<>();
         for (Session session : allSessions) {
-            String day = Formatters.iso8601NoClock_Old().apply(session);
+            String day = iso8601Formatter.apply(session);
 
             List<Session> sessionsOfDay = sessionsByDay.getOrDefault(day, new ArrayList<>());
             sessionsOfDay.add(session);
@@ -89,9 +97,8 @@ public class PlayerCalendar {
     private void appendSessionsAndKills(StringBuilder series) {
         long fiveMinutes = TimeAmount.MINUTE.ms() * 5L;
 
-        Formatter<Long> timeFormatter = Formatters.timeAmount_Old();
         for (Session session : allSessions) {
-            String length = timeFormatter.apply(session.getLength());
+            String length = timeAmountFormatter.apply(session.getLength());
 
             series.append(",{title: 'Session: ").append(length)
                     .append("',start:").append(session.getUnsafe(SessionKeys.START))
@@ -105,16 +112,14 @@ public class PlayerCalendar {
                 series.append(",{title: 'Killed: ").append(kill.getVictim())
                         .append("',start:").append(time)
                         .append(",end:").append(time + fiveMinutes)
-                        .append(",color: '").append(Theme.getValue_Old(ThemeVal.RED)).append("'")
+                        .append(",color: '").append(theme.getValue(ThemeVal.RED)).append("'")
                         .append("}");
             }
         }
     }
 
     private void appendRegister(StringBuilder series) {
-        String registered = FormatUtils.formatTimeStampYear(this.registered);
-
-        series.append("{title: 'Registered: ").append(registered).append("'," +
-                "start: ").append(this.registered).append(",color: '").append(Theme.getValue_Old(ThemeVal.LIGHT_GREEN)).append("'}");
+        series.append("{title: 'Registered: ").append(yearLongFormatter.apply(registered)).append("'," +
+                "start: ").append(this.registered).append(",color: '").append(theme.getValue(ThemeVal.LIGHT_GREEN)).append("'}");
     }
 }

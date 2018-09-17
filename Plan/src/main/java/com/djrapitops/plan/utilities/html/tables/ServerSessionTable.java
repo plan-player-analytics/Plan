@@ -4,8 +4,8 @@ import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.utilities.formatting.Formatters;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 
 import java.util.List;
@@ -19,6 +19,11 @@ import java.util.UUID;
  */
 public class ServerSessionTable extends TableContainer {
 
+    // TODO
+    private int maxSessions; // Should be over 0, default 50
+    private Formatter<DateHolder> yearFormatter;
+    private Formatter<Long> timeAmountFormatter;
+
     private final List<Session> sessions;
     private Map<UUID, String> playerNames;
 
@@ -31,20 +36,15 @@ public class ServerSessionTable extends TableContainer {
     }
 
     private void addRows() {
-        int maxSessions = Settings.MAX_SESSIONS.getNumber();
-        if (maxSessions <= 0) {
-            maxSessions = 50;
-        }
-
         int i = 0;
         for (Session session : sessions) {
             if (i >= maxSessions) {
                 break;
             }
 
-            String start = Formatters.year_Old().apply(session);
+            String start = yearFormatter.apply(session);
             String length = session.supports(SessionKeys.END)
-                    ? Formatters.timeAmount_Old().apply(session.getValue(SessionKeys.LENGTH).orElse(0L))
+                    ? timeAmountFormatter.apply(session.getValue(SessionKeys.LENGTH).orElse(0L))
                     : "Online";
             String world = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
 

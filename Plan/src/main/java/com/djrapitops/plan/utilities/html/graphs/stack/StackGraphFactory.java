@@ -33,7 +33,7 @@ public class StackGraphFactory {
     }
 
     public StackGraph activityStackGraph(TreeMap<Long, Map<String, Set<UUID>>> activityData) {
-        String[] colors = theme.getThemeValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
+        String[] colors = theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE).split(", ");
         return new ActivityStackGraph(activityData, colors, dayFormatter);
     }
 }

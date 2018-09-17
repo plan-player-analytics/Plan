@@ -10,8 +10,6 @@ import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.icon.Icons;
@@ -19,6 +17,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Server Health analysis mutator.
@@ -80,10 +79,10 @@ public class HealthInformation extends AbstractHealthInfo {
         if (playersNewMonth != 0) {
             double retainPercentage = playersRetainedMonth * 1.0 / playersNewMonth;
             if (retainPercentage >= 0.25) {
-                addNote(Icons.GREEN_THUMB + " " + Formatters.percentage_Old().apply(retainPercentage)
+                addNote(Icons.GREEN_THUMB + " " + percentageFormatter.apply(retainPercentage)
                         + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
             } else {
-                addNote(Icons.YELLOW_FLAG + " " + Formatters.percentage_Old().apply(retainPercentage)
+                addNote(Icons.YELLOW_FLAG + " " + percentageFormatter.apply(retainPercentage)
                         + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
             }
         }
@@ -126,15 +125,18 @@ public class HealthInformation extends AbstractHealthInfo {
             serverHealth *= 0.8;
         }
 
-        Formatter<Long> formatter = Formatters.timeAmount_Old();
-        if (serverDownTime <= TimeAmount.DAY.ms()) {
-            addNote(Icons.GREEN_THUMB + " Total Server downtime (No Data) was " + formatter.apply(serverDownTime));
-        } else if (serverDownTime <= TimeAmount.WEEK.ms()) {
-            addNote(Icons.YELLOW_FLAG + " Total Server downtime (No Data) was " + formatter.apply(serverDownTime));
-            serverHealth *= (TimeAmount.WEEK.ms() - serverDownTime) * 1.0 / TimeAmount.WEEK.ms();
+        if (serverDownTime <= TimeUnit.DAYS.toMillis(1L)) {
+            addNote(Icons.GREEN_THUMB + " Total Server downtime (No Data) was " + timeAmountFormatter.apply(serverDownTime));
         } else {
-            addNote(Icons.RED_WARN + " Total Server downtime (No Data) was " + formatter.apply(serverDownTime));
-            serverHealth *= (TimeAmount.MONTH.ms() - serverDownTime) * 1.0 / TimeAmount.MONTH.ms();
+            long weekMs = TimeAmount.WEEK.toMillis(1L);
+            if (serverDownTime <= weekMs) {
+                addNote(Icons.YELLOW_FLAG + " Total Server downtime (No Data) was " + timeAmountFormatter.apply(serverDownTime));
+                serverHealth *= (weekMs - serverDownTime) * 1.0 / weekMs;
+            } else {
+                addNote(Icons.RED_WARN + " Total Server downtime (No Data) was " + timeAmountFormatter.apply(serverDownTime));
+                long monthMs = TimeAmount.MONTH.toMillis(1L);
+                serverHealth *= (monthMs - serverDownTime) * 1.0 / monthMs;
+            }
         }
     }
 

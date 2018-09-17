@@ -14,7 +14,6 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.icon.Color;
@@ -39,7 +38,11 @@ public class ServerAccordion extends AbstractAccordion {
     private final Map<UUID, String> serverNames;
     private PerServerContainer perServer;
 
+    // TODO
+    private Theme theme;
     private Graphs graphs;
+    private Formatter<Long> yearLongFormatter;
+    private Formatter<Long> timeAmountFormatter;
 
     public ServerAccordion(PlayerContainer container, Map<UUID, String> serverNames) {
         super("server_accordion");
@@ -64,8 +67,6 @@ public class ServerAccordion extends AbstractAccordion {
     private void addElements() {
         int i = 0;
 
-        Formatter<Long> timeFormatter = Formatters.timeAmount_Old();
-
         for (Map.Entry<UUID, DataContainer> entry : perServer.entrySet()) {
             UUID serverUUID = entry.getKey();
             DataContainer container = entry.getValue();
@@ -87,10 +88,10 @@ public class ServerAccordion extends AbstractAccordion {
             long playerKills = sessionsMutator.toPlayerKillCount();
             long deaths = sessionsMutator.toDeathCount();
 
-            String play = timeFormatter.apply(playtime);
-            String afk = timeFormatter.apply(afkTime);
-            String median = timeFormatter.apply(sessionMedian);
-            String longest = timeFormatter.apply(longestSession);
+            String play = timeAmountFormatter.apply(playtime);
+            String afk = timeAmountFormatter.apply(afkTime);
+            String median = timeAmountFormatter.apply(sessionMedian);
+            String longest = timeAmountFormatter.apply(longestSession);
 
             String sanitizedServerName = new Format(serverName)
                     .removeSymbols()
@@ -106,7 +107,7 @@ public class ServerAccordion extends AbstractAccordion {
             String leftSide = new AccordionElementContentBuilder()
                     .addRowBold(Icons.OPERATOR, "Operator", operator ? "Yes" : "No")
                     .addRowBold(Icons.BANNED, "Banned", banned ? "Yes" : "No")
-                    .addRowBold(Icon.called("user-plus").of(Color.LIGHT_GREEN), "Registered", Formatters.year_Old().apply(() -> registered))
+                    .addRowBold(Icon.called("user-plus").of(Color.LIGHT_GREEN), "Registered", yearLongFormatter.apply(registered))
                     .addBreak()
                     .addRowBold(Icons.SESSION_COUNT, "Sessions", sessionCount)
                     .addRowBold(Icons.PLAYTIME, "Server Playtime", play)
@@ -126,7 +127,7 @@ public class ServerAccordion extends AbstractAccordion {
                     "</script>";
 
             addElement(new AccordionElement(htmlID, title)
-                    .setColor(Theme.getValue_Old(ThemeVal.PARSED_SERVER_ACCORDION))
+                    .setColor(theme.getValue(ThemeVal.PARSED_SERVER_ACCORDION))
                     .setLeftSide(leftSide)
                     .setRightSide(rightSide));
 

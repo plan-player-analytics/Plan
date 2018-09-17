@@ -7,13 +7,14 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
+import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
@@ -39,6 +40,9 @@ public class NetworkContainer extends DataContainer {
     // TODO
     private Database database;
     private Graphs graphs;
+
+    private Formatter<DateHolder> yearFormatter;
+    private Formatter<Long> secondLongFormatter;
 
     private final Map<UUID, AnalysisContainer> serverContainers;
 
@@ -80,7 +84,7 @@ public class NetworkContainer extends DataContainer {
         putRawData(NetworkKeys.REFRESH_TIME_DAY_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeAmount.DAY.ms());
         putRawData(NetworkKeys.REFRESH_TIME_WEEK_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeAmount.WEEK.ms());
         putRawData(NetworkKeys.REFRESH_TIME_MONTH_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeAmount.MONTH.ms());
-        putSupplier(NetworkKeys.REFRESH_TIME_F, () -> Formatters.second_Old().apply(() -> getUnsafe(NetworkKeys.REFRESH_TIME)));
+        putSupplier(NetworkKeys.REFRESH_TIME_F, () -> secondLongFormatter.apply(getUnsafe(NetworkKeys.REFRESH_TIME)));
 
         putRawData(NetworkKeys.VERSION, PlanPlugin.getInstance().getVersion());
         putSupplier(NetworkKeys.TIME_ZONE, MiscUtils::getTimeZoneOffsetHours);
@@ -119,10 +123,10 @@ public class NetworkContainer extends DataContainer {
         );
 
         putSupplier(NetworkKeys.ALL_TIME_PEAK_TIME_F, () ->
-                bungeeContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS).map(Formatters.year_Old()::apply).orElse("No data")
+                bungeeContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS).map(yearFormatter::apply).orElse("No data")
         );
         putSupplier(NetworkKeys.RECENT_PEAK_TIME_F, () ->
-                bungeeContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS).map(Formatters.year_Old()::apply).orElse("No data")
+                bungeeContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS).map(yearFormatter::apply).orElse("No data")
         );
         putSupplier(NetworkKeys.PLAYERS_ALL_TIME_PEAK, () ->
                 bungeeContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS).map(dateObj -> "" + dateObj.getValue()).orElse("-")

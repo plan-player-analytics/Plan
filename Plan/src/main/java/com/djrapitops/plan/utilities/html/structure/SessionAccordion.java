@@ -10,7 +10,6 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
@@ -37,7 +36,11 @@ public class SessionAccordion extends AbstractAccordion {
     private final boolean appendWorldPercentage;
     private int maxSessions;
 
+    // TODO
+    private Theme theme;
     private Graphs graphs;
+    private Formatter<DateHolder> yearFormatter;
+    private Formatter<Long> timeAmountFormatter;
 
     private SessionAccordion(boolean forPlayer, List<Session> sessions,
                              Supplier<Map<UUID, String>> serverNamesSupplier,
@@ -84,8 +87,6 @@ public class SessionAccordion extends AbstractAccordion {
     private void addElementsForServer() {
         Map<UUID, String> serverNames = serverNamesSupplier.get();
         Map<UUID, String> playerNames = playerNamesSupplier.get();
-        Formatter<Long> timeFormatter = Formatters.timeAmount_Old();
-        Formatter<DateHolder> timeStampFormatter = Formatters.year_Old();
         sessions.sort(new DateHolderRecentComparator());
 
         int i = 0;
@@ -96,17 +97,17 @@ public class SessionAccordion extends AbstractAccordion {
 
             String serverName = serverNames.getOrDefault(session.getValue(SessionKeys.SERVER_UUID).orElse(null), "Unknown");
             String playerName = playerNames.getOrDefault(session.getValue(SessionKeys.UUID).orElse(null), "Unknown");
-            String sessionStart = timeStampFormatter.apply(session);
+            String sessionStart = yearFormatter.apply(session);
 
             WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
             WorldPie worldPie = graphs.pie().worldPie(worldTimes);
             String longestWorldPlayed = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
 
             boolean hasEnded = session.supports(SessionKeys.END);
-            String sessionEnd = hasEnded ? timeStampFormatter.apply(() -> session.getUnsafe(SessionKeys.END)) : "Online";
+            String sessionEnd = hasEnded ? yearFormatter.apply(() -> session.getUnsafe(SessionKeys.END)) : "Online";
 
-            String length = (hasEnded ? "" : "(Online) ") + timeFormatter.apply(session.getValue(SessionKeys.LENGTH).orElse(0L));
-            String afk = (hasEnded ? "" : "(Inaccurate) ") + timeFormatter.apply(session.getValue(SessionKeys.AFK_TIME).orElse(0L));
+            String length = (hasEnded ? "" : "(Online) ") + timeAmountFormatter.apply(session.getValue(SessionKeys.LENGTH).orElse(0L));
+            String afk = (hasEnded ? "" : "(Inaccurate) ") + timeAmountFormatter.apply(session.getValue(SessionKeys.AFK_TIME).orElse(0L));
 
             int playerKillCount = session.getValue(SessionKeys.PLAYER_KILL_COUNT).orElse(0);
             int mobKillCount = session.getValue(SessionKeys.MOB_KILL_COUNT).orElse(0);
@@ -149,7 +150,7 @@ public class SessionAccordion extends AbstractAccordion {
                     "<i class=\"material-icons\">person</i><span>INSPECT PAGE</span></button></a>";
 
             addElement(new AccordionElement(htmlID, title)
-                    .setColor(Theme.getValue_Old(ThemeVal.PARSED_SESSION_ACCORDION))
+                    .setColor(theme.getValue(ThemeVal.PARSED_SESSION_ACCORDION))
                     .setLeftSide(leftSide + leftBottom)
                     .setRightSide(rightSide + rightBottom));
             i++;
@@ -158,8 +159,6 @@ public class SessionAccordion extends AbstractAccordion {
 
     private void addElementsForPlayer() {
         Map<UUID, String> serverNames = serverNamesSupplier.get();
-        Formatter<Long> timeFormatter = Formatters.timeAmount_Old();
-        Formatter<DateHolder> timeStampFormatter = Formatters.year_Old();
         sessions.sort(new DateHolderRecentComparator());
 
         int i = 0;
@@ -169,17 +168,17 @@ public class SessionAccordion extends AbstractAccordion {
             }
 
             String serverName = serverNames.getOrDefault(session.getValue(SessionKeys.SERVER_UUID).orElse(null), "Unknown");
-            String sessionStart = timeStampFormatter.apply(session);
+            String sessionStart = yearFormatter.apply(session);
 
             WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
             WorldPie worldPie = graphs.pie().worldPie(worldTimes);
             String longestWorldPlayed = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
 
             boolean hasEnded = session.supports(SessionKeys.END);
-            String sessionEnd = hasEnded ? timeStampFormatter.apply(() -> session.getValue(SessionKeys.END).orElse(0L)) : "Online";
+            String sessionEnd = hasEnded ? yearFormatter.apply(() -> session.getValue(SessionKeys.END).orElse(0L)) : "Online";
 
-            String length = (hasEnded ? "" : "(Online) ") + timeFormatter.apply(session.getValue(SessionKeys.LENGTH).orElse(0L));
-            String afk = (hasEnded ? "" : "(Inaccurate) ") + timeFormatter.apply(session.getValue(SessionKeys.AFK_TIME).orElse(0L));
+            String length = (hasEnded ? "" : "(Online) ") + timeAmountFormatter.apply(session.getValue(SessionKeys.LENGTH).orElse(0L));
+            String afk = (hasEnded ? "" : "(Inaccurate) ") + timeAmountFormatter.apply(session.getValue(SessionKeys.AFK_TIME).orElse(0L));
 
             int playerKillCount = session.getValue(SessionKeys.PLAYER_KILL_COUNT).orElse(0);
             int mobKillCount = session.getValue(SessionKeys.MOB_KILL_COUNT).orElse(0);
@@ -217,7 +216,7 @@ public class SessionAccordion extends AbstractAccordion {
             String leftBottom = new KillsTable(session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()), null).parseHtml();
 
             addElement(new AccordionElement(htmlID, title)
-                    .setColor(Theme.getValue_Old(ThemeVal.PARSED_SESSION_ACCORDION))
+                    .setColor(theme.getValue(ThemeVal.PARSED_SESSION_ACCORDION))
                     .setLeftSide(leftSide + leftBottom)
                     .setRightSide(rightSide));
 

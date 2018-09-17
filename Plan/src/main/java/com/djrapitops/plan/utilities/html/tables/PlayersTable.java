@@ -8,9 +8,9 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.PlayerContainerLastPlayedComparator;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -24,6 +24,10 @@ import java.util.List;
  */
 public class PlayersTable extends TableContainer {
 
+    // TODO
+    private Formatter<Long> timeAmountFormatter;
+    private Formatter<Long> yearLongFormatter;
+
     private final List<PlayerContainer> players;
     private final int maxPlayers;
 
@@ -31,7 +35,7 @@ public class PlayersTable extends TableContainer {
         super(
                 Icon.called("user") + " Name",
                 Icon.called("check") + " Activity Index",
-                Icon.called("clock_Old").of(Family.REGULAR) + " Playtime",
+                Icon.called("clock").of(Family.REGULAR) + " Playtime",
                 Icon.called("calendar-plus").of(Family.REGULAR) + " Sessions",
                 Icon.called("user-plus") + " Registered",
                 Icon.called("calendar-check").of(Family.REGULAR) + " Last Seen",
@@ -41,16 +45,18 @@ public class PlayersTable extends TableContainer {
         this.maxPlayers = maxPlayers;
         useJqueryDataTables("player-table");
 
-        setFormatter(2, Formatters.timeAmount_Old());
-        setFormatter(4, Formatters.yearLongValue_Old());
-        setFormatter(5, Formatters.yearLongValue_Old());
+        setFormatter(2, timeAmountFormatter);
+        setFormatter(4, yearLongFormatter);
+        setFormatter(5, yearLongFormatter);
         addRows();
     }
 
+    @Deprecated
     public static PlayersTable forServerPage(List<PlayerContainer> players) {
         return new PlayersTable(players, Settings.MAX_PLAYERS.getNumber());
     }
 
+    @Deprecated
     public static PlayersTable forPlayersPage(List<PlayerContainer> players) {
         return new PlayersTable(players, Settings.MAX_PLAYERS_PLAYERS_PAGE.getNumber());
     }

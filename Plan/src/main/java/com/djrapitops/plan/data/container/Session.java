@@ -6,7 +6,7 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.*;
 
@@ -221,6 +221,7 @@ public class Session extends DataContainer implements DateHolder {
         return afkTime;
     }
 
+    @Deprecated // TODO Move this method elsewhere
     private String getLongestWorldPlayed() {
         Map<String, String> aliases = WorldAliasSettings.getAliases_Old();
         if (worldTimes == null) {
@@ -246,6 +247,7 @@ public class Session extends DataContainer implements DateHolder {
 
         double quotient = longest * 1.0 / total;
 
-        return theWorld + " (" + Formatters.percentage_Old().apply(quotient) + ")";
+        Formatter<Double> percentageFormatter = null; // TODO
+        return theWorld + " (" + percentageFormatter.apply(quotient) + ")";
     }
 }

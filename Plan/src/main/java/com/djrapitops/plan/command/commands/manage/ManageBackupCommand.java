@@ -2,7 +2,6 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
@@ -13,6 +12,8 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -41,13 +42,17 @@ public class ManageBackupCommand extends CommandNode {
     private final SQLiteDB.Factory sqliteFactory;
     private final ErrorHandler errorHandler;
 
+    private final Formatter<Long> iso8601LongFormatter;
+
     @Inject
     public ManageBackupCommand(
             Locale locale,
             Processing processing,
             DBSystem dbSystem,
             SQLiteDB.Factory sqliteFactory,
-            ErrorHandler errorHandler) {
+            Formatters formatters,
+            ErrorHandler errorHandler
+    ) {
         super("backup", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
@@ -55,6 +60,8 @@ public class ManageBackupCommand extends CommandNode {
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
         this.errorHandler = errorHandler;
+
+        this.iso8601LongFormatter = formatters.iso8601NoClockLong();
 
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_BACKUP));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_BACKUP));
@@ -105,7 +112,7 @@ public class ManageBackupCommand extends CommandNode {
     private void createNewBackup(String dbName, Database copyFromDB) {
         SQLiteDB backupDB = null;
         try {
-            String timeStamp = Formatters.iso8601NoClock_Old().apply(System::currentTimeMillis);
+            String timeStamp = iso8601LongFormatter.apply(System.currentTimeMillis());
             String fileName = dbName + "-backup-" + timeStamp;
             backupDB = sqliteFactory.usingFileCalled(fileName);
             Collection<UUID> uuids = copyFromDB.fetch().getSavedUUIDs();

@@ -47,11 +47,16 @@ public class DebugPage implements Page {
     private final Timings timings;
     private final DefaultErrorHandler errorHandler;
 
+    private final Formatter<DateHolder> secondFormatter;
+    private final Formatter<Long> yearFormatter;
+
     DebugPage(
             String version,
             Database database,
             ServerInfo serverInfo,
-            ConnectionSystem connectionSystem, DebugLogger debugLogger,
+            ConnectionSystem connectionSystem,
+            Formatters formatters,
+            DebugLogger debugLogger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
@@ -62,6 +67,9 @@ public class DebugPage implements Page {
         this.debugLogger = (CombineDebugLogger) debugLogger;
         this.timings = timings;
         this.errorHandler = (DefaultErrorHandler) errorHandler;
+
+        this.secondFormatter = formatters.second();
+        this.yearFormatter = formatters.yearLong();
     }
 
     @Override
@@ -115,14 +123,13 @@ public class DebugPage implements Page {
             content.append("<pre>### Session Cache:<br><br>");
             content.append("UUID | Session Started <br>")
                     .append("-- | -- <br>");
-            Formatter<Long> timeStamp = Formatters.yearLongValue_Old();
             Set<Map.Entry<UUID, Session>> sessions = SessionCache.getActiveSessions().entrySet();
             if (sessions.isEmpty()) {
                 content.append("Empty");
             }
             for (Map.Entry<UUID, Session> entry : sessions) {
                 UUID uuid = entry.getKey();
-                String start = entry.getValue().getValue(SessionKeys.START).map(timeStamp).orElse("Unknown");
+                String start = entry.getValue().getValue(SessionKeys.START).map(yearFormatter).orElse("Unknown");
                 content.append(uuid.toString()).append(" | ").append(start).append("<br>");
             }
             content.append("</pre>");
@@ -161,8 +168,6 @@ public class DebugPage implements Page {
             content.append("Server Address | Request Type | Response | Sent<br>")
                     .append("-- | -- | -- | --<br>");
 
-            Formatter<DateHolder> formatter = Formatters.second_Old();
-
             if (logEntries.isEmpty()) {
                 content.append("**No Connections Logged**<br>");
             }
@@ -176,7 +181,7 @@ public class DebugPage implements Page {
                     content.append(address).append(" | ")
                             .append(infoRequest).append(" | ")
                             .append(logEntry.getResponseCode()).append(" | ")
-                            .append(formatter.apply(logEntry)).append("<br>");
+                            .append(secondFormatter.apply(logEntry)).append("<br>");
                 }
 
             }

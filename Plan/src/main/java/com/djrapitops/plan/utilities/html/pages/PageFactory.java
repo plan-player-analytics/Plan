@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
@@ -33,6 +34,7 @@ public class PageFactory {
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<ConnectionSystem> connectionSystem;
     private final Lazy<Graphs> graphs;
+    private final Lazy<Formatters> formatters;
     private final Lazy<DebugLogger> debugLogger;
     private final Lazy<Timings> timings;
     private final Lazy<ErrorHandler> errorHandler;
@@ -44,7 +46,9 @@ public class PageFactory {
             Lazy<Database> database,
             Lazy<ServerInfo> serverInfo,
             Lazy<ConnectionSystem> connectionSystem,
-            Lazy<Graphs> graphs, Lazy<DebugLogger> debugLogger,
+            Lazy<Graphs> graphs,
+            Lazy<Formatters> formatters,
+            Lazy<DebugLogger> debugLogger,
             Lazy<Timings> timings,
             Lazy<ErrorHandler> errorHandler
     ) {
@@ -54,15 +58,18 @@ public class PageFactory {
         this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
         this.graphs = graphs;
+        this.formatters = formatters;
         this.debugLogger = debugLogger;
         this.timings = timings;
         this.errorHandler = errorHandler;
     }
 
     public DebugPage debugPage() {
-        return new DebugPage(version,
-                database.get(), serverInfo.get(), connectionSystem.get(),
-                debugLogger.get(), timings.get(), errorHandler.get());
+        return new DebugPage(
+                version,
+                database.get(), serverInfo.get(), connectionSystem.get(), formatters.get(),
+                debugLogger.get(), timings.get(), errorHandler.get()
+        );
     }
 
     public PlayersPage playersPage() {
@@ -76,7 +83,10 @@ public class PageFactory {
     public InspectPage inspectPage(UUID uuid) {
         PlayerContainer player = database.get().fetch().getPlayerContainer(uuid);
         Map<UUID, String> serverNames = database.get().fetch().getServerNames();
-        return new InspectPage(player, serverNames, config.get(), graphs.get(), serverInfo.get(), timings.get());
+        return new InspectPage(
+                player, serverNames,
+                config.get(), graphs.get(), formatters.get(), serverInfo.get(), timings.get()
+        );
     }
 
     public NetworkPage networkPage() {
