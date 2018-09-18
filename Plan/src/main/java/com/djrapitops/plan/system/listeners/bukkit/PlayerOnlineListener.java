@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Settings;
@@ -35,6 +36,7 @@ public class PlayerOnlineListener implements Listener {
     private final PlanConfig config;
     private final Processors processors;
     private final Processing processing;
+    private final ServerInfo serverInfo;
     private final SessionCache sessionCache;
     private final ErrorHandler errorHandler;
     private final RunnableFactory runnableFactory;
@@ -48,6 +50,7 @@ public class PlayerOnlineListener implements Listener {
             PlanConfig config,
             Processors processors,
             Processing processing,
+            ServerInfo serverInfo,
             SessionCache sessionCache,
             RunnableFactory runnableFactory,
             ErrorHandler errorHandler
@@ -55,6 +58,7 @@ public class PlayerOnlineListener implements Listener {
         this.config = config;
         this.processors = processors;
         this.processing = processing;
+        this.serverInfo = serverInfo;
         this.sessionCache = sessionCache;
         this.runnableFactory = runnableFactory;
         this.errorHandler = errorHandler;
@@ -120,7 +124,7 @@ public class PlayerOnlineListener implements Listener {
         String playerName = player.getName();
         String displayName = player.getDisplayName();
 
-        sessionCache.cacheSession(uuid, new Session(uuid, time, world, gm));
+        sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm));
 
         boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
 

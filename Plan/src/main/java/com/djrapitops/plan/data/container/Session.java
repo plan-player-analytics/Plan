@@ -4,7 +4,6 @@ import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
@@ -30,11 +29,12 @@ public class Session extends DataContainer implements DateHolder {
      * Creates a new session.
      *
      * @param uuid         UUID of the Player.
+     * @param serverUUID   UUID of the server.
      * @param sessionStart Epoch ms the session started.
      * @param world        Starting world.
      * @param gm           Starting GameMode.
      */
-    public Session(UUID uuid, long sessionStart, String world, String gm) {
+    public Session(UUID uuid, UUID serverUUID, long sessionStart, String world, String gm) {
         this.sessionStart = sessionStart;
         worldTimes = new WorldTimes(world, gm, sessionStart);
         playerKills = new ArrayList<>();
@@ -44,6 +44,7 @@ public class Session extends DataContainer implements DateHolder {
         afkTime = 0;
 
         putRawData(SessionKeys.UUID, uuid);
+        putRawData(SessionKeys.SERVER_UUID, serverUUID);
         putSupplier(SessionKeys.START, this::getSessionStart);
         putSupplier(SessionKeys.WORLD_TIMES, this::getWorldTimes);
         putSupplier(SessionKeys.PLAYER_KILLS, this::getPlayerKills);
@@ -56,7 +57,6 @@ public class Session extends DataContainer implements DateHolder {
         putSupplier(SessionKeys.LENGTH, () ->
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
         putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
-        putSupplier(SessionKeys.SERVER_UUID, ServerInfo::getServerUUID_Old);
 
         putSupplier(SessionKeys.LONGEST_WORLD_PLAYED, this::getLongestWorldPlayed);
     }

@@ -60,6 +60,8 @@ public class SQLiteTest {
     @Rule
     public Timeout globalTimeout = Timeout.seconds(5);
 
+    private final UUID serverUUID = TestConstants.SERVER_UUID;
+
     @BeforeClass
     public static void setUpClass() throws Exception {
         System.out.println("--- Test Class Setup     ---");
@@ -340,7 +342,7 @@ public class SQLiteTest {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -371,7 +373,7 @@ public class SQLiteTest {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -535,7 +537,7 @@ public class SQLiteTest {
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds();
 
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -601,7 +603,7 @@ public class SQLiteTest {
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds(database);
 
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -695,7 +697,7 @@ public class SQLiteTest {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, 12345L, "", "");
+        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -934,7 +936,7 @@ public class SQLiteTest {
         assertTrue(container.supports(PlayerKeys.PLAYER_KILL_COUNT));
 
         assertFalse(container.supports(PlayerKeys.ACTIVE_SESSION));
-        container.putRawData(PlayerKeys.ACTIVE_SESSION, new Session(TestConstants.PLAYER_ONE_UUID, System.currentTimeMillis(), "TestWorld", "SURVIVAL"));
+        container.putRawData(PlayerKeys.ACTIVE_SESSION, new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, System.currentTimeMillis(), "TestWorld", "SURVIVAL"));
         assertTrue(container.supports(PlayerKeys.ACTIVE_SESSION));
 
         long end = System.nanoTime();

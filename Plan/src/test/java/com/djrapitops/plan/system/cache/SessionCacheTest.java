@@ -23,6 +23,7 @@ public class SessionCacheTest {
     private SessionCache sessionCache;
     private Session session;
     private final UUID uuid = TestConstants.PLAYER_ONE_UUID;
+    private final UUID serverUUID = TestConstants.SERVER_UUID;
 
     private Database database; // TODO
 
@@ -35,7 +36,7 @@ public class SessionCacheTest {
     @Before
     public void setUp() {
         sessionCache = new SessionCache(database);
-        session = new Session(uuid, 12345L, "World1", "SURVIVAL");
+        session = new Session(uuid, serverUUID, 12345L, "World1", "SURVIVAL");
         sessionCache.cacheSession(uuid, session);
     }
 

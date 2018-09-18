@@ -66,7 +66,7 @@ public class PlayerOnlineListener implements Listener {
             InetAddress address = player.getAddress().getAddress();
             long time = System.currentTimeMillis();
 
-            sessionCache.cacheSession(uuid, new Session(uuid, time, "", ""));
+            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, "", ""));
 
             boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
 
@@ -102,7 +102,7 @@ public class PlayerOnlineListener implements Listener {
 
             long time = System.currentTimeMillis();
             // Replaces the current session in the cache.
-            sessionCache.cacheSession(uuid, new Session(uuid, time, "", ""));
+            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, "", ""));
             processing.submit(processors.info().playerPageUpdateProcessor(uuid));
         } catch (Exception e) {
             errorHandler.log(L.WARN, this.getClass(), e);
