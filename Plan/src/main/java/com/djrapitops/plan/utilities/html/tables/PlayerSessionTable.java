@@ -3,42 +3,38 @@ package com.djrapitops.plan.utilities.html.tables;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.data.store.containers.DataContainer;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TableContainer for a Session table for a single player.
+ * Html table that can be used to replace a {@link com.djrapitops.plan.utilities.html.structure.SessionAccordion}.
  *
  * @author Rsl1122
  */
-public class PlayerSessionTable extends TableContainer {
+class PlayerSessionTable extends TableContainer {
 
-    // TODO
-    private int maxSessions; // Should be over 0, default 50
-    private Formatter<DateHolder> yearFormatter;
-    private Formatter<Long> timeAmountFormatter;
+    private final int maxSessions;
+    private final Formatter<DateHolder> yearFormatter;
+    private final Formatter<Long> timeAmountFormatter;
 
     private final String playerName;
     private final List<Session> sessions;
 
-    public static PlayerSessionTable forContainer(DataContainer container) {
-        return new PlayerSessionTable(
-                container.getValue(PlayerKeys.NAME).orElse("Unknown"),
-                container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>())
-        );
-    } 
-    
-    public PlayerSessionTable(String playerName, List<Session> sessions) {
+    PlayerSessionTable(String playerName, List<Session> sessions,
+                       int maxSessions,
+                       Formatter<DateHolder> yearFormatter,
+                       Formatter<Long> timeAmountFormatter
+    ) {
         super("Player", "Start", "Length", "World");
         this.playerName = playerName;
         this.sessions = sessions;
+        this.maxSessions = maxSessions;
+        this.yearFormatter = yearFormatter;
+        this.timeAmountFormatter = timeAmountFormatter;
 
         addRows();
     }

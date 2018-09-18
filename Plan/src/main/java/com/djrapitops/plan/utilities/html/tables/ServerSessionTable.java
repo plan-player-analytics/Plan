@@ -13,24 +13,31 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * TableContainer for a Session table for a single player.
+ * Html table that can be used to replace a {@link com.djrapitops.plan.utilities.html.structure.SessionAccordion}.
  *
  * @author Rsl1122
  */
-public class ServerSessionTable extends TableContainer {
+class ServerSessionTable extends TableContainer {
 
-    // TODO
-    private int maxSessions; // Should be over 0, default 50
-    private Formatter<DateHolder> yearFormatter;
-    private Formatter<Long> timeAmountFormatter;
+    private final int maxSessions;
+    private final Formatter<DateHolder> yearFormatter;
+    private final Formatter<Long> timeAmountFormatter;
 
     private final List<Session> sessions;
     private Map<UUID, String> playerNames;
 
-    public ServerSessionTable(Map<UUID, String> playerNames, List<Session> sessions) {
+    ServerSessionTable(
+            Map<UUID, String> playerNames, List<Session> sessions,
+            int maxSessions,
+            Formatter<DateHolder> yearFormatter,
+            Formatter<Long> timeAmountFormatter
+    ) {
         super("Player", "Start", "Length", "World");
         this.playerNames = playerNames;
         this.sessions = sessions;
+        this.maxSessions = maxSessions;
+        this.yearFormatter = yearFormatter;
+        this.timeAmountFormatter = timeAmountFormatter;
 
         addRows();
     }

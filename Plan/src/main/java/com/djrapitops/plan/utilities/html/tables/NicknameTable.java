@@ -16,17 +16,17 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Utility Class for creating Nicknames Table for inspect page.
+ * Html table that displays player's nicknames and where they were seen.
  *
  * @author Rsl1122
  */
-public class NicknameTable extends TableContainer {
+class NicknameTable extends TableContainer {
 
-    // TODO
-    private Formatter<DateHolder> yearFormatter;
+    private final Formatter<DateHolder> yearFormatter;
 
-    public NicknameTable(List<Nickname> nicknames, Map<UUID, String> serverNames) {
+    NicknameTable(List<Nickname> nicknames, Map<UUID, String> serverNames, Formatter<DateHolder> yearFormatter) {
         super("Nickname", "Server", "Last Seen");
+        this.yearFormatter = yearFormatter;
 
         if (nicknames.isEmpty()) {
             addRow("No Nicknames");

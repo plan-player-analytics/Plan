@@ -9,6 +9,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
+import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -34,6 +35,7 @@ public class PageFactory {
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<ConnectionSystem> connectionSystem;
     private final Lazy<Graphs> graphs;
+    private final Lazy<HtmlTables> tables;
     private final Lazy<Formatters> formatters;
     private final Lazy<DebugLogger> debugLogger;
     private final Lazy<Timings> timings;
@@ -47,6 +49,7 @@ public class PageFactory {
             Lazy<ServerInfo> serverInfo,
             Lazy<ConnectionSystem> connectionSystem,
             Lazy<Graphs> graphs,
+            Lazy<HtmlTables> tables,
             Lazy<Formatters> formatters,
             Lazy<DebugLogger> debugLogger,
             Lazy<Timings> timings,
@@ -58,6 +61,7 @@ public class PageFactory {
         this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
         this.graphs = graphs;
+        this.tables = tables;
         this.formatters = formatters;
         this.debugLogger = debugLogger;
         this.timings = timings;
@@ -73,11 +77,12 @@ public class PageFactory {
     }
 
     public PlayersPage playersPage() {
-        return new PlayersPage(version, config.get(), database.get(), serverInfo.get(), timings.get());
+        return new PlayersPage(version, config.get(), database.get(), serverInfo.get(), tables.get(), timings.get());
     }
 
     public AnalysisPage analysisPage(UUID serverUUID) {
-        return new AnalysisPage(new AnalysisContainer(database.get().fetch().getServerContainer(serverUUID)), decimalFormatter);
+        AnalysisContainer analysisContainer = new AnalysisContainer(database.get().fetch().getServerContainer(serverUUID));
+        return new AnalysisPage(analysisContainer, formatters.get().decimals());
     }
 
     public InspectPage inspectPage(UUID uuid) {
@@ -85,7 +90,7 @@ public class PageFactory {
         Map<UUID, String> serverNames = database.get().fetch().getServerNames();
         return new InspectPage(
                 player, serverNames,
-                config.get(), graphs.get(), formatters.get(), serverInfo.get(), timings.get()
+                config.get(), graphs.get(), tables.get(), formatters.get(), serverInfo.get(), timings.get()
         );
     }
 

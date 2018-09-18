@@ -2,13 +2,13 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.file.FileUtil;
-import com.djrapitops.plan.utilities.html.tables.PlayersTable;
+import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.benchmarking.Timings;
 
@@ -26,6 +26,8 @@ public class PlayersPage implements Page {
     private final Database database;
     private final ServerInfo serverInfo;
 
+    private final HtmlTables tables;
+
     private final Timings timings;
 
     PlayersPage(
@@ -33,12 +35,14 @@ public class PlayersPage implements Page {
             PlanConfig config,
             Database database,
             ServerInfo serverInfo,
+            HtmlTables tables,
             Timings timings
     ) {
         this.version = version;
         this.config = config;
         this.database = database;
         this.serverInfo = serverInfo;
+        this.tables = tables;
         this.timings = timings;
     }
 
@@ -56,7 +60,7 @@ public class PlayersPage implements Page {
 
             timings.start("Players page players table parsing");
             List<PlayerContainer> playerContainers = database.fetch().getAllPlayerContainers();
-            placeholderReplacer.put("playersTable", PlayersTable.forPlayersPage(playerContainers).parseHtml());
+            placeholderReplacer.put("playersTable", tables.playerTableForPlayersPage(playerContainers).parseHtml());
             timings.end("Pages", "Players page players table parsing");
 
             return placeholderReplacer.apply(FileUtil.getStringFromResource("web/players.html"));

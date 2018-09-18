@@ -8,18 +8,23 @@ import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.util.*;
 
-public class PingTable extends TableContainer {
+/**
+ * Html table that displays countries and their average, worst and best pings.
+ *
+ * @author Rsl1122
+ */
+class PingTable extends TableContainer {
 
-    // TODO
-    private Formatter<Double> decimalFormatter;
+    private final Formatter<Double> decimalFormatter;
 
-    public PingTable(Map<String, List<Ping>> pingPerCountry) {
+    PingTable(Map<String, List<Ping>> pingPerCountry, Formatter<Double> decimalFormatter) {
         super(
                 Icon.called("globe") + " Country",
                 Icon.called("signal") + " Average Ping",
                 Icon.called("signal") + " Worst Ping",
                 Icon.called("signal") + " Best Ping"
         );
+        this.decimalFormatter = decimalFormatter;
         setColor("amber");
 
         addRows(pingPerCountry);

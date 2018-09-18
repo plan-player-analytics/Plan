@@ -13,20 +13,19 @@ import com.djrapitops.plan.utilities.html.icon.Icon;
 import java.util.List;
 
 /**
+ * Html table that displays kills Player has performed.
+ *
  * @author Rsl1122
  */
-public class KillsTable extends TableContainer {
+class KillsTable extends TableContainer {
 
-    // TODO
-    private Formatter<DateHolder> yearFormatter;
+    private final Formatter<DateHolder> yearFormatter;
 
-    public KillsTable(List<PlayerKill> playerKills) {
-        this(playerKills, "red");
-    }
-
-    public KillsTable(List<PlayerKill> playerKills, String color) {
+    KillsTable(List<PlayerKill> playerKills, String color, Formatter<DateHolder> yearFormatter) {
         super(Icon.called("clock").of(Family.REGULAR) + " Time", "Killed", "With");
         setColor(color);
+
+        this.yearFormatter = yearFormatter;
 
         if (playerKills.isEmpty()) {
             addRow("No Kills");

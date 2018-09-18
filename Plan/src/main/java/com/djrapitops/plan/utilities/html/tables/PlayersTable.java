@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.PlayerContainerLastPlayedComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
@@ -18,20 +17,20 @@ import com.djrapitops.plan.utilities.html.icon.Icon;
 import java.util.List;
 
 /**
- * Utility for creating Players table html.
+ * Html table that displays a lot of information about players.
  *
  * @author Rsl1122
  */
-public class PlayersTable extends TableContainer {
-
-    // TODO
-    private Formatter<Long> timeAmountFormatter;
-    private Formatter<Long> yearLongFormatter;
+class PlayersTable extends TableContainer {
 
     private final List<PlayerContainer> players;
     private final int maxPlayers;
 
-    private PlayersTable(List<PlayerContainer> players, int maxPlayers) {
+    PlayersTable(List<PlayerContainer> players,
+                 int maxPlayers,
+                 Formatter<Long> timeAmountFormatter,
+                 Formatter<Long> yearLongFormatter
+    ) {
         super(
                 Icon.called("user") + " Name",
                 Icon.called("check") + " Activity Index",
@@ -49,16 +48,6 @@ public class PlayersTable extends TableContainer {
         setFormatter(4, yearLongFormatter);
         setFormatter(5, yearLongFormatter);
         addRows();
-    }
-
-    @Deprecated
-    public static PlayersTable forServerPage(List<PlayerContainer> players) {
-        return new PlayersTable(players, Settings.MAX_PLAYERS.getNumber());
-    }
-
-    @Deprecated
-    public static PlayersTable forPlayersPage(List<PlayerContainer> players) {
-        return new PlayersTable(players, Settings.MAX_PLAYERS_PLAYERS_PAGE.getNumber());
     }
 
     private void addRows() {

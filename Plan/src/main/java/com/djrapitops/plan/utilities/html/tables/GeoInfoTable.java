@@ -17,14 +17,15 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class GeoInfoTable extends TableContainer {
+class GeoInfoTable extends TableContainer {
 
-    // TODO
-    private boolean displayIP;
-    private Formatter<DateHolder> yearFormatter;
+    private final boolean displayIP;
+    private final Formatter<DateHolder> yearFormatter;
 
-    public GeoInfoTable(List<GeoInfo> geoInfo) {
+    GeoInfoTable(List<GeoInfo> geoInfo, boolean displayIP, Formatter<DateHolder> yearFormatter) {
         super("IP", "Geolocation", "Last Used");
+        this.displayIP = displayIP;
+        this.yearFormatter = yearFormatter;
 
         if (geoInfo.isEmpty()) {
             addRow("No Connections");

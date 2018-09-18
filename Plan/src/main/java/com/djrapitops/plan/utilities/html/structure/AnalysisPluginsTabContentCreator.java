@@ -11,7 +11,7 @@ import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
-import com.djrapitops.plan.utilities.html.tables.PluginPlayersTable;
+import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -76,13 +76,15 @@ public class AnalysisPluginsTabContentCreator {
 
         generalTab.append("</div></div>");
 
+        HtmlTables tables = null; // TODO Use HtmlTables
+
         String playerListTab = "<div class=\"tab\">" +
                 "<div class=\"row clearfix\">" +
                 "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">" +
                 "<div class=\"card\">" +
                 "<div class=\"header\"><h2><i class=\"fa fa-users\"></i> Plugin Data</h2></div>" +
                 "<div class=\"body\">" +
-                new PluginPlayersTable(containers, mutator.all()).parseHtml() +
+                tables.pluginPlayersTable(containers, mutator.all()).parseHtml() +
                 "</div></div></div>" +
                 "</div></div>";
 

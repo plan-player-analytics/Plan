@@ -13,15 +13,17 @@ import com.djrapitops.plan.utilities.html.icon.Icon;
 import java.util.List;
 
 /**
+ * Html table that displays Deaths of a single player.
+ *
  * @author Rsl1122
  */
-public class DeathsTable extends TableContainer {
+class DeathsTable extends TableContainer {
 
-    // TODO
-    private Formatter<DateHolder> yearFormatter;
+    private final Formatter<DateHolder> yearFormatter;
 
-    public DeathsTable(List<PlayerDeath> playerPlayerDeaths) {
+    DeathsTable(List<PlayerDeath> playerPlayerDeaths, Formatter<DateHolder> yearFormatter) {
         super(Icon.called("clock").of(Family.REGULAR) + " Time", "Killed by", "With");
+        this.yearFormatter = yearFormatter;
         setColor("red");
 
         if (playerPlayerDeaths.isEmpty()) {

@@ -27,10 +27,7 @@ import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
-import com.djrapitops.plan.utilities.html.tables.CommandUseTable;
-import com.djrapitops.plan.utilities.html.tables.PingTable;
-import com.djrapitops.plan.utilities.html.tables.PlayersTable;
-import com.djrapitops.plan.utilities.html.tables.ServerSessionTable;
+import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
@@ -55,6 +52,7 @@ public class AnalysisContainer extends DataContainer {
     private Database database;
     private ServerProperties serverProperties;
     private Graphs graphs;
+    private HtmlTables tables;
 
     private Formatter<DateHolder> yearFormatter;
     private Formatter<Long> secondLongFormatter;
@@ -160,10 +158,10 @@ public class AnalysisContainer extends DataContainer {
         );
         putSupplier(AnalysisKeys.OPERATORS, () -> serverContainer.getValue(ServerKeys.OPERATORS).map(List::size).orElse(0));
         putSupplier(AnalysisKeys.PLAYERS_TABLE, () ->
-                PlayersTable.forServerPage(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).all()).parseHtml()
+                tables.playerTableForServerPage(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).all()).parseHtml()
         );
         putSupplier(AnalysisKeys.PING_TABLE, () ->
-                new PingTable(
+                tables.pingTable(
                         getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                                 .getPingPerCountry(serverContainer.getUnsafe(ServerKeys.SERVER_UUID))
                 ).parseHtml()
@@ -283,7 +281,7 @@ public class AnalysisContainer extends DataContainer {
                         serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())
                 ).toHtml()
         );
-        putSupplier(AnalysisKeys.SESSION_TABLE, () -> new ServerSessionTable(
+        putSupplier(AnalysisKeys.SESSION_TABLE, () -> tables.serverSessionTable(
                 getUnsafe(AnalysisKeys.PLAYER_NAMES), getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all()).parseHtml()
         );
 
@@ -422,7 +420,7 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addCommandSuppliers() {
-        putSupplier(AnalysisKeys.COMMAND_USAGE_TABLE, () -> new CommandUseTable(serverContainer).parseHtml());
+        putSupplier(AnalysisKeys.COMMAND_USAGE_TABLE, () -> tables.commandUseTable(serverContainer).parseHtml());
         putSupplier(AnalysisKeys.COMMAND_COUNT_UNIQUE, () -> serverContainer.getValue(ServerKeys.COMMAND_USAGE).map(Map::size).orElse(0));
         putSupplier(AnalysisKeys.COMMAND_COUNT, () -> CommandUseMutator.forContainer(serverContainer).commandUsageCount());
     }

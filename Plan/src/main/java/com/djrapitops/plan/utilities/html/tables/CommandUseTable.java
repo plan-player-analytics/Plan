@@ -3,26 +3,25 @@ package com.djrapitops.plan.utilities.html.tables;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
-import com.djrapitops.plan.utilities.comparators.MapComparator;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
+ * Html table that displays how many times each command is used.
+ *
  * @author Rsl1122
  */
-public class CommandUseTable extends TableContainer {
+class CommandUseTable extends TableContainer {
 
-    public CommandUseTable(DataContainer container) {
-        this(container.getValue(ServerKeys.COMMAND_USAGE).orElse(new HashMap<>()));
-    }
-
-    public CommandUseTable(Map<String, Integer> commandUse) {
+    CommandUseTable(DataContainer container) {
         super(Icon.called("terminal") + " Command", Icon.called("list-ol") + "Times Used");
+
+        Map<String, Integer> commandUse = container.getValue(ServerKeys.COMMAND_USAGE).orElse(new HashMap<>());
 
         setColor("lime");
         if (commandUse.isEmpty()) {
@@ -32,17 +31,22 @@ public class CommandUseTable extends TableContainer {
         }
     }
 
+    private List<Map.Entry<String, Integer>> sortByValue(Map<String, Integer> map) {
+        return map.entrySet().stream()
+                .sorted((one, two) -> Integer.compare(two.getValue(), one.getValue()))
+                .collect(Collectors.toList());
+    }
+
     private void addValues(Map<String, Integer> commandUse) {
-        List<String[]> sorted = MapComparator.sortByValue(commandUse);
-        Collections.reverse(sorted);
+        List<Map.Entry<String, Integer>> sorted = sortByValue(commandUse);
 
         int i = 0;
-        for (String[] values : sorted) {
+        for (Map.Entry<String, Integer> entry : sorted) {
             if (i >= 500) {
                 break;
             }
-            String command = HtmlUtils.removeXSS(values[1]);
-            addRow(command, values[0]);
+            String command = HtmlUtils.removeXSS(entry.getKey());
+            addRow(command, entry.getValue());
 
             i++;
         }

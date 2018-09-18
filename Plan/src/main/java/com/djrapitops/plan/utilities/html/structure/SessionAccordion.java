@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities.html.structure;
 
 import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
@@ -14,7 +15,7 @@ import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.icon.Icons;
-import com.djrapitops.plan.utilities.html.tables.KillsTable;
+import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -39,6 +40,7 @@ public class SessionAccordion extends AbstractAccordion {
     // TODO
     private Theme theme;
     private Graphs graphs;
+    private HtmlTables tables;
     private Formatter<DateHolder> yearFormatter;
     private Formatter<Long> timeAmountFormatter;
 
@@ -142,7 +144,8 @@ public class SessionAccordion extends AbstractAccordion {
                     .append(worldHtmlID).append("gmseries")
                     .append(");");
 
-            String leftBottom = new KillsTable(session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()), null).parseHtml();
+            List<PlayerKill> kills = session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>());
+            String leftBottom = tables.killsTable(kills, null).parseHtml();
 
             String link = PlanAPI.getInstance().getPlayerInspectPageLink(playerName);
             String rightBottom = "<a target=\"_blank\" href=\"" + link + "\"><button href=\"" + link +
@@ -213,7 +216,8 @@ public class SessionAccordion extends AbstractAccordion {
                     .append(worldHtmlID).append("gmseries")
                     .append(");");
 
-            String leftBottom = new KillsTable(session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>()), null).parseHtml();
+            List<PlayerKill> kills = session.getValue(SessionKeys.PLAYER_KILLS).orElse(new ArrayList<>());
+            String leftBottom = tables.killsTable(kills, null).parseHtml();
 
             addElement(new AccordionElement(htmlID, title)
                     .setColor(theme.getValue(ThemeVal.PARSED_SESSION_ACCORDION))

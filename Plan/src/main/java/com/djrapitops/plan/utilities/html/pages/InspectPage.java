@@ -29,7 +29,7 @@ import com.djrapitops.plan.utilities.html.graphs.calendar.PlayerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
-import com.djrapitops.plan.utilities.html.tables.*;
+import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.benchmarking.Timings;
 
@@ -48,6 +48,7 @@ public class InspectPage implements Page {
 
     private final PlanConfig config;
     private final Graphs graphs;
+    private final HtmlTables tables;
     private final ServerInfo serverInfo;
     private final Timings timings;
 
@@ -60,13 +61,16 @@ public class InspectPage implements Page {
             PlayerContainer player, Map<UUID, String> serverNames,
             PlanConfig config,
             Graphs graphs,
-            Formatters formatters, ServerInfo serverInfo,
+            HtmlTables tables,
+            Formatters formatters,
+            ServerInfo serverInfo,
             Timings timings
     ) {
         this.player = player;
         this.serverNames = serverNames;
         this.config = config;
         this.graphs = graphs;
+        this.tables = tables;
         this.serverInfo = serverInfo;
         this.timings = timings;
 
@@ -134,10 +138,10 @@ public class InspectPage implements Page {
         String favoriteServer = serverNames.getOrDefault(perServerMutator.favoriteServer(), "Unknown");
         replacer.put("favoriteServer", favoriteServer);
 
-        replacer.put("tableBodyNicknames", new NicknameTable(
-                player.getValue(PlayerKeys.NICKNAMES).orElse(new ArrayList<>()), serverNames)
-                .parseBody());
-        replacer.put("tableBodyIPs", new GeoInfoTable(player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
+        replacer.put("tableBodyNicknames",
+                tables.nicknameTable(player.getValue(PlayerKeys.NICKNAMES).orElse(new ArrayList<>()), serverNames).parseBody()
+        );
+        replacer.put("tableBodyIPs", tables.geoInfoTable(player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
 
         PingMutator pingMutator = PingMutator.forContainer(player);
         double averagePing = pingMutator.average();
@@ -157,7 +161,7 @@ public class InspectPage implements Page {
             replacer.put("accordionSessions", "<div class=\"body\">" + "<p>No Sessions</p>" + "</div>");
         } else {
             if (config.isTrue(Settings.DISPLAY_SESSIONS_AS_TABLE)) {
-                replacer.put("accordionSessions", new PlayerSessionTable(playerName, allSessions).parseHtml());
+                replacer.put("accordionSessions", tables.playerSessionTable(playerName, allSessions).parseHtml());
             } else {
                 SessionAccordion sessionAccordion = SessionAccordion.forPlayer(allSessions, () -> serverNames);
                 replacer.put("accordionSessions", sessionAccordion.toHtml());
@@ -285,8 +289,8 @@ public class InspectPage implements Page {
     }
 
     private void pvpAndPve(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {
-        String playerKillsTable = new KillsTable(sessionsMutator.toPlayerKillList()).parseHtml();
-        String playerDeathTable = new DeathsTable(sessionsMutator.toPlayerDeathList()).parseHtml();
+        String playerKillsTable = tables.killsTable(sessionsMutator.toPlayerKillList(), "red").parseHtml();
+        String playerDeathTable = tables.deathsTable(sessionsMutator.toPlayerDeathList()).parseHtml();
 
         PvpInfoMutator pvpInfoMutator = PvpInfoMutator.forMutator(sessionsMutator);
         PvpInfoMutator pvpInfoMutatorMonth = PvpInfoMutator.forMutator(monthSessionsMutator);
