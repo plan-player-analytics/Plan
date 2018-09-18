@@ -8,6 +8,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.auth.BasicAuthentication;
 import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;
@@ -36,6 +37,7 @@ public class RequestHandler implements HttpHandler {
 
     private final Locale locale;
     private final PlanConfig config;
+    private final Theme theme;
     private final Database database;
     private final ResponseHandler responseHandler;
     private final Timings timings;
@@ -46,6 +48,7 @@ public class RequestHandler implements HttpHandler {
     RequestHandler(
             Locale locale,
             PlanConfig config,
+            Theme theme,
             Database database,
             ResponseHandler responseHandler,
             Timings timings,
@@ -54,6 +57,7 @@ public class RequestHandler implements HttpHandler {
     ) {
         this.locale = locale;
         this.config = config;
+        this.theme = theme;
         this.database = database;
         this.responseHandler = responseHandler;
         this.timings = timings;
@@ -81,7 +85,7 @@ public class RequestHandler implements HttpHandler {
             }
 
             response.setResponseHeaders(responseHeaders);
-            response.send(exchange, locale);
+            response.send(exchange, locale, theme);
         } catch (Exception e) {
             if (inDevMode) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");

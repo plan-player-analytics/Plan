@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
@@ -31,6 +32,7 @@ public class PageFactory {
 
     private final String version;
     private final Lazy<PlanConfig> config;
+    private final Lazy<Theme> theme;
     private final Lazy<Database> database;
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<ConnectionSystem> connectionSystem;
@@ -45,6 +47,7 @@ public class PageFactory {
     public PageFactory(
             @Named("currentVersion") String version,
             Lazy<PlanConfig> config,
+            Lazy<Theme> theme,
             Lazy<Database> database,
             Lazy<ServerInfo> serverInfo,
             Lazy<ConnectionSystem> connectionSystem,
@@ -57,6 +60,7 @@ public class PageFactory {
     ) {
         this.version = version;
         this.config = config;
+        this.theme = theme;
         this.database = database;
         this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
@@ -90,7 +94,7 @@ public class PageFactory {
         Map<UUID, String> serverNames = database.get().fetch().getServerNames();
         return new InspectPage(
                 player, serverNames,
-                config.get(), theme, graphs.get(), tables.get(), formatters.get(), serverInfo.get(), timings.get()
+                config.get(), theme.get(), graphs.get(), tables.get(), formatters.get(), serverInfo.get(), timings.get()
         );
     }
 

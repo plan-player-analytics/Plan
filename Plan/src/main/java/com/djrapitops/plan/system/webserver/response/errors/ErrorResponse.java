@@ -4,11 +4,11 @@
  */
 package com.djrapitops.plan.system.webserver.response.errors;
 
-import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.IOException;
@@ -25,11 +25,14 @@ public class ErrorResponse extends Response {
     private String title;
     private String paragraph;
 
+    // TODO
+    private ErrorHandler errorHandler;
+
     public ErrorResponse() {
         try {
-            setContent(Theme.replaceColors(FileUtil.getStringFromResource("web/error.html")));
+            setContent(FileUtil.getStringFromResource("web/error.html"));
         } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 

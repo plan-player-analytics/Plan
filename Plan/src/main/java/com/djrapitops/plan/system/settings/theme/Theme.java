@@ -6,7 +6,6 @@ package com.djrapitops.plan.system.settings.theme;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -35,24 +34,12 @@ public class Theme implements SubSystem {
         this.logger = logger;
     }
 
-    @Deprecated
-    public static Theme getInstance() {
-        Theme themeSystem = ConfigSystem.getInstance().getThemeSystem();
-        Verify.nullCheck(themeSystem, () -> new IllegalStateException("Theme System has not been initialized."));
-        return themeSystem;
-    }
-
     public String getValue(ThemeVal variable) {
         try {
             return getThemeValue(variable);
         } catch (NullPointerException | IllegalStateException e) {
             return variable.getDefaultValue();
         }
-    }
-
-    @Deprecated
-    public static String replaceColors(String resourceString) {
-        return getInstance().replaceThemeColors(resourceString);
     }
 
     @Override
@@ -112,7 +99,7 @@ public class Theme implements SubSystem {
                 replaced = replaced.replace(defaultValue, value);
             }
         }
-        return replaced;
+        return replaced.replace("${defaultTheme}", getValue(ThemeVal.THEME_DEFAULT));
     }
 
     private String getThemeValue(ThemeVal color) {

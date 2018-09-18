@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
-import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -22,7 +21,7 @@ public class InspectPageResponse extends Response {
 
     public InspectPageResponse(UUID uuid, String html) {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(Theme.replaceColors(html));
+        super.setContent(html);
         this.uuid = uuid;
     }
 

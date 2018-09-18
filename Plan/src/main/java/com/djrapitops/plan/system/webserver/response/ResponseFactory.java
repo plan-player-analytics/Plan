@@ -4,7 +4,6 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
-import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.InternalErrorResponse;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
@@ -25,19 +24,16 @@ public class ResponseFactory {
 
     private final PageFactory pageFactory;
     private final Locale locale;
-    private final Theme theme;
     private final Database database;
 
     @Inject
     public ResponseFactory(
             PageFactory pageFactory,
             Locale locale,
-            Theme theme,
             Database database
     ) {
         this.pageFactory = pageFactory;
         this.locale = locale;
-        this.theme = theme;
         this.database = database;
     }
 
@@ -70,11 +66,11 @@ public class ResponseFactory {
     }
 
     public Response javaScriptResponse(String fileName) {
-        return new JavaScriptResponse(fileName, locale, theme);
+        return new JavaScriptResponse(fileName);
     }
 
     public Response cssResponse(String fileName) {
-        return new CSSResponse(fileName, theme);
+        return new CSSResponse(fileName);
     }
 
     public Response redirectResponse(String location) {

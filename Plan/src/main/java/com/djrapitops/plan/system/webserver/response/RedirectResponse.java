@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.webserver.response;
 
 import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.settings.theme.Theme;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
@@ -17,8 +18,8 @@ public class RedirectResponse extends Response {
     }
 
     @Override
-    public void send(HttpExchange exchange, Locale locale) throws IOException {
+    public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
         responseHeaders.set("Location", getContent());
-        super.send(exchange, locale);
+        super.send(exchange, locale, theme);
     }
 }

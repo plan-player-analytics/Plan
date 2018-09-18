@@ -103,6 +103,7 @@ public class MiscUtils {
         }
     }
 
+    @Deprecated
     public static String getPlanVersion() {
         return PlanPlugin.getInstance().getVersion();
     }
