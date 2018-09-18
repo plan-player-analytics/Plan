@@ -6,7 +6,6 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import utilities.Teardown;
 import utilities.mocks.SystemMockUtil;
 
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ public class PlayersTableTest {
     public static void setUpClass() throws Exception {
         SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
-        Teardown.resetSettingsTempValues();
     }
 
     @Test

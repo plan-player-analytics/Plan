@@ -7,6 +7,13 @@ package com.djrapitops.plan.system.settings.config;
  */
 public interface Setting {
 
+    /**
+     * Used to get the String path of a the config setting.
+     * <p>
+     * Path separates nested levels with a dot.
+     *
+     * @return Example: Settings.WebServer.Enabled
+     */
     String getPath();
 
 }

@@ -17,7 +17,6 @@ import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
 import utilities.TestConstants;
 import utilities.mocks.objects.FakeBungeeConsole;
 import utilities.mocks.objects.TestLogger;
@@ -41,7 +40,6 @@ public class BungeeMockUtil extends MockUtil {
     }
 
     public static BungeeMockUtil setUp() {
-        Teardown.resetSettingsTempValues();
         return new BungeeMockUtil().mockPlugin();
     }
 

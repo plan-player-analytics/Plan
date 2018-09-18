@@ -3,13 +3,11 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.Base64Util;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
 import utilities.mocks.BukkitMockUtil;
 
 import javax.net.ssl.*;
@@ -41,28 +39,18 @@ public class HTTPSWebServerAuthTest {
         String keyStore = resource.getPath();
         String absolutePath = new File(keyStore).getAbsolutePath();
 
-        Settings.WEBSERVER_CERTIFICATE_PATH.setTemporaryValue(absolutePath);
-        Settings.WEBSERVER_CERTIFICATE_KEYPASS.setTemporaryValue("MnD3bU5HpmPXag0e");
-        Settings.WEBSERVER_CERTIFICATE_STOREPASS.setTemporaryValue("wDwwf663NLTm73gL");
-        Settings.WEBSERVER_CERTIFICATE_ALIAS.setTemporaryValue("DefaultPlanCert");
-
-        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+//        Settings.WEBSERVER_CERTIFICATE_PATH.setTemporaryValue(absolutePath);
+//        Settings.WEBSERVER_CERTIFICATE_KEYPASS.setTemporaryValue("MnD3bU5HpmPXag0e");
+//        Settings.WEBSERVER_CERTIFICATE_STOREPASS.setTemporaryValue("wDwwf663NLTm73gL");
+//        Settings.WEBSERVER_CERTIFICATE_ALIAS.setTemporaryValue("DefaultPlanCert");
+//
+//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
         bukkitSystem = null; //TODO
 //        bukkitSystem.enable();
 //
 //        bukkitSystem.getDatabaseSystem().getActiveDatabase().save()
 //                .webUser(new WebUser("test", PassEncryptUtil.createHash("testPass"), 0));
-    }
-
-    @Before
-    public void setUp() {
-        Teardown.resetSettingsTempValues();
-    }
-
-    @After
-    public void tearDown() {
-        Teardown.resetSettingsTempValues();
     }
 
     @AfterClass

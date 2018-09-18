@@ -3,11 +3,12 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.StaticHolder;
-import org.junit.*;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import utilities.Teardown;
 import utilities.mocks.BukkitMockUtil;
 
 import static org.junit.Assert.assertEquals;
@@ -25,7 +26,6 @@ public class GeolocationCacheTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        Teardown.resetSettingsTempValues();
         BukkitMockUtil mockUtil = BukkitMockUtil.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
                 .withLogging()
@@ -36,15 +36,10 @@ public class GeolocationCacheTest {
         StaticHolder.saveInstance(GeolocationCacheTest.class, planMock.getClass());
     }
 
-    @AfterClass
-    public static void tearDownClass() {
-        Teardown.resetSettingsTempValues();
-    }
-
     @Test
     @Ignore
     public void testGeolocationCache() throws EnableException {
-        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
         PlanSystem system = null; //TODO
         try {
             system.enable();

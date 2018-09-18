@@ -16,7 +16,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
 import utilities.TestConstants;
 import utilities.mocks.objects.FakeConsoleCmdSender;
 import utilities.mocks.objects.TestLogger;
@@ -41,7 +40,6 @@ public class BukkitMockUtil extends MockUtil {
     }
 
     public static BukkitMockUtil setUp() {
-        Teardown.resetSettingsTempValues();
         return new BukkitMockUtil().mockPlugin();
     }
 

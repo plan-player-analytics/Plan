@@ -101,25 +101,14 @@ public enum Settings implements Setting {
     BUNGEE_NETWORK_NAME("Network.Name");
 
     private final String configPath;
-    private Object tempValue;
 
     Settings(String path) {
         this.configPath = path;
     }
 
-    /**
-     * Used to get the String path of a the config setting eg.
-     * Settings.WebServer.Enabled
-     *
-     * @return Path of the config setting.
-     */
+    @Override
     public String getPath() {
         return configPath;
-    }
-
-    @Deprecated
-    public void setTemporaryValue(Object value) {
-        this.tempValue = value;
     }
 
 }

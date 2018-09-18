@@ -6,12 +6,10 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.settings.Settings;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
 import utilities.mocks.BukkitMockUtil;
 
 /**
@@ -38,23 +36,17 @@ public class BukkitSystemTest {
         planMock = mockUtil.getPlanMock();
     }
 
-    @Before
-    public void setUp() {
-        Teardown.resetSettingsTempValues();
-    }
-    
     @After
     public void tearDown() {
         if (bukkitSystem != null) {
             bukkitSystem.disable();
         }
-        Teardown.resetSettingsTempValues();
     }
 
     @Test
     @Ignore
     public void testEnable() throws EnableException {
-        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
         bukkitSystem = null; //TODO
         bukkitSystem.enable();

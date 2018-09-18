@@ -12,7 +12,6 @@ import com.djrapitops.plugin.task.thread.ThreadRunnable;
 import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
 import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
@@ -32,7 +31,6 @@ public class SpongeMockUtil extends MockUtil {
     }
 
     public static SpongeMockUtil setUp() {
-        Teardown.resetSettingsTempValues();
         return new SpongeMockUtil().mockPlugin();
     }
 

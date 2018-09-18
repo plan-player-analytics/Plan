@@ -6,13 +6,11 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.settings.Settings;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
 import utilities.mocks.BungeeMockUtil;
 
 /**
@@ -40,19 +38,12 @@ public class BungeeSystemTest {
                 .withProxy();
         planMock = mockUtil.getPlanMock();
     }
-
-
-    @Before
-    public void setUp() {
-        Teardown.resetSettingsTempValues();
-    }
     
     @After
     public void tearDown() {
         if (bungeeSystem != null) {
             bungeeSystem.disable();
         }
-        Teardown.resetSettingsTempValues();
     }
 
     @Test
@@ -60,9 +51,9 @@ public class BungeeSystemTest {
     public void testEnable() throws EnableException {
         bungeeSystem = null; //TODO
 
-        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
-        Settings.BUNGEE_IP.setTemporaryValue("8.8.8.8");
-        Settings.DB_TYPE.setTemporaryValue("sqlite");
+//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+//        Settings.BUNGEE_IP.setTemporaryValue("8.8.8.8");
+//        Settings.DB_TYPE.setTemporaryValue("sqlite");
 //        bungeeSystem.setDatabaseSystem(new BukkitDBSystem(Locale::new));
 
         bungeeSystem.enable();
@@ -76,8 +67,8 @@ public class BungeeSystemTest {
 
         bungeeSystem = null; //TODO
 
-        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
-        Settings.DB_TYPE.setTemporaryValue("sqlite");
+//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+//        Settings.DB_TYPE.setTemporaryValue("sqlite");
 //        bungeeSystem.setDatabaseSystem(new BukkitDBSystem(Locale::new));
 
         bungeeSystem.enable();

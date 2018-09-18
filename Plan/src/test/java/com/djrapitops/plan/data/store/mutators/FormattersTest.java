@@ -5,7 +5,6 @@ import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import utilities.Teardown;
 import utilities.mocks.SystemMockUtil;
 
 /**
@@ -21,7 +20,6 @@ public class FormattersTest {
     public static void setUpClass() throws Exception {
         SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
-        Teardown.resetSettingsTempValues();
     }
 
     @Test

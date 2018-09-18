@@ -5,14 +5,10 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.utility.log.Log;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
-import utilities.Teardown;
 import utilities.TestConstants;
-import utilities.TestErrorManager;
 import utilities.mocks.SystemMockUtil;
 
 import static org.junit.Assert.assertEquals;
@@ -25,7 +21,6 @@ public class NetworkSettingsTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        Teardown.resetSettingsTempValues();
         StaticHolder.saveInstance(NetworkSettingsTest.class, Plan.class);
 
         SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
@@ -34,9 +29,9 @@ public class NetworkSettingsTest {
         mockUtil.enableDatabaseSystem(db)
                 .enableServerInfoSystem();
 
-        Log.setErrorManager(new TestErrorManager());
-        Log.setDebugMode("console");
-        Settings.DEV_MODE.setTemporaryValue(true);
+//        Log.setErrorManager(new TestErrorManager());
+//        Log.setDebugMode("console");
+//        Settings.DEV_MODE.setTemporaryValue(true);
     }
 
     @AfterClass
@@ -44,7 +39,6 @@ public class NetworkSettingsTest {
         if (db != null) {
             db.close();
         }
-        Teardown.resetSettingsTempValues();
     }
 
     @Before
