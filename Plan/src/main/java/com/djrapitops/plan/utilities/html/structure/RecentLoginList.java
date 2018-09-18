@@ -5,7 +5,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
@@ -23,13 +22,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class RecentLoginList {
 
-    // TODO
-    private Formatter<DateHolder> secondFormatter;
-
     private final List<PlayerContainer> players;
 
-    public RecentLoginList(List<PlayerContainer> players) {
+    private final Formatter<Long> secondLongFormatter;
+
+    public RecentLoginList(List<PlayerContainer> players, Formatter<Long> secondLongFormatter) {
         this.players = players;
+        this.secondLongFormatter = secondLongFormatter;
     }
 
     public String toHtml() {
@@ -49,7 +48,7 @@ public class RecentLoginList {
             String name = recentLogin.name;
             String url = PlanAPI.getInstance().getPlayerInspectPageLink(name);
             boolean isNew = recentLogin.isNew;
-            String start = secondFormatter.apply(recentLogin);
+            String start = secondLongFormatter.apply(recentLogin.date);
 
             html.append("<li><a class=\"col-").append(isNew ? "light-green" : "blue").append(" font-bold\" href=\"").append(url)
                     .append("\">").append(name).append("</a><span class=\"pull-right\">").append(start).append("</span></li>");
@@ -87,7 +86,7 @@ public class RecentLoginList {
         return recentLogins;
     }
 
-    class RecentLogin implements DateHolder {
+    class RecentLogin {
         final long date;
         final boolean isNew;
         final String name;
@@ -111,11 +110,6 @@ public class RecentLoginList {
         @Override
         public int hashCode() {
             return Objects.hash(date, isNew, name);
-        }
-
-        @Override
-        public long getDate() {
-            return date;
         }
     }
 

@@ -269,8 +269,8 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.SESSION_ACCORDION_FUNCTIONS, () -> getUnsafe(sessionAccordion).toViewScript());
 
         putSupplier(AnalysisKeys.RECENT_LOGINS, () -> new RecentLoginList(
-                        serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())
-                ).toHtml()
+                serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>()),
+                secondLongFormatter).toHtml()
         );
         putSupplier(AnalysisKeys.SESSION_TABLE, () -> tables.serverSessionTable(
                 getUnsafe(AnalysisKeys.PLAYER_NAMES), getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all()).parseHtml()
