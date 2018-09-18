@@ -4,7 +4,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 
 /**
- * //TODO Class Javadoc Comment
+ * Formatter for timestamp which includes seconds as the smallest entry.
  *
  * @author Rsl1122
  */

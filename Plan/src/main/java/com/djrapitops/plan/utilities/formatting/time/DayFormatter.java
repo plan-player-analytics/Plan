@@ -4,7 +4,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 
 /**
- * //TODO Class Javadoc Comment
+ * Formatter for a timestamp which includes days as the smallest entry.
  *
  * @author Rsl1122
  */

@@ -1,10 +1,10 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
-import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 
 /**
- * //TODO Class Javadoc Comment
+ * Formatter for a DateHolder object that uses a different formatter.
  *
  * @author Rsl1122
  */

@@ -1,8 +1,8 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
-import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.text.SimpleDateFormat;
@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * //TODO Class Javadoc Comment
+ * Abstract formatter for a timestamp.
  *
  * @author Rsl1122
  */

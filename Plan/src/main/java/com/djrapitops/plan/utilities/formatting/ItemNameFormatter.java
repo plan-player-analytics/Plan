@@ -6,7 +6,7 @@ import org.apache.commons.text.TextStringBuilder;
 import java.util.Arrays;
 
 /**
- * //TODO Class Javadoc Comment
+ * Formatter for Item names, that capitalizes each part and separates them with spaces instead of underscores.
  *
  * @author Rsl1122
  */

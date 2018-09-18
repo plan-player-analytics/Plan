@@ -1,7 +1,7 @@
 package com.djrapitops.plan.utilities.formatting;
 
 /**
- * //TODO Class Javadoc Comment
+ * Formatter for percentages.
  *
  * @author Rsl1122
  */

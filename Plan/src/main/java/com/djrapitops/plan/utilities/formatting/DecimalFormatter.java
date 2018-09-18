@@ -6,7 +6,7 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import java.text.DecimalFormat;
 
 /**
- * //TODO Class Javadoc Comment
+ * Formatter for decimal points that depends on settings.
  *
  * @author Rsl1122
  */

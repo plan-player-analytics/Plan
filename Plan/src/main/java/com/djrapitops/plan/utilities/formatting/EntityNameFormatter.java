@@ -3,7 +3,7 @@ package com.djrapitops.plan.utilities.formatting;
 import com.djrapitops.plugin.utilities.Format;
 
 /**
- * //TODO Class Javadoc Comment
+ * Formatter for entity names, that capitalizes the first word and removes symbols and numbers.
  *
  * @author Rsl1122
  */

@@ -4,7 +4,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 
 /**
- * //TODO Class Javadoc Comment
+ * Formatter for a timestamp that only includes a clock.
  *
  * @author Rsl1122
  */
