@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,13 +23,6 @@ public class SessionCache {
 
     public SessionCache(Database database) {
         this.database = database;
-    }
-
-    @Deprecated
-    public static SessionCache getInstance() {
-        SessionCache dataCache = CacheSystem.getInstance().getDataCache();
-        Verify.nullCheck(dataCache, () -> new IllegalStateException("Data Cache was not initialized."));
-        return dataCache;
     }
 
     public static Map<UUID, Session> getActiveSessions() {
