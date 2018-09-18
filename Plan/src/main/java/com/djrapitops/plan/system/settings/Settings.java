@@ -5,8 +5,6 @@ import com.djrapitops.plan.system.settings.config.Setting;
 import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.util.List;
-
 /**
  * This enum contains all of the config settings used by the plugin for easier
  * access.
@@ -126,20 +124,6 @@ public enum Settings implements Setting {
     }
 
     /**
-     * If the settings is a String, this method should be used.
-     *
-     * @return String value of the config setting.
-     */
-    @Override
-    @Deprecated
-    public String toString() {
-        if (tempValue != null) {
-            return String.valueOf(tempValue);
-        }
-        return getConfig().getString(configPath);
-    }
-
-    /**
      * If the settings is a number, this method should be used.
      *
      * @return Integer value of the config setting
@@ -150,10 +134,6 @@ public enum Settings implements Setting {
             return (Integer) tempValue;
         }
         return getConfig().getInt(configPath);
-    }
-
-    public List<String> getStringList() {
-        return getConfig().getStringList(configPath);
     }
 
     /**
@@ -169,11 +149,6 @@ public enum Settings implements Setting {
     @Deprecated
     public void setTemporaryValue(Object value) {
         this.tempValue = value;
-    }
-
-    @Deprecated
-    public void set(Object value) {
-        getConfig().set(getPath(), value);
     }
 
     private Config getConfig() {

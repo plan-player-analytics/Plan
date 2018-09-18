@@ -11,6 +11,7 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.MiscUtils;
@@ -38,6 +39,7 @@ public class NetworkContainer extends DataContainer {
     private final ServerContainer bungeeContainer;
 
     // TODO
+    private PlanConfig config;
     private Database database;
     private Graphs graphs;
 
@@ -91,7 +93,7 @@ public class NetworkContainer extends DataContainer {
 
         putSupplier(NetworkKeys.NETWORK_NAME, () ->
                 Check.isBungeeAvailable() ?
-                        Settings.BUNGEE_NETWORK_NAME.toString() :
+                        config.getString(Settings.BUNGEE_NETWORK_NAME) :
                         bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan")
         );
         putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties_Old()::getOnlinePlayers);
