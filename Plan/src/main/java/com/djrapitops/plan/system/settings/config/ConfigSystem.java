@@ -5,7 +5,6 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.settings.Settings;
@@ -13,7 +12,6 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -43,18 +41,6 @@ public abstract class ConfigSystem implements SubSystem {
         this.errorHandler = errorHandler;
     }
 
-    @Deprecated
-    public static ConfigSystem getInstance() {
-        ConfigSystem configSystem = PlanSystem.getInstance().getConfigSystem();
-        Verify.nullCheck(configSystem, () -> new IllegalStateException("Config System has not been initialized."));
-        return configSystem;
-    }
-
-    @Deprecated
-    public static PlanConfig getConfig_Old() {
-        return getInstance().config;
-    }
-
     public PlanConfig getConfig() {
         return config;
     }
@@ -63,16 +49,13 @@ public abstract class ConfigSystem implements SubSystem {
         return theme;
     }
 
-    @Deprecated
-    public Theme getThemeSystem() {
-        return getInstance().theme;
-    }
-
     @Override
     public void enable() throws EnableException {
         try {
             copyDefaults();
             config.save();
+
+            // TODO Set Debug logger somewhere
             Log.setDebugMode(config.getString(Settings.DEBUG));
         } catch (IOException e) {
             throw new EnableException("Failed to save default config.", e);
