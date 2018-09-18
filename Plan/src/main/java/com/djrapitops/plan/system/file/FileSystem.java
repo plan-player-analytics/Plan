@@ -73,8 +73,10 @@ public class FileSystem implements SubSystem {
             Verify.isTrue((configFile.exists() && configFile.isFile()) || configFile.createNewFile(),
                     () -> new EnableException("Could not create config file at " + configFile.getAbsolutePath()));
 
+            // TODO Log Keep Day threshold from Settings
+            // TODO Move This task creation outside of FileSystem class
             plugin.getRunnableFactory().create("Logs folder Clean Task",
-                    new LogsFolderCleanTask(getLogsFolder(), plugin.getPluginLogger())
+                    new LogsFolderCleanTask(getLogsFolder(), 5, plugin.getPluginLogger())
             ).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
         } catch (IOException e) {
             throw new EnableException("Failed to create config.yml", e);

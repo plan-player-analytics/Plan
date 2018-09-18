@@ -1,7 +1,5 @@
 package com.djrapitops.plan.system.tasks;
 
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
 
@@ -9,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Task in charge of removing old log files
@@ -17,11 +16,14 @@ import java.util.Objects;
  */
 public class LogsFolderCleanTask extends AbsRunnable {
 
+    private final int keepLogDayThreshold;
+
     private final File folder;
     private final PluginLogger logger;
 
-    public LogsFolderCleanTask(File folder, PluginLogger logger) {
+    public LogsFolderCleanTask(File folder, int keepLogDayThreshold, PluginLogger logger) {
         this.folder = folder;
+        this.keepLogDayThreshold = keepLogDayThreshold;
         this.logger = logger;
     }
 
@@ -42,8 +44,8 @@ public class LogsFolderCleanTask extends AbsRunnable {
     private void cleanFolder() {
         long now = System.currentTimeMillis();
         for (File file : Objects.requireNonNull(folder.listFiles())) {
-            long forDaysMs = Settings.KEEP_LOGS_DAYS.getNumber() * TimeAmount.DAY.ms();
-            if (now - file.lastModified() > (forDaysMs > 0 ? forDaysMs : TimeAmount.DAY.ms())) {
+            long forDaysMs = TimeUnit.DAYS.toMillis(keepLogDayThreshold);
+            if (now - file.lastModified() > (forDaysMs > 0 ? forDaysMs : TimeUnit.DAYS.toMillis(1L))) {
                 try {
                     Files.delete(file.toPath());
                 } catch (IOException e) {

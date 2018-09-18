@@ -398,19 +398,21 @@ public class AnalysisContainer extends DataContainer {
 
         putSupplier(AnalysisKeys.PLAYERS_ONLINE_RESOLVER, () -> new PlayersOnlineResolver(getUnsafe(AnalysisKeys.TPS_MUTATOR)));
 
-        putSupplier(AnalysisKeys.TPS_SPIKE_MONTH, () -> getUnsafe(tpsMonth).lowTpsSpikeCount());
+        int threshold = 5; //TODO LOW TPS Threshold from Settings;
+
+        putSupplier(AnalysisKeys.TPS_SPIKE_MONTH, () -> getUnsafe(tpsMonth).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_MONTH, () -> getUnsafe(tpsMonth).averageTPS());
         putSupplier(AnalysisKeys.AVG_CPU_MONTH, () -> getUnsafe(tpsMonth).averageCPU());
         putSupplier(AnalysisKeys.AVG_RAM_MONTH, () -> getUnsafe(tpsMonth).averageRAM());
         putSupplier(AnalysisKeys.AVG_ENTITY_MONTH, () -> getUnsafe(tpsMonth).averageEntities());
         putSupplier(AnalysisKeys.AVG_CHUNK_MONTH, () -> getUnsafe(tpsMonth).averageChunks());
-        putSupplier(AnalysisKeys.TPS_SPIKE_WEEK, () -> getUnsafe(tpsWeek).lowTpsSpikeCount());
+        putSupplier(AnalysisKeys.TPS_SPIKE_WEEK, () -> getUnsafe(tpsWeek).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_WEEK, () -> getUnsafe(tpsWeek).averageTPS());
         putSupplier(AnalysisKeys.AVG_CPU_WEEK, () -> getUnsafe(tpsWeek).averageCPU());
         putSupplier(AnalysisKeys.AVG_RAM_WEEK, () -> getUnsafe(tpsWeek).averageRAM());
         putSupplier(AnalysisKeys.AVG_ENTITY_WEEK, () -> getUnsafe(tpsWeek).averageEntities());
         putSupplier(AnalysisKeys.AVG_CHUNK_WEEK, () -> getUnsafe(tpsWeek).averageChunks());
-        putSupplier(AnalysisKeys.TPS_SPIKE_DAY, () -> getUnsafe(tpsDay).lowTpsSpikeCount());
+        putSupplier(AnalysisKeys.TPS_SPIKE_DAY, () -> getUnsafe(tpsDay).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_DAY, () -> getUnsafe(tpsDay).averageTPS());
         putSupplier(AnalysisKeys.AVG_CPU_DAY, () -> getUnsafe(tpsDay).averageCPU());
         putSupplier(AnalysisKeys.AVG_RAM_DAY, () -> getUnsafe(tpsDay).averageRAM());

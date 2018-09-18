@@ -23,7 +23,8 @@ public class PlayerContainer extends DataContainer {
     }
 
     public ActivityIndex getActivityIndex(long date) {
-        return activityIndexCache.computeIfAbsent(date, time -> new ActivityIndex(this, time));
+        // TODO Thresholds from settings
+        return activityIndexCache.computeIfAbsent(date, time -> new ActivityIndex(this, time, 1, 1));
     }
 
     public boolean playedBetween(long after, long before) {

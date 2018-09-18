@@ -10,7 +10,6 @@ import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -91,7 +90,10 @@ public class HealthInformation extends AbstractHealthInfo {
         Key<TPSMutator> tpsMonth = new Key<>(TPSMutator.class, "TPS_MONTH");
         TPSMutator tpsMutator = analysisContainer.getUnsafe(tpsMonth);
         long serverDownTime = tpsMutator.serverDownTime();
-        double aboveThreshold = tpsMutator.percentageTPSAboveLowThreshold();
+
+        int threshold = 5; // TODO TPS THRESHOLD from settings
+
+        double aboveThreshold = tpsMutator.percentageTPSAboveThreshold(threshold);
         long tpsSpikeMonth = analysisContainer.getValue(AnalysisKeys.TPS_SPIKE_MONTH).orElse(0);
 
         String avgLowThresholdString = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -107,7 +109,6 @@ public class HealthInformation extends AbstractHealthInfo {
         avgLowThresholdString += " Average TPS was above Low Threshold "
                 + decimalFormatter.apply(aboveThreshold * 100.0) + "% of the time";
 
-        int threshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
         if (tpsSpikeMonth <= 5) {
             addNote(Icons.GREEN_THUMB + " Average TPS dropped below Low Threshold (" + threshold + ")" +
                     " " + tpsSpikeMonth + " times" +

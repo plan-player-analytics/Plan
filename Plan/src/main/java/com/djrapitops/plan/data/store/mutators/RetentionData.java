@@ -48,7 +48,8 @@ public class RetentionData {
     public RetentionData(PlayerContainer player, PlayersOnlineResolver onlineOnJoin) {
         Optional<Long> registeredValue = player.getValue(PlayerKeys.REGISTERED);
         activityIndex = registeredValue
-                .map(registered -> new ActivityIndex(player, registered + TimeAmount.DAY.ms()).getValue())
+                // TODO Thresholds from settings
+                .map(registered -> new ActivityIndex(player, registered + TimeAmount.DAY.ms(), 1, 1).getValue())
                 .orElse(0.0);
         this.onlineOnJoin = registeredValue
                 .map(registered -> onlineOnJoin.getOnlineOn(registered).orElse(-1))

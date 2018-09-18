@@ -3,7 +3,6 @@ package com.djrapitops.plan.data.store.mutators;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -134,12 +133,10 @@ public class TPSMutator {
         return idleTime;
     }
 
-    public double percentageTPSAboveLowThreshold() {
+    public double percentageTPSAboveThreshold(int threshold) {
         if (tpsData.isEmpty()) {
             return 1;
         }
-
-        int threshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
 
         long count = 0;
         for (TPS tps : tpsData) {
@@ -151,15 +148,13 @@ public class TPSMutator {
         return count * 1.0 / tpsData.size();
     }
 
-    public int lowTpsSpikeCount() {
-        int mediumThreshold = Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber();
-
+    public int lowTpsSpikeCount(int threshold) {
         boolean wasLow = false;
         int spikeCount = 0;
 
         for (TPS tpsObj : tpsData) {
             double tps = tpsObj.getTicksPerSecond();
-            if (tps < mediumThreshold) {
+            if (tps < threshold) {
                 if (!wasLow) {
                     spikeCount++;
                     wasLow = true;
