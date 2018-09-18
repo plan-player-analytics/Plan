@@ -46,6 +46,8 @@ public class InspectPage implements Page {
     private final PlayerContainer player;
     private final Map<UUID, String> serverNames;
 
+    private final String version;
+
     private final PlanConfig config;
     private final Theme theme;
     private final Graphs graphs;
@@ -60,6 +62,7 @@ public class InspectPage implements Page {
 
     InspectPage(
             PlayerContainer player, Map<UUID, String> serverNames,
+            String version,
             PlanConfig config,
             Theme theme,
             Graphs graphs,
@@ -70,6 +73,7 @@ public class InspectPage implements Page {
     ) {
         this.player = player;
         this.serverNames = serverNames;
+        this.version = version;
         this.config = config;
         this.theme = theme;
         this.graphs = graphs;
@@ -107,7 +111,7 @@ public class InspectPage implements Page {
         PlaceholderReplacer replacer = new PlaceholderReplacer();
 
         replacer.put("refresh", clockLongFormatter.apply(now));
-        replacer.put("version", MiscUtils.getPlanVersion());
+        replacer.put("version", version);
         replacer.put("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
         boolean online = false;

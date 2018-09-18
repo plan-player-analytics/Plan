@@ -94,7 +94,9 @@ public class PageFactory {
         Map<UUID, String> serverNames = database.get().fetch().getServerNames();
         return new InspectPage(
                 player, serverNames,
-                config.get(), theme.get(), graphs.get(), tables.get(), formatters.get(), serverInfo.get(), timings.get()
+                version,
+                config.get(), theme.get(), graphs.get(), tables.get(), formatters.get(),
+                serverInfo.get(), timings.get()
         );
     }
 

@@ -1,10 +1,8 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 
@@ -78,11 +76,8 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (IOException e) {
-                    if (Settings.DEV_MODE.isTrue()) {
-                        Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                        Log.toLog(MiscUtils.class, e);
-                    }
+                } catch (IOException ignored) {
+                    // Closing exceptions are ignored.
                 }
             }
         }
@@ -93,18 +88,10 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (Exception e) {
-                    if (Settings.DEV_MODE.isTrue()) {
-                        Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                        Log.toLog(MiscUtils.class, e);
-                    }
+                } catch (Exception ignore) {
+                    // Closing exceptions are ignored.
                 }
             }
         }
-    }
-
-    @Deprecated
-    public static String getPlanVersion() {
-        return PlanPlugin.getInstance().getVersion();
     }
 }

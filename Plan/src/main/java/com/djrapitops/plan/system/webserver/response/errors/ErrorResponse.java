@@ -5,7 +5,6 @@
 package com.djrapitops.plan.system.webserver.response.errors;
 
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -26,6 +25,7 @@ public class ErrorResponse extends Response {
     private String paragraph;
 
     // TODO
+    private String version;
     private ErrorHandler errorHandler;
 
     public ErrorResponse() {
@@ -42,7 +42,7 @@ public class ErrorResponse extends Response {
         String[] split = title.split(">", 3);
         placeHolders.put("titleText", split.length == 3 ? split[2] : title);
         placeHolders.put("paragraph", paragraph);
-        placeHolders.put("version", MiscUtils.getPlanVersion());
+        placeHolders.put("version", version);
 
         setContent(StringSubstitutor.replace(getContent(), placeHolders));
     }
