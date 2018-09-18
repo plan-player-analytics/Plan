@@ -1,6 +1,5 @@
 package com.djrapitops.plan.data.store.containers;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
@@ -9,7 +8,7 @@ import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -38,9 +37,11 @@ public class NetworkContainer extends DataContainer {
     private final ServerContainer bungeeContainer;
 
     // TODO
+    private String version;
     private PlanConfig config;
     private Theme theme;
     private Database database;
+    private ServerProperties serverProperties;
     private Graphs graphs;
 
     private Formatter<DateHolder> yearFormatter;
@@ -88,7 +89,7 @@ public class NetworkContainer extends DataContainer {
         putRawData(NetworkKeys.REFRESH_TIME_MONTH_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeAmount.MONTH.ms());
         putSupplier(NetworkKeys.REFRESH_TIME_F, () -> secondLongFormatter.apply(getUnsafe(NetworkKeys.REFRESH_TIME)));
 
-        putRawData(NetworkKeys.VERSION, PlanPlugin.getInstance().getVersion());
+        putRawData(NetworkKeys.VERSION, version);
         putSupplier(NetworkKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
 
         putSupplier(NetworkKeys.NETWORK_NAME, () ->
@@ -96,7 +97,7 @@ public class NetworkContainer extends DataContainer {
                         config.getString(Settings.BUNGEE_NETWORK_NAME) :
                         bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan")
         );
-        putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties_Old()::getOnlinePlayers);
+        putSupplier(NetworkKeys.PLAYERS_ONLINE, serverProperties::getOnlinePlayers);
         putRawData(NetworkKeys.WORLD_MAP_LOW_COLOR, theme.getValue(ThemeVal.WORLD_MAP_LOW));
         putRawData(NetworkKeys.WORLD_MAP_HIGH_COLOR, theme.getValue(ThemeVal.WORLD_MAP_HIGH));
         putRawData(NetworkKeys.PLAYERS_GRAPH_COLOR, theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));

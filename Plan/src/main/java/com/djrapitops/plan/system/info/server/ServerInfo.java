@@ -36,28 +36,8 @@ public abstract class ServerInfo implements SubSystem {
     }
 
     @Deprecated
-    public static Server getServer_Old() {
-        return getInstance().server;
-    }
-
-    @Deprecated
-    public static ServerProperties getServerProperties_Old() {
-        return getInstance().serverProperties;
-    }
-
-    @Deprecated
     public static UUID getServerUUID_Old() {
-        return getServer_Old().getUuid();
-    }
-
-    @Deprecated
-    public static String getServerName_Old() {
-        return getServer_Old().getName();
-    }
-
-    @Deprecated
-    public static int getServerID_Old() {
-        return getServer_Old().getId();
+        return getInstance().server.getUuid();
     }
 
     public Server getServer() {

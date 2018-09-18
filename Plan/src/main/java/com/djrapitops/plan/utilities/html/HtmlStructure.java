@@ -7,7 +7,6 @@ package com.djrapitops.plan.utilities.html;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
@@ -64,13 +63,13 @@ public class HtmlStructure {
     // TODO Rework into NetworkPage generation
     @Deprecated
     public static String createServerContainer() {
-        ServerProperties properties = ServerInfo.getServerProperties_Old();
+        ServerProperties properties = null; // TODO
         int maxPlayers = properties.getMaxPlayers();
         int online = properties.getOnlinePlayers();
         Formatter<Long> clockLongFormatter = null; //TODO
         String refresh = clockLongFormatter.apply(System.currentTimeMillis());
 
-        Server server = ServerInfo.getServer_Old();
+        Server server = null; // TODO
 
         String serverName = server.getName();
         String serverType = properties.getVersion();
