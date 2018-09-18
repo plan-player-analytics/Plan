@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.data.plugin.PluginsConfigSection;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plugin.config.Config;
@@ -11,6 +12,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Plan configuration file.
@@ -36,6 +39,15 @@ public class PlanConfig extends Config {
         this.worldAliasSettings = worldAliasSettings;
 
         pluginsConfigSection = new PluginsConfigSection(this);
+    }
+
+    public int getTimeZoneOffsetHours() {
+        if (isTrue(Settings.USE_SERVER_TIME)) {
+            int offset = TimeZone.getDefault().getOffset(System.currentTimeMillis());
+            int hourMs = (int) TimeUnit.HOURS.toMillis(1L);
+            return -offset / hourMs;
+        }
+        return 0; // UTC
     }
 
     public boolean isTrue(Setting setting) {

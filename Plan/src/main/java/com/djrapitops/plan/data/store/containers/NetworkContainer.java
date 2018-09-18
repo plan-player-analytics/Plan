@@ -14,7 +14,6 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
@@ -90,7 +89,7 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.REFRESH_TIME_F, () -> secondLongFormatter.apply(getUnsafe(NetworkKeys.REFRESH_TIME)));
 
         putRawData(NetworkKeys.VERSION, PlanPlugin.getInstance().getVersion());
-        putSupplier(NetworkKeys.TIME_ZONE, MiscUtils::getTimeZoneOffsetHours);
+        putSupplier(NetworkKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
 
         putSupplier(NetworkKeys.NETWORK_NAME, () ->
                 Check.isBungeeAvailable() ?

@@ -111,19 +111,6 @@ public enum Settings implements Setting {
     }
 
     /**
-     * If the settings is a boolean, this method should be used.
-     *
-     * @return Boolean value of the config setting, false if not boolean.
-     */
-    @Deprecated
-    public boolean isTrue() {
-        if (tempValue != null) {
-            return (Boolean) tempValue;
-        }
-        return getConfig().getBoolean(configPath);
-    }
-
-    /**
      * If the settings is a number, this method should be used.
      *
      * @return Integer value of the config setting

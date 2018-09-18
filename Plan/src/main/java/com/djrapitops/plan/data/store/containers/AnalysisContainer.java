@@ -16,7 +16,6 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.analysis.ServerBanDataReader;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
@@ -100,7 +99,7 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> secondLongFormatter.apply(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
 
         putRawData(AnalysisKeys.VERSION, version);
-        putSupplier(AnalysisKeys.TIME_ZONE, MiscUtils::getTimeZoneOffsetHours);
+        putSupplier(AnalysisKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
         putRawData(AnalysisKeys.FIRST_DAY, 1);
         putRawData(AnalysisKeys.TPS_MEDIUM, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED));
         putRawData(AnalysisKeys.TPS_HIGH, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH));

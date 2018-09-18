@@ -17,7 +17,6 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.formatting.Formatter;
@@ -112,7 +111,7 @@ public class InspectPage implements Page {
 
         replacer.put("refresh", clockLongFormatter.apply(now));
         replacer.put("version", version);
-        replacer.put("timeZone", MiscUtils.getTimeZoneOffsetHours());
+        replacer.put("timeZone", config.getTimeZoneOffsetHours());
 
         boolean online = false;
         Optional<Session> activeSession = SessionCache.getCachedSession(uuid);

@@ -7,6 +7,7 @@ import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
@@ -38,6 +39,7 @@ public class SessionAccordion extends AbstractAccordion {
     private int maxSessions;
 
     // TODO
+    private PlanConfig config;
     private Theme theme;
     private Graphs graphs;
     private HtmlTables tables;
@@ -55,11 +57,8 @@ public class SessionAccordion extends AbstractAccordion {
         this.playerNamesSupplier = playerNamesSupplier;
         viewScript = new StringBuilder();
 
-        maxSessions = Settings.MAX_SESSIONS.getNumber();
-        if (maxSessions <= 0) {
-            maxSessions = 50;
-        }
-        appendWorldPercentage = Settings.APPEND_WORLD_PERC.isTrue();
+        maxSessions = config.getNumber(Settings.MAX_SESSIONS);
+        appendWorldPercentage = config.isTrue(Settings.APPEND_WORLD_PERC);
 
         addElements();
     }

@@ -1,14 +1,11 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.TimeZone;
 
 /**
  * Utility method class containing various static methods.
@@ -23,14 +20,6 @@ public class MiscUtils {
      */
     private MiscUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    @Deprecated
-    public static int getTimeZoneOffsetHours() {
-        if (Settings.USE_SERVER_TIME.isTrue()) {
-            return -TimeZone.getDefault().getOffset(System.currentTimeMillis()) / (int) TimeAmount.HOUR.ms();
-        }
-        return 0;
     }
 
     /**
