@@ -91,7 +91,7 @@ public class InfoRequestHandlerFactory {
     }
 
     GenerateRequest generateInspectPluginsTabRequest() {
-        return new GenerateInspectPluginsTabRequest(infoSystem.get(), infoRequestFactory.get());
+        return new GenerateInspectPluginsTabRequest(infoSystem.get(), infoRequestFactory.get(), pageFactory.get());
     }
 
     GenerateRequest generateNetworkPageContentRequest() {

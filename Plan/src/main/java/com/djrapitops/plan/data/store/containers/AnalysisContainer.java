@@ -6,7 +6,6 @@ import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
-import com.djrapitops.plan.data.store.mutators.combiners.MultiBanCombiner;
 import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
@@ -16,7 +15,6 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.analysis.ServerBanDataReader;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
@@ -82,12 +80,6 @@ public class AnalysisContainer extends DataContainer {
         addCommandSuppliers();
         addServerHealth();
         addPluginSuppliers();
-
-        runCombiners();
-    }
-
-    private void runCombiners() {
-        new MultiBanCombiner(this.serverContainer).combine(getUnsafe(AnalysisKeys.BAN_DATA));
     }
 
     private void addConstants() {
@@ -442,7 +434,6 @@ public class AnalysisContainer extends DataContainer {
                         this
                 )
         );
-        putSupplier(AnalysisKeys.BAN_DATA, () -> new ServerBanDataReader().readBanDataForContainer(this));
         putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(navAndTabs)[0]);
         putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(navAndTabs)[1]);
     }

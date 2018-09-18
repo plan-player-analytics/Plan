@@ -1,5 +1,6 @@
 package com.djrapitops.plan.utilities.html.pages;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
@@ -8,6 +9,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
@@ -39,6 +41,7 @@ public class PageFactory {
     private final Lazy<Graphs> graphs;
     private final Lazy<HtmlTables> tables;
     private final Lazy<Formatters> formatters;
+    private final Lazy<HookHandler> hookHandler;
     private final Lazy<DebugLogger> debugLogger;
     private final Lazy<Timings> timings;
     private final Lazy<ErrorHandler> errorHandler;
@@ -54,6 +57,7 @@ public class PageFactory {
             Lazy<Graphs> graphs,
             Lazy<HtmlTables> tables,
             Lazy<Formatters> formatters,
+            Lazy<HookHandler> hookHandler,
             Lazy<DebugLogger> debugLogger,
             Lazy<Timings> timings,
             Lazy<ErrorHandler> errorHandler
@@ -67,6 +71,7 @@ public class PageFactory {
         this.graphs = graphs;
         this.tables = tables;
         this.formatters = formatters;
+        this.hookHandler = hookHandler;
         this.debugLogger = debugLogger;
         this.timings = timings;
         this.errorHandler = errorHandler;
@@ -98,6 +103,10 @@ public class PageFactory {
                 config.get(), theme.get(), graphs.get(), tables.get(), formatters.get(),
                 serverInfo.get(), timings.get()
         );
+    }
+
+    public InspectPagePluginsContent inspectPagePluginsContent(UUID playerUUID) {
+        return InspectPagePluginsContent.generateForThisServer(playerUUID, serverInfo.get(), hookHandler.get());
     }
 
     public NetworkPage networkPage() {

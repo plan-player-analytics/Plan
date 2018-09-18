@@ -23,6 +23,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
+// TODO Turn non static
 public class AnalysisPluginsTabContentCreator {
 
     public static String[] createContent(
@@ -101,7 +102,8 @@ public class AnalysisPluginsTabContentCreator {
     ) {
         Map<PluginData, AnalysisContainer> containers = new HashMap<>();
 
-        List<PluginData> sources = HookHandler.getInstance().getAdditionalDataSources();
+        HookHandler hookHandler = null; // TODO
+        List<PluginData> sources = hookHandler.getAdditionalDataSources();
 
         sources.parallelStream().forEach(source -> {
             PlanPlugin plugin = PlanPlugin.getInstance();

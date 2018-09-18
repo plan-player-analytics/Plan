@@ -2,13 +2,11 @@ package com.djrapitops.plan.data.plugin;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.element.InspectContainer;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.pluginbridge.plan.Bridge;
 
 import javax.inject.Inject;
@@ -38,13 +36,6 @@ public class HookHandler implements SubSystem {
         this.errorHandler = errorHandler;
 
         additionalDataSources = new ArrayList<>();
-    }
-
-    @Deprecated
-    public static HookHandler getInstance() {
-        HookHandler hookHandler = PlanSystem.getInstance().getHookHandler();
-        Verify.nullCheck(hookHandler, () -> new IllegalStateException("Plugin Hooks were not initialized."));
-        return hookHandler;
     }
 
     @Override

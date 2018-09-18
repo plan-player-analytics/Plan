@@ -37,11 +37,11 @@ public class InspectPagePluginsContent extends Response {
         addTab(serverUUID, nav, html);
     }
 
-    public static InspectPagePluginsContent generateForThisServer(UUID playerUUID) {
-        HookHandler hookHandler = HookHandler.getInstance();
+    public static InspectPagePluginsContent generateForThisServer(UUID playerUUID, ServerInfo serverInfo, HookHandler hookHandler) {
+        String serverName = serverInfo.getServer().getName();
+        String actualServerName = serverName.equals("Plan") ? "Server " + serverInfo.getServer().getId() : serverName;
+
         Map<PluginData, InspectContainer> containers = hookHandler.getInspectContainersFor(playerUUID);
-        String serverName = ServerInfo.getServerName_Old();
-        String actualServerName = serverName.equals("Plan") ? "Server " + ServerInfo.getServerID_Old() : serverName;
         if (containers.isEmpty()) {
             return new InspectPagePluginsContent(playerUUID, "<li><a>" + actualServerName + " (No Data)</a></li>",
                     "<div class=\"tab\"><div class=\"row clearfix\">" +
@@ -50,7 +50,12 @@ public class InspectPagePluginsContent extends Response {
         }
 
         String nav = "<li><a class=\"nav-button\" href=\"javascript:void(0)\">" + actualServerName + "</a></li>";
+        String tab = createTab(containers);
 
+        return new InspectPagePluginsContent(serverInfo.getServerUUID(), nav, tab);
+    }
+
+    private static String createTab(Map<PluginData, InspectContainer> containers) {
         StringBuilder tab = new StringBuilder();
         tab.append("<div class=\"tab\"><div class=\"row clearfix\">");
 
@@ -63,8 +68,7 @@ public class InspectPagePluginsContent extends Response {
         }
 
         tab.append("</div></div>");
-
-        return new InspectPagePluginsContent(ServerInfo.getServerUUID_Old(), nav, tab.toString());
+        return tab.toString();
     }
 
     public void addTab(UUID serverUUID, String nav, String html) {
