@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.processing.Processing;
 import dagger.Lazy;
@@ -24,16 +25,19 @@ public class PlayerProcessors {
     private final Lazy<Processing> processing;
     private final Lazy<Database> database;
     private final Lazy<DataCache> dataCache;
+    private final Lazy<GeolocationCache> geolocationCache;
 
     @Inject
     public PlayerProcessors(
             Lazy<Processing> processing,
             Lazy<Database> database,
-            Lazy<DataCache> dataCache
+            Lazy<DataCache> dataCache,
+            Lazy<GeolocationCache> geolocationCache
     ) {
         this.processing = processing;
         this.database = database;
         this.dataCache = dataCache;
+        this.geolocationCache = geolocationCache;
     }
 
     public BanAndOpProcessor banAndOpProcessor(UUID uuid, Supplier<Boolean> banned, boolean op) {
@@ -49,7 +53,7 @@ public class PlayerProcessors {
     }
 
     public IPUpdateProcessor ipUpdateProcessor(UUID uuid, InetAddress ip, long time) {
-        return new IPUpdateProcessor(uuid, ip, time, database.get());
+        return new IPUpdateProcessor(uuid, ip, time, database.get(), geolocationCache.get());
     }
 
     public KickProcessor kickProcessor(UUID uuid) {

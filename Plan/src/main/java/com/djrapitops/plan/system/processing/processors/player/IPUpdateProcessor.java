@@ -25,21 +25,24 @@ public class IPUpdateProcessor implements CriticalRunnable {
     private final long time;
 
     private final Database database;
+    private final GeolocationCache geolocationCache;
 
     IPUpdateProcessor(
             UUID uuid, InetAddress ip, long time,
-            Database database
+            Database database,
+            GeolocationCache geolocationCache
     ) {
         this.uuid = uuid;
         this.ip = ip;
         this.time = time;
         this.database = database;
+        this.geolocationCache = geolocationCache;
     }
 
     @Override
     public void run() {
         try {
-            String country = GeolocationCache.getCountry(ip.getHostAddress());
+            String country = geolocationCache.getCountry(ip.getHostAddress());
             GeoInfo geoInfo = new GeoInfo(ip, country, time);
             database.save().geoInfo(uuid, geoInfo);
         } catch (NoSuchAlgorithmException ignore) {

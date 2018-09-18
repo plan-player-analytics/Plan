@@ -9,7 +9,6 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.utilities.Verify;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
@@ -59,7 +58,8 @@ public class GeolocationCache implements SubSystem {
         this.fileSystem = fileSystem;
         this.config = config;
         this.logger = logger;
-        cached = new HashMap<>();
+
+        this.cached = new HashMap<>();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class GeolocationCache implements SubSystem {
         geolocationDB = fileSystem.getFileFromPluginFolder("GeoIP.dat");
         if (config.isTrue(Settings.DATA_GEOLOCATIONS)) {
             try {
-                GeolocationCache.checkDB();
+                checkDB();
             } catch (UnknownHostException e) {
                 logger.error(locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED));
             } catch (IOException e) {
@@ -90,23 +90,17 @@ public class GeolocationCache implements SubSystem {
      * if that happens, "Not Known" will be returned.
      * @see #getUnCachedCountry(String)
      */
-    public static String getCountry(String ipAddress) {
+    public String getCountry(String ipAddress) {
         String country = getCachedCountry(ipAddress);
 
         if (country != null) {
             return country;
         } else {
             country = getUnCachedCountry(ipAddress);
-            getInstance().cached.put(ipAddress, country);
+            cached.put(ipAddress, country);
 
             return country;
         }
-    }
-
-    private static GeolocationCache getInstance() {
-        GeolocationCache geolocationCache = CacheSystem.getInstance().getGeolocationCache();
-        Verify.nullCheck(geolocationCache, () -> new IllegalStateException("GeolocationCache was not initialized."));
-        return geolocationCache;
     }
 
     /**
@@ -115,8 +109,8 @@ public class GeolocationCache implements SubSystem {
      * @param ipAddress The IP Address which is retrieved out of the cache
      * @return The cached country, {@code null} if the country is not cached
      */
-    private static String getCachedCountry(String ipAddress) {
-        return getInstance().cached.get(ipAddress);
+    private String getCachedCountry(String ipAddress) {
+        return cached.get(ipAddress);
     }
 
     /**
@@ -133,14 +127,14 @@ public class GeolocationCache implements SubSystem {
      * @see <a href="http://maxmind.com">http://maxmind.com</a>
      * @see #getCountry(String)
      */
-    private static String getUnCachedCountry(String ipAddress) {
+    private String getUnCachedCountry(String ipAddress) {
         if ("127.0.0.1".equals(ipAddress)) {
             return "Local Machine";
         }
         try {
             checkDB();
 
-            try (DatabaseReader reader = new DatabaseReader.Builder(getInstance().geolocationDB).build()) {
+            try (DatabaseReader reader = new DatabaseReader.Builder(geolocationDB).build()) {
                 InetAddress inetAddress = InetAddress.getByName(ipAddress);
 
                 CountryResponse response = reader.country(inetAddress);
@@ -159,13 +153,13 @@ public class GeolocationCache implements SubSystem {
      *
      * @throws IOException when an error at download or saving the DB happens
      */
-    public static void checkDB() throws IOException {
-        if (getInstance().geolocationDB.exists()) {
+    private void checkDB() throws IOException {
+        if (geolocationDB.exists()) {
             return;
         }
         URL downloadSite = new URL("http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz");
         try (ReadableByteChannel rbc = Channels.newChannel(new GZIPInputStream(downloadSite.openStream()));
-             FileOutputStream fos = new FileOutputStream(getInstance().geolocationDB.getAbsoluteFile())) {
+             FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())) {
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         }
     }
@@ -176,8 +170,8 @@ public class GeolocationCache implements SubSystem {
      * @param ipAddress The IP Address which is checked
      * @return true if the IP Address is cached
      */
-    public static boolean isCached(String ipAddress) {
-        return getInstance().cached.containsKey(ipAddress);
+    boolean isCached(String ipAddress) {
+        return cached.containsKey(ipAddress);
     }
 
     @Override

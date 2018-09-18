@@ -36,12 +36,19 @@ import java.util.stream.Collectors;
  */
 public abstract class Importer {
 
+    private final GeolocationCache geolocationCache;
     private final Database database;
     private final UUID serverUUID;
 
     private final String name;
 
-    protected Importer(Database database, ServerInfo serverInfo, String name) {
+    protected Importer(
+            GeolocationCache geolocationCache,
+            Database database,
+            ServerInfo serverInfo,
+            String name
+    ) {
+        this.geolocationCache = geolocationCache;
         this.database = database;
         this.serverUUID = serverInfo.getServerUUID();
 
@@ -188,7 +195,7 @@ public abstract class Importer {
 
         return userImportData.getIps().parallelStream()
                 .map(ip -> {
-                    String geoLoc = GeolocationCache.getCountry(ip);
+                    String geoLoc = geolocationCache.getCountry(ip);
                     try {
                         return new GeoInfo(ip, geoLoc, date, new SHA256Hash(ip).create());
                     } catch (NoSuchAlgorithmException e) {
