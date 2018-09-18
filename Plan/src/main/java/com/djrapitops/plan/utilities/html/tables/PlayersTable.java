@@ -25,11 +25,14 @@ class PlayersTable extends TableContainer {
 
     private final List<PlayerContainer> players;
     private final int maxPlayers;
+    private final Formatter<Double> decimalFormatter;
 
-    PlayersTable(List<PlayerContainer> players,
-                 int maxPlayers,
-                 Formatter<Long> timeAmountFormatter,
-                 Formatter<Long> yearLongFormatter
+    PlayersTable(
+            List<PlayerContainer> players,
+            int maxPlayers,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Long> yearLongFormatter,
+            Formatter<Double> decimalFormatter
     ) {
         super(
                 Icon.called("user") + " Name",
@@ -42,6 +45,7 @@ class PlayersTable extends TableContainer {
         );
         this.players = players;
         this.maxPlayers = maxPlayers;
+        this.decimalFormatter = decimalFormatter;
         useJqueryDataTables("player-table");
 
         setFormatter(2, timeAmountFormatter);
@@ -72,7 +76,7 @@ class PlayersTable extends TableContainer {
 
             ActivityIndex activityIndex = player.getActivityIndex(now);
             boolean isBanned = player.getValue(PlayerKeys.BANNED).orElse(false);
-            String activityString = activityIndex.getFormattedValue()
+            String activityString = activityIndex.getFormattedValue(decimalFormatter)
                     + (isBanned ? " (<b>Banned</b>)" : " (" + activityIndex.getGroup() + ")");
 
             String geolocation = GeoInfoMutator.forContainer(player).mostRecent().map(GeoInfo::getGeolocation).orElse("-");

@@ -209,7 +209,7 @@ public class InspectPage implements Page {
 
         ActivityIndex activityIndex = player.getActivityIndex(now);
 
-        replacer.put("activityIndexNumber", activityIndex.getFormattedValue());
+        replacer.put("activityIndexNumber", activityIndex.getFormattedValue(decimalFormatter));
         replacer.put("activityIndexColor", activityIndex.getColor());
         replacer.put("activityIndex", activityIndex.getGroup());
 

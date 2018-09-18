@@ -7,8 +7,6 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
@@ -19,6 +17,8 @@ import com.djrapitops.plan.system.locale.lang.GenericLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -125,7 +125,7 @@ public class QInspectCommand extends CommandNode {
 
         String[] messages = new String[]{
                 locale.getString(CommandLang.HEADER_INSPECT, playerName),
-                locale.getString(CommandLang.QINSPECT_ACTIVITY_INDEX, activityIndex.getFormattedValue(), activityIndex.getGroup()),
+                locale.getString(CommandLang.QINSPECT_ACTIVITY_INDEX, activityIndex.getFormattedValue(formatters.decimals()), activityIndex.getGroup()),
                 locale.getString(CommandLang.QINSPECT_REGISTERED, timestamp.apply(() -> registered)),
                 locale.getString(CommandLang.QINSPECT_LAST_SEEN, timestamp.apply(() -> lastSeen)),
                 locale.getString(CommandLang.QINSPECT_GEOLOCATION, geolocation),

@@ -110,9 +110,8 @@ public class ActivityIndex {
         return value;
     }
 
-    public String getFormattedValue() {
-        Formatter<Double> decimalFormatter = null; // TODO Add as method parameter
-        return decimalFormatter.apply(value);
+    public String getFormattedValue(Formatter<Double> formatter) {
+        return formatter.apply(value);
     }
 
     public String getGroup() {
