@@ -40,6 +40,7 @@ public class NetworkContainer extends DataContainer {
 
     // TODO
     private PlanConfig config;
+    private Theme theme;
     private Database database;
     private Graphs graphs;
 
@@ -97,9 +98,9 @@ public class NetworkContainer extends DataContainer {
                         bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan")
         );
         putSupplier(NetworkKeys.PLAYERS_ONLINE, ServerInfo.getServerProperties_Old()::getOnlinePlayers);
-        putRawData(NetworkKeys.WORLD_MAP_LOW_COLOR, Theme.getValue_Old(ThemeVal.WORLD_MAP_LOW));
-        putRawData(NetworkKeys.WORLD_MAP_HIGH_COLOR, Theme.getValue_Old(ThemeVal.WORLD_MAP_HIGH));
-        putRawData(NetworkKeys.PLAYERS_GRAPH_COLOR, Theme.getValue_Old(ThemeVal.GRAPH_PLAYERS_ONLINE));
+        putRawData(NetworkKeys.WORLD_MAP_LOW_COLOR, theme.getValue(ThemeVal.WORLD_MAP_LOW));
+        putRawData(NetworkKeys.WORLD_MAP_HIGH_COLOR, theme.getValue(ThemeVal.WORLD_MAP_HIGH));
+        putRawData(NetworkKeys.PLAYERS_GRAPH_COLOR, theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
     }
 
     private void addPlayerInformation() {

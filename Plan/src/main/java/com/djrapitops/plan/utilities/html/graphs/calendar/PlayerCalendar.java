@@ -73,7 +73,7 @@ public class PlayerCalendar {
 
             series.append(",{title: 'Playtime: ").append(timeAmountFormatter.apply(playtime))
                     .append("',start:'").append(day)
-                    .append("',color: '").append(Theme.getValue_Old(ThemeVal.GREEN)).append("'")
+                    .append("',color: '").append(theme.getValue(ThemeVal.GREEN)).append("'")
                     .append("}");
 
             series.append(",{title: 'Sessions: ").append(sessionCount)

@@ -47,6 +47,7 @@ public class InspectPage implements Page {
     private final Map<UUID, String> serverNames;
 
     private final PlanConfig config;
+    private final Theme theme;
     private final Graphs graphs;
     private final HtmlTables tables;
     private final ServerInfo serverInfo;
@@ -60,6 +61,7 @@ public class InspectPage implements Page {
     InspectPage(
             PlayerContainer player, Map<UUID, String> serverNames,
             PlanConfig config,
+            Theme theme,
             Graphs graphs,
             HtmlTables tables,
             Formatters formatters,
@@ -69,6 +71,7 @@ public class InspectPage implements Page {
         this.player = player;
         this.serverNames = serverNames;
         this.config = config;
+        this.theme = theme;
         this.graphs = graphs;
         this.tables = tables;
         this.serverInfo = serverInfo;
@@ -131,9 +134,9 @@ public class InspectPage implements Page {
 
         Map<UUID, WorldTimes> worldTimesPerServer = perServerMutator.worldTimesPerServer();
         replacer.put("serverPieSeries", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
-        replacer.put("worldPieColors", Theme.getValue_Old(ThemeVal.GRAPH_WORLD_PIE));
-        replacer.put("gmPieColors", Theme.getValue_Old(ThemeVal.GRAPH_GM_PIE));
-        replacer.put("serverPieColors", Theme.getValue_Old(ThemeVal.GRAPH_SERVER_PREF_PIE));
+        replacer.put("worldPieColors", theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+        replacer.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
+        replacer.put("serverPieColors", theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
 
         String favoriteServer = serverNames.getOrDefault(perServerMutator.favoriteServer(), "Unknown");
         replacer.put("favoriteServer", favoriteServer);

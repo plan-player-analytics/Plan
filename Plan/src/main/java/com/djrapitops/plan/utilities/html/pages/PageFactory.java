@@ -90,7 +90,7 @@ public class PageFactory {
         Map<UUID, String> serverNames = database.get().fetch().getServerNames();
         return new InspectPage(
                 player, serverNames,
-                config.get(), graphs.get(), tables.get(), formatters.get(), serverInfo.get(), timings.get()
+                config.get(), theme, graphs.get(), tables.get(), formatters.get(), serverInfo.get(), timings.get()
         );
     }
 
