@@ -1,9 +1,11 @@
 package com.djrapitops.plan.system.processing.processors.player;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.GeolocationCache;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import dagger.Lazy;
 
@@ -23,6 +25,7 @@ import java.util.function.Supplier;
 public class PlayerProcessors {
 
     private final Lazy<Processing> processing;
+    private final Lazy<ServerInfo> serverInfo;
     private final Lazy<Database> database;
     private final Lazy<DataCache> dataCache;
     private final Lazy<GeolocationCache> geolocationCache;
@@ -30,11 +33,13 @@ public class PlayerProcessors {
     @Inject
     public PlayerProcessors(
             Lazy<Processing> processing,
+            Lazy<ServerInfo> serverInfo,
             Lazy<Database> database,
             Lazy<DataCache> dataCache,
             Lazy<GeolocationCache> geolocationCache
     ) {
         this.processing = processing;
+        this.serverInfo = serverInfo;
         this.database = database;
         this.dataCache = dataCache;
         this.geolocationCache = geolocationCache;
@@ -61,11 +66,12 @@ public class PlayerProcessors {
     }
 
     public NameProcessor nameProcessor(UUID uuid, String playerName, String displayName) {
-        return new NameProcessor(uuid, playerName, displayName, database.get(), dataCache.get());
+        Nickname nickname = new Nickname(displayName, System.currentTimeMillis(), serverInfo.get().getServerUUID());
+        return new NameProcessor(uuid, playerName, nickname, database.get(), dataCache.get());
     }
 
     public PingInsertProcessor pingInsertProcessor(UUID uuid, List<DateObj<Integer>> pingList) {
-        return new PingInsertProcessor(uuid, pingList, database.get());
+        return new PingInsertProcessor(uuid, serverInfo.get().getServerUUID(), pingList, database.get());
     }
 
     public RegisterProcessor registerProcessor(UUID uuid, Supplier<Long> registered, String name, Runnable... afterProcess) {

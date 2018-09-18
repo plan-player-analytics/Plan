@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 
 import java.util.UUID;
@@ -29,13 +28,13 @@ public class NameProcessor implements CriticalRunnable {
     private final DataCache dataCache;
 
     NameProcessor(
-            UUID uuid, String playerName, String displayName,
+            UUID uuid, String playerName, Nickname nickname,
             Database database,
             DataCache dataCache
     ) {
         this.uuid = uuid;
         this.playerName = playerName;
-        this.nickname = new Nickname(displayName, System.currentTimeMillis(), ServerInfo.getServerUUID_Old());
+        this.nickname = nickname;
         this.database = database;
         this.dataCache = dataCache;
     }

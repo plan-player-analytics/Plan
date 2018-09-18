@@ -12,6 +12,7 @@ public interface CheckOperations {
 
     boolean doesWebUserExists(String username);
 
+    @Deprecated
     default boolean isPlayerRegisteredOnThisServer(UUID player) {
         return isPlayerRegistered(player, ServerInfo.getServerUUID_Old());
     }

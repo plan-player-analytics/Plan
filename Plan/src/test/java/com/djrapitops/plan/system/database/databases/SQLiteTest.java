@@ -22,7 +22,6 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -90,7 +89,7 @@ public class SQLiteTest {
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));
-        assertEquals(ServerInfo.getServerUUID_Old(), TestConstants.SERVER_UUID);
+//        assertEquals(ServerInfo.getServerUUID_Old(), TestConstants.SERVER_UUID); TODO check if assertion is required
         System.out.println("--     Clear Complete     --\n");
     }
 
@@ -395,7 +394,7 @@ public class SQLiteTest {
             System.out.println(" " + entry.getValue());
         }
 
-        List<Session> savedSessions = sessions.get(ServerInfo.getServerUUID_Old());
+        List<Session> savedSessions = sessions.get(serverUUID);
 
         assertNotNull(savedSessions);
         assertEquals(1, savedSessions.size());
@@ -427,7 +426,7 @@ public class SQLiteTest {
         assertEquals(playerUUID, userInfo.getUuid());
         assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
         assertEquals(123456789L, userInfo.getRegistered());
-        assertEquals(1, userInfoTable.getServerUserCount(ServerInfo.getServerUUID_Old()));
+        assertEquals(1, userInfoTable.getServerUserCount(serverUUID));
         assertEquals("Waiting for Update..", userInfo.getName());
         assertFalse(userInfo.isBanned());
         assertFalse(userInfo.isOperator());
@@ -803,7 +802,7 @@ public class SQLiteTest {
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
         sessionMap.put(playerUUID, sessions);
-        map.put(ServerInfo.getServerUUID_Old(), sessionMap);
+        map.put(serverUUID, sessionMap);
 
         worldTimesTable.saveWorldTimes(map);
 
@@ -826,7 +825,6 @@ public class SQLiteTest {
         List<Session> sessions = new ArrayList<>();
         sessions.add(session);
         sessionMap.put(playerUUID, sessions);
-        UUID serverUUID = ServerInfo.getServerUUID_Old();
         map.put(serverUUID, sessionMap);
 
         sessionsTable.insertSessions(map, true);

@@ -7,7 +7,6 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
@@ -76,7 +75,7 @@ public class BungeeBukkitConnectionTest {
         bukkitSystem = null; // TODO
         bukkitSystem.enable();
 
-        bukkitUUID = ServerInfo.getServerUUID_Old();
+        bukkitUUID = null;
 
         bungeeSystem = null; // TODO
 
@@ -87,7 +86,7 @@ public class BungeeBukkitConnectionTest {
 
         bungeeSystem.enable();
 
-        bungeeUUID = ServerInfo.getServerUUID_Old();
+        bungeeUUID = null;
 
         System.out.println("------------------------------");
         System.out.println("Enable Complete");
