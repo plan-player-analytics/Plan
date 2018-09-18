@@ -17,10 +17,15 @@ import java.util.UUID;
 
 public class WorldChangeListener implements Listener {
 
+    private final WorldAliasSettings worldAliasSettings;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public WorldChangeListener(ErrorHandler errorHandler) {
+    public WorldChangeListener(
+            WorldAliasSettings worldAliasSettings,
+            ErrorHandler errorHandler
+    ) {
+        this.worldAliasSettings = worldAliasSettings;
         this.errorHandler = errorHandler;
     }
 
@@ -42,7 +47,7 @@ public class WorldChangeListener implements Listener {
         String worldName = player.getWorld().getName();
         String gameMode = player.getGameMode().name();
 
-        WorldAliasSettings.addWorld_Old(worldName);
+        worldAliasSettings.addWorld(worldName);
 
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));

@@ -44,16 +44,6 @@ public class WorldAliasSettings {
         this.errorHandler = errorHandler;
     }
 
-    @Deprecated
-    public static Map<String, String> getAliases_Old() {
-        return new HashMap<>();
-    }
-
-    @Deprecated
-    public static void addWorld_Old(String world) {
-
-    }
-
     private ConfigNode getAliasSection() {
         return config.get().getConfigNode(Settings.WORLD_ALIASES);
     }

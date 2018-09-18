@@ -88,7 +88,7 @@ public class InfoRequestFactory {
     }
 
     public GenerateInspectPluginsTabRequest generateInspectPluginsTabRequest(UUID uuid) {
-        return new GenerateInspectPluginsTabRequest(uuid, infoSystem.get(), this, pageFactory);
+        return new GenerateInspectPluginsTabRequest(uuid, infoSystem.get(), this, pageFactory.get());
     }
 
     public GenerateNetworkPageContentRequest generateNetworkPageContentRequest() {

@@ -24,10 +24,15 @@ import java.util.UUID;
  */
 public class SpongeWorldChangeListener {
 
+    private final WorldAliasSettings worldAliasSettings;
     private ErrorHandler errorHandler;
 
     @Inject
-    public SpongeWorldChangeListener(ErrorHandler errorHandler) {
+    public SpongeWorldChangeListener(
+            WorldAliasSettings worldAliasSettings,
+            ErrorHandler errorHandler
+    ) {
+        this.worldAliasSettings = worldAliasSettings;
         this.errorHandler = errorHandler;
     }
 
@@ -52,7 +57,7 @@ public class SpongeWorldChangeListener {
         String worldName = event.getToTransform().getExtent().getName();
         String gameMode = getGameMode(player);
 
-        WorldAliasSettings.addWorld_Old(worldName);
+        worldAliasSettings.addWorld(worldName);
 
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));

@@ -223,7 +223,8 @@ public class Session extends DataContainer implements DateHolder {
 
     @Deprecated // TODO Move this method elsewhere
     private String getLongestWorldPlayed() {
-        Map<String, String> aliases = WorldAliasSettings.getAliases_Old();
+        WorldAliasSettings worldAliasSettings = null; // TODO
+        Map<String, String> aliases = worldAliasSettings.getAliases();
         if (worldTimes == null) {
             return "No World Time Data";
         }
