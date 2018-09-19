@@ -5,9 +5,7 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
 
@@ -25,13 +23,6 @@ public class CacheSystem implements SubSystem {
     public CacheSystem(DataCache dataCache, GeolocationCache geolocationCache) {
         this.dataCache = dataCache;
         this.geolocationCache = geolocationCache;
-    }
-
-    @Deprecated
-    public static CacheSystem getInstance() {
-        CacheSystem cacheSystem = PlanSystem.getInstance().getCacheSystem();
-        Verify.nullCheck(cacheSystem, () -> new IllegalStateException("Cache System was not initialized."));
-        return cacheSystem;
     }
 
     @Override
