@@ -11,13 +11,13 @@ import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import com.djrapitops.plugin.task.thread.ThreadRunnable;
 import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
 import org.bukkit.Server;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import utilities.TestConstants;
-import utilities.mocks.objects.FakeConsoleCmdSender;
 import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
@@ -102,7 +102,7 @@ public class BukkitMockUtil extends MockUtil {
         doReturn("1.12.2").when(serverMock).getVersion();
         doReturn("32423").when(serverMock).getBukkitVersion();
         doReturn(TestConstants.BUKKIT_MAX_PLAYERS).when(serverMock).getMaxPlayers();
-        FakeConsoleCmdSender sender = new FakeConsoleCmdSender();
+        ConsoleCommandSender sender = Mockito.mock(ConsoleCommandSender.class);
         doReturn(sender).when(serverMock).getConsoleSender();
 
         BukkitScheduler bukkitScheduler = Mockito.mock(BukkitScheduler.class);

@@ -18,7 +18,6 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import utilities.TestConstants;
-import utilities.mocks.objects.FakeBungeeConsole;
 import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
@@ -85,7 +84,7 @@ public class BungeeMockUtil extends MockUtil {
         ProxyServer proxyMock = Mockito.mock(ProxyServer.class);
         doReturn("1.12.2").when(proxyMock).getVersion();
 
-        CommandSender console = new FakeBungeeConsole();
+        CommandSender console = Mockito.mock(CommandSender.class);
         doReturn(console).when(proxyMock).getConsole();
 
         ProxyConfig proxyConfig = Mockito.mock(ProxyConfig.class);

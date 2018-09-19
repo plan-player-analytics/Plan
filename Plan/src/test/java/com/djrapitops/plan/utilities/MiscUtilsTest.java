@@ -12,14 +12,16 @@ import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
+import org.bukkit.command.CommandSender;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.mocks.SystemMockUtil;
-import utilities.mocks.objects.MockUtils;
+import utilities.mocks.objects.MockPlayers;
 
 import java.util.List;
 import java.util.UUID;
@@ -57,7 +59,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplayNameArgsPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
-        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer());
+        ISender sender = new BukkitCMDSender(MockPlayers.mockPlayer());
 
         String expResult = "Rsl1122";
         String result = MiscUtils.getPlayerName(args, sender);
@@ -68,7 +70,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplayNameArgsNoPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
-        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
+        ISender sender = new BukkitCMDSender(MockPlayers.mockPlayer2());
 
         String result = MiscUtils.getPlayerName(args, sender);
 
@@ -78,7 +80,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplayNameNoArgsPerm() {
         String[] args = new String[]{};
-        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer());
+        ISender sender = new BukkitCMDSender(MockPlayers.mockPlayer());
 
         String expResult = "TestName";
         String result = MiscUtils.getPlayerName(args, sender);
@@ -89,7 +91,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplayNameNoArgsNoPerm() {
         String[] args = new String[]{};
-        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
+        ISender sender = new BukkitCMDSender(MockPlayers.mockPlayer2());
 
         String expResult = "TestName2";
         String result = MiscUtils.getPlayerName(args, sender);
@@ -100,7 +102,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplayNameOwnNameNoPerm() {
         String[] args = new String[]{"testname2"};
-        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
+        ISender sender = new BukkitCMDSender(MockPlayers.mockPlayer2());
 
         String expResult = "TestName2";
         String result = MiscUtils.getPlayerName(args, sender);
@@ -111,7 +113,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplayNameConsole() {
         String[] args = new String[]{"TestConsoleSender"};
-        ISender sender = new BukkitCMDSender(MockUtils.mockConsoleSender());
+        ISender sender = new BukkitCMDSender(Mockito.mock(CommandSender.class));
 
         String expResult = "TestConsoleSender";
         String result = MiscUtils.getPlayerName(args, sender);
