@@ -52,6 +52,7 @@ public class AnalysisContainer extends DataContainer {
     private Graphs graphs;
     private HtmlTables tables;
     private Accordions accordions;
+    private AnalysisPluginsTabContentCreator pluginsTabContentCreator;
 
     private Formatter<DateHolder> yearFormatter;
     private Formatter<Long> secondLongFormatter;
@@ -430,12 +431,7 @@ public class AnalysisContainer extends DataContainer {
     private void addPluginSuppliers() {
         // TODO Refactor into a system that supports running the analysis on Bungee
         Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {}, "NAV_AND_TABS");
-        putSupplier(navAndTabs, () ->
-                AnalysisPluginsTabContentCreator.createContent(
-                        getUnsafe(AnalysisKeys.PLAYERS_MUTATOR),
-                        this
-                )
-        );
+        putSupplier(navAndTabs, () -> pluginsTabContentCreator.createContent(this));
         putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(navAndTabs)[0]);
         putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(navAndTabs)[1]);
     }
