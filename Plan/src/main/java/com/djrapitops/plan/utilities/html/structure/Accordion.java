@@ -14,14 +14,14 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class AbstractAccordion {
+public class Accordion {
 
     private final String id;
     private final List<AccordionElement> elements;
 
     private String emptyText = "No Data";
 
-    public AbstractAccordion(String id) {
+    public Accordion(String id) {
         this.id = new Format(id)
                 .removeSymbols()
                 .removeWhitespace()

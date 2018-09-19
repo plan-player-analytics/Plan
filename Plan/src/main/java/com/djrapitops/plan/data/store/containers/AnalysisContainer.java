@@ -21,6 +21,7 @@ import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.PingGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
+import com.djrapitops.plan.utilities.html.structure.Accordions;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
@@ -50,6 +51,7 @@ public class AnalysisContainer extends DataContainer {
     private ServerProperties serverProperties;
     private Graphs graphs;
     private HtmlTables tables;
+    private Accordions accordions;
 
     private Formatter<DateHolder> yearFormatter;
     private Formatter<Long> secondLongFormatter;
@@ -260,7 +262,7 @@ public class AnalysisContainer extends DataContainer {
     private void addSessionSuppliers() {
         Key<SessionAccordion> sessionAccordion = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
         putSupplier(serverNames, () -> database.fetch().getServerNames());
-        putSupplier(sessionAccordion, () -> SessionAccordion.forServer(
+        putSupplier(sessionAccordion, () -> accordions.serverSessionAccordion(
                 getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
                 getSupplier(serverNames),
                 () -> getUnsafe(AnalysisKeys.PLAYER_NAMES)

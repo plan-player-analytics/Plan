@@ -26,6 +26,7 @@ import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.calendar.PlayerCalendar;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.structure.Accordions;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
@@ -51,6 +52,7 @@ public class InspectPage implements Page {
     private final Theme theme;
     private final Graphs graphs;
     private final HtmlTables tables;
+    private final Accordions accordions;
     private final ServerInfo serverInfo;
     private final Timings timings;
 
@@ -66,6 +68,7 @@ public class InspectPage implements Page {
             Theme theme,
             Graphs graphs,
             HtmlTables tables,
+            Accordions accordions,
             Formatters formatters,
             ServerInfo serverInfo,
             Timings timings
@@ -77,6 +80,7 @@ public class InspectPage implements Page {
         this.theme = theme;
         this.graphs = graphs;
         this.tables = tables;
+        this.accordions = accordions;
         this.serverInfo = serverInfo;
         this.timings = timings;
 
@@ -169,13 +173,13 @@ public class InspectPage implements Page {
             if (config.isTrue(Settings.DISPLAY_SESSIONS_AS_TABLE)) {
                 replacer.put("accordionSessions", tables.playerSessionTable(playerName, allSessions).parseHtml());
             } else {
-                SessionAccordion sessionAccordion = SessionAccordion.forPlayer(allSessions, () -> serverNames);
+                SessionAccordion sessionAccordion = accordions.playerSessionAccordion(allSessions, () -> serverNames);
                 replacer.put("accordionSessions", sessionAccordion.toHtml());
                 sessionAccordionViewScript = sessionAccordion.toViewScript();
             }
         }
 
-        ServerAccordion serverAccordion = new ServerAccordion(player, serverNames);
+        ServerAccordion serverAccordion = accordions.serverAccordion(player, serverNames);
 
         PlayerCalendar playerCalendar = graphs.calendar().playerCalendar(player);
 

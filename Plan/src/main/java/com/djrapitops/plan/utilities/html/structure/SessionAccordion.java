@@ -6,8 +6,6 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
@@ -27,7 +25,7 @@ import java.util.function.Supplier;
  * @author Rsl1122
  * @see com.djrapitops.plan.data.container.Session for object
  */
-public class SessionAccordion extends AbstractAccordion {
+public class SessionAccordion extends Accordion {
 
     private final boolean forPlayer;
     private final List<Session> sessions;
@@ -36,40 +34,41 @@ public class SessionAccordion extends AbstractAccordion {
 
     private final StringBuilder viewScript;
     private final boolean appendWorldPercentage;
-    private int maxSessions;
+    private final int maxSessions;
 
-    // TODO
-    private PlanConfig config;
-    private Theme theme;
-    private Graphs graphs;
-    private HtmlTables tables;
-    private Formatter<DateHolder> yearFormatter;
-    private Formatter<Long> timeAmountFormatter;
+    private final Theme theme;
+    private final Graphs graphs;
+    private final HtmlTables tables;
+    private final Formatter<DateHolder> yearFormatter;
+    private final Formatter<Long> timeAmountFormatter;
 
-    private SessionAccordion(boolean forPlayer, List<Session> sessions,
-                             Supplier<Map<UUID, String>> serverNamesSupplier,
-                             Supplier<Map<UUID, String>> playerNamesSupplier) {
+    SessionAccordion(boolean forPlayer, List<Session> sessions,
+                     Supplier<Map<UUID, String>> serverNamesSupplier,
+                     Supplier<Map<UUID, String>> playerNamesSupplier,
+                     boolean appendWorldPercentage,
+                     int maxSessions,
+                     Theme theme,
+                     Graphs graphs,
+                     HtmlTables tables,
+                     Formatter<DateHolder> yearFormatter,
+                     Formatter<Long> timeAmountFormatter
+    ) {
         super("session_accordion");
 
         this.forPlayer = forPlayer;
         this.sessions = sessions;
         this.serverNamesSupplier = serverNamesSupplier;
         this.playerNamesSupplier = playerNamesSupplier;
+        this.appendWorldPercentage = appendWorldPercentage;
+        this.maxSessions = maxSessions;
+        this.theme = theme;
+        this.graphs = graphs;
+        this.tables = tables;
+        this.yearFormatter = yearFormatter;
+        this.timeAmountFormatter = timeAmountFormatter;
         viewScript = new StringBuilder();
 
-        maxSessions = config.getNumber(Settings.MAX_SESSIONS);
-        appendWorldPercentage = config.isTrue(Settings.APPEND_WORLD_PERC);
-
         addElements();
-    }
-
-    public static SessionAccordion forServer(List<Session> sessions, Supplier<Map<UUID, String>> serverNamesSupplier,
-                                             Supplier<Map<UUID, String>> playerNamesSupplier) {
-        return new SessionAccordion(false, sessions, serverNamesSupplier, playerNamesSupplier);
-    }
-
-    public static SessionAccordion forPlayer(List<Session> sessions, Supplier<Map<UUID, String>> serverNamesSupplier) {
-        return new SessionAccordion(true, sessions, serverNamesSupplier, HashMap::new);
     }
 
     public String toViewScript() {

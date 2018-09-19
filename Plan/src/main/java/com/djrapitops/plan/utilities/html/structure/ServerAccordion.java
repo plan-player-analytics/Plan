@@ -31,21 +31,30 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class ServerAccordion extends AbstractAccordion {
+public class ServerAccordion extends Accordion {
 
     private final StringBuilder viewScript;
 
     private final Map<UUID, String> serverNames;
     private PerServerContainer perServer;
 
-    // TODO
-    private Theme theme;
-    private Graphs graphs;
-    private Formatter<Long> yearLongFormatter;
-    private Formatter<Long> timeAmountFormatter;
+    private final Theme theme;
+    private final Graphs graphs;
+    private final Formatter<Long> yearLongFormatter;
+    private final Formatter<Long> timeAmountFormatter;
 
-    public ServerAccordion(PlayerContainer container, Map<UUID, String> serverNames) {
+    public ServerAccordion(
+            PlayerContainer container, Map<UUID, String> serverNames,
+            Theme theme,
+            Graphs graphs,
+            Formatter<Long> yearLongFormatter,
+            Formatter<Long> timeAmountFormatter
+    ) {
         super("server_accordion");
+        this.theme = theme;
+        this.graphs = graphs;
+        this.yearLongFormatter = yearLongFormatter;
+        this.timeAmountFormatter = timeAmountFormatter;
 
         viewScript = new StringBuilder();
 

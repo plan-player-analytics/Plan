@@ -12,6 +12,7 @@ import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
+import com.djrapitops.plan.utilities.html.structure.Accordions;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
@@ -40,6 +41,7 @@ public class PageFactory {
     private final Lazy<ConnectionSystem> connectionSystem;
     private final Lazy<Graphs> graphs;
     private final Lazy<HtmlTables> tables;
+    private final Lazy<Accordions> accordions;
     private final Lazy<Formatters> formatters;
     private final Lazy<HookHandler> hookHandler;
     private final Lazy<DebugLogger> debugLogger;
@@ -56,6 +58,7 @@ public class PageFactory {
             Lazy<ConnectionSystem> connectionSystem,
             Lazy<Graphs> graphs,
             Lazy<HtmlTables> tables,
+            Lazy<Accordions> accordions,
             Lazy<Formatters> formatters,
             Lazy<HookHandler> hookHandler,
             Lazy<DebugLogger> debugLogger,
@@ -70,6 +73,7 @@ public class PageFactory {
         this.connectionSystem = connectionSystem;
         this.graphs = graphs;
         this.tables = tables;
+        this.accordions = accordions;
         this.formatters = formatters;
         this.hookHandler = hookHandler;
         this.debugLogger = debugLogger;
@@ -100,7 +104,8 @@ public class PageFactory {
         return new InspectPage(
                 player, serverNames,
                 version,
-                config.get(), theme.get(), graphs.get(), tables.get(), formatters.get(),
+                config.get(), theme.get(),
+                graphs.get(), tables.get(), accordions.get(), formatters.get(),
                 serverInfo.get(), timings.get()
         );
     }
