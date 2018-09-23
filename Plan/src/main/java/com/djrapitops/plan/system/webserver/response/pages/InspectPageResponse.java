@@ -3,20 +3,20 @@ package com.djrapitops.plan.system.webserver.response.pages;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * @author Rsl1122
  * @since 3.5.2
  */
-public class InspectPageResponse extends Response {
+public class InspectPageResponse extends PageResponse {
 
     private final UUID uuid;
 
@@ -48,5 +48,19 @@ public class InspectPageResponse extends Response {
         refreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"2\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Page will refresh automatically..");
         refreshPage.replacePlaceholders();
         return new InspectPageResponse(null, refreshPage.getContent());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof InspectPageResponse)) return false;
+        if (!super.equals(o)) return false;
+        InspectPageResponse that = (InspectPageResponse) o;
+        return Objects.equals(uuid, that.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), uuid);
     }
 }

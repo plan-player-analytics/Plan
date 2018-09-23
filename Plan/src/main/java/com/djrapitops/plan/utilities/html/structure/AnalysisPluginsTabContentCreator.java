@@ -118,6 +118,7 @@ public class AnalysisPluginsTabContentCreator {
                 Log.toLog(AnalysisPluginsTabContentCreator.class, e);
             } finally {
                 Benchmark.stop("Analysis", "Analysis: Source " + source.getSourcePlugin());
+                source.setAnalysisData(null);
             }
         });
         return containers;

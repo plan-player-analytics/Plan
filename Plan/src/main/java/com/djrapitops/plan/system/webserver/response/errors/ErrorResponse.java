@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.webserver.response.errors;
 
 import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.pages.PageResponse;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author Rsl1122
  */
-public class ErrorResponse extends Response {
+public class ErrorResponse extends PageResponse {
 
     private String title;
     private String paragraph;

@@ -4,6 +4,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.settings.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,13 +30,16 @@ public abstract class Patch {
 
     public boolean hasTable(String tableName) {
         String sql = usingMySQL ?
-                "SELECT * FROM information_schema.TABLES WHERE table_name=? LIMIT 1" :
+                "SELECT * FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=? LIMIT 1" :
                 "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?";
 
         return query(new QueryStatement<Boolean>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
+                if (usingMySQL) {
+                    statement.setString(2, Settings.DB_DATABASE.toString());
+                }
             }
 
             @Override
@@ -48,11 +52,12 @@ public abstract class Patch {
     protected boolean hasColumn(String tableName, String columnName) {
         return usingMySQL ?
                 query(new QueryStatement<Boolean>("SELECT * FROM information_schema.COLUMNS" +
-                        " WHERE TABLE_NAME=? AND COLUMN_NAME=?") {
+                        " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=?") {
                     @Override
                     public void prepare(PreparedStatement statement) throws SQLException {
                         statement.setString(1, tableName);
                         statement.setString(2, columnName);
+                        statement.setString(3, Settings.DB_DATABASE.toString());
                     }
 
                     @Override

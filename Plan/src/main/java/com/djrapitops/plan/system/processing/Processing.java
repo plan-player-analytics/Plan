@@ -9,6 +9,7 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.List;
 import java.util.concurrent.*;
@@ -23,8 +24,8 @@ public class Processing implements SubSystem {
 
     public Processing(Supplier<Locale> locale) {
         this.locale = locale;
-        nonCriticalExecutor = Executors.newFixedThreadPool(6);
-        criticalExecutor = Executors.newFixedThreadPool(2);
+        nonCriticalExecutor = Executors.newFixedThreadPool(6, new ThreadFactoryBuilder().setNameFormat("Plan Non critical-pool-%d").build());
+        criticalExecutor = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setNameFormat("Plan Critical-pool-%d").build());
         saveInstance(nonCriticalExecutor);
         saveInstance(criticalExecutor);
         saveInstance(this);

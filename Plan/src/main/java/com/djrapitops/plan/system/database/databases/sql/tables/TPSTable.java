@@ -151,9 +151,12 @@ public class TPSTable extends Table {
     }
 
     public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) {
+        String subStatement = "SELECT MAX(" + Col.PLAYERS_ONLINE + ") FROM " + tableName +
+                " WHERE " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID +
+                " AND " + Col.DATE + ">= ?";
         String sql = Select.all(tableName)
                 .where(Col.SERVER_ID + "=" + serverTable.statementSelectServerID)
-                .and(Col.PLAYERS_ONLINE + "= (SELECT MAX(" + Col.PLAYERS_ONLINE + ") FROM " + tableName + ")")
+                .and(Col.PLAYERS_ONLINE + "= (" + subStatement + ")")
                 .and(Col.DATE + ">= ?")
                 .toString();
 
@@ -161,13 +164,14 @@ public class TPSTable extends Table {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
-                statement.setLong(2, afterDate);
+                statement.setString(2, serverUUID.toString());
+                statement.setLong(3, afterDate);
+                statement.setLong(4, afterDate);
             }
 
             @Override
             public Optional<TPS> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-
                     TPS tps = TPSBuilder.get()
                             .date(set.getLong(Col.DATE.get()))
                             .tps(set.getDouble(Col.TPS.get()))

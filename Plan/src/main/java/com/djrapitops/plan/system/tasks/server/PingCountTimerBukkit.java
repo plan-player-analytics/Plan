@@ -53,23 +53,23 @@ import java.util.*;
  *
  * @author games647
  */
-public class PingCountTimer extends AbsRunnable implements Listener {
+public class PingCountTimerBukkit extends AbsRunnable implements Listener {
 
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
     public static final int PING_INTERVAL = 2 * 20;
 
-    private static final boolean pingMethodAvailable;
+    private static final boolean PING_METHOD_AVAILABLE;
 
-    private static final MethodHandle pingField;
-    private static final MethodHandle getHandleMethod;
+    private static final MethodHandle PING_FIELD;
+    private static final MethodHandle GET_HANDLE_METHOD;
 
     static {
-        pingMethodAvailable = isPingMethodAvailable();
+        PING_METHOD_AVAILABLE = isPingMethodAvailable();
 
         MethodHandle localHandle = null;
         MethodHandle localPing = null;
-        if (!pingMethodAvailable) {
+        if (!PING_METHOD_AVAILABLE) {
             Class<?> craftPlayerClass = Reflection.getCraftBukkitClass("entity.CraftPlayer");
             Class<?> entityPlayer = Reflection.getMinecraftClass("EntityPlayer");
 
@@ -80,12 +80,12 @@ public class PingCountTimer extends AbsRunnable implements Listener {
 
                 localPing = lookup.findGetter(entityPlayer, "ping", Integer.TYPE);
             } catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException reflectiveEx) {
-                Log.toLog(PingCountTimer.class, reflectiveEx);
+                Log.toLog(PingCountTimerBukkit.class, reflectiveEx);
             }
         }
 
-        getHandleMethod = localHandle;
-        pingField = localPing;
+        GET_HANDLE_METHOD = localHandle;
+        PING_FIELD = localPing;
     }
 
     private final Map<UUID, List<DateObj<Integer>>> playerHistory = new HashMap<>();
@@ -133,7 +133,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
     }
 
     private int getPing(Player player) {
-        if (pingMethodAvailable) {
+        if (PING_METHOD_AVAILABLE) {
             return player.spigot().getPing();
         }
 
@@ -142,8 +142,8 @@ public class PingCountTimer extends AbsRunnable implements Listener {
 
     private int getReflectionPing(Player player) {
         try {
-            Object entityPlayer = getHandleMethod.invoke(player);
-            return (int) pingField.invoke(entityPlayer);
+            Object entityPlayer = GET_HANDLE_METHOD.invoke(player);
+            return (int) PING_FIELD.invoke(entityPlayer);
         } catch (Exception ex) {
             return -1;
         } catch (Throwable throwable) {

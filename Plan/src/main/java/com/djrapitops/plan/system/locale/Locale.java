@@ -1,14 +1,16 @@
 package com.djrapitops.plan.system.locale;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.system.locale.lang.Lang;
+import com.djrapitops.plan.system.locale.lang.*;
 import com.djrapitops.plan.system.settings.Settings;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -71,10 +73,22 @@ public class Locale extends HashMap<Lang, Message> {
 
         String replaced = from;
 
-        // Longest first so that entries that contain each other don't partially replace.
-        List<Entry<Lang, Message>> entries = entrySet().stream().sorted(
-                (one, two) -> Integer.compare(two.getKey().getIdentifier().length(), one.getKey().getIdentifier().length())
-        ).collect(Collectors.toList());
+        Lang[][] langs = new Lang[][]{
+                NetworkPageLang.values(),
+                PlayerPageLang.values(),
+                ServerPageLang.values(),
+                CommonHtmlLang.values()
+        };
+
+        List<Entry<Lang, Message>> entries = Arrays.stream(langs)
+                .flatMap(Arrays::stream)
+                .collect(Collectors.toMap(Function.identity(), this::get))
+                .entrySet().stream()
+                // Longest first so that entries that contain each other don't partially replace.
+                .sorted((one, two) -> Integer.compare(
+                        two.getKey().getIdentifier().length(),
+                        one.getKey().getIdentifier().length()
+                )).collect(Collectors.toList());
 
         for (Entry<Lang, Message> entry : entries) {
             String defaultValue = entry.getKey().getDefault();

@@ -47,6 +47,13 @@ public class DataContainer {
         if (supplier == null) {
             return;
         }
+        map.put(key, supplier);
+    }
+
+    public <T> void putCachingSupplier(Key<T> key, Supplier<T> supplier) {
+        if (supplier == null) {
+            return;
+        }
         map.put(key, new CachingSupplier<>(supplier, timeToLive));
     }
 
