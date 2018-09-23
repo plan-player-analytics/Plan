@@ -5,6 +5,8 @@
 package com.djrapitops.plan.data.element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -25,18 +27,18 @@ import java.util.TreeMap;
  */
 public class InspectContainer {
 
-    protected TreeMap<String, String> values;
+    protected List<String> values;
     protected TreeMap<String, String> html;
     protected TreeMap<String, TableContainer> tables;
 
     public InspectContainer() {
-        values = new TreeMap<>();
+        values = new ArrayList<>();
         html = new TreeMap<>();
         tables = new TreeMap<>();
     }
 
     public final void addValue(String label, Serializable value) {
-        values.put(label, value.toString());
+        values.add(label + ": " + value.toString());
     }
 
     public final void addHtml(String key, String html) {
@@ -52,8 +54,8 @@ public class InspectContainer {
 
         if (!values.isEmpty()) {
             parsed.append("<div class=\"body\">");
-            for (Map.Entry<String, String> entry : values.entrySet()) {
-                parsed.append("<p>").append(entry.getKey()).append(": ").append(entry.getValue()).append("</p>");
+            for (String value : values) {
+                parsed.append("<p>").append(value).append("</p>");
             }
             parsed.append("</div>");
         }
