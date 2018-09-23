@@ -52,11 +52,12 @@ public abstract class Patch {
     protected boolean hasColumn(String tableName, String columnName) {
         return usingMySQL ?
                 query(new QueryStatement<Boolean>("SELECT * FROM information_schema.COLUMNS" +
-                        " WHERE TABLE_NAME=? AND COLUMN_NAME=?") {
+                        " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=?") {
                     @Override
                     public void prepare(PreparedStatement statement) throws SQLException {
                         statement.setString(1, tableName);
                         statement.setString(2, columnName);
+                        statement.setString(3, Settings.DB_DATABASE.toString());
                     }
 
                     @Override
