@@ -8,6 +8,8 @@ import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Abstracted TaskSystem implementation for both Bukkit and Sponge.
  *
@@ -17,8 +19,9 @@ public abstract class ServerTaskSystem extends TaskSystem {
 
     private final PlanConfig config;
     private final NetworkPageRefreshTask networkPageRefreshTask;
+    private final BootAnalysisTask bootAnalysisTask;
     private final PeriodicAnalysisTask periodicAnalysisTask;
-    protected BootAnalysisTask bootAnalysisTask;
+    private final LogsFolderCleanTask logsFolderCleanTask;
 
     public ServerTaskSystem(
             RunnableFactory runnableFactory,
@@ -26,13 +29,14 @@ public abstract class ServerTaskSystem extends TaskSystem {
             PlanConfig config,
             NetworkPageRefreshTask networkPageRefreshTask,
             BootAnalysisTask bootAnalysisTask,
-            PeriodicAnalysisTask periodicAnalysisTask
-    ) {
+            PeriodicAnalysisTask periodicAnalysisTask,
+            LogsFolderCleanTask logsFolderCleanTask) {
         super(runnableFactory, tpsCountTimer);
         this.config = config;
         this.networkPageRefreshTask = networkPageRefreshTask;
         this.bootAnalysisTask = bootAnalysisTask;
         this.periodicAnalysisTask = periodicAnalysisTask;
+        this.logsFolderCleanTask = logsFolderCleanTask;
     }
 
     @Override
@@ -44,25 +48,16 @@ public abstract class ServerTaskSystem extends TaskSystem {
         // Analysis refresh settings
         int analysisRefreshMinutes = config.getNumber(Settings.ANALYSIS_AUTO_REFRESH);
         boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
-        long analysisPeriod = analysisRefreshMinutes * TimeAmount.MINUTE.ticks();
+        long analysisPeriod = TimeAmount.toTicks(analysisRefreshMinutes, TimeUnit.MINUTES);
 
-        registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
-        registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(20L, 5L * TimeAmount.MINUTE.ticks());
-        registerTask(bootAnalysisTask).runTaskLaterAsynchronously(30L * TimeAmount.SECOND.ticks());
+        registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(20L, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
+        registerTask(bootAnalysisTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
 
         if (analysisRefreshTaskIsEnabled) {
             registerTask(periodicAnalysisTask).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }
-    }
 
-    public void cancelBootAnalysis() {
-        try {
-            if (bootAnalysisTask != null) {
-                bootAnalysisTask.cancel();
-                bootAnalysisTask = null;
-            }
-        } catch (Exception ignored) {
-            /* Ignored */
-        }
+        registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
     }
 }

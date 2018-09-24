@@ -33,17 +33,17 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             NetworkPageRefreshTask networkPageRefreshTask,
             BootAnalysisTask bootAnalysisTask,
             PeriodicAnalysisTask periodicAnalysisTask,
-            PingCountTimer pingCountTimer
+            PingCountTimer pingCountTimer,
+            LogsFolderCleanTask logsFolderCleanTask
     ) {
         super(
                 runnableFactory,
-                Check.isPaperAvailable()
-                        ? paperTPSCountTimer
-                        : bukkitTPSCountTimer,
+                Check.isPaperAvailable() ? paperTPSCountTimer : bukkitTPSCountTimer,
                 config,
                 networkPageRefreshTask,
                 bootAnalysisTask,
-                periodicAnalysisTask
+                periodicAnalysisTask,
+                logsFolderCleanTask
         );
         this.plugin = plugin;
         this.pingCountTimer = pingCountTimer;

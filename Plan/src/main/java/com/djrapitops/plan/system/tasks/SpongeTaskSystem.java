@@ -24,7 +24,8 @@ public class SpongeTaskSystem extends ServerTaskSystem {
             SpongeTPSCountTimer spongeTPSCountTimer,
             NetworkPageRefreshTask networkPageRefreshTask,
             BootAnalysisTask bootAnalysisTask,
-            PeriodicAnalysisTask periodicAnalysisTask
+            PeriodicAnalysisTask periodicAnalysisTask,
+            LogsFolderCleanTask logsFolderCleanTask
     ) {
         super(
                 runnableFactory,
@@ -32,7 +33,8 @@ public class SpongeTaskSystem extends ServerTaskSystem {
                 config,
                 networkPageRefreshTask,
                 bootAnalysisTask,
-                periodicAnalysisTask
+                periodicAnalysisTask,
+                logsFolderCleanTask
         );
         this.plugin = plugin;
     }

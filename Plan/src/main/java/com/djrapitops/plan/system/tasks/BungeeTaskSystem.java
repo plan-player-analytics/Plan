@@ -11,6 +11,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
+import java.util.concurrent.TimeUnit;
 
 /**
  * TaskSystem responsible for registering tasks for Bungee.
@@ -21,18 +22,21 @@ public class BungeeTaskSystem extends TaskSystem {
 
     private final EnableConnectionTask enableConnectionTask;
     private final NetworkPageRefreshTask networkPageRefreshTask;
+    private final LogsFolderCleanTask logsFolderCleanTask;
 
     @Inject
     public BungeeTaskSystem(
             RunnableFactory runnableFactory,
             BungeeTPSCountTimer bungeeTPSCountTimer,
             EnableConnectionTask enableConnectionTask,
-            NetworkPageRefreshTask networkPageRefreshTask
+            NetworkPageRefreshTask networkPageRefreshTask,
+            LogsFolderCleanTask logsFolderCleanTask
     ) {
         super(runnableFactory, bungeeTPSCountTimer);
 
         this.enableConnectionTask = enableConnectionTask;
         this.networkPageRefreshTask = networkPageRefreshTask;
+        this.logsFolderCleanTask = logsFolderCleanTask;
     }
 
     @Override
@@ -42,7 +46,8 @@ public class BungeeTaskSystem extends TaskSystem {
 
     private void registerTasks() {
         registerTask(enableConnectionTask).runTaskAsynchronously();
-        registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
-        registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
+        registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
+        registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
     }
 }

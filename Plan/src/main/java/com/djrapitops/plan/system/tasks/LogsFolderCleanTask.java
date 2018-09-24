@@ -1,8 +1,13 @@
 package com.djrapitops.plan.system.tasks;
 
+import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Rsl1122
  */
+@Singleton
 public class LogsFolderCleanTask extends AbsRunnable {
 
     private final int keepLogDayThreshold;
@@ -21,9 +27,14 @@ public class LogsFolderCleanTask extends AbsRunnable {
     private final File folder;
     private final PluginLogger logger;
 
-    public LogsFolderCleanTask(File folder, int keepLogDayThreshold, PluginLogger logger) {
-        this.folder = folder;
-        this.keepLogDayThreshold = keepLogDayThreshold;
+    @Inject
+    public LogsFolderCleanTask(
+            PlanFiles files,
+            PlanConfig config,
+            PluginLogger logger
+    ) {
+        this.folder = files.getLogsFolder();
+        this.keepLogDayThreshold = config.getNumber(Settings.KEEP_LOGS_DAYS);
         this.logger = logger;
     }
 
