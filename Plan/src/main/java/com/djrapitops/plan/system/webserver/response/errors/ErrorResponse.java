@@ -6,8 +6,6 @@ package com.djrapitops.plan.system.webserver.response.errors;
 
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.IOException;
@@ -24,17 +22,15 @@ public class ErrorResponse extends Response {
     private String title;
     private String paragraph;
 
-    // TODO
     private String version;
-    private PlanFiles planFiles;
-    private ErrorHandler errorHandler;
 
-    public ErrorResponse() {
-        try {
-            setContent(planFiles.readCustomizableResourceFlat("web/error.html"));
-        } catch (IOException e) {
-            errorHandler.log(L.WARN, this.getClass(), e);
-        }
+    public ErrorResponse(String version, PlanFiles planFiles) throws IOException {
+        this.version = version;
+        setContent(planFiles.readCustomizableResourceFlat("web/error.html"));
+    }
+
+    public ErrorResponse(String message) {
+        setContent(message);
     }
 
     public void replacePlaceholders() {

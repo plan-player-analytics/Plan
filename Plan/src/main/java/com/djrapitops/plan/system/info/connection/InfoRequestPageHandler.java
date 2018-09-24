@@ -8,12 +8,11 @@ import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -35,16 +34,18 @@ public class InfoRequestPageHandler implements PageHandler {
 
     private final Database database;
     private final ConnectionSystem connectionSystem;
+    private final ResponseFactory responseFactory;
     private final PluginLogger logger;
 
     @Inject
     public InfoRequestPageHandler(
             Database database,
             ConnectionSystem connectionSystem,
-            PluginLogger logger
+            ResponseFactory responseFactory, PluginLogger logger
     ) {
         this.database = database;
         this.connectionSystem = connectionSystem;
+        this.responseFactory = responseFactory;
         this.logger = logger;
     }
 
@@ -54,7 +55,7 @@ public class InfoRequestPageHandler implements PageHandler {
 
         try {
             if (target.isEmpty()) {
-                return new NotFoundResponse(request.getLocale().getString(ErrorPageLang.UNKNOWN_PAGE_404));
+                return responseFactory.pageNotFound404();
             }
 
             if (!request.getRequestMethod().equals("POST")) {

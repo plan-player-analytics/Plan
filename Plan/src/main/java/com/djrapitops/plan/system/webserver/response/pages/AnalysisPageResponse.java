@@ -8,7 +8,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.utilities.html.pages.AnalysisPage;
 import com.djrapitops.plugin.api.utility.log.Log;
 
@@ -23,11 +23,12 @@ public class AnalysisPageResponse extends Response {
     // TODO Split responsibility so that this method does not call system to refresh and also render a refresh page.
     @Deprecated
     public static AnalysisPageResponse refreshNow(UUID serverUUID, Processing processing, InfoSystem infoSystem) {
+        ResponseFactory responseFactory = null; // TODO
         processing.submitNonCritical(() -> {
             try {
                 infoSystem.generateAnalysisPage(serverUUID);
             } catch (NoServersException | ConnectionFailException e) {
-                ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new NotFoundResponse(e.getMessage()));
+                ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> responseFactory.notFound404(e.getMessage()));
             } catch (WebException e) {
                 Log.toLog(AnalysisPageResponse.class.getName(), e);
             }

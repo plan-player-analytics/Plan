@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -30,6 +31,7 @@ public class InfoRequestHandlerFactory {
     private final Lazy<ConnectionSystem> connectionSystem;
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<InfoRequestFactory> infoRequestFactory;
+    private final Lazy<ResponseFactory> responseFactory;
     private final Lazy<PageFactory> pageFactory;
     private final Lazy<HtmlExport> htmlExport;
     private final Lazy<PluginLogger> logger;
@@ -44,6 +46,7 @@ public class InfoRequestHandlerFactory {
             Lazy<ConnectionSystem> connectionSystem,
             Lazy<ServerInfo> serverInfo,
             Lazy<InfoRequestFactory> infoRequestFactory,
+            Lazy<ResponseFactory> responseFactory,
             Lazy<PageFactory> pageFactory,
             Lazy<HtmlExport> htmlExport,
             Lazy<PluginLogger> logger,
@@ -56,6 +59,7 @@ public class InfoRequestHandlerFactory {
         this.connectionSystem = connectionSystem;
         this.serverInfo = serverInfo;
         this.infoRequestFactory = infoRequestFactory;
+        this.responseFactory = responseFactory;
         this.pageFactory = pageFactory;
         this.htmlExport = htmlExport;
         this.logger = logger;
@@ -87,7 +91,7 @@ public class InfoRequestHandlerFactory {
     }
 
     GenerateRequest generateInspectPageRequest() {
-        return new GenerateInspectPageRequest(infoRequestFactory.get(), pageFactory.get(), infoSystem.get());
+        return new GenerateInspectPageRequest(infoRequestFactory.get(), responseFactory.get(), pageFactory.get(), infoSystem.get());
     }
 
     GenerateRequest generateInspectPluginsTabRequest() {

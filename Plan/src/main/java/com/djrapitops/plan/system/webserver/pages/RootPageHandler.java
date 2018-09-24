@@ -8,9 +8,9 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
-import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.RedirectResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +24,17 @@ import java.util.Optional;
  */
 public class RootPageHandler implements PageHandler {
 
+    private final ResponseFactory responseFactory;
+
+    public RootPageHandler(ResponseFactory responseFactory) {
+        this.responseFactory = responseFactory;
+    }
+
     @Override
     public Response getResponse(Request request, List<String> target) throws WebException {
         Optional<Authentication> auth = request.getAuth();
         if (!auth.isPresent()) {
-            return DefaultResponses.BASIC_AUTH.get();
+            return responseFactory.basicAuth();
         }
 
         WebUser webUser = auth.get().getWebUser();
@@ -42,7 +48,7 @@ public class RootPageHandler implements PageHandler {
             case 2:
                 return new RedirectResponse("/player/" + webUser.getName());
             default:
-                return DefaultResponses.FORBIDDEN.get();
+                return responseFactory.forbidden403();
         }
     }
 

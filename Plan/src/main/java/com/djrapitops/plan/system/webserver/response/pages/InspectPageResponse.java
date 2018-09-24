@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.webserver.response.pages;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import org.apache.commons.text.StringSubstitutor;
 
@@ -39,13 +38,5 @@ public class InspectPageResponse extends Response {
 
     private String[] getCalculating() {
         return new String[]{"<li><i class=\"fa fa-spin fa-refresh\"></i><a> Calculating...</a></li>", ""};
-    }
-
-    public static InspectPageResponse getRefreshing() {
-        ErrorResponse refreshPage = new ErrorResponse();
-        refreshPage.setTitle("Player page request is being processed..");
-        refreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"2\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Page will refresh automatically..");
-        refreshPage.replacePlaceholders();
-        return new InspectPageResponse(null, refreshPage.getContent());
     }
 }

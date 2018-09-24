@@ -11,11 +11,9 @@ import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pages.*;
-import com.djrapitops.plan.system.webserver.response.DefaultResponses;
-import com.djrapitops.plan.system.webserver.response.PromptAuthorizationResponse;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
-import com.djrapitops.plan.system.webserver.response.errors.*;
+import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
@@ -34,8 +32,6 @@ import java.util.Optional;
  */
 @Singleton
 public class ResponseHandler extends TreePageHandler {
-
-    private final ResponseFactory responseFactory;
 
     private final DebugPageHandler debugPageHandler;
     private final PlayersPageHandler playersPageHandler;
@@ -59,8 +55,8 @@ public class ResponseHandler extends TreePageHandler {
 
             ErrorHandler errorHandler
     ) {
+        super(responseFactory);
         this.webServer = webServer;
-        this.responseFactory = responseFactory;
         this.debugPageHandler = debugPageHandler;
         this.playersPageHandler = playersPageHandler;
         this.playerPageHandler = playerPageHandler;
@@ -79,7 +75,7 @@ public class ResponseHandler extends TreePageHandler {
         registerPage("server", serverPageHandler);
 
         if (webServer.get().isAuthRequired()) {
-            registerPage("", new RootPageHandler());
+            registerPage("", new RootPageHandler(responseFactory));
         } else {
             registerPage("", responseFactory.redirectResponse("/server"), 5);
         }
@@ -96,26 +92,26 @@ public class ResponseHandler extends TreePageHandler {
         try {
             return getResponse(request, targetString, target);
         } catch (NoServersException | NotFoundException e) {
-            return new NotFoundResponse(e.getMessage());
+            return responseFactory.notFound404(e.getMessage());
         } catch (WebUserAuthException e) {
-            return PromptAuthorizationResponse.getBasicAuthResponse(e);
+            return responseFactory.basicAuthFail(e);
         } catch (ForbiddenException e) {
-            return new ForbiddenResponse(e.getMessage());
+            return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
             return new BadRequestResponse(e.getMessage());
         } catch (UnauthorizedServerException e) {
-            return new UnauthorizedServerResponse(e.getMessage());
+            return responseFactory.unauthorizedServer(e.getMessage());
         } catch (GatewayException e) {
-            return new GatewayErrorResponse(e.getMessage());
+            return responseFactory.gatewayError504(e.getMessage());
         } catch (InternalErrorException e) {
             if (e.getCause() != null) {
-                return new InternalErrorResponse(request.getTarget(), e.getCause());
+                return responseFactory.internalErrorResponse(e.getCause(), request.getTarget());
             } else {
-                return new InternalErrorResponse(request.getTarget(), e);
+                return responseFactory.internalErrorResponse(e, request.getTarget());
             }
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
-            return new InternalErrorResponse(request.getTarget(), e);
+            return responseFactory.internalErrorResponse(e, request.getTarget());
         }
     }
 
@@ -134,9 +130,9 @@ public class ResponseHandler extends TreePageHandler {
             authentication = request.getAuth();
             if (!authentication.isPresent()) {
                 if (webServer.get().isUsingHTTPS()) {
-                    return DefaultResponses.BASIC_AUTH.get();
+                    return responseFactory.basicAuth();
                 } else {
-                    return DefaultResponses.FORBIDDEN.get();
+                    return responseFactory.forbidden403();
                 }
             }
         }
@@ -148,7 +144,7 @@ public class ResponseHandler extends TreePageHandler {
             if (!isAuthRequired || isAuthorized) {
                 return pageHandler.getResponse(request, target);
             }
-            return DefaultResponses.FORBIDDEN.get();
+            return responseFactory.forbidden403();
         }
     }
 }

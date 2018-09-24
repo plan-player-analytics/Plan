@@ -16,7 +16,6 @@ import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
@@ -76,9 +75,9 @@ public class PlayerPageHandler implements PageHandler {
                 return responseFactory.playerNotFound404();
             }
         } catch (NoServersException e) {
-            ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> new NotFoundResponse(e.getMessage()));
+            ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> responseFactory.notFound404(e.getMessage()));
         }
-        return InspectPageResponse.getRefreshing();
+        return responseFactory.serverNotFound404();
     }
 
     private Response playerResponseOrNotFound(UUID uuid) throws WebException {

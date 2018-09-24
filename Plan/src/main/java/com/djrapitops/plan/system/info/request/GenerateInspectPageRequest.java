@@ -10,7 +10,7 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -25,6 +25,7 @@ import java.util.UUID;
 public class GenerateInspectPageRequest extends InfoRequestWithVariables implements GenerateRequest {
 
     private final InfoRequestFactory infoRequestFactory;
+    private final ResponseFactory responseFactory;
     private final PageFactory pageFactory;
     private final InfoSystem infoSystem;
 
@@ -32,21 +33,23 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables impleme
 
     GenerateInspectPageRequest(
             InfoRequestFactory infoRequestFactory,
-            PageFactory pageFactory,
+            ResponseFactory responseFactory, PageFactory pageFactory,
             InfoSystem infoSystem
     ) {
         this.infoRequestFactory = infoRequestFactory;
+        this.responseFactory = responseFactory;
         this.pageFactory = pageFactory;
         this.infoSystem = infoSystem;
     }
 
-    public GenerateInspectPageRequest(
+    GenerateInspectPageRequest(
             UUID uuid,
             InfoRequestFactory infoRequestFactory,
-            PageFactory pageFactory,
+            ResponseFactory responseFactory, PageFactory pageFactory,
             InfoSystem infoSystem
     ) {
         this.infoRequestFactory = infoRequestFactory;
+        this.responseFactory = responseFactory;
         this.pageFactory = pageFactory;
         this.infoSystem = infoSystem;
 
@@ -75,7 +78,7 @@ public class GenerateInspectPageRequest extends InfoRequestWithVariables impleme
             html = getHtml(uuid);
             infoSystem.getConnectionSystem().sendWideInfoRequest(infoRequestFactory.generateInspectPluginsTabRequest(uuid));
         } catch (NotFoundException e) {
-            html = new NotFoundResponse(e.getMessage()).getContent();
+            html = responseFactory.notFound404(e.getMessage()).getContent();
         }
         infoSystem.sendRequest(infoRequestFactory.cacheInspectPageRequest(uuid, html));
     }

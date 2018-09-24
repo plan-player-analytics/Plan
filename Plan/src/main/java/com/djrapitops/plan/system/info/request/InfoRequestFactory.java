@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -31,6 +32,7 @@ public class InfoRequestFactory {
     private final Lazy<ConnectionSystem> connectionSystem;
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<InfoRequestFactory> infoRequestFactory;
+    private final Lazy<ResponseFactory> responseFactory;
     private final Lazy<PageFactory> pageFactory;
     private final Lazy<HtmlExport> htmlExport;
     private final Lazy<PluginLogger> logger;
@@ -45,6 +47,7 @@ public class InfoRequestFactory {
             Lazy<ConnectionSystem> connectionSystem,
             Lazy<ServerInfo> serverInfo,
             Lazy<InfoRequestFactory> infoRequestFactory,
+            Lazy<ResponseFactory> responseFactory,
             Lazy<PageFactory> pageFactory,
             Lazy<HtmlExport> htmlExport,
             Lazy<PluginLogger> logger,
@@ -57,6 +60,7 @@ public class InfoRequestFactory {
         this.connectionSystem = connectionSystem;
         this.serverInfo = serverInfo;
         this.infoRequestFactory = infoRequestFactory;
+        this.responseFactory = responseFactory;
         this.pageFactory = pageFactory;
         this.htmlExport = htmlExport;
         this.logger = logger;
@@ -84,7 +88,7 @@ public class InfoRequestFactory {
     }
 
     public GenerateRequest generateInspectPageRequest(UUID uuid) {
-        return new GenerateInspectPageRequest(uuid, this, pageFactory.get(), infoSystem.get());
+        return new GenerateInspectPageRequest(uuid, this, responseFactory.get(), pageFactory.get(), infoSystem.get());
     }
 
     public GenerateInspectPluginsTabRequest generateInspectPluginsTabRequest(UUID uuid) {

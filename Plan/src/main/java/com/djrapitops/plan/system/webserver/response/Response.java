@@ -90,6 +90,7 @@ public abstract class Response {
         exchange.sendResponseHeaders(getCode(), 0);
 
         String sentContent = getContent();
+        // TODO Smell
         if (!(this instanceof JavaScriptResponse)) {
             sentContent = locale.replaceMatchingLanguage(sentContent);
         }

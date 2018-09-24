@@ -42,7 +42,13 @@ public class AnalysisPage implements Page {
     }
 
     public static String getRefreshingHtml() {
-        ErrorResponse refreshPage = new ErrorResponse();
+        // TODO Work this out
+        ErrorResponse refreshPage = null;
+        try {
+            refreshPage = new ErrorResponse("", null);
+        } catch (IOException e) {
+
+        }
         refreshPage.setTitle("Analysis is being refreshed..");
         refreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"5\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
         refreshPage.replacePlaceholders();
