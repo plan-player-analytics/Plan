@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class WebServer implements SubSystem {
 
     private final Locale locale;
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
     private final PlanConfig config;
 
     private final ServerProperties serverProperties;
@@ -58,7 +58,7 @@ public class WebServer implements SubSystem {
     @Inject
     public WebServer(
             Locale locale,
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             ServerProperties serverProperties,
             PluginLogger logger,
@@ -66,7 +66,7 @@ public class WebServer implements SubSystem {
             RequestHandler requestHandler
     ) {
         this.locale = locale;
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.config = config;
         this.serverProperties = serverProperties;
 
@@ -136,7 +136,7 @@ public class WebServer implements SubSystem {
     private boolean startHttpsServer() {
         String keyStorePath = config.getString(Settings.WEBSERVER_CERTIFICATE_PATH);
         if (!Paths.get(keyStorePath).isAbsolute()) {
-            keyStorePath = fileSystem.getDataFolder() + File.separator + keyStorePath;
+            keyStorePath = planFiles.getDataFolder() + File.separator + keyStorePath;
         }
 
         char[] storepass = config.getString(Settings.WEBSERVER_CERTIFICATE_STOREPASS).toCharArray();

@@ -7,7 +7,7 @@ package com.djrapitops.plan.utilities.html.pages;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.keys.NetworkKeys;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
@@ -25,16 +25,16 @@ public class NetworkPage implements Page {
 
     private final NetworkContainer networkContainer;
 
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
     private final ServerProperties serverProperties;
 
     public NetworkPage(
             NetworkContainer networkContainer,
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             ServerProperties serverProperties
     ) {
         this.networkContainer = networkContainer;
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.serverProperties = serverProperties;
     }
 
@@ -60,7 +60,7 @@ public class NetworkPage implements Page {
                     ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
             placeholderReplacer.put("tabContentServers", networkPageContent.getContents());
 
-            return placeholderReplacer.apply(fileSystem.readCustomizableResourceFlat("web/network.html"));
+            return placeholderReplacer.apply(planFiles.readCustomizableResourceFlat("web/network.html"));
         } catch (Exception e) {
             throw new ParseException(e);
         }

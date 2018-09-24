@@ -7,7 +7,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FileSystemModule;
+import com.djrapitops.plan.modules.FilesModule;
 import com.djrapitops.plan.modules.SuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectBindingModule;
 import com.djrapitops.plan.modules.bungee.BungeeInfoModule;
@@ -37,7 +37,7 @@ import java.io.InputStream;
         SuperClassBindingModule.class,
         SystemObjectBindingModule.class,
         APFModule.class,
-        FileSystemModule.class,
+        FilesModule.class,
         BungeeSuperClassBindingModule.class,
         BungeeInfoModule.class
 })

@@ -3,7 +3,7 @@ package com.djrapitops.plan.utilities.html.pages;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -22,7 +22,7 @@ import java.util.List;
 public class PlayersPage implements Page {
 
     private final String version;
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
     private final PlanConfig config;
     private final Database database;
     private final ServerInfo serverInfo;
@@ -33,7 +33,7 @@ public class PlayersPage implements Page {
 
     PlayersPage(
             String version,
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             Database database,
             ServerInfo serverInfo,
@@ -41,7 +41,7 @@ public class PlayersPage implements Page {
             Timings timings
     ) {
         this.version = version;
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.config = config;
         this.database = database;
         this.serverInfo = serverInfo;
@@ -66,7 +66,7 @@ public class PlayersPage implements Page {
             placeholderReplacer.put("playersTable", tables.playerTableForPlayersPage(playerContainers).parseHtml());
             timings.end("Pages", "Players page players table parsing");
 
-            return placeholderReplacer.apply(fileSystem.readCustomizableResourceFlat("web/players.html"));
+            return placeholderReplacer.apply(planFiles.readCustomizableResourceFlat("web/players.html"));
         } catch (Exception e) {
             throw new ParseException(e);
         }

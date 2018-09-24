@@ -1,6 +1,6 @@
 package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import dagger.Module;
 import dagger.Provides;
 
@@ -9,18 +9,18 @@ import javax.inject.Singleton;
 import java.io.File;
 
 /**
- * Dagger Module for the Plan FileSystem.
+ * Dagger Module for the Plan files.
  *
  * @author Rsl1122
  */
 @Module
-public class FileSystemModule {
+public class FilesModule {
 
     @Provides
     @Named("configFile")
     @Singleton
-    File provideConfigFile(FileSystem fileSystem) {
-        return fileSystem.getConfigFile();
+    File provideConfigFile(PlanFiles planFiles) {
+        return planFiles.getConfigFile();
     }
 
 }

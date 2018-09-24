@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -25,19 +25,19 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
 
     @Inject
     public SpongeConfigSystem(
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             Theme theme,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(fileSystem, config, theme, errorHandler);
+        super(planFiles, config, theme, errorHandler);
         this.logger = logger;
     }
 
     @Override
     public void enable() throws EnableException {
-        firstInstall = !fileSystem.getConfigFile().exists();
+        firstInstall = !planFiles.getConfigFile().exists();
         super.enable();
         config.getNetworkSettings().loadSettingsFromDB();
     }

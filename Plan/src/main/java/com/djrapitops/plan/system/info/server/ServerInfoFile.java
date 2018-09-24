@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.info.server;
 
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -23,16 +23,16 @@ import java.util.UUID;
  */
 public class ServerInfoFile extends Config {
 
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
 
     @Inject
-    public ServerInfoFile(FileSystem fileSystem) {
-        super(fileSystem.getFileFromPluginFolder("ServerInfoFile.yml"));
-        this.fileSystem = fileSystem;
+    public ServerInfoFile(PlanFiles planFiles) {
+        super(planFiles.getFileFromPluginFolder("ServerInfoFile.yml"));
+        this.planFiles = planFiles;
     }
 
     public void prepare() throws IOException {
-        copyDefaults(fileSystem.readFromResource("DefaultServerInfoFile.yml"));
+        copyDefaults(planFiles.readFromResource("DefaultServerInfoFile.yml"));
         save();
     }
 

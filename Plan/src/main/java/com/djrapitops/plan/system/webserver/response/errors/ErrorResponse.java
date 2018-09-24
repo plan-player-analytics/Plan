@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.webserver.response.errors;
 
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -26,12 +26,12 @@ public class ErrorResponse extends Response {
 
     // TODO
     private String version;
-    private FileSystem fileSystem;
+    private PlanFiles planFiles;
     private ErrorHandler errorHandler;
 
     public ErrorResponse() {
         try {
-            setContent(fileSystem.readCustomizableResourceFlat("web/error.html"));
+            setContent(planFiles.readCustomizableResourceFlat("web/error.html"));
         } catch (IOException e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }

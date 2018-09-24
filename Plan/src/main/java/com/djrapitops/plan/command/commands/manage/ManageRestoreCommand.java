@@ -3,7 +3,7 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -35,7 +35,7 @@ public class ManageRestoreCommand extends CommandNode {
     private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
     private final SQLiteDB.Factory sqliteFactory;
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
 
     @Inject
     public ManageRestoreCommand(
@@ -43,7 +43,7 @@ public class ManageRestoreCommand extends CommandNode {
             Processing processing,
             DBSystem dbSystem,
             SQLiteDB.Factory sqliteFactory,
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             ErrorHandler errorHandler
     ) {
         super("restore", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
@@ -52,7 +52,7 @@ public class ManageRestoreCommand extends CommandNode {
         this.processing = processing;
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.errorHandler = errorHandler;
 
         setArguments("<Filename.db>", "<dbTo>", "[-a]");
@@ -96,7 +96,7 @@ public class ManageRestoreCommand extends CommandNode {
                 String backupDBName = backupDbName;
                 boolean containsDBFileExtension = backupDBName.endsWith(".db");
 
-                File backupDBFile = fileSystem.getFileFromPluginFolder(backupDBName + (containsDBFileExtension ? "" : ".db"));
+                File backupDBFile = planFiles.getFileFromPluginFolder(backupDBName + (containsDBFileExtension ? "" : ".db"));
 
                 if (!backupDBFile.exists()) {
                     sender.sendMessage(locale.getString(ManageLang.FAIL_FILE_NOT_FOUND, backupDBFile.getAbsolutePath()));

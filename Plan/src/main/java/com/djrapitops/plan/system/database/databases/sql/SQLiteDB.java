@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -183,13 +183,13 @@ public class SQLiteDB extends SQLDB {
         private final PluginLogger logger;
         private final Timings timings;
         private final ErrorHandler errorHandler;
-        private FileSystem fileSystem;
+        private PlanFiles planFiles;
 
         @Inject
         public Factory(
                 Locale locale,
                 PlanConfig config,
-                FileSystem fileSystem,
+                PlanFiles planFiles,
                 RunnableFactory runnableFactory,
                 PluginLogger logger,
                 Timings timings,
@@ -197,7 +197,7 @@ public class SQLiteDB extends SQLDB {
         ) {
             this.locale = locale;
             this.config = config;
-            this.fileSystem = fileSystem;
+            this.planFiles = planFiles;
             this.runnableFactory = runnableFactory;
             this.logger = logger;
             this.timings = timings;
@@ -209,7 +209,7 @@ public class SQLiteDB extends SQLDB {
         }
 
         public SQLiteDB usingFileCalled(String fileName) {
-            return usingFile(fileSystem.getFileFromPluginFolder(fileName + ".db"));
+            return usingFile(planFiles.getFileFromPluginFolder(fileName + ".db"));
         }
 
         public SQLiteDB usingFile(File databaseFile) {

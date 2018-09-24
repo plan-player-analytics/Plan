@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.webserver.response;
 
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -21,12 +21,12 @@ import java.io.IOException;
 public class FileResponse extends Response {
 
     // TODO
-    private FileSystem fileSystem;
+    private PlanFiles planFiles;
 
     public FileResponse(String fileName) {
         super.setHeader("HTTP/1.1 200 OK");
         try {
-            super.setContent(fileSystem.readCustomizableResourceFlat(fileName));
+            super.setContent(planFiles.readCustomizableResourceFlat(fileName));
         } catch (IOException e) {
             super.setContent(new NotFoundResponse(fileName + " was not found inside the .jar or /plugins/Plan/ folder").getContent());
         }

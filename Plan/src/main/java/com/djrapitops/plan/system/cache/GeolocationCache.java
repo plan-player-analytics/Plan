@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
@@ -40,7 +40,7 @@ import java.util.zip.GZIPInputStream;
 public class GeolocationCache implements SubSystem {
 
     private final Locale locale;
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
     private final PlanConfig config;
     private final PluginLogger logger;
     private final Map<String, String> cached;
@@ -50,12 +50,12 @@ public class GeolocationCache implements SubSystem {
     @Inject
     public GeolocationCache(
             Locale locale,
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             PluginLogger logger
     ) {
         this.locale = locale;
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.config = config;
         this.logger = logger;
 
@@ -64,7 +64,7 @@ public class GeolocationCache implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        geolocationDB = fileSystem.getFileFromPluginFolder("GeoIP.dat");
+        geolocationDB = planFiles.getFileFromPluginFolder("GeoIP.dat");
         if (config.isTrue(Settings.DATA_GEOLOCATIONS)) {
             try {
                 checkDB();

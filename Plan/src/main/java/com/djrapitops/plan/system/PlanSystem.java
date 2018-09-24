@@ -11,7 +11,7 @@ import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.cache.CacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.export.ExportSystem;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.importing.ImportSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -38,7 +38,7 @@ import javax.inject.Singleton;
 @Singleton
 public class PlanSystem implements SubSystem {
 
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
     private final ConfigSystem configSystem;
     private final VersionCheckSystem versionCheckSystem;
     private final LocaleSystem localeSystem;
@@ -60,7 +60,7 @@ public class PlanSystem implements SubSystem {
 
     @Inject
     public PlanSystem(
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             ConfigSystem configSystem,
             VersionCheckSystem versionCheckSystem,
             LocaleSystem localeSystem,
@@ -78,7 +78,7 @@ public class PlanSystem implements SubSystem {
             PlanAPI planAPI,
             ErrorHandler errorHandler
     ) {
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.configSystem = configSystem;
         this.versionCheckSystem = versionCheckSystem;
         this.localeSystem = localeSystem;
@@ -105,7 +105,7 @@ public class PlanSystem implements SubSystem {
     @Override
     public void enable() throws EnableException {
         enableSystems(
-                fileSystem,
+                planFiles,
                 configSystem,
                 localeSystem,
                 versionCheckSystem,
@@ -143,7 +143,7 @@ public class PlanSystem implements SubSystem {
                 serverInfo,
                 localeSystem,
                 configSystem,
-                fileSystem,
+                planFiles,
                 versionCheckSystem
         );
     }
@@ -170,8 +170,8 @@ public class PlanSystem implements SubSystem {
         return configSystem;
     }
 
-    public FileSystem getFileSystem() {
-        return fileSystem;
+    public PlanFiles getPlanFiles() {
+        return planFiles;
     }
 
     public DBSystem getDatabaseSystem() {

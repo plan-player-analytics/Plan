@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author Rsl1122
  */
 @Singleton
-public class FileSystem implements SubSystem {
+public class PlanFiles implements SubSystem {
 
     private final PlanPlugin plugin;
 
@@ -33,7 +33,7 @@ public class FileSystem implements SubSystem {
     private final File configFile;
 
     @Inject
-    public FileSystem(PlanPlugin plugin) {
+    public PlanFiles(PlanPlugin plugin) {
         this.dataFolder = plugin.getDataFolder();
         this.plugin = plugin;
         this.configFile = getFileFromPluginFolder("config.yml");
@@ -70,7 +70,7 @@ public class FileSystem implements SubSystem {
                     () -> new EnableException("Could not create config file at " + configFile.getAbsolutePath()));
 
             // TODO Log Keep Day threshold from Settings
-            // TODO Move This task creation outside of FileSystem class
+            // TODO Move This task creation outside of PlanFiles class
             plugin.getRunnableFactory().create("Logs folder Clean Task",
                     new LogsFolderCleanTask(getLogsFolder(), 5, plugin.getPluginLogger())
             ).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));

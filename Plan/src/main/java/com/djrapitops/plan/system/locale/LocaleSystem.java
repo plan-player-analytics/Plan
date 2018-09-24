@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.locale;
 
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.lang.*;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class LocaleSystem implements SubSystem {
 
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
     private final PlanConfig config;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
@@ -37,12 +37,12 @@ public class LocaleSystem implements SubSystem {
 
     @Inject
     public LocaleSystem(
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.config = config;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -72,7 +72,7 @@ public class LocaleSystem implements SubSystem {
 
     @Override
     public void enable() {
-        File localeFile = fileSystem.getLocaleFile();
+        File localeFile = planFiles.getLocaleFile();
 
         if (config.isTrue(Settings.WRITE_NEW_LOCALE)) {
             writeNewDefaultLocale(localeFile);

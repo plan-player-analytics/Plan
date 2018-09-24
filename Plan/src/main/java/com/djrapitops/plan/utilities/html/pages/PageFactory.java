@@ -5,7 +5,7 @@ import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -35,7 +35,7 @@ import java.util.UUID;
 public class PageFactory {
 
     private final String version;
-    private final Lazy<FileSystem> fileSystem;
+    private final Lazy<PlanFiles> fileSystem;
     private final Lazy<PlanConfig> config;
     private final Lazy<Theme> theme;
     private final Lazy<Database> database;
@@ -53,7 +53,7 @@ public class PageFactory {
     @Inject
     public PageFactory(
             @Named("currentVersion") String version,
-            Lazy<FileSystem> fileSystem,
+            Lazy<PlanFiles> fileSystem,
             Lazy<PlanConfig> config,
             Lazy<Theme> theme,
             Lazy<Database> database,

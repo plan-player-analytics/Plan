@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -25,17 +25,17 @@ public class BukkitConfigSystem extends ConfigSystem {
 
     @Inject
     public BukkitConfigSystem(
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             Theme theme,
             ErrorHandler errorHandler
     ) {
-        super(fileSystem, config, theme, errorHandler);
+        super(planFiles, config, theme, errorHandler);
     }
 
     @Override
     protected void copyDefaults() throws IOException {
-        config.copyDefaults(fileSystem.readFromResource("config.yml"));
+        config.copyDefaults(planFiles.readFromResource("config.yml"));
     }
 
     @Override

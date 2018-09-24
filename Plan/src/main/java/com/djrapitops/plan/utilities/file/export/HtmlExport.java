@@ -9,7 +9,7 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
@@ -42,7 +42,7 @@ public class HtmlExport extends SpecificExport {
     private final PlanPlugin plugin;
     private final Theme theme;
     private final Processing processing;
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
     private final Database database;
     private final PageFactory pageFactory;
     private final ConnectionSystem connectionSystem;
@@ -51,7 +51,7 @@ public class HtmlExport extends SpecificExport {
     @Inject
     public HtmlExport(
             PlanPlugin plugin,
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             Theme theme,
             Processing processing,
@@ -61,11 +61,11 @@ public class HtmlExport extends SpecificExport {
             ConnectionSystem connectionSystem,
             ErrorHandler errorHandler
     ) {
-        super(fileSystem, config, serverInfo);
+        super(planFiles, config, serverInfo);
         this.plugin = plugin;
         this.theme = theme;
         this.processing = processing;
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.database = database;
         this.pageFactory = pageFactory;
         this.connectionSystem = connectionSystem;
@@ -186,7 +186,7 @@ public class HtmlExport extends SpecificExport {
         copyFromJar(resources);
 
         try {
-            String demo = fileSystem.readFromResourceFlat("web/js/demo.js")
+            String demo = planFiles.readFromResourceFlat("web/js/demo.js")
                     .replace("${defaultTheme}", theme.getValue(ThemeVal.THEME_DEFAULT));
             List<String> lines = Arrays.asList(demo.split("\n"));
             File outputFolder = new File(this.outputFolder, "js");

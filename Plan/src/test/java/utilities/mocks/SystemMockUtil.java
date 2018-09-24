@@ -30,7 +30,7 @@ public class SystemMockUtil {
     }
 
     public SystemMockUtil enableConfigSystem() throws Exception {
-        bukkitSystem.getFileSystem().enable();
+        bukkitSystem.getPlanFiles().enable();
         bukkitSystem.getConfigSystem().enable();
         return this;
     }

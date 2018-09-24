@@ -12,7 +12,7 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -48,7 +48,7 @@ public class InspectPage implements Page {
 
     private final String version;
 
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
     private final PlanConfig config;
     private final Theme theme;
     private final Graphs graphs;
@@ -65,7 +65,7 @@ public class InspectPage implements Page {
     InspectPage(
             PlayerContainer player, Map<UUID, String> serverNames,
             String version,
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             Theme theme,
             Graphs graphs,
@@ -78,7 +78,7 @@ public class InspectPage implements Page {
         this.player = player;
         this.serverNames = serverNames;
         this.version = version;
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.config = config;
         this.theme = theme;
         this.graphs = graphs;
@@ -231,7 +231,7 @@ public class InspectPage implements Page {
                         : serverName
         );
 
-        return replacer.apply(fileSystem.readCustomizableResourceFlat("web/player.html"));
+        return replacer.apply(planFiles.readCustomizableResourceFlat("web/player.html"));
     }
 
     private void sessionsAndPlaytime(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator daySessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {

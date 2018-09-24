@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -24,18 +24,18 @@ import java.io.IOException;
 @Singleton
 public abstract class ConfigSystem implements SubSystem {
 
-    protected final FileSystem fileSystem;
+    protected final PlanFiles planFiles;
     protected final PlanConfig config;
     protected final Theme theme;
     protected final ErrorHandler errorHandler;
 
     public ConfigSystem(
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             Theme theme,
             ErrorHandler errorHandler
     ) {
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.config = config;
         this.theme = theme;
         this.errorHandler = errorHandler;

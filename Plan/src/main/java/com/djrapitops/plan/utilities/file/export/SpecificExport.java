@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.utilities.file.export;
 
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -29,7 +29,7 @@ import java.util.UUID;
  */
 public abstract class SpecificExport implements Runnable {
 
-    private final FileSystem fileSystem;
+    private final PlanFiles planFiles;
     private final PlanConfig config;
     private final ServerInfo serverInfo;
 
@@ -37,11 +37,11 @@ public abstract class SpecificExport implements Runnable {
     private final boolean usingBungee;
 
     protected SpecificExport(
-            FileSystem fileSystem,
+            PlanFiles planFiles,
             PlanConfig config,
             ServerInfo serverInfo
     ) {
-        this.fileSystem = fileSystem;
+        this.planFiles = planFiles;
         this.config = config;
         this.serverInfo = serverInfo;
         outputFolder = getFolder();
@@ -56,7 +56,7 @@ public abstract class SpecificExport implements Runnable {
         if (isAbsolute) {
             folder = new File(path);
         } else {
-            File dataFolder = fileSystem.getDataFolder();
+            File dataFolder = planFiles.getDataFolder();
             folder = new File(dataFolder, path);
         }
 

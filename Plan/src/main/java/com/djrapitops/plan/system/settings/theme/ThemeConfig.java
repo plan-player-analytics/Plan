@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.settings.theme;
 
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.config.Config;
@@ -27,8 +27,8 @@ import java.util.List;
 public class ThemeConfig extends Config {
 
     @Inject
-    public ThemeConfig(FileSystem fileSystem, PlanConfig config, PluginLogger logger) {
-        this(getConfigFile(fileSystem), getDefaults(fileSystem, config, logger));
+    public ThemeConfig(PlanFiles planFiles, PlanConfig config, PluginLogger logger) {
+        this(getConfigFile(planFiles), getDefaults(planFiles, config, logger));
     }
 
     private ThemeConfig(File configFile, List<String> defaults) {
@@ -43,12 +43,12 @@ public class ThemeConfig extends Config {
         }
     }
 
-    private static List<String> getDefaults(FileSystem fileSystem, PlanConfig config, PluginLogger logger) {
+    private static List<String> getDefaults(PlanFiles planFiles, PlanConfig config, PluginLogger logger) {
         String fileName = config.getString(Settings.THEME_BASE);
         String fileLocation = getFileLocation(fileName);
 
         try {
-            return fileSystem.readFromResource(fileLocation);
+            return planFiles.readFromResource(fileLocation);
         } catch (IOException e) {
             logger.error("Could not find theme " + fileLocation + ". Attempting to use default.");
             return new ArrayList<>();
@@ -82,7 +82,7 @@ public class ThemeConfig extends Config {
         }
     }
 
-    private static File getConfigFile(FileSystem fileSystem) {
-        return fileSystem.getFileFromPluginFolder("theme.yml");
+    private static File getConfigFile(PlanFiles planFiles) {
+        return planFiles.getFileFromPluginFolder("theme.yml");
     }
 }
