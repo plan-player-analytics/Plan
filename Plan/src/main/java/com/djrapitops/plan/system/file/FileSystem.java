@@ -39,10 +39,6 @@ public class FileSystem implements SubSystem {
         this.configFile = getFileFromPluginFolder("config.yml");
     }
 
-    public List<String> readFromResource(String fileName) throws IOException {
-        return FileUtil.lines(plugin, fileName);
-    }
-
     public File getDataFolder() {
         return dataFolder;
     }
@@ -88,8 +84,42 @@ public class FileSystem implements SubSystem {
         // No disable actions necessary.
     }
 
+    /**
+     * Read a file from jar as lines.
+     *
+     * @param fileName Name of the file.
+     * @return lines of the file
+     * @throws IOException If the resource can not be read.
+     */
+    public List<String> readFromResource(String fileName) throws IOException {
+        return FileUtil.lines(plugin, fileName);
+    }
+
+    /**
+     * Read a file from jar as a flat String.
+     *
+     * @param fileName Name of the file
+     * @return Flattened lines with {@code \r\n} line separators.
+     * @throws IOException If the resource can not be read.
+     */
     public String readFromResourceFlat(String fileName) throws IOException {
-        List<String> lines = readFromResource(fileName);
+        return flatten(readFromResource(fileName));
+    }
+
+    /**
+     * Read a file from jar or /plugins/Plan/ folder.
+     *
+     * @param fileName Name of the file
+     * @return Flattened lines with {@code \r\n} line separators.
+     * @throws IOException If the resource can not be read.
+     */
+    public String readCustomizableResourceFlat(String fileName) throws IOException {
+        return flatten(FileUtil.lines(
+                plugin, new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName
+        ));
+    }
+
+    private String flatten(List<String> lines) {
         StringBuilder flat = new StringBuilder();
         for (String line : lines) {
             flat.append(line).append("\r\n");

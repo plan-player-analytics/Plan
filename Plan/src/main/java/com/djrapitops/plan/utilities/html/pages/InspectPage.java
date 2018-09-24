@@ -12,13 +12,13 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
-import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
@@ -48,6 +48,7 @@ public class InspectPage implements Page {
 
     private final String version;
 
+    private final FileSystem fileSystem;
     private final PlanConfig config;
     private final Theme theme;
     private final Graphs graphs;
@@ -64,6 +65,7 @@ public class InspectPage implements Page {
     InspectPage(
             PlayerContainer player, Map<UUID, String> serverNames,
             String version,
+            FileSystem fileSystem,
             PlanConfig config,
             Theme theme,
             Graphs graphs,
@@ -76,6 +78,7 @@ public class InspectPage implements Page {
         this.player = player;
         this.serverNames = serverNames;
         this.version = version;
+        this.fileSystem = fileSystem;
         this.config = config;
         this.theme = theme;
         this.graphs = graphs;
@@ -228,7 +231,7 @@ public class InspectPage implements Page {
                         : serverName
         );
 
-        return replacer.apply(FileUtil.getStringFromResource("web/player.html"));
+        return replacer.apply(fileSystem.readCustomizableResourceFlat("web/player.html"));
     }
 
     private void sessionsAndPlaytime(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator daySessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {

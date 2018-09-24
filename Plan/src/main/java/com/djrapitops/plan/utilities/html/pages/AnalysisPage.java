@@ -6,8 +6,8 @@ package com.djrapitops.plan.utilities.html.pages;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
+import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
-import com.djrapitops.plan.utilities.file.FileUtil;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plugin.api.Benchmark;
@@ -28,10 +28,16 @@ public class AnalysisPage implements Page {
 
     private final AnalysisContainer analysisContainer;
 
+    private final FileSystem fileSystem;
     private final Formatter<Double> decimalFormatter;
 
-    AnalysisPage(AnalysisContainer analysisContainer, Formatter<Double> decimalFormatter) {
+    AnalysisPage(
+            AnalysisContainer analysisContainer,
+            FileSystem fileSystem,
+            Formatter<Double> decimalFormatter
+    ) {
         this.analysisContainer = analysisContainer;
+        this.fileSystem = fileSystem;
         this.decimalFormatter = decimalFormatter;
     }
 
@@ -67,7 +73,7 @@ public class AnalysisPage implements Page {
         performanceNumbers(placeholderReplacer);
 
         try {
-            return placeholderReplacer.apply(FileUtil.getStringFromResource("web/server.html"));
+            return placeholderReplacer.apply(fileSystem.readCustomizableResourceFlat("web/server.html"));
         } catch (IOException e) {
             throw new ParseException(e);
         } finally {

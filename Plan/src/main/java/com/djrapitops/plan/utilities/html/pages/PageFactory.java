@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -34,6 +35,7 @@ import java.util.UUID;
 public class PageFactory {
 
     private final String version;
+    private final Lazy<FileSystem> fileSystem;
     private final Lazy<PlanConfig> config;
     private final Lazy<Theme> theme;
     private final Lazy<Database> database;
@@ -51,6 +53,7 @@ public class PageFactory {
     @Inject
     public PageFactory(
             @Named("currentVersion") String version,
+            Lazy<FileSystem> fileSystem,
             Lazy<PlanConfig> config,
             Lazy<Theme> theme,
             Lazy<Database> database,
@@ -66,6 +69,7 @@ public class PageFactory {
             Lazy<ErrorHandler> errorHandler
     ) {
         this.version = version;
+        this.fileSystem = fileSystem;
         this.config = config;
         this.theme = theme;
         this.database = database;
@@ -90,12 +94,14 @@ public class PageFactory {
     }
 
     public PlayersPage playersPage() {
-        return new PlayersPage(version, config.get(), database.get(), serverInfo.get(), tables.get(), timings.get());
+        return new PlayersPage(version, fileSystem.get(), config.get(),
+                database.get(), serverInfo.get(), tables.get(),
+                timings.get());
     }
 
     public AnalysisPage analysisPage(UUID serverUUID) {
         AnalysisContainer analysisContainer = new AnalysisContainer(database.get().fetch().getServerContainer(serverUUID));
-        return new AnalysisPage(analysisContainer, formatters.get().decimals());
+        return new AnalysisPage(analysisContainer, fileSystem.get(), formatters.get().decimals());
     }
 
     public InspectPage inspectPage(UUID uuid) {
@@ -104,7 +110,7 @@ public class PageFactory {
         return new InspectPage(
                 player, serverNames,
                 version,
-                config.get(), theme.get(),
+                fileSystem.get(), config.get(), theme.get(),
                 graphs.get(), tables.get(), accordions.get(), formatters.get(),
                 serverInfo.get(), timings.get()
         );
@@ -116,6 +122,6 @@ public class PageFactory {
 
     public NetworkPage networkPage() {
         NetworkContainer networkContainer = database.get().fetch().getNetworkContainer(); // Not cached, big.
-        return new NetworkPage(networkContainer, serverInfo.get().getServerProperties());
+        return new NetworkPage(networkContainer, fileSystem.get(), serverInfo.get().getServerProperties());
     }
 }

@@ -3,7 +3,6 @@ package com.djrapitops.plan.utilities.file;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,16 +19,6 @@ public class FileUtil {
 
     private FileUtil() {
         throw new IllegalStateException("Utility class");
-    }
-
-    @Deprecated
-    public static String getStringFromResource(String fileName) throws IOException {
-        StringBuilder html = new StringBuilder();
-        PlanPlugin plugin = PlanPlugin.getInstance();
-
-        lines(PlanPlugin.getInstance(), new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName)
-                .forEach(line -> html.append(line).append("\r\n"));
-        return html.toString();
     }
 
     public static List<String> lines(PlanPlugin plugin, File savedFile, String defaults) throws IOException {
@@ -97,7 +86,7 @@ public class FileUtil {
 
     public static List<String> lines(File file, Charset charset) throws IOException {
         List<String> lines = new ArrayList<>();
-        if (Verify.exists(file)) {
+        if (file != null && file.exists()) {
             try (Stream<String> linesStream = Files.lines(file.toPath(), charset)) {
                 lines = linesStream.collect(Collectors.toList());
             }
