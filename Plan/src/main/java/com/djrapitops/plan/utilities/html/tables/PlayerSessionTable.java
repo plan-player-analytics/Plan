@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 
@@ -18,6 +19,7 @@ import java.util.List;
 class PlayerSessionTable extends TableContainer {
 
     private final int maxSessions;
+    private final WorldAliasSettings worldAliasSettings;
     private final Formatter<DateHolder> yearFormatter;
     private final Formatter<Long> timeAmountFormatter;
 
@@ -26,6 +28,7 @@ class PlayerSessionTable extends TableContainer {
 
     PlayerSessionTable(String playerName, List<Session> sessions,
                        int maxSessions,
+                       WorldAliasSettings worldAliasSettings,
                        Formatter<DateHolder> yearFormatter,
                        Formatter<Long> timeAmountFormatter
     ) {
@@ -33,6 +36,7 @@ class PlayerSessionTable extends TableContainer {
         this.playerName = playerName;
         this.sessions = sessions;
         this.maxSessions = maxSessions;
+        this.worldAliasSettings = worldAliasSettings;
         this.yearFormatter = yearFormatter;
         this.timeAmountFormatter = timeAmountFormatter;
 
@@ -52,7 +56,7 @@ class PlayerSessionTable extends TableContainer {
             String length = session.supports(SessionKeys.END)
                     ? timeAmountFormatter.apply(session.getValue(SessionKeys.LENGTH).orElse(0L))
                     : "Online";
-            String world = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
+            String world = worldAliasSettings.getLongestWorldPlayed(session);
 
             String toolTip = "Session ID: " + session.getValue(SessionKeys.DB_ID)
                     .map(id -> Integer.toString(id))

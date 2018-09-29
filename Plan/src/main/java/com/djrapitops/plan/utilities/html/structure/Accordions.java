@@ -63,7 +63,7 @@ public class Accordions {
                 true, sessions,
                 serverNamesSupplier, HashMap::new,
                 appendWorldPercentage, maxSessions,
-                theme, graphs, tables,
+                config.getWorldAliasSettings(), theme, graphs, tables,
                 formatters.year(), formatters.timeAmount()
         );
     }
@@ -87,7 +87,7 @@ public class Accordions {
                 false, sessions,
                 serverNamesSupplier, playerNamesSupplier,
                 appendWorldPercentage, maxSessions,
-                theme, graphs, tables,
+                config.getWorldAliasSettings(), theme, graphs, tables,
                 formatters.year(), formatters.timeAmount()
         );
     }

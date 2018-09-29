@@ -4,10 +4,14 @@
  */
 package com.djrapitops.plan.system.settings;
 
+import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.config.ConfigNode;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -30,18 +34,22 @@ import java.util.stream.Collectors;
 public class WorldAliasSettings {
 
     private final Lazy<PlanConfig> config;
+    private final Formatter<Double> percentageFormatter;
     private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
     public WorldAliasSettings(
             Lazy<PlanConfig> config,
+            Formatters formatters,
             Processing processing,
             ErrorHandler errorHandler
     ) {
         this.config = config;
         this.processing = processing;
         this.errorHandler = errorHandler;
+
+        percentageFormatter = formatters.percentage();
     }
 
     private ConfigNode getAliasSection() {
@@ -138,5 +146,34 @@ public class WorldAliasSettings {
             gmTimesPerAlias.put(alias, aliasGMTimes);
         }
         return gmTimesPerAlias;
+    }
+
+    public String getLongestWorldPlayed(Session session) {
+        Map<String, String> aliases = getAliases();
+        if (!session.supports(SessionKeys.WORLD_TIMES)) {
+            return "No World Time Data";
+        }
+        WorldTimes worldTimes = session.getUnsafe(SessionKeys.WORLD_TIMES);
+        if (!session.supports(SessionKeys.END)) {
+            return "Current: " + aliases.get(worldTimes.getCurrentWorld());
+        }
+
+        Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);
+        long total = worldTimes.getTotal();
+
+        long longest = 0;
+        String theWorld = "-";
+        for (Map.Entry<String, Long> entry : playtimePerAlias.entrySet()) {
+            String world = entry.getKey();
+            long time = entry.getValue();
+            if (time > longest) {
+                longest = time;
+                theWorld = world;
+            }
+        }
+
+        double quotient = longest * 1.0 / total;
+
+        return theWorld + " (" + percentageFormatter.apply(quotient) + ")";
     }
 }

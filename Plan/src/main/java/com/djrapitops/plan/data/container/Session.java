@@ -4,8 +4,6 @@ import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.*;
 
@@ -58,7 +56,7 @@ public class Session extends DataContainer implements DateHolder {
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
         putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
 
-        putSupplier(SessionKeys.LONGEST_WORLD_PLAYED, this::getLongestWorldPlayed);
+        putRawData(SessionKeys.LONGEST_WORLD_PLAYED, "Key is Deprecated, use WorldAliasSettings#getLongestWorldPlayed(Session) instead.");
     }
 
     /**
@@ -101,7 +99,7 @@ public class Session extends DataContainer implements DateHolder {
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
         putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
 
-        putSupplier(SessionKeys.LONGEST_WORLD_PLAYED, this::getLongestWorldPlayed);
+        putRawData(SessionKeys.LONGEST_WORLD_PLAYED, "Key is Deprecated, use WorldAliasSettings#getLongestWorldPlayed(Session) instead.");
     }
 
     /**
@@ -219,36 +217,5 @@ public class Session extends DataContainer implements DateHolder {
 
     private long getAfkTime() {
         return afkTime;
-    }
-
-    @Deprecated // TODO Move this method elsewhere
-    private String getLongestWorldPlayed() {
-        WorldAliasSettings worldAliasSettings = null; // TODO
-        Map<String, String> aliases = worldAliasSettings.getAliases();
-        if (worldTimes == null) {
-            return "No World Time Data";
-        }
-        if (!supports(SessionKeys.END)) {
-            return "Current: " + aliases.get(worldTimes.getCurrentWorld());
-        }
-
-        Map<String, Long> playtimePerAlias = new HashMap<>(); //TODO Call WorldAliasSettings#getPlaytimePerAlias(WorldTimes)
-        long total = worldTimes.getTotal();
-
-        long longest = 0;
-        String theWorld = "-";
-        for (Map.Entry<String, Long> entry : playtimePerAlias.entrySet()) {
-            String world = entry.getKey();
-            long time = entry.getValue();
-            if (time > longest) {
-                longest = time;
-                theWorld = world;
-            }
-        }
-
-        double quotient = longest * 1.0 / total;
-
-        Formatter<Double> percentageFormatter = null; // TODO
-        return theWorld + " (" + percentageFormatter.apply(quotient) + ")";
     }
 }

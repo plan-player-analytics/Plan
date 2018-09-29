@@ -110,7 +110,7 @@ public class HtmlTables {
     public TableContainer playerSessionTable(String playerName, List<Session> sessions) {
         return new PlayerSessionTable(
                 playerName, sessions,
-                config.getNumber(Settings.MAX_SESSIONS), formatters.year(), formatters.timeAmount()
+                config.getNumber(Settings.MAX_SESSIONS), config.getWorldAliasSettings(), formatters.year(), formatters.timeAmount()
         );
     }
 
@@ -124,7 +124,7 @@ public class HtmlTables {
     public TableContainer serverSessionTable(Map<UUID, String> playerNames, List<Session> sessions) {
         return new ServerSessionTable(
                 playerNames, sessions,
-                config.getNumber(Settings.MAX_SESSIONS), formatters.year(), formatters.timeAmount()
+                config.getNumber(Settings.MAX_SESSIONS), config.getWorldAliasSettings(), formatters.year(), formatters.timeAmount()
         );
     }
 

@@ -6,6 +6,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
@@ -36,6 +37,7 @@ public class SessionAccordion extends Accordion {
     private final boolean appendWorldPercentage;
     private final int maxSessions;
 
+    private final WorldAliasSettings worldAliasSettings;
     private final Theme theme;
     private final Graphs graphs;
     private final HtmlTables tables;
@@ -47,6 +49,7 @@ public class SessionAccordion extends Accordion {
                      Supplier<Map<UUID, String>> playerNamesSupplier,
                      boolean appendWorldPercentage,
                      int maxSessions,
+                     WorldAliasSettings worldAliasSettings,
                      Theme theme,
                      Graphs graphs,
                      HtmlTables tables,
@@ -61,6 +64,7 @@ public class SessionAccordion extends Accordion {
         this.playerNamesSupplier = playerNamesSupplier;
         this.appendWorldPercentage = appendWorldPercentage;
         this.maxSessions = maxSessions;
+        this.worldAliasSettings = worldAliasSettings;
         this.theme = theme;
         this.graphs = graphs;
         this.tables = tables;
@@ -101,7 +105,7 @@ public class SessionAccordion extends Accordion {
 
             WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
             WorldPie worldPie = graphs.pie().worldPie(worldTimes);
-            String longestWorldPlayed = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
+            String longestWorldPlayed = worldAliasSettings.getLongestWorldPlayed(session);
 
             boolean hasEnded = session.supports(SessionKeys.END);
             String sessionEnd = hasEnded ? yearFormatter.apply(() -> session.getUnsafe(SessionKeys.END)) : "Online";
@@ -173,7 +177,7 @@ public class SessionAccordion extends Accordion {
 
             WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
             WorldPie worldPie = graphs.pie().worldPie(worldTimes);
-            String longestWorldPlayed = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
+            String longestWorldPlayed = worldAliasSettings.getLongestWorldPlayed(session);
 
             boolean hasEnded = session.supports(SessionKeys.END);
             String sessionEnd = hasEnded ? yearFormatter.apply(() -> session.getValue(SessionKeys.END).orElse(0L)) : "Online";
