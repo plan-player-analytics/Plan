@@ -5,6 +5,8 @@
 package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
+import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
+import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
@@ -16,7 +18,6 @@ import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
-import com.djrapitops.plan.system.webserver.response.pages.AnalysisPageResponse;
 import com.djrapitops.plugin.api.Check;
 
 import javax.inject.Inject;
@@ -76,8 +77,22 @@ public class ServerPageHandler implements PageHandler {
                 }
                 return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
             }
-            return AnalysisPageResponse.refreshNow(serverUUID, processing, infoSystem);
+            return refreshNow(serverUUID);
         }
+    }
+
+    // TODO Split responsibility so that this method does not call system to refresh and also render a refresh page.
+    private Response refreshNow(UUID serverUUID) {
+        processing.submitNonCritical(() -> {
+            try {
+                infoSystem.generateAnalysisPage(serverUUID);
+            } catch (NoServersException | ConnectionFailException e) {
+                ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> responseFactory.notFound404(e.getMessage()));
+            } catch (WebException e) {
+                ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> responseFactory.internalErrorResponse(e, "Failed to generate Analysis Page"));
+            }
+        });
+        return responseFactory.refreshingAnalysisResponse();
     }
 
     private UUID getServerUUID(List<String> target) {

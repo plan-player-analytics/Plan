@@ -183,4 +183,12 @@ public class ResponseFactory {
             return internalErrorResponse(e, "Failed to parse PromptAuthorizationResponse");
         }
     }
+
+    public ErrorResponse refreshingAnalysisResponse() {
+        try {
+            return new RefreshingAnalysisResponse(version, files);
+        } catch (IOException e) {
+            return internalErrorResponse(e, "Failed to parse RefreshingAnalysisResponse");
+        }
+    }
 }

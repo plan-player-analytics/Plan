@@ -7,7 +7,6 @@ package com.djrapitops.plan.utilities.html.pages;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plugin.api.Benchmark;
@@ -39,20 +38,6 @@ public class AnalysisPage implements Page {
         this.analysisContainer = analysisContainer;
         this.files = files;
         this.decimalFormatter = decimalFormatter;
-    }
-
-    public static String getRefreshingHtml() {
-        // TODO Work this out
-        ErrorResponse refreshPage = null;
-        try {
-            refreshPage = new ErrorResponse("", null);
-        } catch (IOException e) {
-
-        }
-        refreshPage.setTitle("Analysis is being refreshed..");
-        refreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"5\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
-        refreshPage.replacePlaceholders();
-        return refreshPage.getContent();
     }
 
     @Override
