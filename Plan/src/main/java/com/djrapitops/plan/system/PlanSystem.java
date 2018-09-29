@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
@@ -95,11 +94,6 @@ public class PlanSystem implements SubSystem {
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;
         this.errorHandler = errorHandler;
-    }
-
-    @Deprecated
-    public static PlanSystem getInstance() {
-        return PlanPlugin.getInstance().getSystem();
     }
 
     @Override

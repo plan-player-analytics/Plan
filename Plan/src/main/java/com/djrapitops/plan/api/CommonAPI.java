@@ -23,9 +23,10 @@ public abstract class CommonAPI implements PlanAPI {
     private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
-    public CommonAPI(UUIDUtility uuidUtility, ErrorHandler errorHandler) {
+    CommonAPI(UUIDUtility uuidUtility, ErrorHandler errorHandler) {
         this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
+        PlanAPIHolder.set(this);
     }
 
     @Override
