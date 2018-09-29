@@ -9,7 +9,6 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.icon.Color;
@@ -50,10 +49,11 @@ public class VaultEcoData extends PluginData {
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
-        List<FakeOfflinePlayer> offlinePlayers = analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR)
-                .map(PlayersMutator::all).orElse(new ArrayList<>())
-                .stream().map(FakeOfflinePlayer::new)
-                .collect(Collectors.toList());
+        List<FakeOfflinePlayer> offlinePlayers = Optional.ofNullable(analysisData)
+                .flatMap(c -> c.getValue(AnalysisKeys.PLAYERS_MUTATOR))
+                .map(mutator -> mutator.all().stream().map(FakeOfflinePlayer::new)
+                        .collect(Collectors.toList()))
+                .orElse(new ArrayList<>());
 
         Map<UUID, String> balances = new HashMap<>();
         double totalBalance = 0.0;

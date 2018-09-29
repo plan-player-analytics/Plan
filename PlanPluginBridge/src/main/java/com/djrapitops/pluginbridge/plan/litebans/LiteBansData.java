@@ -179,7 +179,8 @@ public class LiteBansData extends PluginData implements BanData {
         if (objects.isEmpty()) {
             table.addRow("No Data");
         } else {
-            Map<UUID, String> playerNames = analysisData.getValue(AnalysisKeys.PLAYER_NAMES).orElse(new HashMap<>());
+            Map<UUID, String> playerNames = Optional.ofNullable(analysisData)
+                    .flatMap(c -> c.getValue(AnalysisKeys.PLAYER_NAMES)).orElse(new HashMap<>());
             for (LiteBansDBObj object : objects) {
                 UUID uuid = object.getUuid();
                 String name = playerNames.getOrDefault(uuid, uuid.toString());

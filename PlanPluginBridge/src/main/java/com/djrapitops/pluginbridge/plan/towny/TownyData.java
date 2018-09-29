@@ -97,7 +97,8 @@ public class TownyData extends PluginData {
 
             TownsAccordion townsAccordion = new TownsAccordion(
                     towns,
-                    analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
+                    Optional.ofNullable(analysisData).flatMap(c -> c.getValue(AnalysisKeys.PLAYERS_MUTATOR))
+                            .orElse(new PlayersMutator(new ArrayList<>()))
             );
 
             analysisContainer.addHtml("townAccordion", townsAccordion.toHtml());
