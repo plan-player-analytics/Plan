@@ -15,7 +15,6 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsSponge;
 import com.djrapitops.plugin.SpongePlugin;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.logging.L;
@@ -107,13 +106,8 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         onDisable();
     }
 
-    public static PlanSponge getInstance() {
-        return (PlanSponge) StaticHolder.getInstance(PlanSponge.class);
-    }
-
     @Override
     public void onEnable() {
-        super.onEnable();
         PlanSpongeComponent component = DaggerPlanSpongeComponent.builder().plan(this).build();
         try {
             system = component.system();

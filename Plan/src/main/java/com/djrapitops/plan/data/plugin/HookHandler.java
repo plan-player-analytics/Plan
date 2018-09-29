@@ -5,7 +5,6 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.pluginbridge.plan.Bridge;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,7 +38,7 @@ public class HookHandler implements SubSystem {
     @Override
     public void enable() {
         try {
-            Bridge.hook(this);
+//            Bridge.hook(this);
         } catch (Exception e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
             logger.error("Plan Plugin Bridge not included in the plugin jar.");

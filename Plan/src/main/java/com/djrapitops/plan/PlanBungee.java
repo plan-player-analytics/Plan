@@ -18,7 +18,6 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBungee;
 import com.djrapitops.plugin.BungeePlugin;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.logging.L;
@@ -85,13 +84,8 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     private PlanSystem system;
     private Locale locale;
 
-    public static PlanBungee getInstance() {
-        return (PlanBungee) StaticHolder.getInstance(PlanBungee.class);
-    }
-
     @Override
     public void onEnable() {
-        super.onEnable();
         PlanBungeeComponent component = DaggerPlanBungeeComponent.builder().plan(this).build();
         try {
             system = component.system();

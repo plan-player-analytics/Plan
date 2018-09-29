@@ -1,5 +1,6 @@
 package com.djrapitops.plan.system.locale;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.lang.*;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class LocaleSystem implements SubSystem {
 
+    private final PlanPlugin plugin;
     private final PlanFiles files;
     private final PlanConfig config;
     private final PluginLogger logger;
@@ -37,11 +39,13 @@ public class LocaleSystem implements SubSystem {
 
     @Inject
     public LocaleSystem(
+            PlanPlugin plugin,
             PlanFiles files,
             PlanConfig config,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
+        this.plugin = plugin;
         this.files = files;
         this.config = config;
         this.logger = logger;
@@ -111,7 +115,7 @@ public class LocaleSystem implements SubSystem {
         try {
             String setting = config.getString(Settings.LOCALE);
             if (!setting.equalsIgnoreCase("default")) {
-                return Optional.of(Locale.forLangCodeString(setting));
+                return Optional.of(Locale.forLangCodeString(plugin, setting));
             }
         } catch (IOException e) {
             logger.warn("Failed to read locale from jar: " + config.getString(Settings.LOCALE) + ", " + e.toString());

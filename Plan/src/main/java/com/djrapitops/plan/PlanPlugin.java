@@ -6,7 +6,6 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plugin.IPlugin;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.command.ColorScheme;
 
 import java.io.File;
@@ -18,40 +17,6 @@ import java.io.InputStream;
  * @author Rsl1122
  */
 public interface PlanPlugin extends IPlugin {
-    @Deprecated
-    static PlanPlugin getInstance() {
-        boolean bukkitAvailable = Check.isBukkitAvailable();
-        boolean bungeeAvailable = Check.isBungeeAvailable();
-        boolean spongeAvailable = Check.isSpongeAvailable();
-        if (bukkitAvailable) {
-            try {
-                Plan instance = Plan.getInstance();
-                if (instance != null) {
-                    return instance;
-                }
-            } catch (IllegalStateException ignored) {
-            }
-        }
-        if (bungeeAvailable) {
-            try {
-                PlanBungee instance = PlanBungee.getInstance();
-                if (instance != null) {
-                    return instance;
-                }
-            } catch (IllegalStateException ignored) {
-            }
-        }
-        if (spongeAvailable) {
-            try {
-                PlanSponge instance = PlanSponge.getInstance();
-                if (instance != null) {
-                    return instance;
-                }
-            } catch (IllegalStateException ignored) {
-            }
-        }
-        throw new IllegalAccessError("Plugin instance not available");
-    }
 
     @Override
     File getDataFolder();

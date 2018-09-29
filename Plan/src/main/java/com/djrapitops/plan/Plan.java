@@ -34,7 +34,6 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBukkit;
 import com.djrapitops.plugin.BukkitPlugin;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
@@ -105,18 +104,8 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     private PlanSystem system;
     private Locale locale;
 
-    /**
-     * Used to get the plugin-instance singleton.
-     *
-     * @return this object.
-     */
-    public static Plan getInstance() {
-        return (Plan) StaticHolder.getInstance(Plan.class);
-    }
-
     @Override
     public void onEnable() {
-        super.onEnable();
         PlanComponent component = DaggerPlanComponent.builder().plan(this).build();
         try {
             timings.start("Enable");

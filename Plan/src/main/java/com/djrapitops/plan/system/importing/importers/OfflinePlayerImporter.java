@@ -50,7 +50,7 @@ public class OfflinePlayerImporter extends Importer {
         Set<OfflinePlayer> banned = Bukkit.getBannedPlayers();
 
         Arrays.stream(Bukkit.getOfflinePlayers()).parallel().forEach(player -> {
-            UserImportData.UserImportDataBuilder builder = UserImportData.builder(serverUUID);
+            UserImportData.UserImportDataBuilder builder = UserImportData.builder(serverUUID.get());
             builder.name(player.getName())
                     .uuid(player.getUniqueId())
                     .registered(player.getFirstPlayed());

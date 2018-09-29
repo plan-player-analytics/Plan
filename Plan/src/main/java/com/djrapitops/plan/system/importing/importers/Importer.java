@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +39,7 @@ public abstract class Importer {
 
     private final GeolocationCache geolocationCache;
     private final Database database;
-    protected final UUID serverUUID;
+    protected final Supplier<UUID> serverUUID;
 
     private final String name;
     private final Plan plugin;
@@ -52,7 +53,7 @@ public abstract class Importer {
     ) {
         this.geolocationCache = geolocationCache;
         this.database = database;
-        this.serverUUID = serverInfo.getServerUUID();
+        this.serverUUID = serverInfo::getServerUUID;
 
         this.name = name;
         this.plugin = plugin;
@@ -97,8 +98,8 @@ public abstract class Importer {
         ExecutorService service = Executors.newCachedThreadPool();
 
         SaveOperations save = database.save();
-        submitTo(service, () -> save.insertTPS(ImmutableMap.of(serverUUID, serverImportData.getTpsData())));
-        submitTo(service, () -> save.insertCommandUsage(ImmutableMap.of(serverUUID, serverImportData.getCommandUsages())));
+        submitTo(service, () -> save.insertTPS(ImmutableMap.of(serverUUID.get(), serverImportData.getTpsData())));
+        submitTo(service, () -> save.insertCommandUsage(ImmutableMap.of(serverUUID.get(), serverImportData.getCommandUsages())));
 
         service.shutdown();
         try {
@@ -120,7 +121,7 @@ public abstract class Importer {
         userImportData = userImportRefiner.refineData();
 
         Set<UUID> existingUUIDs = database.fetch().getSavedUUIDs();
-        Set<UUID> existingUserInfoTableUUIDs = database.fetch().getSavedUUIDs(serverUUID);
+        Set<UUID> existingUserInfoTableUUIDs = database.fetch().getSavedUUIDs(serverUUID.get());
 
         Map<UUID, UserInfo> users = new HashMap<>();
         List<UserInfo> userInfo = new ArrayList<>();
@@ -152,10 +153,10 @@ public abstract class Importer {
         SaveOperations save = database.save();
 
         save.insertUsers(users);
-        submitTo(service, () -> save.insertSessions(ImmutableMap.of(serverUUID, sessions), true));
+        submitTo(service, () -> save.insertSessions(ImmutableMap.of(serverUUID.get(), sessions), true));
         submitTo(service, () -> save.kickAmount(timesKicked));
-        submitTo(service, () -> save.insertUserInfo(ImmutableMap.of(serverUUID, userInfo)));
-        submitTo(service, () -> save.insertNicknames(ImmutableMap.of(serverUUID, nickNames)));
+        submitTo(service, () -> save.insertUserInfo(ImmutableMap.of(serverUUID.get(), userInfo)));
+        submitTo(service, () -> save.insertNicknames(ImmutableMap.of(serverUUID.get(), nickNames)));
         submitTo(service, () -> save.insertAllGeoInfo(geoInfo));
 
         service.shutdown();
@@ -185,7 +186,7 @@ public abstract class Importer {
         int mobKills = userImportData.getMobKills();
         int deaths = userImportData.getDeaths();
 
-        Session session = new Session(0, userImportData.getUuid(), serverUUID, 0L, 0L, mobKills, deaths, 0);
+        Session session = new Session(0, userImportData.getUuid(), serverUUID.get(), 0L, 0L, mobKills, deaths, 0);
 
         session.setPlayerKills(userImportData.getKills());
         session.setWorldTimes(new WorldTimes(userImportData.getWorldTimes()));

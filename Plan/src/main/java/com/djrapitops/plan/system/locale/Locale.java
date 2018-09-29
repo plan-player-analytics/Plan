@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
  */
 public class Locale extends HashMap<Lang, Message> {
 
-    public static Locale forLangCodeString(String code) throws IOException {
-        return forLangCode(LangCode.fromString(code));
+    public static Locale forLangCodeString(PlanPlugin plugin, String code) throws IOException {
+        return forLangCode(LangCode.fromString(code), plugin);
     }
 
-    public static Locale forLangCode(LangCode code) throws IOException {
-        return new LocaleFileReader(PlanPlugin.getInstance(), code.getFileName()).load();
+    public static Locale forLangCode(LangCode code, PlanPlugin plugin) throws IOException {
+        return new LocaleFileReader(plugin, code.getFileName()).load();
     }
 
     public static Locale fromFile(File file) throws IOException {
