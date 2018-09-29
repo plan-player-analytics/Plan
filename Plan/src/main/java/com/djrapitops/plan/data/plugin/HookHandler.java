@@ -1,9 +1,7 @@
 package com.djrapitops.plan.data.plugin;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -68,7 +66,6 @@ public class HookHandler implements SubSystem {
             return;
         }
         try {
-            StaticHolder.saveInstance(dataSource.getClass(), PlanPlugin.getInstance().getClass());
             if (!configHandler.hasSection(dataSource)) {
                 configHandler.createSection(dataSource);
             }

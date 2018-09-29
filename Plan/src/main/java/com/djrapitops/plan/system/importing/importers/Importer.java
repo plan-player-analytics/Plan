@@ -41,8 +41,10 @@ public abstract class Importer {
     protected final UUID serverUUID;
 
     private final String name;
+    private final Plan plugin;
 
     protected Importer(
+            Plan plugin,
             GeolocationCache geolocationCache,
             Database database,
             ServerInfo serverInfo,
@@ -53,6 +55,7 @@ public abstract class Importer {
         this.serverUUID = serverInfo.getServerUUID();
 
         this.name = name;
+        this.plugin = plugin;
     }
 
     @Deprecated
@@ -113,7 +116,7 @@ public abstract class Importer {
             return;
         }
 
-        UserImportRefiner userImportRefiner = new UserImportRefiner(Plan.getInstance(), userImportData);
+        UserImportRefiner userImportRefiner = new UserImportRefiner(plugin, userImportData);
         userImportData = userImportRefiner.refineData();
 
         Set<UUID> existingUUIDs = database.fetch().getSavedUUIDs();

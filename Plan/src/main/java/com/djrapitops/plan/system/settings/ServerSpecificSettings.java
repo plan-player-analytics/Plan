@@ -27,15 +27,18 @@ import java.util.UUID;
 @Singleton
 public class ServerSpecificSettings {
 
+    private final Lazy<PlanPlugin> plugin;
     private final Lazy<PlanConfig> config;
 
     private final PluginLogger logger;
 
     @Inject
     public ServerSpecificSettings(
+            Lazy<PlanPlugin> plugin,
             Lazy<PlanConfig> config,
             PluginLogger logger
     ) {
+        this.plugin = plugin;
         this.config = config;
         this.logger = logger;
     }
@@ -69,7 +72,7 @@ public class ServerSpecificSettings {
             logger.info("----------------------------------");
             logger.info("The Received Bungee Settings changed the config values, restarting Plan..");
             logger.info("----------------------------------");
-            PlanPlugin.getInstance().reloadPlugin(true);
+            plugin.get().reloadPlugin(true);
         } else {
             logger.debug("Settings up to date");
         }

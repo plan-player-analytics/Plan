@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -200,11 +200,10 @@ public abstract class SQLDB extends Database {
                         logger.error("----------------------------------------------------");
                         logger.error(locale.getString(PluginLang.ENABLE_FAIL_DB_PATCH));
                         logger.error("----------------------------------------------------");
-                        errorHandler.log(L.ERROR, this.getClass(), e);
-                        PlanPlugin.getInstance().onDisable();
+                        errorHandler.log(L.CRITICAL, this.getClass(), e);
                     }
                 }
-            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
+            }).runTaskLaterAsynchronously(TimeAmount.toTicks(5L, TimeUnit.SECONDS));
         } catch (DBOpException e) {
             throw new DBInitException("Failed to set-up Database", e);
         }

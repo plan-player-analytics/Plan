@@ -1,8 +1,6 @@
 package com.djrapitops.plan.utilities.export;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.utilities.file.export.Hastebin;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.collect.Iterables;
 import org.json.simple.parser.ParseException;
@@ -40,7 +38,6 @@ public class HastebinTest {
     @Before
     public void checkAvailability() {
         Thread thread = new Thread(() -> {
-            StaticHolder.saveInstance(this.getClass(), PlanPlugin.getInstance().getClass());
             try {
                 Hastebin.upload(RandomData.randomString(10));
             } catch (IOException e) {
