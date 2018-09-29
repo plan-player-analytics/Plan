@@ -23,6 +23,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -34,14 +35,14 @@ import java.util.stream.Collectors;
 public class WorldAliasSettings {
 
     private final Lazy<PlanConfig> config;
-    private final Formatter<Double> percentageFormatter;
+    private final Supplier<Formatter<Double>> percentageFormatter;
     private final Processing processing;
     private final ErrorHandler errorHandler;
 
     @Inject
     public WorldAliasSettings(
             Lazy<PlanConfig> config,
-            Formatters formatters,
+            Lazy<Formatters> formatters,
             Processing processing,
             ErrorHandler errorHandler
     ) {
@@ -49,7 +50,7 @@ public class WorldAliasSettings {
         this.processing = processing;
         this.errorHandler = errorHandler;
 
-        percentageFormatter = formatters.percentage();
+        percentageFormatter = () -> formatters.get().percentage();
     }
 
     private ConfigNode getAliasSection() {
@@ -174,6 +175,6 @@ public class WorldAliasSettings {
 
         double quotient = longest * 1.0 / total;
 
-        return theWorld + " (" + percentageFormatter.apply(quotient) + ")";
+        return theWorld + " (" + percentageFormatter.get().apply(quotient) + ")";
     }
 }
