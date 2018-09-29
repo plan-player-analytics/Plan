@@ -8,7 +8,6 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -73,7 +72,7 @@ public class WorldTable extends Table {
     }
 
     public List<String> getWorlds() {
-        return getWorlds(ServerInfo.getServerUUID_Old());
+        return getWorlds(getServerUUID());
     }
 
     public List<String> getWorlds(UUID serverUUID) {
@@ -100,7 +99,7 @@ public class WorldTable extends Table {
     }
 
     public void saveWorlds(Collection<String> worlds) {
-        saveWorlds(worlds, ServerInfo.getServerUUID_Old());
+        saveWorlds(worlds, getServerUUID());
     }
 
     /**

@@ -11,7 +11,6 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.sql.PreparedStatement;
@@ -90,7 +89,7 @@ public class TransferTable extends Table {
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID_Old().toString());
+                statement.setString(1, getServerUUID().toString());
                 statement.setString(2, "onlineStatus");
             }
         });
@@ -100,7 +99,7 @@ public class TransferTable extends Table {
         execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID_Old().toString());
+                statement.setString(1, getServerUUID().toString());
                 statement.setLong(2, System.currentTimeMillis() + TimeAmount.HOUR.ms());
                 statement.setString(3, "configSettings");
                 statement.setString(4, null);

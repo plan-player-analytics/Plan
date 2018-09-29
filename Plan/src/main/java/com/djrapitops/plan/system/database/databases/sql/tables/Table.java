@@ -10,6 +10,7 @@ import com.google.common.base.Objects;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * Abstract representation of a SQL database table.
@@ -44,11 +45,8 @@ public abstract class Table {
         }
     }
 
-    protected void renameTable(String to) {
-        String sql = usingMySQL ?
-                "RENAME TABLE " + tableName + " TO " + to :
-                "ALTER TABLE " + tableName + " RENAME TO " + to;
-        execute(sql);
+    protected UUID getServerUUID() {
+        return db.getServerUUIDSupplier().get();
     }
 
     /**

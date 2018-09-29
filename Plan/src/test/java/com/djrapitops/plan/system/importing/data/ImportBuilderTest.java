@@ -68,7 +68,7 @@ public class ImportBuilderTest {
 
     @Test
     public void testEmptyUserBuilder() {
-        UserImportData data = UserImportData.builder().build();
+        UserImportData data = UserImportData.builder(TestConstants.SERVER_UUID).build();
 
         assertEquals(0, data.getRegistered());
         assertEquals(0, data.getTimesKicked());
@@ -122,7 +122,7 @@ public class ImportBuilderTest {
 
     @Test
     public void testUserDataBuilder() {
-        UserImportData.UserImportDataBuilder builder = UserImportData.builder();
+        UserImportData.UserImportDataBuilder builder = UserImportData.builder(TestConstants.SERVER_UUID);
 
         UUID uuid = UUID.randomUUID();
         PlayerKill playerKill = new PlayerKill(uuid, randomString, 1);

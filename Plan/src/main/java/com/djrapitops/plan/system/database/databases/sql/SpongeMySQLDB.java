@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -8,6 +9,7 @@ import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
+import dagger.Lazy;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.sql.SqlService;
 
@@ -27,12 +29,13 @@ public class SpongeMySQLDB extends MySQLDB {
     public SpongeMySQLDB(
             Locale locale,
             PlanConfig config,
+            Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger pluginLogger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(locale, config, runnableFactory, pluginLogger, timings, errorHandler);
+        super(locale, config, serverInfo, runnableFactory, pluginLogger, timings, errorHandler);
     }
 
     @Override

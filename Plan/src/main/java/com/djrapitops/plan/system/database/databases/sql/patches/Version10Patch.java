@@ -4,7 +4,6 @@ import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ public class Version10Patch extends Patch {
     @Override
     public void apply() {
         try {
-            Optional<Integer> fetchedServerID = db.getServerTable().getServerID(ServerInfo.getServerUUID_Old());
+            Optional<Integer> fetchedServerID = db.getServerTable().getServerID(getServerUUID());
             if (!fetchedServerID.isPresent()) {
                 throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
             }

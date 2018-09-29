@@ -9,7 +9,6 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.sql.PreparedStatement;
@@ -73,7 +72,7 @@ public class PingTable extends UserIDTable {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setString(2, ServerInfo.getServerUUID_Old().toString());
+                statement.setString(2, getServerUUID().toString());
                 statement.setLong(3, ping.getDate());
                 statement.setInt(4, ping.getMin());
                 statement.setInt(5, ping.getMax());

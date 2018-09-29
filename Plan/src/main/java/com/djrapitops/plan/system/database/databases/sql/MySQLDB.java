@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
@@ -14,6 +15,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -34,12 +36,13 @@ public class MySQLDB extends SQLDB {
     public MySQLDB(
             Locale locale,
             PlanConfig config,
+            Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger pluginLogger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(locale, config, runnableFactory, pluginLogger, timings, errorHandler);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, pluginLogger, timings, errorHandler);
     }
 
     private static synchronized void increment() {

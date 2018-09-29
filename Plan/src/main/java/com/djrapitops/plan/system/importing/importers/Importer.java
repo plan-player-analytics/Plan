@@ -38,7 +38,7 @@ public abstract class Importer {
 
     private final GeolocationCache geolocationCache;
     private final Database database;
-    private final UUID serverUUID;
+    protected final UUID serverUUID;
 
     private final String name;
 

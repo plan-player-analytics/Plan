@@ -22,6 +22,11 @@ public class SQLCheckOps extends SQLOps implements CheckOperations {
     }
 
     @Override
+    public boolean isPlayerRegisteredOnThisServer(UUID player) {
+        return userInfoTable.isRegisteredOnThisServer(player);
+    }
+
+    @Override
     public boolean doesWebUserExists(String username) {
         return securityTable.userExists(username);
     }

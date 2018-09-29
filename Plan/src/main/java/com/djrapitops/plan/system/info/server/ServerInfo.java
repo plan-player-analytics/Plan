@@ -5,7 +5,6 @@
 package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plugin.utilities.Verify;
@@ -26,18 +25,6 @@ public abstract class ServerInfo implements SubSystem {
 
     public ServerInfo(ServerProperties serverProperties) {
         this.serverProperties = serverProperties;
-    }
-
-    @Deprecated
-    public static ServerInfo getInstance() {
-        ServerInfo serverInfo = PlanSystem.getInstance().getServerInfo();
-        Verify.nullCheck(serverInfo, () -> new IllegalStateException("ServerInfo was not initialized."));
-        return serverInfo;
-    }
-
-    @Deprecated
-    public static UUID getServerUUID_Old() {
-        return getInstance().server.getUuid();
     }
 
     public Server getServer() {

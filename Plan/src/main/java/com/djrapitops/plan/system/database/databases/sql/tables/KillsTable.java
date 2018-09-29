@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -183,7 +182,7 @@ public class KillsTable extends UserIDTable {
 
                     statement.setString(1, uuid.toString());
                     statement.setString(2, victim.toString());
-                    statement.setString(3, ServerInfo.getServerUUID_Old().toString());
+                    statement.setString(3, getServerUUID().toString());
                     statement.setInt(4, sessionID);
                     statement.setLong(5, date);
                     statement.setString(6, weapon);

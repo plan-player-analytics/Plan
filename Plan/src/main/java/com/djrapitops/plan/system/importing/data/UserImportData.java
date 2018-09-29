@@ -7,7 +7,6 @@ package com.djrapitops.plan.system.importing.data;
 import com.djrapitops.plan.data.container.PlayerKill;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 
 import java.util.*;
 
@@ -49,8 +48,8 @@ public class UserImportData {
         this.deaths = deaths;
     }
 
-    public static UserImportDataBuilder builder() {
-        return new UserImportDataBuilder();
+    public static UserImportDataBuilder builder(UUID serverUUID) {
+        return new UserImportDataBuilder(serverUUID);
     }
 
     public String getName() {
@@ -150,6 +149,8 @@ public class UserImportData {
     }
 
     public static final class UserImportDataBuilder {
+        private final UUID serverUUID;
+
         private final List<Nickname> nicknames = new ArrayList<>();
         private final List<String> ips = new ArrayList<>();
         private final Map<String, GMTimes> worldTimes = new HashMap<>();
@@ -163,8 +164,8 @@ public class UserImportData {
         private int mobKills;
         private int deaths;
 
-        private UserImportDataBuilder() {
-            /* Private Constructor */
+        private UserImportDataBuilder(UUID serverUUID) {
+            this.serverUUID = serverUUID;
         }
 
         public UserImportDataBuilder name(String name) {
@@ -197,7 +198,6 @@ public class UserImportData {
 
         public UserImportDataBuilder nicknames(String... nicknames) {
             long time = System.currentTimeMillis();
-            UUID serverUUID = ServerInfo.getServerUUID_Old();
 
             Arrays.stream(nicknames)
                     .map(nick -> new Nickname(nick, time, serverUUID))

@@ -89,7 +89,7 @@ public class SQLiteTest {
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));
-//        assertEquals(ServerInfo.getServerUUID_Old(), TestConstants.SERVER_UUID); TODO check if assertion is required
+        assertEquals(db.getServerUUIDSupplier().get(), TestConstants.SERVER_UUID);
         System.out.println("--     Clear Complete     --\n");
     }
 

@@ -9,7 +9,6 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -111,7 +110,7 @@ public class NicknamesTable extends UserIDTable {
      * @return The nicknames of the User
      */
     public List<String> getNicknames(UUID uuid) {
-        return getNicknames(uuid, ServerInfo.getServerUUID_Old());
+        return getNicknames(uuid, getServerUUID());
     }
 
     public Map<UUID, Map<UUID, List<Nickname>>> getAllNicknames() {
@@ -167,7 +166,7 @@ public class NicknamesTable extends UserIDTable {
                 statement.setLong(1, name.getDate());
                 statement.setString(2, name.getName());
                 statement.setString(3, uuid.toString());
-                statement.setString(4, ServerInfo.getServerUUID_Old().toString());
+                statement.setString(4, getServerUUID().toString());
             }
         });
     }
@@ -177,7 +176,7 @@ public class NicknamesTable extends UserIDTable {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
-                statement.setString(2, ServerInfo.getServerUUID_Old().toString());
+                statement.setString(2, getServerUUID().toString());
                 statement.setString(3, name.getName());
                 statement.setLong(4, name.getDate());
             }

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +41,8 @@ import java.util.stream.Collectors;
  * @since 2.0.0
  */
 public abstract class SQLDB extends Database {
+
+    private final Supplier<UUID> serverUUIDSupplier;
 
     protected final Locale locale;
     protected final PlanConfig config;
@@ -75,6 +78,7 @@ public abstract class SQLDB extends Database {
     private PluginTask dbCleanTask;
 
     public SQLDB(
+            Supplier<UUID> serverUUIDSupplier,
             Locale locale,
             PlanConfig config,
             RunnableFactory runnableFactory,
@@ -82,6 +86,7 @@ public abstract class SQLDB extends Database {
             Timings timings,
             ErrorHandler errorHandler
     ) {
+        this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
         this.config = config;
         this.runnableFactory = runnableFactory;
@@ -462,5 +467,9 @@ public abstract class SQLDB extends Database {
     @Override
     public int hashCode() {
         return Objects.hash(getName());
+    }
+
+    public Supplier<UUID> getServerUUIDSupplier() {
+        return serverUUIDSupplier;
     }
 }

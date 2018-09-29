@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -105,7 +104,7 @@ public class TPSTable extends Table {
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() {
-        return getTPSData(ServerInfo.getServerUUID_Old());
+        return getTPSData(getServerUUID());
     }
 
     /**
@@ -138,7 +137,7 @@ public class TPSTable extends Table {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID_Old().toString());
+                statement.setString(1, getServerUUID().toString());
                 statement.setLong(2, tps.getDate());
                 statement.setDouble(3, tps.getTicksPerSecond());
                 statement.setInt(4, tps.getPlayers());
@@ -194,7 +193,7 @@ public class TPSTable extends Table {
     }
 
     public Optional<TPS> getPeakPlayerCount(long afterDate) {
-        return getPeakPlayerCount(ServerInfo.getServerUUID_Old(), afterDate);
+        return getPeakPlayerCount(getServerUUID(), afterDate);
     }
 
     public Map<UUID, List<TPS>> getAllTPS() {

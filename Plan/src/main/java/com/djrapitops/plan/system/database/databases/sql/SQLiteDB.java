@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -13,6 +14,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -29,16 +31,17 @@ public class SQLiteDB extends SQLDB {
     private Connection connection;
     private PluginTask connectionPingTask;
 
-    public SQLiteDB(
+    private SQLiteDB(
             File databaseFile,
             Locale locale,
             PlanConfig config,
+            Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger logger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(locale, config, runnableFactory, logger, timings, errorHandler);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, logger, timings, errorHandler);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
     }
@@ -179,6 +182,7 @@ public class SQLiteDB extends SQLDB {
 
         private final Locale locale;
         private final PlanConfig config;
+        private final Lazy<ServerInfo> serverInfo;
         private final RunnableFactory runnableFactory;
         private final PluginLogger logger;
         private final Timings timings;
@@ -190,6 +194,7 @@ public class SQLiteDB extends SQLDB {
                 Locale locale,
                 PlanConfig config,
                 PlanFiles planFiles,
+                Lazy<ServerInfo> serverInfo,
                 RunnableFactory runnableFactory,
                 PluginLogger logger,
                 Timings timings,
@@ -198,6 +203,7 @@ public class SQLiteDB extends SQLDB {
             this.locale = locale;
             this.config = config;
             this.planFiles = planFiles;
+            this.serverInfo = serverInfo;
             this.runnableFactory = runnableFactory;
             this.logger = logger;
             this.timings = timings;
@@ -213,7 +219,7 @@ public class SQLiteDB extends SQLDB {
         }
 
         public SQLiteDB usingFile(File databaseFile) {
-            return new SQLiteDB(databaseFile, locale, config, runnableFactory, logger, timings, errorHandler);
+            return new SQLiteDB(databaseFile, locale, config, serverInfo, runnableFactory, logger, timings, errorHandler);
         }
 
     }
