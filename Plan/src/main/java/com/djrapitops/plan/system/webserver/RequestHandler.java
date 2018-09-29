@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.webserver;
 
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
@@ -94,7 +95,10 @@ public class RequestHandler implements HttpHandler {
         } finally {
             exchange.close();
             if (inDevMode) {
-                logger.debug(requestString + " Response code: " + responseCode + timings.end(requestString).map(Benchmark::toString).orElse("-"));
+                logger.getDebugLogger().logOn(
+                        DebugChannels.WEB_REQUESTS,
+                        timings.end(requestString).map(Benchmark::toString).orElse("-") + " Code: " + responseCode
+                );
             }
         }
     }

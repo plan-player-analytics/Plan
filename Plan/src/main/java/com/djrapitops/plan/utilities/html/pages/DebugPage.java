@@ -301,7 +301,10 @@ public class DebugPage implements Page {
 
         TabsElement.Tab[] tabs = channels.entrySet().stream()
                 .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getKey(), two.getKey()))
-                .map(channel -> new TabsElement.Tab(channel.getKey(), debugChannelContent(channel.getKey(), channel.getValue())))
+                .map(channel -> {
+                    String name = channel.getKey().isEmpty() ? "Default" : channel.getKey();
+                    return new TabsElement.Tab(name, debugChannelContent(name, channel.getValue()));
+                })
                 .toArray(TabsElement.Tab[]::new);
 
         content.append(new TabsElement(tabs).toHtmlFull());

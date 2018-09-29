@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.info;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.InfoRequestFactory;
@@ -48,7 +49,7 @@ public class ServerInfoSystem extends InfoSystem {
         if (infoRequest instanceof SetupRequest) {
             throw new NoServersException("Set-up requests can not be run locally.");
         }
-        logger.debug("LocalRun: " + infoRequest.getClass().getSimpleName());
+        logger.getDebugLogger().logOn(DebugChannels.INFO_REQUESTS, "Local: " + infoRequest.getClass().getSimpleName());
         infoRequest.runLocally();
     }
 

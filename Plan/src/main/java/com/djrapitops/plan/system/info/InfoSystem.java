@@ -99,14 +99,14 @@ public abstract class InfoSystem implements SubSystem {
     public void sendRequest(InfoRequest infoRequest) throws WebException {
         try {
             if (!connectionSystem.isServerAvailable()) {
-                logger.debug(DebugChannels.INFO_REQUESTS, "Main server unavailable, running locally.");
+                logger.getDebugLogger().logOn(DebugChannels.INFO_REQUESTS, "Main server unavailable, running locally.");
                 runLocally(infoRequest);
                 return;
             }
             connectionSystem.sendInfoRequest(infoRequest);
         } catch (WebException original) {
             try {
-                logger.debug(DebugChannels.INFO_REQUESTS, "Exception during request: " + original.toString() + ", running locally.");
+                logger.getDebugLogger().logOn(DebugChannels.INFO_REQUESTS, "Exception during request: " + original.toString() + ", running locally.");
                 runLocally(infoRequest);
             } catch (NoServersException e2) {
                 throw original;
