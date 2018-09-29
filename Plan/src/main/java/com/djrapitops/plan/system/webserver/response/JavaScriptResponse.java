@@ -1,5 +1,7 @@
 package com.djrapitops.plan.system.webserver.response;
 
+import com.djrapitops.plan.system.file.PlanFiles;
+
 import java.io.IOException;
 
 /**
@@ -8,8 +10,8 @@ import java.io.IOException;
  */
 public class JavaScriptResponse extends FileResponse {
 
-    JavaScriptResponse(String fileName) throws IOException {
-        super(format(fileName));
+    JavaScriptResponse(String fileName, PlanFiles files) throws IOException {
+        super(format(fileName), files);
         super.setType(ResponseType.JAVASCRIPT);
     }
 }

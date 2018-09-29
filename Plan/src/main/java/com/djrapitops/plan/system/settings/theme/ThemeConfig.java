@@ -27,8 +27,8 @@ import java.util.List;
 public class ThemeConfig extends Config {
 
     @Inject
-    public ThemeConfig(PlanFiles planFiles, PlanConfig config, PluginLogger logger) {
-        this(getConfigFile(planFiles), getDefaults(planFiles, config, logger));
+    public ThemeConfig(PlanFiles files, PlanConfig config, PluginLogger logger) {
+        this(getConfigFile(files), getDefaults(files, config, logger));
     }
 
     private ThemeConfig(File configFile, List<String> defaults) {
@@ -43,12 +43,12 @@ public class ThemeConfig extends Config {
         }
     }
 
-    private static List<String> getDefaults(PlanFiles planFiles, PlanConfig config, PluginLogger logger) {
+    private static List<String> getDefaults(PlanFiles files, PlanConfig config, PluginLogger logger) {
         String fileName = config.getString(Settings.THEME_BASE);
         String fileLocation = getFileLocation(fileName);
 
         try {
-            return planFiles.readFromResource(fileLocation);
+            return files.readFromResource(fileLocation);
         } catch (IOException e) {
             logger.error("Could not find theme " + fileLocation + ". Attempting to use default.");
             return new ArrayList<>();
@@ -82,7 +82,7 @@ public class ThemeConfig extends Config {
         }
     }
 
-    private static File getConfigFile(PlanFiles planFiles) {
-        return planFiles.getFileFromPluginFolder("theme.yml");
+    private static File getConfigFile(PlanFiles files) {
+        return files.getFileFromPluginFolder("theme.yml");
     }
 }

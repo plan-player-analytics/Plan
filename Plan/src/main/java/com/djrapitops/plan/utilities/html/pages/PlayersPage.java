@@ -22,7 +22,7 @@ import java.util.List;
 public class PlayersPage implements Page {
 
     private final String version;
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final PlanConfig config;
     private final Database database;
     private final ServerInfo serverInfo;
@@ -33,7 +33,7 @@ public class PlayersPage implements Page {
 
     PlayersPage(
             String version,
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             Database database,
             ServerInfo serverInfo,
@@ -41,7 +41,7 @@ public class PlayersPage implements Page {
             Timings timings
     ) {
         this.version = version;
-        this.planFiles = planFiles;
+        this.files = files;
         this.config = config;
         this.database = database;
         this.serverInfo = serverInfo;
@@ -66,7 +66,7 @@ public class PlayersPage implements Page {
             placeholderReplacer.put("playersTable", tables.playerTableForPlayersPage(playerContainers).parseHtml());
             timings.end("Pages", "Players page players table parsing");
 
-            return placeholderReplacer.apply(planFiles.readCustomizableResourceFlat("web/players.html"));
+            return placeholderReplacer.apply(files.readCustomizableResourceFlat("web/players.html"));
         } catch (Exception e) {
             throw new ParseException(e);
         }

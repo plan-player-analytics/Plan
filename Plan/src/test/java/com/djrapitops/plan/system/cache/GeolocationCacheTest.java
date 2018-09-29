@@ -30,7 +30,7 @@ public class GeolocationCacheTest {
     private final Map<String, String> ipsToCountries = new HashMap<>();
 
     @Mock
-    private PlanFiles planFiles;
+    private PlanFiles files;
     @Mock
     private PlanConfig config;
     private GeolocationCache geolocationCache;
@@ -47,8 +47,8 @@ public class GeolocationCacheTest {
 
     @Before
     public void setUp() throws IOException {
-        doReturn(temporaryFolder.newFile("GeoIP.dat")).when(planFiles.getFileFromPluginFolder("GeoIP.dat"));
-        geolocationCache = new GeolocationCache(new Locale(), planFiles, config, new TestPluginLogger());
+        doReturn(temporaryFolder.newFile("GeoIP.dat")).when(files.getFileFromPluginFolder("GeoIP.dat"));
+        geolocationCache = new GeolocationCache(new Locale(), files, config, new TestPluginLogger());
 
         ipsToCountries.put("8.8.8.8", "United States");
         ipsToCountries.put("8.8.4.4", "United States");

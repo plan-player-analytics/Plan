@@ -24,18 +24,18 @@ import java.io.IOException;
 @Singleton
 public abstract class ConfigSystem implements SubSystem {
 
-    protected final PlanFiles planFiles;
+    protected final PlanFiles files;
     protected final PlanConfig config;
     protected final Theme theme;
     protected final ErrorHandler errorHandler;
 
     public ConfigSystem(
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             Theme theme,
             ErrorHandler errorHandler
     ) {
-        this.planFiles = planFiles;
+        this.files = files;
         this.config = config;
         this.theme = theme;
         this.errorHandler = errorHandler;

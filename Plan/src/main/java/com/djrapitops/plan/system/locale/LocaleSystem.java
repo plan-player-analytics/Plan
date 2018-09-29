@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class LocaleSystem implements SubSystem {
 
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final PlanConfig config;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
@@ -37,12 +37,12 @@ public class LocaleSystem implements SubSystem {
 
     @Inject
     public LocaleSystem(
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        this.planFiles = planFiles;
+        this.files = files;
         this.config = config;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -72,7 +72,7 @@ public class LocaleSystem implements SubSystem {
 
     @Override
     public void enable() {
-        File localeFile = planFiles.getLocaleFile();
+        File localeFile = files.getLocaleFile();
 
         if (config.isTrue(Settings.WRITE_NEW_LOCALE)) {
             writeNewDefaultLocale(localeFile);

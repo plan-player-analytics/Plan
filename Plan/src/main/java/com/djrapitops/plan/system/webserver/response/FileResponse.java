@@ -19,12 +19,9 @@ import java.io.IOException;
  */
 public class FileResponse extends Response {
 
-    // TODO
-    private PlanFiles planFiles;
-
-    public FileResponse(String fileName) throws IOException {
+    public FileResponse(String fileName, PlanFiles files) throws IOException {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(planFiles.readCustomizableResourceFlat(fileName));
+        super.setContent(files.readCustomizableResourceFlat(fileName));
     }
 
     public static String format(String fileName) {

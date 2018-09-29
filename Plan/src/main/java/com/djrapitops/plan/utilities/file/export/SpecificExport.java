@@ -29,7 +29,7 @@ import java.util.UUID;
  */
 public abstract class SpecificExport implements Runnable {
 
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final PlanConfig config;
     private final ServerInfo serverInfo;
 
@@ -37,11 +37,11 @@ public abstract class SpecificExport implements Runnable {
     private final boolean usingBungee;
 
     protected SpecificExport(
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             ServerInfo serverInfo
     ) {
-        this.planFiles = planFiles;
+        this.files = files;
         this.config = config;
         this.serverInfo = serverInfo;
         outputFolder = getFolder();
@@ -56,7 +56,7 @@ public abstract class SpecificExport implements Runnable {
         if (isAbsolute) {
             folder = new File(path);
         } else {
-            File dataFolder = planFiles.getDataFolder();
+            File dataFolder = files.getDataFolder();
             folder = new File(dataFolder, path);
         }
 

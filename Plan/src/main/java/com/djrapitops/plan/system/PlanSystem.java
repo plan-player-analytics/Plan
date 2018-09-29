@@ -38,7 +38,7 @@ import javax.inject.Singleton;
 @Singleton
 public class PlanSystem implements SubSystem {
 
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final ConfigSystem configSystem;
     private final VersionCheckSystem versionCheckSystem;
     private final LocaleSystem localeSystem;
@@ -60,7 +60,7 @@ public class PlanSystem implements SubSystem {
 
     @Inject
     public PlanSystem(
-            PlanFiles planFiles,
+            PlanFiles files,
             ConfigSystem configSystem,
             VersionCheckSystem versionCheckSystem,
             LocaleSystem localeSystem,
@@ -78,7 +78,7 @@ public class PlanSystem implements SubSystem {
             PlanAPI planAPI,
             ErrorHandler errorHandler
     ) {
-        this.planFiles = planFiles;
+        this.files = files;
         this.configSystem = configSystem;
         this.versionCheckSystem = versionCheckSystem;
         this.localeSystem = localeSystem;
@@ -105,7 +105,7 @@ public class PlanSystem implements SubSystem {
     @Override
     public void enable() throws EnableException {
         enableSystems(
-                planFiles,
+                files,
                 configSystem,
                 localeSystem,
                 versionCheckSystem,
@@ -143,7 +143,7 @@ public class PlanSystem implements SubSystem {
                 serverInfo,
                 localeSystem,
                 configSystem,
-                planFiles,
+                files,
                 versionCheckSystem
         );
     }
@@ -171,7 +171,7 @@ public class PlanSystem implements SubSystem {
     }
 
     public PlanFiles getPlanFiles() {
-        return planFiles;
+        return files;
     }
 
     public DBSystem getDatabaseSystem() {

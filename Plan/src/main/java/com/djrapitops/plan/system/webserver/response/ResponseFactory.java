@@ -97,7 +97,7 @@ public class ResponseFactory {
 
     public Response javaScriptResponse(String fileName) {
         try {
-            return new JavaScriptResponse(fileName);
+            return new JavaScriptResponse(fileName, files);
         } catch (IOException e) {
             return notFound404("JS File not found from jar: " + fileName + ", " + e.toString());
         }
@@ -105,7 +105,7 @@ public class ResponseFactory {
 
     public Response cssResponse(String fileName) {
         try {
-            return new CSSResponse(fileName);
+            return new CSSResponse(fileName, files);
         } catch (IOException e) {
             return notFound404("CSS File not found from jar: " + fileName + ", " + e.toString());
         }

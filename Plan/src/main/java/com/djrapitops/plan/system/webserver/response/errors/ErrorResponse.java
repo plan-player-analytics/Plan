@@ -24,9 +24,9 @@ public class ErrorResponse extends Response {
 
     private String version;
 
-    public ErrorResponse(String version, PlanFiles planFiles) throws IOException {
+    public ErrorResponse(String version, PlanFiles files) throws IOException {
         this.version = version;
-        setContent(planFiles.readCustomizableResourceFlat("web/error.html"));
+        setContent(files.readCustomizableResourceFlat("web/error.html"));
     }
 
     public ErrorResponse(String message) {

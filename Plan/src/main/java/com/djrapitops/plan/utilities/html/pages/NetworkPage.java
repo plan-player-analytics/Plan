@@ -25,16 +25,16 @@ public class NetworkPage implements Page {
 
     private final NetworkContainer networkContainer;
 
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final ServerProperties serverProperties;
 
     public NetworkPage(
             NetworkContainer networkContainer,
-            PlanFiles planFiles,
+            PlanFiles files,
             ServerProperties serverProperties
     ) {
         this.networkContainer = networkContainer;
-        this.planFiles = planFiles;
+        this.files = files;
         this.serverProperties = serverProperties;
     }
 
@@ -60,7 +60,7 @@ public class NetworkPage implements Page {
                     ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
             placeholderReplacer.put("tabContentServers", networkPageContent.getContents());
 
-            return placeholderReplacer.apply(planFiles.readCustomizableResourceFlat("web/network.html"));
+            return placeholderReplacer.apply(files.readCustomizableResourceFlat("web/network.html"));
         } catch (Exception e) {
             throw new ParseException(e);
         }

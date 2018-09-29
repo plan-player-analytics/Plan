@@ -28,16 +28,16 @@ public class AnalysisPage implements Page {
 
     private final AnalysisContainer analysisContainer;
 
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final Formatter<Double> decimalFormatter;
 
     AnalysisPage(
             AnalysisContainer analysisContainer,
-            PlanFiles planFiles,
+            PlanFiles files,
             Formatter<Double> decimalFormatter
     ) {
         this.analysisContainer = analysisContainer;
-        this.planFiles = planFiles;
+        this.files = files;
         this.decimalFormatter = decimalFormatter;
     }
 
@@ -79,7 +79,7 @@ public class AnalysisPage implements Page {
         performanceNumbers(placeholderReplacer);
 
         try {
-            return placeholderReplacer.apply(planFiles.readCustomizableResourceFlat("web/server.html"));
+            return placeholderReplacer.apply(files.readCustomizableResourceFlat("web/server.html"));
         } catch (IOException e) {
             throw new ParseException(e);
         } finally {

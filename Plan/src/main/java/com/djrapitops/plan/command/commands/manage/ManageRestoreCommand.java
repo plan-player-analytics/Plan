@@ -35,7 +35,7 @@ public class ManageRestoreCommand extends CommandNode {
     private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
     private final SQLiteDB.Factory sqliteFactory;
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
 
     @Inject
     public ManageRestoreCommand(
@@ -43,7 +43,7 @@ public class ManageRestoreCommand extends CommandNode {
             Processing processing,
             DBSystem dbSystem,
             SQLiteDB.Factory sqliteFactory,
-            PlanFiles planFiles,
+            PlanFiles files,
             ErrorHandler errorHandler
     ) {
         super("restore", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
@@ -52,7 +52,7 @@ public class ManageRestoreCommand extends CommandNode {
         this.processing = processing;
         this.dbSystem = dbSystem;
         this.sqliteFactory = sqliteFactory;
-        this.planFiles = planFiles;
+        this.files = files;
         this.errorHandler = errorHandler;
 
         setArguments("<Filename.db>", "<dbTo>", "[-a]");
@@ -96,7 +96,7 @@ public class ManageRestoreCommand extends CommandNode {
                 String backupDBName = backupDbName;
                 boolean containsDBFileExtension = backupDBName.endsWith(".db");
 
-                File backupDBFile = planFiles.getFileFromPluginFolder(backupDBName + (containsDBFileExtension ? "" : ".db"));
+                File backupDBFile = files.getFileFromPluginFolder(backupDBName + (containsDBFileExtension ? "" : ".db"));
 
                 if (!backupDBFile.exists()) {
                     sender.sendMessage(locale.getString(ManageLang.FAIL_FILE_NOT_FOUND, backupDBFile.getAbsolutePath()));

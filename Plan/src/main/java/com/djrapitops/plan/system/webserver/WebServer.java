@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class WebServer implements SubSystem {
 
     private final Locale locale;
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final PlanConfig config;
 
     private final ServerProperties serverProperties;
@@ -58,7 +58,7 @@ public class WebServer implements SubSystem {
     @Inject
     public WebServer(
             Locale locale,
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             ServerProperties serverProperties,
             PluginLogger logger,
@@ -66,7 +66,7 @@ public class WebServer implements SubSystem {
             RequestHandler requestHandler
     ) {
         this.locale = locale;
-        this.planFiles = planFiles;
+        this.files = files;
         this.config = config;
         this.serverProperties = serverProperties;
 
@@ -136,7 +136,7 @@ public class WebServer implements SubSystem {
     private boolean startHttpsServer() {
         String keyStorePath = config.getString(Settings.WEBSERVER_CERTIFICATE_PATH);
         if (!Paths.get(keyStorePath).isAbsolute()) {
-            keyStorePath = planFiles.getDataFolder() + File.separator + keyStorePath;
+            keyStorePath = files.getDataFolder() + File.separator + keyStorePath;
         }
 
         char[] storepass = config.getString(Settings.WEBSERVER_CERTIFICATE_STOREPASS).toCharArray();

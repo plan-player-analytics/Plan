@@ -25,17 +25,17 @@ public class BungeeConfigSystem extends ConfigSystem {
 
     @Inject
     public BungeeConfigSystem(
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             Theme theme,
             ErrorHandler errorHandler
     ) {
-        super(planFiles, config, theme, errorHandler);
+        super(files, config, theme, errorHandler);
     }
 
     @Override
     protected void copyDefaults() throws IOException {
-        config.copyDefaults(planFiles.readFromResource("bungeeconfig.yml"));
+        config.copyDefaults(files.readFromResource("bungeeconfig.yml"));
     }
 
     @Override

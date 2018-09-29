@@ -42,7 +42,7 @@ public class HtmlExport extends SpecificExport {
     private final PlanPlugin plugin;
     private final Theme theme;
     private final Processing processing;
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final Database database;
     private final PageFactory pageFactory;
     private final ConnectionSystem connectionSystem;
@@ -51,7 +51,7 @@ public class HtmlExport extends SpecificExport {
     @Inject
     public HtmlExport(
             PlanPlugin plugin,
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             Theme theme,
             Processing processing,
@@ -61,11 +61,11 @@ public class HtmlExport extends SpecificExport {
             ConnectionSystem connectionSystem,
             ErrorHandler errorHandler
     ) {
-        super(planFiles, config, serverInfo);
+        super(files, config, serverInfo);
         this.plugin = plugin;
         this.theme = theme;
         this.processing = processing;
-        this.planFiles = planFiles;
+        this.files = files;
         this.database = database;
         this.pageFactory = pageFactory;
         this.connectionSystem = connectionSystem;
@@ -186,7 +186,7 @@ public class HtmlExport extends SpecificExport {
         copyFromJar(resources);
 
         try {
-            String demo = planFiles.readFromResourceFlat("web/js/demo.js")
+            String demo = files.readFromResourceFlat("web/js/demo.js")
                     .replace("${defaultTheme}", theme.getValue(ThemeVal.THEME_DEFAULT));
             List<String> lines = Arrays.asList(demo.split("\n"));
             File outputFolder = new File(this.outputFolder, "js");

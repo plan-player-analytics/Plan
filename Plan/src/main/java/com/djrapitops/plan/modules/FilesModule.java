@@ -19,8 +19,8 @@ public class FilesModule {
     @Provides
     @Named("configFile")
     @Singleton
-    File provideConfigFile(PlanFiles planFiles) {
-        return planFiles.getConfigFile();
+    File provideConfigFile(PlanFiles files) {
+        return files.getConfigFile();
     }
 
 }

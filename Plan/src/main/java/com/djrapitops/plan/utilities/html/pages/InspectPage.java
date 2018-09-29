@@ -48,7 +48,7 @@ public class InspectPage implements Page {
 
     private final String version;
 
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final PlanConfig config;
     private final Theme theme;
     private final Graphs graphs;
@@ -65,7 +65,7 @@ public class InspectPage implements Page {
     InspectPage(
             PlayerContainer player, Map<UUID, String> serverNames,
             String version,
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             Theme theme,
             Graphs graphs,
@@ -78,7 +78,7 @@ public class InspectPage implements Page {
         this.player = player;
         this.serverNames = serverNames;
         this.version = version;
-        this.planFiles = planFiles;
+        this.files = files;
         this.config = config;
         this.theme = theme;
         this.graphs = graphs;
@@ -231,7 +231,7 @@ public class InspectPage implements Page {
                         : serverName
         );
 
-        return replacer.apply(planFiles.readCustomizableResourceFlat("web/player.html"));
+        return replacer.apply(files.readCustomizableResourceFlat("web/player.html"));
     }
 
     private void sessionsAndPlaytime(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator daySessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {

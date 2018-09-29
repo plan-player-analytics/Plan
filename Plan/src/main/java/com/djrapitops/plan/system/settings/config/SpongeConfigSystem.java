@@ -25,19 +25,19 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
 
     @Inject
     public SpongeConfigSystem(
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             Theme theme,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(planFiles, config, theme, errorHandler);
+        super(files, config, theme, errorHandler);
         this.logger = logger;
     }
 
     @Override
     public void enable() throws EnableException {
-        firstInstall = !planFiles.getConfigFile().exists();
+        firstInstall = !files.getConfigFile().exists();
         super.enable();
         config.getNetworkSettings().loadSettingsFromDB();
     }

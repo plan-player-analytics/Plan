@@ -40,7 +40,7 @@ import java.util.zip.GZIPInputStream;
 public class GeolocationCache implements SubSystem {
 
     private final Locale locale;
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
     private final PlanConfig config;
     private final PluginLogger logger;
     private final Map<String, String> cached;
@@ -50,12 +50,12 @@ public class GeolocationCache implements SubSystem {
     @Inject
     public GeolocationCache(
             Locale locale,
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             PluginLogger logger
     ) {
         this.locale = locale;
-        this.planFiles = planFiles;
+        this.files = files;
         this.config = config;
         this.logger = logger;
 
@@ -64,7 +64,7 @@ public class GeolocationCache implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        geolocationDB = planFiles.getFileFromPluginFolder("GeoIP.dat");
+        geolocationDB = files.getFileFromPluginFolder("GeoIP.dat");
         if (config.isTrue(Settings.DATA_GEOLOCATIONS)) {
             try {
                 checkDB();

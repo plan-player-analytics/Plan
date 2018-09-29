@@ -187,13 +187,13 @@ public class SQLiteDB extends SQLDB {
         private final PluginLogger logger;
         private final Timings timings;
         private final ErrorHandler errorHandler;
-        private PlanFiles planFiles;
+        private PlanFiles files;
 
         @Inject
         public Factory(
                 Locale locale,
                 PlanConfig config,
-                PlanFiles planFiles,
+                PlanFiles files,
                 Lazy<ServerInfo> serverInfo,
                 RunnableFactory runnableFactory,
                 PluginLogger logger,
@@ -202,7 +202,7 @@ public class SQLiteDB extends SQLDB {
         ) {
             this.locale = locale;
             this.config = config;
-            this.planFiles = planFiles;
+            this.files = files;
             this.serverInfo = serverInfo;
             this.runnableFactory = runnableFactory;
             this.logger = logger;
@@ -215,7 +215,7 @@ public class SQLiteDB extends SQLDB {
         }
 
         public SQLiteDB usingFileCalled(String fileName) {
-            return usingFile(planFiles.getFileFromPluginFolder(fileName + ".db"));
+            return usingFile(files.getFileFromPluginFolder(fileName + ".db"));
         }
 
         public SQLiteDB usingFile(File databaseFile) {

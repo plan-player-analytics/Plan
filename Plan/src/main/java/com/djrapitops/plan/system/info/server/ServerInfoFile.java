@@ -23,16 +23,16 @@ import java.util.UUID;
  */
 public class ServerInfoFile extends Config {
 
-    private final PlanFiles planFiles;
+    private final PlanFiles files;
 
     @Inject
-    public ServerInfoFile(PlanFiles planFiles) {
-        super(planFiles.getFileFromPluginFolder("ServerInfoFile.yml"));
-        this.planFiles = planFiles;
+    public ServerInfoFile(PlanFiles files) {
+        super(files.getFileFromPluginFolder("ServerInfoFile.yml"));
+        this.files = files;
     }
 
     public void prepare() throws IOException {
-        copyDefaults(planFiles.readFromResource("DefaultServerInfoFile.yml"));
+        copyDefaults(files.readFromResource("DefaultServerInfoFile.yml"));
         save();
     }
 

@@ -25,17 +25,17 @@ public class BukkitConfigSystem extends ConfigSystem {
 
     @Inject
     public BukkitConfigSystem(
-            PlanFiles planFiles,
+            PlanFiles files,
             PlanConfig config,
             Theme theme,
             ErrorHandler errorHandler
     ) {
-        super(planFiles, config, theme, errorHandler);
+        super(files, config, theme, errorHandler);
     }
 
     @Override
     protected void copyDefaults() throws IOException {
-        config.copyDefaults(planFiles.readFromResource("config.yml"));
+        config.copyDefaults(files.readFromResource("config.yml"));
     }
 
     @Override
