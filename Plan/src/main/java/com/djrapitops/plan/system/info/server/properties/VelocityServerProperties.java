@@ -18,8 +18,8 @@ public class VelocityServerProperties extends ServerProperties {
                 "Velocity",
                 server.getBoundAddress().getPort(),
                 // not sure how to get these
-                server.getVersion(),
-                server.getVersion(),
+                server.getClass().getPackage().getImplementationVersion(),
+                server.getClass().getPackage().getImplementationVersion(),
                 Settings.BUNGEE_IP::toString,
                 -1, // not sure how to get this
                 RedisCheck.isClassAvailable() ? new RedisPlayersOnlineSupplier() : server::getPlayerCount
