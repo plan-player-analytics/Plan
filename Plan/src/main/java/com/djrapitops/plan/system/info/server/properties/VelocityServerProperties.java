@@ -6,7 +6,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 /**
  * ServerProperties for Velocity.
  * <p>
- * Supports RedisVelocity for Players online getting.
+ * Supports RedisBungee for Players online getting.
  *
  * @author Rsl1122
  */
