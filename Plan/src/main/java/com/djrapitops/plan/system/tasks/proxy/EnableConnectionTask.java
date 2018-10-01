@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.tasks.bungee;
+package com.djrapitops.plan.system.tasks.proxy;
 
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;

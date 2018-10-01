@@ -48,7 +48,7 @@ public class SessionCacheTest {
 
     @Test
     public void testBungeeReCaching() {
-        SessionCache cache = new BungeeDataCache(null);
+        SessionCache cache = new ProxyDataCache(null);
         cache.cacheSession(uuid, session);
         Session expected = new Session(uuid, 0, "", "");
         cache.cacheSession(uuid, expected);

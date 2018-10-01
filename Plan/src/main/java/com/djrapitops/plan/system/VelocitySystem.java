@@ -8,11 +8,11 @@ import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.api.VelocityAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.cache.VelocityCacheSystem;
-import com.djrapitops.plan.system.database.VelocityDBSystem;
+import com.djrapitops.plan.system.cache.ProxyCacheSystem;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.ProxyDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.info.VelocityInfoSystem;
+import com.djrapitops.plan.system.info.ProxyInfoSystem;
 import com.djrapitops.plan.system.info.server.VelocityServerInfo;
 import com.djrapitops.plan.system.listeners.VelocityListenerSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -44,12 +44,12 @@ public class VelocitySystem extends PlanSystem {
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
         configSystem = new BungeeConfigSystem(); // not sure if this needs to be different for velocity
-        databaseSystem = new VelocityDBSystem(localeSupplier);
-        cacheSystem = new VelocityCacheSystem(this);
+        databaseSystem = new ProxyDBSystem(localeSupplier);
+        cacheSystem = new ProxyCacheSystem(this);
         listenerSystem = new VelocityListenerSystem(plugin);
         taskSystem = new VelocityTaskSystem(plugin);
 
-        infoSystem = new VelocityInfoSystem();
+        infoSystem = new ProxyInfoSystem();
         serverInfo = new VelocityServerInfo(plugin);
 
         hookHandler = new HookHandler();

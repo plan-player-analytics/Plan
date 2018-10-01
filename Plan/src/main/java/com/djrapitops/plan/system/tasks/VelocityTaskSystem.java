@@ -6,8 +6,8 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.tasks.proxy.EnableConnectionTask;
 import com.djrapitops.plan.system.tasks.velocity.VelocityTPSCountTimer;
-import com.djrapitops.plan.system.tasks.velocity.EnableConnectionTask;
 import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.tasks.server.PingCountTimerVelocity;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;

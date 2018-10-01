@@ -10,7 +10,6 @@ import com.djrapitops.plan.system.VelocitySystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
-import com.djrapitops.plan.utilities.metrics.BStatsVelocity;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.VelocityPlugin;
 import com.djrapitops.plugin.api.Benchmark;
@@ -60,8 +59,6 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
             system = new VelocitySystem(this);
             locale = system.getLocaleSystem().getLocale();
             system.enable();
-
-            new BStatsVelocity(this).registerMetrics();
 
             Log.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {

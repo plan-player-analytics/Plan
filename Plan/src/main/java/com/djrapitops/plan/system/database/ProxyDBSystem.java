@@ -11,15 +11,13 @@ import com.djrapitops.plan.system.locale.Locale;
 import java.util.function.Supplier;
 
 /**
- * Velocity Database system that initializes MySQL object.
+ * Bungee Database system that initializes MySQL object.
  *
- * Based on BungeeDBSystem
- *
- * @author MicleBrick
+ * @author Rsl1122
  */
-public class VelocityDBSystem extends DBSystem {
+public class ProxyDBSystem extends DBSystem {
 
-    public VelocityDBSystem(Supplier<Locale> locale) {
+    public ProxyDBSystem(Supplier<Locale> locale) {
         super(locale);
     }
 

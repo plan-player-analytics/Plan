@@ -8,11 +8,11 @@ import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.BungeeAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.cache.BungeeCacheSystem;
-import com.djrapitops.plan.system.database.BungeeDBSystem;
+import com.djrapitops.plan.system.cache.ProxyCacheSystem;
+import com.djrapitops.plan.system.database.ProxyDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.info.BungeeInfoSystem;
+import com.djrapitops.plan.system.info.ProxyInfoSystem;
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -42,12 +42,12 @@ public class BungeeSystem extends PlanSystem {
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
         configSystem = new BungeeConfigSystem();
-        databaseSystem = new BungeeDBSystem(localeSupplier);
-        cacheSystem = new BungeeCacheSystem(this);
+        databaseSystem = new ProxyDBSystem(localeSupplier);
+        cacheSystem = new ProxyCacheSystem(this);
         listenerSystem = new BungeeListenerSystem(plugin);
         taskSystem = new BungeeTaskSystem(plugin);
 
-        infoSystem = new BungeeInfoSystem();
+        infoSystem = new ProxyInfoSystem();
         serverInfo = new BungeeServerInfo(plugin);
 
         hookHandler = new HookHandler();
