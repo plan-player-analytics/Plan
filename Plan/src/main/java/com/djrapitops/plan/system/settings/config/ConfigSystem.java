@@ -31,7 +31,7 @@ public abstract class ConfigSystem implements SubSystem {
     protected final PlanFiles files;
     protected final PlanConfig config;
     protected final Theme theme;
-    private final PluginLogger logger;
+    protected final PluginLogger logger;
     protected final ErrorHandler errorHandler;
 
     public ConfigSystem(

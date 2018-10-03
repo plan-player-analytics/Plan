@@ -70,8 +70,8 @@ public class PlayersMutator {
         );
     }
 
-    public PlayersMutator filterActive(long date, double limit) {
-        return filterBy(player -> player.getActivityIndex(date).getValue() >= limit);
+    public PlayersMutator filterActive(long date, int minuteThreshold, int loginThreshold, double limit) {
+        return filterBy(player -> player.getActivityIndex(date, minuteThreshold, loginThreshold).getValue() >= limit);
     }
 
     public PlayersMutator filterPlayedOnServer(UUID serverUUID) {
@@ -123,7 +123,7 @@ public class PlayersMutator {
         return pingPerCountry;
     }
 
-    public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date) {
+    public TreeMap<Long, Map<String, Set<UUID>>> toActivityDataMap(long date, int minuteThreshold, int loginThreshold) {
         TreeMap<Long, Map<String, Set<UUID>>> activityData = new TreeMap<>();
         for (long time = date; time >= date - TimeAmount.MONTH.toMillis(2L); time -= TimeAmount.WEEK.toMillis(1L)) {
             Map<String, Set<UUID>> map = activityData.getOrDefault(time, new HashMap<>());
@@ -132,7 +132,7 @@ public class PlayersMutator {
                     if (player.getValue(PlayerKeys.REGISTERED).orElse(0L) > time) {
                         continue;
                     }
-                    ActivityIndex activityIndex = player.getActivityIndex(time);
+                    ActivityIndex activityIndex = player.getActivityIndex(time, minuteThreshold, loginThreshold);
                     String activityGroup = activityIndex.getGroup();
 
                     Set<UUID> uuids = map.getOrDefault(activityGroup, new HashSet<>());

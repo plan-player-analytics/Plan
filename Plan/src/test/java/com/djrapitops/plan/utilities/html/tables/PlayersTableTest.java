@@ -36,7 +36,7 @@ public class PlayersTableTest {
         PlayerContainer container = new PlayerContainer();
         container.putRawData(PlayerKeys.SESSIONS, new ArrayList<>());
         List<PlayerContainer> players = Collections.singletonList(container);
-        String html = new PlayersTable(players, 50, l -> "", l -> "", d -> "").parseHtml();
+        String html = new PlayersTable(players, 50, 60, 5, l -> "", l -> "", d -> "").parseHtml();
 
         testHtmlValidity(html);
     }

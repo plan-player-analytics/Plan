@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.settings.config;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
@@ -28,9 +29,10 @@ public class BukkitConfigSystem extends ConfigSystem {
             PlanFiles files,
             PlanConfig config,
             Theme theme,
+            PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(files, config, theme, errorHandler);
+        super(files, config, theme, logger, errorHandler);
     }
 
     @Override

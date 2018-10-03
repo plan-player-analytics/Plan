@@ -19,9 +19,9 @@ public class ActivityIndex {
 
     public ActivityIndex(
             DataContainer container, long date,
-            int playThreshold, int loginThreshold
+            int minuteThreshold, int loginThreshold
     ) {
-        this.playThreshold = playThreshold;
+        this.playThreshold = minuteThreshold;
         this.loginThreshold = loginThreshold;
         
         value = calculate(container, date);

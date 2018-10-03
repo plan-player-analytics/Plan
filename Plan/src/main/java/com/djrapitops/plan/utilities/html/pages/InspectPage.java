@@ -214,7 +214,9 @@ public class InspectPage implements Page {
 
         pvpAndPve(replacer, sessionsMutator, weekSessionsMutator, monthSessionsMutator);
 
-        ActivityIndex activityIndex = player.getActivityIndex(now);
+        ActivityIndex activityIndex = player.getActivityIndex(
+                now, config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD), config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
+        );
 
         replacer.put("activityIndexNumber", activityIndex.getFormattedValue(decimalFormatter));
         replacer.put("activityIndexColor", activityIndex.getColor());

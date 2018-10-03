@@ -16,6 +16,8 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.GenericLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -44,6 +46,7 @@ public class QInspectCommand extends CommandNode {
 
     private final Locale locale;
     private final Database database;
+    private final PlanConfig config;
     private final Processing processing;
     private final Formatters formatters;
     private final UUIDUtility uuidUtility;
@@ -51,6 +54,7 @@ public class QInspectCommand extends CommandNode {
 
     @Inject
     public QInspectCommand(
+            PlanConfig config,
             Locale locale,
             Processing processing,
             Database database,
@@ -59,6 +63,7 @@ public class QInspectCommand extends CommandNode {
             ErrorHandler errorHandler
     ) {
         super("qinspect", Permissions.QUICK_INSPECT.getPermission(), CommandType.PLAYER_OR_ARGS);
+        this.config = config;
         this.processing = processing;
         this.formatters = formatters;
         setArguments("<player>");
@@ -115,7 +120,11 @@ public class QInspectCommand extends CommandNode {
 
         String playerName = player.getValue(PlayerKeys.NAME).orElse(locale.getString(GenericLang.UNKNOWN));
 
-        ActivityIndex activityIndex = player.getActivityIndex(now);
+        ActivityIndex activityIndex = player.getActivityIndex(
+                now,
+                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
+                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
+        );
         Long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
         Long lastSeen = player.getValue(PlayerKeys.LAST_SEEN).orElse(0L);
         List<GeoInfo> geoInfo = player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());

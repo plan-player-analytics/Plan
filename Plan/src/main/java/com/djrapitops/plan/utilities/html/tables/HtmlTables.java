@@ -136,7 +136,10 @@ public class HtmlTables {
      */
     public TableContainer playerTableForServerPage(List<PlayerContainer> players) {
         return new PlayersTable(
-                players, config.getNumber(Settings.MAX_PLAYERS),
+                players,
+                config.getNumber(Settings.MAX_PLAYERS),
+                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
+                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
                 formatters.timeAmount(), formatters.yearLong(), formatters.decimals()
         );
     }
@@ -150,7 +153,7 @@ public class HtmlTables {
     public TableContainer playerTableForPlayersPage(List<PlayerContainer> players) {
         return new PlayersTable(
                 players, config.getNumber(Settings.MAX_PLAYERS_PLAYERS_PAGE),
-                formatters.timeAmount(), formatters.yearLong(), formatters.decimals()
+                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD), config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD), formatters.timeAmount(), formatters.yearLong(), formatters.decimals()
         );
     }
 

@@ -19,8 +19,6 @@ import java.io.IOException;
 @Singleton
 public class SpongeConfigSystem extends BukkitConfigSystem {
 
-    private final PluginLogger logger;
-
     private boolean firstInstall;
 
     @Inject
@@ -31,8 +29,7 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(files, config, theme, errorHandler);
-        this.logger = logger;
+        super(files, config, theme, logger, errorHandler);
     }
 
     @Override

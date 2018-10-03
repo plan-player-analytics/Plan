@@ -20,6 +20,8 @@ public abstract class AbstractHealthInfo {
     protected double serverHealth;
 
     // TODO
+    protected int activeMinuteThreshold;
+    protected int activeLoginThreshold;
     protected Formatter<Long> timeAmountFormatter;
     protected Formatter<Double> decimalFormatter;
     protected Formatter<Double> percentageFormatter;
@@ -102,7 +104,7 @@ public abstract class AbstractHealthInfo {
     }
 
     protected void activePlayerPlaytimeChange(PlayersMutator playersMutator) {
-        PlayersMutator currentlyActive = playersMutator.filterActive(now, 1.75);
+        PlayersMutator currentlyActive = playersMutator.filterActive(now, activeMinuteThreshold, activeLoginThreshold, 1.75);
         long twoWeeksAgo = (now - (now - monthAgo)) / 2L;
 
         long totalFourToTwoWeeks = 0;
