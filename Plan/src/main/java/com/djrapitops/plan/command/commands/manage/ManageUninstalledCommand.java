@@ -13,7 +13,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -63,7 +63,7 @@ public class ManageUninstalledCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
         processing.submitNonCritical(() -> {

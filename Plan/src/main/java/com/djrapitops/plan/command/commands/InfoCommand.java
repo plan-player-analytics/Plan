@@ -11,7 +11,7 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import javax.inject.Inject;
 
@@ -49,7 +49,7 @@ public class InfoCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         String yes = locale.getString(GenericLang.YES);
         String no = locale.getString(GenericLang.NO);
 

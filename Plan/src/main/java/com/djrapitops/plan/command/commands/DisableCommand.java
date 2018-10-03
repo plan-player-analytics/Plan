@@ -7,7 +7,7 @@ import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import javax.inject.Inject;
 
@@ -28,7 +28,7 @@ public class DisableCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         plugin.onDisable();
         sender.sendMessage(locale.getString(CommandLang.DISABLE_DISABLED));
     }

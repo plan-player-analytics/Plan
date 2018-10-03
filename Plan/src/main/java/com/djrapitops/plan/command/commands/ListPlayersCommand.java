@@ -9,7 +9,7 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import javax.inject.Inject;
 
@@ -36,11 +36,11 @@ public class ListPlayersCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         sendListMsg(sender);
     }
 
-    private void sendListMsg(ISender sender) {
+    private void sendListMsg(Sender sender) {
         sender.sendMessage(locale.getString(CommandLang.HEADER_PLAYERS));
 
         // Link

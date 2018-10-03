@@ -9,7 +9,7 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import javax.inject.Inject;
 
@@ -35,11 +35,11 @@ public class NetworkCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         sendNetworkMsg(sender);
     }
 
-    private void sendNetworkMsg(ISender sender) {
+    private void sendNetworkMsg(Sender sender) {
         sender.sendMessage(locale.getString(CommandLang.HEADER_NETWORK));
 
         // Link

@@ -16,7 +16,7 @@ import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -68,7 +68,7 @@ public class InspectCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender);
 
         if (playerName == null) {
@@ -78,7 +78,7 @@ public class InspectCommand extends CommandNode {
         runInspectTask(playerName, sender);
     }
 
-    private void runInspectTask(String playerName, ISender sender) {
+    private void runInspectTask(String playerName, Sender sender) {
         processing.submitNonCritical(() -> {
             try {
                 UUID uuid = uuidUtility.getUUIDOf(playerName);
@@ -101,7 +101,7 @@ public class InspectCommand extends CommandNode {
         });
     }
 
-    private void checkWebUserAndNotify(ISender sender) {
+    private void checkWebUserAndNotify(Sender sender) {
         if (CommandUtils.isPlayer(sender) && webServer.isAuthRequired()) {
             boolean senderHasWebUser = database.check().doesWebUserExists(sender.getName());
 
@@ -111,7 +111,7 @@ public class InspectCommand extends CommandNode {
         }
     }
 
-    private void sendInspectMsg(ISender sender, String playerName) {
+    private void sendInspectMsg(Sender sender, String playerName) {
         sender.sendMessage(locale.getString(CommandLang.HEADER_INSPECT, playerName));
 
         String url = connectionSystem.getMainAddress() + "/player/" + playerName;

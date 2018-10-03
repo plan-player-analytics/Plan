@@ -9,7 +9,7 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -35,7 +35,7 @@ public class DevCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String cmd, String[] args) {
+    public void onCommand(Sender sender, String cmd, String[] args) {
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 

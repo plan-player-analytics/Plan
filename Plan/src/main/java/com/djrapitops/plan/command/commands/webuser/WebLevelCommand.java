@@ -6,7 +6,7 @@ import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import javax.inject.Inject;
 
@@ -30,7 +30,7 @@ public class WebLevelCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         sender.sendMessage(locale.getArray(CommandLang.WEB_PERMISSION_LEVELS));
     }
 

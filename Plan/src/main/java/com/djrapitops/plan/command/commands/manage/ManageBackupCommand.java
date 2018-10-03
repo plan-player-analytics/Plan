@@ -16,7 +16,7 @@ import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -70,7 +70,7 @@ public class ManageBackupCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         try {
             Verify.isTrue(args.length >= 1,
                     () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
@@ -90,7 +90,7 @@ public class ManageBackupCommand extends CommandNode {
         }
     }
 
-    private void runBackupTask(ISender sender, String[] args, Database database) {
+    private void runBackupTask(Sender sender, String[] args, Database database) {
         processing.submitCritical(() -> {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));

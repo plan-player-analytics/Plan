@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.processing.processors.info;
 
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
 
@@ -36,9 +36,9 @@ public class InfoProcessors {
 
     public InspectCacheRequestProcessor inspectCacheRequestProcessor(
             UUID uuid,
-            ISender sender,
+            Sender sender,
             String playerName,
-            BiConsumer<ISender, String> msgSender
+            BiConsumer<Sender, String> msgSender
     ) {
         return new InspectCacheRequestProcessor(uuid, sender, playerName, msgSender,
                 infoSystem.get(), webExceptionLogger.get()

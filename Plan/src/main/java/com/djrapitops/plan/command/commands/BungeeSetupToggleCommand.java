@@ -12,7 +12,7 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import javax.inject.Inject;
 
@@ -40,7 +40,7 @@ public class BungeeSetupToggleCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String s, String[] strings) {
+    public void onCommand(Sender sender, String s, String[] strings) {
         if (connectionSystem.isSetupAllowed()) {
             connectionSystem.setSetupAllowed(false);
         } else {

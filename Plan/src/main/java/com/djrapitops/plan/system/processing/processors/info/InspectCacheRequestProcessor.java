@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -21,18 +21,18 @@ import java.util.function.BiConsumer;
 public class InspectCacheRequestProcessor implements Runnable {
 
     private final UUID uuid;
-    private final ISender sender;
+    private final Sender sender;
     private final String playerName;
-    private final BiConsumer<ISender, String> msgSender;
+    private final BiConsumer<Sender, String> msgSender;
 
     private final InfoSystem infoSystem;
     private final WebExceptionLogger webExceptionLogger;
 
     InspectCacheRequestProcessor(
             UUID uuid,
-            ISender sender,
+            Sender sender,
             String playerName,
-            BiConsumer<ISender, String> msgSender,
+            BiConsumer<Sender, String> msgSender,
             InfoSystem infoSystem,
             WebExceptionLogger webExceptionLogger
     ) {

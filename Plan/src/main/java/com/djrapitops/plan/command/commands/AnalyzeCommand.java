@@ -18,7 +18,7 @@ import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -73,7 +73,7 @@ public class AnalyzeCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
         processing.submitNonCritical(() -> {
@@ -91,7 +91,7 @@ public class AnalyzeCommand extends CommandNode {
         });
     }
 
-    private void sendLink(Server server, ISender sender) {
+    private void sendLink(Server server, Sender sender) {
         String target = "/server/" + server.getName();
         String url = connectionSystem.getMainAddress() + target;
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
@@ -107,7 +107,7 @@ public class AnalyzeCommand extends CommandNode {
         sender.sendMessage(">");
     }
 
-    private void sendWebUserNotificationIfNecessary(ISender sender) {
+    private void sendWebUserNotificationIfNecessary(Sender sender) {
         if (webServer.isAuthRequired() &&
                 CommandUtils.isPlayer(sender) &&
                 !database.check().doesWebUserExists(sender.getName())) {

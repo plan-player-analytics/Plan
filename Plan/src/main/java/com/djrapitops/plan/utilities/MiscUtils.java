@@ -2,7 +2,7 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class MiscUtils {
      * @param sender Sender of command
      * @return Player name.
      */
-    public static String getPlayerName(String[] args, ISender sender) {
+    public static String getPlayerName(String[] args, Sender sender) {
         return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
     }
 
@@ -41,7 +41,7 @@ public class MiscUtils {
      * @param perm   Permission to use when checking.
      * @return The name of the player (first argument or sender) or null if sender has no permission.
      */
-    public static String getPlayerName(String[] args, ISender sender, Permissions perm) {
+    public static String getPlayerName(String[] args, Sender sender, Permissions perm) {
         String playerName;
         boolean isConsole = !CommandUtils.isPlayer(sender);
         if (isConsole) {

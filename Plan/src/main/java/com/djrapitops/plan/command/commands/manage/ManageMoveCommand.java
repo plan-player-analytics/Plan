@@ -11,7 +11,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -56,7 +56,7 @@ public class ManageMoveCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 2,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 2, Arrays.toString(this.getArguments()))));
 
@@ -90,7 +90,7 @@ public class ManageMoveCommand extends CommandNode {
         }
     }
 
-    private void runMoveTask(final Database fromDatabase, final Database toDatabase, ISender sender) {
+    private void runMoveTask(final Database fromDatabase, final Database toDatabase, Sender sender) {
         processing.submitCritical(() -> {
             try {
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));

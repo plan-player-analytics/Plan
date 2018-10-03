@@ -11,7 +11,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -55,7 +55,7 @@ public class SearchCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
@@ -64,7 +64,7 @@ public class SearchCommand extends CommandNode {
         runSearchTask(args, sender);
     }
 
-    private void runSearchTask(String[] args, ISender sender) {
+    private void runSearchTask(String[] args, Sender sender) {
         processing.submitNonCritical(() -> {
             try {
                 String searchTerm = args[0];

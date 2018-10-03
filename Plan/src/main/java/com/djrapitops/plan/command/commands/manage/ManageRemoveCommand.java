@@ -13,7 +13,7 @@ import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -60,7 +60,7 @@ public class ManageRemoveCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
@@ -74,7 +74,7 @@ public class ManageRemoveCommand extends CommandNode {
         runRemoveTask(playerName, sender, args);
     }
 
-    private void runRemoveTask(String playerName, ISender sender, String[] args) {
+    private void runRemoveTask(String playerName, Sender sender, String[] args) {
         processing.submitCritical(() -> {
             try {
                 UUID uuid = uuidUtility.getUUIDOf(playerName);

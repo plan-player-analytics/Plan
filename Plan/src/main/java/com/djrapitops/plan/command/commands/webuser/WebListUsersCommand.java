@@ -11,7 +11,7 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.comparators.WebUserComparator;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -51,7 +51,7 @@ public class WebListUsersCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         processing.submitNonCritical(() -> {
             try {
                 List<WebUser> users = database.fetch().getWebUsers();

@@ -18,7 +18,7 @@ import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -69,7 +69,7 @@ public class ManageConDebugCommand extends CommandNode {
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
     }
 
-    private void testServer(ISender sender, String accessAddress, Server server, Locale locale) {
+    private void testServer(Sender sender, String accessAddress, Server server, Locale locale) {
         String address = server.getWebAddress().toLowerCase();
         boolean usingHttps = address.startsWith("https");
         boolean local = address.contains("localhost")
@@ -104,7 +104,7 @@ public class ManageConDebugCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         if (!webServer.isEnabled()) {
             sender.sendMessage(locale.getString(CommandLang.CONNECT_WEBSERVER_NOT_ENABLED));
             return;
@@ -113,7 +113,7 @@ public class ManageConDebugCommand extends CommandNode {
         processing.submitNonCritical(() -> testServers(sender));
     }
 
-    private void testServers(ISender sender) {
+    private void testServers(Sender sender) {
         List<Server> servers = database.fetch().getServers();
 
         if (servers.isEmpty()) {

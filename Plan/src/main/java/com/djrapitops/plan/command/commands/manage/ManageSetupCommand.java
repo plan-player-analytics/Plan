@@ -13,7 +13,7 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
@@ -62,7 +62,7 @@ public class ManageSetupCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
@@ -82,7 +82,7 @@ public class ManageSetupCommand extends CommandNode {
         requestSetup(sender, address);
     }
 
-    private void requestSetup(ISender sender, String address) {
+    private void requestSetup(Sender sender, String address) {
         processing.submitNonCritical(() -> {
             try {
                 config.set(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE, false);

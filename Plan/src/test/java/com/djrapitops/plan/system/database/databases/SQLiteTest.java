@@ -1038,4 +1038,44 @@ public class SQLiteTest {
 
         assertTrue("Some keys are not supported by NetworkContainer: NetworkKeys." + unsupported.toString(), unsupported.isEmpty());
     }
+
+    @Test
+    public void testGetMatchingNames() {
+        String exp1 = "TestName";
+        String exp2 = "TestName2";
+
+        UsersTable usersTable = db.getUsersTable();
+        UUID uuid1 = UUID.randomUUID();
+        usersTable.registerUser(uuid1, 0L, exp1);
+        usersTable.registerUser(UUID.randomUUID(), 0L, exp2);
+
+        String search = "testname";
+
+        List<String> result = db.search().matchingPlayers(search);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(exp1, result.get(0));
+        assertEquals(exp2, result.get(1));
+    }
+
+    @Test
+    public void testGetMatchingNickNames() {
+        UUID uuid = UUID.randomUUID();
+        String userName = RandomData.randomString(10);
+        db.getUsersTable().registerUser(uuid, 0L, userName);
+        db.getUsersTable().registerUser(TestConstants.PLAYER_ONE_UUID, 1L, "Not random");
+
+        String nickname = "2" + RandomData.randomString(10);
+        db.getNicknamesTable().saveUserName(uuid, new Nickname(nickname, System.currentTimeMillis(), TestConstants.SERVER_UUID));
+        db.getNicknamesTable().saveUserName(TestConstants.PLAYER_ONE_UUID, new Nickname("No nick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
+
+        String search = "2";
+
+        List<String> result = db.search().matchingPlayers(search);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(userName, result.get(0));
+    }
 }

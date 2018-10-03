@@ -13,7 +13,7 @@ import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -71,7 +71,7 @@ public class RegisterCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         try {
             if (CommandUtils.isPlayer(sender)) {
                 playerRegister(args, sender);
@@ -88,7 +88,7 @@ public class RegisterCommand extends CommandNode {
         }
     }
 
-    private void consoleRegister(String[] args, ISender sender, String notEnoughArgsMsg) throws PassEncryptUtil.CannotPerformOperationException {
+    private void consoleRegister(String[] args, Sender sender, String notEnoughArgsMsg) throws PassEncryptUtil.CannotPerformOperationException {
         Verify.isTrue(args.length >= 3, () -> new IllegalArgumentException(notEnoughArgsMsg));
 
         int permLevel;
@@ -97,7 +97,7 @@ public class RegisterCommand extends CommandNode {
         registerUser(new WebUser(args[1], passHash, permLevel), sender);
     }
 
-    private void playerRegister(String[] args, ISender sender) throws PassEncryptUtil.CannotPerformOperationException {
+    private void playerRegister(String[] args, Sender sender) throws PassEncryptUtil.CannotPerformOperationException {
         boolean registerSenderAsUser = args.length == 1;
         if (registerSenderAsUser) {
             String user = sender.getName();
@@ -111,7 +111,7 @@ public class RegisterCommand extends CommandNode {
         }
     }
 
-    private int getPermissionLevel(ISender sender) {
+    private int getPermissionLevel(Sender sender) {
         final String permAnalyze = Permissions.ANALYZE.getPerm();
         final String permInspectOther = Permissions.INSPECT_OTHER.getPerm();
         final String permInspect = Permissions.INSPECT.getPerm();
@@ -127,7 +127,7 @@ public class RegisterCommand extends CommandNode {
         return 100;
     }
 
-    private void registerUser(WebUser webUser, ISender sender) {
+    private void registerUser(WebUser webUser, Sender sender) {
         processing.submitCritical(() -> {
             String userName = webUser.getName();
             try {

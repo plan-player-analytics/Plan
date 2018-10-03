@@ -22,7 +22,7 @@ import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -73,7 +73,7 @@ public class QInspectCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
 
         if (playerName == null) {
@@ -84,7 +84,7 @@ public class QInspectCommand extends CommandNode {
         runInspectTask(playerName, sender);
     }
 
-    private void runInspectTask(String playerName, ISender sender) {
+    private void runInspectTask(String playerName, Sender sender) {
         processing.submitNonCritical(() -> {
             try {
                 UUID uuid = uuidUtility.getUUIDOf(playerName);
@@ -107,7 +107,7 @@ public class QInspectCommand extends CommandNode {
         });
     }
 
-    private void sendMessages(ISender sender, PlayerContainer player) {
+    private void sendMessages(Sender sender, PlayerContainer player) {
         long now = System.currentTimeMillis();
 
         Formatter<DateHolder> timestamp = formatters.year();
