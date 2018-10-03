@@ -167,6 +167,12 @@
             <version>1.6.0-PR1-S7.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>me.lucko.luckperms</groupId>
+            <artifactId>luckperms-api</artifactId>
+            <version>4.3</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!--        Plugins requiring local install -->
 

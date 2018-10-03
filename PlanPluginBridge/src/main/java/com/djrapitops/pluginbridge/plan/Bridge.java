@@ -18,6 +18,7 @@ import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
 import com.djrapitops.pluginbridge.plan.kingdoms.KingdomsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBukkitHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBungeeHook;
+import com.djrapitops.pluginbridge.plan.luckperms.LuckPermsHook;
 import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
 import com.djrapitops.pluginbridge.plan.nucleus.NucleusHook;
 import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
@@ -75,6 +76,7 @@ public class Bridge {
     private static Hook[] getSpongeHooks(HookHandler h) {
         return new Hook[]{
                 new BuyCraftHook(h),
+                new LuckPermsHook(h),
                 new SpongeEconomyHook(h),
                 new NucleusHook(h)
         };
@@ -85,6 +87,7 @@ public class Bridge {
                 new AdvancedBanHook(h),
                 new BuyCraftHook(h),
                 new LiteBansBungeeHook(h),
+                new LuckPermsHook(h),
                 new ViaVersionBungeeHook(h)
         };
     }
@@ -104,6 +107,7 @@ public class Bridge {
                 new JobsHook(h),
                 new KingdomsHook(h),
                 new LiteBansBukkitHook(h),
+                new LuckPermsHook(h),
                 new McmmoHook(h),
                 new SuperbVoteHook(h),
                 new ProtocolSupportHook(h),
