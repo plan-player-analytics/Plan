@@ -5,11 +5,11 @@ import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -98,7 +98,7 @@ public class TPSMutator {
             }
 
             long diff = date - lastDate;
-            if (diff > TimeAmount.MINUTE.ms() * 3L) {
+            if (diff > TimeUnit.MINUTES.toMillis(3L)) {
                 downTime += diff;
             }
             lastDate = date;

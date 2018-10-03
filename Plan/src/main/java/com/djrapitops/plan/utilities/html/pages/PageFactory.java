@@ -101,7 +101,7 @@ public class PageFactory {
 
     public AnalysisPage analysisPage(UUID serverUUID) {
         AnalysisContainer analysisContainer = new AnalysisContainer(database.get().fetch().getServerContainer(serverUUID));
-        return new AnalysisPage(analysisContainer, fileSystem.get(), formatters.get().decimals());
+        return new AnalysisPage(analysisContainer, fileSystem.get(), formatters.get().decimals(), timings.get());
     }
 
     public InspectPage inspectPage(UUID uuid) {

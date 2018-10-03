@@ -7,7 +7,6 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -22,6 +21,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Rsl1122
@@ -86,8 +86,8 @@ public class MySQLDB extends SQLDB {
 
             hikariConfig.setAutoCommit(true);
             hikariConfig.setMaximumPoolSize(8);
-            hikariConfig.setMaxLifetime(25L * TimeAmount.MINUTE.ms());
-            hikariConfig.setLeakDetectionThreshold(10L * TimeAmount.MINUTE.ms());
+            hikariConfig.setMaxLifetime(TimeUnit.MINUTES.toMillis(25L));
+            hikariConfig.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(10L));
 
             this.dataSource = new HikariDataSource(hikariConfig);
 

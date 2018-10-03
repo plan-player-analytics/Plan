@@ -6,7 +6,6 @@ import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.World;
@@ -15,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class BukkitTPSCountTimer extends TPSCountTimer {
@@ -105,11 +105,11 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
      */
     protected TPS getTPS(long diff, long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline) {
         long difference = diff;
-        if (difference < TimeAmount.SECOND.ns()) { // No tick count above 20
-            difference = TimeAmount.SECOND.ns();
+        if (difference < TimeUnit.SECONDS.toNanos(1L)) { // No tick count above 20
+            difference = TimeUnit.SECONDS.toNanos(1L);
         }
 
-        long twentySeconds = 20L * TimeAmount.SECOND.ns();
+        long twentySeconds = TimeUnit.SECONDS.toNanos(20L);
         while (difference > twentySeconds) {
             // Add 0 TPS since more than 20 ticks has passed.
             history.add(new TPS(now, 0, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded));

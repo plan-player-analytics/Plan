@@ -44,6 +44,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -131,7 +132,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 int ping = getPing(player);
-                if (ping < -1 || ping > TimeAmount.SECOND.ms() * 8L) {
+                if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
                     return;
                 }
@@ -184,7 +185,7 @@ public class PingCountTimer extends AbsRunnable implements Listener {
                     addPlayer(player);
                 }
             }
-        }).runTaskLater(TimeAmount.SECOND.ticks() * 15L);
+        }).runTaskLater(TimeAmount.toTicks(15L, TimeUnit.SECONDS));
     }
 
     @EventHandler

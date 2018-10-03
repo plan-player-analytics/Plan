@@ -22,6 +22,7 @@ import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * InfoRequest for sending Database config settings to Bukkit servers.
@@ -80,7 +81,7 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
                 public void run() {
                     plugin.reloadPlugin(true);
                 }
-            }).runTaskLater(TimeAmount.SECOND.ticks() * 2L);
+            }).runTaskLater(TimeAmount.toTicks(2L, TimeUnit.SECONDS));
         }
     }
 

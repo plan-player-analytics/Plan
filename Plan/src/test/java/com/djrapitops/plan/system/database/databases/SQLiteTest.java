@@ -24,7 +24,6 @@ import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
-import com.djrapitops.plugin.api.TimeAmount;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
@@ -41,6 +40,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -939,7 +939,7 @@ public class SQLiteTest {
 
         long end = System.nanoTime();
 
-        assertFalse("Took too long: " + ((end - start) / 1000000.0) + "ms", end - start > TimeAmount.SECOND.ns());
+        assertFalse("Took too long: " + ((end - start) / 1000000.0) + "ms", end - start > TimeUnit.SECONDS.toNanos(1L));
 
         OptionalAssert.equals(playerUUID, container.getValue(PlayerKeys.UUID));
         OptionalAssert.equals(123456789L, container.getValue(PlayerKeys.REGISTERED));

@@ -10,7 +10,6 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plugin.StaticHolder;
 import org.junit.Assume;
 
 import java.io.File;
@@ -25,7 +24,6 @@ public class SystemMockUtil {
     private PlanSystem bukkitSystem;
 
     public static SystemMockUtil setUp(File dataFolder) throws Exception {
-        StaticHolder.saveInstance(SystemMockUtil.class, Plan.class);
         return new SystemMockUtil().initializeBukkitSystem(dataFolder);
     }
 

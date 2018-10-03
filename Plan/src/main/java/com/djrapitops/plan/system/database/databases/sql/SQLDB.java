@@ -152,7 +152,7 @@ public abstract class SQLDB extends Database {
                     cancel();
                 }
             }
-        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay, TimeAmount.MINUTE.ticks() * 5L);
+        }).runTaskTimerAsynchronously(TimeAmount.toTicks(secondsDelay, TimeUnit.SECONDS), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
     }
 
     /**
@@ -264,7 +264,7 @@ public abstract class SQLDB extends Database {
         pingTable.clean();
 
         long now = System.currentTimeMillis();
-        long keepActiveAfter = now - TimeAmount.DAY.ms() * config.getNumber(Settings.KEEP_INACTIVE_PLAYERS_DAYS);
+        long keepActiveAfter = now - TimeUnit.DAYS.toMillis(config.getNumber(Settings.KEEP_INACTIVE_PLAYERS_DAYS));
 
         List<UUID> inactivePlayers = sessionsTable.getLastSeenForAllPlayers().entrySet().stream()
                 .filter(entry -> entry.getValue() < keepActiveAfter)

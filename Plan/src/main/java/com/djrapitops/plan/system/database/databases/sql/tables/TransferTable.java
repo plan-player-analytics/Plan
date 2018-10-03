@@ -11,12 +11,12 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Table that is in charge of transferring data between network servers.
@@ -100,7 +100,7 @@ public class TransferTable extends Table {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, getServerUUID().toString());
-                statement.setLong(2, System.currentTimeMillis() + TimeAmount.HOUR.ms());
+                statement.setLong(2, System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1L));
                 statement.setString(3, "configSettings");
                 statement.setString(4, null);
                 statement.setString(5, encodedSettingString);

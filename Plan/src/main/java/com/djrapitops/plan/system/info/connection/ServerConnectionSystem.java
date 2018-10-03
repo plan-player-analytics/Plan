@@ -17,7 +17,6 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import dagger.Lazy;
@@ -26,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Connection system for Bukkit servers.
@@ -74,7 +74,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     private void refreshServerMap() {
         processing.submitNonCritical(() -> {
-            if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
+            if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
                 Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
                 bungeeInformation.ifPresent(server -> mainServer = server);
                 bukkitServers = database.fetch().getBukkitServers();

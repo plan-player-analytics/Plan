@@ -126,7 +126,7 @@ public class TPSTable extends Table {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // More than 3 Months ago.
-                long threeMonths = TimeAmount.MONTH.ms() * 3L;
+                long threeMonths = TimeAmount.MONTH.toMillis(3L);
                 statement.setLong(1, System.currentTimeMillis() - threeMonths);
                 statement.setInt(2, pValue);
             }

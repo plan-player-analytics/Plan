@@ -247,7 +247,7 @@ public class DebugPage implements Page {
                 content.append(result.toString()).append("<br>");
             }
         } catch (Exception e) {
-            content.append("Exception on Benchmark.getAverages().asStringArray()");
+            content.append("Exception on Timings#getAverageResults");
         }
         content.append("&#96;&#96;&#96;</pre>");
     }

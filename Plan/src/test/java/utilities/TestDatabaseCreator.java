@@ -5,10 +5,10 @@ import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class TestDatabaseCreator {
@@ -84,7 +84,7 @@ public class TestDatabaseCreator {
         String world = worldNames.get(r.nextInt(worldNames.size()));
         String gm = gms[r.nextInt(gms.length)];
 
-        long end = date + (long) r.nextInt((int) TimeAmount.DAY.ms());
+        long end = date + (long) r.nextInt((int) TimeUnit.DAYS.toMillis(1L));
 
         Session session = new Session(-1, uuid, serverUUID,
                 date, end,

@@ -35,6 +35,7 @@ import com.djrapitops.plugin.benchmarking.Timings;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Used for parsing Inspect page out of database data and the html.
@@ -192,9 +193,9 @@ public class InspectPage implements Page {
         replacer.put("accordionServers", serverAccordion.toHtml());
         replacer.put("sessionTabGraphViewFunctions", sessionAccordionViewScript + serverAccordion.toViewScript());
 
-        long dayAgo = now - TimeAmount.DAY.ms();
-        long weekAgo = now - TimeAmount.WEEK.ms();
-        long monthAgo = now - TimeAmount.MONTH.ms();
+        long dayAgo = now - TimeUnit.DAYS.toMillis(1L);
+        long weekAgo = now - TimeAmount.WEEK.toMillis(1L);
+        long monthAgo = now - TimeAmount.MONTH.toMillis(1L);
 
         SessionsMutator daySessionsMutator = sessionsMutator.filterSessionsBetween(dayAgo, now);
         SessionsMutator weekSessionsMutator = sessionsMutator.filterSessionsBetween(weekAgo, now);

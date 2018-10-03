@@ -8,6 +8,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerPageUpdateProcessor implements Runnable {
 
@@ -44,7 +45,7 @@ public class PlayerPageUpdateProcessor implements Runnable {
                         cancel();
                     }
                 }
-            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 20);
+            }).runTaskLaterAsynchronously(TimeAmount.toTicks(20L, TimeUnit.SECONDS));
         }
     }
 }

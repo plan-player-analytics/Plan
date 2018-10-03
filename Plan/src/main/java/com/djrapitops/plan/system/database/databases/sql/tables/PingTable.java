@@ -61,7 +61,7 @@ public class PingTable extends UserIDTable {
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                long twoWeeks = TimeAmount.WEEK.ms() * 2L;
+                long twoWeeks = TimeAmount.WEEK.toMillis(2L);
                 statement.setLong(1, System.currentTimeMillis() - twoWeeks);
             }
         });

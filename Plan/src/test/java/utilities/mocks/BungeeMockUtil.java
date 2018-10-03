@@ -5,10 +5,8 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
-import com.djrapitops.plugin.task.thread.ThreadRunnable;
 import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyConfig;
@@ -16,7 +14,6 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import utilities.TestConstants;
 import utilities.mocks.objects.TestLogger;
 
@@ -45,11 +42,6 @@ public class BungeeMockUtil extends MockUtil {
     private BungeeMockUtil mockPlugin() {
         planMock = Mockito.mock(PlanBungee.class);
         super.planMock = planMock;
-        StaticHolder.register(PlanBungee.class, planMock);
-        StaticHolder.register(planMock);
-
-        StaticHolder.saveInstance(MockitoJUnitRunner.class, PlanBungee.class);
-        StaticHolder.saveInstance(ThreadRunnable.class, PlanBungee.class);
 
         when(planMock.getVersion()).thenCallRealMethod();
         when(planMock.getColorScheme()).thenCallRealMethod();

@@ -1,10 +1,8 @@
 package com.djrapitops.plan.system.settings.network;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plugin.StaticHolder;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import utilities.TestConstants;
@@ -20,8 +18,6 @@ public class NetworkSettingsTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        StaticHolder.saveInstance(NetworkSettingsTest.class, Plan.class);
-
         SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
         db = null; // TODO

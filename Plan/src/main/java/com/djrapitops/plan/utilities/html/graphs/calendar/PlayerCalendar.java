@@ -13,12 +13,12 @@ import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility for creating FullCalendar calendar event array on Player page.
@@ -95,7 +95,7 @@ public class PlayerCalendar {
     }
 
     private void appendSessionsAndKills(StringBuilder series) {
-        long fiveMinutes = TimeAmount.MINUTE.ms() * 5L;
+        long fiveMinutes = TimeUnit.MINUTES.toMillis(5L);
 
         for (Session session : allSessions) {
             String length = timeAmountFormatter.apply(session.getLength());

@@ -5,9 +5,9 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icons;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractHealthInfo {
 
@@ -125,7 +125,7 @@ public abstract class AbstractHealthInfo {
                 addNote(Icons.GREEN_THUMB + " Active players seem to have things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)");
-            } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeAmount.HOUR.ms() * 2L) {
+            } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeUnit.HOURS.toMillis(2L)) {
                 addNote(Icons.RED_WARN + " Active players might be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)");

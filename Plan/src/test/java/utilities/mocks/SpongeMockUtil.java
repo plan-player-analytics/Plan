@@ -5,13 +5,10 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.PlanSponge;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
-import com.djrapitops.plugin.task.thread.ThreadRunnable;
 import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
@@ -37,11 +34,6 @@ public class SpongeMockUtil extends MockUtil {
     private SpongeMockUtil mockPlugin() {
         planMock = Mockito.mock(PlanSponge.class);
         super.planMock = planMock;
-        StaticHolder.register(PlanSponge.class, planMock);
-        StaticHolder.register(planMock);
-
-        StaticHolder.saveInstance(MockitoJUnitRunner.class, PlanSponge.class);
-        StaticHolder.saveInstance(ThreadRunnable.class, PlanSponge.class);
 
         doReturn("4.2.0").when(planMock).getVersion();
         doCallRealMethod().when(planMock).getColorScheme();

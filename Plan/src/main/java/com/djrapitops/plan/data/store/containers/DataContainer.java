@@ -3,11 +3,11 @@ package com.djrapitops.plan.data.store.containers;
 import com.djrapitops.plan.data.store.CachingSupplier;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.utilities.formatting.Formatter;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
@@ -24,7 +24,7 @@ public class DataContainer {
     private long timeToLive;
 
     public DataContainer() {
-        this(TimeAmount.SECOND.ms() * 30L);
+        this(TimeUnit.SECONDS.toMillis(30L));
     }
 
     public DataContainer(long timeToLive) {

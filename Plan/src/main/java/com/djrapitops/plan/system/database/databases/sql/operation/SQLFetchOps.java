@@ -12,9 +12,9 @@ import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class SQLFetchOps extends SQLOps implements FetchOperations {
 
@@ -70,7 +70,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             return null;
         });
         container.putSupplier(ServerKeys.RECENT_PEAK_PLAYERS, () -> {
-            long twoDaysAgo = System.currentTimeMillis() - (TimeAmount.DAY.ms() * 2L);
+            long twoDaysAgo = System.currentTimeMillis() - (TimeUnit.DAYS.toMillis(2L));
             Optional<TPS> lastPeak = tpsTable.getPeakPlayerCount(serverUUID, twoDaysAgo);
             if (lastPeak.isPresent()) {
                 TPS peak = lastPeak.get();

@@ -5,10 +5,8 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
-import com.djrapitops.plugin.task.thread.ThreadRunnable;
 import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
@@ -16,7 +14,6 @@ import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import utilities.TestConstants;
 import utilities.mocks.objects.TestLogger;
 
@@ -46,11 +43,6 @@ public class BukkitMockUtil extends MockUtil {
     private BukkitMockUtil mockPlugin() {
         planMock = Mockito.mock(Plan.class);
         super.planMock = planMock;
-        StaticHolder.register(Plan.class, planMock);
-        StaticHolder.register(planMock);
-
-        StaticHolder.saveInstance(MockitoJUnitRunner.class, Plan.class);
-        StaticHolder.saveInstance(ThreadRunnable.class, Plan.class);
 
         doCallRealMethod().when(planMock).getVersion();
         doCallRealMethod().when(planMock).getColorScheme();

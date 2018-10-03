@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
@@ -20,6 +19,7 @@ import dagger.Lazy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ConnectionSystem for Bungee.
@@ -57,7 +57,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     }
 
     private void refreshServerMap() {
-        if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
+        if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
             try {
                 bukkitServers = database.fetch().getBukkitServers();
                 latestServerMapRefresh = System.currentTimeMillis();

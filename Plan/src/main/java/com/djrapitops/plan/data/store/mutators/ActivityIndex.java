@@ -32,7 +32,7 @@ public class ActivityIndex {
     }
 
     private double calculate(DataContainer container, long date) {
-        long week = TimeAmount.WEEK.ms();
+        long week = TimeAmount.WEEK.toMillis(1L);
         long weekAgo = date - week;
         long twoWeeksAgo = date - 2L * week;
         long threeWeeksAgo = date - 3L * week;

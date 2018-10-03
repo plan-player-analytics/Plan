@@ -9,7 +9,6 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.InfoRequestWithVariables;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -30,6 +29,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,8 +47,8 @@ public class ConnectionOut {
     static {
         try {
             Properties properties = System.getProperties();
-            properties.setProperty("sun.net.client.defaultConnectTimeout", Long.toString(TimeAmount.MINUTE.ms()));
-            properties.setProperty("sun.net.client.defaultReadTimeout", Long.toString(TimeAmount.MINUTE.ms()));
+            properties.setProperty("sun.net.client.defaultConnectTimeout", Long.toString(TimeUnit.MINUTES.toMillis(1L)));
+            properties.setProperty("sun.net.client.defaultReadTimeout", Long.toString(TimeUnit.MINUTES.toMillis(1L)));
             properties.setProperty("sun.net.http.retryPost", Boolean.toString(false));
         } catch (Exception e) {
             Logger.getGlobal().log(Level.WARNING, "[Plan] Failed to set sun client timeout system properties.", e);
