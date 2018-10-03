@@ -9,7 +9,7 @@ import com.djrapitops.pluginbridge.plan.Hook;
 import me.lucko.luckperms.LuckPerms;
 
 /**
- * Hook for AdvancedBan plugin.
+ * Hook for LuckPerms plugin.
  *
  * @author Vankka
  */

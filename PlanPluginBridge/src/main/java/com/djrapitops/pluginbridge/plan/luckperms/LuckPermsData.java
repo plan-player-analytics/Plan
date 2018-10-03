@@ -12,21 +12,23 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
-import com.djrapitops.plan.utilities.html.icon.Icons;
-import java.util.Collection;
-import java.util.List;
-import java.util.OptionalInt;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import me.lucko.luckperms.api.*;
 import me.lucko.luckperms.api.caching.MetaData;
+import org.apache.commons.text.TextStringBuilder;
 
+/**
+ * PluginData for LuckPerms plugin.
+ *
+ * @author Vankka
+ */
 public class LuckPermsData extends PluginData {
     private LuckPermsApi api;
 
     public LuckPermsData(LuckPermsApi api) {
         super(ContainerSize.THIRD, "LuckPerms");
-        setPluginIcon(Icon.called("exclamation-triangle").of(Family.SOLID).build());
+        setPluginIcon(Icon.called("exclamation-triangle").of(Color.LIGHT_GREEN).build());
 
         this.api = api;
     }
@@ -57,11 +59,16 @@ public class LuckPermsData extends PluginData {
         metaData.getMeta().forEach((key, value) -> metaTable.addRow(key, value));
         inspectContainer.addTable("Meta", metaTable);
 
-        List<String> groups = user.getPermissions().stream().filter(Node::isGroupNode).map(Node::getGroupName).collect(Collectors.toList());
+        List<String> groups = user.getPermissions().stream()
+                                  .filter(Node::isGroupNode)
+                                  .map(Node::getGroupName)
+                                  .sorted()
+                                  .collect(Collectors.toList());
 
-        TableContainer groupTable = new TableContainer(getWithIcon("Group", Icon.called("user-friends").of(Family.SOLID)));
-        groups.forEach(groupTable::addRow);
-        inspectContainer.addTable("Groups", groupTable);
+        inspectContainer.addValue(
+                getWithIcon("Groups", Icon.called("user-friends").of(Family.SOLID)),
+                new TextStringBuilder().appendWithSeparators(groups, ", ").build()
+        );
 
         TableContainer trackTable = new TableContainer(
                 getWithIcon("Track", Icon.called("ellipsis-h").of(Family.SOLID)),
@@ -69,7 +76,10 @@ public class LuckPermsData extends PluginData {
         );
         for (Track track : api.getTracks()) {
             // reduce is used to get the last element
-            String currentGroup = api.getGroups().stream().map(this::getGroupDisplayName).filter(groups::contains).reduce((first, second) -> second).orElse("None");
+            String currentGroup = api.getGroups().stream()
+                                     .map(this::getGroupDisplayName)
+                                     .filter(groups::contains).reduce((first, second) -> second)
+                                     .orElse("None");
             trackTable.addRow(track.getName(), currentGroup);
         }
         inspectContainer.addTable("Tracks", trackTable);
@@ -84,7 +94,9 @@ public class LuckPermsData extends PluginData {
                 getWithIcon("Weight", Icon.called("weight-hanging").of(Family.SOLID)),
                 getWithIcon("Permissions", Icon.called("list").of(Family.SOLID))
         );
-        for (Group group : api.getGroups()) {
+
+
+        for (Group group : api.getGroups().stream().sorted(Comparator.comparing(Group::getName)).collect(Collectors.toList())) {
             OptionalInt weight = group.getWeight();
 
             groupTable.addRow(getGroupDisplayName(group), weight.isPresent() ? weight.getAsInt() : "None", group.getPermissions().size());
