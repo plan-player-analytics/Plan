@@ -20,6 +20,7 @@ softdepend:
 - Kingdoms
 - RedProtect
 - AdvancedBan
+- LuckPerms
 
 commands:
   plan:
