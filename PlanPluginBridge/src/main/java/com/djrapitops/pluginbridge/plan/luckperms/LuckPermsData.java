@@ -50,7 +50,7 @@ public class LuckPermsData extends PluginData {
         inspectContainer.addValue(getWithIcon("Prefix", Icon.called("file-signature").of(Family.SOLID).of(Color.GREEN)), prefix != null ? prefix : "None");
         inspectContainer.addValue(getWithIcon("Suffix", Icon.called("file-signature").of(Family.SOLID).of(Color.BLUE)),suffix != null ? suffix : "None");
 
-        if (metaData.getMeta().size() > 0) {
+        if (!metaData.getMeta().isEmpty()) {
             TableContainer metaTable = new TableContainer(
                     getWithIcon("Meta", Icon.called("info-circle").of(Family.SOLID)),
                     getWithIcon("Value", Icon.called("file-alt").of(Family.SOLID))
@@ -71,7 +71,7 @@ public class LuckPermsData extends PluginData {
         );
 
         Set<Track> tracks = api.getTracks();
-        if (tracks.size() > 0) {
+        if (!tracks.isEmpty()) {
             TableContainer trackTable = new TableContainer(
                     getWithIcon("Track", Icon.called("ellipsis-h").of(Family.SOLID)),
                     getWithIcon("Group", Icon.called("user-friends").of(Family.SOLID))
@@ -98,15 +98,15 @@ public class LuckPermsData extends PluginData {
                 getWithIcon("Permissions", Icon.called("list").of(Family.SOLID))
         );
 
-        for (Group group : api.getGroups().stream().sorted(Comparator.comparing(Group::getName)).collect(Collectors.toList())) {
+        api.getGroups().stream().sorted(Comparator.comparing(Group::getName)).forEach(group -> {
             OptionalInt weight = group.getWeight();
 
             groupTable.addRow(getGroupDisplayName(group), weight.isPresent() ? weight.getAsInt() : "None", group.getPermissions().size());
-        }
+        });
         analysisContainer.addTable("Groups", groupTable);
 
         Set<Track> tracks = api.getTracks();
-        if (tracks.size() > 0) {
+        if (!tracks.isEmpty()) {
             TableContainer trackTable = new TableContainer(
                     getWithIcon("Track", Icon.called("ellipsis-h").of(Family.SOLID)),
                     getWithIcon("Size", Icon.called("list").of(Family.SOLID))
