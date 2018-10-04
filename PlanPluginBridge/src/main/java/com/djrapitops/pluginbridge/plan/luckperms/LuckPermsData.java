@@ -47,17 +47,17 @@ public class LuckPermsData extends PluginData {
         String suffix = metaData.getSuffix();
 
         inspectContainer.addValue(getWithIcon("Primary group", Icon.called("user-friends").of(Family.SOLID)), user.getPrimaryGroup());
-
-
         inspectContainer.addValue(getWithIcon("Prefix", Icon.called("file-signature").of(Family.SOLID).of(Color.GREEN)), prefix != null ? prefix : "None");
         inspectContainer.addValue(getWithIcon("Suffix", Icon.called("file-signature").of(Family.SOLID).of(Color.BLUE)),suffix != null ? suffix : "None");
 
-        TableContainer metaTable = new TableContainer(
-                getWithIcon("Meta", Icon.called("info-circle").of(Family.SOLID)),
-                getWithIcon("Value", Icon.called("file-alt").of(Family.SOLID))
-        );
-        metaData.getMeta().forEach((key, value) -> metaTable.addRow(key, value));
-        inspectContainer.addTable("Meta", metaTable);
+        if (metaData.getMeta().size() > 0) {
+            TableContainer metaTable = new TableContainer(
+                    getWithIcon("Meta", Icon.called("info-circle").of(Family.SOLID)),
+                    getWithIcon("Value", Icon.called("file-alt").of(Family.SOLID))
+            );
+            metaData.getMeta().forEach((key, value) -> metaTable.addRow(key, value));
+            inspectContainer.addTable("Meta", metaTable);
+        }
 
         List<String> groups = user.getPermissions().stream()
                                   .filter(Node::isGroupNode)
@@ -70,31 +70,33 @@ public class LuckPermsData extends PluginData {
                 new TextStringBuilder().appendWithSeparators(groups, ", ").build()
         );
 
-        TableContainer trackTable = new TableContainer(
-                getWithIcon("Track", Icon.called("ellipsis-h").of(Family.SOLID)),
-                getWithIcon("Group", Icon.called("user-friends").of(Family.SOLID))
-        );
-        for (Track track : api.getTracks()) {
-            // reduce is used to get the last element
-            String currentGroup = api.getGroups().stream()
-                                     .map(this::getGroupDisplayName)
-                                     .filter(groups::contains).reduce((first, second) -> second)
-                                     .orElse("None");
-            trackTable.addRow(track.getName(), currentGroup);
+        Set<Track> tracks = api.getTracks();
+        if (tracks.size() > 0) {
+            TableContainer trackTable = new TableContainer(
+                    getWithIcon("Track", Icon.called("ellipsis-h").of(Family.SOLID)),
+                    getWithIcon("Group", Icon.called("user-friends").of(Family.SOLID))
+            );
+            for (Track track : tracks) {
+                // reduce is used to get the last element
+                String currentGroup = api.getGroups().stream()
+                                         .map(this::getGroupDisplayName).filter(groups::contains)
+                                         .reduce((first, second) -> second).orElse("None");
+                trackTable.addRow(track.getName(), currentGroup);
+            }
+            inspectContainer.addTable("Tracks", trackTable);
         }
-        inspectContainer.addTable("Tracks", trackTable);
 
         return inspectContainer;
     }
 
     @Override
     public AnalysisContainer getServerData(Collection<UUID> uuids, AnalysisContainer analysisContainer) {
+        // There will *always* be atleast 1 group
         TableContainer groupTable = new TableContainer(
                 getWithIcon("Group", Icon.called("user-friends").of(Family.SOLID)),
                 getWithIcon("Weight", Icon.called("weight-hanging").of(Family.SOLID)),
                 getWithIcon("Permissions", Icon.called("list").of(Family.SOLID))
         );
-
 
         for (Group group : api.getGroups().stream().sorted(Comparator.comparing(Group::getName)).collect(Collectors.toList())) {
             OptionalInt weight = group.getWeight();
@@ -103,11 +105,15 @@ public class LuckPermsData extends PluginData {
         }
         analysisContainer.addTable("Groups", groupTable);
 
-        TableContainer trackTable = new TableContainer(
-                getWithIcon("Track", Icon.called("ellipsis-h").of(Family.SOLID)),
-                getWithIcon("Size", Icon.called("list").of(Family.SOLID))
-        );
-        api.getTracks().forEach(track -> trackTable.addRow(track.getName(), track.getSize()));
+        Set<Track> tracks = api.getTracks();
+        if (tracks.size() > 0) {
+            TableContainer trackTable = new TableContainer(
+                    getWithIcon("Track", Icon.called("ellipsis-h").of(Family.SOLID)),
+                    getWithIcon("Size", Icon.called("list").of(Family.SOLID))
+            );
+            tracks.forEach(track -> trackTable.addRow(track.getName(), track.getSize()));
+            analysisContainer.addTable("Tracks", trackTable);
+        }
 
         return analysisContainer;
     }
