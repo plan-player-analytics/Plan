@@ -85,6 +85,10 @@
             <id>nucleus-repo</id>
             <url>http://repo.drnaylor.co.uk/artifactory/list/minecraft</url>
         </repository>
+        <repository>
+            <id>discordsrv-repo</id>
+            <url>https://ci.scarsz.me/plugin/repository/everything/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -177,6 +181,12 @@
             <groupId>me.lucko.luckperms</groupId>
             <artifactId>luckperms-api</artifactId>
             <version>4.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>github.scarsz.discordsrv</groupId>
+            <artifactId>DiscordSRV</artifactId>
+            <version>1.16.4</version>
             <scope>provided</scope>
         </dependency>
 

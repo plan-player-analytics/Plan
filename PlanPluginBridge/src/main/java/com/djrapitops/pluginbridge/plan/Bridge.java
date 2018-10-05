@@ -10,6 +10,7 @@ import com.djrapitops.pluginbridge.plan.advancedban.AdvancedBanHook;
 import com.djrapitops.pluginbridge.plan.askyblock.ASkyBlockHook;
 import com.djrapitops.pluginbridge.plan.banmanager.BanManagerHook;
 import com.djrapitops.pluginbridge.plan.buycraft.BuyCraftHook;
+import com.djrapitops.pluginbridge.plan.discordsrv.DiscordSRVHook;
 import com.djrapitops.pluginbridge.plan.essentials.EssentialsHook;
 import com.djrapitops.pluginbridge.plan.factions.FactionsHook;
 import com.djrapitops.pluginbridge.plan.griefprevention.GriefPreventionHook;
@@ -100,6 +101,7 @@ public class Bridge {
                 new ASkyBlockHook(h),
                 new BanManagerHook(h),
                 new BuyCraftHook(h),
+                new DiscordSRVHook(h),
                 new EssentialsHook(h),
                 new FactionsHook(h),
                 new GriefPreventionHook(h),
