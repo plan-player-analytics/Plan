@@ -43,42 +43,47 @@ public class DiscordSRVData extends PluginData {
         String userId = DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(uuid);
         User user = userId != null ? DiscordUtil.getUserById(userId) : null;
 
-        if (user != null) {
+        if (user == null) {
+            return inspectContainer;
+        }
 
-            inspectContainer.addValue(
-                    getWithIcon("Username", Icon.called("user").of(Family.SOLID).of(Color.CYAN)),
-                    "@" + user.getName() + "#" + user.getDiscriminator()
-            );
-            inspectContainer.addValue(
-                    getWithIcon("Account creation date", Icon.called("plus").of(Family.SOLID).of(Color.BLUE)),
-                    FormatUtils.formatTimeStampYear(user.getCreationTime().toEpochSecond() * 1000L)
-            );
+        inspectContainer.addValue(
+                getWithIcon("Username", Icon.called("user").of(Family.SOLID).of(Color.CYAN)),
+                "@" + user.getName() + "#" + user.getDiscriminator()
+        );
+        inspectContainer.addValue(
+                getWithIcon("Account creation date", Icon.called("plus").of(Family.SOLID).of(Color.BLUE)),
+                FormatUtils.formatTimeStampYear(user.getCreationTime().toEpochSecond() * 1000L)
+        );
 
-            Member member = DiscordSRV.getPlugin().getMainGuild().getMember(user);
+        Member member = DiscordSRV.getPlugin().getMainGuild().getMember(user);
 
-            if (member != null) {
-                String nickname = member.getNickname();
-                List<String> roles = member.getRoles().stream().map(Role::getName).collect(Collectors.toList()); // Ordered list of role names
-
-                inspectContainer.addValue(
-                        getWithIcon("Nickname", Icon.called("user-ninja").of(Family.SOLID).of(Color.ORANGE)),
-                        nickname != null ? nickname : "None"
-                );
-                inspectContainer.addValue(
-                        getWithIcon("Join Date", Icon.called("plus").of(Family.SOLID).of(Color.GREEN)),
-                        FormatUtils.formatTimeStampYear(member.getJoinDate().toEpochSecond() * 1000L)
-                );
-
-                if (!roles.isEmpty()) {
-                    inspectContainer.addValue(
-                            getWithIcon("Roles", Icon.called("user-circle").of(Family.SOLID).of(Color.RED)),
-                            new TextStringBuilder().appendWithSeparators(roles, ", ").build()
-                    );
-                }
-            }
+        if (member != null) {
+            addMemberData(member, inspectContainer);
         }
 
         return inspectContainer;
+    }
+
+    private void addMemberData(Member member, InspectContainer inspectContainer) {
+        String nickname = member.getNickname();
+
+        inspectContainer.addValue(
+                getWithIcon("Nickname", Icon.called("user-ninja").of(Family.SOLID).of(Color.ORANGE)),
+                nickname != null ? nickname : "None"
+        );
+        inspectContainer.addValue(
+                getWithIcon("Join Date", Icon.called("plus").of(Family.SOLID).of(Color.GREEN)),
+                FormatUtils.formatTimeStampYear(member.getJoinDate().toEpochSecond() * 1000L)
+        );
+
+        List<String> roles = member.getRoles().stream().map(Role::getName).collect(Collectors.toList()); // Ordered list of role names
+        if (!roles.isEmpty()) {
+            inspectContainer.addValue(
+                    getWithIcon("Roles", Icon.called("user-circle").of(Family.SOLID).of(Color.RED)),
+                    new TextStringBuilder().appendWithSeparators(roles, ", ").build()
+            );
+        }
     }
 
     @Override
@@ -114,6 +119,6 @@ public class DiscordSRVData extends PluginData {
         if (input1 == 0 || input2 == 0)
             return 0D;
 
-        return Math.round((double) input1 / input2 * 10000D) / 100D;
+        return Math.round((double) input1 / input2 * 10000D) / 100D; // 2 decimals
     }
 }
