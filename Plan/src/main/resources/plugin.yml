@@ -21,6 +21,7 @@ softdepend:
 - RedProtect
 - AdvancedBan
 - LuckPerms
+- DiscordSRV
 
 commands:
   plan:
@@ -89,7 +90,7 @@ permissions:
     default: op
   plan.webmanage:
     description: Manage the webusers, delete, list, check
-    default: op;
+    default: op
   
   plan.basic:
     children:
