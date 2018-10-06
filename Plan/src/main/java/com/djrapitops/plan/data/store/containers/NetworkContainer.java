@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.store.containers;
 
+import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
@@ -8,6 +9,7 @@ import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -17,13 +19,14 @@ import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
+import com.djrapitops.plan.utilities.html.structure.NetworkServerBox;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,17 +51,33 @@ public class NetworkContainer extends DataContainer {
     private Formatter<DateHolder> yearFormatter;
     private Formatter<Long> secondLongFormatter;
 
-    private final Map<UUID, AnalysisContainer> serverContainers;
-
     public NetworkContainer(ServerContainer bungeeContainer) {
         this.bungeeContainer = bungeeContainer;
-        serverContainers = new HashMap<>();
 
         putSupplier(NetworkKeys.PLAYERS_MUTATOR, () -> PlayersMutator.forContainer(bungeeContainer));
 
         addConstants();
+        addServerBoxes();
         addPlayerInformation();
         addNetworkHealth();
+    }
+
+    private void addServerBoxes() {
+        putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> database.fetch().getPlayersOnlineForServers(
+                getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
+        );
+        putSupplier(NetworkKeys.SERVERS_TAB, () -> {
+            StringBuilder serverBoxes = new StringBuilder();
+            Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
+            for (Server server : getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>())) {
+                TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(server.getId(), new ArrayList<>()));
+
+                // TODO Add Registered players per server.
+                NetworkServerBox serverBox = new NetworkServerBox(server, 0, tpsMutator, graphs);
+                serverBoxes.append(serverBox.toHtml());
+            }
+            return serverBoxes.toString();
+        });
     }
 
     private void addNetworkHealth() {
@@ -66,20 +85,6 @@ public class NetworkContainer extends DataContainer {
         putSupplier(healthInformation, () -> new NetworkHealthInformation(this));
         putSupplier(NetworkKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
         putSupplier(NetworkKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
-    }
-
-    public void putAnalysisContainer(AnalysisContainer analysisContainer) {
-        serverContainers.put(analysisContainer.getServerContainer().getUnsafe(ServerKeys.SERVER_UUID), analysisContainer);
-    }
-
-    public Optional<AnalysisContainer> getAnalysisContainer(UUID serverUUID) {
-        AnalysisContainer container = serverContainers.get(serverUUID);
-        if (container != null) {
-            return Optional.of(container);
-        }
-        AnalysisContainer analysisContainer = new AnalysisContainer(database.fetch().getServerContainer(serverUUID));
-        serverContainers.put(serverUUID, analysisContainer);
-        return Optional.of(analysisContainer);
     }
 
     private void addConstants() {

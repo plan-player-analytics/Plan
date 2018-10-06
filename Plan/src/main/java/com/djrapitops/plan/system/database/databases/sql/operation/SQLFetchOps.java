@@ -461,4 +461,8 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         return serverTable.getServerUUIDs();
     }
 
+    @Override
+    public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> serverUUIDs) {
+        return tpsTable.getPlayersOnlineForServers(serverUUIDs);
+    }
 }

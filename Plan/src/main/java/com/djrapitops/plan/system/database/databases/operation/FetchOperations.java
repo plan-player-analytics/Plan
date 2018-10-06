@@ -116,4 +116,5 @@ public interface FetchOperations {
 
     List<UUID> getServerUUIDs();
 
+    Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> serverUUIDs);
 }

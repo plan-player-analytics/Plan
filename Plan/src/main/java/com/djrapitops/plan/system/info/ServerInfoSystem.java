@@ -13,7 +13,6 @@ import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.request.SetupRequest;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import dagger.Lazy;
 
@@ -55,7 +54,7 @@ public class ServerInfoSystem extends InfoSystem {
 
     @Override
     public void updateNetworkPage() throws WebException {
-        String html = HtmlStructure.createServerContainer();
+        String html = ""; // TODO Rework this part of the info system
         sendRequest(infoRequestFactory.cacheNetworkPageContentRequest(serverInfo.getServerUUID(), html));
     }
 }

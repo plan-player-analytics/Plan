@@ -7,10 +7,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.Column;
-import com.djrapitops.plan.system.database.databases.sql.statements.Select;
-import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
-import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.database.databases.sql.statements.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
@@ -300,6 +297,40 @@ public class TPSTable extends Table {
                         statement.addBatch();
                     }
                 }
+            }
+        });
+    }
+
+    public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
+        WhereParser sqlParser = Select.from(tableName, Col.SERVER_ID, Col.DATE, Col.PLAYERS_ONLINE)
+                .where(Col.DATE.get() + ">" + (System.currentTimeMillis() - TimeAmount.WEEK.toMillis(2L)));
+        String statementSelectServerID = serverTable.statementSelectServerID;
+        for (Server server : servers) {
+            sqlParser.or(Col.SERVER_ID + "=" + statementSelectServerID.replace("?", server.getUuid().toString()));
+        }
+
+        String sql = sqlParser.toString();
+
+        return query(new QueryAllStatement<Map<Integer, List<TPS>>>(sql, 10000) {
+            @Override
+            public Map<Integer, List<TPS>> processResults(ResultSet set) throws SQLException {
+                Map<Integer, List<TPS>> map = new HashMap<>();
+                while (set.next()) {
+                    int serverID = set.getInt(Col.SERVER_ID.get());
+                    int playersOnline = set.getInt(Col.PLAYERS_ONLINE.get());
+                    long date = set.getLong(Col.DATE.get());
+
+                    List<TPS> tpsList = map.getOrDefault(serverID, new ArrayList<>());
+
+                    TPS tps = TPSBuilder.get().date(date)
+                            .skipTPS()
+                            .playersOnline(playersOnline)
+                            .toTPS();
+                    tpsList.add(tps);
+
+                    map.put(serverID, tpsList);
+                }
+                return map;
             }
         });
     }
