@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>AbstractPluginFramework</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.3.0</version>
         </dependency>
         <!--        SoftDepended Plugins -->
         <dependency>
