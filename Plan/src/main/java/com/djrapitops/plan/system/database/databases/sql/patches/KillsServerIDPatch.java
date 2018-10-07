@@ -40,7 +40,7 @@ public class KillsServerIDPatch extends Patch {
 
     @Override
     public void apply() {
-        addColumns(KillsTable.Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
+        addColumn(KillsTable.TABLE_NAME, KillsTable.Col.SERVER_ID + " integer NOT NULL DEFAULT 0");
 
         Map<Integer, Integer> sessionIDServerIDRelation = db.getSessionsTable().getIDServerIDRelation();
 

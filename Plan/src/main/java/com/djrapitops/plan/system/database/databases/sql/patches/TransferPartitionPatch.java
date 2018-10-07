@@ -16,6 +16,6 @@ public class TransferPartitionPatch extends Patch {
 
     @Override
     public void apply() {
-        addColumns(TransferTable.TABLE_NAME, TransferTable.Col.PART + " bigint NOT NULL DEFAULT 0");
+        addColumn(TransferTable.TABLE_NAME, TransferTable.Col.PART + " bigint NOT NULL DEFAULT 0");
     }
 }

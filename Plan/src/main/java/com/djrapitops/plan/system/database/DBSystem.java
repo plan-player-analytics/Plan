@@ -81,7 +81,7 @@ public abstract class DBSystem implements SubSystem {
         try {
             Benchmark.start("Init Database");
             initDatabase();
-            db.scheduleClean(1L);
+            db.scheduleClean(20L);
             Log.info(locale.get().getString(PluginLang.ENABLED_DATABASE, db.getName()));
             Benchmark.stop("Enable", "Init Database");
         } catch (DBInitException e) {

@@ -78,11 +78,8 @@ public abstract class Patch {
                 });
     }
 
-    protected void addColumns(String tableName, String... columnInfo) {
-        for (int i = 0; i < columnInfo.length; i++) {
-            columnInfo[i] = "ALTER TABLE " + tableName + " ADD " + (usingMySQL ? "" : "COLUMN ") + columnInfo[i];
-        }
-        db.executeUnsafe(columnInfo);
+    protected void addColumn(String tableName, String columnInfo) {
+        db.executeUnsafe("ALTER TABLE " + tableName + " ADD " + (usingMySQL ? "" : "COLUMN ") + columnInfo);
     }
 
     protected void dropTable(String name) {

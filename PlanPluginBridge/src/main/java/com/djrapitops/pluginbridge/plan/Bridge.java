@@ -10,6 +10,7 @@ import com.djrapitops.pluginbridge.plan.advancedban.AdvancedBanHook;
 import com.djrapitops.pluginbridge.plan.askyblock.ASkyBlockHook;
 import com.djrapitops.pluginbridge.plan.banmanager.BanManagerHook;
 import com.djrapitops.pluginbridge.plan.buycraft.BuyCraftHook;
+import com.djrapitops.pluginbridge.plan.discordsrv.DiscordSRVHook;
 import com.djrapitops.pluginbridge.plan.essentials.EssentialsHook;
 import com.djrapitops.pluginbridge.plan.factions.FactionsHook;
 import com.djrapitops.pluginbridge.plan.griefprevention.GriefPreventionHook;
@@ -18,6 +19,7 @@ import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
 import com.djrapitops.pluginbridge.plan.kingdoms.KingdomsHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBukkitHook;
 import com.djrapitops.pluginbridge.plan.litebans.LiteBansBungeeHook;
+import com.djrapitops.pluginbridge.plan.luckperms.LuckPermsHook;
 import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
 import com.djrapitops.pluginbridge.plan.nucleus.NucleusHook;
 import com.djrapitops.pluginbridge.plan.protocolsupport.ProtocolSupportHook;
@@ -75,6 +77,7 @@ public class Bridge {
     private static Hook[] getSpongeHooks(HookHandler h) {
         return new Hook[]{
                 new BuyCraftHook(h),
+                new LuckPermsHook(h),
                 new SpongeEconomyHook(h),
                 new NucleusHook(h)
         };
@@ -85,6 +88,7 @@ public class Bridge {
                 new AdvancedBanHook(h),
                 new BuyCraftHook(h),
                 new LiteBansBungeeHook(h),
+                new LuckPermsHook(h),
                 new ViaVersionBungeeHook(h)
         };
     }
@@ -97,6 +101,7 @@ public class Bridge {
                 new ASkyBlockHook(h),
                 new BanManagerHook(h),
                 new BuyCraftHook(h),
+                new DiscordSRVHook(h),
                 new EssentialsHook(h),
                 new FactionsHook(h),
                 new GriefPreventionHook(h),
@@ -104,6 +109,7 @@ public class Bridge {
                 new JobsHook(h),
                 new KingdomsHook(h),
                 new LiteBansBukkitHook(h),
+                new LuckPermsHook(h),
                 new McmmoHook(h),
                 new SuperbVoteHook(h),
                 new ProtocolSupportHook(h),

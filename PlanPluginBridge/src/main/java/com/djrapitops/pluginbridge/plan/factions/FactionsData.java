@@ -72,7 +72,8 @@ public class FactionsData extends PluginData {
         if (!factions.isEmpty()) {
             FactionsAccordion factionsAccordion = new FactionsAccordion(
                     factions,
-                    analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
+                    Optional.ofNullable(analysisData).flatMap(c -> c.getValue(AnalysisKeys.PLAYERS_MUTATOR))
+                            .orElse(new PlayersMutator(new ArrayList<>()))
             );
             analysisContainer.addHtml("factionAccordion", factionsAccordion.toHtml());
 

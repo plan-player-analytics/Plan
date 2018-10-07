@@ -16,6 +16,6 @@ public class IPHashPatch extends Patch {
 
     @Override
     public void apply() {
-        addColumns(GeoInfoTable.Col.IP_HASH.get() + " varchar(200) DEFAULT ''");
+        addColumn(GeoInfoTable.TABLE_NAME, GeoInfoTable.Col.IP_HASH.get() + " varchar(200) DEFAULT ''");
     }
 }
