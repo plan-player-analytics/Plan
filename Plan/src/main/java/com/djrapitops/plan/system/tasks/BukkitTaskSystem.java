@@ -40,7 +40,6 @@ public class BukkitTaskSystem extends ServerTaskSystem {
                 runnableFactory,
                 Check.isPaperAvailable() ? paperTPSCountTimer : bukkitTPSCountTimer,
                 config,
-                networkPageRefreshTask,
                 bootAnalysisTask,
                 periodicAnalysisTask,
                 logsFolderCleanTask

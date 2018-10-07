@@ -5,7 +5,6 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
-import com.djrapitops.plan.system.tasks.bungee.EnableConnectionTask;
 import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -20,7 +19,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class BungeeTaskSystem extends TaskSystem {
 
-    private final EnableConnectionTask enableConnectionTask;
     private final NetworkPageRefreshTask networkPageRefreshTask;
     private final LogsFolderCleanTask logsFolderCleanTask;
 
@@ -28,13 +26,11 @@ public class BungeeTaskSystem extends TaskSystem {
     public BungeeTaskSystem(
             RunnableFactory runnableFactory,
             BungeeTPSCountTimer bungeeTPSCountTimer,
-            EnableConnectionTask enableConnectionTask,
             NetworkPageRefreshTask networkPageRefreshTask,
             LogsFolderCleanTask logsFolderCleanTask
     ) {
         super(runnableFactory, bungeeTPSCountTimer);
 
-        this.enableConnectionTask = enableConnectionTask;
         this.networkPageRefreshTask = networkPageRefreshTask;
         this.logsFolderCleanTask = logsFolderCleanTask;
     }
@@ -45,7 +41,6 @@ public class BungeeTaskSystem extends TaskSystem {
     }
 
     private void registerTasks() {
-        registerTask(enableConnectionTask).runTaskAsynchronously();
         registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
         registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));

@@ -30,7 +30,6 @@ public class InfoRequests extends HashMap<String, InfoRequest> {
         putRequest(handlers.generateAnalysisPageRequest());
         putRequest(handlers.generateInspectPageRequest());
         putRequest(handlers.generateInspectPluginsTabRequest());
-        putRequest(handlers.generateNetworkPageContentRequest());
 
         putRequest(handlers.saveDBSettingsRequest());
         putRequest(handlers.sendDBSettingsRequest());

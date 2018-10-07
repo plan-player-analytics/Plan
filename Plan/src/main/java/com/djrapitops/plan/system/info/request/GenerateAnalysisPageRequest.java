@@ -83,7 +83,6 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
 
     private void generateAndCache(UUID serverUUID) throws WebException {
         infoSystem.sendRequest(infoRequestFactory.cacheAnalysisPageRequest(serverUUID, analyseAndGetHtml()));
-        infoSystem.updateNetworkPage();
     }
 
     @Override

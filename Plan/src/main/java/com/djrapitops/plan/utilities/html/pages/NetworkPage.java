@@ -9,9 +9,6 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
-import com.djrapitops.plan.system.webserver.cache.PageId;
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.pages.parts.NetworkPageContent;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 
 import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
@@ -54,11 +51,9 @@ public class NetworkPage implements Page {
                     WORLD_MAP_SERIES, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR,
                     COUNTRY_CATEGORIES, COUNTRY_SERIES,
                     HEALTH_INDEX, HEALTH_NOTES,
-                    ACTIVITY_PIE_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES
+                    ACTIVITY_PIE_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES,
+                    SERVERS_TAB
             );
-            NetworkPageContent networkPageContent = (NetworkPageContent)
-                    ResponseCache.loadResponse(PageId.NETWORK_CONTENT.id(), NetworkPageContent::new);
-            placeholderReplacer.put("tabContentServers", networkPageContent.getContents());
 
             return placeholderReplacer.apply(files.readCustomizableResourceFlat("web/network.html"));
         } catch (Exception e) {

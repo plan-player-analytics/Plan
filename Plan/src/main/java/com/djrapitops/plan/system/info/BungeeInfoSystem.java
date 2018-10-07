@@ -13,9 +13,6 @@ import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServer;
-import com.djrapitops.plan.system.webserver.cache.PageId;
-import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import dagger.Lazy;
 
@@ -30,22 +27,15 @@ import javax.inject.Singleton;
 @Singleton
 public class BungeeInfoSystem extends InfoSystem {
 
-    private final ResponseFactory responseFactory;
-    private final ServerInfo serverInfo;
-
     @Inject
     public BungeeInfoSystem(
             InfoRequestFactory infoRequestFactory,
-            ResponseFactory responseFactory,
             ConnectionSystem connectionSystem,
             ServerInfo serverInfo,
             Lazy<WebServer> webServer,
             PluginLogger logger
     ) {
         super(infoRequestFactory, connectionSystem, serverInfo, webServer, logger);
-        this.responseFactory = responseFactory;
-
-        this.serverInfo = serverInfo;
     }
 
     @Override
@@ -57,10 +47,5 @@ public class BungeeInfoSystem extends InfoSystem {
             // runLocally is called when ConnectionSystem has no servers.
             throw new NoServersException("No servers were available to process this request (Local attempt): " + infoRequest.getClass().getSimpleName());
         }
-    }
-
-    @Override
-    public void updateNetworkPage() {
-        ResponseCache.cacheResponse(PageId.SERVER.of(serverInfo.getServerUUID()), responseFactory::networkPageResponse);
     }
 }

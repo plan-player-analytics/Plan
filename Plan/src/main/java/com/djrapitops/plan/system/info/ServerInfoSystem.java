@@ -27,7 +27,6 @@ import javax.inject.Singleton;
 @Singleton
 public class ServerInfoSystem extends InfoSystem {
 
-    private final ServerInfo serverInfo;
     private final PluginLogger logger;
 
     @Inject
@@ -39,7 +38,6 @@ public class ServerInfoSystem extends InfoSystem {
             PluginLogger logger
     ) {
         super(infoRequestFactory, connectionSystem, serverInfo, webServer, logger);
-        this.serverInfo = serverInfo;
         this.logger = logger;
     }
 
@@ -50,11 +48,5 @@ public class ServerInfoSystem extends InfoSystem {
         }
         logger.getDebugLogger().logOn(DebugChannels.INFO_REQUESTS, "Local: " + infoRequest.getClass().getSimpleName());
         infoRequest.runLocally();
-    }
-
-    @Override
-    public void updateNetworkPage() throws WebException {
-        String html = ""; // TODO Rework this part of the info system
-        sendRequest(infoRequestFactory.cacheNetworkPageContentRequest(serverInfo.getServerUUID(), html));
     }
 }

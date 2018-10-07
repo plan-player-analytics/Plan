@@ -70,12 +70,7 @@ public class ServerPageHandler implements PageHandler {
             return response;
         } else {
             if (Check.isBungeeAvailable() && serverInfo.getServerUUID().equals(serverUUID)) {
-                try {
-                    infoSystem.updateNetworkPage();
-                } catch (WebException e) {
-                    /*Ignore, should not occur*/
-                }
-                return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID));
+                return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), responseFactory::networkPageResponse);
             }
             return refreshNow(serverUUID);
         }

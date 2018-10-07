@@ -139,15 +139,6 @@ public abstract class InfoSystem implements SubSystem {
     }
 
     /**
-     * Updates Network page.
-     * <p>
-     * No calls from non-async thread found on 09.02.2018
-     *
-     * @throws WebException If fails.
-     */
-    public abstract void updateNetworkPage() throws WebException;
-
-    /**
      * Requests Set up from Bungee.
      * <p>
      * No calls from non-async thread found on 09.02.2018

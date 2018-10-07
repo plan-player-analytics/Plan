@@ -5,6 +5,7 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
@@ -27,6 +28,7 @@ public class InfoRequestHandlerFactory {
     private final Lazy<PlanPlugin> plugin;
     private final Lazy<PlanConfig> config;
     private final Lazy<Processing> processing;
+    private final Lazy<Processors> processors;
     private final Lazy<InfoSystem> infoSystem;
     private final Lazy<ConnectionSystem> connectionSystem;
     private final Lazy<ServerInfo> serverInfo;
@@ -42,6 +44,7 @@ public class InfoRequestHandlerFactory {
             Lazy<PlanPlugin> plugin,
             Lazy<PlanConfig> config,
             Lazy<Processing> processing,
+            Lazy<Processors> processors,
             Lazy<InfoSystem> infoSystem,
             Lazy<ConnectionSystem> connectionSystem,
             Lazy<ServerInfo> serverInfo,
@@ -55,6 +58,7 @@ public class InfoRequestHandlerFactory {
         this.plugin = plugin;
         this.config = config;
         this.processing = processing;
+        this.processors = processors;
         this.infoSystem = infoSystem;
         this.connectionSystem = connectionSystem;
         this.serverInfo = serverInfo;
@@ -67,7 +71,7 @@ public class InfoRequestHandlerFactory {
     }
 
     CacheRequest cacheAnalysisPageRequest() {
-        return new CacheAnalysisPageRequest(config.get(), processing.get(), htmlExport.get());
+        return new CacheAnalysisPageRequest(config.get(), processing.get(), processors.get(), htmlExport.get());
     }
 
     CacheRequest cacheInspectPageRequest() {
@@ -96,10 +100,6 @@ public class InfoRequestHandlerFactory {
 
     GenerateRequest generateInspectPluginsTabRequest() {
         return new GenerateInspectPluginsTabRequest(infoSystem.get(), infoRequestFactory.get(), pageFactory.get());
-    }
-
-    GenerateRequest generateNetworkPageContentRequest() {
-        return new GenerateNetworkPageContentRequest(infoSystem.get());
     }
 
     SetupRequest saveDBSettingsRequest() {

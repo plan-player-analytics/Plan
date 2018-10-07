@@ -31,7 +31,6 @@ public class SpongeTaskSystem extends ServerTaskSystem {
                 runnableFactory,
                 spongeTPSCountTimer,
                 config,
-                networkPageRefreshTask,
                 bootAnalysisTask,
                 periodicAnalysisTask,
                 logsFolderCleanTask

@@ -7,6 +7,7 @@ package com.djrapitops.plan.system.info.request;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.cache.PageId;
@@ -30,6 +31,7 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
 
     private final PlanConfig config;
     private final Processing processing;
+    private final Processors processors;
     private final HtmlExport htmlExport;
 
     private UUID serverUUID;
@@ -38,10 +40,12 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
     CacheAnalysisPageRequest(
             PlanConfig config,
             Processing processing,
+            Processors processors,
             HtmlExport htmlExport
     ) {
         this.config = config;
         this.processing = processing;
+        this.processors = processors;
         this.htmlExport = htmlExport;
     }
 
@@ -49,10 +53,12 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
             UUID serverUUID, String html,
             PlanConfig config,
             Processing processing,
+            Processors processors,
             HtmlExport htmlExport
     ) {
         this.config = config;
         this.processing = processing;
+        this.processors = processors;
         this.htmlExport = htmlExport;
 
         Verify.nullCheck(serverUUID, html);
@@ -76,6 +82,7 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
 
     private void cache(UUID serverUUID, String html) {
         ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
+        processing.submitNonCritical(processors.info().networkPageUpdateProcessor());
 
         if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
             processing.submitNonCritical(() -> htmlExport.exportServer(serverUUID));
