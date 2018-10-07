@@ -1,3 +1,4 @@
+REL|4.4.7|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.7-REL/Plan-4.4.7-bukkit-bungee.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.4.7-REL
 REL|4.4.6|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.6-REL/Plan-4.4.6-bukkit-bungee.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.4.6-REL
 DEV|4.4.5-b2|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.6-DEV2/Plan-4.4.5-b2-bukkit-bungee.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.4.6-DEV2
 REL|4.4.5|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.5-RELEASE/Plan-4.4.5.Bukkit.Bungee.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.4.5-RELEASE
