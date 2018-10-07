@@ -69,7 +69,6 @@ class BungeePlanModule {
     @Singleton
     @Named("mainCommand")
     CommandNode provideMainCommand(PlanBungeeCommand command) {
-        command.registerCommands();
         return command;
     }
 }
@@ -113,7 +112,9 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("planbungee", component.planCommand());
+        PlanBungeeCommand command = component.planCommand();
+        command.registerCommands();
+        registerCommand("planbungee", command);
     }
 
     @Override

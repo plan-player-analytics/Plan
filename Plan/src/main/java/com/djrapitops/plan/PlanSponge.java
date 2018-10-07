@@ -76,7 +76,6 @@ class SpongePlanModule {
     @Singleton
     @Named("mainCommand")
     CommandNode provideMainCommand(PlanCommand command) {
-        command.registerCommands();
         return command;
     }
 }
@@ -134,7 +133,9 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             slf4jLogger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("plan", component.planCommand());
+        PlanCommand command = component.planCommand();
+        command.registerCommands();
+        registerCommand("plan", command);
     }
 
     @Override

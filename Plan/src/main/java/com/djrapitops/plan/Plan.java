@@ -88,7 +88,6 @@ class BukkitPlanModule {
     @Singleton
     @Named("mainCommand")
     CommandNode provideMainCommand(PlanCommand command) {
-        command.registerCommands();
         return command;
     }
 }
@@ -132,7 +131,9 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("plan", component.planCommand());
+        PlanCommand command = component.planCommand();
+        command.registerCommands();
+        registerCommand("plan", command);
     }
 
     @Override

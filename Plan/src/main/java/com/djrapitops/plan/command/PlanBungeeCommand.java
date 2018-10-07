@@ -13,6 +13,7 @@ import com.djrapitops.plugin.command.TreeCmdNode;
 import dagger.Lazy;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * TreeCommand for the /plan command, and all subcommands.
@@ -22,6 +23,7 @@ import javax.inject.Inject;
  * @author Rsl1122
  * @since 1.0.0
  */
+@Singleton
 public class PlanBungeeCommand extends TreeCmdNode {
 
     private final NetworkCommand networkCommand;
