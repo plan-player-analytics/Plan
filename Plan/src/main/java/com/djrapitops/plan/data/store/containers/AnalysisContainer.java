@@ -390,7 +390,7 @@ public class AnalysisContainer extends DataContainer {
 
         putSupplier(AnalysisKeys.PLAYERS_ONLINE_RESOLVER, () -> new PlayersOnlineResolver(getUnsafe(AnalysisKeys.TPS_MUTATOR)));
 
-        int threshold = 5; //TODO LOW TPS Threshold from Settings;
+        int threshold = config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED);
 
         putSupplier(AnalysisKeys.TPS_SPIKE_MONTH, () -> getUnsafe(tpsMonth).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_MONTH, () -> getUnsafe(tpsMonth).averageTPS());
