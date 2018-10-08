@@ -45,6 +45,7 @@ public class PageFactory {
     private final Lazy<HtmlTables> tables;
     private final Lazy<Accordions> accordions;
     private final Lazy<Formatters> formatters;
+    private final Lazy<AnalysisContainer.Factory> analysisContainerFactory;
     private final Lazy<HookHandler> hookHandler;
     private final Lazy<DebugLogger> debugLogger;
     private final Lazy<Timings> timings;
@@ -63,6 +64,7 @@ public class PageFactory {
             Lazy<HtmlTables> tables,
             Lazy<Accordions> accordions,
             Lazy<Formatters> formatters,
+            Lazy<AnalysisContainer.Factory> analysisContainerFactory,
             Lazy<HookHandler> hookHandler,
             Lazy<DebugLogger> debugLogger,
             Lazy<Timings> timings,
@@ -79,6 +81,7 @@ public class PageFactory {
         this.tables = tables;
         this.accordions = accordions;
         this.formatters = formatters;
+        this.analysisContainerFactory = analysisContainerFactory;
         this.hookHandler = hookHandler;
         this.debugLogger = debugLogger;
         this.timings = timings;
@@ -100,7 +103,8 @@ public class PageFactory {
     }
 
     public AnalysisPage analysisPage(UUID serverUUID) {
-        AnalysisContainer analysisContainer = new AnalysisContainer(database.get().fetch().getServerContainer(serverUUID));
+        AnalysisContainer analysisContainer = analysisContainerFactory.get()
+                .forServerContainer(database.get().fetch().getServerContainer(serverUUID));
         return new AnalysisPage(analysisContainer, fileSystem.get(), formatters.get().decimals(), timings.get());
     }
 

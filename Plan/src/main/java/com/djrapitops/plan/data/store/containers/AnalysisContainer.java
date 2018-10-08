@@ -27,6 +27,9 @@ import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.api.TimeAmount;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -42,22 +45,43 @@ public class AnalysisContainer extends DataContainer {
 
     private final ServerContainer serverContainer;
 
-    // TODO
-    private String version;
-    private PlanConfig config;
-    private Theme theme;
-    private Database database;
-    private ServerProperties serverProperties;
-    private Formatters formatters;
-    private Graphs graphs;
-    private HtmlTables tables;
-    private Accordions accordions;
-    private AnalysisPluginsTabContentCreator pluginsTabContentCreator;
+    private final String version;
+    private final PlanConfig config;
+    private final Theme theme;
+    private final Database database;
+    private final ServerProperties serverProperties;
+    private final Formatters formatters;
+    private final Graphs graphs;
+    private final HtmlTables tables;
+    private final Accordions accordions;
+    private final AnalysisPluginsTabContentCreator pluginsTabContentCreator;
 
     private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {}, "SERVER_NAMES");
 
-    public AnalysisContainer(ServerContainer serverContainer) {
+    public AnalysisContainer(
+            ServerContainer serverContainer,
+            String version,
+            PlanConfig config,
+            Theme theme,
+            Database database,
+            ServerProperties serverProperties,
+            Formatters formatters,
+            Graphs graphs,
+            HtmlTables tables,
+            Accordions accordions,
+            AnalysisPluginsTabContentCreator pluginsTabContentCreator
+    ) {
         this.serverContainer = serverContainer;
+        this.version = version;
+        this.config = config;
+        this.theme = theme;
+        this.database = database;
+        this.serverProperties = serverProperties;
+        this.formatters = formatters;
+        this.graphs = graphs;
+        this.tables = tables;
+        this.accordions = accordions;
+        this.pluginsTabContentCreator = pluginsTabContentCreator;
         addAnalysisSuppliers();
     }
 
@@ -437,5 +461,61 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(navAndTabs, () -> pluginsTabContentCreator.createContent(this));
         putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(navAndTabs)[0]);
         putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(navAndTabs)[1]);
+    }
+
+    @Singleton
+    public static class Factory {
+
+        private final String version;
+        private final PlanConfig config;
+        private final Theme theme;
+        private final Database database;
+        private final ServerProperties serverProperties;
+        private final Formatters formatters;
+        private final Graphs graphs;
+        private final HtmlTables tables;
+        private final Accordions accordions;
+        private final AnalysisPluginsTabContentCreator pluginsTabContentCreator;
+
+        @Inject
+        public Factory(
+                @Named("currentVersion") String version,
+                PlanConfig config,
+                Theme theme,
+                Database database,
+                ServerProperties serverProperties,
+                Formatters formatters,
+                Graphs graphs,
+                HtmlTables tables,
+                Accordions accordions,
+                AnalysisPluginsTabContentCreator pluginsTabContentCreator
+        ) {
+            this.version = version;
+            this.config = config;
+            this.theme = theme;
+            this.database = database;
+            this.serverProperties = serverProperties;
+            this.formatters = formatters;
+            this.graphs = graphs;
+            this.tables = tables;
+            this.accordions = accordions;
+            this.pluginsTabContentCreator = pluginsTabContentCreator;
+        }
+
+        public AnalysisContainer forServerContainer(ServerContainer serverContainer) {
+            return new AnalysisContainer(
+                    serverContainer,
+                    version,
+                    config,
+                    theme,
+                    database,
+                    serverProperties,
+                    formatters,
+                    graphs,
+                    tables,
+                    accordions,
+                    pluginsTabContentCreator
+            );
+        }
     }
 }

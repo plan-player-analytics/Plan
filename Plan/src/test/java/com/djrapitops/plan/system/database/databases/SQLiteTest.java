@@ -1004,8 +1004,10 @@ public class SQLiteTest {
     @Test
     public void analysisContainerSupportsAllAnalysisKeys() throws IllegalAccessException, NoSuchAlgorithmException {
         serverContainerSupportsAllServerKeys();
-        AnalysisContainer analysisContainer = new AnalysisContainer(db.fetch().getServerContainer(TestConstants.SERVER_UUID));
-
+        AnalysisContainer.Factory factory = null;
+        AnalysisContainer analysisContainer = factory.forServerContainer(
+                db.fetch().getServerContainer(TestConstants.SERVER_UUID)
+        );
         List<String> unsupported = new ArrayList<>();
         for (Field field : AnalysisKeys.class.getDeclaredFields()) {
             if (!Modifier.isPublic(field.getModifiers())) {
