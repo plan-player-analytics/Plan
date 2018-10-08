@@ -5,6 +5,7 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,8 @@ public abstract class ServerTaskSystem extends TaskSystem {
             PlanConfig config,
             BootAnalysisTask bootAnalysisTask,
             PeriodicAnalysisTask periodicAnalysisTask,
-            LogsFolderCleanTask logsFolderCleanTask) {
+            LogsFolderCleanTask logsFolderCleanTask
+    ) {
         super(runnableFactory, tpsCountTimer);
         this.config = config;
         this.bootAnalysisTask = bootAnalysisTask;
@@ -54,5 +56,11 @@ public abstract class ServerTaskSystem extends TaskSystem {
         }
 
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
+        registerTask("Settings Load", new AbsRunnable() {
+            @Override
+            public void run() {
+                config.getNetworkSettings().loadSettingsFromDB();
+            }
+        }).runTaskAsynchronously();
     }
 }

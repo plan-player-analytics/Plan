@@ -4,7 +4,6 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -38,11 +37,5 @@ public class BungeeConfigSystem extends ConfigSystem {
     @Override
     protected void copyDefaults() throws IOException {
         config.copyDefaults(files.readFromResource("bungeeconfig.yml"));
-    }
-
-    @Override
-    public void enable() throws EnableException {
-        super.enable();
-        config.getNetworkSettings().placeSettingsToDB();
     }
 }
