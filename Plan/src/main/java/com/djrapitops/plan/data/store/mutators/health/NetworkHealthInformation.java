@@ -8,6 +8,7 @@ import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 
@@ -17,10 +18,18 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
     private final NetworkContainer container;
 
-    public NetworkHealthInformation(NetworkContainer container) {
+    public NetworkHealthInformation(
+            NetworkContainer container,
+            int activeMinuteThreshold,
+            int activeLoginThreshold,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Double> decimalFormatter,
+            Formatter<Double> percentageFormatter
+    ) {
         super(
                 container.getUnsafe(NetworkKeys.REFRESH_TIME),
-                container.getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO)
+                container.getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO),
+                activeMinuteThreshold, activeLoginThreshold, timeAmountFormatter, decimalFormatter, percentageFormatter
         );
         this.container = container;
         calculate();

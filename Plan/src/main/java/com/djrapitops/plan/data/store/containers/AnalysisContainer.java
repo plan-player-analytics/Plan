@@ -7,7 +7,6 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
-import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
@@ -15,7 +14,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.line.PingGraph;
@@ -49,15 +48,11 @@ public class AnalysisContainer extends DataContainer {
     private Theme theme;
     private Database database;
     private ServerProperties serverProperties;
+    private Formatters formatters;
     private Graphs graphs;
     private HtmlTables tables;
     private Accordions accordions;
     private AnalysisPluginsTabContentCreator pluginsTabContentCreator;
-
-    private Formatter<DateHolder> yearFormatter;
-    private Formatter<Long> secondLongFormatter;
-    private Formatter<Long> timeAmountFormatter;
-    private Formatter<Double> percentageFormatter;
 
     private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {}, "SERVER_NAMES");
 
@@ -91,7 +86,7 @@ public class AnalysisContainer extends DataContainer {
         putRawData(AnalysisKeys.ANALYSIS_TIME_DAY_AGO, now - TimeUnit.DAYS.toMillis(1L));
         putRawData(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO, now - TimeAmount.WEEK.toMillis(1L));
         putRawData(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO, now - TimeAmount.MONTH.toMillis(1L));
-        putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> secondLongFormatter.apply(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
+        putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> formatters.secondLong().apply(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
 
         putRawData(AnalysisKeys.VERSION, version);
         putSupplier(AnalysisKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
@@ -144,11 +139,11 @@ public class AnalysisContainer extends DataContainer {
         );
         putSupplier(AnalysisKeys.LAST_PEAK_TIME_F, () ->
                 serverContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS)
-                        .map(dateObj -> yearFormatter.apply(dateObj)).orElse("-")
+                        .map(dateObj -> formatters.year().apply(dateObj)).orElse("-")
         );
         putSupplier(AnalysisKeys.ALL_TIME_PEAK_TIME_F, () ->
                 serverContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS)
-                        .map(dateObj -> yearFormatter.apply(dateObj)).orElse("-")
+                        .map(dateObj -> formatters.year().apply(dateObj)).orElse("-")
         );
         putSupplier(AnalysisKeys.OPERATORS, () -> serverContainer.getValue(ServerKeys.OPERATORS).map(List::size).orElse(0));
         putSupplier(AnalysisKeys.PLAYERS_TABLE, () ->
@@ -242,7 +237,7 @@ public class AnalysisContainer extends DataContainer {
             try {
                 Integer playersNewDay = getUnsafe(AnalysisKeys.PLAYERS_NEW_DAY);
                 return playersNewDay != 0
-                        ? percentageFormatter.apply(1.0 * getUnsafe(retentionDay) / playersNewDay)
+                        ? formatters.percentage().apply(1.0 * getUnsafe(retentionDay) / playersNewDay)
                         : "-";
             } catch (IllegalStateException noPlayersAfterDateFiltering) {
                 return "Not enough data";
@@ -250,13 +245,13 @@ public class AnalysisContainer extends DataContainer {
         });
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK_PERC, () -> {
                     Integer playersNewWeek = getUnsafe(AnalysisKeys.PLAYERS_NEW_WEEK);
-            return playersNewWeek != 0 ? percentageFormatter.apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
+            return playersNewWeek != 0 ? formatters.percentage().apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
                 }
         );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH_PERC, () -> {
                     Integer playersNewMonth = getUnsafe(AnalysisKeys.PLAYERS_NEW_MONTH);
             return playersNewMonth != 0
-                    ? percentageFormatter.apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth)
+                    ? formatters.percentage().apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth)
                     : "-";
                 }
         );
@@ -275,14 +270,14 @@ public class AnalysisContainer extends DataContainer {
 
         putSupplier(AnalysisKeys.RECENT_LOGINS, () -> new RecentLoginList(
                 serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>()),
-                secondLongFormatter).toHtml()
+                formatters.secondLong()).toHtml()
         );
         putSupplier(AnalysisKeys.SESSION_TABLE, () -> tables.serverSessionTable(
                 getUnsafe(AnalysisKeys.PLAYER_NAMES), getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all()).parseHtml()
         );
 
         putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F,
-                () -> timeAmountFormatter.apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
+                () -> formatters.timeAmount().apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
         );
         putSupplier(AnalysisKeys.SESSION_COUNT, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).count());
         putSupplier(AnalysisKeys.PLAYTIME_TOTAL, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toPlaytime());
@@ -290,17 +285,17 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.MOB_KILL_COUNT, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toMobKillCount());
         putSupplier(AnalysisKeys.PLAYER_KILL_COUNT, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toPlayerKillCount());
         putSupplier(AnalysisKeys.PLAYTIME_F,
-                () -> timeAmountFormatter.apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL))
+                () -> formatters.timeAmount().apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL))
         );
         putSupplier(AnalysisKeys.AVERAGE_PLAYTIME_F, () -> {
                     long players = getUnsafe(AnalysisKeys.PLAYERS_TOTAL);
             return players != 0
-                    ? timeAmountFormatter.apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL) / players)
+                    ? formatters.timeAmount().apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL) / players)
                     : "-";
                 }
         );
         putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F,
-                () -> timeAmountFormatter.apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
+                () -> formatters.timeAmount().apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
         );
 
         Key<SessionsMutator> sessionsDay = new Key<>(SessionsMutator.class, "SESSIONS_DAY");
@@ -425,7 +420,13 @@ public class AnalysisContainer extends DataContainer {
 
     private void addServerHealth() {
         Key<HealthInformation> healthInformation = new Key<>(HealthInformation.class, "HEALTH_INFORMATION");
-        putSupplier(healthInformation, () -> new HealthInformation(this));
+        putSupplier(healthInformation, () -> new HealthInformation(
+                this,
+                config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED),
+                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
+                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
+                formatters.timeAmount(), formatters.decimals(), formatters.percentage()
+        ));
         putSupplier(AnalysisKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
         putSupplier(AnalysisKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
     }

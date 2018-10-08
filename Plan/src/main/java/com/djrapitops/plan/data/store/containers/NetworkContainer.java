@@ -7,7 +7,6 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
-import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
@@ -15,7 +14,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
@@ -46,10 +45,8 @@ public class NetworkContainer extends DataContainer {
     private Theme theme;
     private Database database;
     private ServerProperties serverProperties;
+    private Formatters formatters;
     private Graphs graphs;
-
-    private Formatter<DateHolder> yearFormatter;
-    private Formatter<Long> secondLongFormatter;
 
     public NetworkContainer(ServerContainer bungeeContainer) {
         this.bungeeContainer = bungeeContainer;
@@ -82,7 +79,12 @@ public class NetworkContainer extends DataContainer {
 
     private void addNetworkHealth() {
         Key<NetworkHealthInformation> healthInformation = new Key<>(NetworkHealthInformation.class, "HEALTH_INFORMATION");
-        putSupplier(healthInformation, () -> new NetworkHealthInformation(this));
+        putSupplier(healthInformation, () -> new NetworkHealthInformation(
+                this,
+                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
+                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
+                formatters.timeAmount(), formatters.decimals(), formatters.percentage()
+        ));
         putSupplier(NetworkKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
         putSupplier(NetworkKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
     }
@@ -93,7 +95,7 @@ public class NetworkContainer extends DataContainer {
         putRawData(NetworkKeys.REFRESH_TIME_DAY_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeUnit.DAYS.toMillis(1L));
         putRawData(NetworkKeys.REFRESH_TIME_WEEK_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeAmount.WEEK.toMillis(1L));
         putRawData(NetworkKeys.REFRESH_TIME_MONTH_AGO, getUnsafe(NetworkKeys.REFRESH_TIME) - TimeAmount.MONTH.toMillis(1L));
-        putSupplier(NetworkKeys.REFRESH_TIME_F, () -> secondLongFormatter.apply(getUnsafe(NetworkKeys.REFRESH_TIME)));
+        putSupplier(NetworkKeys.REFRESH_TIME_F, () -> formatters.secondLong().apply(getUnsafe(NetworkKeys.REFRESH_TIME)));
 
         putRawData(NetworkKeys.VERSION, version);
         putSupplier(NetworkKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
@@ -132,10 +134,10 @@ public class NetworkContainer extends DataContainer {
         );
 
         putSupplier(NetworkKeys.ALL_TIME_PEAK_TIME_F, () ->
-                bungeeContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS).map(yearFormatter::apply).orElse("No data")
+                bungeeContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS).map(formatters.year()).orElse("No data")
         );
         putSupplier(NetworkKeys.RECENT_PEAK_TIME_F, () ->
-                bungeeContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS).map(yearFormatter::apply).orElse("No data")
+                bungeeContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS).map(formatters.year()).orElse("No data")
         );
         putSupplier(NetworkKeys.PLAYERS_ALL_TIME_PEAK, () ->
                 bungeeContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS).map(dateObj -> "" + dateObj.getValue()).orElse("-")

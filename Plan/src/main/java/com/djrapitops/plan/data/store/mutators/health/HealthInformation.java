@@ -10,6 +10,7 @@ import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.TimeAmount;
 
@@ -26,12 +27,23 @@ public class HealthInformation extends AbstractHealthInfo {
 
     private final AnalysisContainer analysisContainer;
 
-    public HealthInformation(AnalysisContainer analysisContainer) {
+    private final int lowTPSThreshold;
+
+    public HealthInformation(
+            AnalysisContainer analysisContainer,
+            int lowTPSThreshold, int activeMinuteThreshold,
+            int activeLoginThreshold,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Double> decimalFormatter,
+            Formatter<Double> percentageFormatter
+    ) {
         super(
                 analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME),
-                analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO)
+                analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
+                activeMinuteThreshold, activeLoginThreshold, timeAmountFormatter, decimalFormatter, percentageFormatter
         );
         this.analysisContainer = analysisContainer;
+        this.lowTPSThreshold = lowTPSThreshold;
         calculate();
     }
 
@@ -91,9 +103,7 @@ public class HealthInformation extends AbstractHealthInfo {
         TPSMutator tpsMutator = analysisContainer.getUnsafe(tpsMonth);
         long serverDownTime = tpsMutator.serverDownTime();
 
-        int threshold = 5; // TODO TPS THRESHOLD from settings
-
-        double aboveThreshold = tpsMutator.percentageTPSAboveThreshold(threshold);
+        double aboveThreshold = tpsMutator.percentageTPSAboveThreshold(lowTPSThreshold);
         long tpsSpikeMonth = analysisContainer.getValue(AnalysisKeys.TPS_SPIKE_MONTH).orElse(0);
 
         String avgLowThresholdString = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -110,16 +120,16 @@ public class HealthInformation extends AbstractHealthInfo {
                 + decimalFormatter.apply(aboveThreshold * 100.0) + "% of the time";
 
         if (tpsSpikeMonth <= 5) {
-            addNote(Icons.GREEN_THUMB + " Average TPS dropped below Low Threshold (" + threshold + ")" +
+            addNote(Icons.GREEN_THUMB + " Average TPS dropped below Low Threshold (" + lowTPSThreshold + ")" +
                     " " + tpsSpikeMonth + " times" +
                     avgLowThresholdString);
         } else if (tpsSpikeMonth <= 25) {
-            addNote(Icons.YELLOW_FLAG + " Average TPS dropped below Low Threshold (" + threshold + ")" +
+            addNote(Icons.YELLOW_FLAG + " Average TPS dropped below Low Threshold (" + lowTPSThreshold + ")" +
                     " " + tpsSpikeMonth + " times" +
                     avgLowThresholdString);
             serverHealth *= 0.95;
         } else {
-            addNote(Icons.RED_WARN + " Average TPS dropped below Low Threshold (" + threshold + ")" +
+            addNote(Icons.RED_WARN + " Average TPS dropped below Low Threshold (" + lowTPSThreshold + ")" +
                     " " + tpsSpikeMonth + " times" +
                     avgLowThresholdString);
             serverHealth *= 0.8;

@@ -19,16 +19,27 @@ public abstract class AbstractHealthInfo {
 
     protected double serverHealth;
 
-    // TODO
-    protected int activeMinuteThreshold;
-    protected int activeLoginThreshold;
-    protected Formatter<Long> timeAmountFormatter;
-    protected Formatter<Double> decimalFormatter;
-    protected Formatter<Double> percentageFormatter;
+    protected final int activeMinuteThreshold;
+    protected final int activeLoginThreshold;
+    protected final Formatter<Long> timeAmountFormatter;
+    protected final Formatter<Double> decimalFormatter;
+    protected final Formatter<Double> percentageFormatter;
 
-    public AbstractHealthInfo(long now, long monthAgo) {
+    public AbstractHealthInfo(
+            long now, long monthAgo,
+            int activeMinuteThreshold,
+            int activeLoginThreshold,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Double> decimalFormatter,
+            Formatter<Double> percentageFormatter
+    ) {
         this.now = now;
         this.monthAgo = monthAgo;
+        this.activeMinuteThreshold = activeMinuteThreshold;
+        this.activeLoginThreshold = activeLoginThreshold;
+        this.timeAmountFormatter = timeAmountFormatter;
+        this.decimalFormatter = decimalFormatter;
+        this.percentageFormatter = percentageFormatter;
         serverHealth = 100.0;
 
         this.notes = new ArrayList<>();
