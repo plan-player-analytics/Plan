@@ -214,7 +214,9 @@ public class AnalysisContainer extends DataContainer {
         // compareAndFindThoseLikelyToBeRetained can throw exception.
         putSupplier(retentionDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).compareAndFindThoseLikelyToBeRetained(
                 getUnsafe(newDay).all(), getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
-                getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER)
+                getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER),
+                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
+                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
                 ).count()
         );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY, () -> {

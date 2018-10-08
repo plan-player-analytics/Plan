@@ -175,9 +175,13 @@ public class PlayersMutator {
      * @return Mutator containing the players that are considered to be retained.
      * @throws IllegalStateException If all players are rejected due to dateLimit.
      */
-    public PlayersMutator compareAndFindThoseLikelyToBeRetained(Iterable<PlayerContainer> compareTo,
-                                                                long dateLimit,
-                                                                PlayersOnlineResolver onlineResolver) {
+    public PlayersMutator compareAndFindThoseLikelyToBeRetained(
+            Iterable<PlayerContainer> compareTo,
+            long dateLimit,
+            PlayersOnlineResolver onlineResolver,
+            int activityMinuteThreshold,
+            int activityLoginThreshold
+    ) {
         Collection<PlayerContainer> retainedAfterMonth = new ArrayList<>();
         Collection<PlayerContainer> notRetainedAfterMonth = new ArrayList<>();
 
@@ -203,10 +207,10 @@ public class PlayersMutator {
         }
 
         List<RetentionData> retained = retainedAfterMonth.stream()
-                .map(player -> new RetentionData(player, onlineResolver))
+                .map(player -> new RetentionData(player, onlineResolver, activityMinuteThreshold, activityLoginThreshold))
                 .collect(Collectors.toList());
         List<RetentionData> notRetained = notRetainedAfterMonth.stream()
-                .map(player -> new RetentionData(player, onlineResolver))
+                .map(player -> new RetentionData(player, onlineResolver, activityMinuteThreshold, activityLoginThreshold))
                 .collect(Collectors.toList());
 
         RetentionData avgRetained = RetentionData.average(retained);
@@ -214,7 +218,7 @@ public class PlayersMutator {
 
         List<PlayerContainer> toBeRetained = new ArrayList<>();
         for (PlayerContainer player : compareTo) {
-            RetentionData retentionData = new RetentionData(player, onlineResolver);
+            RetentionData retentionData = new RetentionData(player, onlineResolver, activityMinuteThreshold, activityLoginThreshold);
             if (retentionData.distance(avgRetained) < retentionData.distance(avgNotRetained)) {
                 toBeRetained.add(player);
             }

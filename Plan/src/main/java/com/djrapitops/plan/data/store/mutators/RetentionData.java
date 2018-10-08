@@ -45,11 +45,20 @@ public class RetentionData {
         this.onlineOnJoin = onlineOnJoin;
     }
 
-    public RetentionData(PlayerContainer player, PlayersOnlineResolver onlineOnJoin) {
+    public RetentionData(
+            PlayerContainer player,
+            PlayersOnlineResolver onlineOnJoin,
+            int activityMinuteThreshold,
+            int activityLoginThreshold
+    ) {
         Optional<Long> registeredValue = player.getValue(PlayerKeys.REGISTERED);
         activityIndex = registeredValue
-                // TODO Thresholds from settings
-                .map(registered -> new ActivityIndex(player, registered + TimeUnit.DAYS.toMillis(1L), 1, 1).getValue())
+                .map(registered -> new ActivityIndex(
+                        player,
+                        registered + TimeUnit.DAYS.toMillis(1L),
+                        activityMinuteThreshold,
+                        activityLoginThreshold
+                ).getValue())
                 .orElse(0.0);
         this.onlineOnJoin = registeredValue
                 .map(registered -> onlineOnJoin.getOnlineOn(registered).orElse(-1))
