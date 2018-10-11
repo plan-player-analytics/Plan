@@ -136,7 +136,6 @@ public class SpongePlayerListener {
                         processors.info().playerPageUpdateProcessor(uuid)
                 )
         ).runTaskAsynchronously();
-        processing.submit(processors.info().networkPageUpdateProcessor());
     }
 
     @Listener(order = Order.POST)
@@ -158,7 +157,6 @@ public class SpongePlayerListener {
         boolean banned = isBanned(player.getProfile());
         processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, false));
         processing.submit(processors.player().endSessionProcessor(uuid, time));
-        processing.submit(processors.info().networkPageUpdateProcessor());
         processing.submit(processors.info().playerPageUpdateProcessor(uuid));
     }
 }

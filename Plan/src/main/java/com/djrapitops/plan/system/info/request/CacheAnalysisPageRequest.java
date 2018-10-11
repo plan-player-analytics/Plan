@@ -82,7 +82,6 @@ public class CacheAnalysisPageRequest extends InfoRequestWithVariables implement
 
     private void cache(UUID serverUUID, String html) {
         ResponseCache.cacheResponse(PageId.SERVER.of(serverUUID), () -> new AnalysisPageResponse(html));
-        processing.submitNonCritical(processors.info().networkPageUpdateProcessor());
 
         if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
             processing.submitNonCritical(() -> htmlExport.exportServer(serverUUID));

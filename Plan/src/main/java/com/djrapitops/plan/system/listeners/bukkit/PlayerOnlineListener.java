@@ -135,7 +135,6 @@ public class PlayerOnlineListener implements Listener {
                         processors.info().playerPageUpdateProcessor(uuid)
                 )
         ).runTaskAsynchronously();
-        processing.submit(processors.info().networkPageUpdateProcessor());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -156,7 +155,6 @@ public class PlayerOnlineListener implements Listener {
 
         processing.submit(processors.player().banAndOpProcessor(uuid, player::isBanned, player.isOp()));
         processing.submit(processors.player().endSessionProcessor(uuid, time));
-        processing.submit(processors.info().networkPageUpdateProcessor());
         processing.submit(processors.info().playerPageUpdateProcessor(uuid));
     }
 }

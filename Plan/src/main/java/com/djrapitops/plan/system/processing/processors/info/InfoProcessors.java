@@ -2,7 +2,6 @@ package com.djrapitops.plan.system.processing.processors.info;
 
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.command.Sender;
 import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
@@ -20,18 +19,16 @@ import java.util.function.BiConsumer;
 @Singleton
 public class InfoProcessors {
 
-    private final Lazy<ServerInfo> serverInfo;
     private final Lazy<InfoSystem> infoSystem;
     private final Lazy<WebExceptionLogger> webExceptionLogger;
     private final Lazy<RunnableFactory> runnableFactory;
 
     @Inject
     public InfoProcessors(
-            Lazy<ServerInfo> serverInfo, Lazy<InfoSystem> infoSystem,
+            Lazy<InfoSystem> infoSystem,
             Lazy<WebExceptionLogger> webExceptionLogger,
             Lazy<RunnableFactory> runnableFactory
     ) {
-        this.serverInfo = serverInfo;
         this.infoSystem = infoSystem;
         this.webExceptionLogger = webExceptionLogger;
         this.runnableFactory = runnableFactory;
@@ -46,10 +43,6 @@ public class InfoProcessors {
         return new InspectCacheRequestProcessor(uuid, sender, playerName, msgSender,
                 infoSystem.get(), webExceptionLogger.get()
         );
-    }
-
-    public NetworkPageUpdateProcessor networkPageUpdateProcessor() {
-        return new NetworkPageUpdateProcessor(serverInfo.get());
     }
 
     public PlayerPageUpdateProcessor playerPageUpdateProcessor(UUID uuid) {
