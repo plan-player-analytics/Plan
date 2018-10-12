@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.processing.processors.info;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
 import com.djrapitops.plugin.command.Sender;
-import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -21,17 +20,14 @@ public class InfoProcessors {
 
     private final Lazy<InfoSystem> infoSystem;
     private final Lazy<WebExceptionLogger> webExceptionLogger;
-    private final Lazy<RunnableFactory> runnableFactory;
 
     @Inject
     public InfoProcessors(
             Lazy<InfoSystem> infoSystem,
-            Lazy<WebExceptionLogger> webExceptionLogger,
-            Lazy<RunnableFactory> runnableFactory
+            Lazy<WebExceptionLogger> webExceptionLogger
     ) {
         this.infoSystem = infoSystem;
         this.webExceptionLogger = webExceptionLogger;
-        this.runnableFactory = runnableFactory;
     }
 
     public InspectCacheRequestProcessor inspectCacheRequestProcessor(
@@ -46,8 +42,6 @@ public class InfoProcessors {
     }
 
     public PlayerPageUpdateProcessor playerPageUpdateProcessor(UUID uuid) {
-        return new PlayerPageUpdateProcessor(uuid,
-                infoSystem.get(), webExceptionLogger.get(), runnableFactory.get()
-        );
+        return new PlayerPageUpdateProcessor(uuid);
     }
 }

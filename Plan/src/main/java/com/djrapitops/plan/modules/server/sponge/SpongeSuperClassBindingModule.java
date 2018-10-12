@@ -4,6 +4,8 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.SpongeDBSystem;
 import com.djrapitops.plan.system.importing.EmptyImportSystem;
 import com.djrapitops.plan.system.importing.ImportSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.SpongeServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.listeners.SpongeListenerSystem;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
@@ -22,6 +24,12 @@ import javax.inject.Singleton;
  */
 @Module
 public class SpongeSuperClassBindingModule {
+
+    @Provides
+    @Singleton
+    ServerInfo provideSpongeServerInfo(SpongeServerInfo spongeServerInfo) {
+        return spongeServerInfo;
+    }
 
     @Provides
     @Singleton

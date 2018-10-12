@@ -25,7 +25,7 @@ import javax.inject.Singleton;
  * @since 1.0.0
  */
 @Singleton
-public class PlanBungeeCommand extends TreeCmdNode {
+public class PlanVelocityCommand extends TreeCmdNode {
 
     private final NetworkCommand networkCommand;
     private final ListServersCommand listServersCommand;
@@ -42,7 +42,7 @@ public class PlanBungeeCommand extends TreeCmdNode {
     private boolean commandsRegistered;
 
     @Inject
-    public PlanBungeeCommand(
+    public PlanVelocityCommand(
             ColorScheme colorScheme,
             Locale locale,
             // Group 1
@@ -60,7 +60,7 @@ public class PlanBungeeCommand extends TreeCmdNode {
             ReloadCommand reloadCommand,
             DisableCommand disableCommand
     ) {
-        super("planbungee", Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
+        super("planvelocity", Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
         this.uninstalledCommand = uninstalledCommand;
 
         commandsRegistered = false;

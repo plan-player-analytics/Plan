@@ -16,18 +16,18 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
- * PlanAPI extension for Bungee.
+ * PlanAPI extension for proxy servers.
  *
  * @author Rsl1122
  */
 @Singleton
-public class BungeeAPI extends CommonAPI {
+public class ProxyAPI extends CommonAPI {
 
     private final HookHandler hookHandler;
     private final Database database;
 
     @Inject
-    public BungeeAPI(
+    public ProxyAPI(
             UUIDUtility uuidUtility,
             Database database,
             HookHandler hookHandler,

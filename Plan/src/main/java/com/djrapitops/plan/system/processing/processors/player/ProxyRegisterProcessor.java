@@ -15,7 +15,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BungeeRegisterProcessor implements CriticalRunnable {
+public class ProxyRegisterProcessor implements CriticalRunnable {
 
     private final UUID uuid;
     private final String name;
@@ -25,7 +25,7 @@ public class BungeeRegisterProcessor implements CriticalRunnable {
     private final Processing processing;
     private final Database database;
 
-    BungeeRegisterProcessor(
+    ProxyRegisterProcessor(
             UUID uuid, String name, long registered,
             Processing processing,
             Database database,

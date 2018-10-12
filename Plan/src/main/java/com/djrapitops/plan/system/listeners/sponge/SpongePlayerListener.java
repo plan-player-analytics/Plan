@@ -3,7 +3,6 @@ package com.djrapitops.plan.system.listeners.sponge;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.listeners.bukkit.AFKListener;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Settings;
@@ -82,8 +81,7 @@ public class SpongePlayerListener {
     public void onKick(KickPlayerEvent event) {
         try {
             UUID uuid = event.getTargetEntity().getUniqueId();
-            // TODO
-            if (AFKListener.AFK_TRACKER.isAfk(uuid)) {
+            if (SpongeAFKListener.AFK_TRACKER.isAfk(uuid)) {
                 return;
             }
             processing.submit(processors.player().kickProcessor(uuid));

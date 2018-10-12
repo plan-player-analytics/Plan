@@ -1,7 +1,5 @@
 package com.djrapitops.plan.modules.server.sponge;
 
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.info.server.SpongeServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.info.server.properties.SpongeServerProperties;
 import dagger.Module;
@@ -11,18 +9,12 @@ import org.spongepowered.api.Sponge;
 import javax.inject.Singleton;
 
 /**
- * Dagger module for Sponge ServerInfo.
+ * Dagger module for Sponge ServerProperties.
  *
  * @author Rsl1122
  */
 @Module
-public class SpongeInfoModule {
-
-    @Provides
-    @Singleton
-    ServerInfo provideSpongeServerInfo(SpongeServerInfo spongeServerInfo) {
-        return spongeServerInfo;
-    }
+public class SpongeServerPropertiesModule {
 
     @Provides
     @Singleton

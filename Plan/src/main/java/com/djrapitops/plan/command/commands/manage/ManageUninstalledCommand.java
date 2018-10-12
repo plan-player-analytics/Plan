@@ -36,7 +36,6 @@ public class ManageUninstalledCommand extends CommandNode {
     private final Database database;
     private final ErrorHandler errorHandler;
     private final ServerInfo serverInfo;
-    private final ConnectionSystem connectionSystem;
 
     @Inject
     public ManageUninstalledCommand(
@@ -44,7 +43,6 @@ public class ManageUninstalledCommand extends CommandNode {
             Processing processing,
             Database database,
             ServerInfo serverInfo,
-            ConnectionSystem connectionSystem,
             ErrorHandler errorHandler
     ) {
         super("uninstalled", Permissions.MANAGE.getPermission(), CommandType.ALL_WITH_ARGS);
@@ -53,7 +51,6 @@ public class ManageUninstalledCommand extends CommandNode {
         this.processing = processing;
         this.database = database;
         this.serverInfo = serverInfo;
-        this.connectionSystem = connectionSystem;
         this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_UNINSTALLED));

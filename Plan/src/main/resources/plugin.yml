@@ -95,7 +95,7 @@ permissions:
   plan.basic:
     children:
       plan.?: true
-      plan.inspect.base: true  
+      plan.inspect.base: true
       plan.qinspect.base: true
   plan.advanced:
     childer:

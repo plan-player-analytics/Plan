@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
@@ -52,9 +51,9 @@ public class AnalysisPluginsTabContentCreator {
     }
 
     public String[] createContent(
-            com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer
+            com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer,
+            PlayersMutator mutator
     ) {
-        PlayersMutator mutator = analysisContainer.getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()));
 
         if (mutator.all().isEmpty()) {
             return new String[]{"<li><a>No Data</a></li>", ""};

@@ -49,8 +49,8 @@ public class PlayerProcessors {
         return new BanAndOpProcessor(uuid, banned, op, database.get());
     }
 
-    public BungeeRegisterProcessor bungeeRegisterProcessor(UUID uuid, String name, long registered, Runnable... afterProcess) {
-        return new BungeeRegisterProcessor(uuid, name, registered, processing.get(), database.get(), afterProcess);
+    public ProxyRegisterProcessor proxyRegisterProcessor(UUID uuid, String name, long registered, Runnable... afterProcess) {
+        return new ProxyRegisterProcessor(uuid, name, registered, processing.get(), database.get(), afterProcess);
     }
 
     public EndSessionProcessor endSessionProcessor(UUID uuid, long time) {

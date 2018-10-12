@@ -155,8 +155,17 @@ public class Session extends DataContainer implements DateHolder {
         this.worldTimes = worldTimes;
     }
 
-    public void setPlayerKills(List<PlayerKill> playerKills) {
-        this.playerKills = playerKills;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Session session = (Session) o;
+        return getUnsafe(SessionKeys.START).equals(session.getUnsafe(SessionKeys.START)) &&
+                getValue(SessionKeys.END).orElse(-1L).equals(session.getValue(SessionKeys.END).orElse(-1L)) &&
+                mobKills == session.mobKills &&
+                deaths == session.deaths &&
+                Objects.equals(playerKills, session.playerKills) &&
+                Objects.equals(worldTimes, session.worldTimes);
     }
 
     public boolean isFetchedFromDB() {
@@ -171,17 +180,8 @@ public class Session extends DataContainer implements DateHolder {
         putRawData(SessionKeys.DB_ID, sessionID);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Session session = (Session) o;
-        return getUnsafe(SessionKeys.START).equals(session.getUnsafe(SessionKeys.START)) &&
-                getValue(SessionKeys.END).orElse(-1L).equals(session.getValue(SessionKeys.END).orElse(-1L)) &&
-                mobKills == session.mobKills &&
-                deaths == session.deaths &&
-                Objects.equals(playerKills, session.playerKills) &&
-                Objects.equals(worldTimes, session.worldTimes);
+    public List<PlayerKill> getPlayerKills() {
+        return playerKills;
     }
 
     @Override
@@ -197,8 +197,8 @@ public class Session extends DataContainer implements DateHolder {
         return worldTimes;
     }
 
-    public List<PlayerKill> getPlayerKills() {
-        return playerKills;
+    public void setPlayerKills(List<PlayerKill> playerKills) {
+        this.playerKills = playerKills;
     }
 
     private int getMobKills() {

@@ -7,8 +7,8 @@ import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import dagger.Lazy;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

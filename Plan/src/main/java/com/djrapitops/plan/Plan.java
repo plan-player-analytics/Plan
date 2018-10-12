@@ -26,7 +26,7 @@ import com.djrapitops.plan.modules.FilesModule;
 import com.djrapitops.plan.modules.SuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectBindingModule;
 import com.djrapitops.plan.modules.server.ServerSuperClassBindingModule;
-import com.djrapitops.plan.modules.server.bukkit.BukkitInfoModule;
+import com.djrapitops.plan.modules.server.bukkit.BukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.server.bukkit.BukkitSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -55,7 +55,7 @@ import java.util.logging.Logger;
         SystemObjectBindingModule.class,
         APFModule.class,
         FilesModule.class,
-        BukkitInfoModule.class,
+        BukkitServerPropertiesModule.class,
         ServerSuperClassBindingModule.class,
         BukkitSuperClassBindingModule.class
 })

@@ -9,7 +9,6 @@ public class PlayerPageUpdateProcessor implements Runnable {
 
     private final UUID uuid;
 
-    // TODO Factory method fix
     PlayerPageUpdateProcessor(
             UUID uuid
     ) {

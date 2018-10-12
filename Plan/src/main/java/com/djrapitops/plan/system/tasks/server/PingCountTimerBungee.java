@@ -25,8 +25,9 @@ package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.player.PingInsertProcessor;
+import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -36,20 +37,44 @@ import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.event.ServerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Task that handles player ping calculation on Bungee based servers.
  *
  * @author BrainStone
  */
+@Singleton
 public class PingCountTimerBungee extends AbsRunnable implements Listener {
 
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
     public static final int PING_INTERVAL = 2 * 20;
 
-    private final Map<UUID, List<DateObj<Integer>>> playerHistory = new HashMap<>();
+    private final Map<UUID, List<DateObj<Integer>>> playerHistory;
+
+    private final PlanConfig config;
+    private final Processors processors;
+    private final Processing processing;
+    private final RunnableFactory runnableFactory;
+
+    @Inject
+    public PingCountTimerBungee(
+            PlanConfig config,
+            Processors processors,
+            Processing processing,
+            RunnableFactory runnableFactory
+    ) {
+        this.config = config;
+        this.processors = processors;
+        this.processing = processing;
+        this.runnableFactory = runnableFactory;
+        playerHistory = new HashMap<>();
+    }
 
     @Override
     public void run() {
@@ -59,13 +84,13 @@ public class PingCountTimerBungee extends AbsRunnable implements Listener {
             ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
             if (player != null) {
                 int ping = getPing(player);
-                if (ping < -1 || ping > TimeAmount.SECOND.ms() * 8L) {
+                if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
                     return;
                 }
                 history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
-                    Processing.submit(new PingInsertProcessor(uuid, new ArrayList<>(history)));
+                    processing.submit(processors.player().pingInsertProcessor(uuid, new ArrayList<>(history)));
                     history.clear();
                 }
             } else {
@@ -90,14 +115,14 @@ public class PingCountTimerBungee extends AbsRunnable implements Listener {
     @EventHandler
     public void onPlayerJoin(ServerConnectedEvent joinEvent) {
         ProxiedPlayer player = joinEvent.getPlayer();
-        RunnableFactory.createNew("Add Player to Ping list", new AbsRunnable() {
+        runnableFactory.create("Add Player to Ping list", new AbsRunnable() {
             @Override
             public void run() {
                 if (player.isConnected()) {
                     addPlayer(player);
                 }
             }
-        }).runTaskLater(TimeAmount.SECOND.ticks() * (long) Settings.PING_PLAYER_LOGIN_DELAY.getNumber());
+        }).runTaskLater(TimeAmount.toTicks(config.getNumber(Settings.PING_PLAYER_LOGIN_DELAY), TimeUnit.SECONDS));
     }
 
     @EventHandler

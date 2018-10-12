@@ -1,47 +1,47 @@
-package com.djrapitops.plan.modules.proxy.bungee;
+package com.djrapitops.plan.modules.proxy.velocity;
 
-import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
+import com.djrapitops.plan.system.info.server.VelocityServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
-import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
+import com.djrapitops.plan.system.listeners.VelocityListenerSystem;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
+import com.djrapitops.plan.system.settings.config.ProxyConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
+import com.djrapitops.plan.system.tasks.VelocityTaskSystem;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
 /**
- * Module for binding Bungee specific classes to the interface implementations.
+ * Module for binding Velocity specific classes to the interface implementations.
  *
  * @author Rsl1122
  */
 @Module
-public class BungeeSuperClassBindingModule {
+public class VelocitySuperClassBindingModule {
 
     @Provides
     @Singleton
-    ServerInfo provideBungeeServerInfo(BungeeServerInfo bungeeServerInfo) {
-        return bungeeServerInfo;
+    ServerInfo provideVelocityServerInfo(VelocityServerInfo velocityServerInfo) {
+        return velocityServerInfo;
     }
 
     @Provides
     @Singleton
-    ConfigSystem provideBungeeConfigSystem(BungeeConfigSystem bungeeConfigSystem) {
-        return bungeeConfigSystem;
+    ConfigSystem provideVelocityConfigSystem(ProxyConfigSystem proxyConfigSystem) {
+        return proxyConfigSystem;
     }
 
     @Provides
     @Singleton
-    TaskSystem provideBungeeTaskSystem(BungeeTaskSystem bungeeTaskSystem) {
-        return bungeeTaskSystem;
+    TaskSystem provideVelocityTaskSystem(VelocityTaskSystem velocityTaskSystem) {
+        return velocityTaskSystem;
     }
 
     @Provides
     @Singleton
-    ListenerSystem provideBungeeListenerSystem(BungeeListenerSystem bungeeListenerSystem) {
-        return bungeeListenerSystem;
+    ListenerSystem provideVelocityListenerSystem(VelocityListenerSystem velocityListenerSystem) {
+        return velocityListenerSystem;
     }
 }

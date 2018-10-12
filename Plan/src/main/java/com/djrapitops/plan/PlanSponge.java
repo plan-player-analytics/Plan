@@ -7,7 +7,7 @@ import com.djrapitops.plan.modules.FilesModule;
 import com.djrapitops.plan.modules.SuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectBindingModule;
 import com.djrapitops.plan.modules.server.ServerSuperClassBindingModule;
-import com.djrapitops.plan.modules.server.sponge.SpongeInfoModule;
+import com.djrapitops.plan.modules.server.sponge.SpongeServerPropertiesModule;
 import com.djrapitops.plan.modules.server.sponge.SpongeSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -18,7 +18,6 @@ import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.logging.L;
-import com.google.inject.Inject;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
@@ -46,7 +45,7 @@ import java.io.InputStream;
         FilesModule.class,
         ServerSuperClassBindingModule.class,
         SpongeSuperClassBindingModule.class,
-        SpongeInfoModule.class
+        SpongeServerPropertiesModule.class
 })
 interface PlanSpongeComponent {
 
@@ -94,13 +93,13 @@ class SpongePlanModule {
 )
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
-    @Inject
+    @com.google.inject.Inject
     private Metrics metrics;
 
-    @Inject
+    @com.google.inject.Inject
     private Logger slf4jLogger;
 
-    @Inject
+    @com.google.inject.Inject
     @ConfigDir(sharedRoot = false)
     private File dataFolder;
     private PlanSystem system;

@@ -4,6 +4,8 @@ import com.djrapitops.plan.system.database.BukkitDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.importing.BukkitImportSystem;
 import com.djrapitops.plan.system.importing.ImportSystem;
+import com.djrapitops.plan.system.info.server.BukkitServerInfo;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.settings.config.BukkitConfigSystem;
@@ -22,6 +24,12 @@ import javax.inject.Singleton;
  */
 @Module
 public class BukkitSuperClassBindingModule {
+
+    @Provides
+    @Singleton
+    ServerInfo provideBukkitServerInfo(BukkitServerInfo bukkitServerInfo) {
+        return bukkitServerInfo;
+    }
 
     @Provides
     @Singleton

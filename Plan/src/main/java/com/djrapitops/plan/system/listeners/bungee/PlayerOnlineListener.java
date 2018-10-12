@@ -70,7 +70,7 @@ public class PlayerOnlineListener implements Listener {
 
             boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
 
-            processing.submit(processors.player().bungeeRegisterProcessor(uuid, name, time,
+            processing.submit(processors.player().proxyRegisterProcessor(uuid, name, time,
                     gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null
             ));
             processing.submit(processors.info().playerPageUpdateProcessor(uuid));

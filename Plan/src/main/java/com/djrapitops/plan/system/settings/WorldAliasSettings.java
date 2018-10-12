@@ -96,6 +96,10 @@ public class WorldAliasSettings {
     }
 
     public Map<String, Long> getPlaytimePerAlias(WorldTimes worldTimes) {
+        if (worldTimes.getWorldTimes().isEmpty()) {
+            return new HashMap<>();
+        }
+
         Map<String, Long> playtimePerWorld = worldTimes.getWorldTimes() // WorldTimes Map<String, GMTimes>
                 .entrySet().stream()
                 .collect(Collectors.toMap(
@@ -161,6 +165,10 @@ public class WorldAliasSettings {
 
         Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);
         long total = worldTimes.getTotal();
+        // Prevent arithmetic error if 0
+        if (total <= 0) {
+            total = -1;
+        }
 
         long longest = 0;
         String theWorld = "-";

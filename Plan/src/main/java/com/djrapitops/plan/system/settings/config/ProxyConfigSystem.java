@@ -21,10 +21,10 @@ import java.io.IOException;
  * @author Rsl1122
  */
 @Singleton
-public class BungeeConfigSystem extends ConfigSystem {
+public class ProxyConfigSystem extends ConfigSystem {
 
     @Inject
-    public BungeeConfigSystem(
+    public ProxyConfigSystem(
             PlanFiles files,
             PlanConfig config,
             Theme theme,

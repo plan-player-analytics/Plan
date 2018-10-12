@@ -22,16 +22,18 @@ import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
 public class NetworkPage implements Page {
 
     private final NetworkContainer networkContainer;
+    private final AnalysisPluginsTabContentCreator analysisPluginsTabContentCreator;
 
     private final PlanFiles files;
     private final ServerProperties serverProperties;
 
-    public NetworkPage(
+    NetworkPage(
             NetworkContainer networkContainer,
-            PlanFiles files,
+            AnalysisPluginsTabContentCreator analysisPluginsTabContentCreator, PlanFiles files,
             ServerProperties serverProperties
     ) {
         this.networkContainer = networkContainer;
+        this.analysisPluginsTabContentCreator = analysisPluginsTabContentCreator;
         this.files = files;
         this.serverProperties = serverProperties;
     }
@@ -56,8 +58,7 @@ public class NetworkPage implements Page {
                     SERVERS_TAB
             );
 
-            // TODO Fix
-            String[] content = AnalysisPluginsTabContentCreator.createContent(networkContainer.getUnsafe(NetworkKeys.PLAYERS_MUTATOR), null);
+            String[] content = analysisPluginsTabContentCreator.createContent(null, networkContainer.getUnsafe(NetworkKeys.PLAYERS_MUTATOR));
             String nav = content[0];
             String tabs = content[1];
 

@@ -184,8 +184,8 @@ public abstract class SQLDB extends Database {
             };
 
             try {
-                runnableFactory.createNew("Database Patch", new PatchTask(patches, locale))
-                        .runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
+                runnableFactory.create("Database Patch", new PatchTask(patches, locale, logger, errorHandler))
+                        .runTaskLaterAsynchronously(TimeAmount.toTicks(5L, TimeUnit.SECONDS));
             } catch (Exception ignore) {
                 // Task failed to register because plugin is being disabled
             }

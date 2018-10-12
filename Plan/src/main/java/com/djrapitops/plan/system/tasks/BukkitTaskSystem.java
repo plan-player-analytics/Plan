@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class BukkitTaskSystem extends ServerTaskSystem {
 
     private final Plan plugin;
-    private final PingCountTimer pingCountTimer;
+    private final PingCountTimerBukkit pingCountTimer;
 
     @Inject
     public BukkitTaskSystem(
@@ -33,10 +33,9 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             RunnableFactory runnableFactory,
             PaperTPSCountTimer paperTPSCountTimer,
             BukkitTPSCountTimer bukkitTPSCountTimer,
-            NetworkPageRefreshTask networkPageRefreshTask,
             BootAnalysisTask bootAnalysisTask,
             PeriodicAnalysisTask periodicAnalysisTask,
-            PingCountTimer pingCountTimer,
+            PingCountTimerBukkit pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask
     ) {
         super(
@@ -56,8 +55,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
         super.enable();
         try {
             plugin.registerListener(pingCountTimer);
-            // TODO config
-            long startDelay = TimeAmount.toTicks(Settings.PING_SERVER_ENABLE_DELAY.getNumber(), TimeUnit.SECONDS);
+            long startDelay = TimeAmount.toTicks(config.getNumber(Settings.PING_SERVER_ENABLE_DELAY), TimeUnit.SECONDS);
             registerTask("PingCountTimer", pingCountTimer)
                     .runTaskTimer(startDelay, 40L);
         } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {

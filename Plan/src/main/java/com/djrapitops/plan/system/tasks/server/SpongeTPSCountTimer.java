@@ -13,8 +13,6 @@ import org.spongepowered.api.world.World;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
 
 @Singleton
 public class SpongeTPSCountTimer extends TPSCountTimer {

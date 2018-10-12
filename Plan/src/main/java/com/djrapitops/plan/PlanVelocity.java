@@ -6,29 +6,83 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanVelocityCommand;
-import com.djrapitops.plan.system.VelocitySystem;
+import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FilesModule;
+import com.djrapitops.plan.modules.SuperClassBindingModule;
+import com.djrapitops.plan.modules.SystemObjectBindingModule;
+import com.djrapitops.plan.modules.proxy.ProxySuperClassBindingModule;
+import com.djrapitops.plan.modules.proxy.velocity.VelocityServerPropertiesModule;
+import com.djrapitops.plan.modules.proxy.velocity.VelocitySuperClassBindingModule;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
-import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.VelocityPlugin;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.DebugLog;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.settings.ColorScheme;
-import com.google.inject.Inject;
+import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.command.CommandNode;
+import com.djrapitops.plugin.logging.L;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import dagger.BindsInstance;
+import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 import org.slf4j.Logger;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 
+@Singleton
+@Component(modules = {
+        VelocityPlanModule.class,
+        SuperClassBindingModule.class,
+        SystemObjectBindingModule.class,
+        APFModule.class,
+        FilesModule.class,
+        ProxySuperClassBindingModule.class,
+        VelocitySuperClassBindingModule.class,
+        VelocityServerPropertiesModule.class
+})
+interface PlanVelocityComponent {
+
+    PlanVelocityCommand planCommand();
+
+    PlanSystem system();
+
+    @Component.Builder
+    interface Builder {
+
+        @BindsInstance
+        Builder plan(PlanVelocity plan);
+
+        PlanVelocityComponent build();
+    }
+}
+
+@Module
+class VelocityPlanModule {
+
+    @Provides
+    @Singleton
+    PlanPlugin providePlanPlugin(PlanVelocity plugin) {
+        return plugin;
+    }
+
+    @Provides
+    @Singleton
+    @Named("mainCommand")
+    CommandNode provideMainCommand(PlanVelocityCommand command) {
+        return command;
+    }
+}
+
 /**
  * Velocity Main class.
- *
+ * <p>
  * Based on the PlanBungee class
  *
  * @author MicleBrick
@@ -36,16 +90,16 @@ import java.nio.file.Path;
 @Plugin(id = "plan", name = "Plan", version = "4.4.6", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
 public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 
-    private VelocitySystem system;
+    private PlanSystem system;
     private Locale locale;
 
-    public static PlanVelocity getInstance() {
-        return (PlanVelocity) StaticHolder.getInstance(PlanVelocity.class);
-    }
-
-    @Inject
+    @com.google.inject.Inject
     @DataDirectory
     private Path dataFolderPath;
+    @com.google.inject.Inject
+    private ProxyServer proxy;
+    @com.google.inject.Inject
+    private Logger slf4jLogger;
 
     @Override
     public File getDataFolder() {
@@ -54,44 +108,38 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 
     @Override
     public void onEnable() {
-        super.onEnable();
+        PlanVelocityComponent component = DaggerPlanVelocityComponent.builder().plan(this).build();
         try {
-            system = new VelocitySystem(this);
+            system = component.system();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            Log.info(locale.getString(PluginLang.ENABLED));
+            logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
-            Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            Log.error("----------------------------------------");
-            Log.error("Error: " + e.getMessage());
-            Log.error("----------------------------------------");
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
+            logger.error("----------------------------------------");
+            logger.error("Error: " + e.getMessage());
+            logger.error("----------------------------------------");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
             onDisable();
         } catch (Exception e) {
-            getLogger().error(this.getClass().getSimpleName() + "-v" + getVersion(), e);
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
-            Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("planvelocity", new PlanVelocityCommand(this));
+        PlanVelocityCommand command = component.planCommand();
+        command.registerCommands();
+        registerCommand("planvelocity", command);
     }
 
     @Override
     public void onDisable() {
         system.disable();
 
-        Log.info(locale.getString(PluginLang.DISABLED));
-        Benchmark.pluginDisabled(PlanVelocity.class);
-        DebugLog.pluginDisabled(PlanVelocity.class);
+        slf4jLogger.info(locale.getString(PluginLang.DISABLED));
     }
-
-    @Override
-    public String getVersion() {
-        return getClass().getAnnotation(Plugin.class).version();
-    }
-
 
     @Override
     public void onReload() {
@@ -105,11 +153,11 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 
     @Override
     public ColorScheme getColorScheme() {
-        return PlanColorScheme.create();
+        return PlanColorScheme.create(system.getConfigSystem().getConfig(), logger);
     }
 
     @Override
-    public VelocitySystem getSystem() {
+    public PlanSystem getSystem() {
         return system;
     }
 
@@ -118,19 +166,13 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
         return reloading;
     }
 
-    @Inject
-    private ProxyServer proxy;
-
     @Override
     public ProxyServer getProxy() {
         return proxy;
     }
 
-    @Inject
-    private Logger logger;
-
     @Override
     protected Logger getLogger() {
-        return logger;
+        return slf4jLogger;
     }
 }

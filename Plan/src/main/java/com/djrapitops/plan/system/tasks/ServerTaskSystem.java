@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class ServerTaskSystem extends TaskSystem {
 
-    private final PlanConfig config;
+    protected final PlanConfig config;
     private final BootAnalysisTask bootAnalysisTask;
     private final PeriodicAnalysisTask periodicAnalysisTask;
     private final LogsFolderCleanTask logsFolderCleanTask;

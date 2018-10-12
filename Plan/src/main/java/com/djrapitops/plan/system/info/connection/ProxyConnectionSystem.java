@@ -94,9 +94,9 @@ public class ProxyConnectionSystem extends ConnectionSystem {
         for (Server server : bukkitServers.values()) {
             webExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
         }
-        // Quick hack
+        // Quick hack for Bungee Plugins Tab
         if (infoRequest instanceof GenerateInspectPluginsTabRequest) {
-            webExceptionLogger.logIfOccurs(this.getClass(), () -> InfoSystem.getInstance().sendRequest(infoRequest));
+            webExceptionLogger.logIfOccurs(this.getClass(), infoRequest::runLocally);
         }
     }
 

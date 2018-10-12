@@ -458,7 +458,9 @@ public class AnalysisContainer extends DataContainer {
     private void addPluginSuppliers() {
         // TODO Refactor into a system that supports running the analysis on Bungee
         Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {}, "NAV_AND_TABS");
-        putCachingSupplier(navAndTabs, () -> pluginsTabContentCreator.createContent(this));
+        putCachingSupplier(navAndTabs, () -> pluginsTabContentCreator.createContent(
+                this, getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
+        ));
         putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(navAndTabs)[0]);
         putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(navAndTabs)[1]);
     }

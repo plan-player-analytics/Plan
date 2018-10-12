@@ -8,12 +8,14 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * System that holds data caches of the plugin.
  *
  * @author Rsl1122
  */
+@Singleton
 public class CacheSystem implements SubSystem {
 
     private final DataCache dataCache;

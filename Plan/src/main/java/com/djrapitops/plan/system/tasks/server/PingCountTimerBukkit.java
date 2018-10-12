@@ -27,6 +27,7 @@ import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.java.Reflection;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -99,16 +100,19 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
 
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
+    private final PlanConfig config;
     private final Processors processors;
     private final Processing processing;
     private final RunnableFactory runnableFactory;
 
     @Inject
     public PingCountTimerBukkit(
+            PlanConfig config,
             Processors processors,
             Processing processing,
             RunnableFactory runnableFactory
     ) {
+        this.config = config;
         this.processors = processors;
         this.processing = processing;
         this.runnableFactory = runnableFactory;
@@ -186,7 +190,7 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
                     addPlayer(player);
                 }
             }// TODO Config
-        }).runTaskLater(TimeAmount.toTicks(Settings.PING_PLAYER_LOGIN_DELAY.getNumber(), TimeUnit.SECONDS));
+        }).runTaskLater(TimeAmount.toTicks(config.getNumber(Settings.PING_PLAYER_LOGIN_DELAY), TimeUnit.SECONDS));
     }
 
     @EventHandler

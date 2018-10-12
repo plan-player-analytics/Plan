@@ -1,7 +1,5 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
-import com.djrapitops.plan.system.webserver.response.Response;
-
 /**
  * @author Rsl1122
  * @since 3.5.2

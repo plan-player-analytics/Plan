@@ -4,29 +4,42 @@
  */
 package com.djrapitops.plan.system.info.server;
 
-import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.properties.VelocityServerProperties;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.webserver.WebServer;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import dagger.Lazy;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Manages Server information on the Velocity instance.
- * 
- * Based on BungeeServerInfo
+ * Manages Server information on the Bungee instance.
  *
- * @author MicleBrick
+ * @author Rsl1122
  */
+@Singleton
 public class VelocityServerInfo extends ServerInfo {
 
-    public VelocityServerInfo(PlanVelocity plugin) {
-        super(new VelocityServerProperties(plugin.getProxy()));
+    private final Database database;
+    private final Lazy<WebServer> webServer;
+    private final PluginLogger logger;
+
+    @Inject
+    public VelocityServerInfo(
+            ServerProperties serverProperties,
+            Database database,
+            Lazy<WebServer> webServer,
+            PluginLogger logger
+    ) {
+        super(serverProperties);
+        this.database = database;
+        this.webServer = webServer;
+        this.logger = logger;
     }
 
     @Override
@@ -34,14 +47,12 @@ public class VelocityServerInfo extends ServerInfo {
         checkIfDefaultIP();
 
         try {
-            Database db = Database.getActive();
-            // doesn't seem like this would need to be different for velocity, perhaps rename to getProxyInformation()?
-            Optional<Server> velocityInfo = db.fetch().getBungeeInformation();
-            if (velocityInfo.isPresent()) {
-                server = velocityInfo.get();
-                updateServerInfo(db);
+            Optional<Server> bungeeInfo = database.fetch().getBungeeInformation();
+            if (bungeeInfo.isPresent()) {
+                server = bungeeInfo.get();
+                updateServerInfo(database);
             } else {
-                server = registerVelocityInfo(db);
+                server = registerVelocityInfo(database);
             }
         } catch (DBOpException e) {
             throw new EnableException("Failed to read Server information from Database.");
@@ -50,7 +61,7 @@ public class VelocityServerInfo extends ServerInfo {
     }
 
     private void updateServerInfo(Database db) {
-        String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        String accessAddress = webServer.get().getAccessAddress();
         if (!accessAddress.equals(server.getWebAddress())) {
             server.setWebAddress(accessAddress);
             db.save().serverInfoForThisServer(server);
@@ -58,31 +69,35 @@ public class VelocityServerInfo extends ServerInfo {
     }
 
     private void checkIfDefaultIP() throws EnableException {
-        String ip = ServerInfo.getServerProperties().getIp();
+        String ip = serverProperties.getIp();
         if ("0.0.0.0".equals(ip)) {
-            Log.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
-            Log.info("Player Analytics partially enabled (Use /planvelocity to reload config)");
+            logger.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
+            logger.info("Player Analytics partially enabled (Use /planbungee to reload config)");
             throw new EnableException("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
         }
     }
 
     private Server registerVelocityInfo(Database db) throws EnableException {
-        ServerProperties properties = ServerInfo.getServerProperties();
-        UUID serverUUID = generateNewUUID(properties);
-        String accessAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        UUID serverUUID = generateNewUUID();
+        String accessAddress = webServer.get().getAccessAddress();
 
-        Server velocityCord = new Server(-1, serverUUID, "VelocityCord", accessAddress, properties.getMaxPlayers());
-        db.save().serverInfoForThisServer(velocityCord);
+        // TODO Rework to allow Velocity as name.
+        Server bungeeCord = new Server(-1, serverUUID, "BungeeCord", accessAddress, serverProperties.getMaxPlayers());
+        db.save().serverInfoForThisServer(bungeeCord);
 
-        Optional<Server> velocityInfo = db.fetch().getBungeeInformation();
-        if (velocityInfo.isPresent()) {
-            return velocityInfo.get();
+        Optional<Server> bungeeInfo = db.fetch().getBungeeInformation();
+        if (bungeeInfo.isPresent()) {
+            return bungeeInfo.get();
         }
-        throw new EnableException("VelocityCord registration failed (DB)");
+        throw new EnableException("Velocity registration failed (DB)");
     }
 
-    private UUID generateNewUUID(ServerProperties properties) {
-        String seed = properties.getName() + properties.getIp() + properties.getPort() + properties.getVersion() + properties.getImplVersion();
+    private UUID generateNewUUID() {
+        String seed = serverProperties.getName() +
+                serverProperties.getIp() +
+                serverProperties.getPort() +
+                serverProperties.getVersion() +
+                serverProperties.getImplVersion();
         return UUID.nameUUIDFromBytes(seed.getBytes());
     }
 }

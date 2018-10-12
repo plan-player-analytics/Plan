@@ -14,6 +14,7 @@ import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePlug
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.structure.Accordions;
+import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
@@ -46,6 +47,7 @@ public class PageFactory {
     private final Lazy<Accordions> accordions;
     private final Lazy<Formatters> formatters;
     private final Lazy<AnalysisContainer.Factory> analysisContainerFactory;
+    private final Lazy<AnalysisPluginsTabContentCreator> analysisPluginsTabContentCreator;
     private final Lazy<HookHandler> hookHandler;
     private final Lazy<DebugLogger> debugLogger;
     private final Lazy<Timings> timings;
@@ -65,6 +67,7 @@ public class PageFactory {
             Lazy<Accordions> accordions,
             Lazy<Formatters> formatters,
             Lazy<AnalysisContainer.Factory> analysisContainerFactory,
+            Lazy<AnalysisPluginsTabContentCreator> analysisPluginsTabContentCreator,
             Lazy<HookHandler> hookHandler,
             Lazy<DebugLogger> debugLogger,
             Lazy<Timings> timings,
@@ -82,6 +85,7 @@ public class PageFactory {
         this.accordions = accordions;
         this.formatters = formatters;
         this.analysisContainerFactory = analysisContainerFactory;
+        this.analysisPluginsTabContentCreator = analysisPluginsTabContentCreator;
         this.hookHandler = hookHandler;
         this.debugLogger = debugLogger;
         this.timings = timings;
@@ -126,6 +130,8 @@ public class PageFactory {
 
     public NetworkPage networkPage() {
         NetworkContainer networkContainer = database.get().fetch().getNetworkContainer(); // Not cached, big.
-        return new NetworkPage(networkContainer, fileSystem.get(), serverInfo.get().getServerProperties());
+        return new NetworkPage(networkContainer,
+                analysisPluginsTabContentCreator.get(),
+                fileSystem.get(), serverInfo.get().getServerProperties());
     }
 }

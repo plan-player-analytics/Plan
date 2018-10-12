@@ -10,8 +10,9 @@ import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.FilesModule;
 import com.djrapitops.plan.modules.SuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectBindingModule;
-import com.djrapitops.plan.modules.bungee.BungeeInfoModule;
-import com.djrapitops.plan.modules.bungee.BungeeSuperClassBindingModule;
+import com.djrapitops.plan.modules.proxy.ProxySuperClassBindingModule;
+import com.djrapitops.plan.modules.proxy.bungee.BungeeServerPropertiesModule;
+import com.djrapitops.plan.modules.proxy.bungee.BungeeSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -37,8 +38,9 @@ import java.io.InputStream;
         SystemObjectBindingModule.class,
         APFModule.class,
         FilesModule.class,
+        ProxySuperClassBindingModule.class,
         BungeeSuperClassBindingModule.class,
-        BungeeInfoModule.class
+        BungeeServerPropertiesModule.class
 })
 interface PlanBungeeComponent {
 
