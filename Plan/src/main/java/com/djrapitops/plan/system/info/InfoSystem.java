@@ -4,24 +4,22 @@
  */
 package com.djrapitops.plan.system.info;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
-import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
+import com.djrapitops.plan.system.info.request.GenerateRequest;
 import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.system.info.request.SendDBSettingsRequest;
+import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import dagger.Lazy;
 
 import java.util.UUID;
 
@@ -36,16 +34,24 @@ import java.util.UUID;
  */
 public abstract class InfoSystem implements SubSystem {
 
+    protected final InfoRequestFactory infoRequestFactory;
     protected final ConnectionSystem connectionSystem;
+    protected final ServerInfo serverInfo;
+    protected final Lazy<WebServer> webServer;
+    protected final PluginLogger logger;
 
-    protected InfoSystem(ConnectionSystem connectionSystem) {
+    protected InfoSystem(
+            InfoRequestFactory infoRequestFactory,
+            ConnectionSystem connectionSystem,
+            ServerInfo serverInfo,
+            Lazy<WebServer> webServer,
+            PluginLogger logger
+    ) {
+        this.infoRequestFactory = infoRequestFactory;
         this.connectionSystem = connectionSystem;
-    }
-
-    public static InfoSystem getInstance() {
-        InfoSystem infoSystem = PlanSystem.getInstance().getInfoSystem();
-        Verify.nullCheck(infoSystem, () -> new IllegalStateException("Info System was not initialized."));
-        return infoSystem;
+        this.serverInfo = serverInfo;
+        this.webServer = webServer;
+        this.logger = logger;
     }
 
     /**
@@ -57,7 +63,7 @@ public abstract class InfoSystem implements SubSystem {
      * @throws WebException If fails.
      */
     public void generateAndCachePlayerPage(UUID player) throws WebException {
-        GenerateInspectPageRequest infoRequest = new GenerateInspectPageRequest(player);
+        GenerateRequest infoRequest = infoRequestFactory.generateInspectPageRequest(player);
         try {
             sendRequest(infoRequest);
         } catch (ConnectionFailException e) {
@@ -74,8 +80,8 @@ public abstract class InfoSystem implements SubSystem {
      * @throws WebException If fails.
      */
     public void generateAnalysisPage(UUID serverUUID) throws WebException {
-        GenerateAnalysisPageRequest request = new GenerateAnalysisPageRequest(serverUUID);
-        if (ServerInfo.getServerUUID().equals(serverUUID)) {
+        GenerateRequest request = infoRequestFactory.generateAnalysisPageRequest(serverUUID);
+        if (serverInfo.getServerUUID().equals(serverUUID)) {
             runLocally(request);
         } else {
             sendRequest(request);
@@ -93,14 +99,14 @@ public abstract class InfoSystem implements SubSystem {
     public void sendRequest(InfoRequest infoRequest) throws WebException {
         try {
             if (!connectionSystem.isServerAvailable()) {
-                Log.debug("Main server unavailable, running locally.");
+                logger.getDebugLogger().logOn(DebugChannels.INFO_REQUESTS, "Main server unavailable, running locally.");
                 runLocally(infoRequest);
                 return;
             }
             connectionSystem.sendInfoRequest(infoRequest);
         } catch (WebException original) {
             try {
-                Log.debug("Exception during request: " + original.toString() + ", running locally.");
+                logger.getDebugLogger().logOn(DebugChannels.INFO_REQUESTS, "Exception during request: " + original.toString() + ", running locally.");
                 runLocally(infoRequest);
             } catch (NoServersException e2) {
                 throw original;
@@ -119,7 +125,7 @@ public abstract class InfoSystem implements SubSystem {
     public abstract void runLocally(InfoRequest infoRequest) throws WebException;
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         connectionSystem.enable();
     }
 
@@ -131,15 +137,6 @@ public abstract class InfoSystem implements SubSystem {
     public ConnectionSystem getConnectionSystem() {
         return connectionSystem;
     }
-
-    /**
-     * Updates Network page.
-     * <p>
-     * No calls from non-async thread found on 09.02.2018
-     *
-     * @throws WebException If fails.
-     */
-    public abstract void updateNetworkPage() throws WebException;
 
     /**
      * Requests Set up from Bungee.
@@ -154,9 +151,9 @@ public abstract class InfoSystem implements SubSystem {
             throw new BadRequestException("Method not available on Bungee.");
         }
         Server bungee = new Server(-1, null, "Bungee", addressToRequestServer, -1);
-        String addressOfThisServer = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        String addressOfThisServer = webServer.get().getAccessAddress();
 
         connectionSystem.setSetupAllowed(true);
-        connectionSystem.sendInfoRequest(new SendDBSettingsRequest(addressOfThisServer), bungee);
+        connectionSystem.sendInfoRequest(infoRequestFactory.sendDBSettingsRequest(addressOfThisServer), bungee);
     }
 }

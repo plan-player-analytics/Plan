@@ -5,10 +5,10 @@
 package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -19,7 +19,16 @@ import java.util.UUID;
 public interface PlanAPI {
 
     static PlanAPI getInstance() {
-        return PlanSystem.getInstance().getPlanAPI();
+        return Optional.ofNullable(PlanAPIHolder.API)
+                .orElseThrow(() -> new IllegalStateException("PlanAPI has not been initialised yet."));
+    }
+
+    class PlanAPIHolder {
+        static PlanAPI API;
+
+        static void set(PlanAPI api) {
+            PlanAPIHolder.API = api;
+        }
     }
 
     void addPluginDataSource(PluginData pluginData);

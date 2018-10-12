@@ -9,7 +9,9 @@ public class PlayerPageUpdateProcessor implements Runnable {
 
     private final UUID uuid;
 
-    public PlayerPageUpdateProcessor(UUID uuid) {
+    PlayerPageUpdateProcessor(
+            UUID uuid
+    ) {
         this.uuid = uuid;
     }
 

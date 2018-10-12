@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 
 public class GeolocationBarGraph extends BarGraph {
 
-    public GeolocationBarGraph(PlayersMutator mutator) {
+    GeolocationBarGraph(PlayersMutator mutator) {
         this(mutator.getGeolocations());
     }
 
-    public GeolocationBarGraph(List<String> geolocations) {
+    private GeolocationBarGraph(List<String> geolocations) {
         super(turnToBars(geolocations));
     }
 

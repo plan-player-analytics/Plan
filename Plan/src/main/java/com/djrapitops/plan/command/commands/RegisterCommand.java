@@ -1,24 +1,26 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.command.Sender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 
 /**
@@ -32,17 +34,31 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Singleton
 public class RegisterCommand extends CommandNode {
 
     private final String notEnoughArgsMsg;
-    private final String hashErrorMsg;
     private final Locale locale;
+    private final Processing processing;
+    private final Database database;
+    private final PluginLogger logger;
+    private final ErrorHandler errorHandler;
 
-    public RegisterCommand(PlanPlugin plugin) {
+    @Inject
+    public RegisterCommand(
+            Locale locale,
+            Processing processing,
+            Database database,
+            PluginLogger logger,
+            ErrorHandler errorHandler) {
         // No Permission Requirement
         super("register", "", CommandType.PLAYER_OR_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.processing = processing;
+        this.logger = logger;
+        this.database = database;
+        this.errorHandler = errorHandler;
 
         setArguments("<password>", "[name]", "[lvl]");
         setShortHelp(locale.getString(CmdHelpLang.WEB_REGISTER));
@@ -52,11 +68,10 @@ public class RegisterCommand extends CommandNode {
         }
 
         notEnoughArgsMsg = locale.getString(CommandLang.FAIL_REQ_ARGS, 3, Arrays.toString(getArguments()));
-        hashErrorMsg = "§cPassword hash error.";
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         try {
             if (CommandUtils.isPlayer(sender)) {
                 playerRegister(args, sender);
@@ -64,16 +79,16 @@ public class RegisterCommand extends CommandNode {
                 consoleRegister(args, sender, notEnoughArgsMsg);
             }
         } catch (PassEncryptUtil.CannotPerformOperationException e) {
-            Log.toLog(this.getClass().getSimpleName(), e);
-            sender.sendMessage(hashErrorMsg);
+            errorHandler.log(L.WARN, this.getClass(), e);
+            sender.sendMessage("§cPassword hash error.");
         } catch (NumberFormatException e) {
             throw new NumberFormatException(args[2]);
         } catch (Exception e) {
-            Log.toLog(this.getClass().getSimpleName(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
-    private void consoleRegister(String[] args, ISender sender, String notEnoughArgsMsg) throws PassEncryptUtil.CannotPerformOperationException {
+    private void consoleRegister(String[] args, Sender sender, String notEnoughArgsMsg) throws PassEncryptUtil.CannotPerformOperationException {
         Verify.isTrue(args.length >= 3, () -> new IllegalArgumentException(notEnoughArgsMsg));
 
         int permLevel;
@@ -82,7 +97,7 @@ public class RegisterCommand extends CommandNode {
         registerUser(new WebUser(args[1], passHash, permLevel), sender);
     }
 
-    private void playerRegister(String[] args, ISender sender) throws PassEncryptUtil.CannotPerformOperationException {
+    private void playerRegister(String[] args, Sender sender) throws PassEncryptUtil.CannotPerformOperationException {
         boolean registerSenderAsUser = args.length == 1;
         if (registerSenderAsUser) {
             String user = sender.getName();
@@ -96,7 +111,7 @@ public class RegisterCommand extends CommandNode {
         }
     }
 
-    private int getPermissionLevel(ISender sender) {
+    private int getPermissionLevel(Sender sender) {
         final String permAnalyze = Permissions.ANALYZE.getPerm();
         final String permInspectOther = Permissions.INSPECT_OTHER.getPerm();
         final String permInspect = Permissions.INSPECT.getPerm();
@@ -112,30 +127,22 @@ public class RegisterCommand extends CommandNode {
         return 100;
     }
 
-    private void registerUser(WebUser webUser, ISender sender) {
-        RunnableFactory.createNew(new AbsRunnable("Register WebUser Task") {
-            @Override
-            public void run() {
-                final String existsMsg = locale.getString(CommandLang.FAIL_WEB_USER_EXISTS);
-                final String userName = webUser.getName();
-                final String successMsg = locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS);
-                try {
-                    Database database = Database.getActive();
-                    boolean userExists = database.check().doesWebUserExists(userName);
-                    if (userExists) {
-                        sender.sendMessage(existsMsg);
-                        return;
-                    }
-                    database.save().webUser(webUser);
-                    sender.sendMessage(successMsg);
-                    Log.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
-                } catch (Exception e) {
-                    Log.toLog(this.getClass(), e);
-                } finally {
-                    this.cancel();
+    private void registerUser(WebUser webUser, Sender sender) {
+        processing.submitCritical(() -> {
+            String userName = webUser.getName();
+            try {
+                boolean userExists = database.check().doesWebUserExists(userName);
+                if (userExists) {
+                    sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
+                    return;
                 }
+                database.save().webUser(webUser);
+                sender.sendMessage(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS));
+                logger.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, userName, webUser.getPermLevel()));
+            } catch (Exception e) {
+                errorHandler.log(L.WARN, this.getClass(), e);
             }
-        }).runTaskAsynchronously();
+        });
     }
 
     /**

@@ -3,12 +3,11 @@ package com.djrapitops.plan.data.store.mutators.health;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icons;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractHealthInfo {
 
@@ -20,9 +19,27 @@ public abstract class AbstractHealthInfo {
 
     protected double serverHealth;
 
-    public AbstractHealthInfo(long now, long monthAgo) {
+    protected final int activeMinuteThreshold;
+    protected final int activeLoginThreshold;
+    protected final Formatter<Long> timeAmountFormatter;
+    protected final Formatter<Double> decimalFormatter;
+    protected final Formatter<Double> percentageFormatter;
+
+    public AbstractHealthInfo(
+            long now, long monthAgo,
+            int activeMinuteThreshold,
+            int activeLoginThreshold,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Double> decimalFormatter,
+            Formatter<Double> percentageFormatter
+    ) {
         this.now = now;
         this.monthAgo = monthAgo;
+        this.activeMinuteThreshold = activeMinuteThreshold;
+        this.activeLoginThreshold = activeLoginThreshold;
+        this.timeAmountFormatter = timeAmountFormatter;
+        this.decimalFormatter = decimalFormatter;
+        this.percentageFormatter = percentageFormatter;
         serverHealth = 100.0;
 
         this.notes = new ArrayList<>();
@@ -63,7 +80,7 @@ public abstract class AbstractHealthInfo {
         regularRemainCompareSet.removeAll(veryActiveNow);
         int notRegularAnymore = regularRemainCompareSet.size();
         int remain = activeFWAGNum - notRegularAnymore;
-        double percRemain = activeFWAGNum != 0 ? remain * 100.0 / activeFWAGNum : 100.0;
+        double percRemain = activeFWAGNum != 0 ? remain / activeFWAGNum : 1.0;
 
         int newActive = getNewActive(veryActiveNow, activeNow, regularNow, veryActiveFWAG, activeFWAG, regularFWAG);
 
@@ -72,16 +89,16 @@ public abstract class AbstractHealthInfo {
         String remainNote = "";
         if (activeFWAGNum != 0) {
             remainNote = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            if (percRemain > 50) {
+            if (percRemain > 0.5) {
                 remainNote += Icons.GREEN_THUMB;
-            } else if (percRemain > 20) {
+            } else if (percRemain > 0.2) {
                 remainNote += Icons.YELLOW_FLAG;
             } else {
                 remainNote += Icons.RED_WARN;
                 serverHealth -= 2.5;
             }
 
-            remainNote += " " + FormatUtils.cutDecimals(percRemain) + "% of regular players have remained active ("
+            remainNote += " " + percentageFormatter.apply(percRemain) + " of regular players have remained active ("
                     + remain + "/" + activeFWAGNum + ")";
         }
         if (change > 0) {
@@ -98,7 +115,7 @@ public abstract class AbstractHealthInfo {
     }
 
     protected void activePlayerPlaytimeChange(PlayersMutator playersMutator) {
-        PlayersMutator currentlyActive = playersMutator.filterActive(now, 1.75);
+        PlayersMutator currentlyActive = playersMutator.filterActive(now, activeMinuteThreshold, activeLoginThreshold, 1.75);
         long twoWeeksAgo = (now - (now - monthAgo)) / 2L;
 
         long totalFourToTwoWeeks = 0;
@@ -113,13 +130,13 @@ public abstract class AbstractHealthInfo {
         if (activeCount != 0) {
             long avgFourToTwoWeeks = totalFourToTwoWeeks / (long) activeCount;
             long avgLastTwoWeeks = totalLastTwoWeeks / (long) activeCount;
-            String avgLastTwoWeeksString = Formatters.timeAmount().apply(avgLastTwoWeeks);
-            String avgFourToTwoWeeksString = Formatters.timeAmount().apply(avgFourToTwoWeeks);
+            String avgLastTwoWeeksString = timeAmountFormatter.apply(avgLastTwoWeeks);
+            String avgFourToTwoWeeksString = timeAmountFormatter.apply(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
                 addNote(Icons.GREEN_THUMB + " Active players seem to have things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)");
-            } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeAmount.HOUR.ms() * 2L) {
+            } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeUnit.HOURS.toMillis(2L)) {
                 addNote(Icons.RED_WARN + " Active players might be running out of things to do (Played "
                         + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
                         + ", last two weeks vs weeks 2-4)");

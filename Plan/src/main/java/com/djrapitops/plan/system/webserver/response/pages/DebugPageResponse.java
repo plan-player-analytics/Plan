@@ -4,9 +4,12 @@
  */
 package com.djrapitops.plan.system.webserver.response.pages;
 
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.pages.DebugPage;
+
+import java.io.IOException;
 
 /**
  * WebServer response for /debug-page used for easing issue reporting.
@@ -15,10 +18,11 @@ import com.djrapitops.plan.utilities.html.pages.DebugPage;
  */
 public class DebugPageResponse extends ErrorResponse {
 
-    public DebugPageResponse() {
+    public DebugPageResponse(DebugPage debugPage, String version, PlanFiles files) throws IOException {
+        super(version, files);
         super.setHeader("HTTP/1.1 200 OK");
         super.setTitle(Icon.called("bug") + " Debug Information");
-        super.setParagraph(new DebugPage().toHtml());
+        super.setParagraph(debugPage.toHtml());
         replacePlaceholders();
     }
 

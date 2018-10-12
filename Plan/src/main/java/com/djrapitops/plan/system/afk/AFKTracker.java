@@ -3,9 +3,10 @@ package com.djrapitops.plan.system.afk;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Keeps track how long player has been afk during a session
@@ -18,10 +19,10 @@ public class AFKTracker {
     private final Map<UUID, Long> lastMovement;
     private final long afkThresholdMs;
 
-    public AFKTracker() {
+    public AFKTracker(PlanConfig config) {
         usedAFKCommand = new HashSet<>();
         lastMovement = new HashMap<>();
-        afkThresholdMs = Settings.AFK_THRESHOLD_MINUTES.getNumber() * TimeAmount.MINUTE.ms();
+        afkThresholdMs = TimeUnit.MINUTES.toMillis(config.getNumber(Settings.AFK_THRESHOLD_MINUTES));
     }
 
     public void hasIgnorePermission(UUID uuid) {

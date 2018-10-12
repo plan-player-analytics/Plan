@@ -6,7 +6,6 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import utilities.Teardown;
 import utilities.mocks.SystemMockUtil;
 
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ public class PlayersTableTest {
     public static void setUpClass() throws Exception {
         SystemMockUtil.setUp(temporaryFolder.getRoot())
                 .enableConfigSystem();
-        Teardown.resetSettingsTempValues();
     }
 
     @Test
@@ -38,7 +36,7 @@ public class PlayersTableTest {
         PlayerContainer container = new PlayerContainer();
         container.putRawData(PlayerKeys.SESSIONS, new ArrayList<>());
         List<PlayerContainer> players = Collections.singletonList(container);
-        String html = PlayersTable.forServerPage(players).parseHtml();
+        String html = new PlayersTable(players, 50, 60, 5, l -> "", l -> "", d -> "").parseHtml();
 
         testHtmlValidity(html);
     }

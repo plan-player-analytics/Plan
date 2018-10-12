@@ -8,12 +8,13 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
-import com.djrapitops.plan.system.processing.processors.player.BungeePlayerRegisterProcessor;
-import com.djrapitops.plan.system.processing.processors.player.IPUpdateProcessor;
+import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -21,6 +22,7 @@ import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import javax.inject.Inject;
 import java.net.InetAddress;
 import java.util.UUID;
 
@@ -31,6 +33,30 @@ import java.util.UUID;
  */
 public class PlayerOnlineListener implements Listener {
 
+    private final PlanConfig config;
+    private final Processors processors;
+    private final Processing processing;
+    private final SessionCache sessionCache;
+    private final ServerInfo serverInfo;
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public PlayerOnlineListener(
+            PlanConfig config,
+            Processors processors,
+            Processing processing,
+            SessionCache sessionCache,
+            ServerInfo serverInfo,
+            ErrorHandler errorHandler
+    ) {
+        this.config = config;
+        this.processors = processors;
+        this.processing = processing;
+        this.sessionCache = sessionCache;
+        this.serverInfo = serverInfo;
+        this.errorHandler = errorHandler;
+    }
+
     @EventHandler
     public void onPostLogin(PostLoginEvent event) {
         try {
@@ -38,17 +64,19 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = player.getUniqueId();
             String name = player.getName();
             InetAddress address = player.getAddress().getAddress();
-            long now = System.currentTimeMillis();
+            long time = System.currentTimeMillis();
 
-            SessionCache.getInstance().cacheSession(uuid, new Session(uuid, now, "", ""));
+            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, "", ""));
 
-            Processing.submit(new BungeePlayerRegisterProcessor(uuid, name, now,
-                    new IPUpdateProcessor(uuid, address, now))
-            );
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
-            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
+            boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
+
+            processing.submit(processors.player().proxyRegisterProcessor(uuid, name, time,
+                    gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null
+            ));
+            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -58,11 +86,11 @@ public class PlayerOnlineListener implements Listener {
             ProxiedPlayer player = event.getPlayer();
             UUID uuid = player.getUniqueId();
 
-            SessionCache.getInstance().endSession(uuid, System.currentTimeMillis());
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
-            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
+            sessionCache.endSession(uuid, System.currentTimeMillis());
+            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -72,12 +100,12 @@ public class PlayerOnlineListener implements Listener {
             ProxiedPlayer player = event.getPlayer();
             UUID uuid = player.getUniqueId();
 
-            long now = System.currentTimeMillis();
+            long time = System.currentTimeMillis();
             // Replaces the current session in the cache.
-            SessionCache.getInstance().cacheSession(uuid, new Session(uuid, now, "", ""));
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
+            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, "", ""));
+            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 }

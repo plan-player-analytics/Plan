@@ -10,18 +10,17 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.webserver.response.pages.InspectPageResponse;
-import com.djrapitops.plan.system.webserver.response.pages.RawPlayerDataResponse;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,49 +29,64 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PlayerPageHandler extends PageHandler {
+@Singleton
+public class PlayerPageHandler implements PageHandler {
+
+    private final ResponseFactory responseFactory;
+    private final Database database;
+    private final InfoSystem infoSystem;
+    private final UUIDUtility uuidUtility;
+
+    @Inject
+    public PlayerPageHandler(
+            ResponseFactory responseFactory,
+            Database database,
+            InfoSystem infoSystem,
+            UUIDUtility uuidUtility
+    ) {
+        this.responseFactory = responseFactory;
+        this.database = database;
+        this.infoSystem = infoSystem;
+        this.uuidUtility = uuidUtility;
+    }
 
     @Override
     public Response getResponse(Request request, List<String> target) throws WebException {
         if (target.isEmpty()) {
-            return new NotFoundResponse(request.getLocale().getString(ErrorPageLang.UNKNOWN_PAGE_404));
+            return responseFactory.pageNotFound404();
         }
 
         String playerName = target.get(0);
-        UUID uuid = UUIDUtility.getUUIDOf(playerName);
-        Locale locale = request.getLocale();
+        UUID uuid = uuidUtility.getUUIDOf(playerName);
 
         boolean raw = target.size() >= 2 && target.get(1).equalsIgnoreCase("raw");
 
         if (uuid == null) {
-            return notFound(locale.getString(ErrorPageLang.UUID_404));
+            return responseFactory.uuidNotFound404();
         }
         try {
-            if (Database.getActive().check().isPlayerRegistered(uuid)) {
+            // TODO Move this Database dependency to PlayerPage generation in PageFactory instead.
+            if (database.check().isPlayerRegistered(uuid)) {
                 if (raw) {
-                    return ResponseCache.loadResponse(PageId.RAW_PLAYER.of(uuid), () -> new RawPlayerDataResponse(uuid));
+                    return ResponseCache.loadResponse(PageId.RAW_PLAYER.of(uuid), () -> responseFactory.rawPlayerPageResponse(uuid));
                 }
-                return playerResponseOrNotFound(uuid, locale);
+                return playerResponseOrNotFound(uuid);
             } else {
-                return notFound(locale.getString(ErrorPageLang.NOT_PLAYED_404));
+                return responseFactory.playerNotFound404();
             }
         } catch (NoServersException e) {
-            ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> new NotFoundResponse(e.getMessage()));
+            ResponseCache.loadResponse(PageId.PLAYER.of(uuid), () -> responseFactory.notFound404(e.getMessage()));
         }
-        return InspectPageResponse.getRefreshing();
+        return responseFactory.serverNotFound404();
     }
 
-    private Response playerResponseOrNotFound(UUID uuid, Locale locale) throws WebException {
+    private Response playerResponseOrNotFound(UUID uuid) throws WebException {
         Response response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
         if (!(response instanceof InspectPageResponse)) {
-            InfoSystem.getInstance().generateAndCachePlayerPage(uuid);
+            infoSystem.generateAndCachePlayerPage(uuid);
             response = ResponseCache.loadResponse(PageId.PLAYER.of(uuid));
         }
-        return response != null ? response : notFound(locale.getString(ErrorPageLang.NO_SERVERS_404));
-    }
-
-    private Response notFound(String error) {
-        return ResponseCache.loadResponse(PageId.NOT_FOUND.of(error), () -> new NotFoundResponse(error));
+        return response != null ? response : responseFactory.serverNotFound404();
     }
 
     @Override

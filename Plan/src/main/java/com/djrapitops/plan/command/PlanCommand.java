@@ -1,15 +1,18 @@
 package com.djrapitops.plan.command;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
-import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCmdNode;
-import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
+import dagger.Lazy;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * TreeCommand for the /plan command, and all SubCommands.
@@ -19,39 +22,97 @@ import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
  * @author Rsl1122
  * @since 1.0.0
  */
+@Singleton
 public class PlanCommand extends TreeCmdNode {
 
-    public PlanCommand(PlanPlugin plugin) {
+    private final PlanConfig config;
+    private final InspectCommand inspectCommand;
+    private final QInspectCommand qInspectCommand;
+    private final SearchCommand searchCommand;
+    private final ListPlayersCommand listPlayersCommand;
+    private final AnalyzeCommand analyzeCommand;
+    private final NetworkCommand networkCommand;
+    private final ListServersCommand listServersCommand;
+    private final Lazy<WebUserCommand> webUserCommand;
+    private final RegisterCommand registerCommand;
+    private final InfoCommand infoCommand;
+    private final ReloadCommand reloadCommand;
+    private final Lazy<ManageCommand> manageCommand;
+    private final DevCommand devCommand;
+
+    private boolean commandsRegistered;
+
+    @Inject
+    public PlanCommand(
+            ColorScheme colorScheme,
+            Locale locale,
+            PlanConfig config,
+            // Group 1
+            InspectCommand inspectCommand,
+            QInspectCommand qInspectCommand,
+            SearchCommand searchCommand,
+            ListPlayersCommand listPlayersCommand,
+            AnalyzeCommand analyzeCommand,
+            NetworkCommand networkCommand,
+            ListServersCommand listServersCommand,
+            // Group 2
+            Lazy<WebUserCommand> webUserCommand,
+            RegisterCommand registerCommand,
+            // Group 3
+            InfoCommand infoCommand,
+            ReloadCommand reloadCommand,
+            Lazy<ManageCommand> manageCommand,
+            DevCommand devCommand
+    ) {
         super("plan", "", CommandType.CONSOLE, null);
-        super.setDefaultCommand("inspect");
-        super.setColorScheme(plugin.getColorScheme());
 
-        Locale locale = plugin.getSystem().getLocaleSystem().getLocale();
+        commandsRegistered = false;
 
+        this.config = config;
+        this.inspectCommand = inspectCommand;
+        this.qInspectCommand = qInspectCommand;
+        this.searchCommand = searchCommand;
+        this.listPlayersCommand = listPlayersCommand;
+        this.analyzeCommand = analyzeCommand;
+        this.networkCommand = networkCommand;
+        this.listServersCommand = listServersCommand;
+        this.webUserCommand = webUserCommand;
+        this.registerCommand = registerCommand;
+        this.infoCommand = infoCommand;
+        this.reloadCommand = reloadCommand;
+        this.manageCommand = manageCommand;
+        this.devCommand = devCommand;
+
+        setDefaultCommand("inspect");
+        setColorScheme(colorScheme);
         setInDepthHelp(locale.getArray(DeepHelpLang.PLAN));
+    }
 
-        RegisterCommand registerCommand = new RegisterCommand(plugin);
+    public void registerCommands() {
+        if (commandsRegistered) {
+            return;
+        }
+
         CommandNode[] analyticsGroup = {
-                new InspectCommand(plugin),
-                new QInspectCommand(plugin),
-                new SearchCommand(plugin),
-                new ListPlayersCommand(plugin),
-                new AnalyzeCommand(plugin),
-                new NetworkCommand(plugin),
-                new ListServersCommand(plugin)
+                inspectCommand,
+                qInspectCommand,
+                searchCommand,
+                listPlayersCommand,
+                analyzeCommand,
+                networkCommand,
+                listServersCommand
         };
         CommandNode[] webGroup = {
-                new WebUserCommand(plugin, registerCommand, this),
+                webUserCommand.get(),
                 registerCommand
         };
         CommandNode[] manageGroup = {
-                new InfoCommand(plugin),
-                new ReloadCommand(plugin),
-                new ManageCommand(plugin, this),
-                new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
-                (Settings.DEV_MODE.isTrue() ? new DevCommand(plugin) : null),
-//                        (Settings.ALLOW_UPDATE.isTrue() ? new UpdateCommand() : null)
+                infoCommand,
+                reloadCommand,
+                manageCommand.get(),
+                config.isTrue(Settings.DEV_MODE) ? devCommand : null
         };
         setNodeGroups(analyticsGroup, webGroup, manageGroup);
+        commandsRegistered = true;
     }
 }

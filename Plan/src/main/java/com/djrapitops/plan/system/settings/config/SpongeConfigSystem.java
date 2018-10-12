@@ -1,10 +1,14 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 
 /**
@@ -12,26 +16,40 @@ import java.io.IOException;
  *
  * @author Rsl1122
  */
-public class SpongeConfigSystem extends ServerConfigSystem {
+@Singleton
+public class SpongeConfigSystem extends BukkitConfigSystem {
 
     private boolean firstInstall;
 
+    @Inject
+    public SpongeConfigSystem(
+            PlanFiles files,
+            PlanConfig config,
+            Theme theme,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        super(files, config, theme, logger, errorHandler);
+    }
+
     @Override
     public void enable() throws EnableException {
-        firstInstall = !FileSystem.getConfigFile().exists();
+        firstInstall = !files.getConfigFile().exists();
         super.enable();
+        config.getNetworkSettings().loadSettingsFromDB();
     }
 
     @Override
     protected void copyDefaults() throws IOException {
         super.copyDefaults();
         if (firstInstall) {
-            Log.info("§eWebServer and Geolocations disabled by default on Sponge servers. You can enable them in the config:");
-            Log.info("§e  " + Settings.WEBSERVER_DISABLED.getPath());
-            Log.info("§e  " + Settings.DATA_GEOLOCATIONS.getPath());
-            Settings.WEBSERVER_DISABLED.set(true);
-            Settings.DATA_GEOLOCATIONS.set(false);
-            Settings.save();
+            logger.info("§eWebServer and Geolocations disabled by default on Sponge servers. You can enable them in the config:");
+            logger.info("§e  " + Settings.WEBSERVER_DISABLED.getPath());
+            logger.info("§e  " + Settings.DATA_GEOLOCATIONS.getPath());
+
+            config.set(Settings.WEBSERVER_DISABLED, true);
+            config.set(Settings.DATA_GEOLOCATIONS, false);
+            config.save();
         }
     }
 }

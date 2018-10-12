@@ -4,10 +4,6 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.processing;
 
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.Log;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -16,39 +12,31 @@ import java.sql.SQLException;
  *
  * @author Rsl1122
  */
-public abstract class ExecStatement {
-
-    private final String sql;
-    private final boolean devMode;
+public abstract class ExecStatement extends AbstractSQLStatement {
 
     public ExecStatement(String sql) {
-        this.sql = sql;
-        devMode = Settings.DEV_MODE.isTrue();
+        super(sql);
     }
 
     public boolean execute(PreparedStatement statement) throws SQLException {
-        Benchmark.start("SQL: " + sql);
+        startBenchmark();
         try {
             prepare(statement);
             return statement.executeUpdate() > 0;
         } finally {
             statement.close();
-            if (devMode) {
-                Log.debug(Benchmark.stopAndFormat("SQL: " + sql));
-            }
+            stopBenchmark();
         }
     }
 
     public void executeBatch(PreparedStatement statement) throws SQLException {
-        Benchmark.start("SQL: " + sql + " (Batch)");
+        startBatchBenchmark();
         try {
             prepare(statement);
             statement.executeBatch();
         } finally {
             statement.close();
-            if (devMode) {
-                Log.debug(Benchmark.stopAndFormat("SQL: " + sql + " (Batch)"));
-            }
+            stopBatchBenchmark();
         }
     }
 

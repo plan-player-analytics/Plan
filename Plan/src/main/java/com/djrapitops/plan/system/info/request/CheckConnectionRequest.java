@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.GatewayException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -25,18 +25,18 @@ import java.util.UUID;
  */
 public class CheckConnectionRequest extends InfoRequestWithVariables {
 
-    public CheckConnectionRequest(String webServerAddress) {
+    private final ConnectionSystem connectionSystem;
+
+    CheckConnectionRequest(String webServerAddress, ConnectionSystem connectionSystem) {
+        this.connectionSystem = connectionSystem;
         Verify.nullCheck(webServerAddress, () -> new IllegalArgumentException("webServerAddress can not be null."));
 
         variables.put("address", webServerAddress);
         variables.put("continue", "yes");
     }
 
-    public CheckConnectionRequest() {
-    }
-
-    public static CheckConnectionRequest createHandler() {
-        return new CheckConnectionRequest();
+    CheckConnectionRequest(ConnectionSystem connectionSystem) {
+        this.connectionSystem = connectionSystem;
     }
 
     @Override
@@ -56,6 +56,7 @@ public class CheckConnectionRequest extends InfoRequestWithVariables {
     }
 
     private void attemptConnection(Map<String, String> variables) throws WebException {
+        // Continue variable not present in rebound connection, leading to a single round ping.
         boolean shouldNotContinue = variables.get("continue") == null;
         if (shouldNotContinue) {
             return;
@@ -69,7 +70,7 @@ public class CheckConnectionRequest extends InfoRequestWithVariables {
         Server bukkit = new Server(-1, serverUUID, "", address, -1);
 
         try {
-            InfoSystem.getInstance().getConnectionSystem().sendInfoRequest(new CheckConnectionRequest(), bukkit);
+            connectionSystem.sendInfoRequest(new CheckConnectionRequest(connectionSystem), bukkit);
         } catch (ConnectionFailException e) {
             throw new GatewayException(e.getMessage());
         }

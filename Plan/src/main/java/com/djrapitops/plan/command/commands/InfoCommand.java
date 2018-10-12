@@ -11,7 +11,9 @@ import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
+
+import javax.inject.Inject;
 
 /**
  * This SubCommand is used to view the version and the database type in use.
@@ -23,29 +25,42 @@ public class InfoCommand extends CommandNode {
 
     private final PlanPlugin plugin;
     private final Locale locale;
+    private final Database database;
+    private final ConnectionSystem connectionSystem;
+    private final VersionCheckSystem versionCheckSystem;
 
-    public InfoCommand(PlanPlugin plugin) {
+    @Inject
+    public InfoCommand(
+            PlanPlugin plugin,
+            Locale locale,
+            Database database,
+            ConnectionSystem connectionSystem,
+            VersionCheckSystem versionCheckSystem
+    ) {
         super("info", Permissions.INFO.getPermission(), CommandType.CONSOLE);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.plugin = plugin;
+        this.locale = locale;
+        this.database = database;
+        this.connectionSystem = connectionSystem;
+        this.versionCheckSystem = versionCheckSystem;
 
         setShortHelp(locale.get(CmdHelpLang.INFO).toString());
-        this.plugin = plugin;
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         String yes = locale.getString(GenericLang.YES);
         String no = locale.getString(GenericLang.NO);
 
-        String updateAvailable = VersionCheckSystem.isNewVersionAvailable() ? yes : no;
-        String connectedToBungee = ConnectionSystem.getInstance().isServerAvailable() ? yes : no;
+        String updateAvailable = versionCheckSystem.isNewVersionAvailable() ? yes : no;
+        String connectedToBungee = connectionSystem.isServerAvailable() ? yes : no;
         String[] messages = {
                 locale.getString(CommandLang.HEADER_INFO),
                 "",
                 locale.getString(CommandLang.INFO_VERSION, plugin.getVersion()),
                 locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
-                locale.getString(CommandLang.INFO_DATABASE, Database.getActive().getName()),
+                locale.getString(CommandLang.INFO_DATABASE, database.getName()),
                 locale.getString(CommandLang.INFO_BUNGEE_CONNECTION, connectedToBungee),
                 "",
                 ">"

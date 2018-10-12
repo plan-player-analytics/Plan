@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.processing.processors.player;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 
 import java.util.UUID;
@@ -24,15 +24,23 @@ public class NameProcessor implements CriticalRunnable {
     private final String playerName;
     private final Nickname nickname;
 
-    public NameProcessor(UUID uuid, String playerName, String displayName) {
+    private final Database database;
+    private final DataCache dataCache;
+
+    NameProcessor(
+            UUID uuid, String playerName, Nickname nickname,
+            Database database,
+            DataCache dataCache
+    ) {
         this.uuid = uuid;
         this.playerName = playerName;
-        this.nickname = new Nickname(displayName, System.currentTimeMillis(), ServerInfo.getServerUUID());
+        this.nickname = nickname;
+        this.database = database;
+        this.dataCache = dataCache;
     }
 
     @Override
     public void run() {
-        DataCache dataCache = DataCache.getInstance();
         String cachedName = dataCache.getName(uuid);
         String cachedDisplayName = dataCache.getDisplayName(uuid);
 
@@ -43,9 +51,8 @@ public class NameProcessor implements CriticalRunnable {
 
         dataCache.updateNames(uuid, playerName, nickname.getName());
 
-        Database database = Database.getActive();
-        database.save().playerName(uuid, playerName);
-
-        database.save().playerDisplayName(uuid, nickname);
+        SaveOperations save = database.save();
+        save.playerName(uuid, playerName);
+        save.playerDisplayName(uuid, nickname);
     }
 }

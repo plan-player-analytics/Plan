@@ -11,8 +11,10 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,50 +28,57 @@ import java.util.UUID;
  */
 public class ShutdownHook extends Thread {
 
-    private static boolean activated = false;
+    private static ShutdownHook activated;
+    private final Database database;
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public ShutdownHook(Database database, ErrorHandler errorHandler) {
+        this.database = database;
+        this.errorHandler = errorHandler;
+    }
 
     private static boolean isActivated() {
-        return activated;
+        return activated != null;
     }
 
     private static void activate(ShutdownHook hook) {
-        activated = true;
+        activated = hook;
         Runtime.getRuntime().addShutdownHook(hook);
+    }
+
+    private static void deactivate() {
+        Runtime.getRuntime().removeShutdownHook(activated);
+        activated = null;
     }
 
     public void register() {
         if (isActivated()) {
-            return;
+            deactivate();
         }
         activate(this);
     }
 
     @Override
     public void run() {
-        Log.debug("Shutdown hook triggered.");
-
-        Database db = null;
         try {
             Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
             long now = System.currentTimeMillis();
-            db = Database.getActive();
-            saveActiveSessions(db, activeSessions, now);
+            saveActiveSessions(activeSessions, now);
         } catch (IllegalStateException ignored) {
             /* Database is not initialized */
         } catch (DBInitException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         } finally {
-            if (db != null) {
-                try {
-                    db.close();
-                } catch (DBException e) {
-                    Log.toLog(this.getClass(), e);
-                }
+            try {
+                database.close();
+            } catch (DBException e) {
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         }
     }
 
-    private void saveActiveSessions(Database db, Map<UUID, Session> activeSessions, long now) throws DBInitException {
+    private void saveActiveSessions(Map<UUID, Session> activeSessions, long now) throws DBInitException {
         for (Map.Entry<UUID, Session> entry : activeSessions.entrySet()) {
             UUID uuid = entry.getKey();
             Session session = entry.getValue();
@@ -77,13 +86,13 @@ public class ShutdownHook extends Thread {
             if (!end.isPresent()) {
                 session.endSession(now);
             }
-            if (!db.isOpen()) {
-                db.init();
+            if (!database.isOpen()) {
+                database.init();
             }
             try {
-                db.save().session(uuid, session);
+                database.save().session(uuid, session);
             } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         }
         activeSessions.clear();

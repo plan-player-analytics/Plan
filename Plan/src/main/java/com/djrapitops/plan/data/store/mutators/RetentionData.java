@@ -6,11 +6,11 @@ package com.djrapitops.plan.data.store.mutators;
 
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.google.common.base.Objects;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility class for player retention calculations.
@@ -45,10 +45,20 @@ public class RetentionData {
         this.onlineOnJoin = onlineOnJoin;
     }
 
-    public RetentionData(PlayerContainer player, PlayersOnlineResolver onlineOnJoin) {
+    public RetentionData(
+            PlayerContainer player,
+            PlayersOnlineResolver onlineOnJoin,
+            int activityMinuteThreshold,
+            int activityLoginThreshold
+    ) {
         Optional<Long> registeredValue = player.getValue(PlayerKeys.REGISTERED);
         activityIndex = registeredValue
-                .map(registered -> new ActivityIndex(player, registered + TimeAmount.DAY.ms()).getValue())
+                .map(registered -> new ActivityIndex(
+                        player,
+                        registered + TimeUnit.DAYS.toMillis(1L),
+                        activityMinuteThreshold,
+                        activityLoginThreshold
+                ).getValue())
                 .orElse(0.0);
         this.onlineOnJoin = registeredValue
                 .map(registered -> onlineOnJoin.getOnlineOn(registered).orElse(-1))

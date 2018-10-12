@@ -1,8 +1,6 @@
 package com.djrapitops.plan.system.webserver.response.pages;
 
-import com.djrapitops.plan.system.database.databases.Database;
-
-import java.util.UUID;
+import com.djrapitops.plan.data.store.containers.PlayerContainer;
 
 /**
  * Raw Data JSON response for a Player.
@@ -11,7 +9,7 @@ import java.util.UUID;
  */
 public class RawPlayerDataResponse extends RawDataResponse {
 
-    public RawPlayerDataResponse(UUID uuid) {
-        super(Database.getActive().fetch().getPlayerContainer(uuid));
+    public RawPlayerDataResponse(PlayerContainer playerContainer) {
+        super(playerContainer);
     }
 }

@@ -1,12 +1,11 @@
 package com.djrapitops.plan.data.store;
 
-import com.djrapitops.plugin.api.TimeAmount;
-
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
  * Caching layer between Supplier and caller.
- *
+ * <p>
  * Refreshes the value if 30 seconds have passed since the last call.
  *
  * @author Rsl1122
@@ -19,7 +18,7 @@ public class CachingSupplier<T> implements Supplier<T> {
     private long timeToLive;
 
     public CachingSupplier(Supplier<T> original) {
-        this(original, TimeAmount.SECOND.ms() * 30L);
+        this(original, TimeUnit.SECONDS.toMillis(30L));
     }
 
     public CachingSupplier(Supplier<T> original, long timeToLive) {

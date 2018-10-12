@@ -5,25 +5,23 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.task.RunnableFactory;
-import com.djrapitops.plugin.task.ThreadRunnable;
+import com.djrapitops.plugin.logging.console.TestPluginLogger;
+import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
+import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyConfig;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
 import utilities.TestConstants;
-import utilities.mocks.objects.FakeBungeeConsole;
 import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
 import java.util.HashSet;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 /**
  * Mocking Utility for Bungee version of Plan (PlanBungee).
@@ -38,24 +36,19 @@ public class BungeeMockUtil extends MockUtil {
     }
 
     public static BungeeMockUtil setUp() {
-        RunnableFactory.activateTestMode();
-        Teardown.resetSettingsTempValues();
         return new BungeeMockUtil().mockPlugin();
     }
 
     private BungeeMockUtil mockPlugin() {
         planMock = Mockito.mock(PlanBungee.class);
         super.planMock = planMock;
-        StaticHolder.register(PlanBungee.class, planMock);
-        StaticHolder.register(planMock);
-
-        StaticHolder.saveInstance(MockitoJUnitRunner.class, PlanBungee.class);
-        StaticHolder.saveInstance(ThreadRunnable.class, PlanBungee.class);
 
         when(planMock.getVersion()).thenCallRealMethod();
         when(planMock.getColorScheme()).thenCallRealMethod();
-//        doCallRealMethod().when(planMock).getVersion();
-//        doCallRealMethod().when(planMock).getColorScheme();
+
+        ThreadRunnableFactory runnableFactory = new ThreadRunnableFactory();
+        doReturn(runnableFactory).when(planMock).getRunnableFactory();
+
         return this;
     }
 
@@ -70,9 +63,12 @@ public class BungeeMockUtil extends MockUtil {
     }
 
     public BungeeMockUtil withLogging() {
-        doCallRealMethod().when(planMock).log(Mockito.anyString(), Mockito.anyString());
         TestLogger testLogger = new TestLogger();
         doReturn(testLogger).when(planMock).getLogger();
+        TestPluginLogger testPluginLogger = new TestPluginLogger();
+        doReturn(testPluginLogger).when(planMock).getPluginLogger();
+        ConsoleErrorLogger consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);
+        doReturn(consoleErrorLogger).when(planMock).getErrorHandler();
         return this;
     }
 
@@ -80,7 +76,7 @@ public class BungeeMockUtil extends MockUtil {
         ProxyServer proxyMock = Mockito.mock(ProxyServer.class);
         doReturn("1.12.2").when(proxyMock).getVersion();
 
-        CommandSender console = new FakeBungeeConsole();
+        CommandSender console = Mockito.mock(CommandSender.class);
         doReturn(console).when(proxyMock).getConsole();
 
         ProxyConfig proxyConfig = Mockito.mock(ProxyConfig.class);

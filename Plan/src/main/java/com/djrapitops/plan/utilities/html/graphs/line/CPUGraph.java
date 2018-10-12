@@ -1,9 +1,6 @@
 package com.djrapitops.plan.utilities.html.graphs.line;
 
-import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-
-import java.util.List;
 
 /**
  * Graph about CPU Usage gathered by TPSCountTimer.
@@ -12,13 +9,9 @@ import java.util.List;
  * @see com.djrapitops.plan.system.tasks.TPSCountTimer
  * @since 4.2.0
  */
-public class CPUGraph extends AbstractLineGraph {
+class CPUGraph extends LineGraph {
 
-    public CPUGraph(List<TPS> tpsData) {
-        this(new TPSMutator(tpsData));
-    }
-
-    public CPUGraph(TPSMutator mutator) {
-        super(mutator.cpuPoints());
+    CPUGraph(TPSMutator mutator, boolean displayGaps) {
+        super(mutator.cpuPoints(), displayGaps);
     }
 }

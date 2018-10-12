@@ -7,10 +7,9 @@ package com.djrapitops.plan.utilities.html.graphs.calendar;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.*;
 
@@ -25,12 +24,22 @@ public class ServerCalendar {
     private final TreeMap<Long, Integer> uniquePerDay;
     private final TreeMap<Long, Integer> newPerDay;
 
-    public ServerCalendar(PlayersMutator mutator,
-                          TreeMap<Long, Integer> uniquePerDay,
-                          TreeMap<Long, Integer> newPerDay) {
+    private final Formatter<Long> iso8601Formatter;
+    private final Formatter<Long> timeAmountFormatter;
+    private final Theme theme;
+
+    ServerCalendar(
+            PlayersMutator mutator, TreeMap<Long, Integer> uniquePerDay, TreeMap<Long, Integer> newPerDay,
+            Formatter<Long> iso8601Formatter,
+            Formatter<Long> timeAmountFormatter,
+            Theme theme
+    ) {
         this.mutator = mutator;
         this.uniquePerDay = uniquePerDay;
         this.newPerDay = newPerDay;
+        this.iso8601Formatter = iso8601Formatter;
+        this.timeAmountFormatter = timeAmountFormatter;
+        this.theme = theme;
     }
 
     public String toCalendarSeries() {
@@ -51,12 +60,12 @@ public class ServerCalendar {
             if (newPlayers <= 0) {
                 continue;
             }
-            
+
             String day = entry.getKey();
 
             series.append(",{title: 'New: ").append(newPlayers)
                     .append("',start:'").append(day)
-                    .append("',color: '").append(Theme.getValue(ThemeVal.LIGHT_GREEN)).append("'")
+                    .append("',color: '").append(theme.getValue(ThemeVal.LIGHT_GREEN)).append("'")
                     .append("}");
         }
 
@@ -72,7 +81,7 @@ public class ServerCalendar {
             }
 
             Long key = entry.getKey();
-            String day = FormatUtils.formatTimeStampISO8601NoClock(key);
+            String day = iso8601Formatter.apply(key);
             List<Session> sessions = byStartOfDay.getOrDefault(key, new ArrayList<>());
 
             SessionsMutator dayMutator = new SessionsMutator(sessions);
@@ -80,14 +89,14 @@ public class ServerCalendar {
             long playtime = dayMutator.toPlaytime();
             long uniquePlayers = entry.getValue();
 
-            series.append(",{title: 'Playtime: ").append(Formatters.timeAmount().apply(playtime))
+            series.append(",{title: 'Playtime: ").append(timeAmountFormatter.apply(playtime))
                     .append("',start:'").append(day)
-                    .append("',color: '").append(Theme.getValue(ThemeVal.GREEN)).append("'")
+                    .append("',color: '").append(theme.getValue(ThemeVal.GREEN)).append("'")
                     .append("}");
 
             series.append(",{title: 'Sessions: ").append(sessionCount)
                     .append("',start:'").append(day)
-                    .append("',color: '").append(Theme.getValue(ThemeVal.TEAL)).append("'")
+                    .append("',color: '").append(theme.getValue(ThemeVal.TEAL)).append("'")
                     .append("}");
 
             series.append(",{title: 'Unique: ").append(uniquePlayers)
@@ -99,7 +108,7 @@ public class ServerCalendar {
     private Map<String, Integer> getRegisteredByDay() {
         Map<String, Integer> registeredByDay = new HashMap<>();
         for (Map.Entry<Long, Integer> entry : newPerDay.entrySet()) {
-            String day = FormatUtils.formatTimeStampISO8601NoClock(entry.getKey());
+            String day = iso8601Formatter.apply(entry.getKey());
             registeredByDay.put(day, entry.getValue());
         }
         return registeredByDay;

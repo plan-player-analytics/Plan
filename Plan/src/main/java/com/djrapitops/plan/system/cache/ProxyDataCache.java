@@ -1,7 +1,10 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -11,10 +14,12 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ProxyDataCache extends DataCache {
 
-    public ProxyDataCache(PlanSystem system) {
-        super(system);
+    @Inject
+    public ProxyDataCache(Database database, ErrorHandler errorHandler) {
+        super(database, errorHandler);
     }
 
     @Override

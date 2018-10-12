@@ -2,7 +2,6 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 
 import com.djrapitops.plan.system.database.databases.operation.CheckOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 
 import java.util.UUID;
 
@@ -23,13 +22,13 @@ public class SQLCheckOps extends SQLOps implements CheckOperations {
     }
 
     @Override
-    public boolean doesWebUserExists(String username) {
-        return securityTable.userExists(username);
+    public boolean isPlayerRegisteredOnThisServer(UUID player) {
+        return userInfoTable.isRegisteredOnThisServer(player);
     }
 
     @Override
-    public boolean isPlayerRegisteredOnThisServer(UUID player) {
-        return isPlayerRegistered(player, ServerInfo.getServerUUID());
+    public boolean doesWebUserExists(String username) {
+        return securityTable.userExists(username);
     }
 
     @Override

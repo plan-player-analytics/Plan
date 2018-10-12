@@ -2,12 +2,27 @@ package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.World;
+
+import javax.inject.Inject;
 
 public class PaperTPSCountTimer extends BukkitTPSCountTimer {
 
-    public PaperTPSCountTimer(Plan plugin) {
-        super(plugin);
+    @Inject
+    public PaperTPSCountTimer(
+            Plan plugin,
+            Processors processors,
+            Processing processing,
+            ServerProperties serverProperties,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        super(plugin, processors, processing, serverProperties, logger, errorHandler);
     }
 
     @Override

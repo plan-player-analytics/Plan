@@ -11,32 +11,57 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.webserver.WebServer;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
+import dagger.Lazy;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ConnectionSystem for proxy servers.
  *
  * @author Rsl1122
  */
+@Singleton
 public class ProxyConnectionSystem extends ConnectionSystem {
+
+    private final Database database;
+    private final Lazy<WebServer> webServer;
+    private final ErrorHandler errorHandler;
+    private final WebExceptionLogger webExceptionLogger;
 
     private long latestServerMapRefresh;
 
-    public ProxyConnectionSystem() {
+    @Inject
+    public ProxyConnectionSystem(
+            Database database,
+            Lazy<WebServer> webServer,
+            ConnectionLog connectionLog,
+            InfoRequests infoRequests,
+            Lazy<InfoSystem> infoSystem,
+            ServerInfo serverInfo,
+            ErrorHandler errorHandler,
+            WebExceptionLogger webExceptionLogger
+    ) {
+        super(connectionLog, infoRequests, infoSystem, serverInfo);
+        this.database = database;
+        this.webServer = webServer;
+        this.errorHandler = errorHandler;
+        this.webExceptionLogger = webExceptionLogger;
         latestServerMapRefresh = 0;
     }
 
     private void refreshServerMap() {
-        if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
+        if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
             try {
-                bukkitServers = Database.getActive().fetch().getBukkitServers();
+                bukkitServers = database.fetch().getBukkitServers();
                 latestServerMapRefresh = System.currentTimeMillis();
             } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         }
     }
@@ -49,7 +74,7 @@ public class ProxyConnectionSystem extends ConnectionSystem {
                 || infoRequest instanceof GenerateInspectPageRequest
                 || infoRequest instanceof GenerateInspectPluginsTabRequest) {
             // Run locally
-            return ServerInfo.getServer();
+            return serverInfo.getServer();
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
             UUID serverUUID = ((GenerateAnalysisPageRequest) infoRequest).getServerUUID();
             server = bukkitServers.get(serverUUID);
@@ -67,11 +92,11 @@ public class ProxyConnectionSystem extends ConnectionSystem {
             throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
         }
         for (Server server : bukkitServers.values()) {
-            WebExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
+            webExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
         }
-        // Quick hack
+        // Quick hack for Bungee Plugins Tab
         if (infoRequest instanceof GenerateInspectPluginsTabRequest) {
-            WebExceptionLogger.logIfOccurs(this.getClass(), () -> InfoSystem.getInstance().sendRequest(infoRequest));
+            webExceptionLogger.logIfOccurs(this.getClass(), infoRequest::runLocally);
         }
     }
 
@@ -82,11 +107,12 @@ public class ProxyConnectionSystem extends ConnectionSystem {
 
     @Override
     public String getMainAddress() {
-        return WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        return webServer.get().getAccessAddress();
     }
 
     @Override
     public void enable() {
+        super.enable();
         refreshServerMap();
     }
 

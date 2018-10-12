@@ -1,8 +1,5 @@
 package com.djrapitops.plan.utilities.html;
 
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.Settings;
-
 /**
  * @author Rsl1122
  */
@@ -13,22 +10,6 @@ public class HtmlUtils {
      */
     private HtmlUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    /**
-     * Used to get the WebServer's IP with Port.
-     *
-     * @return For example 127.0.0.1:8804
-     */
-    public static String getIP() {
-        int port = Settings.WEBSERVER_PORT.getNumber();
-        String ip;
-        if (Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
-            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
-        } else {
-            ip = ServerInfo.getServerProperties().getIp() + ":" + port;
-        }
-        return ip;
     }
 
     /**

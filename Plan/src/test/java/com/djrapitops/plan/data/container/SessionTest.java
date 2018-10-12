@@ -7,6 +7,7 @@ import utilities.TestConstants;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -17,10 +18,12 @@ import static org.junit.Assert.*;
  */
 public class SessionTest {
 
+    private final UUID serverUUID = TestConstants.SERVER_UUID;
+
     @Test
     public void safeStartKeyConstructor() {
         for (int i = 0; i < 10000; i++) {
-            Session session = new Session(null, System.currentTimeMillis(), null, null);
+            Session session = new Session(null, serverUUID, System.currentTimeMillis(), null, null);
 
             // Should not throw
             session.getUnsafe(SessionKeys.START);
@@ -40,7 +43,7 @@ public class SessionTest {
 
     @Test
     public void killsAreAdded() {
-        Session session = new Session(null, System.currentTimeMillis(), "", "");
+        Session session = new Session(null, serverUUID, System.currentTimeMillis(), "", "");
 
         Optional<List<PlayerKill>> beforeOptional = session.getValue(SessionKeys.PLAYER_KILLS);
         assertTrue(beforeOptional.isPresent());
@@ -59,7 +62,7 @@ public class SessionTest {
 
     @Test
     public void killsAreAdded2() {
-        Session session = new Session(null, System.currentTimeMillis(), "", "");
+        Session session = new Session(null, serverUUID, System.currentTimeMillis(), "", "");
 
         session.playerKilled(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
 
@@ -73,7 +76,7 @@ public class SessionTest {
     @Test
     public void worldTimesWorks() {
         long time = System.currentTimeMillis();
-        Session session = new Session(null, time, "One", "Survival");
+        Session session = new Session(null, serverUUID, time, "One", "Survival");
         session.changeState("Two", "Three", time + 5L);
 
         Optional<WorldTimes> optional = session.getValue(SessionKeys.WORLD_TIMES);

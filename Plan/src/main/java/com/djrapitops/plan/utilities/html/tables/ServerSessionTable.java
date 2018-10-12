@@ -4,8 +4,9 @@ import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.settings.WorldAliasSettings;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 
 import java.util.List;
@@ -13,40 +14,50 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * TableContainer for a Session table for a single player.
+ * Html table that can be used to replace a {@link com.djrapitops.plan.utilities.html.structure.SessionAccordion}.
  *
  * @author Rsl1122
  */
-public class ServerSessionTable extends TableContainer {
+class ServerSessionTable extends TableContainer {
+
+    private final int maxSessions;
+    private final WorldAliasSettings worldAliasSettings;
+    private final Formatter<DateHolder> yearFormatter;
+    private final Formatter<Long> timeAmountFormatter;
 
     private final List<Session> sessions;
     private Map<UUID, String> playerNames;
 
-    public ServerSessionTable(Map<UUID, String> playerNames, List<Session> sessions) {
+    ServerSessionTable(
+            Map<UUID, String> playerNames, List<Session> sessions,
+            int maxSessions,
+            WorldAliasSettings worldAliasSettings,
+            Formatter<DateHolder> yearFormatter,
+            Formatter<Long> timeAmountFormatter
+    ) {
         super("Player", "Start", "Length", "World");
         this.playerNames = playerNames;
         this.sessions = sessions;
+        this.maxSessions = maxSessions;
+        this.worldAliasSettings = worldAliasSettings;
+        this.yearFormatter = yearFormatter;
+        this.timeAmountFormatter = timeAmountFormatter;
 
         addRows();
     }
 
     private void addRows() {
-        int maxSessions = Settings.MAX_SESSIONS.getNumber();
-        if (maxSessions <= 0) {
-            maxSessions = 50;
-        }
-
         int i = 0;
         for (Session session : sessions) {
             if (i >= maxSessions) {
                 break;
             }
 
-            String start = Formatters.year().apply(session);
+            String start = yearFormatter.apply(session);
             String length = session.supports(SessionKeys.END)
-                    ? Formatters.timeAmount().apply(session.getValue(SessionKeys.LENGTH).orElse(0L))
+                    ? timeAmountFormatter.apply(session.getValue(SessionKeys.LENGTH).orElse(0L))
                     : "Online";
-            String world = session.getValue(SessionKeys.LONGEST_WORLD_PLAYED).orElse("Unknown");
+            String world = worldAliasSettings.getLongestWorldPlayed(session);
 
             String toolTip = "Session ID: " + session.getValue(SessionKeys.DB_ID)
                     .map(id -> Integer.toString(id))

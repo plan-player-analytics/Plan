@@ -1,10 +1,11 @@
 package com.djrapitops.plan.system.tasks;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.TPSInsertProcessor;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import java.lang.management.ManagementFactory;
@@ -17,16 +18,27 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public abstract class TPSCountTimer<T extends PlanPlugin> extends AbsRunnable {
+public abstract class TPSCountTimer extends AbsRunnable {
 
-    protected final T plugin;
     protected final List<TPS> history;
+
+    protected final Processors processors;
+    protected final Processing processing;
+    protected final PluginLogger logger;
+    protected final ErrorHandler errorHandler;
 
     protected int latestPlayersOnline = 0;
 
-    public TPSCountTimer(T plugin) {
-        super("TPSCountTimer");
-        this.plugin = plugin;
+    public TPSCountTimer(
+            Processors processors,
+            Processing processing,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        this.processors = processors;
+        this.processing = processing;
+        this.logger = logger;
+        this.errorHandler = errorHandler;
         history = new ArrayList<>();
     }
 
@@ -39,12 +51,12 @@ public abstract class TPSCountTimer<T extends PlanPlugin> extends AbsRunnable {
             addNewTPSEntry(nanoTime, now);
 
             if (history.size() >= 60) {
-                Processing.submit(new TPSInsertProcessor(new ArrayList<>(history)));
+                processing.submit(processors.tpsInsertProcessor(new ArrayList<>(history)));
                 history.clear();
             }
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-            Log.error("TPS Count Task Disabled due to error, reload Plan to re-enable.");
-            Log.toLog(this.getClass(), e);
+            logger.error("TPS Count Task Disabled due to error, reload Plan to re-enable.");
+            errorHandler.log(L.ERROR, this.getClass(), e);
             cancel();
         }
     }

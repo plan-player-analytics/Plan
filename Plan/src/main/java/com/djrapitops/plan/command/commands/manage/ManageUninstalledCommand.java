@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.Server;
@@ -11,11 +10,14 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,14 +28,30 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.0.0
  */
+@Singleton
 public class ManageUninstalledCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
+    private final Database database;
+    private final ErrorHandler errorHandler;
+    private final ServerInfo serverInfo;
 
-    public ManageUninstalledCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageUninstalledCommand(
+            Locale locale,
+            Processing processing,
+            Database database,
+            ServerInfo serverInfo,
+            ErrorHandler errorHandler
+    ) {
         super("uninstalled", Permissions.MANAGE.getPermission(), CommandType.ALL_WITH_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.processing = processing;
+        this.database = database;
+        this.serverInfo = serverInfo;
+        this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_UNINSTALLED));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_UNINSTALLED));
@@ -41,10 +59,10 @@ public class ManageUninstalledCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
                 Optional<Server> serverOptional = getServer(args);
                 if (!serverOptional.isPresent()) {
@@ -53,23 +71,23 @@ public class ManageUninstalledCommand extends CommandNode {
                 }
                 Server server = serverOptional.get();
                 UUID serverUUID = server.getUuid();
-                if (ServerInfo.getServerUUID().equals(serverUUID)) {
+                if (serverInfo.getServerUUID().equals(serverUUID)) {
                     sender.sendMessage(locale.getString(ManageLang.UNINSTALLING_SAME_SERVER));
                     return;
                 }
 
-                Database.getActive().save().setAsUninstalled(serverUUID);
+                database.save().setAsUninstalled(serverUUID);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         });
     }
 
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1) {
-            Map<UUID, Server> bukkitServers = Database.getActive().fetch().getBukkitServers();
+            Map<UUID, Server> bukkitServers = database.fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);
             for (Map.Entry<UUID, Server> entry : bukkitServers.entrySet()) {
                 Server server = entry.getValue();

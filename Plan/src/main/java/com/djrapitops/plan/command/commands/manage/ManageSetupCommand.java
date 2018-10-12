@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -10,13 +9,17 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 
 /**
@@ -25,14 +28,33 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 2.3.0
  */
+@Singleton
 public class ManageSetupCommand extends CommandNode {
 
     private final Locale locale;
+    private final PlanConfig config;
+    private final Processing processing;
+    private final InfoSystem infoSystem;
+    private final WebServer webServer;
+    private final ErrorHandler errorHandler;
 
-    public ManageSetupCommand(PlanPlugin plugin) {
+    @Inject
+    public ManageSetupCommand(
+            Locale locale,
+            PlanConfig config,
+            Processing processing,
+            InfoSystem infoSystem,
+            WebServer webServer,
+            ErrorHandler errorHandler
+    ) {
         super("setup", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.config = config;
+        this.processing = processing;
+        this.infoSystem = infoSystem;
+        this.webServer = webServer;
+        this.errorHandler = errorHandler;
 
         setArguments("<BungeeAddress>");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_SETUP));
@@ -40,11 +62,11 @@ public class ManageSetupCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
-        if (!WebServerSystem.isWebServerEnabled()) {
+        if (!webServer.isEnabled()) {
             sender.sendMessage(locale.getString(CommandLang.CONNECT_WEBSERVER_NOT_ENABLED));
             return;
         }
@@ -60,13 +82,13 @@ public class ManageSetupCommand extends CommandNode {
         requestSetup(sender, address);
     }
 
-    private void requestSetup(ISender sender, String address) {
-        Processing.submitNonCritical(() -> {
+    private void requestSetup(Sender sender, String address) {
+        processing.submitNonCritical(() -> {
             try {
-                Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.set(false);
-                Settings.BUNGEE_COPY_CONFIG.set(true);
+                config.set(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE, false);
+                config.set(Settings.BUNGEE_COPY_CONFIG, true);
 
-                InfoSystem.getInstance().requestSetUp(address);
+                infoSystem.requestSetUp(address);
 
                 sender.sendMessage(locale.getString(CommandLang.CONNECT_SUCCESS));
             } catch (ForbiddenException e) {
@@ -82,7 +104,7 @@ public class ManageSetupCommand extends CommandNode {
             } catch (GatewayException e) {
                 sender.sendMessage(locale.getString(CommandLang.CONNECT_GATEWAY));
             } catch (WebException e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.WARN, this.getClass(), e);
                 sender.sendMessage(locale.getString(CommandLang.CONNECT_FAIL, e.toString()));
             }
         });

@@ -1,9 +1,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
@@ -12,15 +10,19 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
-import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.command.Sender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -31,14 +33,35 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.3.0
  */
+@Singleton
 public class ManageBackupCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
+    private final DBSystem dbSystem;
+    private final SQLiteDB.Factory sqliteFactory;
+    private final ErrorHandler errorHandler;
 
-    public ManageBackupCommand(PlanPlugin plugin) {
+    private final Formatter<Long> iso8601LongFormatter;
+
+    @Inject
+    public ManageBackupCommand(
+            Locale locale,
+            Processing processing,
+            DBSystem dbSystem,
+            SQLiteDB.Factory sqliteFactory,
+            Formatters formatters,
+            ErrorHandler errorHandler
+    ) {
         super("backup", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.processing = processing;
+        this.dbSystem = dbSystem;
+        this.sqliteFactory = sqliteFactory;
+        this.errorHandler = errorHandler;
+
+        this.iso8601LongFormatter = formatters.iso8601NoClockLong();
 
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_BACKUP));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_BACKUP));
@@ -47,7 +70,7 @@ public class ManageBackupCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         try {
             Verify.isTrue(args.length >= 1,
                     () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
@@ -58,7 +81,8 @@ public class ManageBackupCommand extends CommandNode {
             Verify.isTrue(isCorrectDB,
                     () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
-            Database database = DBSystem.getActiveDatabaseByName(dbName);
+            Database database = dbSystem.getActiveDatabaseByName(dbName);
+            database.init();
 
             runBackupTask(sender, args, database);
         } catch (DBInitException e) {
@@ -66,24 +90,17 @@ public class ManageBackupCommand extends CommandNode {
         }
     }
 
-    private void runBackupTask(ISender sender, String[] args, Database database) {
-        RunnableFactory.createNew(new AbsRunnable("BackupTask") {
-            @Override
-            public void run() {
-                try {
-                    Log.debug("Backup", "Start");
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
-                    createNewBackup(args[0], database);
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
-                } catch (Exception e) {
-                    Log.toLog(ManageBackupCommand.class, e);
-                    sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
-                } finally {
-                    Log.logDebug("Backup");
-                    this.cancel();
-                }
+    private void runBackupTask(Sender sender, String[] args, Database database) {
+        processing.submitCritical(() -> {
+            try {
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+                createNewBackup(args[0], database);
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            } catch (Exception e) {
+                errorHandler.log(L.ERROR, ManageBackupCommand.class, e);
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_FAIL, e.getMessage()));
             }
-        }).runTaskAsynchronously();
+        });
     }
 
     /**
@@ -95,9 +112,9 @@ public class ManageBackupCommand extends CommandNode {
     private void createNewBackup(String dbName, Database copyFromDB) {
         SQLiteDB backupDB = null;
         try {
-            String timeStamp = Formatters.iso8601NoClock().apply(System::currentTimeMillis);
+            String timeStamp = iso8601LongFormatter.apply(System.currentTimeMillis());
             String fileName = dbName + "-backup-" + timeStamp;
-            backupDB = new SQLiteDB(fileName, () -> locale);
+            backupDB = sqliteFactory.usingFileCalled(fileName);
             Collection<UUID> uuids = copyFromDB.fetch().getSavedUUIDs();
             if (uuids.isEmpty()) {
                 return;
@@ -105,7 +122,7 @@ public class ManageBackupCommand extends CommandNode {
             backupDB.init();
             copyFromDB.backup().backup(backupDB);
         } catch (DBException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         } finally {
             if (backupDB != null) {
                 backupDB.close();

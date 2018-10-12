@@ -9,8 +9,10 @@ import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.pages.DebugPageResponse;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
@@ -18,11 +20,19 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class DebugPageHandler extends PageHandler {
+@Singleton
+public class DebugPageHandler implements PageHandler {
+
+    private final ResponseFactory responseFactory;
+
+    @Inject
+    public DebugPageHandler(ResponseFactory responseFactory) {
+        this.responseFactory = responseFactory;
+    }
 
     @Override
     public Response getResponse(Request request, List<String> target) {
-        return new DebugPageResponse();
+        return responseFactory.debugPageResponse();
     }
 
     @Override

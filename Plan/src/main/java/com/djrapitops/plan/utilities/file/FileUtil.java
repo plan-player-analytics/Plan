@@ -2,8 +2,7 @@ package com.djrapitops.plan.utilities.file;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plugin.logging.L;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,15 +19,6 @@ public class FileUtil {
 
     private FileUtil() {
         throw new IllegalStateException("Utility class");
-    }
-
-    public static String getStringFromResource(String fileName) throws IOException {
-        StringBuilder html = new StringBuilder();
-        PlanPlugin plugin = PlanPlugin.getInstance();
-
-        lines(PlanPlugin.getInstance(), new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName)
-                .forEach(line -> html.append(line).append("\r\n"));
-        return html.toString();
     }
 
     public static List<String> lines(PlanPlugin plugin, File savedFile, String defaults) throws IOException {
@@ -81,7 +71,7 @@ public class FileUtil {
                 lines.add(scanner.nextLine());
             }
         } catch (NullPointerException e) {
-            Log.infoColor("§ea Resource was not found inside the jar (" + resource + "), Plan does not support /reload or updates using " +
+            plugin.getPluginLogger().log(L.INFO_COLOR, "§ea Resource was not found inside the jar (" + resource + "), Plan does not support /reload or updates using " +
                     "Plugin Managers, restart the server and see if the error persists.");
             throw new FileNotFoundException("File not found inside jar: " + resource);
         } finally {
@@ -96,7 +86,7 @@ public class FileUtil {
 
     public static List<String> lines(File file, Charset charset) throws IOException {
         List<String> lines = new ArrayList<>();
-        if (Verify.exists(file)) {
+        if (file != null && file.exists()) {
             try (Stream<String> linesStream = Files.lines(file.toPath(), charset)) {
                 lines = linesStream.collect(Collectors.toList());
             }

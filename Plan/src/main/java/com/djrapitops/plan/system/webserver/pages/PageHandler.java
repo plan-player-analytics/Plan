@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public abstract class PageHandler {
+public interface PageHandler {
 
     /**
      * Get the Response of a PageHandler.
@@ -26,9 +26,9 @@ public abstract class PageHandler {
      * @param target  Rest of the target coordinates after this page has been solved.
      * @return Response appropriate to the PageHandler.
      */
-    public abstract Response getResponse(Request request, List<String> target) throws WebException;
+    Response getResponse(Request request, List<String> target) throws WebException;
 
-    public boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
+    default boolean isAuthorized(Authentication auth, List<String> target) throws WebUserAuthException {
         return true;
     }
 

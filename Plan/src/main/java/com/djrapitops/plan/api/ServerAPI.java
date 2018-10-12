@@ -4,10 +4,15 @@
  */
 package com.djrapitops.plan.api;
 
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.ServerSystem;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
+import com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -15,26 +20,36 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ServerAPI extends CommonAPI {
 
-    private final ServerSystem serverSystem;
+    private final HookHandler hookHandler;
+    private final Database database;
 
-    public ServerAPI(ServerSystem serverSystem) {
-        this.serverSystem = serverSystem;
+    @Inject
+    public ServerAPI(
+            UUIDUtility uuidUtility,
+            HookHandler hookHandler,
+            Database database,
+            ErrorHandler errorHandler
+    ) {
+        super(uuidUtility, errorHandler);
+        this.hookHandler = hookHandler;
+        this.database = database;
     }
 
     @Override
     public void addPluginDataSource(PluginData pluginData) {
-        serverSystem.getHookHandler().addPluginDataSource(pluginData);
+        hookHandler.addPluginDataSource(pluginData);
     }
 
     @Override
     public String getPlayerName(UUID uuid) {
-        return serverSystem.getCacheSystem().getDataCache().getName(uuid);
+        return database.fetch().getPlayerName(uuid);
     }
 
     @Override
     public FetchOperations fetchFromPlanDB() {
-        return serverSystem.getDatabaseSystem().getActiveDatabase().fetch();
+        return database.fetch();
     }
 }

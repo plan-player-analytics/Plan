@@ -1,42 +1,37 @@
 package com.djrapitops.plan.data.store.containers;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.Type;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
-import com.djrapitops.plan.data.store.mutators.combiners.MultiBanCombiner;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.analysis.ServerBanDataReader;
-import com.djrapitops.plan.utilities.html.graphs.ActivityStackGraph;
-import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
-import com.djrapitops.plan.utilities.html.graphs.WorldMap;
-import com.djrapitops.plan.utilities.html.graphs.bar.GeolocationBarGraph;
-import com.djrapitops.plan.utilities.html.graphs.calendar.ServerCalendar;
-import com.djrapitops.plan.utilities.html.graphs.line.*;
-import com.djrapitops.plan.utilities.html.graphs.pie.ActivityPie;
+import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
+import com.djrapitops.plan.utilities.html.graphs.bar.BarGraph;
+import com.djrapitops.plan.utilities.html.graphs.line.PingGraph;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
+import com.djrapitops.plan.utilities.html.structure.Accordions;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 import com.djrapitops.plan.utilities.html.structure.RecentLoginList;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
-import com.djrapitops.plan.utilities.html.tables.CommandUseTable;
-import com.djrapitops.plan.utilities.html.tables.PingTable;
-import com.djrapitops.plan.utilities.html.tables.PlayersTable;
-import com.djrapitops.plan.utilities.html.tables.ServerSessionTable;
+import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.api.TimeAmount;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -50,10 +45,43 @@ public class AnalysisContainer extends DataContainer {
 
     private final ServerContainer serverContainer;
 
+    private final String version;
+    private final PlanConfig config;
+    private final Theme theme;
+    private final Database database;
+    private final ServerProperties serverProperties;
+    private final Formatters formatters;
+    private final Graphs graphs;
+    private final HtmlTables tables;
+    private final Accordions accordions;
+    private final AnalysisPluginsTabContentCreator pluginsTabContentCreator;
+
     private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {}, "SERVER_NAMES");
 
-    public AnalysisContainer(ServerContainer serverContainer) {
+    public AnalysisContainer(
+            ServerContainer serverContainer,
+            String version,
+            PlanConfig config,
+            Theme theme,
+            Database database,
+            ServerProperties serverProperties,
+            Formatters formatters,
+            Graphs graphs,
+            HtmlTables tables,
+            Accordions accordions,
+            AnalysisPluginsTabContentCreator pluginsTabContentCreator
+    ) {
         this.serverContainer = serverContainer;
+        this.version = version;
+        this.config = config;
+        this.theme = theme;
+        this.database = database;
+        this.serverProperties = serverProperties;
+        this.formatters = formatters;
+        this.graphs = graphs;
+        this.tables = tables;
+        this.accordions = accordions;
+        this.pluginsTabContentCreator = pluginsTabContentCreator;
         addAnalysisSuppliers();
     }
 
@@ -74,27 +102,21 @@ public class AnalysisContainer extends DataContainer {
         addCommandSuppliers();
         addServerHealth();
         addPluginSuppliers();
-
-        runCombiners();
-    }
-
-    private void runCombiners() {
-        new MultiBanCombiner(this.serverContainer).combine(getUnsafe(AnalysisKeys.BAN_DATA));
     }
 
     private void addConstants() {
         long now = System.currentTimeMillis();
         putRawData(AnalysisKeys.ANALYSIS_TIME, now);
-        putRawData(AnalysisKeys.ANALYSIS_TIME_DAY_AGO, now - TimeAmount.DAY.ms());
-        putRawData(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO, now - TimeAmount.WEEK.ms());
-        putRawData(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO, now - TimeAmount.MONTH.ms());
-        putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> Formatters.second().apply(() -> getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
+        putRawData(AnalysisKeys.ANALYSIS_TIME_DAY_AGO, now - TimeUnit.DAYS.toMillis(1L));
+        putRawData(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO, now - TimeAmount.WEEK.toMillis(1L));
+        putRawData(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO, now - TimeAmount.MONTH.toMillis(1L));
+        putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> formatters.secondLong().apply(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
 
-        putRawData(AnalysisKeys.VERSION, PlanPlugin.getInstance().getVersion());
-        putSupplier(AnalysisKeys.TIME_ZONE, MiscUtils::getTimeZoneOffsetHours);
+        putRawData(AnalysisKeys.VERSION, version);
+        putSupplier(AnalysisKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
         putRawData(AnalysisKeys.FIRST_DAY, 1);
-        putRawData(AnalysisKeys.TPS_MEDIUM, Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber());
-        putRawData(AnalysisKeys.TPS_HIGH, Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH.getNumber());
+        putRawData(AnalysisKeys.TPS_MEDIUM, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED));
+        putRawData(AnalysisKeys.TPS_HIGH, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH));
 
         addServerProperties();
         addThemeColors();
@@ -105,24 +127,23 @@ public class AnalysisContainer extends DataContainer {
                 getUnsafe(serverNames).getOrDefault(serverContainer.getUnsafe(ServerKeys.SERVER_UUID), "Plan")
         );
 
-        ServerProperties serverProperties = ServerInfo.getServerProperties();
         putRawData(AnalysisKeys.PLAYERS_MAX, serverProperties.getMaxPlayers());
         putRawData(AnalysisKeys.PLAYERS_ONLINE, serverProperties.getOnlinePlayers());
     }
 
     private void addThemeColors() {
-        putRawData(AnalysisKeys.ACTIVITY_PIE_COLORS, Theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE));
-        putRawData(AnalysisKeys.GM_PIE_COLORS, Theme.getValue(ThemeVal.GRAPH_GM_PIE));
-        putRawData(AnalysisKeys.PLAYERS_GRAPH_COLOR, Theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
-        putRawData(AnalysisKeys.TPS_LOW_COLOR, Theme.getValue(ThemeVal.GRAPH_TPS_LOW));
-        putRawData(AnalysisKeys.TPS_MEDIUM_COLOR, Theme.getValue(ThemeVal.GRAPH_TPS_MED));
-        putRawData(AnalysisKeys.TPS_HIGH_COLOR, Theme.getValue(ThemeVal.GRAPH_TPS_HIGH));
-        putRawData(AnalysisKeys.WORLD_MAP_LOW_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_LOW));
-        putRawData(AnalysisKeys.WORLD_MAP_HIGH_COLOR, Theme.getValue(ThemeVal.WORLD_MAP_HIGH));
-        putRawData(AnalysisKeys.WORLD_PIE_COLORS, Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
-        putRawData(AnalysisKeys.AVG_PING_COLOR, Theme.getValue(ThemeVal.GRAPH_AVG_PING));
-        putRawData(AnalysisKeys.MAX_PING_COLOR, Theme.getValue(ThemeVal.GRAPH_MAX_PING));
-        putRawData(AnalysisKeys.MIN_PING_COLOR, Theme.getValue(ThemeVal.GRAPH_MIN_PING));
+        putRawData(AnalysisKeys.ACTIVITY_PIE_COLORS, theme.getValue(ThemeVal.GRAPH_ACTIVITY_PIE));
+        putRawData(AnalysisKeys.GM_PIE_COLORS, theme.getValue(ThemeVal.GRAPH_GM_PIE));
+        putRawData(AnalysisKeys.PLAYERS_GRAPH_COLOR, theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+        putRawData(AnalysisKeys.TPS_LOW_COLOR, theme.getValue(ThemeVal.GRAPH_TPS_LOW));
+        putRawData(AnalysisKeys.TPS_MEDIUM_COLOR, theme.getValue(ThemeVal.GRAPH_TPS_MED));
+        putRawData(AnalysisKeys.TPS_HIGH_COLOR, theme.getValue(ThemeVal.GRAPH_TPS_HIGH));
+        putRawData(AnalysisKeys.WORLD_MAP_LOW_COLOR, theme.getValue(ThemeVal.WORLD_MAP_LOW));
+        putRawData(AnalysisKeys.WORLD_MAP_HIGH_COLOR, theme.getValue(ThemeVal.WORLD_MAP_HIGH));
+        putRawData(AnalysisKeys.WORLD_PIE_COLORS, theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+        putRawData(AnalysisKeys.AVG_PING_COLOR, theme.getValue(ThemeVal.GRAPH_AVG_PING));
+        putRawData(AnalysisKeys.MAX_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MAX_PING));
+        putRawData(AnalysisKeys.MIN_PING_COLOR, theme.getValue(ThemeVal.GRAPH_MIN_PING));
     }
 
     private void addPlayerSuppliers() {
@@ -142,18 +163,18 @@ public class AnalysisContainer extends DataContainer {
         );
         putSupplier(AnalysisKeys.LAST_PEAK_TIME_F, () ->
                 serverContainer.getValue(ServerKeys.RECENT_PEAK_PLAYERS)
-                        .map(dateObj -> Formatters.year().apply(dateObj)).orElse("-")
+                        .map(dateObj -> formatters.year().apply(dateObj)).orElse("-")
         );
         putSupplier(AnalysisKeys.ALL_TIME_PEAK_TIME_F, () ->
                 serverContainer.getValue(ServerKeys.ALL_TIME_PEAK_PLAYERS)
-                        .map(dateObj -> Formatters.year().apply(dateObj)).orElse("-")
+                        .map(dateObj -> formatters.year().apply(dateObj)).orElse("-")
         );
         putSupplier(AnalysisKeys.OPERATORS, () -> serverContainer.getValue(ServerKeys.OPERATORS).map(List::size).orElse(0));
         putSupplier(AnalysisKeys.PLAYERS_TABLE, () ->
-                PlayersTable.forServerPage(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).all()).parseHtml()
+                tables.playerTableForServerPage(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).all()).parseHtml()
         );
         putSupplier(AnalysisKeys.PING_TABLE, () ->
-                new PingTable(
+                tables.pingTable(
                         getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)
                                 .getPingPerCountry(serverContainer.getUnsafe(ServerKeys.SERVER_UUID))
                 ).parseHtml()
@@ -201,20 +222,20 @@ public class AnalysisContainer extends DataContainer {
 
         putSupplier(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).uniqueJoinsPerDay());
         putSupplier(AnalysisKeys.NEW_PLAYERS_PER_DAY, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).newPerDay());
-        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_SERIES, () -> new AbstractLineGraph(
-                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY))
-                ).toHighChartsSeries()
+        putSupplier(AnalysisKeys.UNIQUE_PLAYERS_SERIES, () -> graphs.line().lineGraph(
+                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY))).toHighChartsSeries()
         );
-        putSupplier(AnalysisKeys.NEW_PLAYERS_SERIES, () -> new AbstractLineGraph(
-                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY))
-                ).toHighChartsSeries()
+        putSupplier(AnalysisKeys.NEW_PLAYERS_SERIES, () -> graphs.line().lineGraph(
+                MutatorFunctions.toPoints(getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY))).toHighChartsSeries()
         );
 
         Key<Integer> retentionDay = new Key<>(Integer.class, "RETENTION_DAY");
         // compareAndFindThoseLikelyToBeRetained can throw exception.
         putCachingSupplier(retentionDay, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).compareAndFindThoseLikelyToBeRetained(
                 getUnsafe(newDay).all(), getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
-                getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER)
+                getUnsafe(AnalysisKeys.PLAYERS_ONLINE_RESOLVER),
+                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
+                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
                 ).count()
         );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY, () -> {
@@ -239,29 +260,31 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_DAY_PERC, () -> {
             try {
                 Integer playersNewDay = getUnsafe(AnalysisKeys.PLAYERS_NEW_DAY);
-                return playersNewDay != 0 ? Formatters.percentage().apply(1.0 * getUnsafe(retentionDay) / playersNewDay) : "-";
+                return playersNewDay != 0
+                        ? formatters.percentage().apply(1.0 * getUnsafe(retentionDay) / playersNewDay)
+                        : "-";
             } catch (IllegalStateException noPlayersAfterDateFiltering) {
                 return "Not enough data";
             }
         });
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK_PERC, () -> {
                     Integer playersNewWeek = getUnsafe(AnalysisKeys.PLAYERS_NEW_WEEK);
-                    return playersNewWeek != 0 ? Formatters.percentage().apply(
-                            1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
+            return playersNewWeek != 0 ? formatters.percentage().apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
                 }
         );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH_PERC, () -> {
                     Integer playersNewMonth = getUnsafe(AnalysisKeys.PLAYERS_NEW_MONTH);
-                    return playersNewMonth != 0 ? Formatters.percentage().apply(
-                            1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth) : "-";
+            return playersNewMonth != 0
+                    ? formatters.percentage().apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth)
+                    : "-";
                 }
         );
     }
 
     private void addSessionSuppliers() {
         Key<SessionAccordion> sessionAccordion = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
-        putCachingSupplier(serverNames, () -> Database.getActive().fetch().getServerNames());
-        putCachingSupplier(sessionAccordion, () -> SessionAccordion.forServer(
+        putCachingSupplier(serverNames, () -> database.fetch().getServerNames());
+        putCachingSupplier(sessionAccordion, () -> accordions.serverSessionAccordion(
                 getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
                 getSupplier(serverNames),
                 () -> getUnsafe(AnalysisKeys.PLAYER_NAMES)
@@ -270,32 +293,33 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.SESSION_ACCORDION_FUNCTIONS, () -> getUnsafe(sessionAccordion).toViewScript());
 
         putSupplier(AnalysisKeys.RECENT_LOGINS, () -> new RecentLoginList(
-                        serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>())
-                ).toHtml()
+                serverContainer.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>()),
+                formatters.secondLong()).toHtml()
         );
-        putSupplier(AnalysisKeys.SESSION_TABLE, () -> new ServerSessionTable(
+        putSupplier(AnalysisKeys.SESSION_TABLE, () -> tables.serverSessionTable(
                 getUnsafe(AnalysisKeys.PLAYER_NAMES), getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all()).parseHtml()
         );
 
-        putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount()
-                .apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
+        putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F,
+                () -> formatters.timeAmount().apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
         );
         putSupplier(AnalysisKeys.SESSION_COUNT, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).count());
         putSupplier(AnalysisKeys.PLAYTIME_TOTAL, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toPlaytime());
         putSupplier(AnalysisKeys.DEATHS, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toDeathCount());
         putSupplier(AnalysisKeys.MOB_KILL_COUNT, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toMobKillCount());
         putSupplier(AnalysisKeys.PLAYER_KILL_COUNT, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toPlayerKillCount());
-        putSupplier(AnalysisKeys.PLAYTIME_F, () -> Formatters.timeAmount()
-                .apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL))
+        putSupplier(AnalysisKeys.PLAYTIME_F,
+                () -> formatters.timeAmount().apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL))
         );
         putSupplier(AnalysisKeys.AVERAGE_PLAYTIME_F, () -> {
                     long players = getUnsafe(AnalysisKeys.PLAYERS_TOTAL);
-                    return players != 0 ? Formatters.timeAmount()
-                            .apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL) / players) : "-";
+            return players != 0
+                    ? formatters.timeAmount().apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL) / players)
+                    : "-";
                 }
         );
-        putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F, () -> Formatters.timeAmount()
-                .apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
+        putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F,
+                () -> formatters.timeAmount().apply(getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageSessionLength())
         );
 
         Key<SessionsMutator> sessionsDay = new Key<>(SessionsMutator.class, "SESSIONS_DAY");
@@ -311,7 +335,7 @@ public class AnalysisContainer extends DataContainer {
                 .filterSessionsBetween(getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO), getUnsafe(AnalysisKeys.ANALYSIS_TIME))
         );
 
-        putSupplier(AnalysisKeys.PUNCHCARD_SERIES, () -> new PunchCardGraph(getUnsafe(sessionsMonth).all()).toHighChartsSeries());
+        putSupplier(AnalysisKeys.PUNCHCARD_SERIES, () -> graphs.special().punchCard(getUnsafe(sessionsMonth).all()).toHighChartsSeries());
         putSupplier(AnalysisKeys.AVG_PLAYERS, () -> getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).toAverageUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_DAY, () -> getUnsafe(sessionsDay).toAverageUniqueJoinsPerDay());
         putSupplier(AnalysisKeys.AVG_PLAYERS_WEEK, () -> getUnsafe(sessionsWeek).toAverageUniqueJoinsPerDay());
@@ -320,46 +344,48 @@ public class AnalysisContainer extends DataContainer {
 
     private void addGraphSuppliers() {
         Key<WorldPie> worldPie = new Key<>(WorldPie.class, "WORLD_PIE");
-        putCachingSupplier(worldPie, () -> new WorldPie(serverContainer.getValue(ServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()))));
+        putCachingSupplier(worldPie, () -> graphs.pie().worldPie(
+                serverContainer.getValue(ServerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()))
+        ));
         putSupplier(AnalysisKeys.WORLD_PIE_SERIES, () -> getUnsafe(worldPie).toHighChartsSeries());
         putSupplier(AnalysisKeys.GM_PIE_SERIES, () -> getUnsafe(worldPie).toHighChartsDrilldown());
         putSupplier(AnalysisKeys.PLAYERS_ONLINE_SERIES, () ->
-                new OnlineActivityGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries()
+                graphs.line().playersOnlineGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries()
         );
-        putSupplier(AnalysisKeys.TPS_SERIES, () -> new TPSGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
-        putSupplier(AnalysisKeys.CPU_SERIES, () -> new CPUGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
-        putSupplier(AnalysisKeys.RAM_SERIES, () -> new RamGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
-        putSupplier(AnalysisKeys.ENTITY_SERIES, () -> new EntityGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
-        putSupplier(AnalysisKeys.CHUNK_SERIES, () -> new ChunkGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.TPS_SERIES, () -> graphs.line().tpsGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.CPU_SERIES, () -> graphs.line().cpuGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.RAM_SERIES, () -> graphs.line().ramGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.ENTITY_SERIES, () -> graphs.line().entityGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.CHUNK_SERIES, () -> graphs.line().cpuGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.WORLD_MAP_SERIES, () ->
-                new WorldMap(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).getGeolocations()).toHighChartsSeries()
+                graphs.special().worldMap(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)).toHighChartsSeries()
         );
-        Key<GeolocationBarGraph> geolocationBarChart = new Key<>(GeolocationBarGraph.class, "GEOLOCATION_BAR_CHART");
-        putCachingSupplier(geolocationBarChart, () -> new GeolocationBarGraph(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)));
+        Key<BarGraph> geolocationBarChart = new Key<>(BarGraph.class, "GEOLOCATION_BAR_GRAPH");
+        putCachingSupplier(geolocationBarChart, () -> graphs.bar().geolocationBarGraph(getUnsafe(AnalysisKeys.PLAYERS_MUTATOR)));
         putSupplier(AnalysisKeys.COUNTRY_CATEGORIES, () -> getUnsafe(geolocationBarChart).toHighChartsCategories());
         putSupplier(AnalysisKeys.COUNTRY_SERIES, () -> getUnsafe(geolocationBarChart).toHighChartsSeries());
 
         Key<PingGraph> pingGraph = new Key<>(PingGraph.class, "PING_GRAPH");
-        putCachingSupplier(pingGraph, () -> new PingGraph(
-                PingMutator.forContainer(serverContainer).mutateToByMinutePings().all()
-        ));
+        putCachingSupplier(pingGraph, () ->
+                graphs.line().pingGraph(PingMutator.forContainer(serverContainer).mutateToByMinutePings().all())
+        );
         putSupplier(AnalysisKeys.AVG_PING_SERIES, () -> getUnsafe(pingGraph).toAvgSeries());
         putSupplier(AnalysisKeys.MAX_PING_SERIES, () -> getUnsafe(pingGraph).toMaxSeries());
         putSupplier(AnalysisKeys.MIN_PING_SERIES, () -> getUnsafe(pingGraph).toMinSeries());
 
-        putSupplier(AnalysisKeys.CALENDAR_SERIES, () -> new ServerCalendar(
+        putSupplier(AnalysisKeys.CALENDAR_SERIES, () -> graphs.calendar().serverCalendar(
                 getUnsafe(AnalysisKeys.PLAYERS_MUTATOR),
                 getUnsafe(AnalysisKeys.UNIQUE_PLAYERS_PER_DAY),
                 getUnsafe(AnalysisKeys.NEW_PLAYERS_PER_DAY)
         ).toCalendarSeries());
 
-        putCachingSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
-        Key<ActivityStackGraph> activityStackGraph = new Key<>(ActivityStackGraph.class, "ACTIVITY_STACK_GRAPH");
-        putCachingSupplier(activityStackGraph, () -> new ActivityStackGraph(getUnsafe(AnalysisKeys.ACTIVITY_DATA)));
+        putCachingSupplier(AnalysisKeys.ACTIVITY_DATA, () -> getUnsafe(AnalysisKeys.PLAYERS_MUTATOR).toActivityDataMap(getUnsafe(AnalysisKeys.ANALYSIS_TIME), config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD), config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)));
+        Key<StackGraph> activityStackGraph = new Key<>(StackGraph.class, "ACTIVITY_STACK_GRAPH");
+        putCachingSupplier(activityStackGraph, () -> graphs.stack().activityStackGraph(getUnsafe(AnalysisKeys.ACTIVITY_DATA)));
         putSupplier(AnalysisKeys.ACTIVITY_STACK_CATEGORIES, () -> getUnsafe(activityStackGraph).toHighChartsLabels());
         putSupplier(AnalysisKeys.ACTIVITY_STACK_SERIES, () -> getUnsafe(activityStackGraph).toHighChartsSeries());
-        putSupplier(AnalysisKeys.ACTIVITY_PIE_SERIES, () ->
-                new ActivityPie(getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME))).toHighChartsSeries()
+        putSupplier(AnalysisKeys.ACTIVITY_PIE_SERIES, () -> graphs.pie().activityPie(
+                getUnsafe(AnalysisKeys.ACTIVITY_DATA).get(getUnsafe(AnalysisKeys.ANALYSIS_TIME))).toHighChartsSeries()
         );
         putSupplier(AnalysisKeys.PLAYERS_REGULAR, () -> {
             Map<String, Set<UUID>> activityNow = getUnsafe(AnalysisKeys.ACTIVITY_DATA)
@@ -388,19 +414,21 @@ public class AnalysisContainer extends DataContainer {
 
         putCachingSupplier(AnalysisKeys.PLAYERS_ONLINE_RESOLVER, () -> new PlayersOnlineResolver(getUnsafe(AnalysisKeys.TPS_MUTATOR)));
 
-        putSupplier(AnalysisKeys.TPS_SPIKE_MONTH, () -> getUnsafe(tpsMonth).lowTpsSpikeCount());
+        int threshold = config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED);
+
+        putSupplier(AnalysisKeys.TPS_SPIKE_MONTH, () -> getUnsafe(tpsMonth).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_MONTH, () -> getUnsafe(tpsMonth).averageTPS());
         putSupplier(AnalysisKeys.AVG_CPU_MONTH, () -> getUnsafe(tpsMonth).averageCPU());
         putSupplier(AnalysisKeys.AVG_RAM_MONTH, () -> getUnsafe(tpsMonth).averageRAM());
         putSupplier(AnalysisKeys.AVG_ENTITY_MONTH, () -> getUnsafe(tpsMonth).averageEntities());
         putSupplier(AnalysisKeys.AVG_CHUNK_MONTH, () -> getUnsafe(tpsMonth).averageChunks());
-        putSupplier(AnalysisKeys.TPS_SPIKE_WEEK, () -> getUnsafe(tpsWeek).lowTpsSpikeCount());
+        putSupplier(AnalysisKeys.TPS_SPIKE_WEEK, () -> getUnsafe(tpsWeek).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_WEEK, () -> getUnsafe(tpsWeek).averageTPS());
         putSupplier(AnalysisKeys.AVG_CPU_WEEK, () -> getUnsafe(tpsWeek).averageCPU());
         putSupplier(AnalysisKeys.AVG_RAM_WEEK, () -> getUnsafe(tpsWeek).averageRAM());
         putSupplier(AnalysisKeys.AVG_ENTITY_WEEK, () -> getUnsafe(tpsWeek).averageEntities());
         putSupplier(AnalysisKeys.AVG_CHUNK_WEEK, () -> getUnsafe(tpsWeek).averageChunks());
-        putSupplier(AnalysisKeys.TPS_SPIKE_DAY, () -> getUnsafe(tpsDay).lowTpsSpikeCount());
+        putSupplier(AnalysisKeys.TPS_SPIKE_DAY, () -> getUnsafe(tpsDay).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_DAY, () -> getUnsafe(tpsDay).averageTPS());
         putSupplier(AnalysisKeys.AVG_CPU_DAY, () -> getUnsafe(tpsDay).averageCPU());
         putSupplier(AnalysisKeys.AVG_RAM_DAY, () -> getUnsafe(tpsDay).averageRAM());
@@ -409,14 +437,20 @@ public class AnalysisContainer extends DataContainer {
     }
 
     private void addCommandSuppliers() {
-        putSupplier(AnalysisKeys.COMMAND_USAGE_TABLE, () -> new CommandUseTable(serverContainer).parseHtml());
+        putSupplier(AnalysisKeys.COMMAND_USAGE_TABLE, () -> tables.commandUseTable(serverContainer).parseHtml());
         putSupplier(AnalysisKeys.COMMAND_COUNT_UNIQUE, () -> serverContainer.getValue(ServerKeys.COMMAND_USAGE).map(Map::size).orElse(0));
         putSupplier(AnalysisKeys.COMMAND_COUNT, () -> CommandUseMutator.forContainer(serverContainer).commandUsageCount());
     }
 
     private void addServerHealth() {
         Key<HealthInformation> healthInformation = new Key<>(HealthInformation.class, "HEALTH_INFORMATION");
-        putCachingSupplier(healthInformation, () -> new HealthInformation(this));
+        putCachingSupplier(healthInformation, () -> new HealthInformation(
+                this,
+                config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED),
+                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
+                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
+                formatters.timeAmount(), formatters.decimals(), formatters.percentage()
+        ));
         putSupplier(AnalysisKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
         putSupplier(AnalysisKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
     }
@@ -424,14 +458,66 @@ public class AnalysisContainer extends DataContainer {
     private void addPluginSuppliers() {
         // TODO Refactor into a system that supports running the analysis on Bungee
         Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {}, "NAV_AND_TABS");
-        putCachingSupplier(navAndTabs, () ->
-                AnalysisPluginsTabContentCreator.createContent(
-                        getUnsafe(AnalysisKeys.PLAYERS_MUTATOR),
-                        this
-                )
-        );
-        putCachingSupplier(AnalysisKeys.BAN_DATA, () -> new ServerBanDataReader().readBanDataForContainer(this));
+        putCachingSupplier(navAndTabs, () -> pluginsTabContentCreator.createContent(
+                this, getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
+        ));
         putSupplier(AnalysisKeys.PLUGINS_TAB_NAV, () -> getUnsafe(navAndTabs)[0]);
         putSupplier(AnalysisKeys.PLUGINS_TAB, () -> getUnsafe(navAndTabs)[1]);
+    }
+
+    @Singleton
+    public static class Factory {
+
+        private final String version;
+        private final PlanConfig config;
+        private final Theme theme;
+        private final Database database;
+        private final ServerProperties serverProperties;
+        private final Formatters formatters;
+        private final Graphs graphs;
+        private final HtmlTables tables;
+        private final Accordions accordions;
+        private final AnalysisPluginsTabContentCreator pluginsTabContentCreator;
+
+        @Inject
+        public Factory(
+                @Named("currentVersion") String version,
+                PlanConfig config,
+                Theme theme,
+                Database database,
+                ServerProperties serverProperties,
+                Formatters formatters,
+                Graphs graphs,
+                HtmlTables tables,
+                Accordions accordions,
+                AnalysisPluginsTabContentCreator pluginsTabContentCreator
+        ) {
+            this.version = version;
+            this.config = config;
+            this.theme = theme;
+            this.database = database;
+            this.serverProperties = serverProperties;
+            this.formatters = formatters;
+            this.graphs = graphs;
+            this.tables = tables;
+            this.accordions = accordions;
+            this.pluginsTabContentCreator = pluginsTabContentCreator;
+        }
+
+        public AnalysisContainer forServerContainer(ServerContainer serverContainer) {
+            return new AnalysisContainer(
+                    serverContainer,
+                    version,
+                    config,
+                    theme,
+                    database,
+                    serverProperties,
+                    formatters,
+                    graphs,
+                    tables,
+                    accordions,
+                    pluginsTabContentCreator
+            );
+        }
     }
 }

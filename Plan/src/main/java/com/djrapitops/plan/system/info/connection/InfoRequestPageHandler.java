@@ -6,15 +6,18 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
+import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.pages.PageHandler;
 import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
@@ -26,7 +29,25 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class InfoRequestPageHandler extends PageHandler {
+@Singleton
+public class InfoRequestPageHandler implements PageHandler {
+
+    private final Database database;
+    private final ConnectionSystem connectionSystem;
+    private final ResponseFactory responseFactory;
+    private final PluginLogger logger;
+
+    @Inject
+    public InfoRequestPageHandler(
+            Database database,
+            ConnectionSystem connectionSystem,
+            ResponseFactory responseFactory, PluginLogger logger
+    ) {
+        this.database = database;
+        this.connectionSystem = connectionSystem;
+        this.responseFactory = responseFactory;
+        this.logger = logger;
+    }
 
     @Override
     public Response getResponse(Request request, List<String> target) throws WebException {
@@ -34,7 +55,7 @@ public class InfoRequestPageHandler extends PageHandler {
 
         try {
             if (target.isEmpty()) {
-                return new NotFoundResponse(request.getLocale().getString(ErrorPageLang.UNKNOWN_PAGE_404));
+                return responseFactory.pageNotFound404();
             }
 
             if (!request.getRequestMethod().equals("POST")) {
@@ -42,16 +63,17 @@ public class InfoRequestPageHandler extends PageHandler {
             }
 
             String requestName = target.get(0);
-            InfoRequest infoRequest = ConnectionSystem.getInstance().getInfoRequest(requestName);
+            InfoRequest infoRequest = connectionSystem.getInfoRequest(requestName);
 
             Verify.nullCheck(infoRequest, () -> new NotFoundException("Info Request has not been registered."));
 
-            return new ConnectionIn(request, infoRequest).handleRequest();
+            logger.debug("ConnectionIn: " + infoRequest.getClass().getSimpleName());
+            return new ConnectionIn(request, infoRequest, database, connectionSystem).handleRequest();
         } catch (WebException e) {
             responseCode = getResponseCodeFor(e);
             throw e;
         } finally {
-            ConnectionLog.logConnectionFrom(request.getRemoteAddress(), request.getTarget(), responseCode);
+            connectionSystem.getConnectionLog().logConnectionFrom(request.getRemoteAddress(), request.getTarget(), responseCode);
         }
     }
 

@@ -7,19 +7,11 @@ package com.djrapitops.plan.system;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.database.ServerDBSystem;
-import com.djrapitops.plan.system.info.request.GenerateInspectPluginsTabRequest;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
-import utilities.TestConstants;
 import utilities.mocks.BukkitMockUtil;
 import utilities.mocks.BungeeMockUtil;
 
@@ -39,8 +31,8 @@ public class BungeeBukkitConnectionTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private BukkitSystem bukkitSystem;
-    private BungeeSystem bungeeSystem;
+    private PlanSystem bukkitSystem;
+    private PlanSystem bungeeSystem;
 
     private UUID bukkitUUID;
     private UUID bungeeUUID;
@@ -64,13 +56,6 @@ public class BungeeBukkitConnectionTest {
         bungeeMock = bungeeMockUtil.getPlanMock();
     }
 
-    @Before
-    public void setUp() {
-        Teardown.resetSettingsTempValues();
-        Settings.DEBUG.setTemporaryValue("console");
-        Settings.DEV_MODE.setTemporaryValue(true);
-    }
-
     @After
     public void tearDown() {
         System.out.println("------------------------------");
@@ -82,27 +67,26 @@ public class BungeeBukkitConnectionTest {
         if (bungeeSystem != null) {
             bungeeSystem.disable();
         }
-        Teardown.resetSettingsTempValues();
     }
 
     public void enable() throws EnableException {
-        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
-        bukkitSystem = new BukkitSystem(bukkitMock);
+        bukkitSystem = null; // TODO
         bukkitSystem.enable();
 
-        bukkitUUID = ServerInfo.getServerUUID();
+        bukkitUUID = null;
 
-        bungeeSystem = new BungeeSystem(bungeeMock);
+        bungeeSystem = null; // TODO
 
-        Settings.WEBSERVER_PORT.setTemporaryValue(9250);
-        Settings.BUNGEE_IP.setTemporaryValue("localhost");
-        Settings.DB_TYPE.setTemporaryValue("sqlite");
-        bungeeSystem.setDatabaseSystem(new ServerDBSystem(Locale::new));
+//        Settings.WEBSERVER_PORT.setTemporaryValue(9250);
+//        Settings.BUNGEE_IP.setTemporaryValue("localhost");
+//        Settings.DB_TYPE.setTemporaryValue("sqlite");
+//        bungeeSystem.setDatabaseSystem(new BukkitDBSystem(new Locale()));
 
         bungeeSystem.enable();
 
-        bungeeUUID = ServerInfo.getServerUUID();
+        bungeeUUID = null;
 
         System.out.println("------------------------------");
         System.out.println("Enable Complete");
@@ -113,10 +97,10 @@ public class BungeeBukkitConnectionTest {
 
     @Test
     @Ignore("Causes next BungeeSystem test to fail")
-    public void testRequest() throws EnableException, WebException {
+    public void testRequest() throws EnableException {
         enable();
 
         System.out.println("Sending request");
-        bungeeSystem.getInfoSystem().getConnectionSystem().sendWideInfoRequest(new GenerateInspectPluginsTabRequest(TestConstants.PLAYER_ONE_UUID));
+//        bungeeSystem.getInfoSystem().getConnectionSystem().sendWideInfoRequest(new GenerateInspectPluginsTabRequest(infoSystem, infoRequestFactory, TestConstants.PLAYER_ONE_UUID));
     }
 }

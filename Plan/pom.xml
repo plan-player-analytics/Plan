@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>4.3.0-SNAPSHOT</version>
+    <version>4.5.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>AbstractPluginFramework</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.1-SNAPSHOT</version>
         </dependency>
         <!--        SoftDepended Plugins -->
         <dependency>
@@ -192,6 +192,12 @@
             <version>1.3</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger</artifactId>
+            <version>2.16</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -221,6 +227,13 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.dagger</groupId>
+                            <artifactId>dagger-compiler</artifactId>
+                            <version>2.16</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>

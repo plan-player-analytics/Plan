@@ -6,16 +6,14 @@ package com.djrapitops.plan.system;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.settings.Settings;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
 import utilities.mocks.SpongeMockUtil;
 
 /**
- * Test for BukkitSystem.
+ * Test for Sponge PlanSystem.
  *
  * @author Rsl1122
  */
@@ -25,7 +23,7 @@ public class SpongeSystemTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private static PlanSponge planMock;
-    private SpongeSystem spongeSystem;
+    private PlanSystem spongeSystem;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -36,25 +34,19 @@ public class SpongeSystemTest {
         planMock = mockUtil.getPlanMock();
     }
 
-    @Before
-    public void setUp() {
-        Teardown.resetSettingsTempValues();
-    }
-
     @After
     public void tearDown() {
         if (spongeSystem != null) {
             spongeSystem.disable();
         }
-        Teardown.resetSettingsTempValues();
     }
 
     @Test
     @Ignore("Sponge mock required")
     public void testEnable() throws EnableException {
-        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
 
-        spongeSystem = new SpongeSystem(planMock);
+        spongeSystem = null; //TODO
         spongeSystem.enable();
     }
 }

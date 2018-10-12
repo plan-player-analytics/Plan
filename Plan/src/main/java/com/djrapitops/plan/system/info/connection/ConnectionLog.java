@@ -5,60 +5,54 @@
 package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.debug.DebugLogger;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- * Class responsible for logging what ConnectionOut objects get in return.
+ * Class responsible for logging what {@link ConnectionOut} and {@link ConnectionIn} objects get as response.
  *
  * @author Rsl1122
  */
+@Singleton
 public class ConnectionLog {
 
-    private Map<String, Map<String, Entry>> log;
+    private final DebugLogger debugLogger;
 
-    public ConnectionLog() {
-        this.log = new HashMap<>();
+    private final Map<String, Map<String, Entry>> log;
+
+    @Inject
+    public ConnectionLog(DebugLogger debugLogger) {
+        this.debugLogger = debugLogger;
+        log = new HashMap<>();
     }
 
-    /**
-     * Get a map sorted by Addresses, then Requests and then Log entries.
-     *
-     * @return {@code Map<"In:  "/"Out: "+Address, Map<InfoRequestClassname, ConnectionLog.Entry>>}
-     */
-    public static Map<String, Map<String, Entry>> getLogEntries() {
-        return getInstance().getLog();
-    }
-
-    public static void logConnectionTo(Server server, InfoRequest request, int responseCode) {
+    public void logConnectionTo(Server server, InfoRequest request, int responseCode) {
         String requestName = request.getClass().getSimpleName();
         String address = server.getWebAddress();
         logConnection(address, "Out: " + requestName, responseCode);
-        Log.debug("ConnectionOut: " + requestName + " to " + address);
+        debugLogger.logOn(DebugChannels.CONNECTIONS, "ConnectionOut: " + requestName + " to " + address);
     }
 
-    public static void logConnectionFrom(String server, String requestTarget, int responseCode) {
+    public void logConnectionFrom(String server, String requestTarget, int responseCode) {
         logConnection(server, "In:  " + requestTarget, responseCode);
-        Log.debug("ConnectionIn: " + requestTarget + " from " + server);
+        debugLogger.logOn(DebugChannels.CONNECTIONS, "ConnectionIn: " + requestTarget + " from " + server);
     }
 
-    private static void logConnection(String address, String infoRequestName, int responseCode) {
-        Map<String, Map<String, Entry>> log = getInstance().log;
+    private void logConnection(String address, String infoRequestName, int responseCode) {
         Map<String, Entry> requestMap = log.getOrDefault(address, new HashMap<>());
         requestMap.put(infoRequestName, new Entry(responseCode, System.currentTimeMillis()));
         log.put(address, requestMap);
     }
 
-    private static ConnectionLog getInstance() {
-        return ConnectionSystem.getInstance().getConnectionLog();
-    }
-
-    public Map<String, Map<String, Entry>> getLog() {
+    public Map<String, Map<String, Entry>> getLogEntries() {
         return log;
     }
 

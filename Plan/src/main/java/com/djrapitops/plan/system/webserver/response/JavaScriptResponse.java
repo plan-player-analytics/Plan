@@ -1,11 +1,8 @@
 package com.djrapitops.plan.system.webserver.response;
 
-import com.djrapitops.plan.system.settings.theme.Theme;
-import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import org.apache.commons.text.StringSubstitutor;
+import com.djrapitops.plan.system.file.PlanFiles;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
 /**
  * @author Rsl1122
@@ -13,11 +10,8 @@ import java.util.Map;
  */
 public class JavaScriptResponse extends FileResponse {
 
-    public JavaScriptResponse(String fileName) {
-        super(format(fileName));
+    JavaScriptResponse(String fileName, PlanFiles files) throws IOException {
+        super(format(fileName), files);
         super.setType(ResponseType.JAVASCRIPT);
-        Map<String, String> replace = new HashMap<>();
-        replace.put("defaultTheme", Theme.getValue(ThemeVal.THEME_DEFAULT));
-        setContent(StringSubstitutor.replace(Theme.replaceColors(getContent()), replace));
     }
 }

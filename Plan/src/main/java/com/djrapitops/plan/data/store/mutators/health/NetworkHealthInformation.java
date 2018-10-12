@@ -8,7 +8,7 @@ import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 
@@ -18,10 +18,18 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
     private final NetworkContainer container;
 
-    public NetworkHealthInformation(NetworkContainer container) {
+    public NetworkHealthInformation(
+            NetworkContainer container,
+            int activeMinuteThreshold,
+            int activeLoginThreshold,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Double> decimalFormatter,
+            Formatter<Double> percentageFormatter
+    ) {
         super(
                 container.getUnsafe(NetworkKeys.REFRESH_TIME),
-                container.getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO)
+                container.getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO),
+                activeMinuteThreshold, activeLoginThreshold, timeAmountFormatter, decimalFormatter, percentageFormatter
         );
         this.container = container;
         calculate();
@@ -82,7 +90,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                     return subNote + (playersPerMonth >= average && playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
                             server.getName() + ": " + playersPerMonth;
                 }).forEach(subNotes::append);
-        addNote(icon + " " + FormatUtils.cutDecimals(average) + uniquePlayersNote + subNotes.toString());
+        addNote(icon + " " + decimalFormatter.apply(average) + uniquePlayersNote + subNotes.toString());
     }
 
     private void newPlayersNote(int serverCount, Key<Server> serverKey, List<DataContainer> perServerContainers) {
@@ -109,7 +117,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                     return subNote + (playersPerMonth >= average && playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
                             server.getName() + ": " + playersPerMonth;
                 }).forEach(subNotes::append);
-        addNote(icon + " " + FormatUtils.cutDecimals(average) + newPlayersNote + subNotes.toString());
+        addNote(icon + " " + decimalFormatter.apply(average) + newPlayersNote + subNotes.toString());
     }
 
     private List<DataContainer> getPerServerContainers(PlayersMutator playersMutator, Collection<Server> servers, Key<Server> serverKey) {

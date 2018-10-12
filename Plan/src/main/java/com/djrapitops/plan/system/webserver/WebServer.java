@@ -1,23 +1,25 @@
 package com.djrapitops.plan.system.webserver;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.file.FileSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.html.HtmlUtils;
-import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,14 +31,22 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.concurrent.*;
-import java.util.function.Supplier;
 
 /**
  * @author Rsl1122
  */
+@Singleton
 public class WebServer implements SubSystem {
 
-    private final Supplier<Locale> locale;
+    private final Locale locale;
+    private final PlanFiles files;
+    private final PlanConfig config;
+
+    private final ServerProperties serverProperties;
+    private final RequestHandler requestHandler;
+
+    private final PluginLogger logger;
+    private final ErrorHandler errorHandler;
 
     private int port;
     private boolean enabled = false;
@@ -44,66 +54,69 @@ public class WebServer implements SubSystem {
 
     private boolean usingHttps = false;
 
-    private RequestHandler requestHandler;
-    private ResponseHandler responseHandler;
-
-    public WebServer(Supplier<Locale> locale) {
+    @Inject
+    public WebServer(
+            Locale locale,
+            PlanFiles files,
+            PlanConfig config,
+            ServerProperties serverProperties,
+            PluginLogger logger,
+            ErrorHandler errorHandler,
+            RequestHandler requestHandler
+    ) {
         this.locale = locale;
-    }
+        this.files = files;
+        this.config = config;
+        this.serverProperties = serverProperties;
 
-    public static WebServer getInstance() {
-        WebServer webServer = WebServerSystem.getInstance().getWebServer();
-        Verify.nullCheck(webServer, () -> new IllegalStateException("WebServer was not initialized."));
-        return webServer;
+        this.requestHandler = requestHandler;
+
+        this.logger = logger;
+        this.errorHandler = errorHandler;
     }
 
     @Override
     public void enable() throws EnableException {
-        this.port = Settings.WEBSERVER_PORT.getNumber();
-
-        requestHandler = new RequestHandler(this);
-        responseHandler = requestHandler.getResponseHandler();
-
-        PlanPlugin plugin = PlanPlugin.getInstance();
-        StaticHolder.saveInstance(RequestHandler.class, plugin.getClass());
-        StaticHolder.saveInstance(ResponseHandler.class, plugin.getClass());
+        this.port = config.getNumber(Settings.WEBSERVER_PORT);
 
         initServer();
 
         if (!isEnabled()) {
             if (Check.isBungeeAvailable()) {
-                throw new EnableException(locale.get().getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_BUNGEE));
+                throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_BUNGEE));
             }
-            if (Settings.WEBSERVER_DISABLED.isTrue()) {
-                Log.warn(locale.get().getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
+            if (config.isTrue(Settings.WEBSERVER_DISABLED)) {
+                logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
             } else {
-                Log.error(locale.get().getString(PluginLang.WEB_SERVER_FAIL_PORT_BIND, port));
+                logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_PORT_BIND, port));
             }
         }
+
+        requestHandler.getResponseHandler().registerPages();
     }
 
     /**
      * Starts up the WebServer in a new Thread Pool.
      */
     private void initServer() {
-        // Check if Bukkit WebServer has been disabled.
-        if (!Check.isBungeeAvailable() && Settings.WEBSERVER_DISABLED.isTrue()) {
+        if (!Check.isBungeeAvailable() && config.isTrue(Settings.WEBSERVER_DISABLED)) {
+            // Bukkit WebServer has been disabled.
             return;
         }
 
-        // Server is already enabled stop code
         if (enabled) {
+            // Server is already enabled stop code
             return;
         }
 
         try {
             usingHttps = startHttpsServer();
 
-            Log.debug(usingHttps ? "Https Start Successful." : "Https Start Failed.");
+            logger.debug(usingHttps ? "Https Start Successful." : "Https Start Failed.");
 
             if (!usingHttps) {
-                Log.infoColor("§e" + locale.get().getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
-                server = HttpServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
+                logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
+                server = HttpServer.create(new InetSocketAddress(config.getString(Settings.WEBSERVER_IP), port), 10);
             }
             server.createContext("/", requestHandler);
 
@@ -116,22 +129,22 @@ public class WebServer implements SubSystem {
 
             enabled = true;
 
-            Log.info(locale.get().getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), getAccessAddress()));
+            logger.info(locale.getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), getAccessAddress()));
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
             enabled = false;
         }
     }
 
     private boolean startHttpsServer() {
-        String keyStorePath = Settings.WEBSERVER_CERTIFICATE_PATH.toString();
+        String keyStorePath = config.getString(Settings.WEBSERVER_CERTIFICATE_PATH);
         if (!Paths.get(keyStorePath).isAbsolute()) {
-            keyStorePath = FileSystem.getDataFolder() + File.separator + keyStorePath;
+            keyStorePath = files.getDataFolder() + File.separator + keyStorePath;
         }
 
-        char[] storepass = Settings.WEBSERVER_CERTIFICATE_STOREPASS.toString().toCharArray();
-        char[] keypass = Settings.WEBSERVER_CERTIFICATE_KEYPASS.toString().toCharArray();
-        String alias = Settings.WEBSERVER_CERTIFICATE_ALIAS.toString();
+        char[] storepass = config.getString(Settings.WEBSERVER_CERTIFICATE_STOREPASS).toCharArray();
+        char[] keypass = config.getString(Settings.WEBSERVER_CERTIFICATE_KEYPASS).toCharArray();
+        String alias = config.getString(Settings.WEBSERVER_CERTIFICATE_ALIAS);
 
         boolean startSuccessful = false;
         try (FileInputStream fIn = new FileInputStream(keyStorePath)) {
@@ -144,7 +157,7 @@ public class WebServer implements SubSystem {
                 throw new IllegalStateException("Certificate with Alias: " + alias + " was not found in the Keystore.");
             }
 
-            Log.info("Certificate: " + cert.getType());
+            logger.info("Certificate: " + cert.getType());
 
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             keyManagerFactory.init(keystore, keypass);
@@ -152,7 +165,7 @@ public class WebServer implements SubSystem {
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
             trustManagerFactory.init(keystore);
 
-            server = HttpsServer.create(new InetSocketAddress(Settings.WEBSERVER_IP.toString(), port), 10);
+            server = HttpsServer.create(new InetSocketAddress(config.getString(Settings.WEBSERVER_IP), port), 10);
             SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(keyManagerFactory.getKeyManagers(), null/*trustManagerFactory.getTrustManagers()*/, null);
 
@@ -171,20 +184,20 @@ public class WebServer implements SubSystem {
             });
             startSuccessful = true;
         } catch (IllegalStateException e) {
-            Log.error(e.getMessage());
-            Log.toLog(this.getClass(), e);
+            logger.error(e.getMessage());
+            errorHandler.log(L.ERROR, this.getClass(), e);
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            Log.error(locale.get().getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
-            Log.toLog(this.getClass(), e);
+            logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
+            errorHandler.log(L.ERROR, this.getClass(), e);
         } catch (FileNotFoundException e) {
-            Log.infoColor("§e" + locale.get().getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
-            Log.info(locale.get().getString(PluginLang.WEB_SERVER_NOTIFY_HTTP));
+            logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
+            logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP));
         } catch (IOException e) {
-            Log.error("WebServer: " + e);
-            Log.toLog(this.getClass(), e);
+            logger.error("WebServer: " + e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
-            Log.error(locale.get().getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
-            Log.toLog(this.getClass(), e);
+            logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
         return startSuccessful;
     }
@@ -203,7 +216,7 @@ public class WebServer implements SubSystem {
     public void disable() {
         if (server != null) {
             shutdown();
-            Log.info(locale.get().getString(PluginLang.DISABLED_WEB_SERVER));
+            logger.info(locale.getString(PluginLang.DISABLED_WEB_SERVER));
         }
         enabled = false;
     }
@@ -235,18 +248,12 @@ public class WebServer implements SubSystem {
     }
 
     public String getAccessAddress() {
-        return isEnabled() ? getProtocol() + "://" + HtmlUtils.getIP() : Settings.EXTERNAL_WEBSERVER_LINK.toString();
+        return isEnabled() ? getProtocol() + "://" + getIP() : config.getString(Settings.EXTERNAL_WEBSERVER_LINK);
     }
 
-    public RequestHandler getRequestHandler() {
-        return requestHandler;
-    }
-
-    public ResponseHandler getResponseHandler() {
-        return responseHandler;
-    }
-
-    Supplier<Locale> getLocaleSupplier() {
-        return locale;
+    private String getIP() {
+        return config.isTrue(Settings.SHOW_ALTERNATIVE_IP)
+                ? config.getString(Settings.ALTERNATIVE_IP).replace("%port%", String.valueOf(port))
+                : serverProperties.getIp() + ":" + port;
     }
 }

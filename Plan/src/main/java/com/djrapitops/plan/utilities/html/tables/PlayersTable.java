@@ -8,9 +8,8 @@ import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.PlayerContainerLastPlayedComparator;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -18,16 +17,28 @@ import com.djrapitops.plan.utilities.html.icon.Icon;
 import java.util.List;
 
 /**
- * Utility for creating Players table html.
+ * Html table that displays a lot of information about players.
  *
  * @author Rsl1122
  */
-public class PlayersTable extends TableContainer {
+class PlayersTable extends TableContainer {
 
     private final List<PlayerContainer> players;
     private final int maxPlayers;
+    private final int activeMinuteThreshold;
+    private final int activeLoginThreshold;
 
-    private PlayersTable(List<PlayerContainer> players, int maxPlayers) {
+    private final Formatter<Double> decimalFormatter;
+
+    PlayersTable(
+            List<PlayerContainer> players,
+            int maxPlayers,
+            int activeMinuteThreshold,
+            int activeLoginThreshold,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Long> yearLongFormatter,
+            Formatter<Double> decimalFormatter
+    ) {
         super(
                 Icon.called("user") + " Name",
                 Icon.called("check") + " Activity Index",
@@ -39,20 +50,15 @@ public class PlayersTable extends TableContainer {
         );
         this.players = players;
         this.maxPlayers = maxPlayers;
+        this.activeMinuteThreshold = activeMinuteThreshold;
+        this.activeLoginThreshold = activeLoginThreshold;
+        this.decimalFormatter = decimalFormatter;
         useJqueryDataTables("player-table");
 
-        setFormatter(2, Formatters.timeAmount());
-        setFormatter(4, Formatters.yearLongValue());
-        setFormatter(5, Formatters.yearLongValue());
+        setFormatter(2, timeAmountFormatter);
+        setFormatter(4, yearLongFormatter);
+        setFormatter(5, yearLongFormatter);
         addRows();
-    }
-
-    public static PlayersTable forServerPage(List<PlayerContainer> players) {
-        return new PlayersTable(players, Settings.MAX_PLAYERS.getNumber());
-    }
-
-    public static PlayersTable forPlayersPage(List<PlayerContainer> players) {
-        return new PlayersTable(players, Settings.MAX_PLAYERS_PLAYERS_PAGE.getNumber());
     }
 
     private void addRows() {
@@ -75,9 +81,9 @@ public class PlayersTable extends TableContainer {
             long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
             long lastSeen = sessionsMutator.toLastSeen();
 
-            ActivityIndex activityIndex = player.getActivityIndex(now);
+            ActivityIndex activityIndex = player.getActivityIndex(now, activeMinuteThreshold, activeLoginThreshold);
             boolean isBanned = player.getValue(PlayerKeys.BANNED).orElse(false);
-            String activityString = activityIndex.getFormattedValue()
+            String activityString = activityIndex.getFormattedValue(decimalFormatter)
                     + (isBanned ? " (<b>Banned</b>)" : " (" + activityIndex.getGroup() + ")");
 
             String geolocation = GeoInfoMutator.forContainer(player).mostRecent().map(GeoInfo::getGeolocation).orElse("-");

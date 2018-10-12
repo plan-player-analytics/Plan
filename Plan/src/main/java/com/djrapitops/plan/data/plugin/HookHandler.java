@@ -1,14 +1,13 @@
 package com.djrapitops.plan.data.plugin;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.element.InspectContainer;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
-import com.djrapitops.pluginbridge.plan.Bridge;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,29 +18,30 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 2.6.0
  */
+@Singleton
 public class HookHandler implements SubSystem {
 
     private final List<PluginData> additionalDataSources;
     private PluginsConfigSection configHandler;
+    private final PluginLogger logger;
+    private final ErrorHandler errorHandler;
 
-    public HookHandler() {
+    @Inject
+    public HookHandler(PluginsConfigSection configHandler, PluginLogger logger, ErrorHandler errorHandler) {
+        this.configHandler = configHandler;
+        this.logger = logger;
+        this.errorHandler = errorHandler;
+
         additionalDataSources = new ArrayList<>();
-    }
-
-    public static HookHandler getInstance() {
-        HookHandler hookHandler = PlanSystem.getInstance().getHookHandler();
-        Verify.nullCheck(hookHandler, () -> new IllegalStateException("Plugin Hooks were not initialized."));
-        return hookHandler;
     }
 
     @Override
     public void enable() {
-        configHandler = new PluginsConfigSection();
         try {
-            Bridge.hook(this);
+//            Bridge.hook(this);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
-            Log.error("Plan Plugin Bridge not included in the plugin jar.");
+            errorHandler.log(L.ERROR, this.getClass(), e);
+            logger.error("Plan Plugin Bridge not included in the plugin jar.");
         }
     }
 
@@ -65,17 +65,16 @@ public class HookHandler implements SubSystem {
             return;
         }
         try {
-            StaticHolder.saveInstance(dataSource.getClass(), PlanPlugin.getInstance().getClass());
             if (!configHandler.hasSection(dataSource)) {
                 configHandler.createSection(dataSource);
             }
             if (configHandler.isEnabled(dataSource)) {
-                Log.debug("Registered a new datasource: " + dataSource.getSourcePlugin());
+                logger.debug("Registered a new datasource: " + dataSource.getSourcePlugin());
                 additionalDataSources.add(dataSource);
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
-            Log.error("Attempting to register PluginDataSource caused an exception.");
+            errorHandler.log(L.WARN, this.getClass(), e);
+            logger.error("Attempting to register PluginDataSource caused an exception.");
         }
     }
 
@@ -107,8 +106,8 @@ public class HookHandler implements SubSystem {
                 }
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
                 String sourcePlugin = pluginData.getSourcePlugin();
-                Log.error("PluginData caused exception: " + sourcePlugin);
-                Log.toLog(this.getClass().getName() + " " + sourcePlugin, e);
+                logger.error("PluginData caused exception: " + sourcePlugin);
+                errorHandler.log(L.WARN, pluginData.getClass(), e);
             }
         }
         return containers;

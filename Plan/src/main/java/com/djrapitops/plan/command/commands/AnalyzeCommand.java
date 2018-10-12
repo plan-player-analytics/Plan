@@ -1,6 +1,5 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -15,13 +14,16 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,14 +34,38 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.0.0
  */
+@Singleton
 public class AnalyzeCommand extends CommandNode {
 
     private final Locale locale;
+    private final Processing processing;
+    private final InfoSystem infoSystem;
+    private final ServerInfo serverInfo;
+    private final WebServer webServer;
+    private final Database database;
+    private final ConnectionSystem connectionSystem;
+    private final ErrorHandler errorHandler;
 
-    public AnalyzeCommand(PlanPlugin plugin) {
+    @Inject
+    public AnalyzeCommand(
+            Locale locale,
+            Processing processing,
+            InfoSystem infoSystem,
+            ServerInfo serverInfo,
+            WebServer webServer,
+            Database database,
+            ErrorHandler errorHandler
+    ) {
         super("analyze|analyse|analysis|a", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
 
-        locale = plugin.getSystem().getLocaleSystem().getLocale();
+        this.locale = locale;
+        this.processing = processing;
+        this.infoSystem = infoSystem;
+        connectionSystem = infoSystem.getConnectionSystem();
+        this.serverInfo = serverInfo;
+        this.webServer = webServer;
+        this.database = database;
+        this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.ANALYZE));
         setInDepthHelp(locale.getArray(DeepHelpLang.ANALYZE));
@@ -47,27 +73,27 @@ public class AnalyzeCommand extends CommandNode {
     }
 
     @Override
-    public void onCommand(ISender sender, String commandLabel, String[] args) {
+    public void onCommand(Sender sender, String commandLabel, String[] args) {
         sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-        Processing.submitNonCritical(() -> {
+        processing.submitNonCritical(() -> {
             try {
-                Server server = getServer(args).orElseGet(ServerInfo::getServer);
+                Server server = getServer(args).orElseGet(serverInfo::getServer);
                 UUID serverUUID = server.getUuid();
 
-                InfoSystem.getInstance().generateAnalysisPage(serverUUID);
+                infoSystem.generateAnalysisPage(serverUUID);
                 sendWebUserNotificationIfNecessary(sender);
                 sendLink(server, sender);
             } catch (DBOpException | WebException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         });
     }
 
-    private void sendLink(Server server, ISender sender) {
+    private void sendLink(Server server, Sender sender) {
         String target = "/server/" + server.getName();
-        String url = ConnectionSystem.getAddress() + target;
+        String url = connectionSystem.getMainAddress() + target;
         String linkPrefix = locale.getString(CommandLang.LINK_PREFIX);
         sender.sendMessage(locale.getString(CommandLang.HEADER_ANALYSIS));
         // Link
@@ -81,19 +107,17 @@ public class AnalyzeCommand extends CommandNode {
         sender.sendMessage(">");
     }
 
-    private void sendWebUserNotificationIfNecessary(ISender sender) {
-        if (WebServerSystem.getInstance().getWebServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {
-
-            boolean senderHasWebUser = Database.getActive().check().doesWebUserExists(sender.getName());
-            if (!senderHasWebUser) {
-                sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
-            }
+    private void sendWebUserNotificationIfNecessary(Sender sender) {
+        if (webServer.isAuthRequired() &&
+                CommandUtils.isPlayer(sender) &&
+                !database.check().doesWebUserExists(sender.getName())) {
+            sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
         }
     }
 
     private Optional<Server> getServer(String[] args) {
-        if (args.length >= 1 && ConnectionSystem.getInstance().isServerAvailable()) {
-            Map<UUID, Server> bukkitServers = Database.getActive().fetch().getBukkitServers();
+        if (args.length >= 1 && connectionSystem.isServerAvailable()) {
+            Map<UUID, Server> bukkitServers = database.fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);
             for (Map.Entry<UUID, Server> entry : bukkitServers.entrySet()) {
                 Server server = entry.getValue();

@@ -1,13 +1,17 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
-import java.util.*;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * This Class contains the Cache.
@@ -22,24 +26,32 @@ import java.util.*;
  * @author Rsl1122
  * @since 4.0.0
  */
+@Singleton
 public class DataCache extends SessionCache implements SubSystem {
 
-    private Database db;
+    private final ErrorHandler errorHandler;
+    private Database database;
+
     private final Map<UUID, String> playerNames;
     private final Map<String, UUID> uuids;
     private final Map<UUID, String> displayNames;
 
-    public DataCache(PlanSystem system) {
-        super(system);
-
+    @Inject
+    public DataCache(
+            Database database,
+            ErrorHandler errorHandler
+    ) {
+        super(database);
+        this.errorHandler = errorHandler;
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
         uuids = new HashMap<>();
+
+        this.database = database;
     }
 
     @Override
     public void enable() {
-        db = system.getDatabaseSystem().getActiveDatabase();
     }
 
     @Override
@@ -47,12 +59,6 @@ public class DataCache extends SessionCache implements SubSystem {
         playerNames.clear();
         uuids.clear();
         displayNames.clear();
-    }
-
-    public static DataCache getInstance() {
-        DataCache dataCache = CacheSystem.getInstance().getDataCache();
-        Verify.nullCheck(dataCache, () -> new IllegalStateException("Data Cache was not initialized."));
-        return dataCache;
     }
 
     /**
@@ -87,10 +93,10 @@ public class DataCache extends SessionCache implements SubSystem {
         String name = playerNames.get(uuid);
         if (name == null) {
             try {
-                name = db.fetch().getPlayerName(uuid);
+                name = database.fetch().getPlayerName(uuid);
                 playerNames.put(uuid, name);
             } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
                 name = "Error occurred";
             }
         }
@@ -110,19 +116,15 @@ public class DataCache extends SessionCache implements SubSystem {
         if (cached == null) {
             List<String> nicknames;
             try {
-                nicknames = db.fetch().getNicknames(uuid);
+                nicknames = database.fetch().getNicknames(uuid);
                 if (!nicknames.isEmpty()) {
                     return nicknames.get(nicknames.size() - 1);
                 }
             } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.ERROR, this.getClass(), e);
             }
         }
         return cached;
-    }
-
-    public Set<UUID> getUuids() {
-        return playerNames.keySet();
     }
 
     public UUID getUUIDof(String playerName) {

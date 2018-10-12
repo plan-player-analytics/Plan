@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.info.server.properties;
 
-import com.djrapitops.plan.system.settings.Settings;
 import com.velocitypowered.api.proxy.ProxyServer;
 
 /**
@@ -12,7 +11,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
  */
 public class VelocityServerProperties extends ServerProperties {
 
-    public VelocityServerProperties(ProxyServer server) {
+    public VelocityServerProperties(ProxyServer server, String serverIP) {
         super(
                 server.getAllServers().toString(),
                 "Velocity",
@@ -20,7 +19,7 @@ public class VelocityServerProperties extends ServerProperties {
                 // not sure how to get these
                 server.getClass().getPackage().getImplementationVersion(),
                 server.getClass().getPackage().getImplementationVersion(),
-                Settings.BUNGEE_IP::toString,
+                () -> serverIP,
                 -1, // not sure how to get this
                 RedisCheck.isClassAvailable() ? new RedisPlayersOnlineSupplier() : server::getPlayerCount
         );

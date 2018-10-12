@@ -3,24 +3,38 @@ package com.djrapitops.plan.system.listeners.bukkit;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
+import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
 public class WorldChangeListener implements Listener {
+
+    private final WorldAliasSettings worldAliasSettings;
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public WorldChangeListener(
+            WorldAliasSettings worldAliasSettings,
+            ErrorHandler errorHandler
+    ) {
+        this.worldAliasSettings = worldAliasSettings;
+        this.errorHandler = errorHandler;
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(PlayerChangedWorldEvent event) {
         try {
             actOnEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -33,7 +47,7 @@ public class WorldChangeListener implements Listener {
         String worldName = player.getWorld().getName();
         String gameMode = player.getGameMode().name();
 
-        WorldAliasSettings.addWorld(worldName);
+        worldAliasSettings.addWorld(worldName);
 
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));

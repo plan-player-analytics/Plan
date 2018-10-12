@@ -9,7 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
+import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Map;
@@ -22,20 +22,32 @@ import java.util.UUID;
  */
 public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables implements GenerateRequest, WideRequest {
 
-    private final UUID playerUUID;
+    private final InfoSystem infoSystem;
+    private final InfoRequestFactory infoRequestFactory;
+    private final PageFactory pageFactory;
 
-    private GenerateInspectPluginsTabRequest() {
-        playerUUID = null;
+    private UUID playerUUID;
+
+    GenerateInspectPluginsTabRequest(
+            InfoSystem infoSystem,
+            InfoRequestFactory infoRequestFactory,
+            PageFactory pageFactory
+    ) {
+        this.infoSystem = infoSystem;
+        this.infoRequestFactory = infoRequestFactory;
+        this.pageFactory = pageFactory;
     }
 
-    public GenerateInspectPluginsTabRequest(UUID uuid) {
+    GenerateInspectPluginsTabRequest(
+            UUID uuid,
+            InfoSystem infoSystem,
+            InfoRequestFactory infoRequestFactory,
+            PageFactory pageFactory
+    ) {
+        this(infoSystem, infoRequestFactory, pageFactory);
         Verify.nullCheck(uuid);
         playerUUID = uuid;
         variables.put("player", uuid.toString());
-    }
-
-    public static GenerateInspectPluginsTabRequest createHandler() {
-        return new GenerateInspectPluginsTabRequest();
     }
 
     @Override
@@ -53,8 +65,8 @@ public class GenerateInspectPluginsTabRequest extends InfoRequestWithVariables i
     }
 
     private void generateAndCache(UUID uuid) throws WebException {
-        String[] navAndHtml = InspectPagePluginsContent.generateForThisServer(uuid).getContents();
-        InfoSystem.getInstance().sendRequest(new CacheInspectPluginsTabRequest(uuid, navAndHtml[0], navAndHtml[1]));
+        String[] navAndHtml = pageFactory.inspectPagePluginsContent(uuid).getContents();
+        infoSystem.sendRequest(infoRequestFactory.cacheInspectPluginsTabRequest(uuid, navAndHtml[0], navAndHtml[1]));
     }
 
     @Override

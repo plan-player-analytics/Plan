@@ -16,12 +16,15 @@ public class CommandProcessor implements CriticalRunnable {
 
     private final String command;
 
-    public CommandProcessor(String command) {
+    private final Database database;
+
+    CommandProcessor(String command, Database database) {
         this.command = command;
+        this.database = database;
     }
 
     @Override
     public void run() {
-        Database.getActive().save().commandUsed(command);
+        database.save().commandUsed(command);
     }
 }

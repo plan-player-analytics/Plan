@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
+import com.djrapitops.plan.system.database.databases.Database;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import utilities.TestConstants;
@@ -19,6 +20,9 @@ public class SessionCacheTest {
     private SessionCache sessionCache;
     private Session session;
     private final UUID uuid = TestConstants.PLAYER_ONE_UUID;
+    private final UUID serverUUID = TestConstants.SERVER_UUID;
+
+    private Database database; // TODO
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -28,8 +32,8 @@ public class SessionCacheTest {
 
     @Before
     public void setUp() {
-        sessionCache = new SessionCache(null);
-        session = new Session(uuid, 12345L, "World1", "SURVIVAL");
+        sessionCache = new SessionCache(database);
+        session = new Session(uuid, serverUUID, 12345L, "World1", "SURVIVAL");
         sessionCache.cacheSession(uuid, session);
     }
 
@@ -40,7 +44,7 @@ public class SessionCacheTest {
 
     @Test
     public void testAtomity() {
-        SessionCache reloaded = new SessionCache(null);
+        SessionCache reloaded = new SessionCache(database);
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         assertTrue(cachedSession.isPresent());
         assertEquals(session, cachedSession.get());
@@ -48,9 +52,9 @@ public class SessionCacheTest {
 
     @Test
     public void testBungeeReCaching() {
-        SessionCache cache = new ProxyDataCache(null);
+        SessionCache cache = new ProxyDataCache(null, null);
         cache.cacheSession(uuid, session);
-        Session expected = new Session(uuid, 0, "", "");
+        Session expected = new Session(uuid, TestConstants.SERVER_UUID, 0, "", "");
         cache.cacheSession(uuid, expected);
 
         Optional<Session> result = SessionCache.getCachedSession(uuid);

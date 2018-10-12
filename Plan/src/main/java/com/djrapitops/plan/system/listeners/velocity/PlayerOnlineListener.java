@@ -8,29 +8,57 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
-import com.djrapitops.plan.system.processing.processors.player.BungeePlayerRegisterProcessor;
-import com.djrapitops.plan.system.processing.processors.player.IPUpdateProcessor;
+import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.InetAddress;
 import java.util.UUID;
 
 /**
  * Player Join listener for Velocity.
- *
+ * <p>
  * Based on the bungee version.
  *
  * @author MicleBrick
  */
+@Singleton
 public class PlayerOnlineListener {
+
+    private final PlanConfig config;
+    private final Processors processors;
+    private final Processing processing;
+    private final SessionCache sessionCache;
+    private final ServerInfo serverInfo;
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public PlayerOnlineListener(
+            PlanConfig config,
+            Processing processing,
+            Processors processors,
+            SessionCache sessionCache,
+            ServerInfo serverInfo,
+            ErrorHandler errorHandler
+    ) {
+        this.config = config;
+        this.processing = processing;
+        this.processors = processors;
+        this.sessionCache = sessionCache;
+        this.serverInfo = serverInfo;
+        this.errorHandler = errorHandler;
+    }
 
     @Subscribe
     public void onPostLogin(PostLoginEvent event) {
@@ -39,18 +67,19 @@ public class PlayerOnlineListener {
             UUID uuid = player.getUniqueId();
             String name = player.getUsername();
             InetAddress address = player.getRemoteAddress().getAddress();
-            long now = System.currentTimeMillis();
+            long time = System.currentTimeMillis();
 
-            SessionCache.getInstance().cacheSession(uuid, new Session(uuid, now, "", ""));
+            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, "", ""));
 
-            // maybe rename to ProxyPlayerRegisterProcessor?
-            Processing.submit(new BungeePlayerRegisterProcessor(uuid, name, now,
-                    new IPUpdateProcessor(uuid, address, now))
-            );
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
-            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
+            boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
+
+            processing.submit(processors.player().proxyRegisterProcessor(uuid, name, time,
+                    gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null
+            ));
+            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -60,11 +89,11 @@ public class PlayerOnlineListener {
             Player player = event.getPlayer();
             UUID uuid = player.getUniqueId();
 
-            SessionCache.getInstance().endSession(uuid, System.currentTimeMillis());
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
-            ResponseCache.clearResponse(PageId.SERVER.of(ServerInfo.getServerUUID()));
+            sessionCache.endSession(uuid, System.currentTimeMillis());
+            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
+            ResponseCache.clearResponse(PageId.SERVER.of(serverInfo.getServerUUID()));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -76,10 +105,10 @@ public class PlayerOnlineListener {
 
             long now = System.currentTimeMillis();
             // Replaces the current session in the cache.
-            SessionCache.getInstance().cacheSession(uuid, new Session(uuid, now, "", ""));
-            Processing.submit(new PlayerPageUpdateProcessor(uuid));
+            sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), now, "", ""));
+            processing.submit(processors.info().playerPageUpdateProcessor(uuid));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 }

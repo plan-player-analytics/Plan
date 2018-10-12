@@ -5,18 +5,16 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.task.RunnableFactory;
-import com.djrapitops.plugin.task.ThreadRunnable;
+import com.djrapitops.plugin.logging.console.TestPluginLogger;
+import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
+import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
 import org.bukkit.Server;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
 import utilities.TestConstants;
-import utilities.mocks.objects.FakeConsoleCmdSender;
 import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
@@ -39,22 +37,18 @@ public class BukkitMockUtil extends MockUtil {
     }
 
     public static BukkitMockUtil setUp() {
-        RunnableFactory.activateTestMode();
-        Teardown.resetSettingsTempValues();
         return new BukkitMockUtil().mockPlugin();
     }
 
     private BukkitMockUtil mockPlugin() {
         planMock = Mockito.mock(Plan.class);
         super.planMock = planMock;
-        StaticHolder.register(Plan.class, planMock);
-        StaticHolder.register(planMock);
-
-        StaticHolder.saveInstance(MockitoJUnitRunner.class, Plan.class);
-        StaticHolder.saveInstance(ThreadRunnable.class, Plan.class);
 
         doCallRealMethod().when(planMock).getVersion();
         doCallRealMethod().when(planMock).getColorScheme();
+
+        ThreadRunnableFactory runnableFactory = new ThreadRunnableFactory();
+        doReturn(runnableFactory).when(planMock).getRunnableFactory();
 
         return this;
     }
@@ -65,9 +59,12 @@ public class BukkitMockUtil extends MockUtil {
     }
 
     public BukkitMockUtil withLogging() {
-        Mockito.doCallRealMethod().when(planMock).log(Mockito.anyString(), Mockito.anyString());
         TestLogger testLogger = new TestLogger();
         doReturn(testLogger).when(planMock).getLogger();
+        TestPluginLogger testPluginLogger = new TestPluginLogger();
+        doReturn(testPluginLogger).when(planMock).getPluginLogger();
+        ConsoleErrorLogger consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);
+        doReturn(consoleErrorLogger).when(planMock).getErrorHandler();
         return this;
     }
 
@@ -97,7 +94,7 @@ public class BukkitMockUtil extends MockUtil {
         doReturn("1.12.2").when(serverMock).getVersion();
         doReturn("32423").when(serverMock).getBukkitVersion();
         doReturn(TestConstants.BUKKIT_MAX_PLAYERS).when(serverMock).getMaxPlayers();
-        FakeConsoleCmdSender sender = new FakeConsoleCmdSender();
+        ConsoleCommandSender sender = Mockito.mock(ConsoleCommandSender.class);
         doReturn(sender).when(serverMock).getConsoleSender();
 
         BukkitScheduler bukkitScheduler = Mockito.mock(BukkitScheduler.class);

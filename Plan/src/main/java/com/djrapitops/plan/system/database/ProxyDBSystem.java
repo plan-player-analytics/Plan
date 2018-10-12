@@ -4,27 +4,28 @@
  */
 package com.djrapitops.plan.system.database;
 
-import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
-import java.util.function.Supplier;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Bungee Database system that initializes MySQL object.
  *
  * @author Rsl1122
  */
+@Singleton
 public class ProxyDBSystem extends DBSystem {
 
-    public ProxyDBSystem(Supplier<Locale> locale) {
-        super(locale);
-    }
-
-    @Override
-    protected void initDatabase() throws DBInitException {
-        db = new MySQLDB(locale);
-        databases.add(db);
-        db.init();
+    @Inject
+    public ProxyDBSystem(Locale locale, MySQLDB mySQLDB,
+                         PluginLogger logger, Timings timings, ErrorHandler errorHandler) {
+        super(locale, logger, timings, errorHandler);
+        databases.add(mySQLDB);
+        db = mySQLDB;
     }
 }

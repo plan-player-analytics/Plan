@@ -6,11 +6,10 @@ package com.djrapitops.plan.system.webserver.pages;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.system.webserver.response.errors.NotFoundResponse;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +20,14 @@ import java.util.Map;
  *
  * @author Rsl1122
  */
-public abstract class TreePageHandler extends PageHandler {
+public abstract class TreePageHandler implements PageHandler {
+
+    protected final ResponseFactory responseFactory;
 
     private Map<String, PageHandler> pages;
 
-    public TreePageHandler() {
+    public TreePageHandler(ResponseFactory responseFactory) {
+        this.responseFactory = responseFactory;
         pages = new HashMap<>();
     }
 
@@ -52,7 +54,7 @@ public abstract class TreePageHandler extends PageHandler {
         PageHandler pageHandler = getPageHandler(target);
         return pageHandler != null
                 ? pageHandler.getResponse(request, target)
-                : new NotFoundResponse(request.getLocale().getString(ErrorPageLang.UNKNOWN_PAGE_404));
+                : responseFactory.pageNotFound404();
     }
 
     public PageHandler getPageHandler(List<String> target) {

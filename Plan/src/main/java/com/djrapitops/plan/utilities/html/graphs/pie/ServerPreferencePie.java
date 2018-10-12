@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class ServerPreferencePie extends AbstractPieChart {
+public class ServerPreferencePie extends Pie {
 
-    public ServerPreferencePie(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
+    ServerPreferencePie(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
         super(turnToSlices(serverNames, serverWorldTimes));
     }
 

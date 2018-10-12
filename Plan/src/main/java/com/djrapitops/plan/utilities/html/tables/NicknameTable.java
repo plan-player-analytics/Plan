@@ -5,11 +5,10 @@
 package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
@@ -17,14 +16,17 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Utility Class for creating Nicknames Table for inspect page.
+ * Html table that displays player's nicknames and where they were seen.
  *
  * @author Rsl1122
  */
-public class NicknameTable extends TableContainer {
+class NicknameTable extends TableContainer {
 
-    public NicknameTable(List<Nickname> nicknames, Map<UUID, String> serverNames) {
+    private final Formatter<DateHolder> yearFormatter;
+
+    NicknameTable(List<Nickname> nicknames, Map<UUID, String> serverNames, Formatter<DateHolder> yearFormatter) {
         super("Nickname", "Server", "Last Seen");
+        this.yearFormatter = yearFormatter;
 
         if (nicknames.isEmpty()) {
             addRow("No Nicknames");
@@ -36,14 +38,13 @@ public class NicknameTable extends TableContainer {
     private void addValues(List<Nickname> nicknames, Map<UUID, String> serverNames) {
         nicknames.sort(new DateHolderRecentComparator());
 
-        Formatter<DateHolder> formatter = Formatters.year();
         for (Nickname nickname : nicknames) {
             UUID serverUUID = nickname.getServerUUID();
             String serverName = serverNames.getOrDefault(serverUUID, "Unknown");
             addRow(
                     HtmlUtils.swapColorsToSpan(HtmlUtils.removeXSS(nickname.getName())),
                     serverName,
-                    formatter.apply(nickname)
+                    yearFormatter.apply(nickname)
             );
         }
     }

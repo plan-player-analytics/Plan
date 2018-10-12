@@ -3,18 +3,27 @@ package com.djrapitops.plan.data.store.mutators;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class ActivityIndex {
 
     private final double value;
 
-    public ActivityIndex(DataContainer container, long date) {
+    private final int playThreshold;
+    private final int loginThreshold;
+
+    public ActivityIndex(
+            DataContainer container, long date,
+            int minuteThreshold, int loginThreshold
+    ) {
+        this.playThreshold = minuteThreshold;
+        this.loginThreshold = loginThreshold;
+        
         value = calculate(container, date);
     }
 
@@ -22,22 +31,14 @@ public class ActivityIndex {
         return new String[]{"Very Active", "Active", "Regular", "Irregular", "Inactive"};
     }
 
-    private long loadSetting(long value) {
-        return value <= 0 ? 1 : value;
-    }
-
-    private int loadSetting(int value) {
-        return value <= 0 ? 1 : value;
-    }
-
     private double calculate(DataContainer container, long date) {
-        long week = TimeAmount.WEEK.ms();
+        long week = TimeAmount.WEEK.toMillis(1L);
         long weekAgo = date - week;
         long twoWeeksAgo = date - 2L * week;
         long threeWeeksAgo = date - 3L * week;
 
-        long activePlayThreshold = loadSetting(Settings.ACTIVE_PLAY_THRESHOLD.getNumber() * TimeAmount.MINUTE.ms());
-        int activeLoginThreshold = loadSetting(Settings.ACTIVE_LOGIN_THRESHOLD.getNumber());
+        long activePlayThreshold = TimeUnit.MINUTES.toMillis(playThreshold);
+        int activeLoginThreshold = loginThreshold;
 
         Optional<List<Session>> sessionsValue = container.getValue(PlayerKeys.SESSIONS);
         if (!sessionsValue.isPresent()) {
@@ -109,8 +110,8 @@ public class ActivityIndex {
         return value;
     }
 
-    public String getFormattedValue() {
-        return FormatUtils.cutDecimals(value);
+    public String getFormattedValue(Formatter<Double> formatter) {
+        return formatter.apply(value);
     }
 
     public String getGroup() {
