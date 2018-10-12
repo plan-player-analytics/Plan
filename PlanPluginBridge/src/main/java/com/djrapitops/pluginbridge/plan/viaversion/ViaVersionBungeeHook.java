@@ -1,6 +1,6 @@
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -16,7 +16,7 @@ import us.myles.ViaVersion.api.ViaAPI;
  * @author Rsl1122
  * @since 3.1.0
  */
-public class ViaVersionHook extends Hook {
+public class ViaVersionBungeeHook extends Hook {
 
     /**
      * Hooks the plugin and registers it's PluginData objects.
@@ -25,15 +25,15 @@ public class ViaVersionHook extends Hook {
      *
      * @param hookH HookHandler instance for registering the data sources.
      */
-    public ViaVersionHook(HookHandler hookH) {
-        super("us.myles.ViaVersion.ViaVersionPlugin", hookH);
+    public ViaVersionBungeeHook(HookHandler hookH) {
+        super("us.myles.ViaVersion.BungeePlugin", hookH);
     }
 
     public void hook() throws NoClassDefFoundError {
         if (!enabled) {
             return;
         }
-        Plan plan = Plan.getInstance();
+        PlanBungee plan = PlanBungee.getInstance();
         ViaAPI api = Via.getAPI();
         ProtocolTable table = new ProtocolTable((SQLDB) Database.getActive());
         try {
@@ -42,7 +42,7 @@ public class ViaVersionHook extends Hook {
             Log.toLog(this.getClass().getName(), e);
             return;
         }
-        plan.registerListener(new PlayerVersionListener(api));
+        plan.registerListener(new BungeePlayerVersionListener(api));
         addPluginDataSource(new ViaVersionData(table));
     }
 }

@@ -55,7 +55,7 @@ public class AnalysisPluginsTabContentCreator {
             com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer
     ) {
         PlayersMutator mutator = analysisContainer.getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()));
-        
+
         if (mutator.all().isEmpty()) {
             return new String[]{"<li><a>No Data</a></li>", ""};
         }
@@ -143,6 +143,7 @@ public class AnalysisPluginsTabContentCreator {
                 errorHandler.log(L.WARN, this.getClass(), e);
             } finally {
                 timings.end(DebugChannels.ANALYSIS, "Source " + source.getSourcePlugin());
+                source.setAnalysisData(null);
             }
         });
         return containers;

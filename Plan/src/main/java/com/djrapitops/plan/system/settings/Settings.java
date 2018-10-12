@@ -44,6 +44,8 @@ public enum Settings implements Setting {
     AFK_THRESHOLD_MINUTES("Data.AFKThresholdMinutes"),
     KEEP_LOGS_DAYS("Plugin.KeepLogsForXDays"),
     KEEP_INACTIVE_PLAYERS_DAYS("Data.KeepInactivePlayerDataForDays"),
+    PING_SERVER_ENABLE_DELAY("Data.Ping.ServerEnableDelaySeconds"),
+    PING_PLAYER_LOGIN_DELAY("Data.Ping.PlayerLoginDelaySeconds"),
 
     // String
     DEBUG("Plugin.Debug"),

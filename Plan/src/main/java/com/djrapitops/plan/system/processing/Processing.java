@@ -8,6 +8,7 @@ import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,8 +34,8 @@ public class Processing implements SubSystem {
         this.locale = locale;
         this.logger = logger;
         this.errorHandler = errorHandler;
-        nonCriticalExecutor = Executors.newFixedThreadPool(6);
-        criticalExecutor = Executors.newFixedThreadPool(2);
+        nonCriticalExecutor = Executors.newFixedThreadPool(6, new ThreadFactoryBuilder().setNameFormat("Plan Non critical-pool-%d").build());
+        criticalExecutor = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setNameFormat("Plan Critical-pool-%d").build());
     }
 
     public void submit(Runnable runnable) {

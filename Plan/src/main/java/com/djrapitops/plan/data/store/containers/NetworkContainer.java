@@ -69,7 +69,7 @@ public class NetworkContainer extends DataContainer {
         this.formatters = formatters;
         this.graphs = graphs;
 
-        putSupplier(NetworkKeys.PLAYERS_MUTATOR, () -> PlayersMutator.forContainer(bungeeContainer));
+        putCachingSupplier(NetworkKeys.PLAYERS_MUTATOR, () -> PlayersMutator.forContainer(bungeeContainer));
 
         addConstants();
         addServerBoxes();
@@ -99,14 +99,14 @@ public class NetworkContainer extends DataContainer {
 
     private void addNetworkHealth() {
         Key<NetworkHealthInformation> healthInformation = new Key<>(NetworkHealthInformation.class, "HEALTH_INFORMATION");
-        putSupplier(healthInformation, () -> new NetworkHealthInformation(
+        putCachingSupplier(healthInformation, () -> new NetworkHealthInformation(
                 this,
                 config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
                 config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
                 formatters.timeAmount(), formatters.decimals(), formatters.percentage()
         ));
-        putSupplier(NetworkKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
-        putSupplier(NetworkKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
+        putCachingSupplier(NetworkKeys.HEALTH_INDEX, () -> getUnsafe(healthInformation).getServerHealth());
+        putCachingSupplier(NetworkKeys.HEALTH_NOTES, () -> getUnsafe(healthInformation).toHtml());
     }
 
     private void addConstants() {
@@ -120,7 +120,7 @@ public class NetworkContainer extends DataContainer {
         putRawData(NetworkKeys.VERSION, version);
         putSupplier(NetworkKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
 
-        putSupplier(NetworkKeys.NETWORK_NAME, () ->
+        putCachingSupplier(NetworkKeys.NETWORK_NAME, () ->
                 Check.isBungeeAvailable() ?
                         config.getString(Settings.BUNGEE_NETWORK_NAME) :
                         bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan")
@@ -176,22 +176,22 @@ public class NetworkContainer extends DataContainer {
         Key<PlayersMutator> uniqueDay = new Key<>(PlayersMutator.class, "UNIQUE_DAY");
         Key<PlayersMutator> uniqueWeek = new Key<>(PlayersMutator.class, "UNIQUE_WEEK");
         Key<PlayersMutator> uniqueMonth = new Key<>(PlayersMutator.class, "UNIQUE_MONTH");
-        putSupplier(newDay, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(newDay, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_DAY_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(newWeek, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(newWeek, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_WEEK_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(newMonth, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(newMonth, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterRegisteredBetween(getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(uniqueDay, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(uniqueDay, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterPlayedBetween(getUnsafe(NetworkKeys.REFRESH_TIME_DAY_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(uniqueWeek, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(uniqueWeek, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterPlayedBetween(getUnsafe(NetworkKeys.REFRESH_TIME_WEEK_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
-        putSupplier(uniqueMonth, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
+        putCachingSupplier(uniqueMonth, () -> getUnsafe(NetworkKeys.PLAYERS_MUTATOR)
                 .filterPlayedBetween(getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO), getUnsafe(NetworkKeys.REFRESH_TIME))
         );
 
@@ -201,6 +201,10 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.PLAYERS_DAY, () -> getUnsafe(uniqueDay).count());
         putSupplier(NetworkKeys.PLAYERS_WEEK, () -> getUnsafe(uniqueWeek).count());
         putSupplier(NetworkKeys.PLAYERS_MONTH, () -> getUnsafe(uniqueMonth).count());
+    }
+
+    public ServerContainer getBungeeContainer() {
+        return bungeeContainer;
     }
 
     @Singleton

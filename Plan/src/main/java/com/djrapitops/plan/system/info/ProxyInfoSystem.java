@@ -7,10 +7,7 @@ package com.djrapitops.plan.system.info;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.request.CacheRequest;
-import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
-import com.djrapitops.plan.system.info.request.InfoRequest;
-import com.djrapitops.plan.system.info.request.InfoRequestFactory;
+import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.WebServer;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -25,10 +22,10 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class BungeeInfoSystem extends InfoSystem {
+public class ProxyInfoSystem extends InfoSystem {
 
     @Inject
-    public BungeeInfoSystem(
+    public ProxyInfoSystem(
             InfoRequestFactory infoRequestFactory,
             ConnectionSystem connectionSystem,
             ServerInfo serverInfo,
@@ -41,7 +38,9 @@ public class BungeeInfoSystem extends InfoSystem {
     @Override
     public void runLocally(InfoRequest infoRequest) throws WebException {
         if (infoRequest instanceof CacheRequest
-                || infoRequest instanceof GenerateInspectPageRequest) {
+                || infoRequest instanceof GenerateInspectPageRequest
+                || infoRequest instanceof GenerateInspectPluginsTabRequest
+        ) {
             infoRequest.runLocally();
         } else {
             // runLocally is called when ConnectionSystem has no servers.

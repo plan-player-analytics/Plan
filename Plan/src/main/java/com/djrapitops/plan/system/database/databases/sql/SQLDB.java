@@ -183,30 +183,12 @@ public abstract class SQLDB extends Database {
                     new VersionTableRemovalPatch(this)
             };
 
-            runnableFactory.create("Database Patch", new AbsRunnable() {
-                @Override
-                public void run() {
-                    try {
-                        boolean applied = false;
-                        for (Patch patch : patches) {
-                            if (!patch.hasBeenApplied()) {
-                                String patchName = patch.getClass().getSimpleName();
-                                logger.info(locale.getString(PluginLang.DB_APPLY_PATCH, patchName));
-                                patch.apply();
-                                applied = true;
-                            }
-                        }
-                        logger.info(locale.getString(
-                                applied ? PluginLang.DB_APPLIED_PATCHES : PluginLang.DB_APPLIED_PATCHES_ALREADY
-                        ));
-                    } catch (Exception e) {
-                        logger.error("----------------------------------------------------");
-                        logger.error(locale.getString(PluginLang.ENABLE_FAIL_DB_PATCH));
-                        logger.error("----------------------------------------------------");
-                        errorHandler.log(L.CRITICAL, this.getClass(), e);
-                    }
-                }
-            }).runTaskLaterAsynchronously(TimeAmount.toTicks(5L, TimeUnit.SECONDS));
+            try {
+                runnableFactory.createNew("Database Patch", new PatchTask(patches, locale))
+                        .runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
+            } catch (Exception ignore) {
+                // Task failed to register because plugin is being disabled
+            }
         } catch (DBOpException e) {
             throw new DBInitException("Failed to set-up Database", e);
         }

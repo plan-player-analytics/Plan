@@ -19,6 +19,7 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -158,8 +159,12 @@ public class GeolocationCache implements SubSystem {
             return;
         }
         URL downloadSite = new URL("http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz");
-        try (ReadableByteChannel rbc = Channels.newChannel(new GZIPInputStream(downloadSite.openStream()));
-             FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())) {
+        try (
+                InputStream in = downloadSite.openStream();
+                GZIPInputStream gzipIn = new GZIPInputStream(in);
+                ReadableByteChannel rbc = Channels.newChannel(gzipIn);
+                FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())
+        ) {
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         }
     }

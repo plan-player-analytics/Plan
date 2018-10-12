@@ -42,6 +42,10 @@
 
     <repositories>
         <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -50,11 +54,15 @@
             <url>https://repo.destroystokyo.com/repository/maven-public/</url>
         </repository>
         <repository>
+            <id>sponge-repo</id>
+            <url>https://repo.spongepowered.org/maven</url>
+        </repository>
+        <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
-            <id>jitpack.io</id>
+            <id>jitpack.io (GriefPrevention)</id>
             <url>https://jitpack.io</url>
         </repository>
         <repository>
@@ -73,6 +81,14 @@
             <id>advanced-achievements-repo</id>
             <url>https://raw.github.com/PyvesB/AdvancedAchievements/mvn-repo/</url>
         </repository>
+        <repository>
+            <id>nucleus-repo</id>
+            <url>http://repo.drnaylor.co.uk/artifactory/list/minecraft</url>
+        </repository>
+        <repository>
+            <id>discordsrv-repo</id>
+            <url>https://ci.scarsz.me/plugin/repository/everything/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -82,14 +98,20 @@
             <version>4.3.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--        Paper API -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.3</version>
+        </dependency>
+
+
+        <!--        Server APIs -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--        Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -98,45 +120,43 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.12-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongeapi</artifactId>
+            <version>7.0.0</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <!--        Plugins from repositories -->
+
+        <dependency>
             <groupId>com.hm.achievement</groupId>
             <artifactId>advanced-achievements-api</artifactId>
             <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.earth2me</groupId>
-            <artifactId>essentials</artifactId>
-            <version>2.0.1</version>
+            <groupId>com.github.TechFortress</groupId>
+            <artifactId>GriefPrevention</artifactId>
+            <version>16.8</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.massivecraft</groupId>
-            <artifactId>factions</artifactId>
-            <version>2.10.0</version>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.9.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.gamingmesh</groupId>
-            <artifactId>jobs</artifactId>
-            <version>4.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.massivecraft</groupId>
-            <artifactId>mcore</artifactId>
-            <version>2.10.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gmail.nossr50</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>1.5.07</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.palmergames</groupId>
-            <artifactId>towny</artifactId>
-            <version>0.91.4.0</version>
+            <groupId>br.net.fabiozumbi12.RedProtect</groupId>
+            <artifactId>RedProtect-Spigot</artifactId>
+            <version>7.5.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -146,18 +166,74 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.wasteofplastic.askyblock</groupId>
-            <artifactId>ASkyBlock</artifactId>
-            <version>3.0.6.8</version>
+            <groupId>us.myles</groupId>
+            <artifactId>viaversion</artifactId>
+            <version>1.5.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.TechFortress</groupId>
-            <artifactId>GriefPrevention</artifactId>
-            <version>16.7.1</version>
+            <groupId>io.github.nucleuspowered</groupId>
+            <artifactId>nucleus-api</artifactId>
+            <version>1.6.0-PR1-S7.0</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://github.com/KaiKikuchi/GriefPreventionPlus/releases -->
+        <dependency> <!-- Maven Central -->
+            <groupId>me.lucko.luckperms</groupId>
+            <artifactId>luckperms-api</artifactId>
+            <version>4.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>github.scarsz.discordsrv</groupId>
+            <artifactId>DiscordSRV</artifactId>
+            <version>1.16.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--        Plugins requiring local install -->
+
+        <dependency>
+            <groupId>me.konsolas</groupId>
+            <artifactId>AAC</artifactId>
+            <version>3.5.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.leoko</groupId>
+            <artifactId>advancedban</artifactId>
+            <version>2.1.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.wasteofplastic.askyblock</groupId>
+            <artifactId>ASkyBlock</artifactId>
+            <version>3.0.9.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.confuser</groupId>
+            <artifactId>banmanager</artifactId>
+            <version>5.15.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.ess3</groupId>
+            <artifactId>EssentialsX</artifactId>
+            <version>2.15.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>factions</artifactId>
+            <version>2.14.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>mcore</artifactId>
+            <version>2.14.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>net.kaikk.mc</groupId>
             <artifactId>GriefPreventionPlus</artifactId>
@@ -165,21 +241,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>litebans</groupId>
-            <artifactId>api</artifactId>
-            <version>0.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.minimum</groupId>
-            <artifactId>minecraft.superbvote</artifactId>
-            <version>0.4.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>us.myles</groupId>
-            <artifactId>viaversion</artifactId>
-            <version>1.1.1</version>
+            <groupId>com.gamingmesh</groupId>
+            <artifactId>jobs</artifactId>
+            <version>4.7.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -189,17 +253,17 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.confuser</groupId>
-            <artifactId>banmanager</artifactId>
-            <version>5.15.0</version>
+            <groupId>litebans</groupId>
+            <artifactId>api</artifactId>
+            <version>0.3</version>
             <scope>provided</scope>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>com.github.MCE-Plugins</groupId>-->
-        <!--<artifactId>MinigamesLib-parent</artifactId>-->
-        <!--<version>1.14.18</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.gmail.nossr50</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>1.6.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.github.ProtocolSupport</groupId>
             <artifactId>ProtocolSupport</artifactId>
@@ -207,33 +271,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>br.net.fabiozumbi12.RedProtect</groupId>
-            <artifactId>RedProtect-Spigot</artifactId>
-            <version>RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.konsolas</groupId>
-            <artifactId>AAC</artifactId>
-            <version>3.3.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>LATEST</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.volmit</groupId>
             <artifactId>react</artifactId>
-            <version>6.549</version>
+            <version>6.573</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.leoko</groupId>
-            <artifactId>advancedban</artifactId>
-            <version>2.1.5</version>
+            <groupId>io.minimum</groupId>
+            <artifactId>minecraft.superbvote</artifactId>
+            <version>0.5.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.palmergames</groupId>
+            <artifactId>towny</artifactId>
+            <version>0.92.0.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -245,46 +297,6 @@
                 <artifactId>maven-install-plugin</artifactId>
                 <version>2.5.2</version>
             </plugin>
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

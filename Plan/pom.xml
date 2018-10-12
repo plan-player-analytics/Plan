@@ -24,6 +24,10 @@
             <id>sponge-repo</id>
             <url>https://repo.spongepowered.org/maven</url>
         </repository>
+        <repository>
+            <id>velocity-repo</id>
+            <url>https://repo.velocitypowered.com/snapshots/</url>
+        </repository>
         <!--        RedisBungee Repository -->
         <repository>
             <id>md_5-snapshots</id>
@@ -79,6 +83,14 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+        <!--        Velocity -->
+        <dependency>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
         <!--        SpongePowered -->
         <dependency>
             <groupId>org.spongepowered</groupId>
@@ -112,7 +124,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
         </dependency>
 
         <!--        Geo IP -->
@@ -120,6 +132,13 @@
             <groupId>com.maxmind.geoip2</groupId>
             <artifactId>geoip2</artifactId>
             <version>2.9.0</version>
+        </dependency>
+
+        <!--        Cache with invalidation -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>2.6.2</version>
         </dependency>
 
         <!--        Metrics -->
@@ -137,6 +156,13 @@
             <groupId>org.bstats</groupId>
             <artifactId>bstats-sponge</artifactId>
             <version>1.2</version>
+        </dependency>
+
+        <!--        HTML Compression -->
+        <dependency>
+            <groupId>com.googlecode.htmlcompressor</groupId>
+            <artifactId>htmlcompressor</artifactId>
+            <version>1.5.2</version>
         </dependency>
 
         <!-- Mockito (Test Dependency) -->
@@ -236,6 +262,7 @@
                             <exclude>org.mockito:*</exclude>
                             <exclude>org.easymock:*</exclude>
                             <exclude>junit:*</exclude>
+                            <!--<exclued>org.slf4j:*</exclued>-->
                         </excludes>
                     </artifactSet>
                     <relocations>
@@ -261,9 +288,6 @@
                         <relocation>
                             <pattern>org.slf4j</pattern>
                             <shadedPattern>plan.org.slf4j</shadedPattern>
-                            <excludes>
-                                <exclude>org.slf4j.Logger</exclude>
-                            </excludes>
                         </relocation>
                         <relocation>
                             <pattern>org.bstats</pattern>

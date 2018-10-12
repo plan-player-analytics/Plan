@@ -44,7 +44,7 @@ public class LiteBansData extends PluginData implements BanData {
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
 
         inspectContainer.addValue(Icon.called("balance-scale").of(Color.RED) +
-                "Hover over 'What' column entry for offence reasons", "");
+                " Hover over 'What' column entry for offence reasons", "");
 
         String what = getWithIcon("Effect", Icon.called("times-circle").of(Family.REGULAR));
         String by = getWithIcon("By", Icon.called("gavel"));
@@ -179,7 +179,8 @@ public class LiteBansData extends PluginData implements BanData {
         if (objects.isEmpty()) {
             table.addRow("No Data");
         } else {
-            Map<UUID, String> playerNames = analysisData.getValue(AnalysisKeys.PLAYER_NAMES).orElse(new HashMap<>());
+            Map<UUID, String> playerNames = Optional.ofNullable(analysisData)
+                    .flatMap(c -> c.getValue(AnalysisKeys.PLAYER_NAMES)).orElse(new HashMap<>());
             for (LiteBansDBObj object : objects) {
                 UUID uuid = object.getUuid();
                 String name = playerNames.getOrDefault(uuid, uuid.toString());

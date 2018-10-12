@@ -7,6 +7,7 @@ import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.CommonKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.utilities.analysis.Median;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -142,13 +143,8 @@ public class SessionsMutator {
     }
 
     public long toMedianSessionLength() {
-        List<Long> sessionLengths = sessions.stream().map(Session::getLength)
-                .sorted()
-                .collect(Collectors.toList());
-        if (sessionLengths.isEmpty()) {
-            return 0;
-        }
-        return sessionLengths.get(sessionLengths.size() / 2);
+        List<Long> sessionLengths = sessions.stream().map(Session::getLength).collect(Collectors.toList());
+        return (long) Median.forLong(sessionLengths).calculate();
     }
 
     public int toAverageUniqueJoinsPerDay() {
@@ -199,6 +195,5 @@ public class SessionsMutator {
     public int toPlayerDeathCount() {
         return toPlayerDeathList().size();
     }
-
 
 }

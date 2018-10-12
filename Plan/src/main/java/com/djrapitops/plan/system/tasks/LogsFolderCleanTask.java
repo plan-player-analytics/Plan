@@ -48,7 +48,11 @@ public class LogsFolderCleanTask extends AbsRunnable {
         } catch (NullPointerException ignore) {
             /* Ignored - not supposed to occur. */
         } finally {
-            cancel();
+            try {
+                cancel();
+            } catch (Exception ignore) {
+                /* Ignored, TaskCenter concurrent modification exception, will be fixed later in apf-3.3.0. */
+            }
         }
     }
 

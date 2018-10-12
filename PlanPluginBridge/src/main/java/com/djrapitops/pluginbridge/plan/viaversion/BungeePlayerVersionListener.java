@@ -10,10 +10,9 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plugin.api.utility.log.Log;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 import us.myles.ViaVersion.api.ViaAPI;
 
 import java.util.UUID;
@@ -24,16 +23,16 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class PlayerVersionListener implements Listener {
+public class BungeePlayerVersionListener implements Listener {
 
     private ViaAPI viaAPI;
 
-    public PlayerVersionListener(ViaAPI viaAPI) {
+    public BungeePlayerVersionListener(ViaAPI viaAPI) {
         this.viaAPI = viaAPI;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onJoin(PlayerJoinEvent event) {
+    @EventHandler
+    public void onJoin(PostLoginEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         int playerVersion = viaAPI.getPlayerVersion(uuid);
         Processing.submitNonCritical(() -> {

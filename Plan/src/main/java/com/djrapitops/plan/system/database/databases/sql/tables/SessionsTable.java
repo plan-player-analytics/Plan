@@ -112,7 +112,7 @@ public class SessionsTable extends UserIDTable {
         }
 
         db.getWorldTimesTable().saveWorldTimes(uuid, sessionID, session.getUnsafe(SessionKeys.WORLD_TIMES));
-        db.getKillsTable().savePlayerKills(uuid, sessionID, session.getUnsafe(SessionKeys.PLAYER_KILLS));
+        db.getKillsTable().savePlayerKills(uuid, sessionID, session.getPlayerKills());
     }
 
     /**

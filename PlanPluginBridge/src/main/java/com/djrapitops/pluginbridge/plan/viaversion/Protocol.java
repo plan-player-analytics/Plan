@@ -25,6 +25,8 @@ public class Protocol {
      */
     public static String getMCVersion(int protocolVersion) {
         switch (protocolVersion) {
+            case 401:
+                return "1.13.1";
             case 390:
             case 391:
             case 392:

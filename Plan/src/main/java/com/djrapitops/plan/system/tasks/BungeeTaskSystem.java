@@ -4,9 +4,11 @@
  */
 package com.djrapitops.plan.system.tasks;
 
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
+import com.djrapitops.plan.system.tasks.server.PingCountTimerBungee;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -55,5 +57,12 @@ public class BungeeTaskSystem extends TaskSystem {
                 config.getNetworkSettings().placeSettingsToDB();
             }
         }).runTaskAsynchronously();
+
+        // TODO Move this elsewhere
+        PingCountTimerBungee pingCountTimer = new PingCountTimerBungee();
+        plugin.registerListener(pingCountTimer);
+        long startDelay = TimeAmount.SECOND.ticks() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
+        RunnableFactory.createNew("PingCountTimer", pingCountTimer)
+                .runTaskTimer(startDelay, PingCountTimerBungee.PING_INTERVAL);
     }
 }

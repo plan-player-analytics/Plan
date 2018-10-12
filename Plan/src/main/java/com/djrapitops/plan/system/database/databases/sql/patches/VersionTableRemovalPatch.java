@@ -10,7 +10,7 @@ public class VersionTableRemovalPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasTable("plan_version");
+        return !hasTable("plan_version");
     }
 
     @Override

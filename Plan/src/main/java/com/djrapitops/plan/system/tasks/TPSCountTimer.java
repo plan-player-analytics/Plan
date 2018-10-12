@@ -8,6 +8,8 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,5 +65,28 @@ public abstract class TPSCountTimer extends AbsRunnable {
 
     public int getLatestPlayersOnline() {
         return latestPlayersOnline;
+    }
+
+    protected long getUsedMemory() {
+        Runtime runtime = Runtime.getRuntime();
+        long totalMemory = runtime.totalMemory();
+        return (totalMemory - runtime.freeMemory()) / 1000000;
+    }
+
+    protected double getCPUUsage() {
+        double averageCPUUsage;
+
+        OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+        if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
+            com.sun.management.OperatingSystemMXBean nativeOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
+            averageCPUUsage = nativeOsBean.getSystemCpuLoad();
+        } else {
+            int availableProcessors = osBean.getAvailableProcessors();
+            averageCPUUsage = osBean.getSystemLoadAverage() / availableProcessors;
+        }
+        if (averageCPUUsage < 0) { // If unavailable, getSystemLoadAverage() returns -1
+            averageCPUUsage = -1;
+        }
+        return averageCPUUsage * 100.0;
     }
 }

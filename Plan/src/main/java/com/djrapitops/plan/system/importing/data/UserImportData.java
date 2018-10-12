@@ -276,4 +276,28 @@ public class UserImportData {
             return new UserImportData(name, uuid, nicknames, registered, op, banned, timesKicked, ips, worldTimes, kills, mobKills, deaths);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserImportData)) return false;
+        UserImportData that = (UserImportData) o;
+        return registered == that.registered &&
+                op == that.op &&
+                banned == that.banned &&
+                timesKicked == that.timesKicked &&
+                mobKills == that.mobKills &&
+                deaths == that.deaths &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(uuid, that.uuid) &&
+                Objects.equals(nicknames, that.nicknames) &&
+                Objects.equals(ips, that.ips) &&
+                Objects.equals(worldTimes, that.worldTimes) &&
+                Objects.equals(kills, that.kills);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, uuid, nicknames, registered, op, banned, timesKicked, ips, worldTimes, kills, mobKills, deaths);
+    }
 }

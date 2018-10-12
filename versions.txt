@@ -1,3 +1,9 @@
+REL|4.4.7|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.7-REL/Plan-4.4.7-bukkit-bungee.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.4.7-REL
+REL|4.4.6|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.6-REL/Plan-4.4.6-bukkit-bungee.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.4.6-REL
+DEV|4.4.5-b2|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.6-DEV2/Plan-4.4.5-b2-bukkit-bungee.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.4.6-DEV2
+REL|4.4.5|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.5-RELEASE/Plan-4.4.5.Bukkit.Bungee.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.4.5-RELEASE
+REL|4.4.4|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.4-REL/Plan-4.4.4.jar|https://www.spigotmc.org/resources/plan-player-analytics.32536/update?update=240584
+DEV|4.4.3-b3|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.4-DEV3/Plan-4.4.3-b3.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.4.4-DEV3
 REL|4.4.3|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.3/Plan-4.4.3.jar|https://www.spigotmc.org/resources/plan-player-analytics.32536/update?update=238545
 REL|4.4.2|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.2/Plan-4.4.2.jar|https://www.spigotmc.org/resources/plan-player-analytics.32536/update?update=237951
 REL|4.4.1|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.4.1/Plan-4.4.1.jar|https://www.spigotmc.org/resources/plan-player-analytics.32536/update?update=234420

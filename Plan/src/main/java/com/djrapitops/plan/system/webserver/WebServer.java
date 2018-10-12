@@ -12,6 +12,7 @@ import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
@@ -29,9 +30,7 @@ import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author Rsl1122
@@ -121,7 +120,11 @@ public class WebServer implements SubSystem {
             }
             server.createContext("/", requestHandler);
 
-            server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
+            ExecutorService executor = new ThreadPoolExecutor(
+                    4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100),
+                    new ThreadFactoryBuilder().setNameFormat("Plan WebServer Thread-%d").build()
+            );
+            server.setExecutor(executor);
             server.start();
 
             enabled = true;
@@ -212,10 +215,24 @@ public class WebServer implements SubSystem {
     @Override
     public void disable() {
         if (server != null) {
+            shutdown();
             logger.info(locale.getString(PluginLang.DISABLED_WEB_SERVER));
-            server.stop(0);
         }
         enabled = false;
+    }
+
+    private void shutdown() {
+        server.stop(0);
+        Executor executor = server.getExecutor();
+        if (executor instanceof ExecutorService) {
+            ExecutorService service = (ExecutorService) executor;
+            service.shutdown();
+            try {
+                service.awaitTermination(5, TimeUnit.SECONDS);
+            } catch (InterruptedException timeoutExceededEx) {
+                service.shutdownNow();
+            }
+        }
     }
 
     public String getProtocol() {

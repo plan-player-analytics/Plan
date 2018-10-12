@@ -10,8 +10,8 @@ public enum Permissions {
 
     HELP("plan.?"),
 
-    INSPECT("plan.inspect"),
-    QUICK_INSPECT("plan.qinspect"),
+    INSPECT("plan.inspect.base"),
+    QUICK_INSPECT("plan.qinspect.base"),
     INSPECT_OTHER("plan.inspect.other"),
     QUICK_INSPECT_OTHER("plan.qinspect.other"),
 
@@ -36,7 +36,7 @@ public enum Permissions {
     /**
      * Returns the permission node in plugin.yml.
      *
-     * @return permission node eg. plan.inspect
+     * @return permission node eg. plan.inspect.base
      */
     public String getPermission() {
         return permission;
@@ -45,7 +45,7 @@ public enum Permissions {
     /**
      * Same as {@link #getPermission()}.
      *
-     * @return permission node eg. plan.inspect
+     * @return permission node eg. plan.inspect.base
      */
     public String getPerm() {
         return getPermission();

@@ -83,7 +83,7 @@ public abstract class DBSystem implements SubSystem {
     public void enable() throws EnableException {
         try {
             db.init();
-            db.scheduleClean(1L);
+            db.scheduleClean(20L);
             logger.info(locale.getString(PluginLang.ENABLED_DATABASE, db.getName()));
         } catch (DBInitException e) {
             Throwable cause = e.getCause();

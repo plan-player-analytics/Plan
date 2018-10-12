@@ -15,6 +15,8 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -30,11 +32,13 @@ public class AFKListener implements Listener {
     // Static so that /reload does not cause afk tracking to fail.
     static AFKTracker AFK_TRACKER;
 
+    private final Map<UUID, Boolean> ignorePermissionInfo;
     private final ErrorHandler errorHandler;
 
     @Inject
     public AFKListener(PlanConfig config, ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
+        this.ignorePermissionInfo = new HashMap<>();
 
         AFKListener.assignAFKTracker(config);
     }
@@ -51,8 +55,15 @@ public class AFKListener implements Listener {
             UUID uuid = player.getUniqueId();
             long time = System.currentTimeMillis();
 
-            if (player.hasPermission(Permissions.IGNORE_AFK.getPermission())) {
+            Boolean ignored = ignorePermissionInfo.get(uuid);
+            if (ignored == null) {
+                ignored = player.hasPermission(Permissions.IGNORE_AFK.getPermission());
+            }
+            if (ignored) {
                 AFK_TRACKER.hasIgnorePermission(uuid);
+                ignorePermissionInfo.put(uuid, true);
+            } else {
+                ignorePermissionInfo.put(uuid, false);
             }
 
             AFK_TRACKER.performedAction(uuid, time);

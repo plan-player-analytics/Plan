@@ -10,6 +10,7 @@ import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 
 import static com.djrapitops.plan.data.store.keys.NetworkKeys.*;
 
@@ -54,6 +55,14 @@ public class NetworkPage implements Page {
                     ACTIVITY_PIE_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES,
                     SERVERS_TAB
             );
+
+            // TODO Fix
+            String[] content = AnalysisPluginsTabContentCreator.createContent(networkContainer.getUnsafe(NetworkKeys.PLAYERS_MUTATOR), null);
+            String nav = content[0];
+            String tabs = content[1];
+
+            placeholderReplacer.put("navPluginsTabs", nav);
+            placeholderReplacer.put("tabsPlugins", tabs);
 
             return placeholderReplacer.apply(files.readCustomizableResourceFlat("web/network.html"));
         } catch (Exception e) {

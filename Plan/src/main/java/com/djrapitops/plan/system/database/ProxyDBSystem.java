@@ -19,10 +19,10 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class BungeeDBSystem extends DBSystem {
+public class ProxyDBSystem extends DBSystem {
 
     @Inject
-    public BungeeDBSystem(Locale locale, MySQLDB mySQLDB,
+    public ProxyDBSystem(Locale locale, MySQLDB mySQLDB,
                           PluginLogger logger, Timings timings, ErrorHandler errorHandler) {
         super(locale, logger, timings, errorHandler);
         databases.add(mySQLDB);

@@ -96,8 +96,10 @@ public abstract class Response {
         }
         sentContent = theme.replaceThemeColors(sentContent);
 
-        try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
-             ByteArrayInputStream bis = new ByteArrayInputStream(sentContent.getBytes(StandardCharsets.UTF_8))) {
+        try (
+                GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
+                ByteArrayInputStream bis = new ByteArrayInputStream(sentContent.getBytes(StandardCharsets.UTF_8))
+        ) {
             byte[] buffer = new byte[2048];
             int count;
             while ((count = bis.read(buffer)) != -1) {

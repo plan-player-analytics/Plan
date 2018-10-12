@@ -66,4 +66,14 @@ public class AFKTracker {
         lastMovement.remove(uuid);
         usedAFKCommand.remove(uuid);
     }
+
+    public boolean isAfk(UUID uuid) {
+        long time = System.currentTimeMillis();
+
+        Long lastMoved = lastMovement.get(uuid);
+        if (lastMoved == null || lastMoved == -1) {
+            return false;
+        }
+        return time - lastMoved > afkThresholdMs;
+    }
 }

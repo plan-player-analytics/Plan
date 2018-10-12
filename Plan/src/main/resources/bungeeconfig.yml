@@ -66,6 +66,9 @@ Data:
     LogUnknownCommands: false
     CombineCommandAliases: true
   Geolocations: true
+  Ping:
+    ServerEnableDelaySeconds: 300
+    PlayerLoginDelaySeconds: 30
   KeepInactivePlayerDataForDays: 180
 # -----------------------------------------------------
 Customization:
@@ -145,3 +148,8 @@ Servers:
     WebServerPort: 8034
     ServerName: Example
     ThemeBase: Default
+# -----------------------------------------------------
+Plugins:
+  BuyCraft:
+    # http://help.buycraft.net/article/36-where-to-find-the-secret-key
+    Secret: "-"

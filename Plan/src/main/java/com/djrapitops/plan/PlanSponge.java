@@ -29,6 +29,7 @@ import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 
 import javax.inject.Named;
@@ -80,7 +81,17 @@ class SpongePlanModule {
     }
 }
 
-@Plugin(id = "plan", name = "Plan", version = "4.4.3", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
+@Plugin(
+        id = "plan",
+        name = "Plan",
+        version = "4.4.7",
+        description = "Player Analytics Plugin by Rsl1122",
+        authors = {"Rsl1122"},
+        dependencies = {
+                @Dependency(id = "nucleus", optional = true),
+                @Dependency(id = "luckperms", optional = true)
+        }
+)
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Inject

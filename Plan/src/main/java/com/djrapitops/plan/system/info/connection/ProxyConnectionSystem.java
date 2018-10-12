@@ -22,12 +22,12 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * ConnectionSystem for Bungee.
+ * ConnectionSystem for proxy servers.
  *
  * @author Rsl1122
  */
 @Singleton
-public class BungeeConnectionSystem extends ConnectionSystem {
+public class ProxyConnectionSystem extends ConnectionSystem {
 
     private final Database database;
     private final Lazy<WebServer> webServer;
@@ -37,7 +37,7 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     private long latestServerMapRefresh;
 
     @Inject
-    public BungeeConnectionSystem(
+    public ProxyConnectionSystem(
             Database database,
             Lazy<WebServer> webServer,
             ConnectionLog connectionLog,
@@ -52,7 +52,6 @@ public class BungeeConnectionSystem extends ConnectionSystem {
         this.webServer = webServer;
         this.errorHandler = errorHandler;
         this.webExceptionLogger = webExceptionLogger;
-
         latestServerMapRefresh = 0;
     }
 
@@ -71,7 +70,9 @@ public class BungeeConnectionSystem extends ConnectionSystem {
     protected Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException {
         refreshServerMap();
         Server server = null;
-        if (infoRequest instanceof CacheRequest || infoRequest instanceof GenerateInspectPageRequest) {
+        if (infoRequest instanceof CacheRequest
+                || infoRequest instanceof GenerateInspectPageRequest
+                || infoRequest instanceof GenerateInspectPluginsTabRequest) {
             // Run locally
             return serverInfo.getServer();
         } else if (infoRequest instanceof GenerateAnalysisPageRequest) {
@@ -92,6 +93,10 @@ public class BungeeConnectionSystem extends ConnectionSystem {
         }
         for (Server server : bukkitServers.values()) {
             webExceptionLogger.logIfOccurs(this.getClass(), () -> sendInfoRequest(infoRequest, server));
+        }
+        // Quick hack
+        if (infoRequest instanceof GenerateInspectPluginsTabRequest) {
+            webExceptionLogger.logIfOccurs(this.getClass(), () -> InfoSystem.getInstance().sendRequest(infoRequest));
         }
     }
 

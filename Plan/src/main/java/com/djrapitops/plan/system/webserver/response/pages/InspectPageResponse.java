@@ -8,13 +8,14 @@ import org.apache.commons.text.StringSubstitutor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * @author Rsl1122
  * @since 3.5.2
  */
-public class InspectPageResponse extends Response {
+public class InspectPageResponse extends PageResponse {
 
     private final UUID uuid;
 
@@ -38,5 +39,19 @@ public class InspectPageResponse extends Response {
 
     private String[] getCalculating() {
         return new String[]{"<li><i class=\"fa fa-spin fa-refresh\"></i><a> Calculating...</a></li>", ""};
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof InspectPageResponse)) return false;
+        if (!super.equals(o)) return false;
+        InspectPageResponse that = (InspectPageResponse) o;
+        return Objects.equals(uuid, that.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), uuid);
     }
 }

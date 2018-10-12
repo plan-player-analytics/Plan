@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -62,7 +62,8 @@ public class KingdomsData extends PluginData {
         if (!kingdoms.isEmpty()) {
             KingdomsAccordion kingdomsAccordion = new KingdomsAccordion(
                     kingdoms,
-                    analysisData.getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
+                    Optional.ofNullable(analysisData).flatMap(c -> c.getValue(AnalysisKeys.PLAYERS_MUTATOR))
+                            .orElse(new PlayersMutator(new ArrayList<>()))
             );
 
             analysisContainer.addHtml("kingdomsAccordion", kingdomsAccordion.toHtml());

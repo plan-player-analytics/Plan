@@ -201,7 +201,9 @@ public class NetworkSettings {
                 AFK_THRESHOLD_MINUTES,
                 DATA_GEOLOCATIONS,
                 KEEP_LOGS_DAYS,
-                KEEP_INACTIVE_PLAYERS_DAYS
+                KEEP_INACTIVE_PLAYERS_DAYS,
+                PING_SERVER_ENABLE_DELAY,
+                PING_PLAYER_LOGIN_DELAY
         };
         logger.debug("NetworkSettings: Adding Config Values..");
         PlanConfig planConfig = config.get();

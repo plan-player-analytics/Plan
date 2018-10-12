@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.webserver.response.errors;
 
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.pages.PageResponse;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * @author Rsl1122
  */
-public class ErrorResponse extends Response {
+public class ErrorResponse extends PageResponse {
 
     private String title;
     private String paragraph;

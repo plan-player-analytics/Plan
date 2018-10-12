@@ -8,23 +8,23 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
- * Bungee specific DataCache.
+ * Proxy server specific DataCache.
  * <p>
  * Used for overriding {@link SessionCache#endSession(UUID, long)}.
  *
  * @author Rsl1122
  */
 @Singleton
-public class BungeeDataCache extends DataCache {
+public class ProxyDataCache extends DataCache {
 
     @Inject
-    public BungeeDataCache(Database database, ErrorHandler errorHandler) {
+    public ProxyDataCache(Database database, ErrorHandler errorHandler) {
         super(database, errorHandler);
     }
 
     @Override
     public void endSession(UUID uuid, long time) {
         removeSessionFromCache(uuid);
-        /* Bungee should not save sessions so session is not removed.. */
+        /* Proxy should not save sessions so session is not removed.. */
     }
 }

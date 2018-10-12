@@ -16,8 +16,8 @@ import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ServerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -81,7 +81,7 @@ public class PlayerOnlineListener implements Listener {
     }
 
     @EventHandler
-    public void onLogout(ServerDisconnectEvent event) {
+    public void onLogout(PlayerDisconnectEvent event) {
         try {
             ProxiedPlayer player = event.getPlayer();
             UUID uuid = player.getUniqueId();
