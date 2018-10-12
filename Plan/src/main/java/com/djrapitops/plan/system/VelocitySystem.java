@@ -4,35 +4,37 @@
  */
 package com.djrapitops.plan.system;
 
-import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.api.BungeeAPI;
+import com.djrapitops.plan.PlanVelocity;
+import com.djrapitops.plan.api.VelocityAPI;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.system.cache.ProxyCacheSystem;
-import com.djrapitops.plan.system.database.ProxyDBSystem;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.ProxyDBSystem;
 import com.djrapitops.plan.system.file.FileSystem;
 import com.djrapitops.plan.system.info.ProxyInfoSystem;
-import com.djrapitops.plan.system.info.server.BungeeServerInfo;
-import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
+import com.djrapitops.plan.system.info.server.VelocityServerInfo;
+import com.djrapitops.plan.system.listeners.VelocityListenerSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.PlanErrorManager;
 import com.djrapitops.plan.system.settings.config.BungeeConfigSystem;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
-import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
+import com.djrapitops.plan.system.tasks.VelocityTaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.function.Supplier;
 
 /**
- * Represents PlanSystem for PlanBungee.
+ * Represents PlanSystem for PlanVelocity.
+ * 
+ * Based on BungeeSystem
  *
- * @author Rsl1122
+ * @author MicleBrick
  */
-public class BungeeSystem extends PlanSystem {
+public class VelocitySystem extends PlanSystem {
 
-    public BungeeSystem(PlanBungee plugin) {
+    public VelocitySystem(PlanVelocity plugin) {
         setTestSystem(this);
 
         Log.setErrorManager(new PlanErrorManager());
@@ -41,21 +43,21 @@ public class BungeeSystem extends PlanSystem {
 
         versionCheckSystem = new VersionCheckSystem(plugin.getVersion(), localeSupplier);
         fileSystem = new FileSystem(plugin);
-        configSystem = new BungeeConfigSystem();
+        configSystem = new BungeeConfigSystem(); // not sure if this needs to be different for velocity
         databaseSystem = new ProxyDBSystem(localeSupplier);
         cacheSystem = new ProxyCacheSystem(this);
-        listenerSystem = new BungeeListenerSystem(plugin);
-        taskSystem = new BungeeTaskSystem(plugin);
+        listenerSystem = new VelocityListenerSystem(plugin);
+        taskSystem = new VelocityTaskSystem(plugin);
 
         infoSystem = new ProxyInfoSystem();
-        serverInfo = new BungeeServerInfo(plugin);
+        serverInfo = new VelocityServerInfo(plugin);
 
         hookHandler = new HookHandler();
-        planAPI = new BungeeAPI(this);
+        planAPI = new VelocityAPI(this);
     }
 
-    public static BungeeSystem getInstance() {
-        return PlanBungee.getInstance().getSystem();
+    public static VelocitySystem getInstance() {
+        return PlanVelocity.getInstance().getSystem();
     }
 
     public void setDatabaseSystem(DBSystem dbSystem) {

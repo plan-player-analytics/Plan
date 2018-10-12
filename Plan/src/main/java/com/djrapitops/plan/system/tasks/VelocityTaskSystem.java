@@ -4,27 +4,27 @@
  */
 package com.djrapitops.plan.system.tasks;
 
-import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.proxy.EnableConnectionTask;
+import com.djrapitops.plan.system.tasks.velocity.VelocityTPSCountTimer;
 import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
-import com.djrapitops.plan.system.tasks.server.PingCountTimerBungee;
+import com.djrapitops.plan.system.tasks.server.PingCountTimerVelocity;
 import com.djrapitops.plan.utilities.file.export.HtmlExport;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 /**
- * TaskSystem responsible for registering tasks for Bungee.
+ * TaskSystem responsible for registering tasks for Velocity.
  *
  * @author Rsl1122
  */
-public class BungeeTaskSystem extends TaskSystem {
+public class VelocityTaskSystem extends TaskSystem {
 
-    private final PlanBungee plugin;
+    private final PlanVelocity plugin;
 
-    public BungeeTaskSystem(PlanBungee plugin) {
-        super(new BungeeTPSCountTimer(plugin));
+    public VelocityTaskSystem(PlanVelocity plugin) {
+        super(new VelocityTPSCountTimer(plugin));
         this.plugin = plugin;
     }
 
@@ -40,10 +40,10 @@ public class BungeeTaskSystem extends TaskSystem {
         if (Settings.ANALYSIS_EXPORT.isTrue()) {
             registerTask(new HtmlExport(plugin)).runTaskAsynchronously();
         }
-        PingCountTimerBungee pingCountTimer = new PingCountTimerBungee();
+        PingCountTimerVelocity pingCountTimer = new PingCountTimerVelocity();
         plugin.registerListener(pingCountTimer);
         long startDelay = TimeAmount.SECOND.ticks() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
         RunnableFactory.createNew("PingCountTimer", pingCountTimer)
-                .runTaskTimer(startDelay, PingCountTimerBungee.PING_INTERVAL);
+                .runTaskTimer(startDelay, PingCountTimerVelocity.PING_INTERVAL);
     }
 }

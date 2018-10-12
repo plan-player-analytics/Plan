@@ -24,6 +24,10 @@
             <id>sponge-repo</id>
             <url>https://repo.spongepowered.org/maven</url>
         </repository>
+        <repository>
+            <id>velocity-repo</id>
+            <url>https://repo.velocitypowered.com/snapshots/</url>
+        </repository>
         <!--        RedisBungee Repository -->
         <repository>
             <id>md_5-snapshots</id>
@@ -76,6 +80,14 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.12-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <!--        Velocity -->
+        <dependency>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>

@@ -7,7 +7,7 @@ package com.djrapitops.plan.system.info;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.info.connection.BungeeConnectionSystem;
+import com.djrapitops.plan.system.info.connection.ProxyConnectionSystem;
 import com.djrapitops.plan.system.info.request.CacheRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPageRequest;
 import com.djrapitops.plan.system.info.request.GenerateInspectPluginsTabRequest;
@@ -23,10 +23,10 @@ import com.djrapitops.plan.system.webserver.response.pages.NetworkPageResponse;
  *
  * @author Rsl1122
  */
-public class BungeeInfoSystem extends InfoSystem {
+public class ProxyInfoSystem extends InfoSystem {
 
-    public BungeeInfoSystem() {
-        super(new BungeeConnectionSystem());
+    public ProxyInfoSystem() {
+        super(new ProxyConnectionSystem());
     }
 
     @Override

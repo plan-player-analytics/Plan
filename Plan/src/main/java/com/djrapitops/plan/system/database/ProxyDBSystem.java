@@ -15,9 +15,9 @@ import java.util.function.Supplier;
  *
  * @author Rsl1122
  */
-public class BungeeDBSystem extends DBSystem {
+public class ProxyDBSystem extends DBSystem {
 
-    public BungeeDBSystem(Supplier<Locale> locale) {
+    public ProxyDBSystem(Supplier<Locale> locale) {
         super(locale);
     }
 

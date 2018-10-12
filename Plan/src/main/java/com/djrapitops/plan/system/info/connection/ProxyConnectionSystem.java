@@ -18,15 +18,15 @@ import com.djrapitops.plugin.api.utility.log.Log;
 import java.util.UUID;
 
 /**
- * ConnectionSystem for Bungee.
+ * ConnectionSystem for proxy servers.
  *
  * @author Rsl1122
  */
-public class BungeeConnectionSystem extends ConnectionSystem {
+public class ProxyConnectionSystem extends ConnectionSystem {
 
     private long latestServerMapRefresh;
 
-    public BungeeConnectionSystem() {
+    public ProxyConnectionSystem() {
         latestServerMapRefresh = 0;
     }
 
