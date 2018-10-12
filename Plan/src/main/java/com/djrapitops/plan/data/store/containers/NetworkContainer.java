@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -21,7 +20,11 @@ import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
 import com.djrapitops.plan.utilities.html.structure.NetworkServerBox;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
+import dagger.Lazy;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,17 +42,32 @@ public class NetworkContainer extends DataContainer {
 
     private final ServerContainer bungeeContainer;
 
-    // TODO
-    private String version;
-    private PlanConfig config;
-    private Theme theme;
-    private Database database;
-    private ServerProperties serverProperties;
-    private Formatters formatters;
-    private Graphs graphs;
+    private final String version;
+    private final PlanConfig config;
+    private final Theme theme;
+    private final Database database;
+    private final ServerProperties serverProperties;
+    private final Formatters formatters;
+    private final Graphs graphs;
 
-    public NetworkContainer(ServerContainer bungeeContainer) {
+    public NetworkContainer(
+            ServerContainer bungeeContainer,
+            String version,
+            PlanConfig config,
+            Theme theme,
+            Database database,
+            ServerProperties serverProperties,
+            Formatters formatters,
+            Graphs graphs
+    ) {
         this.bungeeContainer = bungeeContainer;
+        this.version = version;
+        this.config = config;
+        this.theme = theme;
+        this.database = database;
+        this.serverProperties = serverProperties;
+        this.formatters = formatters;
+        this.graphs = graphs;
 
         putSupplier(NetworkKeys.PLAYERS_MUTATOR, () -> PlayersMutator.forContainer(bungeeContainer));
 
@@ -66,13 +84,15 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
-            for (Server server : getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>())) {
-                TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(server.getId(), new ArrayList<>()));
-
-                // TODO Add Registered players per server.
-                NetworkServerBox serverBox = new NetworkServerBox(server, 0, tpsMutator, graphs);
-                serverBoxes.append(serverBox.toHtml());
-            }
+            getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>())
+                    .stream()
+                    .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
+                    .forEach(server -> {
+                        TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(server.getId(), new ArrayList<>()));
+                        // TODO Add Registered players per server.
+                        NetworkServerBox serverBox = new NetworkServerBox(server, 0, tpsMutator, graphs);
+                        serverBoxes.append(serverBox.toHtml());
+                    });
             return serverBoxes.toString();
         });
     }
@@ -181,6 +201,50 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.PLAYERS_DAY, () -> getUnsafe(uniqueDay).count());
         putSupplier(NetworkKeys.PLAYERS_WEEK, () -> getUnsafe(uniqueWeek).count());
         putSupplier(NetworkKeys.PLAYERS_MONTH, () -> getUnsafe(uniqueMonth).count());
+    }
+
+    @Singleton
+    public static class Factory {
+
+        private final Lazy<String> version;
+        private final Lazy<PlanConfig> config;
+        private final Lazy<Theme> theme;
+        private final Lazy<Database> database;
+        private final Lazy<ServerProperties> serverProperties;
+        private final Lazy<Formatters> formatters;
+        private final Lazy<Graphs> graphs;
+
+        @Inject
+        public Factory(
+                @Named("currentVersion") Lazy<String> version,
+                Lazy<PlanConfig> config,
+                Lazy<Theme> theme,
+                Lazy<Database> database,
+                Lazy<ServerProperties> serverProperties,
+                Lazy<Formatters> formatters,
+                Lazy<Graphs> graphs
+        ) {
+            this.version = version;
+            this.config = config;
+            this.theme = theme;
+            this.database = database;
+            this.serverProperties = serverProperties;
+            this.formatters = formatters;
+            this.graphs = graphs;
+        }
+
+        public NetworkContainer forBungeeContainer(ServerContainer bungeeContainer) {
+            return new NetworkContainer(
+                    bungeeContainer,
+                    version.get(),
+                    config.get(),
+                    theme.get(),
+                    database.get(),
+                    serverProperties.get(),
+                    formatters.get(),
+                    graphs.get()
+            );
+        }
     }
 
 }

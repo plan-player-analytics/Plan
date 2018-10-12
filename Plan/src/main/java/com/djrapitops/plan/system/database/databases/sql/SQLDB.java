@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.operation.*;
@@ -46,6 +47,7 @@ public abstract class SQLDB extends Database {
 
     protected final Locale locale;
     protected final PlanConfig config;
+    protected final NetworkContainer.Factory networkContainerFactory;
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
     protected final Timings timings;
@@ -81,7 +83,7 @@ public abstract class SQLDB extends Database {
             Supplier<UUID> serverUUIDSupplier,
             Locale locale,
             PlanConfig config,
-            RunnableFactory runnableFactory,
+            NetworkContainer.Factory networkContainerFactory, RunnableFactory runnableFactory,
             PluginLogger logger,
             Timings timings,
             ErrorHandler errorHandler
@@ -89,6 +91,7 @@ public abstract class SQLDB extends Database {
         this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
         this.config = config;
+        this.networkContainerFactory = networkContainerFactory;
         this.runnableFactory = runnableFactory;
         this.logger = logger;
         this.timings = timings;
@@ -470,5 +473,9 @@ public abstract class SQLDB extends Database {
 
     public Supplier<UUID> getServerUUIDSupplier() {
         return serverUUIDSupplier;
+    }
+
+    public NetworkContainer.Factory getNetworkContainerFactory() {
+        return networkContainerFactory;
     }
 }

@@ -304,9 +304,8 @@ public class TPSTable extends Table {
     public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
         WhereParser sqlParser = Select.from(tableName, Col.SERVER_ID, Col.DATE, Col.PLAYERS_ONLINE)
                 .where(Col.DATE.get() + ">" + (System.currentTimeMillis() - TimeAmount.WEEK.toMillis(2L)));
-        String statementSelectServerID = serverTable.statementSelectServerID;
         for (Server server : servers) {
-            sqlParser.or(Col.SERVER_ID + "=" + statementSelectServerID.replace("?", server.getUuid().toString()));
+            sqlParser.or(Col.SERVER_ID + "=" + server.getId());
         }
 
         String sql = sqlParser.toString();

@@ -24,7 +24,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public NetworkContainer getNetworkContainer() {
-        NetworkContainer networkContainer = new NetworkContainer(getBungeeServerContainer());
+        NetworkContainer networkContainer = db.getNetworkContainerFactory().forBungeeContainer(getBungeeServerContainer());
         networkContainer.putSupplier(NetworkKeys.BUKKIT_SERVERS, () -> getBukkitServers().values());
         return networkContainer;
     }

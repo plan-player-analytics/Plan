@@ -72,9 +72,11 @@ public class NetworkServerBox {
                 "<span class=\"pull-right\">" + onlineCount + " / " + maxCount + "</span></p>" +
                 "</div>" +
                 "<div class=\"col-md-4\">" +
-                "<p><i class=\"far fa-chart-pie \"></i> Analysis Cached" +
+                "<p><i class=\"fa fa-chart-pie \"></i> Analysis Cached" +
                 "<span class=\"pull-right\"><b>" + cached + "</b></span></p>" +
-                "<a href=\"" + address + "\"><button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-light-green waves-effect\">" +
+                "<a href=\"" + address + "\"><button href=\"" + address + "\" type=\"button\" class=\"pull-right btn bg-" +
+                (isCached ? "light-green" : "grey") +
+                " waves-effect\">" +
                 "<i class=\"material-icons\">trending_up</i>" +
                 "<span>ANALYSIS</span>" +
                 "</button></a></div></div></div></div></div></div>" +
