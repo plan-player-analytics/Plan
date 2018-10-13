@@ -6,6 +6,9 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
@@ -23,22 +26,28 @@ public class BungeeSystemTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    private static PlanBungee planMock;
+    private static PlanBungee PLUGIN_MOCK;
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    private PlanBungeeComponent component;
     private PlanSystem bungeeSystem;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        PlanBungeeMocker mockUtil = PlanBungeeMocker.setUp()
-                .withDataFolder(temporaryFolder.getRoot())
-                .withLogging()
+        PlanBungeeMocker mocker = PlanBungeeMocker.setUp()
+                .withDataFolder(temporaryFolder.newFolder())
                 .withPluginDescription()
                 .withResourceFetchingFromJar()
                 .withProxy();
-        planMock = mockUtil.getPlanMock();
+        PLUGIN_MOCK = mocker.getPlanMock();
     }
-    
+
+    @Before
+    public void setUp() {
+        component = DaggerPlanBungeeComponent.builder().plan(PLUGIN_MOCK).build();
+    }
+
     @After
     public void tearDown() {
         if (bungeeSystem != null) {
@@ -47,29 +56,33 @@ public class BungeeSystemTest {
     }
 
     @Test
-    @Ignore
-    public void testEnable() throws EnableException {
-        bungeeSystem = null; //TODO
+    public void bungeeEnables() throws Exception {
+        bungeeSystem = component.system();
 
-//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
-//        Settings.BUNGEE_IP.setTemporaryValue("8.8.8.8");
-//        Settings.DB_TYPE.setTemporaryValue("sqlite");
-//        bungeeSystem.setDatabaseSystem(new BukkitDBSystem(Locale::new));
+        PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+        config.set(Settings.WEBSERVER_PORT, 9005);
+        config.set(Settings.BUNGEE_IP, "8.8.8.8");
+
+        DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
+        dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
 
         bungeeSystem.enable();
     }
 
     @Test
-    @Ignore
-    public void testEnableDefaultIP() throws EnableException {
+    @Ignore("First test causes config settings to be wrong")
+    public void bungeeDoesNotEnableWithDefaultIP() throws Exception {
         thrown.expect(EnableException.class);
         thrown.expectMessage("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
 
-        bungeeSystem = null; //TODO
+        bungeeSystem = component.system();
 
-//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
-//        Settings.DB_TYPE.setTemporaryValue("sqlite");
-//        bungeeSystem.setDatabaseSystem(new BukkitDBSystem(Locale::new));
+        PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+        config.set(Settings.WEBSERVER_PORT, 9005);
+        config.set(Settings.BUNGEE_IP, "0.0.0.0");
+
+        DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
+        dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
 
         bungeeSystem.enable();
     }
@@ -80,7 +93,12 @@ public class BungeeSystemTest {
         thrown.expect(EnableException.class);
         thrown.expectMessage("Database failed to initialize");
 
-        bungeeSystem = null; //TODO
+        bungeeSystem = component.system();
+
+        PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+        config.set(Settings.WEBSERVER_PORT, 9005);
+        config.set(Settings.BUNGEE_IP, "8.8.8.8");
+
         bungeeSystem.enable();
     }
 }

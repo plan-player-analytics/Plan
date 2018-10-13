@@ -37,7 +37,7 @@ public class BukkitDBSystem extends DBSystem {
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(locale, logger, timings, errorHandler);
+        super(locale, sqLiteDB, logger, timings, errorHandler);
         this.config = config;
 
         databases.add(mySQLDB);

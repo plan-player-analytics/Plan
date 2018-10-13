@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.database;
 
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
+import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -25,11 +26,12 @@ public class ProxyDBSystem extends DBSystem {
     public ProxyDBSystem(
             Locale locale,
             MySQLDB mySQLDB,
+            SQLiteDB.Factory sqLiteDB,
             PluginLogger logger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(locale, logger, timings, errorHandler);
+        super(locale, sqLiteDB, logger, timings, errorHandler);
         databases.add(mySQLDB);
         db = mySQLDB;
     }

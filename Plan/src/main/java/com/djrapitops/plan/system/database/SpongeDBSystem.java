@@ -21,9 +21,16 @@ import javax.inject.Singleton;
 public class SpongeDBSystem extends DBSystem {
 
     @Inject
-    public SpongeDBSystem(Locale locale, SpongeMySQLDB spongeMySQLDB, SQLiteDB.Factory sqLiteDB, PlanConfig config,
-                          PluginLogger logger, Timings timings, ErrorHandler errorHandler) {
-        super(locale, logger, timings, errorHandler);
+    public SpongeDBSystem(
+            Locale locale,
+            SpongeMySQLDB spongeMySQLDB,
+            SQLiteDB.Factory sqLiteDB,
+            PlanConfig config,
+            PluginLogger logger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
+        super(locale, sqLiteDB, logger, timings, errorHandler);
 
         databases.add(spongeMySQLDB);
         databases.add(sqLiteDB.usingDefaultFile());
