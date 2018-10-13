@@ -1,5 +1,6 @@
 package com.djrapitops.plan.system.database;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.SpongeMySQLDB;
 import com.djrapitops.plan.system.locale.Locale;
@@ -20,6 +21,8 @@ import javax.inject.Singleton;
 @Singleton
 public class SpongeDBSystem extends DBSystem {
 
+    private final PlanConfig config;
+
     @Inject
     public SpongeDBSystem(
             Locale locale,
@@ -31,11 +34,16 @@ public class SpongeDBSystem extends DBSystem {
             ErrorHandler errorHandler
     ) {
         super(locale, sqLiteDB, logger, timings, errorHandler);
+        this.config = config;
 
         databases.add(spongeMySQLDB);
         databases.add(sqLiteDB.usingDefaultFile());
+    }
 
+    @Override
+    public void enable() throws EnableException {
         String dbType = config.getString(Settings.DB_TYPE).toLowerCase().trim();
         db = getActiveDatabaseByName(dbType);
+        super.enable();
     }
 }

@@ -24,6 +24,8 @@ import dagger.Module;
 import dagger.Provides;
 import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
+import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -195,5 +197,9 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     @Override
     public PlanSystem getSystem() {
         return system;
+    }
+
+    public Game getGame() {
+        return Sponge.getGame();
     }
 }

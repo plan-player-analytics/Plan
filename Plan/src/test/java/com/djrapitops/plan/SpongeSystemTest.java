@@ -6,6 +6,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.settings.Settings;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
@@ -24,14 +25,20 @@ public class SpongeSystemTest {
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private static PlanSponge planMock;
     private PlanSystem spongeSystem;
+    private PlanSpongeComponent component;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
         PlanSpongeMocker mockUtil = PlanSpongeMocker.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
-                .withLogging()
-                .withResourceFetchingFromJar();
+                .withResourceFetchingFromJar()
+                .withGame();
         planMock = mockUtil.getPlanMock();
+    }
+
+    @Before
+    public void setUp() {
+        component = DaggerPlanSpongeComponent.builder().plan(planMock).build();
     }
 
     @After
@@ -42,11 +49,10 @@ public class SpongeSystemTest {
     }
 
     @Test
-    @Ignore("Sponge mock required")
     public void testEnable() throws EnableException {
-//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+        spongeSystem = component.system();
+        spongeSystem.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
 
-        spongeSystem = null; //TODO
         spongeSystem.enable();
     }
 }

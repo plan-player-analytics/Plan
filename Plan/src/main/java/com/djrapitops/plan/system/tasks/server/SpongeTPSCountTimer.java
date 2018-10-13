@@ -1,5 +1,6 @@
 package com.djrapitops.plan.system.tasks.server;
 
+import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
@@ -8,7 +9,6 @@ import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.tasks.TPSCountTimer;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.World;
 
 import javax.inject.Inject;
@@ -18,10 +18,12 @@ import javax.inject.Singleton;
 public class SpongeTPSCountTimer extends TPSCountTimer {
 
     private long lastCheckNano;
+    private final PlanSponge plugin;
     private ServerProperties serverProperties;
 
     @Inject
     public SpongeTPSCountTimer(
+            PlanSponge plugin,
             Processors processors,
             Processing processing,
             ServerProperties serverProperties,
@@ -29,6 +31,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
             ErrorHandler errorHandler
     ) {
         super(processors, processing, logger, errorHandler);
+        this.plugin = plugin;
         this.serverProperties = serverProperties;
         lastCheckNano = -1;
     }
@@ -58,7 +61,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
 
         long usedMemory = getUsedMemory();
 
-        double tps = Sponge.getGame().getServer().getTicksPerSecond();
+        double tps = plugin.getGame().getServer().getTicksPerSecond();
         int playersOnline = serverProperties.getOnlinePlayers();
         latestPlayersOnline = playersOnline;
         int loadedChunks = -1; // getLoadedChunks();
@@ -83,7 +86,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
     private int getLoadedChunks() {
         // DISABLED
         int loaded = 0;
-        for (World world : Sponge.getGame().getServer().getWorlds()) {
+        for (World world : plugin.getGame().getServer().getWorlds()) {
             loaded += world.getLoadedChunks().spliterator().estimateSize();
         }
         return loaded;
@@ -95,6 +98,6 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
      * @return amount of entities
      */
     private int getEntityCount() {
-        return Sponge.getGame().getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
+        return plugin.getGame().getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
     }
 }

@@ -1,10 +1,10 @@
 package com.djrapitops.plan.modules.server.sponge;
 
+import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.info.server.properties.SpongeServerProperties;
 import dagger.Module;
 import dagger.Provides;
-import org.spongepowered.api.Sponge;
 
 import javax.inject.Singleton;
 
@@ -18,7 +18,7 @@ public class SpongeServerPropertiesModule {
 
     @Provides
     @Singleton
-    ServerProperties provideServerProperties() {
-        return new SpongeServerProperties(Sponge.getGame());
+    ServerProperties provideServerProperties(PlanSponge plugin) {
+        return new SpongeServerProperties(plugin.getGame());
     }
 }
