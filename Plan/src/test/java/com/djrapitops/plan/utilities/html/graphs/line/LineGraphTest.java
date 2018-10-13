@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for {@link LineGraph}.
@@ -62,15 +62,15 @@ public class LineGraphTest {
                     break;
                 case ')':
                     Character pop = bracketStack.pop();
-                    assertTrue("Bracket mismatch at char: " + i + " Expected (, got " + pop, '(' == pop);
+                    assertEquals("Bracket mismatch at char: " + i + " Expected (, got " + pop, '(', (char) pop);
                     break;
                 case ']':
                     Character pop1 = bracketStack.pop();
-                    assertTrue("Bracket mismatch at char: " + i + " Expected [, got " + pop1, '[' == pop1);
+                    assertEquals("Bracket mismatch at char: " + i + " Expected [, got " + pop1, '[', (char) pop1);
                     break;
                 case '}':
                     Character pop2 = bracketStack.pop();
-                    assertTrue("Bracket mismatch at char: " + i + " Expected {, got " + pop2, '{' == pop2);
+                    assertEquals("Bracket mismatch at char: " + i + " Expected {, got " + pop2, '{', (char) pop2);
                     break;
                 default:
                     break;
