@@ -1,10 +1,18 @@
 package com.djrapitops.plan.system.webserver;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.DaggerPlanBukkitComponent;
+import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.api.exceptions.connection.*;
+import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.Base64Util;
-import org.junit.*;
+import com.djrapitops.plan.utilities.PassEncryptUtil;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -27,30 +35,32 @@ public class HTTPSWebServerAuthTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        PlanBukkitMocker mockUtil = PlanBukkitMocker.setUp()
+        PlanBukkitMocker mocker = PlanBukkitMocker.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
-                .withLogging()
                 .withPluginDescription()
                 .withResourceFetchingFromJar()
                 .withServer();
-        Plan planMock = mockUtil.getPlanMock();
+        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(mocker.getPlanMock()).build();
 
         URL resource = HTTPSWebServerAuthTest.class.getResource("/Cert.keystore");
         String keyStore = resource.getPath();
         String absolutePath = new File(keyStore).getAbsolutePath();
 
-//        Settings.WEBSERVER_CERTIFICATE_PATH.setTemporaryValue(absolutePath);
-//        Settings.WEBSERVER_CERTIFICATE_KEYPASS.setTemporaryValue("MnD3bU5HpmPXag0e");
-//        Settings.WEBSERVER_CERTIFICATE_STOREPASS.setTemporaryValue("wDwwf663NLTm73gL");
-//        Settings.WEBSERVER_CERTIFICATE_ALIAS.setTemporaryValue("DefaultPlanCert");
-//
-//        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+        bukkitSystem = component.system();
 
-        bukkitSystem = null; //TODO
-//        bukkitSystem.enable();
-//
-//        bukkitSystem.getDatabaseSystem().getDatabase().save()
-//                .webUser(new WebUser("test", PassEncryptUtil.createHash("testPass"), 0));
+        PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
+
+        config.set(Settings.WEBSERVER_CERTIFICATE_PATH, absolutePath);
+        config.set(Settings.WEBSERVER_CERTIFICATE_KEYPASS, "MnD3bU5HpmPXag0e");
+        config.set(Settings.WEBSERVER_CERTIFICATE_STOREPASS, "wDwwf663NLTm73gL");
+        config.set(Settings.WEBSERVER_CERTIFICATE_ALIAS, "DefaultPlanCert");
+
+        config.set(Settings.WEBSERVER_PORT, 9005);
+
+        bukkitSystem.enable();
+
+        bukkitSystem.getDatabaseSystem().getDatabase().save()
+                .webUser(new WebUser("test", PassEncryptUtil.createHash("testPass"), 0));
     }
 
     @AfterClass
@@ -89,7 +99,6 @@ public class HTTPSWebServerAuthTest {
      * Test case against "Perm level 0 required, got 0".
      */
     @Test
-    @Ignore // TODO
     public void testHTTPSAuthForPages() throws IOException, WebException, KeyManagementException, NoSuchAlgorithmException {
         String address = "https://localhost:9005";
         URL url = new URL(address);
@@ -114,6 +123,7 @@ public class HTTPSWebServerAuthTest {
 
         switch (responseCode) {
             case 200:
+            case 302:
                 return;
             case 400:
                 throw new BadRequestException("Bad Request: " + url.toString());
