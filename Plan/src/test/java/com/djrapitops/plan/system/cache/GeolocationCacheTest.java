@@ -1,7 +1,9 @@
 package com.djrapitops.plan.system.cache;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.Before;
@@ -12,81 +14,90 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.SystemMockUtil;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.*;
-import static org.mockito.Mockito.doReturn;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 /**
+ * Tests for {@link GeolocationCache}.
+ *
  * @author Fuzzlemann
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class GeolocationCacheTest {
 
-    private final Map<String, String> ipsToCountries = new HashMap<>();
-
+    private static final Map<String, String> TEST_DATA = new HashMap<>();
+    private static File IP_STORE;
     @Mock
-    private PlanFiles files;
+    public PlanFiles files;
     @Mock
-    private PlanConfig config;
-    private GeolocationCache geolocationCache;
+    public PlanConfig config;
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+    private GeolocationCache underTest;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
-        SystemMockUtil.setUp(temporaryFolder.getRoot())
-                .enableConfigSystem()
-                .enableCacheSystem();
+    public static void setUpClass() throws IOException {
+        IP_STORE = temporaryFolder.newFile("GeoIP.dat");
+        // TemporaryFolder creates the file, which prevents cache from downloading the GeoIP database from the internet.
+        // This is why the file needs to be removed first.
+        Files.delete(IP_STORE.toPath());
+
+        TEST_DATA.put("8.8.8.8", "United States");
+        TEST_DATA.put("8.8.4.4", "United States");
+        TEST_DATA.put("4.4.2.2", "United States");
+        TEST_DATA.put("208.67.222.222", "United States");
+        TEST_DATA.put("208.67.220.220", "United States");
+        TEST_DATA.put("205.210.42.205", "Canada");
+        TEST_DATA.put("64.68.200.200", "Canada");
+        TEST_DATA.put("0.0.0.0", "Not Known");
+        TEST_DATA.put("127.0.0.1", "Local Machine");
     }
 
     @Before
-    public void setUp() throws IOException {
-        doReturn(temporaryFolder.newFile("GeoIP.dat")).when(files.getFileFromPluginFolder("GeoIP.dat"));
-        geolocationCache = new GeolocationCache(new Locale(), files, config, new TestPluginLogger());
+    public void setUp() throws EnableException {
+        when(config.isTrue(Settings.DATA_GEOLOCATIONS)).thenReturn(true);
+        when(files.getFileFromPluginFolder("GeoIP.dat")).thenReturn(IP_STORE);
 
-        ipsToCountries.put("8.8.8.8", "United States");
-        ipsToCountries.put("8.8.4.4", "United States");
-        ipsToCountries.put("4.4.2.2", "United States");
-        ipsToCountries.put("208.67.222.222", "United States");
-        ipsToCountries.put("208.67.220.220", "United States");
-        ipsToCountries.put("205.210.42.205", "Canada");
-        ipsToCountries.put("64.68.200.200", "Canada");
-        ipsToCountries.put("0.0.0.0", "Not Known");
-        ipsToCountries.put("127.0.0.1", "Local Machine");
+        assertTrue(config.isTrue(Settings.DATA_GEOLOCATIONS));
+
+        underTest = new GeolocationCache(new Locale(), files, config, new TestPluginLogger());
+        underTest.enable();
     }
 
     @Test
-    public void testCountryGetting() {
-        for (Map.Entry<String, String> entry : ipsToCountries.entrySet()) {
+    public void countryIsFetched() {
+        for (Map.Entry<String, String> entry : TEST_DATA.entrySet()) {
             String ip = entry.getKey();
             String expCountry = entry.getValue();
 
-            String country = geolocationCache.getCountry(ip);
+            String country = underTest.getCountry(ip);
 
-            assertEquals(country, expCountry);
+            assertEquals(expCountry, country);
         }
     }
 
     @Test
-    public void testCaching() {
-        for (Map.Entry<String, String> entry : ipsToCountries.entrySet()) {
+    public void callsToCachedIPsReturnCachedEntries() {
+        for (Map.Entry<String, String> entry : TEST_DATA.entrySet()) {
             String ip = entry.getKey();
             String expIp = entry.getValue();
 
-            assertFalse(geolocationCache.isCached(ip));
-            String countrySecondCall = geolocationCache.getCountry(ip);
-            assertTrue(geolocationCache.isCached(ip));
+            assertFalse(underTest.isCached(ip));
+            String countrySecondCall = underTest.getCountry(ip);
+            assertTrue(underTest.isCached(ip));
 
-            String countryThirdCall = geolocationCache.getCountry(ip);
+            String countryThirdCall = underTest.getCountry(ip);
 
-            assertEquals(countrySecondCall, countryThirdCall);
-            assertEquals(countryThirdCall, expIp);
+            assertSame(countrySecondCall, countryThirdCall);
+            assertEquals(expIp, countryThirdCall);
         }
     }
 }
