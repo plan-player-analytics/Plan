@@ -42,7 +42,6 @@ public class SystemMockUtil {
     private SystemMockUtil initializeBukkitSystem(File dataFolder) throws Exception {
         Plan planMock = PlanBukkitMocker.setUp()
                 .withDataFolder(dataFolder)
-                .withLogging()
                 .withResourceFetchingFromJar()
                 .withPluginDescription()
                 .withServer()
