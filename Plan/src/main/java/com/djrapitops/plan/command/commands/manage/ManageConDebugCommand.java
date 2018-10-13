@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.connection.*;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.Server;
@@ -41,7 +41,7 @@ public class ManageConDebugCommand extends CommandNode {
     private final ConnectionSystem connectionSystem;
     private final InfoRequestFactory infoRequestFactory;
     private final WebServer webServer;
-    private final Database database;
+    private final DBSystem dbSystem;
 
     @Inject
     public ManageConDebugCommand(
@@ -52,7 +52,7 @@ public class ManageConDebugCommand extends CommandNode {
             ConnectionSystem connectionSystem,
             InfoRequestFactory infoRequestFactory,
             WebServer webServer,
-            Database database
+            DBSystem dbSystem
     ) {
         super("con", Permissions.MANAGE.getPermission(), CommandType.ALL);
 
@@ -63,7 +63,7 @@ public class ManageConDebugCommand extends CommandNode {
         this.connectionSystem = connectionSystem;
         this.infoRequestFactory = infoRequestFactory;
         this.webServer = webServer;
-        this.database = database;
+        this.dbSystem = dbSystem;
 
         setShortHelp(locale.getString(Check.isBungeeAvailable() ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
@@ -114,7 +114,7 @@ public class ManageConDebugCommand extends CommandNode {
     }
 
     private void testServers(Sender sender) {
-        List<Server> servers = database.fetch().getServers();
+        List<Server> servers = dbSystem.getDatabase().fetch().getServers();
 
         if (servers.isEmpty()) {
             sender.sendMessage(locale.getString(ManageLang.CON_NO_SERVERS));

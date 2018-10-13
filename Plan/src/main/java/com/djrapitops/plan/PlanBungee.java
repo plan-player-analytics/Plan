@@ -95,7 +95,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
             new BStatsBungee(
                     this,
-                    system.getDatabaseSystem().getActiveDatabase(),
+                    system.getDatabaseSystem().getDatabase(),
                     system.getInfoSystem().getConnectionSystem()
             ).registerMetrics();
 

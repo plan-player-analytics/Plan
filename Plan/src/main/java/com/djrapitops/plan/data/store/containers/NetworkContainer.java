@@ -7,7 +7,7 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -45,7 +45,7 @@ public class NetworkContainer extends DataContainer {
     private final String version;
     private final PlanConfig config;
     private final Theme theme;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ServerProperties serverProperties;
     private final Formatters formatters;
     private final Graphs graphs;
@@ -55,7 +55,7 @@ public class NetworkContainer extends DataContainer {
             String version,
             PlanConfig config,
             Theme theme,
-            Database database,
+            DBSystem dbSystem,
             ServerProperties serverProperties,
             Formatters formatters,
             Graphs graphs
@@ -64,7 +64,7 @@ public class NetworkContainer extends DataContainer {
         this.version = version;
         this.config = config;
         this.theme = theme;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.serverProperties = serverProperties;
         this.formatters = formatters;
         this.graphs = graphs;
@@ -78,7 +78,7 @@ public class NetworkContainer extends DataContainer {
     }
 
     private void addServerBoxes() {
-        putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> database.fetch().getPlayersOnlineForServers(
+        putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> dbSystem.getDatabase().fetch().getPlayersOnlineForServers(
                 getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
         );
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
@@ -213,7 +213,7 @@ public class NetworkContainer extends DataContainer {
         private final Lazy<String> version;
         private final Lazy<PlanConfig> config;
         private final Lazy<Theme> theme;
-        private final Lazy<Database> database;
+        private final Lazy<DBSystem> dbSystem;
         private final Lazy<ServerProperties> serverProperties;
         private final Lazy<Formatters> formatters;
         private final Lazy<Graphs> graphs;
@@ -223,7 +223,7 @@ public class NetworkContainer extends DataContainer {
                 @Named("currentVersion") Lazy<String> version,
                 Lazy<PlanConfig> config,
                 Lazy<Theme> theme,
-                Lazy<Database> database,
+                Lazy<DBSystem> dbSystem,
                 Lazy<ServerProperties> serverProperties,
                 Lazy<Formatters> formatters,
                 Lazy<Graphs> graphs
@@ -231,7 +231,7 @@ public class NetworkContainer extends DataContainer {
             this.version = version;
             this.config = config;
             this.theme = theme;
-            this.database = database;
+            this.dbSystem = dbSystem;
             this.serverProperties = serverProperties;
             this.formatters = formatters;
             this.graphs = graphs;
@@ -243,7 +243,7 @@ public class NetworkContainer extends DataContainer {
                     version.get(),
                     config.get(),
                     theme.get(),
-                    database.get(),
+                    dbSystem.get(),
                     serverProperties.get(),
                     formatters.get(),
                     graphs.get()

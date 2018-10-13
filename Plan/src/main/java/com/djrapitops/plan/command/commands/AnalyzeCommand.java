@@ -2,7 +2,7 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
@@ -42,7 +42,7 @@ public class AnalyzeCommand extends CommandNode {
     private final InfoSystem infoSystem;
     private final ServerInfo serverInfo;
     private final WebServer webServer;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ConnectionSystem connectionSystem;
     private final ErrorHandler errorHandler;
 
@@ -53,7 +53,7 @@ public class AnalyzeCommand extends CommandNode {
             InfoSystem infoSystem,
             ServerInfo serverInfo,
             WebServer webServer,
-            Database database,
+            DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
         super("analyze|analyse|analysis|a", Permissions.ANALYZE.getPermission(), CommandType.CONSOLE);
@@ -64,7 +64,7 @@ public class AnalyzeCommand extends CommandNode {
         connectionSystem = infoSystem.getConnectionSystem();
         this.serverInfo = serverInfo;
         this.webServer = webServer;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.ANALYZE));
@@ -110,14 +110,14 @@ public class AnalyzeCommand extends CommandNode {
     private void sendWebUserNotificationIfNecessary(Sender sender) {
         if (webServer.isAuthRequired() &&
                 CommandUtils.isPlayer(sender) &&
-                !database.check().doesWebUserExists(sender.getName())) {
+                !dbSystem.getDatabase().check().doesWebUserExists(sender.getName())) {
             sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));
         }
     }
 
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1 && connectionSystem.isServerAvailable()) {
-            Map<UUID, Server> bukkitServers = database.fetch().getBukkitServers();
+            Map<UUID, Server> bukkitServers = dbSystem.getDatabase().fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);
             for (Map.Entry<UUID, Server> entry : bukkitServers.entrySet()) {
                 Server server = entry.getValue();

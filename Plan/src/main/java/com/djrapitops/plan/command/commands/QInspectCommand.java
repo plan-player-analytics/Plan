@@ -8,7 +8,7 @@ import com.djrapitops.plan.data.store.mutators.ActivityIndex;
 import com.djrapitops.plan.data.store.mutators.GeoInfoMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateHolder;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -45,7 +45,7 @@ import java.util.UUID;
 public class QInspectCommand extends CommandNode {
 
     private final Locale locale;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final PlanConfig config;
     private final Processing processing;
     private final Formatters formatters;
@@ -57,7 +57,7 @@ public class QInspectCommand extends CommandNode {
             PlanConfig config,
             Locale locale,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             UUIDUtility uuidUtility,
             Formatters formatters,
             ErrorHandler errorHandler
@@ -69,7 +69,7 @@ public class QInspectCommand extends CommandNode {
         setArguments("<player>");
 
         this.locale = locale;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
 
@@ -98,7 +98,7 @@ public class QInspectCommand extends CommandNode {
                     return;
                 }
 
-                PlayerContainer container = database.fetch().getPlayerContainer(uuid);
+                PlayerContainer container = dbSystem.getDatabase().fetch().getPlayerContainer(uuid);
                 if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                     return;

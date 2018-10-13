@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -33,20 +33,20 @@ public class SearchCommand extends CommandNode {
 
     private final Locale locale;
     private final Processing processing;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
     public SearchCommand(
             Locale locale,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             ErrorHandler errorHandler) {
         super("search", Permissions.SEARCH.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
         this.processing = processing;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
 
         setArguments("<text>");
@@ -68,7 +68,7 @@ public class SearchCommand extends CommandNode {
         processing.submitNonCritical(() -> {
             try {
                 String searchTerm = args[0];
-                List<String> names = database.search().matchingPlayers(searchTerm);
+                List<String> names = dbSystem.getDatabase().search().matchingPlayers(searchTerm);
                 Collections.sort(names);
                 boolean empty = Verify.isEmpty(names);
 

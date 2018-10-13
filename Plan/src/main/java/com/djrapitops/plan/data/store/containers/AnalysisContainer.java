@@ -8,7 +8,7 @@ import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
 import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -48,7 +48,7 @@ public class AnalysisContainer extends DataContainer {
     private final String version;
     private final PlanConfig config;
     private final Theme theme;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ServerProperties serverProperties;
     private final Formatters formatters;
     private final Graphs graphs;
@@ -63,7 +63,7 @@ public class AnalysisContainer extends DataContainer {
             String version,
             PlanConfig config,
             Theme theme,
-            Database database,
+            DBSystem dbSystem,
             ServerProperties serverProperties,
             Formatters formatters,
             Graphs graphs,
@@ -75,7 +75,7 @@ public class AnalysisContainer extends DataContainer {
         this.version = version;
         this.config = config;
         this.theme = theme;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.serverProperties = serverProperties;
         this.formatters = formatters;
         this.graphs = graphs;
@@ -283,7 +283,7 @@ public class AnalysisContainer extends DataContainer {
 
     private void addSessionSuppliers() {
         Key<SessionAccordion> sessionAccordion = new Key<>(SessionAccordion.class, "SESSION_ACCORDION");
-        putCachingSupplier(serverNames, () -> database.fetch().getServerNames());
+        putCachingSupplier(serverNames, () -> dbSystem.getDatabase().fetch().getServerNames());
         putCachingSupplier(sessionAccordion, () -> accordions.serverSessionAccordion(
                 getUnsafe(AnalysisKeys.SESSIONS_MUTATOR).all(),
                 getSupplier(serverNames),
@@ -471,7 +471,7 @@ public class AnalysisContainer extends DataContainer {
         private final String version;
         private final PlanConfig config;
         private final Theme theme;
-        private final Database database;
+        private final DBSystem dbSystem;
         private final ServerProperties serverProperties;
         private final Formatters formatters;
         private final Graphs graphs;
@@ -484,7 +484,7 @@ public class AnalysisContainer extends DataContainer {
                 @Named("currentVersion") String version,
                 PlanConfig config,
                 Theme theme,
-                Database database,
+                DBSystem dbSystem,
                 ServerProperties serverProperties,
                 Formatters formatters,
                 Graphs graphs,
@@ -495,7 +495,7 @@ public class AnalysisContainer extends DataContainer {
             this.version = version;
             this.config = config;
             this.theme = theme;
-            this.database = database;
+            this.dbSystem = dbSystem;
             this.serverProperties = serverProperties;
             this.formatters = formatters;
             this.graphs = graphs;
@@ -510,7 +510,7 @@ public class AnalysisContainer extends DataContainer {
                     version,
                     config,
                     theme,
-                    database,
+                    dbSystem,
                     serverProperties,
                     formatters,
                     graphs,

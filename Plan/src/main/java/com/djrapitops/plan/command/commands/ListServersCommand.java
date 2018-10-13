@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -28,16 +28,21 @@ public class ListServersCommand extends CommandNode {
 
     private final Locale locale;
     private final ColorScheme colorScheme;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public ListServersCommand(Locale locale, ColorScheme colorScheme, Database database, ErrorHandler errorHandler) {
+    public ListServersCommand(
+            Locale locale,
+            ColorScheme colorScheme,
+            DBSystem dbSystem,
+            ErrorHandler errorHandler
+    ) {
         super("servers|serverlist|listservers|sl|ls", Permissions.MANAGE.getPermission(), CommandType.CONSOLE);
 
         this.locale = locale;
         this.colorScheme = colorScheme;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.SERVERS));
@@ -60,7 +65,7 @@ public class ListServersCommand extends CommandNode {
     }
 
     private void sendServers(Sender sender, Formatter<Server> serverFormatter) {
-        List<Server> servers = database.fetch().getServers();
+        List<Server> servers = dbSystem.getDatabase().fetch().getServers();
         for (Server server : servers) {
             sender.sendMessage(serverFormatter.apply(server));
         }

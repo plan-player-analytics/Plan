@@ -5,7 +5,7 @@
 package com.djrapitops.plan.system.webserver;
 
 import com.djrapitops.plan.system.DebugChannels;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -39,7 +39,7 @@ public class RequestHandler implements HttpHandler {
     private final Locale locale;
     private final PlanConfig config;
     private final Theme theme;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ResponseHandler responseHandler;
     private final Timings timings;
     private final PluginLogger logger;
@@ -50,7 +50,7 @@ public class RequestHandler implements HttpHandler {
             Locale locale,
             PlanConfig config,
             Theme theme,
-            Database database,
+            DBSystem dbSystem,
             ResponseHandler responseHandler,
             Timings timings,
             PluginLogger logger,
@@ -59,7 +59,7 @@ public class RequestHandler implements HttpHandler {
         this.locale = locale;
         this.config = config;
         this.theme = theme;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.responseHandler = responseHandler;
         this.timings = timings;
         this.logger = logger;
@@ -111,7 +111,7 @@ public class RequestHandler implements HttpHandler {
 
         String authLine = authorization.get(0);
         if (authLine.contains("Basic ")) {
-            return new BasicAuthentication(authLine.split(" ")[1], database);
+            return new BasicAuthentication(authLine.split(" ")[1], dbSystem.getDatabase());
         }
         return null;
     }

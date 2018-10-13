@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.webserver.response;
 
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
@@ -30,7 +30,7 @@ public class ResponseFactory {
     private final PlanFiles files;
     private final PageFactory pageFactory;
     private final Locale locale;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
@@ -39,14 +39,14 @@ public class ResponseFactory {
             PlanFiles files,
             PageFactory pageFactory,
             Locale locale,
-            Database database,
+            DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
         this.version = version;
         this.files = files;
         this.pageFactory = pageFactory;
         this.locale = locale;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
     }
 
@@ -88,11 +88,11 @@ public class ResponseFactory {
     }
 
     public RawDataResponse rawPlayerPageResponse(UUID uuid) {
-        return new RawPlayerDataResponse(database.fetch().getPlayerContainer(uuid));
+        return new RawPlayerDataResponse(dbSystem.getDatabase().fetch().getPlayerContainer(uuid));
     }
 
     public RawDataResponse rawServerPageResponse(UUID serverUUID) {
-        return new RawServerDataResponse(database.fetch().getServerContainer(serverUUID));
+        return new RawServerDataResponse(dbSystem.getDatabase().fetch().getServerContainer(serverUUID));
     }
 
     public Response javaScriptResponse(String fileName) {

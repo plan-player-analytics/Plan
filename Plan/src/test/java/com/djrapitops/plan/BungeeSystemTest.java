@@ -2,10 +2,10 @@
  * License is provided in the jar as LICENSE also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
  */
-package com.djrapitops.plan.system;
+package com.djrapitops.plan;
 
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.PlanSystem;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;

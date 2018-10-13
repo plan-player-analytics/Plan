@@ -8,7 +8,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -43,7 +43,7 @@ public class HtmlExport extends SpecificExport {
     private final Theme theme;
     private final Processing processing;
     private final PlanFiles files;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final PageFactory pageFactory;
     private final ConnectionSystem connectionSystem;
     private final ErrorHandler errorHandler;
@@ -55,7 +55,7 @@ public class HtmlExport extends SpecificExport {
             PlanConfig config,
             Theme theme,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             PageFactory pageFactory,
             ServerInfo serverInfo,
             ConnectionSystem connectionSystem,
@@ -66,7 +66,7 @@ public class HtmlExport extends SpecificExport {
         this.theme = theme;
         this.processing = processing;
         this.files = files;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.pageFactory = pageFactory;
         this.connectionSystem = connectionSystem;
         this.errorHandler = errorHandler;
@@ -76,7 +76,7 @@ public class HtmlExport extends SpecificExport {
         if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
             return;
         }
-        Optional<String> serverName = database.fetch().getServerName(serverUUID);
+        Optional<String> serverName = dbSystem.getDatabase().fetch().getServerName(serverUUID);
         serverName.ifPresent(name -> processing.submitNonCritical(() -> {
             try {
                 exportAvailableServerPage(serverUUID, name);
@@ -90,7 +90,7 @@ public class HtmlExport extends SpecificExport {
         if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
             return;
         }
-        String playerName = database.fetch().getPlayerName(uuid);
+        String playerName = dbSystem.getDatabase().fetch().getPlayerName(uuid);
         if (playerName != null) {
             processing.submitNonCritical(() -> {
                 try {
@@ -137,13 +137,13 @@ public class HtmlExport extends SpecificExport {
     }
 
     private void exportAvailablePlayers() throws IOException {
-        for (Map.Entry<UUID, UserInfo> entry : database.fetch().getUsers().entrySet()) {
+        for (Map.Entry<UUID, UserInfo> entry : dbSystem.getDatabase().fetch().getUsers().entrySet()) {
             exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
         }
     }
 
     private void exportAvailableServerPages() throws IOException {
-        Map<UUID, String> serverNames = database.fetch().getServerNames();
+        Map<UUID, String> serverNames = dbSystem.getDatabase().fetch().getServerNames();
 
         for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
             exportAvailableServerPage(entry.getKey(), entry.getValue());

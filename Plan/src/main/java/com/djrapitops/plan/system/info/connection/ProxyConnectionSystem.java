@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class ProxyConnectionSystem extends ConnectionSystem {
 
-    private final Database database;
+    private final DBSystem dbSystem;
     private final Lazy<WebServer> webServer;
     private final ErrorHandler errorHandler;
     private final WebExceptionLogger webExceptionLogger;
@@ -38,7 +38,7 @@ public class ProxyConnectionSystem extends ConnectionSystem {
 
     @Inject
     public ProxyConnectionSystem(
-            Database database,
+            DBSystem dbSystem,
             Lazy<WebServer> webServer,
             ConnectionLog connectionLog,
             InfoRequests infoRequests,
@@ -48,7 +48,7 @@ public class ProxyConnectionSystem extends ConnectionSystem {
             WebExceptionLogger webExceptionLogger
     ) {
         super(connectionLog, infoRequests, infoSystem, serverInfo);
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.webServer = webServer;
         this.errorHandler = errorHandler;
         this.webExceptionLogger = webExceptionLogger;
@@ -58,7 +58,7 @@ public class ProxyConnectionSystem extends ConnectionSystem {
     private void refreshServerMap() {
         if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
             try {
-                bukkitServers = database.fetch().getBukkitServers();
+                bukkitServers = dbSystem.getDatabase().fetch().getBukkitServers();
                 latestServerMapRefresh = System.currentTimeMillis();
             } catch (DBOpException e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);

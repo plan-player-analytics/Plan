@@ -22,8 +22,13 @@ import javax.inject.Singleton;
 public class ProxyDBSystem extends DBSystem {
 
     @Inject
-    public ProxyDBSystem(Locale locale, MySQLDB mySQLDB,
-                         PluginLogger logger, Timings timings, ErrorHandler errorHandler) {
+    public ProxyDBSystem(
+            Locale locale,
+            MySQLDB mySQLDB,
+            PluginLogger logger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
         super(locale, logger, timings, errorHandler);
         databases.add(mySQLDB);
         db = mySQLDB;

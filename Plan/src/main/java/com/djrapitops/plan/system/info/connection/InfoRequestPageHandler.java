@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.NotFoundException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.request.InfoRequest;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.pages.PageHandler;
@@ -32,18 +32,18 @@ import java.util.List;
 @Singleton
 public class InfoRequestPageHandler implements PageHandler {
 
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ConnectionSystem connectionSystem;
     private final ResponseFactory responseFactory;
     private final PluginLogger logger;
 
     @Inject
     public InfoRequestPageHandler(
-            Database database,
+            DBSystem dbSystem,
             ConnectionSystem connectionSystem,
             ResponseFactory responseFactory, PluginLogger logger
     ) {
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.connectionSystem = connectionSystem;
         this.responseFactory = responseFactory;
         this.logger = logger;
@@ -68,7 +68,7 @@ public class InfoRequestPageHandler implements PageHandler {
             Verify.nullCheck(infoRequest, () -> new NotFoundException("Info Request has not been registered."));
 
             logger.debug("ConnectionIn: " + infoRequest.getClass().getSimpleName());
-            return new ConnectionIn(request, infoRequest, database, connectionSystem).handleRequest();
+            return new ConnectionIn(request, infoRequest, dbSystem.getDatabase(), connectionSystem).handleRequest();
         } catch (WebException e) {
             responseCode = getResponseCodeFor(e);
             throw e;

@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
@@ -30,21 +30,21 @@ public class WebListUsersCommand extends CommandNode {
 
     private final Locale locale;
     private final Processing processing;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
     public WebListUsersCommand(
             Locale locale,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
         super("list", Permissions.MANAGE_WEB.getPerm(), CommandType.CONSOLE);
 
         this.locale = locale;
         this.processing = processing;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.WEB_LIST));
@@ -54,7 +54,7 @@ public class WebListUsersCommand extends CommandNode {
     public void onCommand(Sender sender, String commandLabel, String[] args) {
         processing.submitNonCritical(() -> {
             try {
-                List<WebUser> users = database.fetch().getWebUsers();
+                List<WebUser> users = dbSystem.getDatabase().fetch().getWebUsers();
                 users.sort(new WebUserComparator());
                 sender.sendMessage(locale.getString(CommandLang.HEADER_WEB_USERS, users.size()));
                 for (WebUser user : users) {

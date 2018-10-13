@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
@@ -32,19 +33,19 @@ public class BukkitServerInfo extends ServerInfo {
     private final Lazy<WebServer> webServer;
     private final PlanConfig config;
     private ServerInfoFile serverInfoFile;
-    private Database database;
+    private DBSystem dbSystem;
 
     @Inject
     public BukkitServerInfo(
             ServerProperties serverProperties,
             ServerInfoFile serverInfoFile,
-            Database database,
+            DBSystem dbSystem,
             Lazy<WebServer> webServer,
             PlanConfig config
     ) {
         super(serverProperties);
         this.serverInfoFile = serverInfoFile;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.webServer = webServer;
         this.config = config;
     }
@@ -73,6 +74,7 @@ public class BukkitServerInfo extends ServerInfo {
     }
 
     private Server updateDbInfo(UUID serverUUID) throws IOException {
+        Database database = dbSystem.getDatabase();
         Optional<Integer> serverID = database.fetch().getServerID(serverUUID);
         if (!serverID.isPresent()) {
             return registerServer(serverUUID);
@@ -99,14 +101,12 @@ public class BukkitServerInfo extends ServerInfo {
         int maxPlayers = serverProperties.getMaxPlayers();
 
         Server server = new Server(-1, serverUUID, name, webAddress, maxPlayers);
+
+        Database database = dbSystem.getDatabase();
         database.save().serverInfoForThisServer(server);
 
         Optional<Integer> serverID = database.fetch().getServerID(serverUUID);
-        if (!serverID.isPresent()) {
-            throw new IllegalStateException("Failed to Register Server (ID not found)");
-        }
-
-        int id = serverID.get();
+        int id = serverID.orElseThrow(() -> new IllegalStateException("Failed to Register Server (ID not found)"));
         server.setId(id);
 
         serverInfoFile.saveServerUUID(serverUUID);

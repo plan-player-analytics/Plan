@@ -6,7 +6,8 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
@@ -23,7 +24,6 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +38,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
     private final Locale locale;
     private final PlanConfig config;
     private final Processing processing;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final Lazy<WebServer> webServer;
     private final PluginLogger pluginLogger;
     private final WebExceptionLogger webExceptionLogger;
@@ -52,7 +52,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
             Locale locale,
             PlanConfig config,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             Lazy<WebServer> webServer,
             ConnectionLog connectionLog,
             InfoRequests infoRequests,
@@ -65,7 +65,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
         this.locale = locale;
         this.config = config;
         this.processing = processing;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.webServer = webServer;
         this.pluginLogger = pluginLogger;
         this.webExceptionLogger = webExceptionLogger;
@@ -75,9 +75,9 @@ public class ServerConnectionSystem extends ConnectionSystem {
     private void refreshServerMap() {
         processing.submitNonCritical(() -> {
             if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
-                Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
-                bungeeInformation.ifPresent(server -> mainServer = server);
-                bukkitServers = database.fetch().getBukkitServers();
+                FetchOperations fetch = dbSystem.getDatabase().fetch();
+                mainServer = fetch.getBungeeInformation().orElse(null);
+                bukkitServers = fetch.getBukkitServers();
                 latestServerMapRefresh = System.currentTimeMillis();
             }
         });

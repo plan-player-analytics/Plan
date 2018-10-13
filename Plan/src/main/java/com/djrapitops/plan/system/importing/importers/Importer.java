@@ -13,7 +13,8 @@ import com.djrapitops.plan.data.container.UserInfo;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.GeolocationCache;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 import com.djrapitops.plan.system.importing.data.ServerImportData;
 import com.djrapitops.plan.system.importing.data.UserImportData;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 public abstract class Importer {
 
     private final GeolocationCache geolocationCache;
-    private final Database database;
+    private final DBSystem dbSystem;
     protected final Supplier<UUID> serverUUID;
 
     private final String name;
@@ -47,12 +48,12 @@ public abstract class Importer {
     protected Importer(
             Plan plugin,
             GeolocationCache geolocationCache,
-            Database database,
+            DBSystem dbSystem,
             ServerInfo serverInfo,
             String name
     ) {
         this.geolocationCache = geolocationCache;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.serverUUID = serverInfo::getServerUUID;
 
         this.name = name;
@@ -97,7 +98,7 @@ public abstract class Importer {
 
         ExecutorService service = Executors.newCachedThreadPool();
 
-        SaveOperations save = database.save();
+        SaveOperations save = dbSystem.getDatabase().save();
         submitTo(service, () -> save.insertTPS(ImmutableMap.of(serverUUID.get(), serverImportData.getTpsData())));
         submitTo(service, () -> save.insertCommandUsage(ImmutableMap.of(serverUUID.get(), serverImportData.getCommandUsages())));
 
@@ -120,8 +121,9 @@ public abstract class Importer {
         UserImportRefiner userImportRefiner = new UserImportRefiner(plugin, userImportData);
         userImportData = userImportRefiner.refineData();
 
-        Set<UUID> existingUUIDs = database.fetch().getSavedUUIDs();
-        Set<UUID> existingUserInfoTableUUIDs = database.fetch().getSavedUUIDs(serverUUID.get());
+        FetchOperations fetch = dbSystem.getDatabase().fetch();
+        Set<UUID> existingUUIDs = fetch.getSavedUUIDs();
+        Set<UUID> existingUserInfoTableUUIDs = fetch.getSavedUUIDs(serverUUID.get());
 
         Map<UUID, UserInfo> users = new HashMap<>();
         List<UserInfo> userInfo = new ArrayList<>();
@@ -150,7 +152,7 @@ public abstract class Importer {
 
         ExecutorService service = Executors.newCachedThreadPool();
 
-        SaveOperations save = database.save();
+        SaveOperations save = dbSystem.getDatabase().save();
 
         save.insertUsers(users);
         submitTo(service, () -> save.insertSessions(ImmutableMap.of(serverUUID.get(), sessions), true));

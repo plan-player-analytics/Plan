@@ -7,7 +7,7 @@ package com.djrapitops.plan.utilities.uuid;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plugin.api.utility.UUIDFetcher;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -23,13 +23,13 @@ import java.util.UUID;
 public class UUIDUtility {
 
     private final DataCache dataCache;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public UUIDUtility(DataCache dataCache, Database database, ErrorHandler errorHandler) {
+    public UUIDUtility(DataCache dataCache, DBSystem dbSystem, ErrorHandler errorHandler) {
         this.dataCache = dataCache;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
     }
 
@@ -46,7 +46,7 @@ public class UUIDUtility {
             return uuidOf;
         }
         try {
-            uuid = database.fetch().getUuidOf(playerName);
+            uuid = dbSystem.getDatabase().fetch().getUuidOf(playerName);
         } catch (DBOpException e) {
             errorHandler.log(L.ERROR, UUIDUtility.class, e);
         }

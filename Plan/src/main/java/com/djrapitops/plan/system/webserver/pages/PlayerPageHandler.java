@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.webserver.Request;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
@@ -33,19 +33,19 @@ import java.util.UUID;
 public class PlayerPageHandler implements PageHandler {
 
     private final ResponseFactory responseFactory;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final InfoSystem infoSystem;
     private final UUIDUtility uuidUtility;
 
     @Inject
     public PlayerPageHandler(
             ResponseFactory responseFactory,
-            Database database,
+            DBSystem dbSystem,
             InfoSystem infoSystem,
             UUIDUtility uuidUtility
     ) {
         this.responseFactory = responseFactory;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.infoSystem = infoSystem;
         this.uuidUtility = uuidUtility;
     }
@@ -66,7 +66,7 @@ public class PlayerPageHandler implements PageHandler {
         }
         try {
             // TODO Move this Database dependency to PlayerPage generation in PageFactory instead.
-            if (database.check().isPlayerRegistered(uuid)) {
+            if (dbSystem.getDatabase().check().isPlayerRegistered(uuid)) {
                 if (raw) {
                     return ResponseCache.loadResponse(PageId.RAW_PLAYER.of(uuid), () -> responseFactory.rawPlayerPageResponse(uuid));
                 }

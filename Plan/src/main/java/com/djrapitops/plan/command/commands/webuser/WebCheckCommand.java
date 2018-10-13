@@ -1,6 +1,7 @@
 package com.djrapitops.plan.command.commands.webuser;
 
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -30,20 +31,21 @@ public class WebCheckCommand extends CommandNode {
 
     private final Locale locale;
     private final Processing processing;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
     public WebCheckCommand(
             Locale locale,
             Processing processing,
-            Database database,
-            ErrorHandler errorHandler) {
+            DBSystem dbSystem,
+            ErrorHandler errorHandler
+    ) {
         super("check", Permissions.MANAGE_WEB.getPerm(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
         this.processing = processing;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.WEB_CHECK));
@@ -59,11 +61,12 @@ public class WebCheckCommand extends CommandNode {
 
         processing.submitNonCritical(() -> {
             try {
-                if (!database.check().doesWebUserExists(user)) {
+                Database db = dbSystem.getDatabase();
+                if (!db.check().doesWebUserExists(user)) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_NOT_EXISTS));
                     return;
                 }
-                WebUser info = database.fetch().getWebUser(user);
+                WebUser info = db.fetch().getWebUser(user);
                 sender.sendMessage(locale.getString(CommandLang.WEB_USER_LIST, info.getName(), info.getPermLevel()));
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);

@@ -8,7 +8,7 @@ import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
@@ -36,7 +36,7 @@ public class ServerPageHandler implements PageHandler {
 
     private final Processing processing;
     private final ResponseFactory responseFactory;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final InfoSystem infoSystem;
 
@@ -44,13 +44,13 @@ public class ServerPageHandler implements PageHandler {
     public ServerPageHandler(
             Processing processing,
             ResponseFactory responseFactory,
-            Database database,
+            DBSystem dbSystem,
             ServerInfo serverInfo,
             InfoSystem infoSystem
     ) {
         this.processing = processing;
         this.responseFactory = responseFactory;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.infoSystem = infoSystem;
     }
@@ -97,7 +97,7 @@ public class ServerPageHandler implements PageHandler {
         if (!target.isEmpty()) {
             try {
                 String serverName = target.get(0).replace("%20", " ");
-                Optional<UUID> serverUUIDOptional = database.fetch().getServerUUID(serverName);
+                Optional<UUID> serverUUIDOptional = dbSystem.getDatabase().fetch().getServerUUID(serverName);
                 if (serverUUIDOptional.isPresent()) {
                     serverUUID = serverUUIDOptional.get();
                 }

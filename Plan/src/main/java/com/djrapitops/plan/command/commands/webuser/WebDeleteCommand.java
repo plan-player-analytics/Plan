@@ -1,5 +1,6 @@
 package com.djrapitops.plan.command.commands.webuser;
 
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -29,21 +30,21 @@ public class WebDeleteCommand extends CommandNode {
 
     private final Locale locale;
     private final Processing processing;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
     public WebDeleteCommand(
             Locale locale,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
         super("delete|remove", Permissions.MANAGE_WEB.getPerm(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
         this.processing = processing;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
 
         setShortHelp(locale.getString(CmdHelpLang.WEB_DELETE));
@@ -59,11 +60,12 @@ public class WebDeleteCommand extends CommandNode {
 
         processing.submitNonCritical(() -> {
             try {
-                if (!database.check().doesWebUserExists(user)) {
+                Database db = dbSystem.getDatabase();
+                if (!db.check().doesWebUserExists(user)) {
                     sender.sendMessage("§c[Plan] User Doesn't exist.");
                     return;
                 }
-                database.remove().webUser(user);
+                db.remove().webUser(user);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);

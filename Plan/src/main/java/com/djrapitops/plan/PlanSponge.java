@@ -125,7 +125,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
             new BStatsSponge(
                     metrics,
-                    system.getDatabaseSystem().getActiveDatabase()
+                    system.getDatabaseSystem().getDatabase()
             ).registerMetrics();
 
             slf4jLogger.info(locale.getString(PluginLang.ENABLED));

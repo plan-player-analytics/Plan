@@ -6,7 +6,7 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -24,18 +24,18 @@ import java.util.UUID;
 public class ProxyAPI extends CommonAPI {
 
     private final HookHandler hookHandler;
-    private final Database database;
+    private final DBSystem dbSystem;
 
     @Inject
     public ProxyAPI(
             UUIDUtility uuidUtility,
-            Database database,
+            DBSystem dbSystem,
             HookHandler hookHandler,
             ErrorHandler errorHandler
     ) {
         super(uuidUtility, errorHandler);
 
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.hookHandler = hookHandler;
     }
 
@@ -46,11 +46,11 @@ public class ProxyAPI extends CommonAPI {
 
     @Override
     public String getPlayerName(UUID uuid) {
-        return database.fetch().getPlayerName(uuid);
+        return dbSystem.getDatabase().fetch().getPlayerName(uuid);
     }
 
     @Override
     public FetchOperations fetchFromPlanDB() {
-        return database.fetch();
+        return dbSystem.getDatabase().fetch();
     }
 }

@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
@@ -20,7 +20,6 @@ import java.util.UUID;
  * <ul>
  * <li>PlayerName cache, used for reducing database calls on chat events</li>
  * <li>DisplayName cache, used for reducing database calls on chat events</li>
- * <li>FirstSession MessageCount Map, used for tracking first session and message count on that session.</li>
  * </ul>
  *
  * @author Rsl1122
@@ -30,7 +29,6 @@ import java.util.UUID;
 public class DataCache extends SessionCache implements SubSystem {
 
     private final ErrorHandler errorHandler;
-    private Database database;
 
     private final Map<UUID, String> playerNames;
     private final Map<String, UUID> uuids;
@@ -38,16 +36,14 @@ public class DataCache extends SessionCache implements SubSystem {
 
     @Inject
     public DataCache(
-            Database database,
+            DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
-        super(database);
+        super(dbSystem);
         this.errorHandler = errorHandler;
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
         uuids = new HashMap<>();
-
-        this.database = database;
     }
 
     @Override
@@ -93,7 +89,7 @@ public class DataCache extends SessionCache implements SubSystem {
         String name = playerNames.get(uuid);
         if (name == null) {
             try {
-                name = database.fetch().getPlayerName(uuid);
+                name = dbSystem.getDatabase().fetch().getPlayerName(uuid);
                 playerNames.put(uuid, name);
             } catch (DBOpException e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);
@@ -116,7 +112,7 @@ public class DataCache extends SessionCache implements SubSystem {
         if (cached == null) {
             List<String> nicknames;
             try {
-                nicknames = database.fetch().getNicknames(uuid);
+                nicknames = dbSystem.getDatabase().fetch().getNicknames(uuid);
                 if (!nicknames.isEmpty()) {
                     return nicknames.get(nicknames.size() - 1);
                 }

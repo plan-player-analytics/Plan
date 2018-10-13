@@ -1,4 +1,4 @@
-package module;
+package utilities.module;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plugin.IPlugin;

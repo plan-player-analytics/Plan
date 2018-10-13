@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.cache;
 
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
@@ -18,8 +18,8 @@ import java.util.UUID;
 public class ProxyDataCache extends DataCache {
 
     @Inject
-    public ProxyDataCache(Database database, ErrorHandler errorHandler) {
-        super(database, errorHandler);
+    public ProxyDataCache(DBSystem dbSystem, ErrorHandler errorHandler) {
+        super(dbSystem, errorHandler);
     }
 
     @Override

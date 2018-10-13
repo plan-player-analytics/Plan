@@ -61,7 +61,7 @@ public class ManageHotSwapCommand extends CommandNode {
         Verify.isTrue(isCorrectDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
-        Verify.isFalse(dbName.equals(dbSystem.getActiveDatabase().getConfigName()),
+        Verify.isFalse(dbName.equals(dbSystem.getDatabase().getConfigName()),
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB)));
 
         try {

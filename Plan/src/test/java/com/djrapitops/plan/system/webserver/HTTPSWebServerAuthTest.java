@@ -49,7 +49,7 @@ public class HTTPSWebServerAuthTest {
         bukkitSystem = null; //TODO
 //        bukkitSystem.enable();
 //
-//        bukkitSystem.getDatabaseSystem().getActiveDatabase().save()
+//        bukkitSystem.getDatabaseSystem().getDatabase().save()
 //                .webUser(new WebUser("test", PassEncryptUtil.createHash("testPass"), 0));
     }
 

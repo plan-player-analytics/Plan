@@ -4,6 +4,7 @@
  */
 package com.djrapitops.plan.system.database;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.locale.Locale;
@@ -24,15 +25,29 @@ import javax.inject.Singleton;
 @Singleton
 public class BukkitDBSystem extends DBSystem {
 
+    private final PlanConfig config;
+
     @Inject
-    public BukkitDBSystem(Locale locale, MySQLDB mySQLDB, SQLiteDB.Factory sqLiteDB, PlanConfig config,
-                          PluginLogger logger, Timings timings, ErrorHandler errorHandler) {
+    public BukkitDBSystem(
+            Locale locale,
+            MySQLDB mySQLDB,
+            SQLiteDB.Factory sqLiteDB,
+            PlanConfig config,
+            PluginLogger logger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
         super(locale, logger, timings, errorHandler);
+        this.config = config;
 
         databases.add(mySQLDB);
         databases.add(sqLiteDB.usingDefaultFile());
+    }
 
+    @Override
+    public void enable() throws EnableException {
         String dbType = config.getString(Settings.DB_TYPE).toLowerCase().trim();
         db = getActiveDatabaseByName(dbType);
+        super.enable();
     }
 }

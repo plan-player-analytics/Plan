@@ -75,7 +75,7 @@ public abstract class DBSystem implements SubSystem {
         }
     }
 
-    public Database getActiveDatabase() {
+    public Database getDatabase() {
         return db;
     }
 

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.info.server;
 
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.WebServer;
@@ -14,10 +14,10 @@ public class SpongeServerInfo extends BukkitServerInfo {
     public SpongeServerInfo(
             ServerProperties serverProperties,
             ServerInfoFile serverInfoFile,
-            Database database,
+            DBSystem dbSystem,
             Lazy<WebServer> webServer,
             PlanConfig config
     ) {
-        super(serverProperties, serverInfoFile, database, webServer, config);
+        super(serverProperties, serverInfoFile, dbSystem, webServer, config);
     }
 }

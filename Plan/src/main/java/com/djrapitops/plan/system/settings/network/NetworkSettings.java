@@ -4,7 +4,7 @@
  */
 package com.djrapitops.plan.system.settings.network;
 
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.ServerSpecificSettings;
@@ -42,7 +42,7 @@ public class NetworkSettings {
     private final Lazy<PlanConfig> config;
     private final ServerSpecificSettings serverSpecificSettings;
     private final Processing processing;
-    private final Lazy<Database> database;
+    private final Lazy<DBSystem> dbSystem;
     private final Lazy<ServerInfo> serverInfo;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
@@ -52,7 +52,7 @@ public class NetworkSettings {
             Lazy<PlanConfig> config,
             ServerSpecificSettings serverSpecificSettings,
             Processing processing,
-            Lazy<Database> database,
+            Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
             PluginLogger logger,
             ErrorHandler errorHandler
@@ -60,7 +60,7 @@ public class NetworkSettings {
         this.config = config;
         this.serverSpecificSettings = serverSpecificSettings;
         this.processing = processing;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.logger = logger;
         this.errorHandler = errorHandler;
@@ -90,7 +90,7 @@ public class NetworkSettings {
 
     void loadFromDatabase() {
         logger.debug("NetworkSettings: Fetch Config settings from database..");
-        Optional<String> encodedConfigSettings = database.get().transfer().getEncodedConfigSettings();
+        Optional<String> encodedConfigSettings = dbSystem.get().getDatabase().transfer().getEncodedConfigSettings();
 
         if (!encodedConfigSettings.isPresent()) {
             logger.debug("NetworkSettings: No Config settings in database.");
@@ -157,7 +157,7 @@ public class NetworkSettings {
         String base64 = Base64Util.encode(transferBuilder.toString());
 
         logger.debug("NetworkSettings: Saving Config settings to database..");
-        database.get().transfer().storeConfigSettings(base64);
+        dbSystem.get().getDatabase().transfer().storeConfigSettings(base64);
     }
 
     private Map<String, Object> getConfigValues() {
@@ -230,7 +230,7 @@ public class NetworkSettings {
     private void addServerSpecificValues(Map<String, Object> configValues) {
         logger.debug("NetworkSettings: Adding Server-specific Config Values..");
 
-        for (UUID serverUUID : database.get().fetch().getServerUUIDs()) {
+        for (UUID serverUUID : dbSystem.get().getDatabase().fetch().getServerUUIDs()) {
             String theme = serverSpecificSettings.getString(serverUUID, THEME_BASE);
             Integer port = serverSpecificSettings.getInt(serverUUID, WEBSERVER_PORT);
             String name = serverSpecificSettings.getString(serverUUID, SERVER_NAME);

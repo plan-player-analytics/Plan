@@ -1,7 +1,7 @@
 package com.djrapitops.plan.system.processing.processors;
 
 import com.djrapitops.plan.data.container.TPS;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.processing.processors.info.InfoProcessors;
 import com.djrapitops.plan.system.processing.processors.player.PlayerProcessors;
 import dagger.Lazy;
@@ -21,26 +21,26 @@ public class Processors {
     private final PlayerProcessors playerProcessors;
     private final InfoProcessors infoProcessors;
 
-    private final Lazy<Database> database;
+    private final Lazy<DBSystem> dbSystem;
 
     @Inject
     public Processors(
             PlayerProcessors playerProcessors,
             InfoProcessors infoProcessors,
 
-            Lazy<Database> database
+            Lazy<DBSystem> dbSystem
     ) {
         this.playerProcessors = playerProcessors;
         this.infoProcessors = infoProcessors;
-        this.database = database;
+        this.dbSystem = dbSystem;
     }
 
     public TPSInsertProcessor tpsInsertProcessor(List<TPS> tpsList) {
-        return new TPSInsertProcessor(tpsList, database.get());
+        return new TPSInsertProcessor(tpsList, dbSystem.get().getDatabase());
     }
 
     public CommandProcessor commandProcessor(String command) {
-        return new CommandProcessor(command, database.get());
+        return new CommandProcessor(command, dbSystem.get().getDatabase());
     }
 
     public PlayerProcessors player() {

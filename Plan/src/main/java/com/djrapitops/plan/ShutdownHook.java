@@ -10,6 +10,7 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -29,12 +30,12 @@ import java.util.UUID;
 public class ShutdownHook extends Thread {
 
     private static ShutdownHook activated;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
 
     @Inject
-    public ShutdownHook(Database database, ErrorHandler errorHandler) {
-        this.database = database;
+    public ShutdownHook(DBSystem dbSystem, ErrorHandler errorHandler) {
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
     }
 
@@ -71,7 +72,7 @@ public class ShutdownHook extends Thread {
             errorHandler.log(L.ERROR, this.getClass(), e);
         } finally {
             try {
-                database.close();
+                dbSystem.getDatabase().close();
             } catch (DBException e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);
             }
@@ -86,6 +87,7 @@ public class ShutdownHook extends Thread {
             if (!end.isPresent()) {
                 session.endSession(now);
             }
+            Database database = dbSystem.getDatabase();
             if (!database.isOpen()) {
                 database.init();
             }

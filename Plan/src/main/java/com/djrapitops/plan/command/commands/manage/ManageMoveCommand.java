@@ -99,7 +99,7 @@ public class ManageMoveCommand extends CommandNode {
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
 
-                boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(dbSystem.getActiveDatabase().getConfigName());
+                boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(dbSystem.getDatabase().getConfigName());
                 if (movingToCurrentDB) {
                     sender.sendMessage(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getConfigName()));
                 }

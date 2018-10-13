@@ -6,6 +6,7 @@ package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.webserver.WebServer;
@@ -25,19 +26,19 @@ import java.util.UUID;
 @Singleton
 public class VelocityServerInfo extends ServerInfo {
 
-    private final Database database;
+    private final DBSystem dbSystem;
     private final Lazy<WebServer> webServer;
     private final PluginLogger logger;
 
     @Inject
     public VelocityServerInfo(
             ServerProperties serverProperties,
-            Database database,
+            DBSystem dbSystem,
             Lazy<WebServer> webServer,
             PluginLogger logger
     ) {
         super(serverProperties);
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.webServer = webServer;
         this.logger = logger;
     }
@@ -47,6 +48,7 @@ public class VelocityServerInfo extends ServerInfo {
         checkIfDefaultIP();
 
         try {
+            Database database = dbSystem.getDatabase();
             Optional<Server> bungeeInfo = database.fetch().getBungeeInformation();
             if (bungeeInfo.isPresent()) {
                 server = bungeeInfo.get();

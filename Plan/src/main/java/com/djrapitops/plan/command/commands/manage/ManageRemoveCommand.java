@@ -1,6 +1,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -25,7 +26,7 @@ import java.util.UUID;
 
 /**
  * This manage subcommand is used to remove a single player's data from the
- * database.
+ * dbSystem.
  *
  * @author Rsl1122
  */
@@ -34,7 +35,7 @@ public class ManageRemoveCommand extends CommandNode {
 
     private final Locale locale;
     private final Processing processing;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final UUIDUtility uuidUtility;
     private final ErrorHandler errorHandler;
 
@@ -42,7 +43,7 @@ public class ManageRemoveCommand extends CommandNode {
     public ManageRemoveCommand(
             Locale locale,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             UUIDUtility uuidUtility,
             ErrorHandler errorHandler
     ) {
@@ -50,7 +51,7 @@ public class ManageRemoveCommand extends CommandNode {
 
         this.locale = locale;
         this.processing = processing;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
 
@@ -84,19 +85,24 @@ public class ManageRemoveCommand extends CommandNode {
                     return;
                 }
 
-                if (!database.check().isPlayerRegistered(uuid)) {
+                Database db = dbSystem.getDatabase();
+                if (!db.check().isPlayerRegistered(uuid)) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                     return;
                 }
 
                 if (!Verify.contains("-a", args)) {
-                    sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_REMOVAL, database.getName())));
+                    sender.sendMessage(
+                            locale.getString(ManageLang.CONFIRMATION,
+                                    locale.getString(ManageLang.CONFIRM_REMOVAL, db.getName())
+                            )
+                    );
                     return;
                 }
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
 
-                database.remove().player(uuid);
+                db.remove().player(uuid);
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {

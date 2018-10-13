@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -32,7 +32,7 @@ import java.util.UUID;
 public class InspectCommand extends CommandNode {
 
     private final Locale locale;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final WebServer webServer;
     private final InfoProcessors processorFactory;
     private final Processing processing;
@@ -45,7 +45,7 @@ public class InspectCommand extends CommandNode {
             Locale locale,
             InfoProcessors processorFactory,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             WebServer webServer,
             ConnectionSystem connectionSystem,
             UUIDUtility uuidUtility,
@@ -58,7 +58,7 @@ public class InspectCommand extends CommandNode {
         setArguments("<player>");
 
         this.locale = locale;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.webServer = webServer;
         this.uuidUtility = uuidUtility;
         this.errorHandler = errorHandler;
@@ -87,7 +87,7 @@ public class InspectCommand extends CommandNode {
                     return;
                 }
 
-                if (!database.check().isPlayerRegistered(uuid)) {
+                if (!dbSystem.getDatabase().check().isPlayerRegistered(uuid)) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_USERNAME_NOT_KNOWN));
                     return;
                 }
@@ -103,7 +103,7 @@ public class InspectCommand extends CommandNode {
 
     private void checkWebUserAndNotify(Sender sender) {
         if (CommandUtils.isPlayer(sender) && webServer.isAuthRequired()) {
-            boolean senderHasWebUser = database.check().doesWebUserExists(sender.getName());
+            boolean senderHasWebUser = dbSystem.getDatabase().check().doesWebUserExists(sender.getName());
 
             if (!senderHasWebUser) {
                 sender.sendMessage("§e" + locale.getString(CommandLang.NO_WEB_USER_NOTIFY));

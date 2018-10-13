@@ -5,8 +5,15 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
+import com.djrapitops.plugin.logging.debug.CombineDebugLogger;
+import com.djrapitops.plugin.logging.debug.DebugLogger;
+import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
@@ -21,7 +28,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 
 /**
@@ -44,11 +50,22 @@ public class PlanBukkitMocker extends Mocker {
         planMock = Mockito.mock(Plan.class);
         super.planMock = planMock;
 
-        doCallRealMethod().when(planMock).getVersion();
-        doCallRealMethod().when(planMock).getColorScheme();
+        doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
+        doReturn("1.0.0").when(planMock).getVersion();
 
+        TestLogger testLogger = new TestLogger();
         ThreadRunnableFactory runnableFactory = new ThreadRunnableFactory();
+        PluginLogger testPluginLogger = new TestPluginLogger();
+        DebugLogger debugLogger = new CombineDebugLogger(new MemoryDebugLogger());
+        ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);
+        Timings timings = new Timings(debugLogger);
+
+        doReturn(testLogger).when(planMock).getLogger();
         doReturn(runnableFactory).when(planMock).getRunnableFactory();
+        doReturn(testPluginLogger).when(planMock).getPluginLogger();
+        doReturn(debugLogger).when(planMock).getDebugLogger();
+        doReturn(consoleErrorLogger).when(planMock).getErrorHandler();
+        doReturn(timings).when(planMock).getTimings();
 
         return this;
     }
@@ -58,13 +75,8 @@ public class PlanBukkitMocker extends Mocker {
         return this;
     }
 
+    @Deprecated
     public PlanBukkitMocker withLogging() {
-        TestLogger testLogger = new TestLogger();
-        doReturn(testLogger).when(planMock).getLogger();
-        TestPluginLogger testPluginLogger = new TestPluginLogger();
-        doReturn(testPluginLogger).when(planMock).getPluginLogger();
-        ConsoleErrorLogger consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);
-        doReturn(consoleErrorLogger).when(planMock).getErrorHandler();
         return this;
     }
 

@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +19,10 @@ public class SessionCache {
 
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
 
-    private final Database database;
+    protected final DBSystem dbSystem;
 
-    public SessionCache(Database database) {
-        this.database = database;
+    public SessionCache(DBSystem dbSystem) {
+        this.dbSystem = dbSystem;
     }
 
     public static Map<UUID, Session> getActiveSessions() {
@@ -74,7 +74,7 @@ public class SessionCache {
         try {
             session.endSession(time);
             // Might throw a DBOpException
-            database.save().session(uuid, session);
+            dbSystem.getDatabase().save().session(uuid, session);
         } finally {
             removeSessionFromCache(uuid);
         }

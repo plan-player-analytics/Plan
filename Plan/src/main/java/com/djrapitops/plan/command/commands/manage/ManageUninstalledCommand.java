@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
@@ -33,7 +33,7 @@ public class ManageUninstalledCommand extends CommandNode {
 
     private final Locale locale;
     private final Processing processing;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final ErrorHandler errorHandler;
     private final ServerInfo serverInfo;
 
@@ -41,7 +41,7 @@ public class ManageUninstalledCommand extends CommandNode {
     public ManageUninstalledCommand(
             Locale locale,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             ServerInfo serverInfo,
             ErrorHandler errorHandler
     ) {
@@ -49,7 +49,7 @@ public class ManageUninstalledCommand extends CommandNode {
 
         this.locale = locale;
         this.processing = processing;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.errorHandler = errorHandler;
 
@@ -76,7 +76,7 @@ public class ManageUninstalledCommand extends CommandNode {
                     return;
                 }
 
-                database.save().setAsUninstalled(serverUUID);
+                dbSystem.getDatabase().save().setAsUninstalled(serverUUID);
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
             } catch (DBOpException e) {
                 sender.sendMessage("§cError occurred: " + e.toString());
@@ -87,7 +87,7 @@ public class ManageUninstalledCommand extends CommandNode {
 
     private Optional<Server> getServer(String[] args) {
         if (args.length >= 1) {
-            Map<UUID, Server> bukkitServers = database.fetch().getBukkitServers();
+            Map<UUID, Server> bukkitServers = dbSystem.getDatabase().fetch().getBukkitServers();
             String serverIdentifier = getGivenIdentifier(args);
             for (Map.Entry<UUID, Server> entry : bukkitServers.entrySet()) {
                 Server server = entry.getValue();

@@ -1,6 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.data.WebUser;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -40,7 +41,7 @@ public class RegisterCommand extends CommandNode {
     private final String notEnoughArgsMsg;
     private final Locale locale;
     private final Processing processing;
-    private final Database database;
+    private final DBSystem dbSystem;
     private final PluginLogger logger;
     private final ErrorHandler errorHandler;
 
@@ -48,16 +49,17 @@ public class RegisterCommand extends CommandNode {
     public RegisterCommand(
             Locale locale,
             Processing processing,
-            Database database,
+            DBSystem dbSystem,
             PluginLogger logger,
-            ErrorHandler errorHandler) {
+            ErrorHandler errorHandler
+    ) {
         // No Permission Requirement
         super("register", "", CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
         this.processing = processing;
         this.logger = logger;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.errorHandler = errorHandler;
 
         setArguments("<password>", "[name]", "[lvl]");
@@ -131,6 +133,7 @@ public class RegisterCommand extends CommandNode {
         processing.submitCritical(() -> {
             String userName = webUser.getName();
             try {
+                Database database = dbSystem.getDatabase();
                 boolean userExists = database.check().doesWebUserExists(userName);
                 if (userExists) {
                     sender.sendMessage(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));

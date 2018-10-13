@@ -4,7 +4,8 @@ import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -39,7 +40,7 @@ public class PageFactory {
     private final Lazy<PlanFiles> fileSystem;
     private final Lazy<PlanConfig> config;
     private final Lazy<Theme> theme;
-    private final Lazy<Database> database;
+    private final Lazy<DBSystem> dbSystem;
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<ConnectionSystem> connectionSystem;
     private final Lazy<Graphs> graphs;
@@ -59,7 +60,7 @@ public class PageFactory {
             Lazy<PlanFiles> fileSystem,
             Lazy<PlanConfig> config,
             Lazy<Theme> theme,
-            Lazy<Database> database,
+            Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
             Lazy<ConnectionSystem> connectionSystem,
             Lazy<Graphs> graphs,
@@ -77,7 +78,7 @@ public class PageFactory {
         this.fileSystem = fileSystem;
         this.config = config;
         this.theme = theme;
-        this.database = database;
+        this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
         this.graphs = graphs;
@@ -95,26 +96,27 @@ public class PageFactory {
     public DebugPage debugPage() {
         return new DebugPage(
                 version,
-                database.get(), serverInfo.get(), connectionSystem.get(), formatters.get(),
+                dbSystem.get().getDatabase(), serverInfo.get(), connectionSystem.get(), formatters.get(),
                 debugLogger.get(), timings.get(), errorHandler.get()
         );
     }
 
     public PlayersPage playersPage() {
         return new PlayersPage(version, fileSystem.get(), config.get(),
-                database.get(), serverInfo.get(), tables.get(),
+                dbSystem.get().getDatabase(), serverInfo.get(), tables.get(),
                 timings.get());
     }
 
     public AnalysisPage analysisPage(UUID serverUUID) {
         AnalysisContainer analysisContainer = analysisContainerFactory.get()
-                .forServerContainer(database.get().fetch().getServerContainer(serverUUID));
+                .forServerContainer(dbSystem.get().getDatabase().fetch().getServerContainer(serverUUID));
         return new AnalysisPage(analysisContainer, fileSystem.get(), formatters.get().decimals(), timings.get());
     }
 
     public InspectPage inspectPage(UUID uuid) {
-        PlayerContainer player = database.get().fetch().getPlayerContainer(uuid);
-        Map<UUID, String> serverNames = database.get().fetch().getServerNames();
+        FetchOperations fetch = dbSystem.get().getDatabase().fetch();
+        PlayerContainer player = fetch.getPlayerContainer(uuid);
+        Map<UUID, String> serverNames = fetch.getServerNames();
         return new InspectPage(
                 player, serverNames,
                 version,
@@ -129,7 +131,7 @@ public class PageFactory {
     }
 
     public NetworkPage networkPage() {
-        NetworkContainer networkContainer = database.get().fetch().getNetworkContainer(); // Not cached, big.
+        NetworkContainer networkContainer = dbSystem.get().getDatabase().fetch().getNetworkContainer(); // Not cached, big.
         return new NetworkPage(networkContainer,
                 analysisPluginsTabContentCreator.get(),
                 fileSystem.get(), serverInfo.get().getServerProperties());

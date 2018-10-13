@@ -6,7 +6,7 @@ package com.djrapitops.plan.system.importing.importers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.system.cache.GeolocationCache;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.importing.data.ServerImportData;
 import com.djrapitops.plan.system.importing.data.UserImportData;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -31,10 +31,10 @@ public class OfflinePlayerImporter extends Importer {
     public OfflinePlayerImporter(
             Plan plugin,
             GeolocationCache geolocationCache,
-            Database database,
+            DBSystem dbSystem,
             ServerInfo serverInfo
     ) {
-        super(plugin, geolocationCache, database, serverInfo, "offline");
+        super(plugin, geolocationCache, dbSystem, serverInfo, "offline");
     }
 
     @Override
