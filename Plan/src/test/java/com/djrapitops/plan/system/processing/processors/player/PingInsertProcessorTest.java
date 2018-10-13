@@ -34,7 +34,7 @@ public class PingInsertProcessorTest {
     }
 
     @Test
-    public void testMedian() {
+    public void medianCalculation() {
         List<Integer> collect = testPing.stream().map(DateObj::getValue).sorted().collect(Collectors.toList());
 
         int expected = (int) Median.forInt(collect).calculate();
@@ -45,7 +45,7 @@ public class PingInsertProcessorTest {
     }
 
     @Test
-    public void testMedianSingleEntry() {
+    public void medianCalculationForSingleEntry() {
         int expected = 50;
         int result = new PingInsertProcessor(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>(), null)
                 .getMeanValue(Collections.singletonList(new DateObj<>(0, expected)));
@@ -54,7 +54,7 @@ public class PingInsertProcessorTest {
     }
 
     @Test
-    public void testMedianEmpty() {
+    public void medianCalculationForNoEntries() {
         int expected = -1;
         int result = new PingInsertProcessor(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>(), null)
                 .getMeanValue(Collections.emptyList());
