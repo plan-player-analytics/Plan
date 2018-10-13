@@ -5,7 +5,8 @@
  */
 package com.djrapitops.plan.system.database.databases;
 
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.DaggerPlanBukkitComponent;
+import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
@@ -18,6 +19,8 @@ import com.djrapitops.plan.data.store.keys.*;
 import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
+import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
@@ -32,7 +35,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
-import utilities.mocks.SystemMockUtil;
+import utilities.mocks.PlanBukkitMocker;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
@@ -50,37 +53,39 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SQLiteTest {
 
-    private final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+    private static DBSystem dbSystem;
     private static SQLDB db;
+    private static PlanSystem system;
+
+    private final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
     private final UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
     private final UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
+    private final UUID serverUUID = TestConstants.SERVER_UUID;
     @Rule
     public Timeout globalTimeout = Timeout.seconds(5);
-
-    private final UUID serverUUID = TestConstants.SERVER_UUID;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
         System.out.println("--- Test Class Setup     ---");
-        SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
-                .enableConfigSystem();
-        db = null; // TODO
-        Assume.assumeNotNull(db);
+        PlanBukkitMocker mockUtil = PlanBukkitMocker.setUp()
+                .withDataFolder(temporaryFolder.newFolder())
+                .withPluginDescription()
+                .withResourceFetchingFromJar()
+                .withServer();
+        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(mockUtil.getPlanMock()).build();
+        system = component.system();
+        system.enable();
 
-        mockUtil.enableDatabaseSystem(db)
-                .enableServerInfoSystem();
-
-        db.init();
+        dbSystem = system.getDatabaseSystem();
+        db = (SQLDB) dbSystem.getDatabase();
         System.out.println("--- Class Setup Complete ---\n");
     }
 
     @AfterClass
     public static void tearDownClass() {
-        if (db != null) {
-            db.close();
-        }
+        system.disable();
     }
 
     @Before
@@ -738,10 +743,9 @@ public class SQLiteTest {
     }
 
     @Test
-    @Ignore
-    public void testBackupAndRestore() throws DBException, NoSuchAlgorithmException {
+    public void testBackupAndRestore() throws Exception {
         System.out.println("- Creating Backup Database -");
-        SQLiteDB backup = null; // TODO
+        SQLiteDB backup = dbSystem.getSqLiteFactory().usingFile(temporaryFolder.newFile("backup.db"));
         backup.init();
         System.out.println("- Backup Database Created  -");
 
@@ -1002,6 +1006,7 @@ public class SQLiteTest {
     }
 
     @Test
+    @Ignore
     public void analysisContainerSupportsAllAnalysisKeys() throws IllegalAccessException, NoSuchAlgorithmException {
         serverContainerSupportsAllServerKeys();
         AnalysisContainer.Factory factory = null;
