@@ -189,7 +189,7 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
                 if (player.isOnline()) {
                     addPlayer(player);
                 }
-            }// TODO Config
+            }
         }).runTaskLater(TimeAmount.toTicks(config.getNumber(Settings.PING_PLAYER_LOGIN_DELAY), TimeUnit.SECONDS));
     }
 
