@@ -21,13 +21,6 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FilesModule;
-import com.djrapitops.plan.modules.SuperClassBindingModule;
-import com.djrapitops.plan.modules.SystemObjectBindingModule;
-import com.djrapitops.plan.modules.server.ServerSuperClassBindingModule;
-import com.djrapitops.plan.modules.server.bukkit.BukkitServerPropertiesModule;
-import com.djrapitops.plan.modules.server.bukkit.BukkitSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -36,61 +29,10 @@ import com.djrapitops.plan.utilities.metrics.BStatsBukkit;
 import com.djrapitops.plugin.BukkitPlugin;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.command.CommandNode;
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-@Singleton
-@Component(modules = {
-        BukkitPlanModule.class,
-        SuperClassBindingModule.class,
-        SystemObjectBindingModule.class,
-        APFModule.class,
-        FilesModule.class,
-        BukkitServerPropertiesModule.class,
-        ServerSuperClassBindingModule.class,
-        BukkitSuperClassBindingModule.class
-})
-interface PlanComponent {
-
-    PlanCommand planCommand();
-
-    PlanSystem system();
-
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        Builder plan(Plan plan);
-
-        PlanComponent build();
-    }
-}
-
-@Module
-class BukkitPlanModule {
-
-    @Provides
-    @Singleton
-    PlanPlugin providePlanPlugin(Plan plugin) {
-        return plugin;
-    }
-
-    @Provides
-    @Singleton
-    @Named("mainCommand")
-    CommandNode provideMainCommand(PlanCommand command) {
-        return command;
-    }
-}
 
 /**
  * Main class for Bukkit that manages the plugin.
@@ -105,7 +47,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
 
     @Override
     public void onEnable() {
-        PlanComponent component = DaggerPlanComponent.builder().plan(this).build();
+        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(this).build();
         try {
             timings.start("Enable");
             system = component.system();

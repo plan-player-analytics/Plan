@@ -25,7 +25,7 @@ public class BungeeBukkitConnectionTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    private static PlanComponent BUKKIT_COMPONENT;
+    private static PlanBukkitComponent BUKKIT_COMPONENT;
     private static PlanBungeeComponent BUNGEE_COMPONENT;
 
     @Rule
@@ -44,7 +44,7 @@ public class BungeeBukkitConnectionTest {
                 .withPluginDescription()
                 .withResourceFetchingFromJar()
                 .withServer();
-        BUKKIT_COMPONENT = DaggerPlanComponent.builder().plan(planBukkitMocker.getPlanMock()).build();
+        BUKKIT_COMPONENT = DaggerPlanBukkitComponent.builder().plan(planBukkitMocker.getPlanMock()).build();
 
         PlanBungeeMocker planBungeeMocker = PlanBungeeMocker.setUp()
                 .withDataFolder(temporaryFolder.getRoot())

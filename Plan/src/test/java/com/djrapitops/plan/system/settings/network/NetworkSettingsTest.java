@@ -1,12 +1,14 @@
 package com.djrapitops.plan.system.settings.network;
 
+import com.djrapitops.plan.DaggerPlanBungeeComponent;
+import com.djrapitops.plan.PlanBungeeComponent;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.info.server.Server;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import utilities.TestConstants;
-import utilities.mocks.SystemMockUtil;
+import utilities.mocks.PlanBungeeMocker;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,18 +17,16 @@ public class NetworkSettingsTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private static SQLDB db;
+    private static PlanBungeeComponent COMPONENT;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        SystemMockUtil mockUtil = SystemMockUtil.setUp(temporaryFolder.getRoot())
-                .enableConfigSystem();
-        db = null; // TODO
-        mockUtil.enableDatabaseSystem(db)
-                .enableServerInfoSystem();
-
-//        Log.setErrorManager(new TestErrorManager());
-//        Log.setDebugMode("console");
-//        Settings.DEV_MODE.setTemporaryValue(true);
+        PlanBungeeMocker planBungeeMocker = PlanBungeeMocker.setUp()
+                .withDataFolder(temporaryFolder.getRoot())
+                .withPluginDescription()
+                .withResourceFetchingFromJar()
+                .withProxy();
+        COMPONENT = DaggerPlanBungeeComponent.builder().plan(planBungeeMocker.getPlanMock()).build();
     }
 
     @AfterClass

@@ -6,13 +6,6 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
-import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FilesModule;
-import com.djrapitops.plan.modules.SuperClassBindingModule;
-import com.djrapitops.plan.modules.SystemObjectBindingModule;
-import com.djrapitops.plan.modules.proxy.ProxySuperClassBindingModule;
-import com.djrapitops.plan.modules.proxy.bungee.BungeeServerPropertiesModule;
-import com.djrapitops.plan.modules.proxy.bungee.BungeeSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -20,60 +13,9 @@ import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBungee;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.logging.L;
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
 import java.io.InputStream;
-
-@Singleton
-@Component(modules = {
-        BungeePlanModule.class,
-        SuperClassBindingModule.class,
-        SystemObjectBindingModule.class,
-        APFModule.class,
-        FilesModule.class,
-        ProxySuperClassBindingModule.class,
-        BungeeSuperClassBindingModule.class,
-        BungeeServerPropertiesModule.class
-})
-interface PlanBungeeComponent {
-
-    PlanBungeeCommand planCommand();
-
-    PlanSystem system();
-
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        Builder plan(PlanBungee plan);
-
-        PlanBungeeComponent build();
-    }
-}
-
-@Module
-class BungeePlanModule {
-
-    @Provides
-    @Singleton
-    PlanPlugin providePlanPlugin(PlanBungee plugin) {
-        return plugin;
-    }
-
-    @Provides
-    @Singleton
-    @Named("mainCommand")
-    CommandNode provideMainCommand(PlanBungeeCommand command) {
-        return command;
-    }
-}
 
 /**
  * Bungee Main class.

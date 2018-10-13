@@ -25,7 +25,7 @@ public class BukkitSystemTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private PlanSystem bukkitSystem;
-    private static PlanComponent COMPONENT;
+    private static PlanBukkitComponent COMPONENT;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -34,7 +34,7 @@ public class BukkitSystemTest {
                 .withPluginDescription()
                 .withResourceFetchingFromJar()
                 .withServer();
-        COMPONENT = DaggerPlanComponent.builder().plan(mockUtil.getPlanMock()).build();
+        COMPONENT = DaggerPlanBukkitComponent.builder().plan(mockUtil.getPlanMock()).build();
     }
 
     @Before

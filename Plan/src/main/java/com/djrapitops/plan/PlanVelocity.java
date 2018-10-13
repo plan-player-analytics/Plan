@@ -6,79 +6,21 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanVelocityCommand;
-import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FilesModule;
-import com.djrapitops.plan.modules.SuperClassBindingModule;
-import com.djrapitops.plan.modules.SystemObjectBindingModule;
-import com.djrapitops.plan.modules.proxy.ProxySuperClassBindingModule;
-import com.djrapitops.plan.modules.proxy.velocity.VelocityServerPropertiesModule;
-import com.djrapitops.plan.modules.proxy.velocity.VelocitySuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.VelocityPlugin;
 import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.logging.L;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 import org.slf4j.Logger;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
-
-@Singleton
-@Component(modules = {
-        VelocityPlanModule.class,
-        SuperClassBindingModule.class,
-        SystemObjectBindingModule.class,
-        APFModule.class,
-        FilesModule.class,
-        ProxySuperClassBindingModule.class,
-        VelocitySuperClassBindingModule.class,
-        VelocityServerPropertiesModule.class
-})
-interface PlanVelocityComponent {
-
-    PlanVelocityCommand planCommand();
-
-    PlanSystem system();
-
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        Builder plan(PlanVelocity plan);
-
-        PlanVelocityComponent build();
-    }
-}
-
-@Module
-class VelocityPlanModule {
-
-    @Provides
-    @Singleton
-    PlanPlugin providePlanPlugin(PlanVelocity plugin) {
-        return plugin;
-    }
-
-    @Provides
-    @Singleton
-    @Named("mainCommand")
-    CommandNode provideMainCommand(PlanVelocityCommand command) {
-        return command;
-    }
-}
 
 /**
  * Velocity Main class.

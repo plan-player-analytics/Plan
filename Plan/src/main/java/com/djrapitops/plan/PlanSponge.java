@@ -2,13 +2,6 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FilesModule;
-import com.djrapitops.plan.modules.SuperClassBindingModule;
-import com.djrapitops.plan.modules.SystemObjectBindingModule;
-import com.djrapitops.plan.modules.server.ServerSuperClassBindingModule;
-import com.djrapitops.plan.modules.server.sponge.SpongeServerPropertiesModule;
-import com.djrapitops.plan.modules.server.sponge.SpongeSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -16,12 +9,7 @@ import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsSponge;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.logging.L;
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -33,54 +21,8 @@ import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.InputStream;
-
-@Singleton
-@Component(modules = {
-        SpongePlanModule.class,
-        SuperClassBindingModule.class,
-        SystemObjectBindingModule.class,
-        APFModule.class,
-        FilesModule.class,
-        ServerSuperClassBindingModule.class,
-        SpongeSuperClassBindingModule.class,
-        SpongeServerPropertiesModule.class
-})
-interface PlanSpongeComponent {
-
-    PlanCommand planCommand();
-
-    PlanSystem system();
-
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        Builder plan(PlanSponge plan);
-
-        PlanSpongeComponent build();
-    }
-}
-
-@Module
-class SpongePlanModule {
-
-    @Provides
-    @Singleton
-    PlanPlugin providePlanPlugin(PlanSponge plugin) {
-        return plugin;
-    }
-
-    @Provides
-    @Singleton
-    @Named("mainCommand")
-    CommandNode provideMainCommand(PlanCommand command) {
-        return command;
-    }
-}
 
 @Plugin(
         id = "plan",
