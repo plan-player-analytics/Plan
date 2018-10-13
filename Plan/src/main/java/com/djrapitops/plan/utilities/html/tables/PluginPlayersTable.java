@@ -6,31 +6,41 @@ import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.html.Html;
+import com.djrapitops.plugin.utilities.ArrayUtil;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.Serializable;
 import java.util.*;
 
 /**
- * TableContainer that creates the html table for per player plugins values.
+ * Html table that displays players data in various plugins.
  *
  * @author Rsl1122
  */
-public class PluginPlayersTable extends TableContainer {
+class PluginPlayersTable extends TableContainer {
 
     private Collection<PlayerContainer> players;
 
-    public PluginPlayersTable(Map<PluginData, AnalysisContainer> containers, Collection<PlayerContainer> players) {
-        this(getPluginDataSet(containers), players);
+    private final int maxPlayers;
+
+    PluginPlayersTable(
+            Map<PluginData, AnalysisContainer> containers,
+            Collection<PlayerContainer> players,
+            int maxPlayers
+    ) {
+        this(getPluginDataSet(containers), players, maxPlayers);
     }
 
-    private PluginPlayersTable(TreeMap<String, Map<UUID, ? extends Serializable>> pluginDataSet, Collection<PlayerContainer> players) {
+    private PluginPlayersTable(
+            TreeMap<String, Map<UUID, ? extends Serializable>> pluginDataSet,
+            Collection<PlayerContainer> players,
+            int maxPlayers
+    ) {
         super(true, getHeaders(pluginDataSet.keySet()));
 
         this.players = players;
+        this.maxPlayers = maxPlayers;
 
         useJqueryDataTables("player-plugin-table");
 
@@ -61,10 +71,6 @@ public class PluginPlayersTable extends TableContainer {
 
     private void addValues(Map<UUID, String[]> rows) {
         int i = 0;
-        int maxPlayers = Settings.MAX_PLAYERS.getNumber();
-        if (maxPlayers <= 0) {
-            maxPlayers = 2000;
-        }
         for (PlayerContainer profile : players) {
             if (i >= maxPlayers) {
                 break;
@@ -73,7 +79,7 @@ public class PluginPlayersTable extends TableContainer {
             String name = profile.getValue(PlayerKeys.NAME).orElse("Unknown");
             String link = Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name);
 
-            String[] playerData = FormatUtils.mergeArrays(new String[]{link}, rows.getOrDefault(uuid, new String[]{}));
+            String[] playerData = ArrayUtil.merge(new String[]{link}, rows.getOrDefault(uuid, new String[]{}));
             addRow(ArrayUtils.addAll(playerData));
 
             i++;

@@ -1,7 +1,5 @@
 package com.djrapitops.plan.system.database.databases.operation;
 
-import com.djrapitops.plan.system.info.server.ServerInfo;
-
 import java.util.UUID;
 
 public interface CheckOperations {
@@ -12,9 +10,7 @@ public interface CheckOperations {
 
     boolean doesWebUserExists(String username);
 
-    default boolean isPlayerRegisteredOnThisServer(UUID player) {
-        return isPlayerRegistered(player, ServerInfo.getServerUUID());
-    }
+    boolean isPlayerRegisteredOnThisServer(UUID player);
 
     boolean isServerInDatabase(UUID serverUUID);
 }

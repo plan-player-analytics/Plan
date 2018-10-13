@@ -6,11 +6,9 @@ package com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plan.data.container.GeoInfo;
 import com.djrapitops.plan.data.element.TableContainer;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.List;
 
@@ -19,10 +17,15 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class GeoInfoTable extends TableContainer {
+class GeoInfoTable extends TableContainer {
 
-    public GeoInfoTable(List<GeoInfo> geoInfo) {
+    private final boolean displayIP;
+    private final Formatter<DateHolder> yearFormatter;
+
+    GeoInfoTable(List<GeoInfo> geoInfo, boolean displayIP, Formatter<DateHolder> yearFormatter) {
         super("IP", "Geolocation", "Last Used");
+        this.displayIP = displayIP;
+        this.yearFormatter = yearFormatter;
 
         if (geoInfo.isEmpty()) {
             addRow("No Connections");
@@ -33,15 +36,12 @@ public class GeoInfoTable extends TableContainer {
 
     private void addValues(List<GeoInfo> geoInfo) {
         geoInfo.sort(new DateHolderRecentComparator());
-        
-        boolean displayIP = Settings.DISPLAY_PLAYER_IPS.isTrue();
-        Formatter<DateHolder> formatter = Formatters.year();
 
         for (GeoInfo info : geoInfo) {
             addRow(
                     displayIP ? info.getIp() : "Hidden (Config)",
                     info.getGeolocation(),
-                    formatter.apply(info)
+                    yearFormatter.apply(info)
             );
         }
     }

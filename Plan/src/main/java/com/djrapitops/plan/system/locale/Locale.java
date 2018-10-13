@@ -2,7 +2,6 @@ package com.djrapitops.plan.system.locale;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.locale.lang.*;
-import com.djrapitops.plan.system.settings.Settings;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -20,20 +20,12 @@ import java.util.stream.Collectors;
  */
 public class Locale extends HashMap<Lang, Message> {
 
-    public static Locale fromSetting() throws IOException {
-        String locale = Settings.LOCALE.toString();
-        if (locale.equalsIgnoreCase("default")) {
-            return new Locale();
-        }
-        return forLangCodeString(locale);
+    public static Locale forLangCodeString(PlanPlugin plugin, String code) throws IOException {
+        return forLangCode(LangCode.fromString(code), plugin);
     }
 
-    public static Locale forLangCodeString(String code) throws IOException {
-        return forLangCode(LangCode.fromString(code));
-    }
-
-    public static Locale forLangCode(LangCode code) throws IOException {
-        return new LocaleFileReader(PlanPlugin.getInstance(), code.getFileName()).load();
+    public static Locale forLangCode(LangCode code, PlanPlugin plugin) throws IOException {
+        return new LocaleFileReader(plugin, code.getFileName()).load();
     }
 
     public static Locale fromFile(File file) throws IOException {
@@ -64,6 +56,10 @@ public class Locale extends HashMap<Lang, Message> {
 
     public String[] getArray(Lang key, Serializable... values) {
         return get(key).toArray(values);
+    }
+
+    public void loadFromAnotherLocale(Map<Lang, Message> locale) {
+        putAll(locale);
     }
 
     public String replaceMatchingLanguage(String from) {

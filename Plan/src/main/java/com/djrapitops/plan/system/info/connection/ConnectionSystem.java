@@ -8,10 +8,12 @@ import com.djrapitops.plan.api.exceptions.connection.NoServersException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.request.*;
+import com.djrapitops.plan.system.info.request.InfoRequest;
+import com.djrapitops.plan.system.info.request.InfoRequests;
+import com.djrapitops.plan.system.info.request.WideRequest;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.utilities.Verify;
+import dagger.Lazy;
 
 import java.util.*;
 
@@ -25,43 +27,39 @@ import java.util.*;
 public abstract class ConnectionSystem implements SubSystem {
 
     protected final ConnectionLog connectionLog;
-    protected final Map<String, InfoRequest> dataRequests;
+    protected final InfoRequests infoRequests;
+    protected final Lazy<InfoSystem> infoSystem;
+    protected final ServerInfo serverInfo;
+
     protected Map<UUID, Server> bukkitServers;
     private boolean setupAllowed;
 
-    public ConnectionSystem() {
+    public ConnectionSystem(
+            ConnectionLog connectionLog,
+            InfoRequests infoRequests,
+            Lazy<InfoSystem> infoSystem,
+            ServerInfo serverInfo
+    ) {
+        this.connectionLog = connectionLog;
+        this.infoSystem = infoSystem;
+        this.serverInfo = serverInfo;
         setupAllowed = false;
         bukkitServers = new HashMap<>();
-        dataRequests = loadDataRequests();
-        connectionLog = new ConnectionLog();
-    }
-
-    public static ConnectionSystem getInstance() {
-        ConnectionSystem connectionSystem = InfoSystem.getInstance().getConnectionSystem();
-        Verify.nullCheck(connectionSystem, () -> new IllegalStateException("Connection System was not initialized"));
-        return connectionSystem;
-    }
-
-    public static boolean isSetupAllowed() {
-        return getInstance().setupAllowed;
+        this.infoRequests = infoRequests;
     }
 
     public InfoRequest getInfoRequest(String name) {
-        return dataRequests.get(name.toLowerCase());
+        return infoRequests.get(name.toLowerCase());
     }
 
     public void setSetupAllowed(boolean setupAllowed) {
         this.setupAllowed = setupAllowed;
     }
 
-    private void putRequest(Map<String, InfoRequest> requests, InfoRequest request) {
-        requests.put(request.getClass().getSimpleName().toLowerCase(), request);
-    }
-
     protected abstract Server selectServerForRequest(InfoRequest infoRequest) throws NoServersException;
 
-    public static String getAddress() {
-        return getInstance().getMainAddress();
+    public boolean isSetupAllowed() {
+        return setupAllowed;
     }
 
     public void sendInfoRequest(InfoRequest infoRequest) throws WebException {
@@ -70,10 +68,11 @@ public abstract class ConnectionSystem implements SubSystem {
     }
 
     public void sendInfoRequest(InfoRequest infoRequest, Server toServer) throws WebException {
-        if (ServerInfo.getServerUUID().equals(toServer.getUuid())) {
-            InfoSystem.getInstance().runLocally(infoRequest);
+        UUID serverUUID = serverInfo.getServerUUID();
+        if (serverUUID.equals(toServer.getUuid())) {
+            infoSystem.get().runLocally(infoRequest);
         } else {
-            new ConnectionOut(toServer, ServerInfo.getServerUUID(), infoRequest).sendRequest();
+            new ConnectionOut(toServer, serverUUID, infoRequest, connectionLog).sendRequest();
         }
     }
 
@@ -87,35 +86,19 @@ public abstract class ConnectionSystem implements SubSystem {
 
     public abstract void sendWideInfoRequest(WideRequest infoRequest) throws NoServersException;
 
-    private Map<String, InfoRequest> loadDataRequests() {
-        Map<String, InfoRequest> requests = new HashMap<>();
-        putRequest(requests, CacheInspectPageRequest.createHandler());
-        putRequest(requests, CacheInspectPluginsTabRequest.createHandler());
-        putRequest(requests, CacheAnalysisPageRequest.createHandler());
-        putRequest(requests, CacheNetworkPageContentRequest.createHandler());
-
-        putRequest(requests, GenerateAnalysisPageRequest.createHandler());
-        putRequest(requests, GenerateInspectPageRequest.createHandler());
-        putRequest(requests, GenerateInspectPluginsTabRequest.createHandler());
-        putRequest(requests, GenerateNetworkPageContentRequest.createHandler());
-
-        putRequest(requests, SaveDBSettingsRequest.createHandler());
-        putRequest(requests, SendDBSettingsRequest.createHandler());
-        putRequest(requests, CheckConnectionRequest.createHandler());
-
-//        putRequest(requests, UpdateRequest.createHandler());
-//        putRequest(requests, UpdateCancelRequest.createHandler());
-        return requests;
-    }
-
     public List<Server> getBukkitServers() {
         return new ArrayList<>(bukkitServers.values());
+    }
+
+    @Override
+    public void enable() {
+        infoRequests.initializeRequests();
     }
 
     @Override
     public void disable() {
         setupAllowed = false;
         bukkitServers.clear();
-        dataRequests.clear();
+        infoRequests.clear();
     }
 }

@@ -4,17 +4,16 @@
  */
 package com.djrapitops.plan.system.settings.theme;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plugin.api.utility.EnumUtility;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.List;
+
+import static com.djrapitops.plan.system.settings.theme.ThemeVal.*;
 
 /**
  * Enum that contains available themes.
@@ -23,35 +22,32 @@ import java.util.List;
  *
  * @author Rsl1122
  */
+@Singleton
 public class Theme implements SubSystem {
 
-    private ThemeConfig config;
+    private final ThemeConfig config;
+    private final PluginLogger logger;
 
-    public static Theme getInstance() {
-        Theme themeSystem = ConfigSystem.getInstance().getThemeSystem();
-        Verify.nullCheck(themeSystem, () -> new IllegalStateException("Theme System has not been initialized."));
-        return themeSystem;
+    @Inject
+    public Theme(ThemeConfig config, PluginLogger logger) {
+        this.config = config;
+        this.logger = logger;
     }
 
-    public static String getValue(ThemeVal variable) {
+    public String getValue(ThemeVal variable) {
         try {
-            return getInstance().getThemeValue(variable);
+            return getThemeValue(variable);
         } catch (NullPointerException | IllegalStateException e) {
             return variable.getDefaultValue();
         }
     }
 
-    public static String replaceColors(String resourceString) {
-        return getInstance().replaceThemeColors(resourceString);
-    }
-
     @Override
     public void enable() throws EnableException {
-        String themeName = Settings.THEME_BASE.toString();
         try {
-            config = new ThemeConfig(themeName);
+            config.save();
         } catch (IOException e) {
-            throw new EnableException("Default theme could not be loaded.", e);
+            throw new EnableException("theme.yml could not be saved.", e);
         }
     }
 
@@ -60,7 +56,7 @@ public class Theme implements SubSystem {
 
     }
 
-    public String getColor(ThemeVal variable) {
+    private String getColor(ThemeVal variable) {
         String path = variable.getThemePath();
         try {
             String value = config.getString(path);
@@ -70,24 +66,22 @@ public class Theme implements SubSystem {
             } else {
                 return value;
             }
-        } catch (IllegalStateException e) {
-            if (!PlanPlugin.getInstance().isReloading()) {
-                Log.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
-            }
         } catch (Exception | NoSuchFieldError e) {
-            Log.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
+            logger.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
         }
         return variable.getDefaultValue();
     }
 
     public String replaceThemeColors(String resourceString) {
         String replaced = resourceString;
-        List<ThemeVal> themeVariables = EnumUtility.getSupportedEnumValues(ThemeVal.class, "RED", "PINK", "PURPLE",
-                "DEEP_PURPLE", "INDIGO", "BLUE", "LIGHT_BLUE", "CYAN", "TEAL", "GREEN", "LIGHT_GREEN", "LIME",
-                "YELLOW", "AMBER", "ORANGE", "DEEP_ORANGE", "BROWN", "GREY", "BLUE_GREY", "BLACK", "WHITE",
-                "GRAPH_PUNCHCARD", "GRAPH_PLAYERS_ONLINE", "GRAPH_TPS_HIGH", "GRAPH_TPS_MED", "GRAPH_TPS_LOW",
-                "GRAPH_CPU", "GRAPH_RAM", "GRAPH_CHUNKS", "GRAPH_ENTITIES", "GRAPH_WORLD_PIE", "GRAPH_GM_PIE",
-                "GRAPH_ACTIVITY_PIE", "GRAPH_SERVER_PREF_PIE", "FONT_STYLESHEET", "FONT_FAMILY");
+        ThemeVal[] themeVariables = new ThemeVal[]{
+                RED, PINK, PURPLE,
+                DEEP_PURPLE, INDIGO, BLUE, LIGHT_BLUE, CYAN, TEAL, GREEN, LIGHT_GREEN, LIME,
+                YELLOW, AMBER, ORANGE, DEEP_ORANGE, BROWN, GREY, BLUE_GREY, BLACK, WHITE,
+                GRAPH_PUNCHCARD, GRAPH_PLAYERS_ONLINE, GRAPH_TPS_HIGH, GRAPH_TPS_MED, GRAPH_TPS_LOW,
+                GRAPH_CPU, GRAPH_RAM, GRAPH_CHUNKS, GRAPH_ENTITIES, GRAPH_WORLD_PIE, GRAPH_GM_PIE,
+                GRAPH_ACTIVITY_PIE, GRAPH_SERVER_PREF_PIE, FONT_STYLESHEET, FONT_FAMILY
+        };
         for (ThemeVal variable : themeVariables) {
             String value = getColor(variable);
             String defaultValue = variable.getDefaultValue();
@@ -105,10 +99,10 @@ public class Theme implements SubSystem {
                 replaced = replaced.replace(defaultValue, value);
             }
         }
-        return replaced;
+        return replaced.replace("${defaultTheme}", getValue(ThemeVal.THEME_DEFAULT));
     }
 
-    public String getThemeValue(ThemeVal color) {
+    private String getThemeValue(ThemeVal color) {
         return config.getString(color.getThemePath());
     }
 }

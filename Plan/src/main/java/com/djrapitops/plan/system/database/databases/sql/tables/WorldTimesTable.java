@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -143,7 +142,7 @@ public class WorldTimesTable extends UserIDTable {
                     GMTimes gmTimes = entry.getValue();
                     statement.setString(1, uuid.toString());
                     statement.setString(2, worldName);
-                    String serverUUID = ServerInfo.getServerUUID().toString();
+                    String serverUUID = getServerUUID().toString();
                     statement.setString(3, serverUUID);
                     statement.setString(4, serverUUID);
                     statement.setInt(5, sessionID);

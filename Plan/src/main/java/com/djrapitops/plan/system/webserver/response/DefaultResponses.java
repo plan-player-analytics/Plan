@@ -10,7 +10,6 @@ package com.djrapitops.plan.system.webserver.response;
  * @author Rsl1122
  */
 public enum DefaultResponses {
-    BASIC_AUTH(PromptAuthorizationResponse.getBasicAuthResponse()),
     SUCCESS(new TextResponse("Success"));
 
     private final Response response;

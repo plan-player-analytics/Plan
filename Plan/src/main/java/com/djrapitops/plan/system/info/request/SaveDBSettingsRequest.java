@@ -6,19 +6,23 @@ package com.djrapitops.plan.system.info.request;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
+import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * InfoRequest for sending Database config settings to Bukkit servers.
@@ -27,23 +31,28 @@ import java.util.Map;
  */
 public class SaveDBSettingsRequest extends InfoRequestWithVariables implements SetupRequest {
 
-    public SaveDBSettingsRequest() {
+    private final PlanPlugin plugin;
+    private final PlanConfig config;
+    private final PluginLogger logger;
+    private final RunnableFactory runnableFactory;
+
+    SaveDBSettingsRequest(
+            PlanPlugin plugin,
+            PlanConfig config,
+            PluginLogger logger,
+            RunnableFactory runnableFactory
+    ) {
+        this.plugin = plugin;
+        this.config = config;
+        this.logger = logger;
+        this.runnableFactory = runnableFactory;
+
         variables.put("DB_TYPE", "mysql"); // Settings.DB_TYPE
-        variables.put("DB_HOST", Settings.DB_HOST.toString());
-        variables.put("DB_USER", Settings.DB_USER.toString());
-        variables.put("DB_PASS", Settings.DB_PASS.toString());
-        variables.put("DB_DATABASE", Settings.DB_DATABASE.toString());
-        variables.put("DB_PORT", Settings.DB_PORT.toString());
-    }
-
-    /**
-     * Private constructor for creating a handler.
-     */
-    private SaveDBSettingsRequest(boolean b) {
-    }
-
-    public static SaveDBSettingsRequest createHandler() {
-        return new SaveDBSettingsRequest(true);
+        variables.put("DB_HOST", config.getString(Settings.DB_HOST));
+        variables.put("DB_USER", config.getString(Settings.DB_USER));
+        variables.put("DB_PASS", config.getString(Settings.DB_PASS));
+        variables.put("DB_DATABASE", config.getString(Settings.DB_DATABASE));
+        variables.put("DB_PORT", config.getString(Settings.DB_PORT));
     }
 
     @Override
@@ -56,27 +65,27 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
         if (Check.isBungeeAvailable()) {
             return new BadRequestResponse("Not supposed to be called on a Bungee server");
         }
-        if (Settings.BUNGEE_COPY_CONFIG.isFalse() || Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()) {
+        if (config.isFalse(Settings.BUNGEE_COPY_CONFIG) || config.isTrue(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE)) {
             return new BadRequestResponse("Bungee config settings overridden on this server.");
         }
 
         try {
             setSettings(variables);
-            Log.info("----------------------------------");
-            Log.info("The Received Bungee Database Settings, restarting Plan..");
-            Log.info("----------------------------------");
+            logger.info("----------------------------------");
+            logger.info("The Received Bungee Database Settings, restarting Plan..");
+            logger.info("----------------------------------");
             return DefaultResponses.SUCCESS.get();
         } finally {
-            RunnableFactory.createNew("Bungee Setup Restart Task", new AbsRunnable() {
+            runnableFactory.create("Bungee Setup Restart Task", new AbsRunnable() {
                 @Override
                 public void run() {
-                    PlanPlugin.getInstance().reloadPlugin(true);
+                    plugin.reloadPlugin(true);
                 }
-            }).runTaskLater(TimeAmount.SECOND.ticks() * 2L);
+            }).runTaskLater(TimeAmount.toTicks(2L, TimeUnit.SECONDS));
         }
     }
 
-    private void setSettings(Map<String, String> variables) throws BadRequestException {
+    private void setSettings(Map<String, String> variables) throws BadRequestException, InternalErrorException {
         String type = variables.get("DB_TYPE");
         String host = variables.get("DB_HOST");
         String user = variables.get("DB_USER");
@@ -92,15 +101,19 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
         Verify.nullCheck(portS, () -> new BadRequestException("DB_PORT not specified in the request."));
 
         try {
-            Settings.DB_PORT.set(Integer.valueOf(portS));
+            config.set(Settings.DB_PORT, Integer.valueOf(portS));
         } catch (NumberFormatException e) {
             throw new BadRequestException("DB_PORT was not a number.");
         }
-        Settings.DB_TYPE.set(type);
-        Settings.DB_HOST.set(host);
-        Settings.DB_USER.set(user);
-        Settings.DB_PASS.set(pass);
-        Settings.DB_DATABASE.set(database);
-        Settings.save();
+        config.set(Settings.DB_TYPE, type);
+        config.set(Settings.DB_HOST, host);
+        config.set(Settings.DB_USER, user);
+        config.set(Settings.DB_PASS, pass);
+        config.set(Settings.DB_DATABASE, database);
+        try {
+            config.save();
+        } catch (IOException e) {
+            throw new InternalErrorException("Failed to Save Config", e);
+        }
     }
 }

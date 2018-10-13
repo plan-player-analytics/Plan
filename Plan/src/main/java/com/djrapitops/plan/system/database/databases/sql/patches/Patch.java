@@ -9,6 +9,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public abstract class Patch {
 
@@ -93,4 +94,7 @@ public abstract class Patch {
         db.execute(sql);
     }
 
+    protected UUID getServerUUID() {
+        return db.getServerUUIDSupplier().get();
+    }
 }

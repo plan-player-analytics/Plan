@@ -5,33 +5,26 @@
 package com.djrapitops.plan.system.cache;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.SubSystem;
-import com.djrapitops.plugin.utilities.Verify;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * System that holds data caches of the plugin.
  *
  * @author Rsl1122
  */
+@Singleton
 public class CacheSystem implements SubSystem {
 
     private final DataCache dataCache;
     private final GeolocationCache geolocationCache;
 
-    public CacheSystem(PlanSystem system) {
-        this(new DataCache(system), system);
-    }
-
-    protected CacheSystem(DataCache dataCache, PlanSystem system) {
+    @Inject
+    public CacheSystem(DataCache dataCache, GeolocationCache geolocationCache) {
         this.dataCache = dataCache;
-        geolocationCache = new GeolocationCache(() -> system.getLocaleSystem().getLocale());
-    }
-
-    public static CacheSystem getInstance() {
-        CacheSystem cacheSystem = PlanSystem.getInstance().getCacheSystem();
-        Verify.nullCheck(cacheSystem, () -> new IllegalStateException("Cache System was not initialized."));
-        return cacheSystem;
+        this.geolocationCache = geolocationCache;
     }
 
     @Override

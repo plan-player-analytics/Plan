@@ -9,6 +9,7 @@ import com.djrapitops.plan.api.exceptions.connection.WebException;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
@@ -30,24 +31,43 @@ import java.util.UUID;
  */
 public class CacheInspectPageRequest extends InfoRequestWithVariables implements CacheRequest {
 
-    private final UUID player;
-    private final String html;
+    private final PlanConfig config;
+    private final Processing processing;
+    private final ServerInfo serverInfo;
+    private final HtmlExport htmlExport;
 
-    private CacheInspectPageRequest() {
-        player = null;
-        html = null;
+    private UUID player;
+    private String html;
+
+    CacheInspectPageRequest(
+            PlanConfig config,
+            Processing processing,
+            ServerInfo serverInfo,
+            HtmlExport htmlExport
+    ) {
+        this.config = config;
+        this.processing = processing;
+        this.serverInfo = serverInfo;
+        this.htmlExport = htmlExport;
     }
 
-    public CacheInspectPageRequest(UUID player, String html) {
+    CacheInspectPageRequest(
+            UUID player, String html,
+            PlanConfig config,
+            Processing processing,
+            ServerInfo serverInfo,
+            HtmlExport htmlExport
+    ) {
+        this.config = config;
+        this.processing = processing;
+        this.serverInfo = serverInfo;
+        this.htmlExport = htmlExport;
+
         Verify.nullCheck(player, html);
         variables.put("player", player.toString());
         variables.put("html", Base64Util.encode(html));
         this.player = player;
         this.html = html;
-    }
-
-    public static CacheInspectPageRequest createHandler() {
-        return new CacheInspectPageRequest();
     }
 
     @Override
@@ -61,22 +81,21 @@ public class CacheInspectPageRequest extends InfoRequestWithVariables implements
         String html = variables.get("html");
         Verify.nullCheck(html, () -> new BadRequestException("HTML 'html' variable not supplied in the request"));
 
-        Map<String, String> replace = Collections.singletonMap("networkName", ServerInfo.getServerName());
-        boolean export = Settings.ANALYSIS_EXPORT.isTrue();
-        cache(export, uuid, StringSubstitutor.replace(Base64Util.decode(html), replace));
+        Map<String, String> replace = Collections.singletonMap("networkName", serverInfo.getServer().getName());
+        cache(uuid, StringSubstitutor.replace(Base64Util.decode(html), replace));
 
         return DefaultResponses.SUCCESS.get();
     }
 
-    private void cache(boolean export, UUID uuid, String html) {
+    private void cache(UUID uuid, String html) {
         ResponseCache.cacheResponse(PageId.PLAYER.of(uuid), () -> new InspectPageResponse(uuid, html));
-        if (export) {
-            Processing.submitNonCritical(() -> HtmlExport.exportPlayer(uuid));
+        if (config.isTrue(Settings.ANALYSIS_EXPORT)) {
+            processing.submitNonCritical(() -> htmlExport.exportPlayer(uuid));
         }
     }
 
     @Override
     public void runLocally() {
-        cache(Settings.ANALYSIS_EXPORT.isTrue(), player, html);
+        cache(player, html);
     }
 }

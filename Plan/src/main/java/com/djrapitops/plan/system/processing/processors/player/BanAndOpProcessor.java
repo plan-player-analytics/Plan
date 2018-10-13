@@ -21,15 +21,21 @@ public class BanAndOpProcessor implements Runnable {
     private final Supplier<Boolean> banned;
     private final boolean op;
 
-    public BanAndOpProcessor(UUID uuid, Supplier<Boolean> banned, boolean op) {
+    private final Database database;
+
+    BanAndOpProcessor(
+            UUID uuid, Supplier<Boolean> banned, boolean op,
+            Database database
+    ) {
         this.uuid = uuid;
         this.banned = banned;
         this.op = op;
+        this.database = database;
     }
 
     @Override
     public void run() {
-        SaveOperations save = Database.getActive().save();
+        SaveOperations save = database.save();
         save.banStatus(uuid, banned.get());
         save.opStatus(uuid, op);
     }

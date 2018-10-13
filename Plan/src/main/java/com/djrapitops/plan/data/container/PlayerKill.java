@@ -2,8 +2,8 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
 
-import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -12,11 +12,13 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class PlayerKill implements DateHolder, Serializable {
+public class PlayerKill implements DateHolder {
 
     private final UUID victim;
-    private final long date;
     private final String weapon;
+    private final long date;
+
+    private String victimName;
 
     /**
      * Creates a PlayerKill object with given parameters.
@@ -31,6 +33,13 @@ public class PlayerKill implements DateHolder, Serializable {
         this.date = date;
     }
 
+    public PlayerKill(UUID victim, String weapon, long date, String victimName) {
+        this.victim = victim;
+        this.date = date;
+        this.weapon = weapon;
+        this.victimName = victimName;
+    }
+
     /**
      * Get the victim's UUID.
      *
@@ -38,6 +47,10 @@ public class PlayerKill implements DateHolder, Serializable {
      */
     public UUID getVictim() {
         return victim;
+    }
+
+    public Optional<String> getVictimName() {
+        return Optional.ofNullable(victimName);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.djrapitops.plan.utilities.file.export;
 
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import org.json.simple.JSONObject;
@@ -36,7 +35,7 @@ public class Hastebin {
      * @return The link to the Dump Log
      * @see #split(String)
      */
-    public static String safeUpload(String content) {
+    public static String safeUpload(String content) throws ParseException, IOException {
         List<String> parts = ImmutableList.copyOf(split(content)).reverse();
 
         String lastLink = null;
@@ -52,10 +51,7 @@ public class Hastebin {
             if (e.getMessage().contains("503")) {
                 return "Hastebin unavailable";
             }
-
-            Log.toLog("DumpLog.upload", e);
-        } catch (ParseException e) {
-            Log.toLog("DumpLog.upload", e);
+            throw e;
         }
 
         return lastLink;

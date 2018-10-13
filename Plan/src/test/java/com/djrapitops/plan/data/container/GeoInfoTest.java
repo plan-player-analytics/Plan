@@ -24,4 +24,24 @@ public class GeoInfoTest {
         assertEquals(expected, result);
     }
 
+    @Test
+    public void testFormatIP() throws UnknownHostException {
+        InetAddress ip = InetAddress.getByName("1.2.3.4");
+        InetAddress ip2 = InetAddress.getByName("1.2.3.26");
+        InetAddress ip3 = InetAddress.getByName("1.2.3.235");
+        String expected = "1.2.xx.xx";
+
+        assertEquals(expected, GeoInfo.formatIP(ip));
+        assertEquals(expected, GeoInfo.formatIP(ip2));
+        assertEquals(expected, GeoInfo.formatIP(ip3));
+    }
+
+    @Test
+    public void testFormatIPv6() throws UnknownHostException {
+        InetAddress ip = InetAddress.getByName("1234:1234:1234:1234:1234:1234:1234:1234%0");
+        String expected = "1234:1234:1234:xx..";
+
+        assertEquals(expected, GeoInfo.formatIP(ip));
+    }
+
 }

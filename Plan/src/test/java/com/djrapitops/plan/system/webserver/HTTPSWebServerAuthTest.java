@@ -1,18 +1,22 @@
 package com.djrapitops.plan.system.webserver;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.DaggerPlanBukkitComponent;
+import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.data.WebUser;
-import com.djrapitops.plan.system.BukkitSystem;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.Teardown;
-import utilities.mocks.BukkitMockUtil;
+import utilities.mocks.PlanBukkitMocker;
 
 import javax.net.ssl.*;
 import java.io.File;
@@ -27,44 +31,36 @@ public class HTTPSWebServerAuthTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    private static BukkitSystem bukkitSystem;
+    private static PlanSystem bukkitSystem;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        BukkitMockUtil mockUtil = BukkitMockUtil.setUp()
+        PlanBukkitMocker mocker = PlanBukkitMocker.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
-                .withLogging()
                 .withPluginDescription()
                 .withResourceFetchingFromJar()
                 .withServer();
-        Plan planMock = mockUtil.getPlanMock();
+        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(mocker.getPlanMock()).build();
 
         URL resource = HTTPSWebServerAuthTest.class.getResource("/Cert.keystore");
         String keyStore = resource.getPath();
         String absolutePath = new File(keyStore).getAbsolutePath();
 
-        Settings.WEBSERVER_CERTIFICATE_PATH.setTemporaryValue(absolutePath);
-        Settings.WEBSERVER_CERTIFICATE_KEYPASS.setTemporaryValue("MnD3bU5HpmPXag0e");
-        Settings.WEBSERVER_CERTIFICATE_STOREPASS.setTemporaryValue("wDwwf663NLTm73gL");
-        Settings.WEBSERVER_CERTIFICATE_ALIAS.setTemporaryValue("DefaultPlanCert");
+        bukkitSystem = component.system();
 
-        Settings.WEBSERVER_PORT.setTemporaryValue(9005);
+        PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
 
-        bukkitSystem = new BukkitSystem(planMock);
+        config.set(Settings.WEBSERVER_CERTIFICATE_PATH, absolutePath);
+        config.set(Settings.WEBSERVER_CERTIFICATE_KEYPASS, "MnD3bU5HpmPXag0e");
+        config.set(Settings.WEBSERVER_CERTIFICATE_STOREPASS, "wDwwf663NLTm73gL");
+        config.set(Settings.WEBSERVER_CERTIFICATE_ALIAS, "DefaultPlanCert");
+
+        config.set(Settings.WEBSERVER_PORT, 9005);
+
         bukkitSystem.enable();
 
-        bukkitSystem.getDatabaseSystem().getActiveDatabase().save()
+        bukkitSystem.getDatabaseSystem().getDatabase().save()
                 .webUser(new WebUser("test", PassEncryptUtil.createHash("testPass"), 0));
-    }
-
-    @Before
-    public void setUp() {
-        Teardown.resetSettingsTempValues();
-    }
-
-    @After
-    public void tearDown() {
-        Teardown.resetSettingsTempValues();
     }
 
     @AfterClass
@@ -72,8 +68,6 @@ public class HTTPSWebServerAuthTest {
         if (bukkitSystem != null) {
             bukkitSystem.disable();
         }
-        bukkitSystem.disable();
-
     }
 
     private static final TrustManager[] trustAllCerts = new TrustManager[]{
@@ -129,6 +123,7 @@ public class HTTPSWebServerAuthTest {
 
         switch (responseCode) {
             case 200:
+            case 302:
                 return;
             case 400:
                 throw new BadRequestException("Bad Request: " + url.toString());

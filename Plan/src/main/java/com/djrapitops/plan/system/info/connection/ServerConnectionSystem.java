@@ -6,7 +6,9 @@ package com.djrapitops.plan.system.info.connection;
 
 import com.djrapitops.plan.api.exceptions.connection.ConnectionFailException;
 import com.djrapitops.plan.api.exceptions.connection.NoServersException;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
+import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.request.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -14,39 +16,68 @@ import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.webserver.WebServer;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import dagger.Lazy;
 
-import java.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Connection system for Bukkit servers.
  *
  * @author Rsl1122
  */
+@Singleton
 public class ServerConnectionSystem extends ConnectionSystem {
 
-    private final Supplier<Locale> locale;
+    private final Locale locale;
+    private final PlanConfig config;
+    private final Processing processing;
+    private final DBSystem dbSystem;
+    private final Lazy<WebServer> webServer;
+    private final PluginLogger pluginLogger;
+    private final WebExceptionLogger webExceptionLogger;
 
     private long latestServerMapRefresh;
 
     private Server mainServer;
 
-    public ServerConnectionSystem(Supplier<Locale> locale) {
+    @Inject
+    public ServerConnectionSystem(
+            Locale locale,
+            PlanConfig config,
+            Processing processing,
+            DBSystem dbSystem,
+            Lazy<WebServer> webServer,
+            ConnectionLog connectionLog,
+            InfoRequests infoRequests,
+            Lazy<InfoSystem> infoSystem,
+            ServerInfo serverInfo,
+            PluginLogger pluginLogger,
+            WebExceptionLogger webExceptionLogger
+    ) {
+        super(connectionLog, infoRequests, infoSystem, serverInfo);
         this.locale = locale;
+        this.config = config;
+        this.processing = processing;
+        this.dbSystem = dbSystem;
+        this.webServer = webServer;
+        this.pluginLogger = pluginLogger;
+        this.webExceptionLogger = webExceptionLogger;
         latestServerMapRefresh = 0;
     }
 
     private void refreshServerMap() {
-        Processing.submitNonCritical(() -> {
-            if (latestServerMapRefresh < System.currentTimeMillis() - TimeAmount.SECOND.ms() * 15L) {
-                Database database = Database.getActive();
-                Optional<Server> bungeeInformation = database.fetch().getBungeeInformation();
-                bungeeInformation.ifPresent(server -> mainServer = server);
-                bukkitServers = database.fetch().getBukkitServers();
+        processing.submitNonCritical(() -> {
+            if (latestServerMapRefresh < System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15L)) {
+                FetchOperations fetch = dbSystem.getDatabase().fetch();
+                mainServer = fetch.getBungeeInformation().orElse(null);
+                bukkitServers = fetch.getBukkitServers();
                 latestServerMapRefresh = System.currentTimeMillis();
             }
         });
@@ -80,7 +111,7 @@ public class ServerConnectionSystem extends ConnectionSystem {
             throw new NoServersException("No Servers available to make wide-request: " + infoRequest.getClass().getSimpleName());
         }
         for (Server server : bukkitServers.values()) {
-            WebExceptionLogger.logIfOccurs(this.getClass(), () -> {
+            webExceptionLogger.logIfOccurs(this.getClass(), () -> {
                 try {
                     sendInfoRequest(infoRequest, server);
                 } catch (ConnectionFailException ignored) {
@@ -92,28 +123,29 @@ public class ServerConnectionSystem extends ConnectionSystem {
 
     @Override
     public boolean isServerAvailable() {
-        return mainServer != null && Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse();
+        return mainServer != null && config.isFalse(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE);
     }
 
     @Override
     public String getMainAddress() {
-        return isServerAvailable() ? mainServer.getWebAddress() : ServerInfo.getServer().getWebAddress();
+        return isServerAvailable() ? mainServer.getWebAddress() : serverInfo.getServer().getWebAddress();
 
     }
 
     @Override
     public void enable() {
+        super.enable();
         refreshServerMap();
 
-        boolean usingBungeeWebServer = ConnectionSystem.getInstance().isServerAvailable();
-        boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+        boolean usingBungeeWebServer = isServerAvailable();
+        boolean usingAlternativeIP = config.isTrue(Settings.SHOW_ALTERNATIVE_IP);
 
-        if (!usingAlternativeIP && ServerInfo.getServerProperties().getIp().isEmpty()) {
-            Log.infoColor("§e" + locale.get().getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
+        if (!usingAlternativeIP && serverInfo.getServerProperties().getIp().isEmpty()) {
+            pluginLogger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
         }
         if (usingBungeeWebServer && usingAlternativeIP) {
-            String webServerAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
-            Log.info(locale.get().getString(PluginLang.ENABLE_NOTIFY_ADDRESS_CONFIRMATION, webServerAddress));
+            String webServerAddress = webServer.get().getAccessAddress();
+            pluginLogger.info(locale.getString(PluginLang.ENABLE_NOTIFY_ADDRESS_CONFIRMATION, webServerAddress));
         }
     }
 }

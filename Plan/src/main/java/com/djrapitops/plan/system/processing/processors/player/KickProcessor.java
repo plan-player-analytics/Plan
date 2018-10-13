@@ -18,12 +18,15 @@ public class KickProcessor implements CriticalRunnable {
 
     private final UUID uuid;
 
-    public KickProcessor(UUID uuid) {
+    private final Database database;
+
+    KickProcessor(UUID uuid, Database database) {
         this.uuid = uuid;
+        this.database = database;
     }
 
     @Override
     public void run() {
-        Database.getActive().save().playerWasKicked(uuid);
+        database.save().playerWasKicked(uuid);
     }
 }

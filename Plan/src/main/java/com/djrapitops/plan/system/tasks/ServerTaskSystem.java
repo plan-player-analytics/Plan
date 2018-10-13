@@ -1,29 +1,40 @@
 package com.djrapitops.plan.system.tasks;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
-import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
-import com.djrapitops.plan.utilities.file.export.HtmlExport;
-import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Abstracted TaskSystem implementation for both Bukkit and Sponge.
  *
  * @author Rsl1122
  */
-public class ServerTaskSystem extends TaskSystem {
+public abstract class ServerTaskSystem extends TaskSystem {
 
-    protected final PlanPlugin plugin;
-    protected ITask bootAnalysisTask;
+    protected final PlanConfig config;
+    private final BootAnalysisTask bootAnalysisTask;
+    private final PeriodicAnalysisTask periodicAnalysisTask;
+    private final LogsFolderCleanTask logsFolderCleanTask;
 
-    public ServerTaskSystem(PlanPlugin plugin, TPSCountTimer tpsCountTimer) {
-        super(tpsCountTimer);
-        this.plugin = plugin;
+    public ServerTaskSystem(
+            RunnableFactory runnableFactory,
+            TPSCountTimer tpsCountTimer,
+            PlanConfig config,
+            BootAnalysisTask bootAnalysisTask,
+            PeriodicAnalysisTask periodicAnalysisTask,
+            LogsFolderCleanTask logsFolderCleanTask
+    ) {
+        super(runnableFactory, tpsCountTimer);
+        this.config = config;
+        this.bootAnalysisTask = bootAnalysisTask;
+        this.periodicAnalysisTask = periodicAnalysisTask;
+        this.logsFolderCleanTask = logsFolderCleanTask;
     }
 
     @Override
@@ -32,34 +43,24 @@ public class ServerTaskSystem extends TaskSystem {
     }
 
     private void registerTasks() {
-        Benchmark.start("Task Registration");
-
         // Analysis refresh settings
-        int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
+        int analysisRefreshMinutes = config.getNumber(Settings.ANALYSIS_AUTO_REFRESH);
         boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
-        long analysisPeriod = analysisRefreshMinutes * TimeAmount.MINUTE.ticks();
+        long analysisPeriod = TimeAmount.toTicks(analysisRefreshMinutes, TimeUnit.MINUTES);
 
-        registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
-        registerTask(new NetworkPageRefreshTask()).runTaskTimerAsynchronously(20L, 5L * TimeAmount.MINUTE.ticks());
-        bootAnalysisTask = registerTask(new BootAnalysisTask()).runTaskLaterAsynchronously(30L * TimeAmount.SECOND.ticks());
+        registerTask(tpsCountTimer).runTaskTimer(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        registerTask(bootAnalysisTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
 
         if (analysisRefreshTaskIsEnabled) {
-            registerTask(new PeriodicAnalysisTask()).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
+            registerTask(periodicAnalysisTask).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }
-        if (Settings.ANALYSIS_EXPORT.isTrue()) {
-            RunnableFactory.createNew(new HtmlExport(plugin)).runTaskAsynchronously();
-        }
-        Benchmark.stop("Enable", "Task Registration");
-    }
 
-    public void cancelBootAnalysis() {
-        try {
-            if (bootAnalysisTask != null) {
-                bootAnalysisTask.cancel();
-                bootAnalysisTask = null;
+        registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
+        registerTask("Settings Load", new AbsRunnable() {
+            @Override
+            public void run() {
+                config.getNetworkSettings().loadSettingsFromDB();
             }
-        } catch (Exception ignored) {
-            /* Ignored */
-        }
+        }).runTaskAsynchronously();
     }
 }

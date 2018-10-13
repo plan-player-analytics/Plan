@@ -1,14 +1,16 @@
 package com.djrapitops.plan.data.store.mutators.formatting;
 
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.TimeAmount;
-import org.junit.AfterClass;
-import org.junit.Before;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.formatting.time.TimeAmountFormatter;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import utilities.Teardown;
+import org.mockito.Mockito;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for {@link TimeAmountFormatter} that checks extra zeros config example.
@@ -17,41 +19,33 @@ import static org.junit.Assert.assertEquals;
  */
 public class TimeAmountFormatterExtraZerosTest {
 
-    private TimeAmountFormatter timeAmountFormatter;
+    private static TimeAmountFormatter underTest;
 
     @BeforeClass
     public static void setUpClass() {
-        Settings.FORMAT_YEAR.setTemporaryValue("1 year, ");
-        Settings.FORMAT_YEARS.setTemporaryValue("%years% years, ");
-        Settings.FORMAT_MONTH.setTemporaryValue("1 month, ");
-        Settings.FORMAT_MONTHS.setTemporaryValue("%months% months, ");
-        Settings.FORMAT_DAY.setTemporaryValue("1d ");
-        Settings.FORMAT_DAYS.setTemporaryValue("%days%d ");
-        Settings.FORMAT_HOURS.setTemporaryValue("%zero%%hours%:");
-        Settings.FORMAT_MINUTES.setTemporaryValue("%hours%%zero%%minutes%:");
-        Settings.FORMAT_SECONDS.setTemporaryValue("%minutes%%zero%%seconds%");
-        Settings.FORMAT_ZERO_SECONDS.setTemporaryValue("00:00:00");
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-        Teardown.resetSettingsTempValues();
-    }
-
-    @Before
-    public void setUp() {
-        timeAmountFormatter = new TimeAmountFormatter();
+        PlanConfig config = Mockito.mock(PlanConfig.class);
+        when(config.getString(Settings.FORMAT_YEAR)).thenReturn("1 year, ");
+        when(config.getString(Settings.FORMAT_YEARS)).thenReturn("%years% years, ");
+        when(config.getString(Settings.FORMAT_MONTH)).thenReturn("1 month, ");
+        when(config.getString(Settings.FORMAT_MONTHS)).thenReturn("%months% months, ");
+        when(config.getString(Settings.FORMAT_DAY)).thenReturn("1d ");
+        when(config.getString(Settings.FORMAT_DAYS)).thenReturn("%days%d ");
+        when(config.getString(Settings.FORMAT_HOURS)).thenReturn("%zero%%hours%:");
+        when(config.getString(Settings.FORMAT_MINUTES)).thenReturn("%hours%%zero%%minutes%:");
+        when(config.getString(Settings.FORMAT_SECONDS)).thenReturn("%minutes%%zero%%seconds%");
+        when(config.getString(Settings.FORMAT_ZERO_SECONDS)).thenReturn("00:00:00");
+        underTest = new TimeAmountFormatter(config);
     }
 
     @Test
     public void exampleOne() {
         String expected = "1 year, 1 month, 5d 12:30:20";
 
-        long ms = TimeAmount.DAY.ms() * 400L +
-                TimeAmount.HOUR.ms() * 12L +
-                TimeAmount.MINUTE.ms() * 30L +
-                TimeAmount.SECOND.ms() * 20L;
-        String result = timeAmountFormatter.apply(ms);
+        long ms = TimeUnit.DAYS.toMillis(400L) +
+                TimeUnit.HOURS.toMillis(12L) +
+                TimeUnit.MINUTES.toMillis(30L) +
+                TimeUnit.SECONDS.toMillis(20L);
+        String result = underTest.apply(ms);
 
         assertEquals(expected, result);
     }
@@ -60,8 +54,8 @@ public class TimeAmountFormatterExtraZerosTest {
     public void exampleTwo() {
         String expected = "1 year, 1 month, 5d 00:00:00";
 
-        long ms = TimeAmount.DAY.ms() * 400L;
-        String result = timeAmountFormatter.apply(ms);
+        long ms = TimeUnit.DAYS.toMillis(400L);
+        String result = underTest.apply(ms);
 
         assertEquals(expected, result);
     }
@@ -70,9 +64,9 @@ public class TimeAmountFormatterExtraZerosTest {
     public void exampleThree() {
         String expected = "12:00:20";
 
-        long ms = TimeAmount.HOUR.ms() * 12L +
-                TimeAmount.SECOND.ms() * 20L;
-        String result = timeAmountFormatter.apply(ms);
+        long ms = TimeUnit.HOURS.toMillis(12L) +
+                TimeUnit.SECONDS.toMillis(20L);
+        String result = underTest.apply(ms);
 
         assertEquals(expected, result);
     }
@@ -81,8 +75,8 @@ public class TimeAmountFormatterExtraZerosTest {
     public void exampleFour() {
         String expected = "00:30:00";
 
-        long ms = TimeAmount.MINUTE.ms() * 30L;
-        String result = timeAmountFormatter.apply(ms);
+        long ms = TimeUnit.MINUTES.toMillis(30L);
+        String result = underTest.apply(ms);
 
         assertEquals(expected, result);
     }
@@ -91,8 +85,8 @@ public class TimeAmountFormatterExtraZerosTest {
     public void exampleFive() {
         String expected = "00:00:20";
 
-        long ms = TimeAmount.SECOND.ms() * 20L;
-        String result = timeAmountFormatter.apply(ms);
+        long ms = TimeUnit.SECONDS.toMillis(20L);
+        String result = underTest.apply(ms);
 
         assertEquals(expected, result);
     }
@@ -102,7 +96,7 @@ public class TimeAmountFormatterExtraZerosTest {
         String expected = "-";
 
         long ms = 0L;
-        String result = timeAmountFormatter.apply(ms);
+        String result = underTest.apply(ms);
 
         assertEquals(expected, result);
     }
@@ -111,8 +105,8 @@ public class TimeAmountFormatterExtraZerosTest {
     public void exampleOneSecond() {
         String expected = "00:00:01";
 
-        long ms = TimeAmount.SECOND.ms();
-        String result = timeAmountFormatter.apply(ms);
+        long ms = TimeUnit.SECONDS.toMillis(1L);
+        String result = underTest.apply(ms);
 
         assertEquals(expected, result);
     }
@@ -121,8 +115,8 @@ public class TimeAmountFormatterExtraZerosTest {
     public void exampleOneMinute() {
         String expected = "00:01:00";
 
-        long ms = TimeAmount.MINUTE.ms();
-        String result = timeAmountFormatter.apply(ms);
+        long ms = TimeUnit.MINUTES.toMillis(1L);
+        String result = underTest.apply(ms);
 
         assertEquals(expected, result);
     }

@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.info.server.properties;
 
-import com.djrapitops.plan.system.settings.Settings;
 import net.md_5.bungee.api.ProxyServer;
 
 /**
@@ -12,14 +11,14 @@ import net.md_5.bungee.api.ProxyServer;
  */
 public class BungeeServerProperties extends ServerProperties {
 
-    public BungeeServerProperties(ProxyServer server) {
+    public BungeeServerProperties(ProxyServer server, String ip) {
         super(
                 server.getServers().toString(),
                 "BungeeCord",
                 -1,
                 server.getVersion(),
                 server.getVersion(),
-                Settings.BUNGEE_IP::toString,
+                () -> ip,
                 server.getConfig().getPlayerLimit(),
                 RedisCheck.isClassAvailable() ? new RedisPlayersOnlineSupplier() : server::getOnlineCount
         );

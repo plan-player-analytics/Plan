@@ -1,29 +1,43 @@
 package com.djrapitops.plan.system.tasks.server;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.connection.WebExceptionLogger;
-import com.djrapitops.plan.system.info.request.GenerateAnalysisPageRequest;
+import com.djrapitops.plan.system.info.request.InfoRequestFactory;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class BootAnalysisTask extends AbsRunnable {
 
-    public BootAnalysisTask() {
-        super(BootAnalysisTask.class.getSimpleName());
+    private final InfoSystem infoSystem;
+    private final InfoRequestFactory infoRequestFactory;
+    private final ServerInfo serverInfo;
+    private final WebExceptionLogger webExceptionLogger;
+
+    @Inject
+    public BootAnalysisTask(
+            InfoSystem infoSystem,
+            InfoRequestFactory infoRequestFactory,
+            ServerInfo serverInfo,
+            WebExceptionLogger webExceptionLogger
+    ) {
+        this.infoSystem = infoSystem;
+        this.infoRequestFactory = infoRequestFactory;
+        this.serverInfo = serverInfo;
+        this.webExceptionLogger = webExceptionLogger;
     }
 
     @Override
     public void run() {
         try {
-            WebExceptionLogger.logIfOccurs(this.getClass(), () ->
-                    InfoSystem.getInstance().sendRequest(new GenerateAnalysisPageRequest(ServerInfo.getServerUUID()))
+            webExceptionLogger.logIfOccurs(this.getClass(), () ->
+                    infoSystem.sendRequest(infoRequestFactory.generateAnalysisPageRequest(serverInfo.getServerUUID()))
             );
-        } catch (IllegalStateException e) {
-            if (!PlanPlugin.getInstance().isReloading()) {
-                Log.toLog(this.getClass(), e);
-            }
+        } catch (IllegalStateException ignore) {
+            /* Plugin was reloading */
         } finally {
             cancel();
         }

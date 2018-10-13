@@ -22,10 +22,12 @@ import com.djrapitops.plan.utilities.PassEncryptUtil;
  */
 public class BasicAuthentication implements Authentication {
 
-    private String authenticationString;
+    private final String authenticationString;
+    private final Database database;
 
-    public BasicAuthentication(String authenticationString) {
+    public BasicAuthentication(String authenticationString, Database database) {
         this.authenticationString = authenticationString;
+        this.database = database;
     }
 
     @Override
@@ -41,8 +43,6 @@ public class BasicAuthentication implements Authentication {
         String passwordRaw = userInfo[1];
 
         try {
-
-            Database database = Database.getActive();
             if (!database.check().doesWebUserExists(user)) {
                 throw new WebUserAuthException(FailReason.USER_DOES_NOT_EXIST, user);
             }

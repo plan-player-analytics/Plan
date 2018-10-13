@@ -4,18 +4,21 @@
  */
 package com.djrapitops.plan.utilities.html.structure;
 
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
+import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.utilities.comparators.PluginDataNameComparator;
-import com.djrapitops.plan.utilities.html.tables.PluginPlayersTable;
-import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.utilities.html.tables.HtmlTables;
+import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
@@ -23,12 +26,35 @@ import java.util.*;
  *
  * @author Rsl1122
  */
+@Singleton
 public class AnalysisPluginsTabContentCreator {
 
-    public static String[] createContent(
-            PlayersMutator mutator,
-            com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer
+    private final HookHandler hookHandler;
+    private final HtmlTables tables;
+    private final Timings timings;
+    private final PluginLogger logger;
+    private final ErrorHandler errorHandler;
+
+    @Inject
+    public AnalysisPluginsTabContentCreator(
+            HookHandler hookHandler,
+            HtmlTables tables,
+            Timings timings,
+            PluginLogger logger,
+            ErrorHandler errorHandler
     ) {
+        this.hookHandler = hookHandler;
+        this.tables = tables;
+        this.timings = timings;
+        this.logger = logger;
+        this.errorHandler = errorHandler;
+    }
+
+    public String[] createContent(
+            com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer,
+            PlayersMutator mutator
+    ) {
+
         if (mutator.all().isEmpty()) {
             return new String[]{"<li><a>No Data</a></li>", ""};
         }
@@ -82,7 +108,7 @@ public class AnalysisPluginsTabContentCreator {
                 "<div class=\"card\">" +
                 "<div class=\"header\"><h2><i class=\"fa fa-users\"></i> Plugin Data</h2></div>" +
                 "<div class=\"body\">" +
-                new PluginPlayersTable(containers, mutator.all()).parseHtml() +
+                tables.pluginPlayersTable(containers, mutator.all()).parseHtml() +
                 "</div></div></div>" +
                 "</div></div>";
 
@@ -93,19 +119,17 @@ public class AnalysisPluginsTabContentCreator {
         };
     }
 
-    private static Map<PluginData, AnalysisContainer> analyzeAdditionalPluginData(
+    private Map<PluginData, AnalysisContainer> analyzeAdditionalPluginData(
             Collection<UUID> uuids,
             com.djrapitops.plan.data.store.containers.AnalysisContainer analysisContainer
     ) {
         Map<PluginData, AnalysisContainer> containers = new HashMap<>();
 
-        List<PluginData> sources = HookHandler.getInstance().getAdditionalDataSources();
+        List<PluginData> sources = hookHandler.getAdditionalDataSources();
 
         sources.parallelStream().forEach(source -> {
-            PlanPlugin plugin = PlanPlugin.getInstance();
-            StaticHolder.saveInstance(AnalysisPluginsTabContentCreator.class, plugin.getClass());
             try {
-                Benchmark.start("Analysis: Source " + source.getSourcePlugin());
+                timings.start("Source " + source.getSourcePlugin());
 
                 source.setAnalysisData(analysisContainer);
                 AnalysisContainer container = source.getServerData(uuids, new AnalysisContainer());
@@ -114,10 +138,10 @@ public class AnalysisPluginsTabContentCreator {
                 }
 
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-                Log.error("A PluginData-source caused an exception: " + source.getSourcePlugin());
-                Log.toLog(AnalysisPluginsTabContentCreator.class, e);
+                logger.error("A PluginData-source caused an exception: " + source.getSourcePlugin());
+                errorHandler.log(L.WARN, this.getClass(), e);
             } finally {
-                Benchmark.stop("Analysis", "Analysis: Source " + source.getSourcePlugin());
+                timings.end(DebugChannels.ANALYSIS, "Source " + source.getSourcePlugin());
                 source.setAnalysisData(null);
             }
         });

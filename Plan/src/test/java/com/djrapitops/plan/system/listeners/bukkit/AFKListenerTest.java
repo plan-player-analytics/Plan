@@ -1,21 +1,21 @@
 package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.logging.console.TestPluginLogger;
+import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import utilities.Teardown;
 import utilities.TestConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 /**
  * Test for {@link AFKListener}
@@ -24,27 +24,25 @@ import static org.mockito.Mockito.doReturn;
  */
 public class AFKListenerTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-        Settings.AFK_THRESHOLD_MINUTES.setTemporaryValue(3);
-    }
+    private AFKListener underTest;
 
-    @AfterClass
-    public static void tearDownClass() {
-        Teardown.resetSettingsTempValues();
+    @Before
+    public void setUp() {
+        PlanConfig config = Mockito.mock(PlanConfig.class);
+        when(config.getNumber(Settings.AFK_THRESHOLD_MINUTES)).thenReturn(3);
+        underTest = new AFKListener(config, new ConsoleErrorLogger(new TestPluginLogger()));
     }
 
     @Test
-    public void testAfkPermissionCallCaching() {
-        AFKListener afkListener = new AFKListener();
+    public void afkPermissionIsNotCalledMoreThanOnce() {
         Collection<Boolean> calls = new ArrayList<>();
 
         Player player = mockPlayer(calls);
         PlayerMoveEvent event = mockMoveEvent(player);
 
-        afkListener.onMove(event);
+        underTest.onMove(event);
         assertEquals(1, calls.size());
-        afkListener.onMove(event);
+        underTest.onMove(event);
         assertEquals(1, calls.size());
     }
 

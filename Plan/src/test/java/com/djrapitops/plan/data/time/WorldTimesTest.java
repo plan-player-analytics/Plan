@@ -22,7 +22,7 @@ public class WorldTimesTest {
     private WorldTimes worldTimes = new WorldTimes(worldOne, gms[0], time);
 
     @Test
-    public void testWorldChange() {
+    public void stateAffectedByWorldChange() {
         long changeTime = time + 1000L;
         worldTimes.updateState(worldTwo, gms[0], changeTime);
 
@@ -31,7 +31,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void testGMChange() {
+    public void stateAffectedByGamemodeChange() {
         long changeTime = time + 1000L;
         worldTimes.updateState(worldOne, gms[0], changeTime);
 
@@ -40,7 +40,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void testBothTwiceChange() {
+    public void stateAffectedByTwoChangesAtOnce() {
         long changeTime = time + 1000L;
         long changeTime2 = changeTime + 1000L;
 
@@ -57,7 +57,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void testLotOfChangesWorldTime() {
+    public void stateAffectedByManyWorldChanges() {
         long amount = 1000L;
         String[] worlds = new String[]{worldOne, worldTwo};
 
@@ -95,7 +95,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void testGMTrackingSingleWorld() {
+    public void gamemodeTrackingWorksForASingleWorld() {
         long changeTime = time + 1000L;
         long changeTime2 = changeTime + 1000L;
 
@@ -114,7 +114,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void testGMTrackingTwoWorlds() {
+    public void gamemodeTrackingWorksForTwoWorlds() {
         long changeTime = time + 1000L;
         long changeTime2 = time + 2000L;
 

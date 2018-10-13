@@ -3,7 +3,6 @@ package com.djrapitops.plan.utilities.metrics;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plugin.api.utility.log.Log;
 import org.bstats.bungeecord.Metrics;
 
 import java.io.Serializable;
@@ -11,14 +10,18 @@ import java.io.Serializable;
 public class BStatsBungee {
 
     private final PlanBungee plugin;
+    private final Database database;
+    private final ConnectionSystem connectionSystem;
+
     private Metrics metrics;
 
-    public BStatsBungee(PlanBungee plugin) {
+    public BStatsBungee(PlanBungee plugin, Database database, ConnectionSystem connectionSystem) {
         this.plugin = plugin;
+        this.database = database;
+        this.connectionSystem = connectionSystem;
     }
 
     public void registerMetrics() {
-        Log.logDebug("Enable", "Enabling bStats Metrics.");
         if (metrics == null) {
             metrics = new Metrics(plugin);
         }
@@ -27,11 +30,11 @@ public class BStatsBungee {
 
     private void registerConfigSettingGraphs() {
         String serverType = plugin.getProxy().getName();
-        String databaseType = Database.getActive().getName();
+        String databaseType = database.getName();
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);
-        addStringSettingPie("network_servers", ConnectionSystem.getInstance().getBukkitServers().size());
+        addStringSettingPie("network_servers", connectionSystem.getBukkitServers().size());
     }
 
     protected void addStringSettingPie(String id, Serializable setting) {

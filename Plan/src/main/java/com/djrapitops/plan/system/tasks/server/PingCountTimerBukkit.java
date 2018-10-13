@@ -25,11 +25,11 @@ package com.djrapitops.plan.system.tasks.server;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.player.PingInsertProcessor;
+import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.java.Reflection;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
@@ -39,11 +39,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Task that handles player ping calculation on Bukkit based servers.
@@ -53,6 +58,7 @@ import java.util.*;
  *
  * @author games647
  */
+@Singleton
 public class PingCountTimerBukkit extends AbsRunnable implements Listener {
 
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
@@ -80,7 +86,11 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
 
                 localPing = lookup.findGetter(entityPlayer, "ping", Integer.TYPE);
             } catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException reflectiveEx) {
-                Log.toLog(PingCountTimerBukkit.class, reflectiveEx);
+                Logger.getGlobal().log(
+                        Level.WARNING,
+                        "Reflective exception in static initializer of Plan PingCountTimer",
+                        reflectiveEx
+                );
             }
         }
 
@@ -88,7 +98,26 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
         PING_FIELD = localPing;
     }
 
-    private final Map<UUID, List<DateObj<Integer>>> playerHistory = new HashMap<>();
+    private final Map<UUID, List<DateObj<Integer>>> playerHistory;
+
+    private final PlanConfig config;
+    private final Processors processors;
+    private final Processing processing;
+    private final RunnableFactory runnableFactory;
+
+    @Inject
+    public PingCountTimerBukkit(
+            PlanConfig config,
+            Processors processors,
+            Processing processing,
+            RunnableFactory runnableFactory
+    ) {
+        this.config = config;
+        this.processors = processors;
+        this.processing = processing;
+        this.runnableFactory = runnableFactory;
+        playerHistory = new HashMap<>();
+    }
 
     private static boolean isPingMethodAvailable() {
         try {
@@ -108,13 +137,13 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 int ping = getPing(player);
-                if (ping < -1 || ping > TimeAmount.SECOND.ms() * 8L) {
+                if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
                     return;
                 }
                 history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
-                    Processing.submit(new PingInsertProcessor(uuid, new ArrayList<>(history)));
+                    processing.submit(processors.player().pingInsertProcessor(uuid, new ArrayList<>(history)));
                     history.clear();
                 }
             } else {
@@ -154,14 +183,14 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent joinEvent) {
         Player player = joinEvent.getPlayer();
-        RunnableFactory.createNew("Add Player to Ping list", new AbsRunnable() {
+        runnableFactory.create("Add Player to Ping list", new AbsRunnable() {
             @Override
             public void run() {
                 if (player.isOnline()) {
                     addPlayer(player);
                 }
             }
-        }).runTaskLater(TimeAmount.SECOND.ticks() * (long) Settings.PING_PLAYER_LOGIN_DELAY.getNumber());
+        }).runTaskLater(TimeAmount.toTicks(config.getNumber(Settings.PING_PLAYER_LOGIN_DELAY), TimeUnit.SECONDS));
     }
 
     @EventHandler

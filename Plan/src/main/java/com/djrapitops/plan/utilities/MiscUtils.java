@@ -1,19 +1,11 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.Sender;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Utility method class containing various static methods.
@@ -30,13 +22,6 @@ public class MiscUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static int getTimeZoneOffsetHours() {
-        if (Settings.USE_SERVER_TIME.isTrue()) {
-            return -TimeZone.getDefault().getOffset(System.currentTimeMillis()) / (int) TimeAmount.HOUR.ms();
-        }
-        return 0;
-    }
-
     /**
      * Get a players name that matches the given arguments or name of the sender.
      *
@@ -44,7 +29,7 @@ public class MiscUtils {
      * @param sender Sender of command
      * @return Player name.
      */
-    public static String getPlayerName(String[] args, ISender sender) {
+    public static String getPlayerName(String[] args, Sender sender) {
         return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
     }
 
@@ -56,7 +41,7 @@ public class MiscUtils {
      * @param perm   Permission to use when checking.
      * @return The name of the player (first argument or sender) or null if sender has no permission.
      */
-    public static String getPlayerName(String[] args, ISender sender, Permissions perm) {
+    public static String getPlayerName(String[] args, Sender sender, Permissions perm) {
         String playerName;
         boolean isConsole = !CommandUtils.isPlayer(sender);
         if (isConsole) {
@@ -75,29 +60,13 @@ public class MiscUtils {
         return playerName;
     }
 
-    /**
-     * Get matching player names from the offline players.
-     *
-     * @param search Part of a name to search for.
-     * @return Alphabetically sorted list of matching player names.
-     */
-    public static List<String> getMatchingPlayerNames(String search) {
-        Database db = Database.getActive();
-        List<String> matches = db.search().matchingPlayers(search);
-        Collections.sort(matches);
-        return matches;
-    }
-
     public static void close(Closeable... close) {
         for (Closeable c : close) {
             if (c != null) {
                 try {
                     c.close();
-                } catch (IOException e) {
-                    if (Settings.DEV_MODE.isTrue()) {
-                        Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                        Log.toLog(MiscUtils.class, e);
-                    }
+                } catch (IOException ignored) {
+                    // Closing exceptions are ignored.
                 }
             }
         }
@@ -108,17 +77,10 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (Exception e) {
-                    if (Settings.DEV_MODE.isTrue()) {
-                        Log.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                        Log.toLog(MiscUtils.class, e);
-                    }
+                } catch (Exception ignore) {
+                    // Closing exceptions are ignored.
                 }
             }
         }
-    }
-
-    public static String getPlanVersion() {
-        return PlanPlugin.getInstance().getVersion();
     }
 }

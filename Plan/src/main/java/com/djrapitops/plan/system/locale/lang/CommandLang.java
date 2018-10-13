@@ -67,17 +67,6 @@ public enum CommandLang implements Lang {
 
     DISABLE_DISABLED("Cmd Disable - Disabled", "§aPlan systems are now disabled. You can still use /planbungee reload to restart the plugin."),
 
-    UPDATE_WRONG_URL("Cmd Update - Url mismatch", "§cVersion download url did not start with ${0} and might not be trusted. You can download this version manually here (Direct download):"),
-    UPDATE_CHANGE_LOG("Cmd Update - Change log", "Change Log v${0}:"),
-    UPDATE_CANCEL_SUCCESS("Cmd Update - Cancel Success", "§aCancel operation performed."),
-    UPDATE_NOTIFY_CANCEL("Cmd Update - Notify Cancel", "§aYou can cancel the update on servers that haven't rebooted yet with /plan update cancel."),
-    UPDATE_ONLINE_CHECK("Cmd Update - Online Check", "Checking that all servers are online.."),
-    UPDATE_FAIL_NOT_ONLINE("Cmd Update - Fail Not Online", "§cNot all servers were online or accessible, you can still update available servers using /plan update -u -force"),
-    UPDATE_SCHEDULED("Cmd Update - Scheduled", "§a${0} scheduled for update."),
-    UPDATE_FAIL_FORCED("Cmd Update - Fail Force Notify", "§e${0} failed to update, -force specified, continuing update."),
-    UPDATE_FAIL_CANCEL("Cmd Update - Fail Cacnel", "§cUpdate failed on a server, cancelling update on all servers.."),
-    UPDATE_CANCELLED("Cmd Update - Cancelled", "§cUpdate cancelled."),
-
     RELOAD_COMPLETE("Cmd Info - Reload Complete", "§aReload Complete"),
     RELOAD_FAILED("Cmd Info - Reload Failed", "§cSomething went wrong during reload of the plugin, a restart is recommended.");
 

@@ -7,15 +7,19 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.connection.InfoRequestPageHandler;
-import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.system.webserver.auth.Authentication;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.pages.*;
-import com.djrapitops.plan.system.webserver.response.*;
-import com.djrapitops.plan.system.webserver.response.errors.*;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.webserver.response.Response;
+import com.djrapitops.plan.system.webserver.response.ResponseFactory;
+import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
+import dagger.Lazy;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,35 +30,57 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ResponseHandler extends TreePageHandler {
 
-    private final WebServer webServer;
+    private final DebugPageHandler debugPageHandler;
+    private final PlayersPageHandler playersPageHandler;
+    private final PlayerPageHandler playerPageHandler;
+    private final ServerPageHandler serverPageHandler;
+    private final InfoRequestPageHandler infoRequestPageHandler;
+    private final ErrorHandler errorHandler;
 
-    public ResponseHandler(WebServer webServer) {
+    private Lazy<WebServer> webServer;
+
+    @Inject
+    public ResponseHandler(
+            ResponseFactory responseFactory,
+            Lazy<WebServer> webServer,
+
+            DebugPageHandler debugPageHandler,
+            PlayersPageHandler playersPageHandler,
+            PlayerPageHandler playerPageHandler,
+            ServerPageHandler serverPageHandler,
+            InfoRequestPageHandler infoRequestPageHandler,
+
+            ErrorHandler errorHandler
+    ) {
+        super(responseFactory);
         this.webServer = webServer;
+        this.debugPageHandler = debugPageHandler;
+        this.playersPageHandler = playersPageHandler;
+        this.playerPageHandler = playerPageHandler;
+        this.serverPageHandler = serverPageHandler;
+        this.infoRequestPageHandler = infoRequestPageHandler;
+        this.errorHandler = errorHandler;
     }
 
-    public void registerDefaultPages() {
-        registerPage("favicon.ico", new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"), 5);
-        registerPage("debug", new DebugPageHandler());
-        registerPage("players", new PlayersPageHandler());
-        registerPage("player", new PlayerPageHandler());
+    public void registerPages() {
+        registerPage("favicon.ico", responseFactory.redirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"), 5);
+        registerPage("debug", debugPageHandler);
+        registerPage("players", playersPageHandler);
+        registerPage("player", playerPageHandler);
 
-        ServerPageHandler serverPageHandler = new ServerPageHandler();
         registerPage("network", serverPageHandler);
         registerPage("server", serverPageHandler);
-        registerPage("", webServer.isAuthRequired()
-                ? new RootPageHandler(this)
-                : new PageHandler() {
-            @Override
-            public Response getResponse(Request request, List<String> target) {
-                return new RedirectResponse("/server");
-            }
-        });
-    }
 
-    public void registerWebAPIPages() {
-        registerPage("info", new InfoRequestPageHandler());
+        if (webServer.get().isAuthRequired()) {
+            registerPage("", new RootPageHandler(responseFactory));
+        } else {
+            registerPage("", responseFactory.redirectResponse("/server"), 5);
+        }
+
+        registerPage("info", infoRequestPageHandler);
     }
 
     public Response getResponse(Request request) {
@@ -66,26 +92,26 @@ public class ResponseHandler extends TreePageHandler {
         try {
             return getResponse(request, targetString, target);
         } catch (NoServersException | NotFoundException e) {
-            return new NotFoundResponse(e.getMessage());
+            return responseFactory.notFound404(e.getMessage());
         } catch (WebUserAuthException e) {
-            return PromptAuthorizationResponse.getBasicAuthResponse(e);
+            return responseFactory.basicAuthFail(e);
         } catch (ForbiddenException e) {
-            return new ForbiddenResponse(e.getMessage());
+            return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
             return new BadRequestResponse(e.getMessage());
         } catch (UnauthorizedServerException e) {
-            return new UnauthorizedServerResponse(e.getMessage());
+            return responseFactory.unauthorizedServer(e.getMessage());
         } catch (GatewayException e) {
-            return new GatewayErrorResponse(e.getMessage());
+            return responseFactory.gatewayError504(e.getMessage());
         } catch (InternalErrorException e) {
             if (e.getCause() != null) {
-                return new InternalErrorResponse(request.getTarget(), e.getCause());
+                return responseFactory.internalErrorResponse(e.getCause(), request.getTarget());
             } else {
-                return new InternalErrorResponse(request.getTarget(), e);
+                return responseFactory.internalErrorResponse(e, request.getTarget());
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
-            return new InternalErrorResponse(request.getTarget(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
+            return responseFactory.internalErrorResponse(e, request.getTarget());
         }
     }
 
@@ -93,38 +119,32 @@ public class ResponseHandler extends TreePageHandler {
         Optional<Authentication> authentication = Optional.empty();
 
         if (targetString.endsWith(".css")) {
-            return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> new CSSResponse(targetString));
+            return ResponseCache.loadResponse(PageId.CSS.of(targetString), () -> responseFactory.cssResponse(targetString));
         }
         if (targetString.endsWith(".js")) {
-            return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> new JavaScriptResponse(targetString));
+            return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> responseFactory.javaScriptResponse(targetString));
         }
         boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
-        boolean isAuthRequired = webServer.isAuthRequired() && isNotInfoRequest;
+        boolean isAuthRequired = webServer.get().isAuthRequired() && isNotInfoRequest;
         if (isAuthRequired) {
             authentication = request.getAuth();
             if (!authentication.isPresent()) {
-                if (webServer.isUsingHTTPS()) {
-                    return DefaultResponses.BASIC_AUTH.get();
+                if (webServer.get().isUsingHTTPS()) {
+                    return responseFactory.basicAuth();
                 } else {
-                    return forbiddenResponse();
+                    return responseFactory.forbidden403();
                 }
             }
         }
         PageHandler pageHandler = getPageHandler(target);
         if (pageHandler == null) {
-            return new NotFoundResponse(request.getLocale().getString(ErrorPageLang.UNKNOWN_PAGE_404));
+            return responseFactory.pageNotFound404();
         } else {
             boolean isAuthorized = authentication.isPresent() && pageHandler.isAuthorized(authentication.get(), target);
             if (!isAuthRequired || isAuthorized) {
                 return pageHandler.getResponse(request, target);
             }
-            return forbiddenResponse();
+            return responseFactory.forbidden403();
         }
-    }
-
-    public Response forbiddenResponse() {
-        return ResponseCache.loadResponse(PageId.FORBIDDEN.id(), () ->
-                new ForbiddenResponse("Your user is not authorized to view this page.<br>"
-                        + "If you believe this is an error contact staff to change your access level."));
     }
 }

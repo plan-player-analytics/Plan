@@ -7,12 +7,8 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.Column;
-import com.djrapitops.plan.system.database.databases.sql.statements.Select;
-import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
-import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
+import com.djrapitops.plan.system.database.databases.sql.statements.*;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -105,7 +101,7 @@ public class TPSTable extends Table {
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() {
-        return getTPSData(ServerInfo.getServerUUID());
+        return getTPSData(getServerUUID());
     }
 
     /**
@@ -127,7 +123,7 @@ public class TPSTable extends Table {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // More than 3 Months ago.
-                long threeMonths = TimeAmount.MONTH.ms() * 3L;
+                long threeMonths = TimeAmount.MONTH.toMillis(3L);
                 statement.setLong(1, System.currentTimeMillis() - threeMonths);
                 statement.setInt(2, pValue);
             }
@@ -138,7 +134,7 @@ public class TPSTable extends Table {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setString(1, getServerUUID().toString());
                 statement.setLong(2, tps.getDate());
                 statement.setDouble(3, tps.getTicksPerSecond());
                 statement.setInt(4, tps.getPlayers());
@@ -198,7 +194,7 @@ public class TPSTable extends Table {
     }
 
     public Optional<TPS> getPeakPlayerCount(long afterDate) {
-        return getPeakPlayerCount(ServerInfo.getServerUUID(), afterDate);
+        return getPeakPlayerCount(getServerUUID(), afterDate);
     }
 
     public Map<UUID, List<TPS>> getAllTPS() {
@@ -305,6 +301,39 @@ public class TPSTable extends Table {
                         statement.addBatch();
                     }
                 }
+            }
+        });
+    }
+
+    public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
+        WhereParser sqlParser = Select.from(tableName, Col.SERVER_ID, Col.DATE, Col.PLAYERS_ONLINE)
+                .where(Col.DATE.get() + ">" + (System.currentTimeMillis() - TimeAmount.WEEK.toMillis(2L)));
+        for (Server server : servers) {
+            sqlParser.or(Col.SERVER_ID + "=" + server.getId());
+        }
+
+        String sql = sqlParser.toString();
+
+        return query(new QueryAllStatement<Map<Integer, List<TPS>>>(sql, 10000) {
+            @Override
+            public Map<Integer, List<TPS>> processResults(ResultSet set) throws SQLException {
+                Map<Integer, List<TPS>> map = new HashMap<>();
+                while (set.next()) {
+                    int serverID = set.getInt(Col.SERVER_ID.get());
+                    int playersOnline = set.getInt(Col.PLAYERS_ONLINE.get());
+                    long date = set.getLong(Col.DATE.get());
+
+                    List<TPS> tpsList = map.getOrDefault(serverID, new ArrayList<>());
+
+                    TPS tps = TPSBuilder.get().date(date)
+                            .skipTPS()
+                            .playersOnline(playersOnline)
+                            .toTPS();
+                    tpsList.add(tps);
+
+                    map.put(serverID, tpsList);
+                }
+                return map;
             }
         });
     }
