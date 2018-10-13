@@ -106,7 +106,7 @@ public class TPSMutatorTest {
         long periodLength = TimeUnit.MINUTES.toMillis(5L);
         long expected = TimeAmount.MONTH.toMillis(1L) - periodLength;
 
-        List<TPS> randomOrder = testData;
+        List<TPS> randomOrder = new ArrayList<>(testData);
         Collections.shuffle(randomOrder);
         long monthAgo = time - TimeAmount.MONTH.toMillis(1L);
         TPSMutator tpsMutator = new TPSMutator(randomOrder.stream()
