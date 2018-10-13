@@ -12,8 +12,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.BukkitMockUtil;
-import utilities.mocks.BungeeMockUtil;
+import utilities.mocks.PlanBukkitMocker;
+import utilities.mocks.PlanBungeeMocker;
 
 import java.util.UUID;
 
@@ -39,21 +39,21 @@ public class BungeeBukkitConnectionTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        BukkitMockUtil bukkitMockUtil = BukkitMockUtil.setUp()
+        PlanBukkitMocker planBukkitMocker = PlanBukkitMocker.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
                 .withLogging()
                 .withPluginDescription()
                 .withResourceFetchingFromJar()
                 .withServer();
-        bukkitMock = bukkitMockUtil.getPlanMock();
+        bukkitMock = planBukkitMocker.getPlanMock();
 
-        BungeeMockUtil bungeeMockUtil = BungeeMockUtil.setUp()
+        PlanBungeeMocker planBungeeMocker = PlanBungeeMocker.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
                 .withLogging()
                 .withPluginDescription()
                 .withResourceFetchingFromJar()
                 .withProxy();
-        bungeeMock = bungeeMockUtil.getPlanMock();
+        bungeeMock = planBungeeMocker.getPlanMock();
     }
 
     @After

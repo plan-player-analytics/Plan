@@ -12,11 +12,11 @@ import java.io.FileInputStream;
 import static org.mockito.Mockito.doReturn;
 
 /**
- * Abstract MockUtil for methods that can be used for both Bungee and Bukkit.
+ * Abstract Mocker for methods that can be used for both Bungee and Bukkit.
  *
  * @author Rsl1122
  */
-abstract class MockUtil {
+abstract class Mocker {
 
     PlanPlugin planMock;
 

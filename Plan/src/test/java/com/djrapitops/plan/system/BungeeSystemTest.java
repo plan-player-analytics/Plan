@@ -11,7 +11,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.BungeeMockUtil;
+import utilities.mocks.PlanBungeeMocker;
 
 /**
  * Test for Bungee PlanSystem.
@@ -30,7 +30,7 @@ public class BungeeSystemTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        BungeeMockUtil mockUtil = BungeeMockUtil.setUp()
+        PlanBungeeMocker mockUtil = PlanBungeeMocker.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
                 .withLogging()
                 .withPluginDescription()

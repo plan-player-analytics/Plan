@@ -19,6 +19,7 @@ import java.io.File;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class SystemMockUtil {
 
     private PlanSystem bukkitSystem;
@@ -39,7 +40,7 @@ public class SystemMockUtil {
     }
 
     private SystemMockUtil initializeBukkitSystem(File dataFolder) throws Exception {
-        Plan planMock = BukkitMockUtil.setUp()
+        Plan planMock = PlanBukkitMocker.setUp()
                 .withDataFolder(dataFolder)
                 .withLogging()
                 .withResourceFetchingFromJar()

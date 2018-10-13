@@ -28,18 +28,18 @@ import static org.mockito.Mockito.when;
  *
  * @author Rsl1122
  */
-public class BungeeMockUtil extends MockUtil {
+public class PlanBungeeMocker extends Mocker {
 
     private PlanBungee planMock;
 
-    private BungeeMockUtil() {
+    private PlanBungeeMocker() {
     }
 
-    public static BungeeMockUtil setUp() {
-        return new BungeeMockUtil().mockPlugin();
+    public static PlanBungeeMocker setUp() {
+        return new PlanBungeeMocker().mockPlugin();
     }
 
-    private BungeeMockUtil mockPlugin() {
+    private PlanBungeeMocker mockPlugin() {
         planMock = Mockito.mock(PlanBungee.class);
         super.planMock = planMock;
 
@@ -52,17 +52,17 @@ public class BungeeMockUtil extends MockUtil {
         return this;
     }
 
-    public BungeeMockUtil withDataFolder(File tempFolder) {
+    public PlanBungeeMocker withDataFolder(File tempFolder) {
         when(planMock.getDataFolder()).thenReturn(tempFolder);
         return this;
     }
 
-    public BungeeMockUtil withResourceFetchingFromJar() throws Exception {
+    public PlanBungeeMocker withResourceFetchingFromJar() throws Exception {
         withPluginFiles();
         return this;
     }
 
-    public BungeeMockUtil withLogging() {
+    public PlanBungeeMocker withLogging() {
         TestLogger testLogger = new TestLogger();
         doReturn(testLogger).when(planMock).getLogger();
         TestPluginLogger testPluginLogger = new TestPluginLogger();
@@ -72,7 +72,7 @@ public class BungeeMockUtil extends MockUtil {
         return this;
     }
 
-    public BungeeMockUtil withProxy() {
+    public PlanBungeeMocker withProxy() {
         ProxyServer proxyMock = Mockito.mock(ProxyServer.class);
         doReturn("1.12.2").when(proxyMock).getVersion();
 
@@ -90,7 +90,7 @@ public class BungeeMockUtil extends MockUtil {
         return this;
     }
 
-    public BungeeMockUtil withPluginDescription() {
+    public PlanBungeeMocker withPluginDescription() {
         File pluginYml = getFile("/bungee.yml");
         HashSet<String> empty = new HashSet<>();
         PluginDescription pluginDescription = new PluginDescription("Plan", "", "9.9.9", "Rsl1122", empty, empty, pluginYml, "");

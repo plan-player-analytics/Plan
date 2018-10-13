@@ -10,7 +10,7 @@ import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.SpongeMockUtil;
+import utilities.mocks.PlanSpongeMocker;
 
 /**
  * Test for Sponge PlanSystem.
@@ -27,7 +27,7 @@ public class SpongeSystemTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        SpongeMockUtil mockUtil = SpongeMockUtil.setUp()
+        PlanSpongeMocker mockUtil = PlanSpongeMocker.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
                 .withLogging()
                 .withResourceFetchingFromJar();

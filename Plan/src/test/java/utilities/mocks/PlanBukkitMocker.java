@@ -29,18 +29,18 @@ import static org.mockito.Mockito.doReturn;
  *
  * @author Rsl1122
  */
-public class BukkitMockUtil extends MockUtil {
+public class PlanBukkitMocker extends Mocker {
 
     private Plan planMock;
 
-    private BukkitMockUtil() {
+    private PlanBukkitMocker() {
     }
 
-    public static BukkitMockUtil setUp() {
-        return new BukkitMockUtil().mockPlugin();
+    public static PlanBukkitMocker setUp() {
+        return new PlanBukkitMocker().mockPlugin();
     }
 
-    private BukkitMockUtil mockPlugin() {
+    private PlanBukkitMocker mockPlugin() {
         planMock = Mockito.mock(Plan.class);
         super.planMock = planMock;
 
@@ -53,12 +53,12 @@ public class BukkitMockUtil extends MockUtil {
         return this;
     }
 
-    public BukkitMockUtil withDataFolder(File tempFolder) {
+    public PlanBukkitMocker withDataFolder(File tempFolder) {
         doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 
-    public BukkitMockUtil withLogging() {
+    public PlanBukkitMocker withLogging() {
         TestLogger testLogger = new TestLogger();
         doReturn(testLogger).when(planMock).getLogger();
         TestPluginLogger testPluginLogger = new TestPluginLogger();
@@ -68,8 +68,7 @@ public class BukkitMockUtil extends MockUtil {
         return this;
     }
 
-
-    public BukkitMockUtil withPluginDescription() {
+    public PlanBukkitMocker withPluginDescription() {
         try {
             File pluginYml = getFile("/plugin.yml");
             PluginDescriptionFile description = new PluginDescriptionFile(new FileInputStream(pluginYml));
@@ -80,12 +79,12 @@ public class BukkitMockUtil extends MockUtil {
         return this;
     }
 
-    public BukkitMockUtil withResourceFetchingFromJar() throws Exception {
+    public PlanBukkitMocker withResourceFetchingFromJar() throws Exception {
         withPluginFiles();
         return this;
     }
 
-    public BukkitMockUtil withServer() {
+    public PlanBukkitMocker withServer() {
         Server serverMock = Mockito.mock(Server.class);
         doReturn("").when(serverMock).getIp();
         doReturn("Bukkit").when(serverMock).getName();

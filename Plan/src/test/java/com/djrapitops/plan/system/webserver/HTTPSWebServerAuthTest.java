@@ -8,7 +8,7 @@ import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.BukkitMockUtil;
+import utilities.mocks.PlanBukkitMocker;
 
 import javax.net.ssl.*;
 import java.io.File;
@@ -27,7 +27,7 @@ public class HTTPSWebServerAuthTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        BukkitMockUtil mockUtil = BukkitMockUtil.setUp()
+        PlanBukkitMocker mockUtil = PlanBukkitMocker.setUp()
                 .withDataFolder(temporaryFolder.getRoot())
                 .withLogging()
                 .withPluginDescription()
