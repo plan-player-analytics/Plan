@@ -3,123 +3,117 @@ package com.djrapitops.plan.data.time;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
+/**
+ * Tests for {@link GMTimes}.
+ *
+ * @author Rsl1122
+ */
 public class GMTimesTest {
     @Test
-    public void testSetAllGMTimes() {
-        GMTimes gmTimes = new GMTimes();
-        gmTimes.setAllGMTimes(1L, 2L, 3L, 4L);
+    public void allGMTimesAreSet() {
+        GMTimes times = new GMTimes();
+        times.setAllGMTimes(1L, 2L, 3L, 4L);
 
-        Map<String, Long> times = gmTimes.getTimes();
-
-        assertEquals(times.size(), 4);
-        assertTrue(times.get("SURVIVAL") == 1L);
-        assertTrue(times.get("CREATIVE") == 2L);
-        assertTrue(times.get("ADVENTURE") == 3L);
-        assertTrue(times.get("SPECTATOR") == 4L);
+        assertEquals(1L, times.getTime("SURVIVAL"));
+        assertEquals(2L, times.getTime("CREATIVE"));
+        assertEquals(3L, times.getTime("ADVENTURE"));
+        assertEquals(4L, times.getTime("SPECTATOR"));
     }
 
     @Test
-    public void testSetAllGMTimesTooFew() {
-        GMTimes gmTimes = new GMTimes();
-        gmTimes.setAllGMTimes(1L, 2L);
+    public void allGMTimesAreSetWithTooFewArguments() {
+        GMTimes times = new GMTimes();
+        times.setAllGMTimes(1L, 2L);
 
-        Map<String, Long> times = gmTimes.getTimes();
-
-        assertEquals(times.size(), 4);
-        assertTrue(times.get("SURVIVAL") == 1L);
-        assertTrue(times.get("CREATIVE") == 2L);
-        assertTrue(times.get("ADVENTURE") == 0L);
-        assertTrue(times.get("SPECTATOR") == 0L);
+        assertEquals(1L, times.getTime("SURVIVAL"));
+        assertEquals(2L, times.getTime("CREATIVE"));
+        assertEquals(0L, times.getTime("ADVENTURE"));
+        assertEquals(0L, times.getTime("SPECTATOR"));
     }
 
     @Test
-    public void testSetAllGMTimesTooMany() {
-        GMTimes gmTimes = new GMTimes();
-        gmTimes.setAllGMTimes(1L, 2L, 3L, 4L, 5L, 6L);
+    public void allGMTimesAreSetWithTooManyArguments() {
+        GMTimes times = new GMTimes();
+        times.setAllGMTimes(1L, 2L, 3L, 4L, 5L, 6L);
 
-        Map<String, Long> times = gmTimes.getTimes();
-
-        assertEquals(times.size(), 4);
-        assertTrue(times.get("SURVIVAL") == 1L);
-        assertTrue(times.get("CREATIVE") == 2L);
-        assertTrue(times.get("ADVENTURE") == 3L);
-        assertTrue(times.get("SPECTATOR") == 4L);
+        assertEquals(1L, times.getTime("SURVIVAL"));
+        assertEquals(2L, times.getTime("CREATIVE"));
+        assertEquals(3L, times.getTime("ADVENTURE"));
+        assertEquals(4L, times.getTime("SPECTATOR"));
     }
 
     @Test
-    public void testResetTimes() {
+    public void timesAreReset() {
         GMTimes gmTimes = new GMTimes();
         gmTimes.setAllGMTimes(4, 3, 2, 1);
-        gmTimes.resetTimes(10);
+        gmTimes.resetTimes(10L);
 
-        assertTrue(gmTimes.getTotal() == 10L);
-        assertTrue(gmTimes.getTime("SURVIVAL") == 10L);
-        assertTrue(gmTimes.getTime("ADVENTURE") == 0L);
+        assertEquals(10L, gmTimes.getTotal());
+        assertEquals(10L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(0L, gmTimes.getTime("ADVENTURE"));
     }
 
     @Test
-    public void testSetTime() {
+    public void timeIsSet() {
         GMTimes gmTimes = new GMTimes();
         gmTimes.setTime("SURVIVAL", 5L);
 
-        assertTrue(gmTimes.getTime("SURVIVAL") == 5L);
+        assertEquals(5L, gmTimes.getTime("SURVIVAL"));
     }
 
     @Test
-    public void testRenameState() {
+    public void stateIsRenamed() {
         GMTimes gmTimes = new GMTimes();
         gmTimes.setAllGMTimes(5L);
         gmTimes.renameState("SURVIVAL", "Survival");
 
-        assertTrue(gmTimes.getTime("SURVIVAL") == 0L);
-        assertTrue(gmTimes.getTime("Survival") == 5L);
+        assertEquals(0L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(5L, gmTimes.getTime("Survival"));
     }
 
     @Test
-    public void testChangeStateNormal() {
+    public void stateIsChangedAppropriately() {
         GMTimes gmTimes = new GMTimes(new HashMap<>(), "SURVIVAL", 0);
         gmTimes.changeState("CREATIVE", 5L);
 
-        assertTrue(gmTimes.getTime("SURVIVAL") == 5L);
-        assertTrue(gmTimes.getTime("CREATIVE") == 0L);
+        assertEquals(5L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(0L, gmTimes.getTime("CREATIVE"));
 
         gmTimes.changeState("ADVENTURE", 20L);
 
-        assertTrue(gmTimes.getTime("SURVIVAL") == 5L);
-        assertTrue(gmTimes.getTime("CREATIVE") == 15L);
-        assertTrue(gmTimes.getTime("ADVENTURE") == 0L);
+        assertEquals(5L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(15L, gmTimes.getTime("CREATIVE"));
+        assertEquals(0L, gmTimes.getTime("ADVENTURE"));
     }
 
     @Test
-    public void testChangeStateMissingStartTime() {
+    public void stateIsChangedWhenStartTimeIsDefault() {
         GMTimes gmTimes = new GMTimes("SURVIVAL");
         gmTimes.changeState("CREATIVE", 5L);
 
-        assertTrue(5L == gmTimes.getTime("SURVIVAL"));
-        assertTrue(0L == gmTimes.getTime("CREATIVE"));
+        assertEquals(5L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(0L, gmTimes.getTime("CREATIVE"));
 
         gmTimes.changeState("ADVENTURE", 20L);
 
-        assertTrue(5L == gmTimes.getTime("SURVIVAL"));
-        assertTrue(15L == gmTimes.getTime("CREATIVE"));
-        assertTrue(0L == gmTimes.getTime("ADVENTURE"));
+        assertEquals(5L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(15L, gmTimes.getTime("CREATIVE"));
+        assertEquals(0L, gmTimes.getTime("ADVENTURE"));
     }
 
     @Test
-    public void testChangeStateMissingStartState() {
+    public void stateIsChangedWhenBeginStateIsDefault() {
         GMTimes test = new GMTimes();
         test.changeState("CREATIVE", 5L);
 
-        assertTrue(5L == test.getTime("CREATIVE"));
+        assertEquals(5L, test.getTime("CREATIVE"));
 
         test.changeState("ADVENTURE", 20L);
 
-        assertTrue(20L == test.getTime("CREATIVE"));
-        assertTrue(0L == test.getTime("ADVENTURE"));
+        assertEquals(20L, test.getTime("CREATIVE"));
+        assertEquals(0L, test.getTime("ADVENTURE"));
     }
 }
