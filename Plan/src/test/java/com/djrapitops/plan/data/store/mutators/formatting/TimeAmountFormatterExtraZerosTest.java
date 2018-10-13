@@ -1,14 +1,16 @@
 package com.djrapitops.plan.data.store.mutators.formatting;
 
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.formatting.time.TimeAmountFormatter;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for {@link TimeAmountFormatter} that checks extra zeros config example.
@@ -21,19 +23,17 @@ public class TimeAmountFormatterExtraZerosTest {
 
     @BeforeClass
     public static void setUpClass() {
-        // TODO Test initialization
-        Assume.assumeTrue(false);
-        PlanConfig config = new PlanConfig(null, null, null);
-//        Settings.FORMAT_YEAR.setTemporaryValue("1 year, ");
-//        Settings.FORMAT_YEARS.setTemporaryValue("%years% years, ");
-//        Settings.FORMAT_MONTH.setTemporaryValue("1 month, ");
-//        Settings.FORMAT_MONTHS.setTemporaryValue("%months% months, ");
-//        Settings.FORMAT_DAY.setTemporaryValue("1d ");
-//        Settings.FORMAT_DAYS.setTemporaryValue("%days%d ");
-//        Settings.FORMAT_HOURS.setTemporaryValue("%zero%%hours%:");
-//        Settings.FORMAT_MINUTES.setTemporaryValue("%hours%%zero%%minutes%:");
-//        Settings.FORMAT_SECONDS.setTemporaryValue("%minutes%%zero%%seconds%");
-//        Settings.FORMAT_ZERO_SECONDS.setTemporaryValue("00:00:00");
+        PlanConfig config = Mockito.mock(PlanConfig.class);
+        when(config.getString(Settings.FORMAT_YEAR)).thenReturn("1 year, ");
+        when(config.getString(Settings.FORMAT_YEARS)).thenReturn("%years% years, ");
+        when(config.getString(Settings.FORMAT_MONTH)).thenReturn("1 month, ");
+        when(config.getString(Settings.FORMAT_MONTHS)).thenReturn("%months% months, ");
+        when(config.getString(Settings.FORMAT_DAY)).thenReturn("1d ");
+        when(config.getString(Settings.FORMAT_DAYS)).thenReturn("%days%d ");
+        when(config.getString(Settings.FORMAT_HOURS)).thenReturn("%zero%%hours%:");
+        when(config.getString(Settings.FORMAT_MINUTES)).thenReturn("%hours%%zero%%minutes%:");
+        when(config.getString(Settings.FORMAT_SECONDS)).thenReturn("%minutes%%zero%%seconds%");
+        when(config.getString(Settings.FORMAT_ZERO_SECONDS)).thenReturn("00:00:00");
         underTest = new TimeAmountFormatter(config);
     }
 
