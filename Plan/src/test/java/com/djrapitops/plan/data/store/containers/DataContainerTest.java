@@ -20,8 +20,6 @@ public class DataContainerTest {
         DataContainer container = new DataContainer();
         container.putSupplier(TEST_KEY, () -> "Success");
 
-        // Test twice for CachingSupplier
-        assertEquals("Success", container.getUnsafe(TEST_KEY));
         assertEquals("Success", container.getUnsafe(TEST_KEY));
     }
 
@@ -30,8 +28,6 @@ public class DataContainerTest {
         DataContainer container = new DataContainer();
         container.putSupplier(TEST_KEY, () -> "Success");
 
-        // Test twice for CachingSupplier
-        assertEquals("Success", container.getUnsafe(TEST_KEY_COPY));
         assertEquals("Success", container.getUnsafe(TEST_KEY_COPY));
     }
 
@@ -40,8 +36,6 @@ public class DataContainerTest {
         DataContainer container = new DataContainer();
         container.putRawData(TEST_KEY, "Success");
 
-        // Test twice for CachingSupplier
-        assertEquals("Success", container.getUnsafe(TEST_KEY));
         assertEquals("Success", container.getUnsafe(TEST_KEY));
     }
 
@@ -50,8 +44,6 @@ public class DataContainerTest {
         DataContainer container = new DataContainer();
         container.putRawData(TEST_KEY, "Success");
 
-        // Test twice for CachingSupplier
-        assertEquals("Success", container.getUnsafe(TEST_KEY_COPY));
         assertEquals("Success", container.getUnsafe(TEST_KEY_COPY));
     }
 
@@ -60,9 +52,7 @@ public class DataContainerTest {
         DataContainer container = new DataContainer();
         container.putRawData(TEST_KEY, null);
 
-        // Test twice for CachingSupplier
         assertTrue(container.supports(TEST_KEY));
-        assertNull(container.getUnsafe(TEST_KEY));
         assertNull(container.getUnsafe(TEST_KEY));
     }
 
@@ -79,10 +69,27 @@ public class DataContainerTest {
         DataContainer container = new DataContainer();
         container.putSupplier(TEST_KEY, () -> null);
 
-        // Test twice for CachingSupplier
         assertTrue(container.supports(TEST_KEY));
         assertNull(container.getUnsafe(TEST_KEY));
-        assertNull(container.getUnsafe(TEST_KEY));
+    }
+
+    @Test
+    public void cachingSupplier() {
+        DataContainer container = new DataContainer();
+        String firstObj = "First";
+        String secondObj = "Second";
+
+        assertNotSame(firstObj, secondObj);
+
+        container.putCachingSupplier(TEST_KEY, () -> firstObj);
+
+        String found = container.getUnsafe(TEST_KEY);
+        assertEquals(firstObj, found);
+        assertSame(firstObj, found);
+        assertNotSame(secondObj, found);
+
+        String secondCall = container.getUnsafe(TEST_KEY);
+        assertSame(found, secondCall);
     }
 
 }
