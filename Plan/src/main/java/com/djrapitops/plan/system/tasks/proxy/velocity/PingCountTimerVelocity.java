@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.djrapitops.plan.system.tasks.server;
+package com.djrapitops.plan.system.tasks.proxy.velocity;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.data.store.objects.DateObj;
@@ -56,7 +56,7 @@ public class PingCountTimerVelocity extends AbsRunnable {
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
     public static final int PING_INTERVAL = 2 * 20;
 
-    private final Map<UUID, List<DateObj<Integer>>> playerHistory;
+    final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
     private final PlanVelocity plugin;
     private final PlanConfig config;
@@ -82,15 +82,19 @@ public class PingCountTimerVelocity extends AbsRunnable {
 
     @Override
     public void run() {
-        List<UUID> loggedOut = new ArrayList<>();
         long time = System.currentTimeMillis();
-        playerHistory.forEach((uuid, history) -> {
+        Iterator<Map.Entry<UUID, List<DateObj<Integer>>>> iterator = playerHistory.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, List<DateObj<Integer>>> entry = iterator.next();
+            UUID uuid = entry.getKey();
+            List<DateObj<Integer>> history = entry.getValue();
             Player player = plugin.getProxy().getPlayer(uuid).orElse(null);
             if (player != null) {
                 int ping = getPing(player);
                 if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
-                    return;
+                    continue;
                 }
                 history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
@@ -98,13 +102,12 @@ public class PingCountTimerVelocity extends AbsRunnable {
                     history.clear();
                 }
             } else {
-                loggedOut.add(uuid);
+                iterator.remove();
             }
-        });
-        loggedOut.forEach(playerHistory::remove);
+        }
     }
 
-    public void addPlayer(Player player) {
+    void addPlayer(Player player) {
         playerHistory.put(player.getUniqueId(), new ArrayList<>());
     }
 

@@ -33,7 +33,7 @@ import javax.inject.Singleton;
         VelocityServerPropertiesModule.class,
         PluginBridgeModule.Velocity.class
 })
-interface PlanVelocityComponent {
+public interface PlanVelocityComponent {
 
     PlanVelocityCommand planCommand();
 

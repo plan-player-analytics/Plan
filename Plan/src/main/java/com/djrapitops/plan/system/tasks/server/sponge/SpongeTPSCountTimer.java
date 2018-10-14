@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.tasks.server;
+package com.djrapitops.plan.system.tasks.server.sponge;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.data.container.TPS;

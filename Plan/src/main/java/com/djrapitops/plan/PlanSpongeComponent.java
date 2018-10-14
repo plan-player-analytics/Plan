@@ -33,7 +33,7 @@ import javax.inject.Singleton;
         SpongeServerPropertiesModule.class,
         PluginBridgeModule.Sponge.class
 })
-interface PlanSpongeComponent {
+public interface PlanSpongeComponent {
 
     PlanCommand planCommand();
 

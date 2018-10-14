@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.tasks.server;
+package com.djrapitops.plan.system.tasks.server.bukkit;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;

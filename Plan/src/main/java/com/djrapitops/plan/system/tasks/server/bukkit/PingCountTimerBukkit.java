@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.djrapitops.plan.system.tasks.server;
+package com.djrapitops.plan.system.tasks.server.bukkit;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
@@ -131,15 +131,19 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
 
     @Override
     public void run() {
-        List<UUID> loggedOut = new ArrayList<>();
         long time = System.currentTimeMillis();
-        playerHistory.forEach((uuid, history) -> {
+        Iterator<Map.Entry<UUID, List<DateObj<Integer>>>> iterator = playerHistory.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, List<DateObj<Integer>>> entry = iterator.next();
+            UUID uuid = entry.getKey();
+            List<DateObj<Integer>> history = entry.getValue();
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 int ping = getPing(player);
                 if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
-                    return;
+                    continue;
                 }
                 history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
@@ -147,10 +151,9 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
                     history.clear();
                 }
             } else {
-                loggedOut.add(uuid);
+                iterator.remove();
             }
-        });
-        loggedOut.forEach(playerHistory::remove);
+        }
     }
 
     public void addPlayer(Player player) {

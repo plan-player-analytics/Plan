@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.djrapitops.plan.system.tasks.server;
+package com.djrapitops.plan.system.tasks.proxy.bungee;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
@@ -31,21 +31,25 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.ServerConnectedEvent;
+import net.md_5.bungee.api.event.ServerDisconnectEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Task that handles player ping calculation on Sponge based servers.
+ * Task that handles player ping calculation on Bungee based servers.
  *
  * @author BrainStone
  */
-public class PingCountTimerSponge extends AbsRunnable {
+@Singleton
+public class PingCountTimerBungee extends AbsRunnable implements Listener {
 
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
@@ -59,7 +63,7 @@ public class PingCountTimerSponge extends AbsRunnable {
     private final RunnableFactory runnableFactory;
 
     @Inject
-    public PingCountTimerSponge(
+    public PingCountTimerBungee(
             PlanConfig config,
             Processors processors,
             Processing processing,
@@ -74,15 +78,19 @@ public class PingCountTimerSponge extends AbsRunnable {
 
     @Override
     public void run() {
-        List<UUID> loggedOut = new ArrayList<>();
         long time = System.currentTimeMillis();
-        playerHistory.forEach((uuid, history) -> {
-            Optional<Player> player = Sponge.getServer().getPlayer(uuid);
-            if (player.isPresent()) {
-                int ping = getPing(player.get());
+        Iterator<Map.Entry<UUID, List<DateObj<Integer>>>> iterator = playerHistory.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, List<DateObj<Integer>>> entry = iterator.next();
+            UUID uuid = entry.getKey();
+            List<DateObj<Integer>> history = entry.getValue();
+            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
+            if (player != null) {
+                int ping = getPing(player);
                 if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
-                    return;
+                    continue;
                 }
                 history.add(new DateObj<>(time, ping));
                 if (history.size() >= 30) {
@@ -90,40 +98,39 @@ public class PingCountTimerSponge extends AbsRunnable {
                     history.clear();
                 }
             } else {
-                loggedOut.add(uuid);
+                iterator.remove();
             }
-        });
-        loggedOut.forEach(playerHistory::remove);
+        }
     }
 
-    public void addPlayer(Player player) {
+    public void addPlayer(ProxiedPlayer player) {
         playerHistory.put(player.getUniqueId(), new ArrayList<>());
     }
 
-    public void removePlayer(Player player) {
+    public void removePlayer(ProxiedPlayer player) {
         playerHistory.remove(player.getUniqueId());
     }
 
-    private int getPing(Player player) {
-        return player.getConnection().getLatency();
+    private int getPing(ProxiedPlayer player) {
+        return player.getPing();
     }
 
-    @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Join joinEvent) {
-        Player player = joinEvent.getTargetEntity();
+    @EventHandler
+    public void onPlayerJoin(ServerConnectedEvent joinEvent) {
+        ProxiedPlayer player = joinEvent.getPlayer();
         runnableFactory.create("Add Player to Ping list", new AbsRunnable() {
             @Override
             public void run() {
-                if (player.isOnline()) {
+                if (player.isConnected()) {
                     addPlayer(player);
                 }
             }
         }).runTaskLater(TimeAmount.toTicks(config.getNumber(Settings.PING_PLAYER_LOGIN_DELAY), TimeUnit.SECONDS));
     }
 
-    @Listener
-    public void onPlayerQuit(ClientConnectionEvent.Disconnect quitEvent) {
-        removePlayer(quitEvent.getTargetEntity());
+    @EventHandler
+    public void onPlayerQuit(ServerDisconnectEvent quitEvent) {
+        removePlayer(quitEvent.getPlayer());
     }
 
     public void clear() {

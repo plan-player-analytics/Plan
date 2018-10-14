@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.tasks.bungee;
+package com.djrapitops.plan.system.tasks.proxy.velocity;
 
 import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.container.builders.TPSBuilder;
@@ -13,12 +13,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class BungeeTPSCountTimer extends TPSCountTimer {
+public class VelocityTPSCountTimer extends TPSCountTimer {
 
     private final ServerProperties serverProperties;
 
     @Inject
-    public BungeeTPSCountTimer(
+    public VelocityTPSCountTimer(
             Processors processors,
             Processing processing,
             ServerProperties serverProperties,

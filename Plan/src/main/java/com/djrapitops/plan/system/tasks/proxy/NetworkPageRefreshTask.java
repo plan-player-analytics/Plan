@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.tasks.server;
+package com.djrapitops.plan.system.tasks.proxy;
 
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.cache.PageId;
