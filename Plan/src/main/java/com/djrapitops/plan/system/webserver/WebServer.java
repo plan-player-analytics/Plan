@@ -82,7 +82,7 @@ public class WebServer implements SubSystem {
         initServer();
 
         if (!isEnabled()) {
-            if (Check.isBungeeAvailable()) {
+            if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
                 throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_BUNGEE));
             }
             if (config.isTrue(Settings.WEBSERVER_DISABLED)) {
@@ -99,7 +99,7 @@ public class WebServer implements SubSystem {
      * Starts up the WebServer in a new Thread Pool.
      */
     private void initServer() {
-        if (!Check.isBungeeAvailable() && config.isTrue(Settings.WEBSERVER_DISABLED)) {
+        if (!(Check.isBungeeAvailable() || Check.isVelocityAvailable()) && config.isTrue(Settings.WEBSERVER_DISABLED)) {
             // Bukkit WebServer has been disabled.
             return;
         }

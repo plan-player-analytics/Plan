@@ -34,7 +34,7 @@ public abstract class SpecificExport implements Runnable {
     private final ServerInfo serverInfo;
 
     protected final File outputFolder;
-    private final boolean usingBungee;
+    private final boolean usingProxy;
 
     protected SpecificExport(
             PlanFiles files,
@@ -45,7 +45,7 @@ public abstract class SpecificExport implements Runnable {
         this.config = config;
         this.serverInfo = serverInfo;
         outputFolder = getFolder();
-        usingBungee = Check.isBungeeAvailable();
+        usingProxy = Check.isBungeeAvailable() || Check.isVelocityAvailable();
     }
 
     protected File getFolder() {
@@ -112,7 +112,7 @@ public abstract class SpecificExport implements Runnable {
                 .replace("src=\"js/", "src=\"../js/");
 
         File htmlLocation;
-        if (usingBungee) {
+        if (usingProxy) {
             if (serverUUID.equals(serverInfo.getServerUUID())) {
                 htmlLocation = new File(outputFolder, "network");
             } else {

@@ -65,7 +65,7 @@ public class ManageConDebugCommand extends CommandNode {
         this.webServer = webServer;
         this.dbSystem = dbSystem;
 
-        setShortHelp(locale.getString(Check.isBungeeAvailable() ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
+        setShortHelp(locale.getString(Check.isBungeeAvailable() || Check.isVelocityAvailable() ? CmdHelpLang.CON : CmdHelpLang.MANAGE_CON));
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
     }
 

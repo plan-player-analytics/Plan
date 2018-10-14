@@ -67,7 +67,7 @@ public class NetworkSettings {
     }
 
     public void loadSettingsFromDB() {
-        if (Check.isBungeeAvailable()) {
+        if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
             return;
         }
 
@@ -81,7 +81,7 @@ public class NetworkSettings {
     }
 
     public void placeSettingsToDB() {
-        if (!Check.isBungeeAvailable()) {
+        if (!Check.isBungeeAvailable() && !Check.isVelocityAvailable()) {
             return;
         }
 

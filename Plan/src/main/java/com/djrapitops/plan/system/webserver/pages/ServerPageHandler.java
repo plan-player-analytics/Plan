@@ -69,7 +69,7 @@ public class ServerPageHandler implements PageHandler {
         if (response != null) {
             return response;
         } else {
-            if (Check.isBungeeAvailable() && serverInfo.getServerUUID().equals(serverUUID)) {
+            if ((Check.isBungeeAvailable() || Check.isVelocityAvailable()) && serverInfo.getServerUUID().equals(serverUUID)) {
                 return ResponseCache.loadResponse(PageId.SERVER.of(serverUUID), responseFactory::networkPageResponse);
             }
             return refreshNow(serverUUID);

@@ -121,7 +121,7 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
 
         putCachingSupplier(NetworkKeys.NETWORK_NAME, () ->
-                Check.isBungeeAvailable() ?
+                Check.isBungeeAvailable() || Check.isVelocityAvailable() ?
                         config.getString(Settings.BUNGEE_NETWORK_NAME) :
                         bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan")
         );

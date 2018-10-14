@@ -65,6 +65,7 @@
               <exclude>org.mockito:*</exclude>
               <exclude>org.easymock:*</exclude>
               <exclude>junit:*</exclude>
+                <exclued>org.slf4j:*</exclued>
             </excludes>
           </artifactSet>
           <relocations>
@@ -86,10 +87,6 @@
             <relocation>
               <pattern>com.zaxxer</pattern>
               <shadedPattern>plan.com.zaxxer</shadedPattern>
-            </relocation>
-            <relocation>
-              <pattern>org.slf4j</pattern>
-              <shadedPattern>plan.org.slf4j</shadedPattern>
             </relocation>
             <relocation>
               <pattern>org.bstats</pattern>

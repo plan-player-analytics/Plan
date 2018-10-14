@@ -48,7 +48,7 @@ public class CheckConnectionRequest extends InfoRequestWithVariables {
     public Response handleRequest(Map<String, String> variables) throws WebException {
         // Available variables: sender, address
 
-        if (Check.isBungeeAvailable()) {
+        if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
             attemptConnection(variables);
         }
 

@@ -150,6 +150,9 @@ public abstract class InfoSystem implements SubSystem {
         if (Check.isBungeeAvailable()) {
             throw new BadRequestException("Method not available on Bungee.");
         }
+        if (Check.isVelocityAvailable()) {
+            throw new BadRequestException("Method not available on Velocity.");
+        }
         Server bungee = new Server(-1, null, "Bungee", addressToRequestServer, -1);
         String addressOfThisServer = webServer.get().getAccessAddress();
 
