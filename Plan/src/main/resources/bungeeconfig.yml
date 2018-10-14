@@ -12,6 +12,7 @@ Network:
 Plugin:
   Debug: 'false'
   Locale: default
+  Check-for-updates: true
   Notify-About-DEV-Releases: false
   KeepLogsForXDays: 7
 

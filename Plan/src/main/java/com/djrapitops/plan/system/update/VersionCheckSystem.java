@@ -18,6 +18,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +55,9 @@ public class VersionCheckSystem implements SubSystem {
 
     @Override
     public void enable() {
+        if (config.isFalse(Settings.CHECK_FOR_UPDATES)) {
+            return;
+        }
         try {
             List<VersionInfo> versions = VersionInfoLoader.load();
             if (config.isFalse(Settings.NOTIFY_ABOUT_DEV_RELEASES)) {
@@ -83,7 +87,7 @@ public class VersionCheckSystem implements SubSystem {
         /* Does not need to be closed */
     }
 
-    public VersionInfo getNewVersionAvailable() {
-        return newVersionAvailable;
+    public Optional<VersionInfo> getNewVersionAvailable() {
+        return Optional.ofNullable(newVersionAvailable);
     }
 }

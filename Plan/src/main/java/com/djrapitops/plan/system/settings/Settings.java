@@ -31,6 +31,7 @@ public enum Settings implements Setting {
     DISPLAY_GAPS_IN_GRAPH_DATA("Customization.Display.GapsInGraphData"),
     DATA_GEOLOCATIONS("Data.Geolocations"),
     NOTIFY_ABOUT_DEV_RELEASES("Plugin.Notify-About-DEV-Releases"),
+    CHECK_FOR_UPDATES("Plugin.Check-for-updates"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),

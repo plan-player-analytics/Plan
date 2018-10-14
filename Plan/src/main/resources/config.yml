@@ -17,6 +17,7 @@ Plugin:
   Bungee-Override:
     StandaloneMode: false
     CopyBungeeConfig: true
+  Check-for-updates: true
   Notify-About-DEV-Releases: false
   KeepLogsForXDays: 7
 
