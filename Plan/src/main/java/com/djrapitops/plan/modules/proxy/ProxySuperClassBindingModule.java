@@ -12,6 +12,8 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.ProxyInfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.connection.ProxyConnectionSystem;
+import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.config.ProxyConfigSystem;
 import dagger.Module;
 import dagger.Provides;
 
@@ -35,6 +37,12 @@ public class ProxySuperClassBindingModule {
     @Singleton
     DBSystem provideProxyDatabaseSystem(ProxyDBSystem proxyDBSystem) {
         return proxyDBSystem;
+    }
+
+    @Provides
+    @Singleton
+    ConfigSystem provideProxyConfigSystem(ProxyConfigSystem proxyConfigSystem) {
+        return proxyConfigSystem;
     }
 
     @Provides
