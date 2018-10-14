@@ -22,11 +22,11 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class EssentialsData extends PluginData {
+class EssentialsData extends PluginData {
 
     private final Essentials essentials;
 
-    public EssentialsData(Essentials essentials) {
+    EssentialsData(Essentials essentials) {
         super(ContainerSize.THIRD, "Essentials");
         setPluginIcon(Icon.called("flask").of(Color.DEEP_ORANGE).build());
         this.essentials = essentials;

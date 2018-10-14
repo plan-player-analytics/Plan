@@ -7,7 +7,7 @@ import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
-import com.djrapitops.plan.utilities.html.structure.AbstractAccordion;
+import com.djrapitops.plan.utilities.html.structure.Accordion;
 import com.djrapitops.plan.utilities.html.structure.AccordionElement;
 import com.djrapitops.plan.utilities.html.structure.AccordionElementContentBuilder;
 import org.kingdoms.constants.kingdom.OfflineKingdom;
@@ -21,12 +21,12 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class KingdomsAccordion extends AbstractAccordion {
+class KingdomsAccordion extends Accordion {
 
     private final Map<String, OfflineKingdom> kingdoms;
     private final PlayersMutator playersMutator;
 
-    public KingdomsAccordion(Map<String, OfflineKingdom> kingdoms, PlayersMutator playersMutator) {
+    KingdomsAccordion(Map<String, OfflineKingdom> kingdoms, PlayersMutator playersMutator) {
         super("kingdoms_accordion");
         this.kingdoms = kingdoms;
         this.playersMutator = playersMutator;

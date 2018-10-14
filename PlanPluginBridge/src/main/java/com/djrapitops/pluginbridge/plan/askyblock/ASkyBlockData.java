@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.graphs.ProgressBar;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
@@ -25,12 +26,15 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class ASkyBlockData extends PluginData {
+class ASkyBlockData extends PluginData {
 
     private final ASkyBlockAPI api;
 
-    public ASkyBlockData(ASkyBlockAPI api) {
+    private final Formatter<Double> percentageFormatter;
+
+    ASkyBlockData(ASkyBlockAPI api, Formatter<Double> percentageFormatter) {
         super(ContainerSize.THIRD, "ASkyBlock");
+        this.percentageFormatter = percentageFormatter;
         setPluginIcon(Icon.called("street-view").of(Color.LIGHT_BLUE).build());
         this.api = api;
     }
@@ -54,7 +58,7 @@ public class ASkyBlockData extends PluginData {
         int max = challengeCompletion.size();
 
         inspectContainer.addValue(getWithIcon("Challenge Progress", Icon.called("bookmark").of(Color.LIGHT_BLUE)), obtained + " / " + max);
-        ProgressBar challengeProgress = new ProgressBar(obtained, max, "light-blue");
+        ProgressBar challengeProgress = new ProgressBar(obtained, max, "light-blue", percentageFormatter);
         inspectContainer.addHtml("challenge-progress", challengeProgress.toHtml());
 
         addTable(inspectContainer, challengeCompletion);

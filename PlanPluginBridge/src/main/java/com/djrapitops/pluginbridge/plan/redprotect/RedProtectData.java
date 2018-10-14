@@ -25,9 +25,9 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class RedProtectData extends PluginData {
+class RedProtectData extends PluginData {
 
-    public RedProtectData() {
+    RedProtectData() {
         super(ContainerSize.THIRD, "RedProtect");
         setPluginIcon(Icon.called("shield-alt").of(Color.RED).build());
     }

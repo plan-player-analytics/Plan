@@ -5,22 +5,36 @@
 package com.djrapitops.pluginbridge.plan.discordsrv;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.pluginbridge.plan.Hook;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Hook for DiscordSRV plugin.
  *
  * @author Vankka
  */
+@Singleton
 public class DiscordSRVHook extends Hook {
-    public DiscordSRVHook(HookHandler hookHandler) {
-        super("github.scarsz.discordsrv.DiscordSRV", hookHandler);
+
+    private final Formatter<Long> timestampFormatter;
+
+    @Inject
+    public DiscordSRVHook(
+            Formatters formatters
+    ) {
+        super("github.scarsz.discordsrv.DiscordSRV");
+
+        timestampFormatter = formatters.yearLong();
     }
 
     @Override
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (enabled) {
-            addPluginDataSource(new DiscordSRVData());
+            handler.addPluginDataSource(new DiscordSRVData(timestampFormatter));
         }
     }
 }

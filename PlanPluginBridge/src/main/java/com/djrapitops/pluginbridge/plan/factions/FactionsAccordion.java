@@ -3,13 +3,13 @@ package com.djrapitops.pluginbridge.plan.factions;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
-import com.djrapitops.plan.utilities.html.structure.AbstractAccordion;
+import com.djrapitops.plan.utilities.html.structure.Accordion;
 import com.djrapitops.plan.utilities.html.structure.AccordionElement;
 import com.djrapitops.plan.utilities.html.structure.AccordionElementContentBuilder;
 import com.massivecraft.factions.entity.Faction;
@@ -25,15 +25,25 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class FactionsAccordion extends AbstractAccordion {
+class FactionsAccordion extends Accordion {
 
     private final List<Faction> factions;
     private final PlayersMutator playersMutator;
 
-    public FactionsAccordion(List<Faction> factions, PlayersMutator playersMutator) {
+    private final Formatter<Long> timestampFormatter;
+    private final Formatter<Double> decimalFormatter;
+
+    FactionsAccordion(
+            List<Faction> factions,
+            PlayersMutator playersMutator,
+            Formatter<Long> timestampFormatter,
+            Formatter<Double> decimalFormatter
+    ) {
         super("faction_accordion");
         this.factions = factions;
         this.playersMutator = playersMutator;
+        this.timestampFormatter = timestampFormatter;
+        this.decimalFormatter = decimalFormatter;
 
         addElements();
     }
@@ -42,10 +52,10 @@ public class FactionsAccordion extends AbstractAccordion {
         for (Faction faction : factions) {
             String factionName = faction.getName();
             long createdAtMillis = faction.getCreatedAtMillis();
-            String created = FormatUtils.formatTimeStampYear(createdAtMillis);
+            String created = timestampFormatter.apply(createdAtMillis);
             double power = faction.getPower();
             double maxPower = faction.getPowerMax();
-            String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
+            String powerString = decimalFormatter.apply(power) + " / " + decimalFormatter.apply(maxPower);
             MPlayer leader = faction.getLeader();
             String leaderName = leader != null ? leader.getName() : "No Leader";
 

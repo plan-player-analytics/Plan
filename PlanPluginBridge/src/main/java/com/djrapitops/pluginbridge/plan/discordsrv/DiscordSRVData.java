@@ -8,7 +8,7 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -17,20 +17,25 @@ import github.scarsz.discordsrv.dependencies.jda.core.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.core.entities.Role;
 import github.scarsz.discordsrv.dependencies.jda.core.entities.User;
 import github.scarsz.discordsrv.util.DiscordUtil;
+import org.apache.commons.text.TextStringBuilder;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.apache.commons.text.TextStringBuilder;
 
 /**
  * PluginData for DiscordSRV plugin.
  *
  * @author Vankka
  */
-public class DiscordSRVData extends PluginData {
-    public DiscordSRVData() {
+class DiscordSRVData extends PluginData {
+
+    private final Formatter<Long> timestampFormatter;
+
+    DiscordSRVData(Formatter<Long> timestampFormatter) {
         super(ContainerSize.THIRD, "DiscordSRV");
+        this.timestampFormatter = timestampFormatter;
         setPluginIcon(Icon.called("discord").of(Family.BRAND).build());
     }
 
@@ -53,7 +58,7 @@ public class DiscordSRVData extends PluginData {
         );
         inspectContainer.addValue(
                 getWithIcon("Account creation date", Icon.called("plus").of(Family.SOLID).of(Color.BLUE)),
-                FormatUtils.formatTimeStampYear(user.getCreationTime().toEpochSecond() * 1000L)
+                timestampFormatter.apply(user.getCreationTime().toEpochSecond() * 1000L)
         );
 
         Member member = DiscordSRV.getPlugin().getMainGuild().getMember(user);
@@ -74,7 +79,7 @@ public class DiscordSRVData extends PluginData {
         );
         inspectContainer.addValue(
                 getWithIcon("Join Date", Icon.called("plus").of(Family.SOLID).of(Color.GREEN)),
-                FormatUtils.formatTimeStampYear(member.getJoinDate().toEpochSecond() * 1000L)
+                timestampFormatter.apply(member.getJoinDate().toEpochSecond() * 1000L)
         );
 
         List<String> roles = member.getRoles().stream().map(Role::getName).collect(Collectors.toList()); // Ordered list of role names

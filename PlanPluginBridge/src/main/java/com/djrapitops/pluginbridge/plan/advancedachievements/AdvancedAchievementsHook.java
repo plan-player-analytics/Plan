@@ -1,10 +1,14 @@
 package com.djrapitops.pluginbridge.plan.advancedachievements;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.hm.achievement.api.AdvancedAchievementsAPI;
 import com.hm.achievement.api.AdvancedAchievementsAPIFetcher;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
@@ -14,26 +18,25 @@ import java.util.Optional;
  * @author Rsl1122
  * @since 3.1.0
  */
+@Singleton
 public class AdvancedAchievementsHook extends Hook {
 
-    /**
-     * Hooks the plugin and registers it's PluginData objects.
-     * <p>
-     * API#addPluginDataSource uses the same method from HookHandler.
-     *
-     * @param hookH HookHandler instance for registering the data sources.
-     * @throws NoClassDefFoundError when the plugin class can not be found.
-     */
-    public AdvancedAchievementsHook(HookHandler hookH) {
-        super("com.hm.achievement.AdvancedAchievements", hookH);
+    private final Formatter<Double> decimalFormatter;
+
+    @Inject
+    public AdvancedAchievementsHook(
+            Formatters formatters
+    ) {
+        super("com.hm.achievement.AdvancedAchievements");
+        decimalFormatter = formatters.decimals();
     }
 
     @Override
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (enabled) {
             Optional<AdvancedAchievementsAPI> aaAPI = AdvancedAchievementsAPIFetcher.fetchInstance();
             if (aaAPI.isPresent()) {
-                addPluginDataSource(new AdvancedAchievementsData(aaAPI.get()));
+                handler.addPluginDataSource(new AdvancedAchievementsData(aaAPI.get(), decimalFormatter));
             } else {
                 enabled = false;
             }

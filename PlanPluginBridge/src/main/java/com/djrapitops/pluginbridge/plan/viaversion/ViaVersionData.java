@@ -12,7 +12,6 @@ import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,11 +24,11 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class ViaVersionData extends PluginData {
+class ViaVersionData extends PluginData {
 
     private final ProtocolTable table;
 
-    public ViaVersionData(ProtocolTable table) {
+    ViaVersionData(ProtocolTable table) {
         super(ContainerSize.THIRD, "ViaVersion");
         setPluginIcon(Icon.called("gamepad").of(Color.LIGHT_GREEN).build());
         this.table = table;
@@ -43,7 +42,7 @@ public class ViaVersionData extends PluginData {
             inspectContainer.addValue(getWithIcon("Last Join Version", Icon.called("signal").of(Color.LIGHT_GREEN)),
                     protocolVersion != -1 ? Protocol.getMCVersion(protocolVersion) : "Not Yet Known");
         } catch (DBOpException ex) {
-            Log.toLog(this.getClass(), ex);
+            inspectContainer.addValue("Error", ex.toString());
         }
 
         return inspectContainer;
@@ -56,7 +55,7 @@ public class ViaVersionData extends PluginData {
         try {
             versions = table.getProtocolVersions();
         } catch (DBOpException ex) {
-            Log.toLog(this.getClass(), ex);
+            analysisContainer.addValue("Error", ex.toString());
             return analysisContainer;
         }
 

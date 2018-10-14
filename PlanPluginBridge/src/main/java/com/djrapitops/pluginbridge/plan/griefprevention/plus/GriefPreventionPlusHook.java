@@ -5,6 +5,9 @@ import com.djrapitops.pluginbridge.plan.Hook;
 import net.kaikk.mc.gpp.DataStore;
 import net.kaikk.mc.gpp.GriefPreventionPlus;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
@@ -14,24 +17,18 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  * @author Rsl1122
  * @since 3.5.0
  */
+@Singleton
 public class GriefPreventionPlusHook extends Hook {
 
-    /**
-     * Hooks the plugin and registers it's PluginData objects.
-     * <p>
-     * API#addPluginDataSource uses the same method from HookHandler.
-     *
-     * @param hookH HookHandler instance for registering the data sources.
-     * @throws NoClassDefFoundError when the plugin class can not be found.
-     */
-    public GriefPreventionPlusHook(HookHandler hookH) {
-        super("net.kaikk.mc.gpp.GriefPreventionPlus", hookH);
+    @Inject
+    public GriefPreventionPlusHook() {
+        super("net.kaikk.mc.gpp.GriefPreventionPlus");
     }
 
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (enabled) {
             DataStore dataStore = getPlugin(GriefPreventionPlus.class).getDataStore();
-            addPluginDataSource(new GriefPreventionPlusData(dataStore));
+            handler.addPluginDataSource(new GriefPreventionPlusData(dataStore));
         }
     }
 }

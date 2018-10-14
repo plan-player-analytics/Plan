@@ -51,7 +51,7 @@ public class HackerTable extends Table {
         );
     }
 
-    public List<HackObject> getHackObjects(UUID uuid) throws SQLException {
+    public List<HackObject> getHackObjects(UUID uuid) {
         String sql = "SELECT * FROM " + tableName + " WHERE " + columnUUID + "=?";
 
         return query(new QueryStatement<List<HackObject>>(sql) {
@@ -75,7 +75,7 @@ public class HackerTable extends Table {
         });
     }
 
-    public Map<UUID, List<HackObject>> getHackObjects() throws SQLException {
+    public Map<UUID, List<HackObject>> getHackObjects() {
         return query(new QueryAllStatement<Map<UUID, List<HackObject>>>(Select.all(tableName).toString(), 5000) {
             @Override
             public Map<UUID, List<HackObject>> processResults(ResultSet set) throws SQLException {
@@ -94,7 +94,7 @@ public class HackerTable extends Table {
         });
     }
 
-    public void insertHackRow(HackObject hackObject) throws SQLException {
+    public void insertHackRow(HackObject hackObject) {
         String sql = "INSERT INTO " + tableName + " ("
                 + columnUUID + ", "
                 + columnDate + ", "

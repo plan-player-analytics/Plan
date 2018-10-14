@@ -6,29 +6,55 @@ import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.webserver.WebServer;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
+import javax.inject.Singleton;
 import java.io.Serializable;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Placeholders of Plan.
  *
  * @author Rsl1122
  */
+@Singleton
 public class PlanPlaceholders extends PlaceholderExpansion {
 
     private final PlanPlugin plugin;
+    private final PlanConfig config;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
+    private final WebServer webServer;
+    private final Formatters formatters;
+    private final ErrorHandler errorHandler;
 
-    public PlanPlaceholders() {
-        plugin = PlanPlugin.getInstance();
+    public PlanPlaceholders(
+            PlanPlugin plugin,
+            PlanConfig config,
+            DBSystem dbSystem,
+            ServerInfo serverInfo,
+            WebServer webServer,
+            Formatters formatters,
+            ErrorHandler errorHandler
+    ) {
+        this.plugin = plugin;
+        this.config = config;
+        this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
+        this.webServer = webServer;
+        this.formatters = formatters;
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -75,19 +101,19 @@ public class PlanPlaceholders extends PlaceholderExpansion {
     private Serializable getPlanValue(String identifier) {
         switch (identifier.toLowerCase()) {
             case "address":
-                return PlanSystem.getInstance().getWebServerSystem().getWebServer().getAccessAddress();
+                return webServer.getAccessAddress();
             default:
                 return null;
         }
     }
 
     private Serializable getServerValue(String identifier) {
-        ServerContainer serverContainer = Database.getActive().fetch().getServerContainer(ServerInfo.getServerUUID());
+        ServerContainer serverContainer = dbSystem.getDatabase().fetch().getServerContainer(serverInfo.getServerUUID());
 
         long now = System.currentTimeMillis();
-        long dayAgo = now - TimeAmount.DAY.ms();
-        long weekAgo = now - TimeAmount.WEEK.ms();
-        long monthAgo = now - TimeAmount.MONTH.ms();
+        long dayAgo = now - TimeUnit.DAYS.toMillis(1L);
+        long weekAgo = now - TimeAmount.WEEK.toMillis(1L);
+        long monthAgo = now - TimeAmount.MONTH.toMillis(1L);
 
         try {
             PlayersMutator playersMutator = PlayersMutator.forContainer(serverContainer);
@@ -107,9 +133,9 @@ public class PlanPlaceholders extends PlaceholderExpansion {
                 case "players_unique_month":
                     return playersMutator.filterPlayedBetween(monthAgo, now).count();
                 case "playtime_total":
-                    return Formatters.timeAmount().apply(new SessionsMutator(playersMutator.getSessions()).toPlaytime());
+                    return formatters.timeAmount().apply(new SessionsMutator(playersMutator.getSessions()).toPlaytime());
                 case "session_avg":
-                    return Formatters.timeAmount().apply(new SessionsMutator(playersMutator.getSessions()).toAverageSessionLength());
+                    return formatters.timeAmount().apply(new SessionsMutator(playersMutator.getSessions()).toAverageSessionLength());
                 case "session_count":
                     return playersMutator.getSessions().size();
                 case "kills_players":
@@ -121,45 +147,50 @@ public class PlanPlaceholders extends PlaceholderExpansion {
                 case "tps_day":
                     return TPSMutator.forContainer(serverContainer).filterDataBetween(dayAgo, now).averageTPS();
                 case "tps_drops_week":
-                    return TPSMutator.forContainer(serverContainer).filterDataBetween(weekAgo, now).lowTpsSpikeCount();
+                    return TPSMutator.forContainer(serverContainer).filterDataBetween(weekAgo, now)
+                            .lowTpsSpikeCount(config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED));
                 default:
                     break;
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
         return null;
     }
 
     private Serializable getPlayerValue(Player player, String identifier) {
         UUID uuid = player.getUniqueId();
-        PlayerContainer playerContainer = Database.getActive().fetch().getPlayerContainer(uuid);
+        PlayerContainer playerContainer = dbSystem.getDatabase().fetch().getPlayerContainer(uuid);
 
         long now = System.currentTimeMillis();
-        long dayAgo = now - TimeAmount.DAY.ms();
-        long weekAgo = now - TimeAmount.WEEK.ms();
-        long monthAgo = now - TimeAmount.MONTH.ms();
+        long dayAgo = now - TimeUnit.DAYS.toMillis(1L);
+        long weekAgo = now - TimeAmount.WEEK.toMillis(1L);
+        long monthAgo = now - TimeAmount.MONTH.toMillis(1L);
 
         try {
             SessionsMutator sessionsMutator = SessionsMutator.forContainer(playerContainer);
             switch (identifier.toLowerCase()) {
                 case "playtime":
-                    return Formatters.timeAmount().apply(sessionsMutator.toPlaytime());
+                    return formatters.timeAmount().apply(sessionsMutator.toPlaytime());
                 case "playtime_day":
-                    return Formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(dayAgo, now).toPlaytime());
+                    return formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(dayAgo, now).toPlaytime());
                 case "playtime_week":
-                    return Formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(weekAgo, now).toPlaytime());
+                    return formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(weekAgo, now).toPlaytime());
                 case "playtime_month":
-                    return Formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(monthAgo, now).toPlaytime());
+                    return formatters.timeAmount().apply(sessionsMutator.filterSessionsBetween(monthAgo, now).toPlaytime());
                 case "geolocation":
                     return GeoInfoMutator.forContainer(playerContainer).mostRecent().map(GeoInfo::getGeolocation).orElse("Unknown");
                 case "activity_index":
-                    ActivityIndex activityIndex = playerContainer.getActivityIndex(now);
+                    ActivityIndex activityIndex = playerContainer.getActivityIndex(
+                            now,
+                            config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
+                            config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
+                    );
                     return activityIndex.getValue() + " (" + activityIndex.getGroup() + ")";
                 case "registered":
-                    return Formatters.yearLongValue().apply(playerContainer.getValue(PlayerKeys.REGISTERED).orElse(0L));
+                    return formatters.yearLong().apply(playerContainer.getValue(PlayerKeys.REGISTERED).orElse(0L));
                 case "last_seen":
-                    return Formatters.yearLongValue().apply(playerContainer.getValue(PlayerKeys.LAST_SEEN).orElse(0L));
+                    return formatters.yearLong().apply(playerContainer.getValue(PlayerKeys.LAST_SEEN).orElse(0L));
                 case "player_kills":
                     return sessionsMutator.toPlayerKillCount();
                 case "mob_kills":
@@ -170,7 +201,7 @@ public class PlanPlaceholders extends PlaceholderExpansion {
                     break;
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
         return null;
     }

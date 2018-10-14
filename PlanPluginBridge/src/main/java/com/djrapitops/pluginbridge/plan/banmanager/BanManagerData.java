@@ -10,7 +10,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.BanData;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
@@ -29,10 +29,13 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class BanManagerData extends PluginData implements BanData {
+class BanManagerData extends PluginData implements BanData {
 
-    public BanManagerData() {
+    private final Formatter<Long> timestampFormatter;
+    
+    BanManagerData(Formatter<Long> timestampFormatter) {
         super(ContainerSize.THIRD, "BanManager");
+        this.timestampFormatter = timestampFormatter;
         setPluginIcon(Icons.BANNED);
     }
 
@@ -42,36 +45,44 @@ public class BanManagerData extends PluginData implements BanData {
         boolean muted = BmAPI.isMuted(uuid);
 
         inspectContainer.addValue(getWithIcon("Banned", Icons.BANNED), banned ? "Yes" : "No");
-
         if (banned) {
-            PlayerBanData currentBan = BmAPI.getCurrentBan(uuid);
-            String bannedBy = currentBan.getActor().getName();
-            String link = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(bannedBy), bannedBy);
-            long date = currentBan.getCreated();
-            long ends = currentBan.getExpires();
-            String reason = currentBan.getReason();
-
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Banned by", Icon.called("user").of(Color.RED)), link);
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Date", Icon.called("calendar").of(Color.RED).of(Family.REGULAR)), FormatUtils.formatTimeStampYear(date));
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Ends", Icon.called("calendar-check").of(Color.RED).of(Family.REGULAR)), FormatUtils.formatTimeStampYear(ends));
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Reason", Icon.called("comment").of(Color.RED).of(Family.REGULAR)), reason);
+            addBanInformation(uuid, inspectContainer);
         }
+
         inspectContainer.addValue(getWithIcon("Muted", Icon.called("bell-slash").of(Color.DEEP_ORANGE)), muted ? "Yes" : "No");
         if (muted) {
-            PlayerMuteData currentMute = BmAPI.getCurrentMute(uuid);
-            String mutedBy = currentMute.getActor().getName();
-            String link = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mutedBy), mutedBy);
-            long date = currentMute.getCreated();
-            long ends = currentMute.getExpires();
-            String reason = currentMute.getReason();
-
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Muted by", Icon.called("user").of(Color.DEEP_ORANGE)), link);
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Date", Icon.called("calendar").of(Color.DEEP_ORANGE).of(Family.REGULAR)), FormatUtils.formatTimeStampYear(date));
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Ends", Icon.called("calendar-check").of(Color.DEEP_ORANGE).of(Family.REGULAR)), FormatUtils.formatTimeStampYear(ends));
-            inspectContainer.addValue("&nbsp;" + getWithIcon("Reason", Icon.called("comment").of(Color.DEEP_ORANGE).of(Family.REGULAR)), reason);
+            addMuteInformation(uuid, inspectContainer);
         }
 
         return inspectContainer;
+    }
+
+    private void addBanInformation(UUID uuid, InspectContainer inspectContainer) {
+        PlayerBanData currentBan = BmAPI.getCurrentBan(uuid);
+        String bannedBy = currentBan.getActor().getName();
+        String link = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(bannedBy), bannedBy);
+        long date = currentBan.getCreated();
+        long ends = currentBan.getExpires();
+        String reason = currentBan.getReason();
+
+        inspectContainer.addValue("&nbsp;" + getWithIcon("Banned by", Icon.called("user").of(Color.RED)), link);
+        inspectContainer.addValue("&nbsp;" + getWithIcon("Date", Icon.called("calendar").of(Color.RED).of(Family.REGULAR)), timestampFormatter.apply(date));
+        inspectContainer.addValue("&nbsp;" + getWithIcon("Ends", Icon.called("calendar-check").of(Color.RED).of(Family.REGULAR)), timestampFormatter.apply(ends));
+        inspectContainer.addValue("&nbsp;" + getWithIcon("Reason", Icon.called("comment").of(Color.RED).of(Family.REGULAR)), reason);
+    }
+
+    private void addMuteInformation(UUID uuid, InspectContainer inspectContainer) {
+        PlayerMuteData currentMute = BmAPI.getCurrentMute(uuid);
+        String mutedBy = currentMute.getActor().getName();
+        String link = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mutedBy), mutedBy);
+        long date = currentMute.getCreated();
+        long ends = currentMute.getExpires();
+        String reason = currentMute.getReason();
+
+        inspectContainer.addValue("&nbsp;" + getWithIcon("Muted by", Icon.called("user").of(Color.DEEP_ORANGE)), link);
+        inspectContainer.addValue("&nbsp;" + getWithIcon("Date", Icon.called("calendar").of(Color.DEEP_ORANGE).of(Family.REGULAR)), timestampFormatter.apply(date));
+        inspectContainer.addValue("&nbsp;" + getWithIcon("Ends", Icon.called("calendar-check").of(Color.DEEP_ORANGE).of(Family.REGULAR)), timestampFormatter.apply(ends));
+        inspectContainer.addValue("&nbsp;" + getWithIcon("Reason", Icon.called("comment").of(Color.DEEP_ORANGE).of(Family.REGULAR)), reason);
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -26,18 +26,20 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class AdvancedAntiCheatData extends PluginData {
+class AdvancedAntiCheatData extends PluginData {
 
     private final HackerTable table;
+    private final Formatter<Long> timestampFormatter;
 
-    public AdvancedAntiCheatData(HackerTable table) {
+    AdvancedAntiCheatData(HackerTable table, Formatter<Long> timestampFormatter) {
         super(ContainerSize.THIRD, "AdvancedAntiCheat");
+        this.timestampFormatter = timestampFormatter;
         super.setPluginIcon(Icon.called("heart").of(Color.RED).build());
         this.table = table;
     }
 
     @Override
-    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) throws Exception {
+    public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
         List<HackObject> hackObjects = table.getHackObjects(uuid);
 
         inspectContainer.addValue(
@@ -53,8 +55,8 @@ public class AdvancedAntiCheatData extends PluginData {
         hackTable.setColor("red");
 
         for (HackObject hackObject : hackObjects) {
-            String date = FormatUtils.formatTimeStampYear(hackObject.getDate());
-            String hack = Format.create(hackObject.getHackType().getName()).capitalize().toString();
+            String date = timestampFormatter.apply(hackObject.getDate());
+            String hack = new Format(hackObject.getHackType().getName()).capitalize().toString();
             hackTable.addRow(date, hack, hackObject.getViolationLevel());
         }
         inspectContainer.addTable("hackTable", hackTable);
@@ -63,7 +65,7 @@ public class AdvancedAntiCheatData extends PluginData {
     }
 
     @Override
-    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) throws Exception {
+    public AnalysisContainer getServerData(Collection<UUID> collection, AnalysisContainer analysisContainer) {
         Map<UUID, List<HackObject>> hackObjects = table.getHackObjects();
 
         Map<UUID, Integer> violations = hackObjects.entrySet().stream()

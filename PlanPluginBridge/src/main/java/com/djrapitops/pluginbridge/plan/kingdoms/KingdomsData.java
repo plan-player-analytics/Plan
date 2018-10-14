@@ -26,9 +26,9 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class KingdomsData extends PluginData {
+class KingdomsData extends PluginData {
 
-    public KingdomsData() {
+    KingdomsData() {
         super(ContainerSize.TAB, "Kingdoms");
         setPluginIcon(Icon.called("crown").of(Color.AMBER).build());
     }

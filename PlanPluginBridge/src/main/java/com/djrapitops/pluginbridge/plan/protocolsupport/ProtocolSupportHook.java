@@ -6,38 +6,53 @@ package com.djrapitops.pluginbridge.plan.protocolsupport;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Hook for ProtocolSupport plugin.
  *
  * @author Rsl1122
  */
+@Singleton
 public class ProtocolSupportHook extends Hook {
 
-    public ProtocolSupportHook(HookHandler hookHandler) {
-        super("protocolsupport.ProtocolSupport", hookHandler);
+    private final Plan plugin;
+    private final Processing processing;
+    private final DBSystem dbSystem;
+
+    @Inject
+    public ProtocolSupportHook(
+            Plan plugin,
+            Processing processing,
+            DBSystem dbSystem
+    ) {
+        super("protocolsupport.ProtocolSupport");
+        this.plugin = plugin;
+        this.processing = processing;
+        this.dbSystem = dbSystem;
     }
 
     @Override
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (!enabled) {
             return;
         }
-        Plan plan = Plan.getInstance();
-        ProtocolTable table = new ProtocolTable((SQLDB) Database.getActive());
+        ProtocolTable protocolTable = new ProtocolTable((SQLDB) dbSystem.getDatabase());
         try {
-            table.createTable();
+            protocolTable.createTable();
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
-            return;
+            throw new DBOpException("Failed to create Protocol table", e);
         }
-        plan.registerListener(new PlayerVersionListener());
-        addPluginDataSource(new ProtocolSupportData(table));
+        plugin.registerListener(new PlayerVersionListener(processing, protocolTable));
+        handler.addPluginDataSource(new ProtocolSupportData(protocolTable));
     }
 }

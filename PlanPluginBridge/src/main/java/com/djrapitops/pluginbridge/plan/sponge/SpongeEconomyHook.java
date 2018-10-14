@@ -4,6 +4,9 @@ import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.economy.EconomyService;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
@@ -12,9 +15,12 @@ import java.util.Optional;
  * @author BrainStone
  * @since 4.4.6
  */
+@Singleton
 public class SpongeEconomyHook extends Hook {
-    public SpongeEconomyHook(HookHandler hookHandler) {
-        super("org.spongepowered.api.Sponge", hookHandler);
+
+    @Inject
+    public SpongeEconomyHook() {
+        super("org.spongepowered.api.Sponge");
         
         try {
             Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
@@ -25,9 +31,9 @@ public class SpongeEconomyHook extends Hook {
     }
 
     @Override
-    public void hook() {
+    public void hook(HookHandler handler) {
         if (enabled) {
-            addPluginDataSource(new SpongeEconomyData(Sponge.getServiceManager().provide(EconomyService.class).get()));
+            handler.addPluginDataSource(new SpongeEconomyData(Sponge.getServiceManager().provide(EconomyService.class).get()));
         }
     }
 }

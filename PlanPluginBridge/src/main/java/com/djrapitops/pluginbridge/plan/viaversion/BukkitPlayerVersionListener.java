@@ -5,11 +5,7 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plugin.api.utility.log.Log;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,24 +20,27 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class BukkitPlayerVersionListener implements Listener {
+class BukkitPlayerVersionListener implements Listener {
 
-    private ViaAPI viaAPI;
+    private final ViaAPI viaAPI;
 
-    public BukkitPlayerVersionListener(ViaAPI viaAPI) {
+    private final ProtocolTable protocolTable;
+    private final Processing processing;
+
+    BukkitPlayerVersionListener(
+            ViaAPI viaAPI,
+            ProtocolTable protocolTable,
+            Processing processing
+    ) {
         this.viaAPI = viaAPI;
+        this.protocolTable = protocolTable;
+        this.processing = processing;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         int playerVersion = viaAPI.getPlayerVersion(uuid);
-        Processing.submitNonCritical(() -> {
-            try {
-                new ProtocolTable((SQLDB) Database.getActive()).saveProtocolVersion(uuid, playerVersion);
-            } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
-            }
-        });
+        processing.submitNonCritical(() -> protocolTable.saveProtocolVersion(uuid, playerVersion));
     }
 }

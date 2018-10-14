@@ -1,7 +1,12 @@
 package com.djrapitops.pluginbridge.plan.factions;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.pluginbridge.plan.Hook;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * A Class responsible for hooking to Factions and registering 4 data sources.
@@ -9,22 +14,25 @@ import com.djrapitops.pluginbridge.plan.Hook;
  * @author Rsl1122
  * @since 3.1.0
  */
+@Singleton
 public class FactionsHook extends Hook {
 
-    /**
-     * Hooks the plugin and registers it's PluginData objects.
-     *
-     * API#addPluginDataSource uses the same method from HookHandler.
-     *
-     * @param hookH HookHandler instance for registering the data sources.
-     */
-    public FactionsHook(HookHandler hookH) {
-        super("com.massivecraft.factions.Factions", hookH);
+    private final PlanConfig config;
+    private final Formatters formatters;
+
+    @Inject
+    public FactionsHook(
+            PlanConfig config,
+            Formatters formatters
+    ) {
+        super("com.massivecraft.factions.Factions");
+        this.config = config;
+        this.formatters = formatters;
     }
 
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (enabled) {
-            addPluginDataSource(new FactionsData());
+            handler.addPluginDataSource(new FactionsData(config, formatters.yearLong(), formatters.decimals()));
         }
     }
 }

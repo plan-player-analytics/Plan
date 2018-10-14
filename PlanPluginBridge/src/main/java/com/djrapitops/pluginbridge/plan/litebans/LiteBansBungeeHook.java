@@ -1,8 +1,8 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.pluginbridge.plan.Hook;
 import litebans.api.Database;
 import net.md_5.bungee.api.ProxyServer;
@@ -10,6 +10,8 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -22,34 +24,28 @@ import java.util.logging.Logger;
  * @author Rsl1122
  * @since 3.5.0
  */
+@Singleton
 public class LiteBansBungeeHook extends Hook {
 
-    /**
-     * Hooks the plugin and registers it's PluginData objects.
-     * <p>
-     * API#addPluginDataSource uses the same method from HookHandler.
-     *
-     * @param hookH HookHandler instance for registering the data sources.
-     * @throws NoClassDefFoundError when the plugin class can not be found.
-     */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public LiteBansBungeeHook(HookHandler hookH) {
-        super(hookH);
+    private Formatter<Long> timestampFormatter;
+
+    @Inject
+    public LiteBansBungeeHook(
+            Formatters formatters
+    ) {
+        super();
         try {
-            Database.get();
-            enabled = true;
+            enabled = Database.get() != null;
+            timestampFormatter = formatters.secondLong();
         } catch (NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError | Exception e) {
-            if (Settings.DEV_MODE.isTrue()) {
-                Log.toLog(this.getClass(), e);
-            }
             enabled = false;
         }
     }
 
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (enabled) {
             LiteBansDatabaseQueries db = new LiteBansDatabaseQueries(getTablePrefix());
-            addPluginDataSource(new LiteBansData(db));
+            handler.addPluginDataSource(new LiteBansData(db, timestampFormatter));
         }
     }
 

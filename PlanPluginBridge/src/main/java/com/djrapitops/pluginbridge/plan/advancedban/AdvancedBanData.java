@@ -9,7 +9,7 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.icon.Color;
@@ -28,9 +28,15 @@ import java.util.UUID;
  *
  * @author Vankka
  */
-public class AdvancedBanData extends PluginData {
-    public AdvancedBanData() {
+class AdvancedBanData extends PluginData {
+
+    private final Formatter<Long> timestampFormatter;
+
+    AdvancedBanData(
+            Formatter<Long> timestampFormatter
+    ) {
         super(ContainerSize.THIRD, "AdvancedBan");
+        this.timestampFormatter = timestampFormatter;
         setPluginIcon(Icons.BANNED);
     }
 
@@ -66,8 +72,8 @@ public class AdvancedBanData extends PluginData {
         String operator = punishment.getOperator();
         String link = Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(operator), operator);
         String reason = HtmlUtils.swapColorsToSpan(punishment.getReason());
-        String start = FormatUtils.formatTimeStampYear(punishment.getStart());
-        String end = FormatUtils.formatTimeStampYear(punishment.getEnd());
+        String start = timestampFormatter.apply(punishment.getStart());
+        String end = timestampFormatter.apply(punishment.getEnd());
 
         PunishmentType type = punishment.getType();
         // Permanent

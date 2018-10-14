@@ -6,6 +6,7 @@ import com.djrapitops.plan.modules.proxy.ProxySuperClassBindingModule;
 import com.djrapitops.plan.modules.proxy.velocity.VelocityServerPropertiesModule;
 import com.djrapitops.plan.modules.proxy.velocity.VelocitySuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.pluginbridge.plan.PluginBridgeModule;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -25,7 +26,8 @@ import javax.inject.Singleton;
         FilesModule.class,
         ProxySuperClassBindingModule.class,
         VelocitySuperClassBindingModule.class,
-        VelocityServerPropertiesModule.class
+        VelocityServerPropertiesModule.class,
+        PluginBridgeModule.Velocity.class
 })
 interface PlanVelocityComponent {
 

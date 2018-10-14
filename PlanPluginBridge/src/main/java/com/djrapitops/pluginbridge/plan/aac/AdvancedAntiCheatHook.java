@@ -5,40 +5,59 @@
 package com.djrapitops.pluginbridge.plan.aac;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.pluginbridge.plan.Hook;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Hook for AAC plugin.
  *
  * @author Rsl1122
  */
+@Singleton
 public class AdvancedAntiCheatHook extends Hook {
 
-    public AdvancedAntiCheatHook(HookHandler hookHandler) {
-        super("me.konsolas.aac.AAC", hookHandler);
+    private final Plan plugin;
+    private final Processing processing;
+    private final DBSystem dbSystem;
+    private final Formatters formatters;
+
+    @Inject
+    public AdvancedAntiCheatHook(
+            Plan plugin,
+            Processing processing,
+            DBSystem dbSystem,
+            Formatters formatters
+    ) {
+        super("me.konsolas.aac.AAC");
+        this.plugin = plugin;
+        this.processing = processing;
+        this.dbSystem = dbSystem;
+        this.formatters = formatters;
     }
 
     @Override
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler hookHandler) throws NoClassDefFoundError {
         if (!enabled) {
             return;
         }
-        Plan plugin = Plan.getInstance();
 
-        HackerTable table = new HackerTable((SQLDB) Database.getActive());
+        HackerTable hackerTable = new HackerTable((SQLDB) dbSystem.getDatabase());
         try {
-            table.createTable();
-        } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
-            return;
+            hackerTable.createTable();
+        } catch (DBInitException e) {
+            throw new DBOpException("Failed to create AAC database table", e);
         }
 
-        plugin.registerListener(new PlayerHackKickListener());
-        addPluginDataSource(new AdvancedAntiCheatData(table));
+        plugin.registerListener(new PlayerHackKickListener(hackerTable, processing));
+        hookHandler.addPluginDataSource(new AdvancedAntiCheatData(hackerTable, formatters.yearLong()));
     }
 }

@@ -11,7 +11,8 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
@@ -24,12 +25,23 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class BuyCraftData extends PluginData {
+class BuyCraftData extends PluginData {
 
     private final String secret;
 
-    public BuyCraftData(String secret) {
+    private final PlanConfig config;
+    private final Formatter<Long> timestampFormatter;
+    private final Formatter<Double> decimalFormatter;
+
+    BuyCraftData(
+            String secret,
+            PlanConfig config, Formatter<Long> timestampFormatter,
+            Formatter<Double> decimalFormatter
+    ) {
         super(ContainerSize.TAB, "BuyCraft");
+        this.config = config;
+        this.timestampFormatter = timestampFormatter;
+        this.decimalFormatter = decimalFormatter;
         setPluginIcon(Icon.called("shopping-bag").of(Color.BLUE).build());
 
         this.secret = secret;
@@ -68,14 +80,14 @@ public class BuyCraftData extends PluginData {
             String name = payment.getPlayerName();
             payTable.addRow(
                     Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
-                    FormatUtils.formatTimeStampYear(payment.getDate()),
-                    FormatUtils.cutDecimals(payment.getAmount()) + " " + payment.getCurrency(),
+                    timestampFormatter.apply(payment.getDate()),
+                    decimalFormatter.apply(payment.getAmount()) + " " + payment.getCurrency(),
                     payment.getPackages()
             );
         }
         analysisContainer.addTable("payTable", payTable);
 
-        MoneyStackGraph moneyStackGraph = MoneyStackGraph.create(payments);
+        MoneyStackGraph moneyStackGraph = new MoneyStackGraph(payments, config);
         String graphHtml = Html.PANEL_BODY.parse("<div id=\"buycraftChart\" class=\"dashboard-flot-chart\"></div>") +
                 "<script>$(function () {setTimeout(function() {" +
                 "stackChart('buycraftChart', "
@@ -95,7 +107,7 @@ public class BuyCraftData extends PluginData {
         for (Map.Entry<String, Double> entry : paymentTotals.entrySet()) {
             analysisContainer.addValue(
                     getWithIcon("Total " + entry.getKey(), Icon.called("money-bill-wave").of(Color.BLUE)),
-                    FormatUtils.cutDecimals(entry.getValue())
+                    decimalFormatter.apply(entry.getValue())
             );
         }
     }

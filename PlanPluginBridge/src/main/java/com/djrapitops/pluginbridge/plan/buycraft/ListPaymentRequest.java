@@ -66,7 +66,6 @@ public class ListPaymentRequest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
         for (JsonElement element : jsonArray) {
-//            System.out.println(element.toString().replace(",", ",\n"));
             JsonObject payment = element.getAsJsonObject();
             double amount = payment.get("amount").getAsDouble();
             String dateString = payment.get("date").getAsString();
@@ -84,7 +83,6 @@ public class ListPaymentRequest {
             }
 
             payments.add(new Payment(amount, currency, null, playerName, date, packages.toString()));
-//            System.out.println();
         }
     }
 

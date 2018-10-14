@@ -6,6 +6,7 @@ import com.djrapitops.plan.modules.proxy.ProxySuperClassBindingModule;
 import com.djrapitops.plan.modules.proxy.bungee.BungeeServerPropertiesModule;
 import com.djrapitops.plan.modules.proxy.bungee.BungeeSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.pluginbridge.plan.PluginBridgeModule;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -25,7 +26,8 @@ import javax.inject.Singleton;
         FilesModule.class,
         ProxySuperClassBindingModule.class,
         BungeeSuperClassBindingModule.class,
-        BungeeServerPropertiesModule.class
+        BungeeServerPropertiesModule.class,
+        PluginBridgeModule.Bungee.class
 })
 public interface PlanBungeeComponent {
 

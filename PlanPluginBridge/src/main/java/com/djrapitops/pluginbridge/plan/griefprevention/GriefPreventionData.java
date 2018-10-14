@@ -1,4 +1,4 @@
-/* 
+/*
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
@@ -12,9 +12,9 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
-import com.djrapitops.plugin.utilities.FormatUtils;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
+import org.bukkit.Location;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,11 +24,11 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class GriefPreventionData extends PluginData {
+class GriefPreventionData extends PluginData {
 
     private final DataStore dataStore;
 
-    public GriefPreventionData(DataStore dataStore) {
+    GriefPreventionData(DataStore dataStore) {
         super(ContainerSize.THIRD, "GriefPrevention");
         setPluginIcon(Icon.called("shield-alt").of(Color.BLUE_GREY).build());
         this.dataStore = dataStore;
@@ -40,7 +40,7 @@ public class GriefPreventionData extends PluginData {
                 .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.ownerID))
                 .collect(Collectors.toMap(
-                        claim -> FormatUtils.formatLocation(claim.getGreaterBoundaryCorner()),
+                        claim -> formatLocation(claim.getGreaterBoundaryCorner()),
                         Claim::getArea)
                 );
         String softMuted = dataStore.isSoftMuted(uuid) ? "Yes" : "No";
@@ -61,6 +61,10 @@ public class GriefPreventionData extends PluginData {
         inspectContainer.addTable("claimTable", claimsTable);
 
         return inspectContainer;
+    }
+
+    private String formatLocation(Location greaterBoundaryCorner) {
+        return "x: " + greaterBoundaryCorner.getBlockX() + " z: " + greaterBoundaryCorner.getBlockZ();
     }
 
     @Override
