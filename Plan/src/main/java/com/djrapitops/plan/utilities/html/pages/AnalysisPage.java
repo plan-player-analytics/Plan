@@ -110,7 +110,7 @@ public class AnalysisPage implements Page {
     private void miscTotals(PlaceholderReplacer placeholderReplacer) {
         timings.start(CHANNEL + " Misc. totals");
         placeholderReplacer.addAllPlaceholdersFrom(analysisContainer,
-                REFRESH_TIME_F, LAST_PEAK_TIME_F, ALL_TIME_PEAK_TIME_F,
+                REFRESH_TIME_F, REFRESH_TIME_FULL_F, LAST_PEAK_TIME_F, ALL_TIME_PEAK_TIME_F,
                 AVERAGE_SESSION_LENGTH_F, AVERAGE_PLAYTIME_F, PLAYTIME_F,
 
                 PLAYERS_LAST_PEAK, PLAYERS_ALL_TIME_PEAK, OPERATORS,

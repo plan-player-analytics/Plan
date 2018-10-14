@@ -60,6 +60,7 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> PLUGINS_TAB_NAV = new PlaceholderKey<>(String.class, "navPluginsTabs");
     // Formatted time values
     public static final PlaceholderKey<String> REFRESH_TIME_F = CommonPlaceholderKeys.REFRESH_TIME_F;
+    public static final PlaceholderKey<String> REFRESH_TIME_FULL_F = CommonPlaceholderKeys.REFRESH_TIME_FULL_F;
     public static final PlaceholderKey<String> LAST_PEAK_TIME_F = CommonPlaceholderKeys.LAST_PEAK_TIME_F;
     public static final PlaceholderKey<String> ALL_TIME_PEAK_TIME_F = CommonPlaceholderKeys.ALL_TIME_PEAK_TIME_F;
     public static final PlaceholderKey<String> AVERAGE_SESSION_LENGTH_F = new PlaceholderKey<>(String.class, "sessionAverage");

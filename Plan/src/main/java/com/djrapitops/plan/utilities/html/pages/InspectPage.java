@@ -60,6 +60,7 @@ public class InspectPage implements Page {
 
     private final Formatter<Long> timeAmountFormatter;
     private final Formatter<Long> clockLongFormatter;
+    private final Formatter<Long> secondLongFormatter;
     private final Formatter<Long> yearLongFormatter;
     private final Formatter<Double> decimalFormatter;
 
@@ -90,6 +91,7 @@ public class InspectPage implements Page {
 
         timeAmountFormatter = formatters.timeAmount();
         clockLongFormatter = formatters.clockLong();
+        secondLongFormatter = formatters.secondLong();
         yearLongFormatter = formatters.yearLong();
         decimalFormatter = formatters.decimals();
     }
@@ -118,6 +120,7 @@ public class InspectPage implements Page {
         PlaceholderReplacer replacer = new PlaceholderReplacer();
 
         replacer.put("refresh", clockLongFormatter.apply(now));
+        replacer.put("refreshFull", secondLongFormatter.apply(now));
         replacer.put("version", version);
         replacer.put("timeZone", config.getTimeZoneOffsetHours());
 

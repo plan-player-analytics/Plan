@@ -110,7 +110,8 @@ public class AnalysisContainer extends DataContainer {
         putRawData(AnalysisKeys.ANALYSIS_TIME_DAY_AGO, now - TimeUnit.DAYS.toMillis(1L));
         putRawData(AnalysisKeys.ANALYSIS_TIME_WEEK_AGO, now - TimeAmount.WEEK.toMillis(1L));
         putRawData(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO, now - TimeAmount.MONTH.toMillis(1L));
-        putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> formatters.secondLong().apply(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
+        putSupplier(AnalysisKeys.REFRESH_TIME_F, () -> formatters.clockLong().apply(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
+        putSupplier(AnalysisKeys.REFRESH_TIME_FULL_F, () -> formatters.secondLong().apply(getUnsafe(AnalysisKeys.ANALYSIS_TIME)));
 
         putRawData(AnalysisKeys.VERSION, version);
         putSupplier(AnalysisKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
