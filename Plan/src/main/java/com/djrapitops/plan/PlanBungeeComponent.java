@@ -1,7 +1,11 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanBungeeCommand;
-import com.djrapitops.plan.modules.*;
+import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FilesModule;
+import com.djrapitops.plan.modules.SuperClassBindingModule;
+import com.djrapitops.plan.modules.SystemObjectBindingModule;
+import com.djrapitops.plan.modules.plugin.BungeePlanModule;
 import com.djrapitops.plan.modules.proxy.ProxySuperClassBindingModule;
 import com.djrapitops.plan.modules.proxy.bungee.BungeeServerPropertiesModule;
 import com.djrapitops.plan.modules.proxy.bungee.BungeeSuperClassBindingModule;

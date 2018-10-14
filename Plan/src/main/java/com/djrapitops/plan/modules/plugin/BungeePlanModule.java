@@ -1,8 +1,8 @@
-package com.djrapitops.plan.modules;
+package com.djrapitops.plan.modules.plugin;
 
+import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.PlanVelocity;
-import com.djrapitops.plan.command.PlanVelocityCommand;
+import com.djrapitops.plan.command.PlanBungeeCommand;
 import com.djrapitops.plugin.command.CommandNode;
 import dagger.Module;
 import dagger.Provides;
@@ -11,23 +11,23 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
- * Dagger module for binding PlanVelocity instance.
+ * Dagger module for binding PlanBungee instance.
  *
  * @author Rsl1122
  */
 @Module
-public class VelocityPlanModule {
+public class BungeePlanModule {
 
     @Provides
     @Singleton
-    PlanPlugin providePlanPlugin(PlanVelocity plugin) {
+    PlanPlugin providePlanPlugin(PlanBungee plugin) {
         return plugin;
     }
 
     @Provides
     @Singleton
     @Named("mainCommand")
-    CommandNode provideMainCommand(PlanVelocityCommand command) {
+    CommandNode provideMainCommand(PlanBungeeCommand command) {
         return command;
     }
 }

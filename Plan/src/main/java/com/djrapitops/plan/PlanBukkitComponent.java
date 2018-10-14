@@ -1,7 +1,11 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.modules.*;
+import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FilesModule;
+import com.djrapitops.plan.modules.SuperClassBindingModule;
+import com.djrapitops.plan.modules.SystemObjectBindingModule;
+import com.djrapitops.plan.modules.plugin.BukkitPlanModule;
 import com.djrapitops.plan.modules.server.ServerSuperClassBindingModule;
 import com.djrapitops.plan.modules.server.bukkit.BukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.server.bukkit.BukkitSuperClassBindingModule;

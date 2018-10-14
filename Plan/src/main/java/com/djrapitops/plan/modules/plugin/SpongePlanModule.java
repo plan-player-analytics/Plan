@@ -1,7 +1,7 @@
-package com.djrapitops.plan.modules;
+package com.djrapitops.plan.modules.plugin;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plugin.command.CommandNode;
 import dagger.Module;
@@ -11,16 +11,16 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
- * Dagger module for binding Plan instance.
+ * Dagger module for binding PlanSponge instance.
  *
  * @author Rsl1122
  */
 @Module
-public class BukkitPlanModule {
+public class SpongePlanModule {
 
     @Provides
     @Singleton
-    PlanPlugin providePlanPlugin(Plan plugin) {
+    PlanPlugin providePlanPlugin(PlanSponge plugin) {
         return plugin;
     }
 
