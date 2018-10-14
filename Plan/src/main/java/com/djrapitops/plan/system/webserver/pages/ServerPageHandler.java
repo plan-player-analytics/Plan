@@ -96,7 +96,7 @@ public class ServerPageHandler implements PageHandler {
 
         if (!target.isEmpty()) {
             try {
-                String serverName = target.get(0).replace("%20", " ");
+                String serverName = target.get(0);
                 Optional<UUID> serverUUIDOptional = dbSystem.getDatabase().fetch().getServerUUID(serverName);
                 if (serverUUIDOptional.isPresent()) {
                     serverUUID = serverUUIDOptional.get();
