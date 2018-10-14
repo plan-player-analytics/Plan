@@ -36,7 +36,6 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
     public void enable() throws EnableException {
         firstInstall = !files.getConfigFile().exists();
         super.enable();
-        config.getNetworkSettings().loadSettingsFromDB();
     }
 
     @Override
