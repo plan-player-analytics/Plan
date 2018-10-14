@@ -118,20 +118,16 @@ public class SpongePlayerListener {
 
         String world = player.getWorld().getName();
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
-        String gm = "ADVENTURE";
-        if (gameMode.isPresent()) {
-            gm = gameMode.get().getName().toUpperCase();
-        }
+        String gm = gameMode.map(mode -> mode.getName().toUpperCase()).orElse("ADVENTURE");
 
         InetAddress address = player.getConnection().getAddress().getAddress();
 
         String playerName = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
 
-        sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm));
-
         boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
 
+        processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm)));
         runnableFactory.create("Player Register: " + uuid,
                 processors.player().registerProcessor(uuid, () -> time, playerName,
                         gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null,

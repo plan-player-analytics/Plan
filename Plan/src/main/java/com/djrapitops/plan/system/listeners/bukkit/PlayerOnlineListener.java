@@ -128,10 +128,9 @@ public class PlayerOnlineListener implements Listener {
         String playerName = player.getName();
         String displayName = player.getDisplayName();
 
-        sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm));
-
         boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
 
+        processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm)));
         runnableFactory.create("Player Register: " + uuid,
                 processors.player().registerProcessor(uuid, player::getFirstPlayed, playerName,
                         gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null,
