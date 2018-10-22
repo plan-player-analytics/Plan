@@ -114,4 +114,13 @@ public enum Settings implements Setting {
         return configPath;
     }
 
+    /**
+     * @return What getPath returns
+     * @deprecated Old access method used to return string value in config. Use {@link com.djrapitops.plan.system.settings.config.PlanConfig#getString(Setting)} instead
+     */
+    @Deprecated
+    @Override
+    public String toString() {
+        return getPath();
+    }
 }

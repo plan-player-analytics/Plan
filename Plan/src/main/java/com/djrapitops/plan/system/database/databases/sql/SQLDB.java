@@ -457,6 +457,10 @@ public abstract class SQLDB extends Database {
         return serverUUIDSupplier;
     }
 
+    public PlanConfig getConfig() {
+        return config;
+    }
+
     public NetworkContainer.Factory getNetworkContainerFactory() {
         return networkContainerFactory;
     }

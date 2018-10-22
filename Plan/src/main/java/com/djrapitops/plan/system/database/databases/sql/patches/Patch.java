@@ -39,7 +39,7 @@ public abstract class Patch {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
                 if (usingMySQL) {
-                    statement.setString(2, Settings.DB_DATABASE.toString());
+                    statement.setString(2, db.getConfig().getString(Settings.DB_DATABASE));
                 }
             }
 
@@ -58,7 +58,7 @@ public abstract class Patch {
                     public void prepare(PreparedStatement statement) throws SQLException {
                         statement.setString(1, tableName);
                         statement.setString(2, columnName);
-                        statement.setString(3, Settings.DB_DATABASE.toString());
+                        statement.setString(3, db.getConfig().getString(Settings.DB_DATABASE));
                     }
 
                     @Override
