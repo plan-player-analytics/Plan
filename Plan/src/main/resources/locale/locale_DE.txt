@@ -314,3 +314,21 @@ WebServer FAIL - SSL Context                    || WebServer: SSL Context Initia
 WebServer FAIL - Store Load                     || WebServer: SSL Zertifikat konnte nicht geladen werden.
 Yesterday                                       || 'Yesterday'
 Today                                           || 'Today'
+Health - Active Playtime Comparison Decrease    ||  Active players might be running out of things to do (Played ${0} vs ${1}, last two weeks vs weeks 2-4)
+Health - Active Playtime Comparison Increase    ||  Active players seem to have things to do (Played ${0} vs ${1}, last two weeks vs weeks 2-4)
+Health - Downtime                               || Total Server downtime (No Data) was ${0}
+Health - New Player Join Players, No            ||  New Players may not have players to play with when they join (${0} on average)
+Health - New Player Join Players, Yes           ||  New Players have players to play with when they join (${0} on average)
+Health - New Player Stickiness                  ||  ${0} of new players have stuck around (${1}/${2})
+Health - No Servers Inaccuracy                  ||  No Bukkit/Sponge servers to gather session data - These measures are inaccurate.
+Health - Player Play on Network                 ||  players played on the network:
+Health - Player Register Server                 ||  players register on servers per day/server on average.
+Health - Player Visit Server                    ||  players visit on servers per day/server on average.
+Health - Regular Activity Change                ||  Number of regular players has
+Health - Regular Activity Change Decrease       || decreased (${0})
+Health - Regular Activity Change Increase       || increased (+${0})
+Health - Regular Activity Change Zero           || stayed the same (+${0})
+Health - Regular Activity Remain                ||  ${0} of regular players have remained active (${1}/${2})
+Health - Single Servers Inaccuracy              ||  Single Bukkit/Sponge server to gather session data.
+Health - TPS Above Low Threshold                ||  Average TPS was above Low Threshold ${0} of the time
+Health - TPS Low Dips                           ||  Average TPS dropped below Low Threshold (${0}) ${1} times

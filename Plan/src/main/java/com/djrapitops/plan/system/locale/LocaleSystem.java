@@ -66,7 +66,8 @@ public class LocaleSystem implements SubSystem {
                 ServerPageLang.values(),
                 NetworkPageLang.values(),
                 ErrorPageLang.values(),
-                FailReason.values()
+                FailReason.values(),
+                HealthInfoLang.values()
         };
 
         return Arrays.stream(lang)

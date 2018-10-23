@@ -10,6 +10,7 @@ import com.djrapitops.plan.data.store.mutators.health.HealthInformation;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -46,6 +47,7 @@ public class AnalysisContainer extends DataContainer {
     private final ServerContainer serverContainer;
 
     private final String version;
+    private final Locale locale;
     private final PlanConfig config;
     private final Theme theme;
     private final DBSystem dbSystem;
@@ -61,6 +63,7 @@ public class AnalysisContainer extends DataContainer {
     public AnalysisContainer(
             ServerContainer serverContainer,
             String version,
+            Locale locale,
             PlanConfig config,
             Theme theme,
             DBSystem dbSystem,
@@ -73,6 +76,7 @@ public class AnalysisContainer extends DataContainer {
     ) {
         this.serverContainer = serverContainer;
         this.version = version;
+        this.locale = locale;
         this.config = config;
         this.theme = theme;
         this.dbSystem = dbSystem;
@@ -447,6 +451,7 @@ public class AnalysisContainer extends DataContainer {
         Key<HealthInformation> healthInformation = new Key<>(HealthInformation.class, "HEALTH_INFORMATION");
         putCachingSupplier(healthInformation, () -> new HealthInformation(
                 this,
+                locale,
                 config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED),
                 config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
                 config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
@@ -471,6 +476,7 @@ public class AnalysisContainer extends DataContainer {
 
         private final String version;
         private final PlanConfig config;
+        private final Locale locale;
         private final Theme theme;
         private final DBSystem dbSystem;
         private final ServerProperties serverProperties;
@@ -484,6 +490,7 @@ public class AnalysisContainer extends DataContainer {
         public Factory(
                 @Named("currentVersion") String version,
                 PlanConfig config,
+                Locale locale,
                 Theme theme,
                 DBSystem dbSystem,
                 ServerProperties serverProperties,
@@ -495,6 +502,7 @@ public class AnalysisContainer extends DataContainer {
         ) {
             this.version = version;
             this.config = config;
+            this.locale = locale;
             this.theme = theme;
             this.dbSystem = dbSystem;
             this.serverProperties = serverProperties;
@@ -509,6 +517,7 @@ public class AnalysisContainer extends DataContainer {
             return new AnalysisContainer(
                     serverContainer,
                     version,
+                    locale,
                     config,
                     theme,
                     dbSystem,

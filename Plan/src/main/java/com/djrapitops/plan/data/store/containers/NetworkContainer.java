@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -44,6 +45,7 @@ public class NetworkContainer extends DataContainer {
 
     private final String version;
     private final PlanConfig config;
+    private final Locale locale;
     private final Theme theme;
     private final DBSystem dbSystem;
     private final ServerProperties serverProperties;
@@ -54,6 +56,7 @@ public class NetworkContainer extends DataContainer {
             ServerContainer bungeeContainer,
             String version,
             PlanConfig config,
+            Locale locale,
             Theme theme,
             DBSystem dbSystem,
             ServerProperties serverProperties,
@@ -63,6 +66,7 @@ public class NetworkContainer extends DataContainer {
         this.bungeeContainer = bungeeContainer;
         this.version = version;
         this.config = config;
+        this.locale = locale;
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.serverProperties = serverProperties;
@@ -101,6 +105,7 @@ public class NetworkContainer extends DataContainer {
         Key<NetworkHealthInformation> healthInformation = new Key<>(NetworkHealthInformation.class, "HEALTH_INFORMATION");
         putCachingSupplier(healthInformation, () -> new NetworkHealthInformation(
                 this,
+                locale,
                 config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
                 config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
                 formatters.timeAmount(), formatters.decimals(), formatters.percentage()
@@ -212,6 +217,7 @@ public class NetworkContainer extends DataContainer {
 
         private final Lazy<String> version;
         private final Lazy<PlanConfig> config;
+        private final Lazy<Locale> locale;
         private final Lazy<Theme> theme;
         private final Lazy<DBSystem> dbSystem;
         private final Lazy<ServerProperties> serverProperties;
@@ -222,6 +228,7 @@ public class NetworkContainer extends DataContainer {
         public Factory(
                 @Named("currentVersion") Lazy<String> version,
                 Lazy<PlanConfig> config,
+                Lazy<Locale> locale,
                 Lazy<Theme> theme,
                 Lazy<DBSystem> dbSystem,
                 Lazy<ServerProperties> serverProperties,
@@ -230,6 +237,7 @@ public class NetworkContainer extends DataContainer {
         ) {
             this.version = version;
             this.config = config;
+            this.locale = locale;
             this.theme = theme;
             this.dbSystem = dbSystem;
             this.serverProperties = serverProperties;
@@ -242,6 +250,7 @@ public class NetworkContainer extends DataContainer {
                     bungeeContainer,
                     version.get(),
                     config.get(),
+                    locale.get(),
                     theme.get(),
                     dbSystem.get(),
                     serverProperties.get(),

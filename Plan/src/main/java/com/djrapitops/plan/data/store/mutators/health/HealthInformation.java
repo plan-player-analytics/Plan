@@ -10,6 +10,8 @@ import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.HealthInfoLang;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -31,7 +33,9 @@ public class HealthInformation extends AbstractHealthInfo {
 
     public HealthInformation(
             AnalysisContainer analysisContainer,
-            int lowTPSThreshold, int activeMinuteThreshold,
+            Locale locale,
+            int lowTPSThreshold,
+            int activeMinuteThreshold,
             int activeLoginThreshold,
             Formatter<Long> timeAmountFormatter,
             Formatter<Double> decimalFormatter,
@@ -40,7 +44,9 @@ public class HealthInformation extends AbstractHealthInfo {
         super(
                 analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME),
                 analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
-                activeMinuteThreshold, activeLoginThreshold, timeAmountFormatter, decimalFormatter, percentageFormatter
+                locale,
+                activeMinuteThreshold, activeLoginThreshold,
+                timeAmountFormatter, decimalFormatter, percentageFormatter
         );
         this.analysisContainer = analysisContainer;
         this.lowTPSThreshold = lowTPSThreshold;
@@ -75,11 +81,11 @@ public class HealthInformation extends AbstractHealthInfo {
                 .mapToInt(Optional::get)
                 .average().orElse(0);
         if (avgOnlineOnRegister >= 1) {
-            addNote(Icons.GREEN_THUMB + " New Players have players to play with when they join ("
-                    + decimalFormatter.apply(avgOnlineOnRegister) + " on average)");
+            addNote(Icons.GREEN_THUMB + locale.getString(HealthInfoLang.NEW_PLAYER_JOIN_PLAYERS_GOOD,
+                    decimalFormatter.apply(avgOnlineOnRegister)));
         } else {
-            addNote(Icons.YELLOW_FLAG + " New Players may not have players to play with when they join ("
-                    + decimalFormatter.apply(avgOnlineOnRegister) + " on average)");
+            addNote(Icons.YELLOW_FLAG + locale.getString(HealthInfoLang.NEW_PLAYER_JOIN_PLAYERS_BAD,
+                    decimalFormatter.apply(avgOnlineOnRegister)));
             serverHealth -= 5;
         }
 
@@ -88,12 +94,12 @@ public class HealthInformation extends AbstractHealthInfo {
 
         if (playersNewMonth != 0) {
             double retainPercentage = playersRetainedMonth * 1.0 / playersNewMonth;
+            String stickinessSentence = locale.getString(HealthInfoLang.NEW_PLAYER_STICKINESS,
+                    percentageFormatter.apply(retainPercentage), playersRetainedMonth, playersNewMonth);
             if (retainPercentage >= 0.25) {
-                addNote(Icons.GREEN_THUMB + " " + percentageFormatter.apply(retainPercentage)
-                        + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
+                addNote(Icons.GREEN_THUMB + stickinessSentence);
             } else {
-                addNote(Icons.YELLOW_FLAG + " " + percentageFormatter.apply(retainPercentage)
-                        + " of new players have stuck around (" + playersRetainedMonth + "/" + playersNewMonth + ")");
+                addNote(Icons.YELLOW_FLAG + stickinessSentence);
             }
         }
     }
@@ -106,44 +112,39 @@ public class HealthInformation extends AbstractHealthInfo {
         double aboveThreshold = tpsMutator.percentageTPSAboveThreshold(lowTPSThreshold);
         long tpsSpikeMonth = analysisContainer.getValue(AnalysisKeys.TPS_SPIKE_MONTH).orElse(0);
 
-        String avgLowThresholdString = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        StringBuilder avgLowThresholdString = new StringBuilder(subNote);
         if (aboveThreshold >= 0.96) {
-            avgLowThresholdString += Icons.GREEN_THUMB;
+            avgLowThresholdString.append(Icons.GREEN_THUMB);
         } else if (aboveThreshold >= 0.9) {
-            avgLowThresholdString += Icons.YELLOW_FLAG;
+            avgLowThresholdString.append(Icons.YELLOW_FLAG);
             serverHealth *= 0.9;
         } else {
-            avgLowThresholdString += Icons.RED_WARN;
+            avgLowThresholdString.append(Icons.RED_WARN);
             serverHealth *= 0.6;
         }
-        avgLowThresholdString += " Average TPS was above Low Threshold "
-                + decimalFormatter.apply(aboveThreshold * 100.0) + "% of the time";
+        avgLowThresholdString.append(locale.getString(HealthInfoLang.TPS_ABOVE_LOW_THERSHOLD, percentageFormatter.apply(aboveThreshold)));
 
+        String tpsDipSentence = locale.getString(HealthInfoLang.TPS_LOW_DIPS, lowTPSThreshold, tpsSpikeMonth);
         if (tpsSpikeMonth <= 5) {
-            addNote(Icons.GREEN_THUMB + " Average TPS dropped below Low Threshold (" + lowTPSThreshold + ")" +
-                    " " + tpsSpikeMonth + " times" +
-                    avgLowThresholdString);
+            addNote(Icons.GREEN_THUMB + tpsDipSentence + avgLowThresholdString);
         } else if (tpsSpikeMonth <= 25) {
-            addNote(Icons.YELLOW_FLAG + " Average TPS dropped below Low Threshold (" + lowTPSThreshold + ")" +
-                    " " + tpsSpikeMonth + " times" +
-                    avgLowThresholdString);
+            addNote(Icons.YELLOW_FLAG + tpsDipSentence + avgLowThresholdString);
             serverHealth *= 0.95;
         } else {
-            addNote(Icons.RED_WARN + " Average TPS dropped below Low Threshold (" + lowTPSThreshold + ")" +
-                    " " + tpsSpikeMonth + " times" +
-                    avgLowThresholdString);
+            addNote(Icons.RED_WARN + tpsDipSentence + avgLowThresholdString);
             serverHealth *= 0.8;
         }
 
+        String downtimeSentence = locale.getString(HealthInfoLang.DOWNTIME, timeAmountFormatter.apply(serverDownTime));
         if (serverDownTime <= TimeUnit.DAYS.toMillis(1L)) {
-            addNote(Icons.GREEN_THUMB + " Total Server downtime (No Data) was " + timeAmountFormatter.apply(serverDownTime));
+            addNote(Icons.GREEN_THUMB + downtimeSentence);
         } else {
             long weekMs = TimeAmount.WEEK.toMillis(1L);
             if (serverDownTime <= weekMs) {
-                addNote(Icons.YELLOW_FLAG + " Total Server downtime (No Data) was " + timeAmountFormatter.apply(serverDownTime));
+                addNote(Icons.YELLOW_FLAG + downtimeSentence);
                 serverHealth *= (weekMs - serverDownTime) * 1.0 / weekMs;
             } else {
-                addNote(Icons.RED_WARN + " Total Server downtime (No Data) was " + timeAmountFormatter.apply(serverDownTime));
+                addNote(Icons.RED_WARN + downtimeSentence);
                 long monthMs = TimeAmount.MONTH.toMillis(1L);
                 serverHealth *= (monthMs - serverDownTime) * 1.0 / monthMs;
             }
