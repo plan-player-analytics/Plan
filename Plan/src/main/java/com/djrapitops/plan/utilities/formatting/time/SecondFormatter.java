@@ -1,7 +1,9 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+
 
 /**
  * Formatter for timestamp which includes seconds as the smallest entry.
@@ -10,8 +12,8 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
  */
 public class SecondFormatter extends DateFormatter {
 
-    public SecondFormatter(PlanConfig config) {
-        super(config);
+    public SecondFormatter(PlanConfig config, Locale locale) {
+        super(config, locale);
     }
 
     @Override

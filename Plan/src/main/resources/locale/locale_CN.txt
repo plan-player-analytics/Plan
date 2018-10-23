@@ -313,3 +313,5 @@ WebServer - Notify no Cert file                 || 网页服务器：未找到�
 WebServer FAIL - Port Bind                      || 未成功初始化网页服务器。端口（${0}）是否被占用？
 WebServer FAIL - SSL Context                    || 网页服务器：SSL 环境初始化失败。
 WebServer FAIL - Store Load                     || 网页服务器：SSL 证书载入失败。
+Yesterday                                       || 'Yesterday'
+Today                                           || 'Today'

@@ -1,5 +1,6 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 
 /**
@@ -9,8 +10,8 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
  */
 public class ISO8601NoClockFormatter extends DateFormatter {
 
-    public ISO8601NoClockFormatter(PlanConfig config) {
-        super(config);
+    public ISO8601NoClockFormatter(PlanConfig config, Locale locale) {
+        super(config, locale);
     }
 
     @Override

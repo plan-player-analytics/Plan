@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities.formatting;
 
 import com.djrapitops.plan.data.store.objects.DateHolder;
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.formatting.time.*;
 
@@ -33,12 +34,12 @@ public class Formatters {
     private final PercentageFormatter percentageFormatter;
 
     @Inject
-    public Formatters(PlanConfig config) {
-        yearLongFormatter = new YearFormatter(config);
-        dayLongFormatter = new DayFormatter(config);
-        clockLongFormatter = new ClockFormatter(config);
-        secondLongFormatter = new SecondFormatter(config);
-        iso8601NoClockLongFormatter = new ISO8601NoClockFormatter(config);
+    public Formatters(PlanConfig config, Locale locale) {
+        yearLongFormatter = new YearFormatter(config, locale);
+        dayLongFormatter = new DayFormatter(config, locale);
+        clockLongFormatter = new ClockFormatter(config, locale);
+        secondLongFormatter = new SecondFormatter(config, locale);
+        iso8601NoClockLongFormatter = new ISO8601NoClockFormatter(config, locale);
 
         yearFormatter = new DateHolderFormatter(yearLongFormatter);
         dayFormatter = new DateHolderFormatter(dayLongFormatter);

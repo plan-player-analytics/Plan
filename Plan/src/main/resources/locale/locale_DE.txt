@@ -312,3 +312,5 @@ WebServer - Notify no Cert file                 || WebServer: Zertifikat KeyStor
 WebServer FAIL - Port Bind                      || WebServer wurde nicht erfolgreich initalisiert. Ist der Port (${0}) schon benutzt?
 WebServer FAIL - SSL Context                    || WebServer: SSL Context Initialisierung fehlgeschlagen.
 WebServer FAIL - Store Load                     || WebServer: SSL Zertifikat konnte nicht geladen werden.
+Yesterday                                       || 'Yesterday'
+Today                                           || 'Today'

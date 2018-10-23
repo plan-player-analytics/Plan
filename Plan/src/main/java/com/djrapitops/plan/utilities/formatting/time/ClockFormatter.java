@@ -1,7 +1,9 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+
 
 /**
  * Formatter for a timestamp that only includes a clock.
@@ -10,8 +12,8 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
  */
 public class ClockFormatter extends DateFormatter {
 
-    public ClockFormatter(PlanConfig config) {
-        super(config);
+    public ClockFormatter(PlanConfig config, Locale locale) {
+        super(config, locale);
     }
 
     @Override

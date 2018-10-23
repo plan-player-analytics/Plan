@@ -1,5 +1,6 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
+import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 
@@ -10,8 +11,8 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
  */
 public class YearFormatter extends DateFormatter {
 
-    public YearFormatter(PlanConfig config) {
-        super(config);
+    public YearFormatter(PlanConfig config, Locale locale) {
+        super(config, locale);
     }
 
     @Override

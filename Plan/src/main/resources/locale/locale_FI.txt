@@ -311,3 +311,5 @@ WebServer - Notify no Cert file                 || Web Palvelin: Sertifikaatti A
 WebServer FAIL - Port Bind                      || Web Palvelin ei käynnistynyt. Onko portti (${0}) käytössä?
 WebServer FAIL - SSL Context                    || Web Palvelin: SSL Kontekstin käynnistys ei onnistunut.
 WebServer FAIL - Store Load                     || Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.
+Yesterday                                       || 'Eilen'
+Today                                           || 'Tänään'
