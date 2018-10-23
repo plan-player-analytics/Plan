@@ -23,7 +23,7 @@ public abstract class Hook {
      *
      * @param pluginClass Class path string of the plugin's main JavaPlugin class.
      */
-    protected Hook(String pluginClass) {
+    public Hook(String pluginClass) {
         enabled = Check.isAvailable(pluginClass);
     }
 
@@ -32,7 +32,7 @@ public abstract class Hook {
     /**
      * Constructor to set enabled to false.
      */
-    protected Hook() {
+    public Hook() {
         enabled = false;
     }
 }

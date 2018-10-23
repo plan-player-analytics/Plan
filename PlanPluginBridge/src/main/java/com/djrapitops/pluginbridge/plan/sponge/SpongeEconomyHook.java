@@ -1,6 +1,8 @@
 package com.djrapitops.pluginbridge.plan.sponge;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -19,7 +21,9 @@ import java.util.Optional;
 public class SpongeEconomyHook extends Hook {
 
     @Inject
-    public SpongeEconomyHook() {
+    public SpongeEconomyHook(
+            ErrorHandler errorHandler
+    ) {
         super("org.spongepowered.api.Sponge");
         
         try {
@@ -27,6 +31,8 @@ public class SpongeEconomyHook extends Hook {
             enabled = serviceOpt.isPresent();
         } catch(NoClassDefFoundError e) {
             enabled = false;
+        } catch (IllegalStateException e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 

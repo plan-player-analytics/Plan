@@ -87,7 +87,7 @@
         </repository>
         <repository>
             <id>discordsrv-repo</id>
-            <url>https://ci.scarsz.me/plugin/repository/everything/</url>
+            <url>https://nexus.scarsz.me/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -183,8 +183,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>github.scarsz.discordsrv</groupId>
-            <artifactId>DiscordSRV</artifactId>
+            <groupId>com.discordsrv</groupId>
+            <artifactId>discordsrv</artifactId>
             <version>1.16.4</version>
             <scope>provided</scope>
         </dependency>
