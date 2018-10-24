@@ -21,6 +21,7 @@ public abstract class ServerTaskSystem extends TaskSystem {
     private final BootAnalysisTask bootAnalysisTask;
     private final PeriodicAnalysisTask periodicAnalysisTask;
     private final LogsFolderCleanTask logsFolderCleanTask;
+    private final PlayersPageRefreshTask playersPageRefreshTask;
 
     public ServerTaskSystem(
             RunnableFactory runnableFactory,
@@ -28,13 +29,14 @@ public abstract class ServerTaskSystem extends TaskSystem {
             PlanConfig config,
             BootAnalysisTask bootAnalysisTask,
             PeriodicAnalysisTask periodicAnalysisTask,
-            LogsFolderCleanTask logsFolderCleanTask
-    ) {
+            LogsFolderCleanTask logsFolderCleanTask,
+            PlayersPageRefreshTask playersPageRefreshTask) {
         super(runnableFactory, tpsCountTimer);
         this.config = config;
         this.bootAnalysisTask = bootAnalysisTask;
         this.periodicAnalysisTask = periodicAnalysisTask;
         this.logsFolderCleanTask = logsFolderCleanTask;
+        this.playersPageRefreshTask = playersPageRefreshTask;
     }
 
     @Override
@@ -62,5 +64,7 @@ public abstract class ServerTaskSystem extends TaskSystem {
                 config.getNetworkSettings().loadSettingsFromDB();
             }
         }).runTaskAsynchronously();
+        registerTask(playersPageRefreshTask)
+                .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
     }
 }

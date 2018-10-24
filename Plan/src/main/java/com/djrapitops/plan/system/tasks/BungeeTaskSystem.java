@@ -29,6 +29,7 @@ public class BungeeTaskSystem extends TaskSystem {
     private final NetworkPageRefreshTask networkPageRefreshTask;
     private final PingCountTimerBungee pingCountTimer;
     private final LogsFolderCleanTask logsFolderCleanTask;
+    private final PlayersPageRefreshTask playersPageRefreshTask;
 
     @Inject
     public BungeeTaskSystem(
@@ -38,8 +39,8 @@ public class BungeeTaskSystem extends TaskSystem {
             BungeeTPSCountTimer bungeeTPSCountTimer,
             NetworkPageRefreshTask networkPageRefreshTask,
             PingCountTimerBungee pingCountTimer,
-            LogsFolderCleanTask logsFolderCleanTask
-    ) {
+            LogsFolderCleanTask logsFolderCleanTask,
+            PlayersPageRefreshTask playersPageRefreshTask) {
         super(runnableFactory, bungeeTPSCountTimer);
         this.plugin = plugin;
         this.config = config;
@@ -47,6 +48,7 @@ public class BungeeTaskSystem extends TaskSystem {
         this.networkPageRefreshTask = networkPageRefreshTask;
         this.pingCountTimer = pingCountTimer;
         this.logsFolderCleanTask = logsFolderCleanTask;
+        this.playersPageRefreshTask = playersPageRefreshTask;
     }
 
     @Override
@@ -68,5 +70,8 @@ public class BungeeTaskSystem extends TaskSystem {
         plugin.registerListener(pingCountTimer);
         long startDelay = TimeAmount.toTicks(config.getNumber(Settings.PING_SERVER_ENABLE_DELAY), TimeUnit.SECONDS);
         runnableFactory.create("PingCountTimer", pingCountTimer).runTaskTimer(startDelay, PingCountTimerBungee.PING_INTERVAL);
+
+        registerTask(playersPageRefreshTask)
+                .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
     }
 }

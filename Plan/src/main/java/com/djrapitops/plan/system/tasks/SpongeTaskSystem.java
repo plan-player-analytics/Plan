@@ -29,7 +29,8 @@ public class SpongeTaskSystem extends ServerTaskSystem {
             BootAnalysisTask bootAnalysisTask,
             PeriodicAnalysisTask periodicAnalysisTask,
             PingCountTimerSponge pingCountTimer,
-            LogsFolderCleanTask logsFolderCleanTask
+            LogsFolderCleanTask logsFolderCleanTask,
+            PlayersPageRefreshTask playersPageRefreshTask
     ) {
         super(
                 runnableFactory,
@@ -37,8 +38,8 @@ public class SpongeTaskSystem extends ServerTaskSystem {
                 config,
                 bootAnalysisTask,
                 periodicAnalysisTask,
-                logsFolderCleanTask
-        );
+                logsFolderCleanTask,
+                playersPageRefreshTask);
         this.plugin = plugin;
         this.pingCountTimer = pingCountTimer;
     }

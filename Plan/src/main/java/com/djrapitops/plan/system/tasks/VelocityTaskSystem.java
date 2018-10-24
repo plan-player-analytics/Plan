@@ -30,6 +30,7 @@ public class VelocityTaskSystem extends TaskSystem {
     private final NetworkPageRefreshTask networkPageRefreshTask;
     private final PingCountTimerVelocity pingCountTimer;
     private final LogsFolderCleanTask logsFolderCleanTask;
+    private final PlayersPageRefreshTask playersPageRefreshTask;
 
     @Inject
     public VelocityTaskSystem(
@@ -39,8 +40,8 @@ public class VelocityTaskSystem extends TaskSystem {
             VelocityTPSCountTimer velocityTPSCountTimer,
             NetworkPageRefreshTask networkPageRefreshTask,
             PingCountTimerVelocity pingCountTimer,
-            LogsFolderCleanTask logsFolderCleanTask
-    ) {
+            LogsFolderCleanTask logsFolderCleanTask,
+            PlayersPageRefreshTask playersPageRefreshTask) {
         super(runnableFactory, velocityTPSCountTimer);
         this.plugin = plugin;
         this.config = config;
@@ -48,6 +49,7 @@ public class VelocityTaskSystem extends TaskSystem {
         this.networkPageRefreshTask = networkPageRefreshTask;
         this.pingCountTimer = pingCountTimer;
         this.logsFolderCleanTask = logsFolderCleanTask;
+        this.playersPageRefreshTask = playersPageRefreshTask;
     }
 
     @Override
@@ -69,5 +71,8 @@ public class VelocityTaskSystem extends TaskSystem {
         plugin.registerListener(pingCountTimer);
         long startDelay = TimeAmount.toTicks(config.getNumber(Settings.PING_SERVER_ENABLE_DELAY), TimeUnit.SECONDS);
         runnableFactory.create("PingCountTimer", pingCountTimer).runTaskTimer(startDelay, PingCountTimerBungee.PING_INTERVAL);
+
+        registerTask(playersPageRefreshTask)
+                .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
     }
 }

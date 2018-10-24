@@ -40,7 +40,8 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             BootAnalysisTask bootAnalysisTask,
             PeriodicAnalysisTask periodicAnalysisTask,
             PingCountTimerBukkit pingCountTimer,
-            LogsFolderCleanTask logsFolderCleanTask
+            LogsFolderCleanTask logsFolderCleanTask,
+            PlayersPageRefreshTask playersPageRefreshTask
     ) {
         super(
                 runnableFactory,
@@ -48,8 +49,8 @@ public class BukkitTaskSystem extends ServerTaskSystem {
                 config,
                 bootAnalysisTask,
                 periodicAnalysisTask,
-                logsFolderCleanTask
-        );
+                logsFolderCleanTask,
+                playersPageRefreshTask);
         this.plugin = plugin;
         this.pingCountTimer = pingCountTimer;
     }
