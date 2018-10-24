@@ -65,6 +65,7 @@ public class TPSMutator {
     public List<Point> cpuPoints() {
         return tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getCPUUsage()))
+                .filter(point -> point.getY() != -1)
                 .collect(Collectors.toList());
     }
 
@@ -83,6 +84,13 @@ public class TPSMutator {
     public List<Point> chunkPoints() {
         return tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getChunksLoaded()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Point> freeDiskPoints() {
+        return tpsData.stream()
+                .map(tps -> new Point(tps.getDate(), tps.getFreeDiskSpace()))
+                .filter(point -> point.getY() != -1)
                 .collect(Collectors.toList());
     }
 

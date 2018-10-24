@@ -332,3 +332,5 @@ Health - Regular Activity Remain                ||  ${0} of regular players have
 Health - Single Servers Inaccuracy              ||  Single Bukkit/Sponge server to gather session data.
 Health - TPS Above Low Threshold                ||  Average TPS was above Low Threshold ${0} of the time
 Health - TPS Low Dips                           ||  Average TPS dropped below Low Threshold (${0}) ${1} times
+HTML - FREE_DISK_SPACE                          || Free Disk Space
+HTML - DISK_SPACE                               || DISK SPACE

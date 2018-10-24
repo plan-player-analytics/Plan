@@ -50,6 +50,7 @@ public class AnalysisPage implements Page {
         placeholderReplacer.addAllPlaceholdersFrom(analysisContainer,
                 VERSION, SERVER_NAME, TIME_ZONE,
                 FIRST_DAY, TPS_MEDIUM, TPS_HIGH,
+                DISK_MEDIUM, DISK_HIGH,
                 PLAYERS_MAX, PLAYERS_ONLINE, PLAYERS_TOTAL,
 
                 WORLD_PIE_COLORS, GM_PIE_COLORS, ACTIVITY_PIE_COLORS,
@@ -163,7 +164,8 @@ public class AnalysisPage implements Page {
                 ACTIVITY_PIE_SERIES, CALENDAR_SERIES,
                 UNIQUE_PLAYERS_SERIES, NEW_PLAYERS_SERIES,
                 COUNTRY_CATEGORIES, COUNTRY_SERIES,
-                AVG_PING_SERIES, MAX_PING_SERIES, MIN_PING_SERIES
+                AVG_PING_SERIES, MAX_PING_SERIES, MIN_PING_SERIES,
+                DISK_SERIES
         );
         timings.end(CHANNEL, CHANNEL + " Chart Series");
     }

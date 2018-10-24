@@ -180,7 +180,8 @@ public abstract class SQLDB extends Database {
                     new IPHashPatch(this),
                     new IPAnonPatch(this),
                     new NicknameLastSeenPatch(this),
-                    new VersionTableRemovalPatch(this)
+                    new VersionTableRemovalPatch(this),
+                    new DiskUsagePatch(this)
             };
 
             try {

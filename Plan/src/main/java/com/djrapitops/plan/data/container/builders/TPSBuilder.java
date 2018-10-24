@@ -20,6 +20,7 @@ public class TPSBuilder {
     protected long usedMemory = -1;
     protected int entityCount = -1;
     protected int chunksLoaded = -1;
+    protected long freeDiskSpace = -1;
 
     /**
      * Hides constructor.
@@ -28,11 +29,11 @@ public class TPSBuilder {
     }
 
     public static TPSBuilder.Date get() {
-        return new TPSBuilder.Chunks();
+        return new TPSBuilder.DiskSpace();
     }
 
     public TPS toTPS() {
-        return new TPS(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded);
+        return new TPS(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace);
     }
 
     public static class Date extends TPSBuilder {
@@ -89,8 +90,15 @@ public class TPSBuilder {
 
     public static class Chunks extends Entities {
 
-        public TPSBuilder chunksLoaded(int chunksLoaded) {
+        public DiskSpace chunksLoaded(int chunksLoaded) {
             this.chunksLoaded = chunksLoaded;
+            return (DiskSpace) this;
+        }
+    }
+
+    public static class DiskSpace extends Chunks {
+        public TPSBuilder freeDiskSpace(long freeDiskSpace) {
+            this.freeDiskSpace = freeDiskSpace;
             return this;
         }
     }

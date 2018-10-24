@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.tasks.server.bukkit;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
@@ -26,19 +27,28 @@ public class PaperTPSCountTimer extends BukkitTPSCountTimer {
     }
 
     @Override
-    protected TPS getTPS(long diff, long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline) {
+    protected TPS getTPS(long diff, long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline, long freeDiskSpace) {
         double tps;
         try {
             tps = plugin.getServer().getTPS()[0];
         } catch (NoSuchMethodError e) {
-            return super.getTPS(diff, now, cpuUsage, usedMemory, entityCount, chunksLoaded, playersOnline);
+            return super.getTPS(diff, now, cpuUsage, usedMemory, entityCount, chunksLoaded, playersOnline, freeDiskSpace);
         }
 
         if (tps > 20) {
             tps = 20;
         }
 
-        return new TPS(now, tps, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded);
+        return TPSBuilder.get()
+                .date(now)
+                .tps(tps)
+                .playersOnline(playersOnline)
+                .usedCPU(cpuUsage)
+                .usedMemory(usedMemory)
+                .entities(entityCount)
+                .chunksLoaded(chunksLoaded)
+                .freeDiskSpace(freeDiskSpace)
+                .toTPS();
     }
 
     @Override

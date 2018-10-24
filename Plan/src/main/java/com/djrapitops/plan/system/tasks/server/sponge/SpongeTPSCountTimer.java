@@ -66,6 +66,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
         latestPlayersOnline = playersOnline;
         int loadedChunks = -1; // getLoadedChunks();
         int entityCount = getEntityCount();
+        long freeDiskSpace = getFreeDiskSpace();
 
         return TPSBuilder.get()
                 .date(now)
@@ -75,6 +76,7 @@ public class SpongeTPSCountTimer extends TPSCountTimer {
                 .usedMemory(usedMemory)
                 .entities(entityCount)
                 .chunksLoaded(loadedChunks)
+                .freeDiskSpace(freeDiskSpace)
                 .toTPS();
     }
 

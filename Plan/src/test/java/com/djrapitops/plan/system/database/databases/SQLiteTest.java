@@ -37,6 +37,7 @@ import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.mocks.PlanBukkitMocker;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.reflect.Field;
@@ -209,7 +210,7 @@ public class SQLiteTest {
         List<TPS> expected = new ArrayList<>();
 
         for (int i = 0; i < RandomData.randomInt(1, 5); i++) {
-            expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), r.nextDouble(), r.nextLong(), r.nextInt(), r.nextInt()));
+            expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), r.nextDouble(), r.nextLong(), r.nextInt(), r.nextInt(), r.nextLong()));
         }
 
         for (TPS tps : expected) {
@@ -631,14 +632,15 @@ public class SQLiteTest {
         Random r = new Random();
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         int availableProcessors = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
-        final double averageCPUUsage = operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0;
-        final long usedMemory = 51231251254L;
-        final int entityCount = 6123;
-        final int chunksLoaded = 2134;
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
+        double averageCPUUsage = operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0;
+        long usedMemory = 51231251254L;
+        int entityCount = 6123;
+        int chunksLoaded = 2134;
+        long freeDiskSpace = new File("").getUsableSpace();
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace));
         for (TPS tps : expected) {
             tpsTable.insertTPS(tps);
         }

@@ -173,6 +173,7 @@ public class HtmlExport extends SpecificExport {
                 "web/js/charts/playerGraph.js",
                 "web/js/charts/playerGraphNoNav.js",
                 "web/js/charts/resourceGraph.js",
+                "web/js/charts/diskGraph.js",
                 "web/js/charts/tpsGraph.js",
                 "web/js/charts/worldGraph.js",
                 "web/js/charts/worldMap.js",

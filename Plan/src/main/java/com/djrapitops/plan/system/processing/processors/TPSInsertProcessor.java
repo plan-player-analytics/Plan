@@ -37,6 +37,7 @@ public class TPSInsertProcessor implements CriticalRunnable {
         long averageUsedMemory = (long) history.stream().mapToLong(TPS::getUsedMemory).average().orElse(0);
         int averageEntityCount = (int) history.stream().mapToInt(TPS::getEntityCount).average().orElse(0);
         int averageChunksLoaded = (int) history.stream().mapToInt(TPS::getChunksLoaded).average().orElse(0);
+        long freeDiskSpace = (long) history.stream().mapToLong(TPS::getFreeDiskSpace).average().orElse(0);
 
         TPS tps = TPSBuilder.get()
                 .date(lastDate)
@@ -46,6 +47,7 @@ public class TPSInsertProcessor implements CriticalRunnable {
                 .usedMemory(averageUsedMemory)
                 .entities(averageEntityCount)
                 .chunksLoaded(averageChunksLoaded)
+                .freeDiskSpace(freeDiskSpace)
                 .toTPS();
 
         database.save().insertTPSforThisServer(tps);

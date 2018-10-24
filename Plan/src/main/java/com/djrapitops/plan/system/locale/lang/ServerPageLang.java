@@ -51,7 +51,10 @@ public enum ServerPageLang implements Lang {
     USED_COMMANDS("Used Commands"),
     UNIQUE_TEXT("Unique"),
     COMMAND(" Command"),
-    TIMES_USED("Times Used");
+    TIMES_USED("Times Used"),
+    FREE_DISK_SPACE("Free Disk Space"),
+    DISK_SPACE("DISK SPACE"),
+    ;
 
     private final String defaultValue;
 

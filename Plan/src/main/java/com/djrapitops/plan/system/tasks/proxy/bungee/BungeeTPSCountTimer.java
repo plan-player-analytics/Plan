@@ -40,6 +40,7 @@ public class BungeeTPSCountTimer extends TPSCountTimer {
                 .usedMemory(getUsedMemory())
                 .entities(-1)
                 .chunksLoaded(-1)
+                .freeDiskSpace(getFreeDiskSpace())
                 .toTPS();
 
         history.add(tps);

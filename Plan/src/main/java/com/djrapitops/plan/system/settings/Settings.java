@@ -92,6 +92,8 @@ public enum Settings implements Setting {
     THEME_BASE("Theme.Base"),
     THEME_GRAPH_TPS_THRESHOLD_HIGH("Theme.Graphs.TPS.High-Threshold"),
     THEME_GRAPH_TPS_THRESHOLD_MED("Theme.Graphs.TPS.Medium-Threshold"),
+    THEME_GRAPH_DISK_THRESHOLD_HIGH("Theme.Graphs.Disk.High-Threshold"),
+    THEME_GRAPH_DISK_THRESHOLD_MED("Theme.Graphs.Disk.Medium-Threshold"),
 
     // StringList
     HIDE_FACTIONS("Plugins.Factions.HideFactions"),

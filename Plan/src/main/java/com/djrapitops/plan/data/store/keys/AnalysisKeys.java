@@ -30,6 +30,8 @@ public class AnalysisKeys {
     public static final PlaceholderKey<Integer> FIRST_DAY = new PlaceholderKey<>(Integer.class, "firstDay");
     public static final PlaceholderKey<Integer> TPS_MEDIUM = new PlaceholderKey<>(Integer.class, "tpsMedium");
     public static final PlaceholderKey<Integer> TPS_HIGH = new PlaceholderKey<>(Integer.class, "tpsHigh");
+    public static final PlaceholderKey<Integer> DISK_MEDIUM = new PlaceholderKey<>(Integer.class, "diskMedium");
+    public static final PlaceholderKey<Integer> DISK_HIGH = new PlaceholderKey<>(Integer.class, "diskHigh");
     public static final PlaceholderKey<Integer> PLAYERS_MAX = new PlaceholderKey<>(Integer.class, "playersMax");
     public static final PlaceholderKey<Integer> PLAYERS_ONLINE = CommonPlaceholderKeys.PLAYERS_ONLINE;
     public static final PlaceholderKey<Integer> PLAYERS_TOTAL = CommonPlaceholderKeys.PLAYERS_TOTAL;
@@ -127,6 +129,7 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> RAM_SERIES = new PlaceholderKey<>(String.class, "ramSeries");
     public static final PlaceholderKey<String> ENTITY_SERIES = new PlaceholderKey<>(String.class, "entitySeries");
     public static final PlaceholderKey<String> CHUNK_SERIES = new PlaceholderKey<>(String.class, "chunkSeries");
+    public static final PlaceholderKey<String> DISK_SERIES = new PlaceholderKey<>(String.class, "diskSeries");
     public static final PlaceholderKey<String> PUNCHCARD_SERIES = new PlaceholderKey<>(String.class, "punchCardSeries");
     public static final PlaceholderKey<String> WORLD_MAP_SERIES = CommonPlaceholderKeys.WORLD_MAP_SERIES;
     public static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = CommonPlaceholderKeys.ACTIVITY_STACK_SERIES;

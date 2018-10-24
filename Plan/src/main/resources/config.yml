@@ -138,6 +138,10 @@ Theme:
     TPS:
       High-Threshold: 18
       Medium-Threshold: 10
+    # Free Disk space thresholds, in megabytes.
+    Disk:
+      High-Threshold: 500
+      Medium-Threshold: 100
 # -----------------------------------------------------
 Plugins:
   Factions:

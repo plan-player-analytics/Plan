@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.tasks.server.bukkit;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.builders.TPSBuilder;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
@@ -59,30 +60,21 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
      */
     private TPS calculateTPS(long diff, long now) {
         double averageCPUUsage = getCPUUsage();
-
         long usedMemory = getUsedMemory();
+        long freeDiskSpace = getFreeDiskSpace();
 
         int playersOnline = serverProperties.getOnlinePlayers();
         latestPlayersOnline = playersOnline;
         int loadedChunks = getLoadedChunks();
-        int entityCount;
+        int entityCount = getEntityCount();
 
-        entityCount = getEntityCount();
-
-        return getTPS(diff, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline);
+        return getTPS(diff, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline, freeDiskSpace);
     }
 
-
-    /**
-     * Gets the TPS for Spigot / Bukkit
-     *
-     * @param diff          The difference between the last run and this run
-     * @param now           The time right now
-     * @param cpuUsage      The usage of the CPU
-     * @param playersOnline The amount of players that are online
-     * @return the TPS
-     */
-    protected TPS getTPS(long diff, long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline) {
+    protected TPS getTPS(long diff, long now,
+                         double cpuUsage, long usedMemory,
+                         int entityCount, int chunksLoaded,
+                         int playersOnline, long freeDiskSpace) {
         long difference = diff;
         if (difference < TimeUnit.SECONDS.toNanos(1L)) { // No tick count above 20
             difference = TimeUnit.SECONDS.toNanos(1L);
@@ -91,13 +83,31 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
         long twentySeconds = TimeUnit.SECONDS.toNanos(20L);
         while (difference > twentySeconds) {
             // Add 0 TPS since more than 20 ticks has passed.
-            history.add(new TPS(now, 0, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded));
+            history.add(TPSBuilder.get()
+                    .date(now)
+                    .tps(0)
+                    .playersOnline(playersOnline)
+                    .usedCPU(cpuUsage)
+                    .usedMemory(usedMemory)
+                    .entities(entityCount)
+                    .chunksLoaded(chunksLoaded)
+                    .freeDiskSpace(freeDiskSpace)
+                    .toTPS());
             difference -= twentySeconds;
         }
 
         double tpsN = twentySeconds * 1.0 / difference;
 
-        return new TPS(now, tpsN, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded);
+        return TPSBuilder.get()
+                .date(now)
+                .tps(0)
+                .playersOnline(playersOnline)
+                .usedCPU(cpuUsage)
+                .usedMemory(usedMemory)
+                .entities(entityCount)
+                .chunksLoaded(chunksLoaded)
+                .freeDiskSpace(freeDiskSpace)
+                .toTPS();
     }
 
     /**

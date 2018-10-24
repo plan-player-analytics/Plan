@@ -8,6 +8,7 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public abstract class TPSCountTimer extends AbsRunnable {
     protected final Processing processing;
     protected final PluginLogger logger;
     protected final ErrorHandler errorHandler;
+
+    private boolean diskErrored = false;
 
     protected int latestPlayersOnline = 0;
 
@@ -88,5 +91,18 @@ public abstract class TPSCountTimer extends AbsRunnable {
             averageCPUUsage = -1;
         }
         return averageCPUUsage * 100.0;
+    }
+
+    protected long getFreeDiskSpace() {
+        try {
+            File file = new File(new File("").getAbsolutePath());
+            return file.getFreeSpace() / 1000000L;
+        } catch (SecurityException noPermission) {
+            if (!diskErrored) {
+                errorHandler.log(L.WARN, this.getClass(), noPermission);
+            }
+            diskErrored = true;
+            return -1;
+        }
     }
 }

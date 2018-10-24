@@ -70,7 +70,7 @@ public class ImportBuilderTest {
     public void serverDataBuilderConstructsCorrectItem() {
         ServerImportData.ServerImportDataBuilder builder = ServerImportData.builder();
 
-        TPS tps = new TPS(randomInt, randomInt, randomInt, randomInt, randomInt, randomInt, randomInt);
+        TPS tps = new TPS(randomInt, randomInt, randomInt, randomInt, randomInt, randomInt, randomInt, randomInt);
 
         ServerImportData data = builder.tpsData(tps)
                 .tpsData(tps)

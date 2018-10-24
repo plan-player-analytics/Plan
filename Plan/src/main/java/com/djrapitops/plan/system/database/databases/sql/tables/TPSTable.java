@@ -28,8 +28,10 @@ import java.util.*;
  */
 public class TPSTable extends Table {
 
+    public static final String TABLE_NAME = "plan_tps";
+
     public TPSTable(SQLDB db) {
-        super("plan_tps", db);
+        super(TABLE_NAME, db);
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " ("
                 + Col.SERVER_ID + ", "
@@ -39,10 +41,11 @@ public class TPSTable extends Table {
                 + Col.CPU_USAGE + ", "
                 + Col.RAM_USAGE + ", "
                 + Col.ENTITIES + ", "
-                + Col.CHUNKS
+                + Col.CHUNKS + ", "
+                + Col.FREE_DISK
                 + ") VALUES ("
                 + serverTable.statementSelectServerID + ", "
-                + "?, ?, ?, ?, ?, ?, ?)";
+                + "?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
     private final ServerTable serverTable;
@@ -59,6 +62,7 @@ public class TPSTable extends Table {
                 .column(Col.RAM_USAGE, Sql.LONG).notNull()
                 .column(Col.ENTITIES, Sql.INT).notNull()
                 .column(Col.CHUNKS, Sql.INT).notNull()
+                .column(Col.FREE_DISK, Sql.LONG).notNull()
                 .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
                 .toString()
         );
@@ -88,6 +92,7 @@ public class TPSTable extends Table {
                             .usedMemory(set.getLong(Col.RAM_USAGE.get()))
                             .entities(set.getInt(Col.ENTITIES.get()))
                             .chunksLoaded(set.getInt(Col.CHUNKS.get()))
+                            .freeDiskSpace(set.getLong(Col.FREE_DISK.get()))
                             .toTPS();
 
                     data.add(tps);
@@ -142,6 +147,7 @@ public class TPSTable extends Table {
                 statement.setLong(6, tps.getUsedMemory());
                 statement.setDouble(7, tps.getEntityCount());
                 statement.setDouble(8, tps.getChunksLoaded());
+                statement.setLong(9, tps.getFreeDiskSpace());
             }
         });
     }
@@ -176,6 +182,7 @@ public class TPSTable extends Table {
                             .usedMemory(set.getLong(Col.RAM_USAGE.get()))
                             .entities(set.getInt(Col.ENTITIES.get()))
                             .chunksLoaded(set.getInt(Col.CHUNKS.get()))
+                            .freeDiskSpace(set.getLong(Col.FREE_DISK.get()))
                             .toTPS();
 
                     return Optional.of(tps);
@@ -208,6 +215,7 @@ public class TPSTable extends Table {
                 Col.RAM_USAGE + ", " +
                 Col.ENTITIES + ", " +
                 Col.CHUNKS + ", " +
+                Col.FREE_DISK + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
@@ -229,6 +237,7 @@ public class TPSTable extends Table {
                             .usedMemory(set.getLong(Col.RAM_USAGE.get()))
                             .entities(set.getInt(Col.ENTITIES.get()))
                             .chunksLoaded(set.getInt(Col.CHUNKS.get()))
+                            .freeDiskSpace(set.getLong(Col.FREE_DISK.get()))
                             .toTPS();
 
                     tpsList.add(tps);
@@ -298,6 +307,7 @@ public class TPSTable extends Table {
                         statement.setLong(6, tps.getUsedMemory());
                         statement.setDouble(7, tps.getEntityCount());
                         statement.setDouble(8, tps.getChunksLoaded());
+                        statement.setLong(9, tps.getFreeDiskSpace());
                         statement.addBatch();
                     }
                 }
@@ -346,7 +356,8 @@ public class TPSTable extends Table {
         CPU_USAGE("cpu_usage"),
         RAM_USAGE("ram_usage"),
         ENTITIES("entities"),
-        CHUNKS("chunks_loaded");
+        CHUNKS("chunks_loaded"),
+        FREE_DISK("free_disk_space");
 
         private final String column;
 

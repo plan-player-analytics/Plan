@@ -23,7 +23,7 @@ public class LineGraphTest {
     @Before
     public void setUp() {
         for (int i = 0; i < 10; i++) {
-            tpsList.add(new TPS(i, i, i, i, i, i, i));
+            tpsList.add(new TPS(i, i, i, i, i, i, i, i));
         }
     }
 
@@ -36,7 +36,8 @@ public class LineGraphTest {
                 new RamGraph(mutator, true),
                 new TPSGraph(mutator, false),
                 new EntityGraph(mutator, true),
-                new ChunkGraph(mutator, false)
+                new ChunkGraph(mutator, false),
+                new DiskGraph(mutator, false)
         };
 
         for (LineGraph graph : graphs) {

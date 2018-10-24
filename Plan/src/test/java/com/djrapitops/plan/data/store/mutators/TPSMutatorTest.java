@@ -40,6 +40,7 @@ public class TPSMutatorTest {
                             .usedMemory(0)
                             .entities(0)
                             .chunksLoaded(0)
+                            .freeDiskSpace(0)
                             .toTPS()
             );
         }
@@ -63,6 +64,7 @@ public class TPSMutatorTest {
                         .usedMemory(0)
                         .entities(0)
                         .chunksLoaded(0)
+                        .freeDiskSpace(0)
                         .toTPS()
         )).serverDownTime();
         assertEquals(expected, result);

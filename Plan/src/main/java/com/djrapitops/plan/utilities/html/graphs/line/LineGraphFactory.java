@@ -57,4 +57,8 @@ public class LineGraphFactory {
     public LineGraph tpsGraph(TPSMutator mutator) {
         return new TPSGraph(mutator, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
     }
+
+    public LineGraph diskGraph(TPSMutator mutator) {
+        return new DiskGraph(mutator, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+    }
 }

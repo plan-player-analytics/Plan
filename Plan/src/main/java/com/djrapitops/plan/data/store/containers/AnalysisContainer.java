@@ -122,6 +122,8 @@ public class AnalysisContainer extends DataContainer {
         putRawData(AnalysisKeys.FIRST_DAY, 1);
         putRawData(AnalysisKeys.TPS_MEDIUM, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_MED));
         putRawData(AnalysisKeys.TPS_HIGH, config.getNumber(Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH));
+        putRawData(AnalysisKeys.DISK_MEDIUM, config.getNumber(Settings.THEME_GRAPH_DISK_THRESHOLD_MED));
+        putRawData(AnalysisKeys.DISK_HIGH, config.getNumber(Settings.THEME_GRAPH_DISK_THRESHOLD_HIGH));
 
         addServerProperties();
         addThemeColors();
@@ -360,6 +362,7 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.TPS_SERIES, () -> graphs.line().tpsGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.CPU_SERIES, () -> graphs.line().cpuGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.RAM_SERIES, () -> graphs.line().ramGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
+        putSupplier(AnalysisKeys.DISK_SERIES, () -> graphs.line().diskGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.ENTITY_SERIES, () -> graphs.line().entityGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.CHUNK_SERIES, () -> graphs.line().cpuGraph(getUnsafe(AnalysisKeys.TPS_MUTATOR)).toHighChartsSeries());
         putSupplier(AnalysisKeys.WORLD_MAP_SERIES, () ->

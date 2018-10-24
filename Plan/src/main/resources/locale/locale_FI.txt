@@ -331,3 +331,5 @@ Health - Regular Activity Remain                ||  ${0} kestopelaajista on pysy
 Health - Single Servers Inaccuracy              ||  Yksi Bukkit/Sponge palvelin sessio tietojen keräykseen.
 Health - TPS Above Low Threshold                ||  Keskimääräinen TPS oli alarajan yläpuolella ${0} ajasta
 Health - TPS Low Dips                           ||  Keskimääräinen TPS putosi alarajan alapuolelle (${0}) ${1} kertaa
+HTML - FREE_DISK_SPACE                          || Vapaa Levytila
+HTML - DISK_SPACE                               || LEVYTILA
