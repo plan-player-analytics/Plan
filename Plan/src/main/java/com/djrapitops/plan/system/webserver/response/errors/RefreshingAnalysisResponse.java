@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.webserver.response.errors;
 
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 
 import java.io.IOException;
 
@@ -11,8 +12,8 @@ import java.io.IOException;
  */
 public class RefreshingAnalysisResponse extends ErrorResponse {
 
-    public RefreshingAnalysisResponse(String version, PlanFiles files) throws IOException {
-        super(version, files);
+    public RefreshingAnalysisResponse(VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
+        super(versionCheckSystem, files);
 
         setTitle("Analysis is being refreshed..");
         setParagraph("<meta http-equiv=\"refresh\" content=\"5\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");

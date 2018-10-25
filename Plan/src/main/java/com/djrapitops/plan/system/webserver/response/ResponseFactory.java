@@ -6,6 +6,7 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.ErrorPageLang;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.response.errors.*;
 import com.djrapitops.plan.system.webserver.response.pages.*;
 import com.djrapitops.plan.utilities.html.pages.PageFactory;
@@ -13,7 +14,6 @@ import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.UUID;
@@ -26,7 +26,7 @@ import java.util.UUID;
 @Singleton
 public class ResponseFactory {
 
-    private final String version;
+    private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private final PageFactory pageFactory;
     private final Locale locale;
@@ -35,14 +35,14 @@ public class ResponseFactory {
 
     @Inject
     public ResponseFactory(
-            @Named("currentVersion") String version,
+            VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             PageFactory pageFactory,
             Locale locale,
             DBSystem dbSystem,
             ErrorHandler errorHandler
     ) {
-        this.version = version;
+        this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.pageFactory = pageFactory;
         this.locale = locale;
@@ -52,7 +52,7 @@ public class ResponseFactory {
 
     public Response debugPageResponse() {
         try {
-            return new DebugPageResponse(pageFactory.debugPage(), version, files);
+            return new DebugPageResponse(pageFactory.debugPage(), versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse debug page");
         }
@@ -69,7 +69,7 @@ public class ResponseFactory {
     public ErrorResponse internalErrorResponse(Throwable e, String s) {
         try {
             errorHandler.log(L.WARN, this.getClass(), e);
-            return new InternalErrorResponse(s, e, version, files);
+            return new InternalErrorResponse(s, e, versionCheckSystem, files);
         } catch (IOException improperRestartException) {
             return new ErrorResponse(
                     "Error occurred: " + e.toString() +
@@ -133,7 +133,7 @@ public class ResponseFactory {
 
     public ErrorResponse notFound404(String message) {
         try {
-            return new NotFoundResponse(message, version, files);
+            return new NotFoundResponse(message, versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse 404 page");
         }
@@ -141,7 +141,7 @@ public class ResponseFactory {
 
     public ErrorResponse basicAuthFail(WebUserAuthException e) {
         try {
-            return PromptAuthorizationResponse.getBasicAuthResponse(e, version, files);
+            return PromptAuthorizationResponse.getBasicAuthResponse(e, versionCheckSystem, files);
         } catch (IOException e1) {
             return internalErrorResponse(e, "Failed to parse PromptAuthorizationResponse");
         }
@@ -154,7 +154,7 @@ public class ResponseFactory {
 
     public ErrorResponse forbidden403(String message) {
         try {
-            return new ForbiddenResponse(message, version, files);
+            return new ForbiddenResponse(message, versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse ForbiddenResponse");
         }
@@ -162,7 +162,7 @@ public class ResponseFactory {
 
     public ErrorResponse unauthorizedServer(String message) {
         try {
-            return new UnauthorizedServerResponse(message, version, files);
+            return new UnauthorizedServerResponse(message, versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse UnauthorizedServerResponse");
         }
@@ -170,7 +170,7 @@ public class ResponseFactory {
 
     public ErrorResponse gatewayError504(String message) {
         try {
-            return new GatewayErrorResponse(message, version, files);
+            return new GatewayErrorResponse(message, versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse GatewayErrorResponse");
         }
@@ -178,7 +178,7 @@ public class ResponseFactory {
 
     public ErrorResponse basicAuth() {
         try {
-            return PromptAuthorizationResponse.getBasicAuthResponse(version, files);
+            return PromptAuthorizationResponse.getBasicAuthResponse(versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse PromptAuthorizationResponse");
         }
@@ -186,7 +186,7 @@ public class ResponseFactory {
 
     public ErrorResponse refreshingAnalysisResponse() {
         try {
-            return new RefreshingAnalysisResponse(version, files);
+            return new RefreshingAnalysisResponse(versionCheckSystem, files);
         } catch (IOException e) {
             return internalErrorResponse(e, "Failed to parse RefreshingAnalysisResponse");
         }

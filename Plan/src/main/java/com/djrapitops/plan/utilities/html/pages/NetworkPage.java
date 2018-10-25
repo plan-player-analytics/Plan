@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.utilities.html.structure.AnalysisPluginsTabContentCreator;
 
@@ -24,16 +25,20 @@ public class NetworkPage implements Page {
     private final NetworkContainer networkContainer;
     private final AnalysisPluginsTabContentCreator analysisPluginsTabContentCreator;
 
+    private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private final ServerProperties serverProperties;
 
     NetworkPage(
             NetworkContainer networkContainer,
-            AnalysisPluginsTabContentCreator analysisPluginsTabContentCreator, PlanFiles files,
+            AnalysisPluginsTabContentCreator analysisPluginsTabContentCreator,
+            VersionCheckSystem versionCheckSystem,
+            PlanFiles files,
             ServerProperties serverProperties
     ) {
         this.networkContainer = networkContainer;
         this.analysisPluginsTabContentCreator = analysisPluginsTabContentCreator;
+        this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.serverProperties = serverProperties;
     }
@@ -57,6 +62,7 @@ public class NetworkPage implements Page {
                     ACTIVITY_PIE_SERIES, ACTIVITY_STACK_SERIES, ACTIVITY_STACK_CATEGORIES,
                     SERVERS_TAB
             );
+            placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
 
             String[] content = analysisPluginsTabContentCreator.createContent(null, networkContainer.getUnsafe(NetworkKeys.PLAYERS_MUTATOR));
             String nav = content[0];

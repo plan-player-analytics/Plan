@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.response.pages.parts.InspectPagePluginsContent;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plan.utilities.html.graphs.Graphs;
@@ -23,7 +24,6 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Map;
 import java.util.UUID;
@@ -36,7 +36,7 @@ import java.util.UUID;
 @Singleton
 public class PageFactory {
 
-    private final String version;
+    private final Lazy<VersionCheckSystem> versionCheckSystem;
     private final Lazy<PlanFiles> fileSystem;
     private final Lazy<PlanConfig> config;
     private final Lazy<Theme> theme;
@@ -56,7 +56,7 @@ public class PageFactory {
 
     @Inject
     public PageFactory(
-            @Named("currentVersion") String version,
+            Lazy<VersionCheckSystem> versionCheckSystem,
             Lazy<PlanFiles> fileSystem,
             Lazy<PlanConfig> config,
             Lazy<Theme> theme,
@@ -74,7 +74,7 @@ public class PageFactory {
             Lazy<Timings> timings,
             Lazy<ErrorHandler> errorHandler
     ) {
-        this.version = version;
+        this.versionCheckSystem = versionCheckSystem;
         this.fileSystem = fileSystem;
         this.config = config;
         this.theme = theme;
@@ -95,14 +95,13 @@ public class PageFactory {
 
     public DebugPage debugPage() {
         return new DebugPage(
-                version,
                 dbSystem.get().getDatabase(), serverInfo.get(), connectionSystem.get(), formatters.get(),
                 debugLogger.get(), timings.get(), errorHandler.get()
         );
     }
 
     public PlayersPage playersPage() {
-        return new PlayersPage(version, fileSystem.get(), config.get(),
+        return new PlayersPage(versionCheckSystem.get(), fileSystem.get(), config.get(),
                 dbSystem.get().getDatabase(), serverInfo.get(), tables.get(),
                 timings.get());
     }
@@ -110,7 +109,7 @@ public class PageFactory {
     public AnalysisPage analysisPage(UUID serverUUID) {
         AnalysisContainer analysisContainer = analysisContainerFactory.get()
                 .forServerContainer(dbSystem.get().getDatabase().fetch().getServerContainer(serverUUID));
-        return new AnalysisPage(analysisContainer, fileSystem.get(), formatters.get().decimals(), timings.get());
+        return new AnalysisPage(analysisContainer, versionCheckSystem.get(), fileSystem.get(), formatters.get().decimals(), timings.get());
     }
 
     public InspectPage inspectPage(UUID uuid) {
@@ -119,7 +118,7 @@ public class PageFactory {
         Map<UUID, String> serverNames = fetch.getServerNames();
         return new InspectPage(
                 player, serverNames,
-                version,
+                versionCheckSystem.get(),
                 fileSystem.get(), config.get(), theme.get(),
                 graphs.get(), tables.get(), accordions.get(), formatters.get(),
                 serverInfo.get(), timings.get()
@@ -134,6 +133,6 @@ public class PageFactory {
         NetworkContainer networkContainer = dbSystem.get().getDatabase().fetch().getNetworkContainer(); // Not cached, big.
         return new NetworkPage(networkContainer,
                 analysisPluginsTabContentCreator.get(),
-                fileSystem.get(), serverInfo.get().getServerProperties());
+                versionCheckSystem.get(), fileSystem.get(), serverInfo.get().getServerProperties());
     }
 }

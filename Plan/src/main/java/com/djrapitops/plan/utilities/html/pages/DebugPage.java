@@ -39,7 +39,6 @@ import java.util.*;
  */
 public class DebugPage implements Page {
 
-    private final String version;
     private final Database database;
     private final ServerInfo serverInfo;
     private final ConnectionSystem connectionSystem;
@@ -51,7 +50,6 @@ public class DebugPage implements Page {
     private final Formatter<Long> yearFormatter;
 
     DebugPage(
-            String version,
             Database database,
             ServerInfo serverInfo,
             ConnectionSystem connectionSystem,
@@ -60,7 +58,6 @@ public class DebugPage implements Page {
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        this.version = version;
         this.database = database;
         this.serverInfo = serverInfo;
         this.connectionSystem = connectionSystem;
@@ -206,7 +203,7 @@ public class DebugPage implements Page {
         ServerProperties serverProperties = serverInfo.getServerProperties();
 
         content.append("<pre>### Server Information<br>")
-                .append("**Plan Version:** ").append(version).append("<br>");
+                .append("**Plan Version:** ${version}<br>");
 
         content.append("**Server:** ");
         content.append(serverProperties.getName())

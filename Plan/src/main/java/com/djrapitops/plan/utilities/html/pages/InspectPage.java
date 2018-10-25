@@ -18,6 +18,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -47,7 +48,7 @@ public class InspectPage implements Page {
     private final PlayerContainer player;
     private final Map<UUID, String> serverNames;
 
-    private final String version;
+    private final VersionCheckSystem versionCheckSystem;
 
     private final PlanFiles files;
     private final PlanConfig config;
@@ -66,7 +67,7 @@ public class InspectPage implements Page {
 
     InspectPage(
             PlayerContainer player, Map<UUID, String> serverNames,
-            String version,
+            VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             PlanConfig config,
             Theme theme,
@@ -79,7 +80,7 @@ public class InspectPage implements Page {
     ) {
         this.player = player;
         this.serverNames = serverNames;
-        this.version = version;
+        this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.config = config;
         this.theme = theme;
@@ -121,7 +122,8 @@ public class InspectPage implements Page {
 
         replacer.put("refresh", clockLongFormatter.apply(now));
         replacer.put("refreshFull", secondLongFormatter.apply(now));
-        replacer.put("version", version);
+        replacer.put("version", versionCheckSystem.getCurrentVersion());
+        replacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
         replacer.put("timeZone", config.getTimeZoneOffsetHours());
 
         boolean online = false;

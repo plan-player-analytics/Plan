@@ -90,4 +90,14 @@ public class VersionCheckSystem implements SubSystem {
     public Optional<VersionInfo> getNewVersionAvailable() {
         return Optional.ofNullable(newVersionAvailable);
     }
+
+    public Optional<String> getUpdateHtml() {
+        return getNewVersionAvailable()
+                .map(v -> v.isTrusted() ? "<a href=\"" + v.getChangeLogUrl() + "\" target=\"_blank\">" +
+                        "<h4 class=\"col-green\"><i class=\"fa fa-" + (v.isRelease() ? "download" : "dev") + "\"></i> Update available!</h4></a>" : "");
+    }
+
+    public String getCurrentVersion() {
+        return currentVersion;
+    }
 }

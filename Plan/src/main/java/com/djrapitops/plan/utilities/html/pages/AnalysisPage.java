@@ -8,6 +8,7 @@ import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.data.store.containers.AnalysisContainer;
 import com.djrapitops.plan.system.DebugChannels;
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plugin.benchmarking.Timings;
@@ -27,17 +28,20 @@ public class AnalysisPage implements Page {
 
     private final AnalysisContainer analysisContainer;
 
+    private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private final Formatter<Double> decimalFormatter;
     private final Timings timings;
 
     AnalysisPage(
             AnalysisContainer analysisContainer,
+            VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             Formatter<Double> decimalFormatter,
             Timings timings
     ) {
         this.analysisContainer = analysisContainer;
+        this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.decimalFormatter = decimalFormatter;
         this.timings = timings;
@@ -58,6 +62,7 @@ public class AnalysisPage implements Page {
                 TPS_LOW_COLOR, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR,
                 AVG_PING_COLOR, MAX_PING_COLOR, MIN_PING_COLOR
         );
+        placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
         playersTable(placeholderReplacer);
         sessionStructures(placeholderReplacer);
         serverHealth(placeholderReplacer);

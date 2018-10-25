@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.webserver.response;
 
 import com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.auth.FailReason;
 import com.djrapitops.plan.system.webserver.response.errors.ErrorResponse;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -21,13 +22,13 @@ public class PromptAuthorizationResponse extends ErrorResponse {
             + "- Username and password are case-sensitive<br>"
             + "<br>If you have forgotten your password, ask a staff member to delete your old user and re-register.";
 
-    private PromptAuthorizationResponse(String version, PlanFiles files) throws IOException {
-        super(version, files);
+    private PromptAuthorizationResponse(VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
+        super(versionCheckSystem, files);
         super.setTitle(Icon.called("lock").build() + " 401 Unauthorized");
     }
 
-    public static PromptAuthorizationResponse getBasicAuthResponse(String version, PlanFiles files) throws IOException {
-        PromptAuthorizationResponse response = new PromptAuthorizationResponse(version, files);
+    public static PromptAuthorizationResponse getBasicAuthResponse(VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
+        PromptAuthorizationResponse response = new PromptAuthorizationResponse(versionCheckSystem, files);
         response.setHeader("HTTP/1.1 401 Access Denied\r\n"
                 + "WWW-Authenticate: Basic realm=\"/\";");
 
@@ -36,8 +37,8 @@ public class PromptAuthorizationResponse extends ErrorResponse {
         return response;
     }
 
-    public static PromptAuthorizationResponse getBasicAuthResponse(WebUserAuthException e, String version, PlanFiles files) throws IOException {
-        PromptAuthorizationResponse response = new PromptAuthorizationResponse(version, files);
+    public static PromptAuthorizationResponse getBasicAuthResponse(WebUserAuthException e, VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
+        PromptAuthorizationResponse response = new PromptAuthorizationResponse(versionCheckSystem, files);
         response.setHeader("HTTP/1.1 401 Access Denied\r\n"
                 + "WWW-Authenticate: Basic realm=\"/\";");
 

@@ -5,6 +5,7 @@
 package com.djrapitops.plan.system.webserver.response.errors;
 
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.response.pages.PageResponse;
 import org.apache.commons.text.StringSubstitutor;
 
@@ -22,10 +23,10 @@ public class ErrorResponse extends PageResponse {
     private String title;
     private String paragraph;
 
-    private String version;
+    private VersionCheckSystem versionCheckSystem;
 
-    public ErrorResponse(String version, PlanFiles files) throws IOException {
-        this.version = version;
+    public ErrorResponse(VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
+        this.versionCheckSystem = versionCheckSystem;
         setContent(files.readCustomizableResourceFlat("web/error.html"));
     }
 
@@ -39,7 +40,8 @@ public class ErrorResponse extends PageResponse {
         String[] split = title.split(">", 3);
         placeHolders.put("titleText", split.length == 3 ? split[2] : title);
         placeHolders.put("paragraph", paragraph);
-        placeHolders.put("version", version);
+        placeHolders.put("version", versionCheckSystem.getCurrentVersion());
+        placeHolders.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
 
         setContent(StringSubstitutor.replace(getContent(), placeHolders));
     }

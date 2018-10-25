@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.webserver.response.errors;
 
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 
 import java.io.IOException;
@@ -13,8 +14,8 @@ import java.io.IOException;
  */
 public class NotFoundResponse extends ErrorResponse {
 
-    public NotFoundResponse(String msg, String version, PlanFiles files) throws IOException {
-        super(version, files);
+    public NotFoundResponse(String msg, VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
+        super(versionCheckSystem, files);
         super.setHeader("HTTP/1.1 404 Not Found");
         super.setTitle(Icon.called("map-signs") + " 404 Not Found");
         super.setParagraph(msg);

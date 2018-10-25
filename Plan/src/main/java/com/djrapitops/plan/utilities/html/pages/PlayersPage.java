@@ -7,6 +7,7 @@ import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.api.Check;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class PlayersPage implements Page {
 
-    private final String version;
+    private final VersionCheckSystem versionCheckSystem;
     private final PlanFiles files;
     private final PlanConfig config;
     private final Database database;
@@ -32,7 +33,7 @@ public class PlayersPage implements Page {
     private final Timings timings;
 
     PlayersPage(
-            String version,
+            VersionCheckSystem versionCheckSystem,
             PlanFiles files,
             PlanConfig config,
             Database database,
@@ -40,7 +41,7 @@ public class PlayersPage implements Page {
             HtmlTables tables,
             Timings timings
     ) {
-        this.version = version;
+        this.versionCheckSystem = versionCheckSystem;
         this.files = files;
         this.config = config;
         this.database = database;
@@ -54,7 +55,8 @@ public class PlayersPage implements Page {
         try {
             PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
 
-            placeholderReplacer.put("version", version);
+            placeholderReplacer.put("version", versionCheckSystem.getCurrentVersion());
+            placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
             if (Check.isBukkitAvailable()) {
                 placeholderReplacer.put("networkName", serverInfo.getServer().getName());
             } else {
