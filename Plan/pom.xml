@@ -114,6 +114,12 @@
             <artifactId>HikariCP</artifactId>
             <version>3.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.25</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <!--        Geo IP -->
         <dependency>
