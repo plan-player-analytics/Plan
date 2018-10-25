@@ -11,6 +11,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatemen
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.*;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -313,6 +314,30 @@ public class UserInfoTable extends UserIDTable {
 
     public boolean isRegisteredOnThisServer(UUID player) {
         return isRegistered(player, getServerUUID());
+    }
+
+    public Map<Integer, Integer> getPlayersRegisteredForServers(Collection<Server> servers) {
+        if (servers.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        String sql = "SELECT " + Col.SERVER_ID + ", " +
+                "COUNT(" + Col.REGISTERED + ") AS count " +
+                "FROM " + tableName +
+                "GROUP BY " + Col.SERVER_ID;
+        return query(new QueryAllStatement<Map<Integer, Integer>>(sql, 10000) {
+            @Override
+            public Map<Integer, Integer> processResults(ResultSet set) throws SQLException {
+                Map<Integer, Integer> map = new HashMap<>();
+                while (set.next()) {
+                    int serverID = set.getInt(Col.SERVER_ID.get());
+                    int count = set.getInt("count");
+                    map.put(serverID, count);
+                }
+                return map;
+            }
+        });
+
     }
 
     public enum Col implements Column {

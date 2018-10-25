@@ -58,6 +58,7 @@ public class NetworkKeys {
     public static final Key<Collection<Server>> BUKKIT_SERVERS = new Key<>(new Type<Collection<Server>>() {}, "BUKKIT_SERVERS");
     public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = CommonKeys.ACTIVITY_DATA;
     public static final Key<Map<Integer, List<TPS>>> NETWORK_PLAYER_ONLINE_DATA = new Key<>(new Type<Map<Integer, List<TPS>>>() {}, "NETWORK_PLAYER_ONLINE_DATA");
+    public static final Key<Map<Integer, Integer>> SERVER_REGISTER_DATA = new Key<>(new Type<Map<Integer, Integer>>() {}, "SERVER_REGISTER_DATA");
 
     private NetworkKeys() {
         /* static variable class */

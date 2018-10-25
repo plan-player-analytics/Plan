@@ -116,5 +116,7 @@ public interface FetchOperations {
 
     List<UUID> getServerUUIDs();
 
-    Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> serverUUIDs);
+    Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers);
+
+    Map<Integer, Integer> getPlayersRegisteredForServers(Collection<Server> servers);
 }

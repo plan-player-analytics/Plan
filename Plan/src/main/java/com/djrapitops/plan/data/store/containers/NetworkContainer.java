@@ -85,16 +85,21 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA, () -> dbSystem.getDatabase().fetch().getPlayersOnlineForServers(
                 getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
         );
+        putSupplier(NetworkKeys.SERVER_REGISTER_DATA, () -> dbSystem.getDatabase().fetch().getPlayersRegisteredForServers(
+                getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>()))
+        );
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
+            Map<Integer, Integer> registerData = getValue(NetworkKeys.SERVER_REGISTER_DATA).orElse(new HashMap<>());
             getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>())
                     .stream()
                     .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
                     .forEach(server -> {
-                        TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(server.getId(), new ArrayList<>()));
-                        // TODO Add Registered players per server.
-                        NetworkServerBox serverBox = new NetworkServerBox(server, 0, tpsMutator, graphs);
+                        int serverId = server.getId();
+                        TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(serverId, new ArrayList<>()));
+                        int registered = registerData.getOrDefault(serverId, 0);
+                        NetworkServerBox serverBox = new NetworkServerBox(server, registered, tpsMutator, graphs);
                         serverBoxes.append(serverBox.toHtml());
                     });
             return serverBoxes.toString();
