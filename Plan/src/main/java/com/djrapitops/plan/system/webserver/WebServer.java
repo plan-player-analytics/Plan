@@ -118,7 +118,7 @@ public class WebServer implements SubSystem {
                 logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
                 server = HttpServer.create(new InetSocketAddress(config.getString(Settings.WEBSERVER_IP), port), 10);
             } else if (server == null) {
-                logger.log(L.INFO_COLOR, "§eWebServer: Nginx HTTPS Override enabled. HTTP Server in use, make sure that your Nginx is routing with HTTPS and AlternativeIP.Link points to Nginx");
+                logger.log(L.INFO_COLOR, "§eWebServer: Proxy HTTPS Override enabled. HTTP Server in use, make sure that your Proxy webserver is routing with HTTPS and AlternativeIP.Link points to the Proxy");
                 server = HttpServer.create(new InetSocketAddress(config.getString(Settings.WEBSERVER_IP), port), 10);
             }
             server.createContext("/", requestHandler);
@@ -142,7 +142,7 @@ public class WebServer implements SubSystem {
     private boolean startHttpsServer() {
         String keyStorePath = config.getString(Settings.WEBSERVER_CERTIFICATE_PATH);
 
-        if (keyStorePath.equalsIgnoreCase("nginx")) {
+        if (keyStorePath.equalsIgnoreCase("proxy")) {
             return true;
         }
 
