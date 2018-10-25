@@ -4,6 +4,7 @@ import com.djrapitops.plan.DaggerPlanBukkitComponent;
 import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.settings.Settings;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -35,6 +36,7 @@ public class NetworkSettingsTest {
     @Test
     public void transferDoesNotProduceException() throws EnableException {
         PlanSystem system = COMPONENT.system();
+        system.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
         system.enable();
 
         NetworkSettings networkSettings = system.getConfigSystem().getConfig().getNetworkSettings();

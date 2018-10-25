@@ -25,6 +25,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import org.junit.*;
@@ -77,6 +78,7 @@ public class SQLiteTest {
                 .withServer();
         PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(mockUtil.getPlanMock()).build();
         system = component.system();
+        system.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
         system.enable();
 
         dbSystem = system.getDatabaseSystem();
