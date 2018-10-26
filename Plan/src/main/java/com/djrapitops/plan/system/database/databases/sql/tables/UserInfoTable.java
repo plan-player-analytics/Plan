@@ -322,9 +322,9 @@ public class UserInfoTable extends UserIDTable {
         }
 
         String sql = "SELECT " + Col.SERVER_ID + ", " +
-                "COUNT(" + Col.REGISTERED + ") AS count " +
-                "FROM " + tableName +
-                "GROUP BY " + Col.SERVER_ID;
+                "COUNT(" + Col.REGISTERED + ") AS count" +
+                " FROM " + tableName +
+                " GROUP BY " + Col.SERVER_ID;
         return query(new QueryAllStatement<Map<Integer, Integer>>(sql, 10000) {
             @Override
             public Map<Integer, Integer> processResults(ResultSet set) throws SQLException {
