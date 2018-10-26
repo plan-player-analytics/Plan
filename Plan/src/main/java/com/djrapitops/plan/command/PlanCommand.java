@@ -3,6 +3,7 @@ package com.djrapitops.plan.command;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
+import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.command.ColorScheme;
@@ -83,6 +84,7 @@ public class PlanCommand extends TreeCmdNode {
         this.manageCommand = manageCommand;
         this.devCommand = devCommand;
 
+        getHelpCommand().setPermission(Permissions.HELP.getPermission());
         setDefaultCommand("inspect");
         setColorScheme(colorScheme);
         setInDepthHelp(locale.getArray(DeepHelpLang.PLAN));

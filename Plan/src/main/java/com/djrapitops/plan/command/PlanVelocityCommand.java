@@ -76,6 +76,7 @@ public class PlanVelocityCommand extends TreeCmdNode {
         this.reloadCommand = reloadCommand;
         this.disableCommand = disableCommand;
 
+        getHelpCommand().setPermission(Permissions.MANAGE.getPermission());
         setColorScheme(colorScheme);
         setInDepthHelp(locale.getArray(DeepHelpLang.PLAN));
     }
