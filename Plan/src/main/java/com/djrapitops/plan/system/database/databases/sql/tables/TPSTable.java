@@ -7,10 +7,14 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
-import com.djrapitops.plan.system.database.databases.sql.statements.*;
+import com.djrapitops.plan.system.database.databases.sql.statements.Column;
+import com.djrapitops.plan.system.database.databases.sql.statements.Select;
+import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
+import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -316,15 +320,18 @@ public class TPSTable extends Table {
     }
 
     public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
-        WhereParser sqlParser = Select.from(tableName, Col.SERVER_ID, Col.DATE, Col.PLAYERS_ONLINE)
-                .where(Col.DATE.get() + ">" + (System.currentTimeMillis() - TimeAmount.WEEK.toMillis(2L)));
-        for (Server server : servers) {
-            sqlParser.or(Col.SERVER_ID + "=" + server.getId());
-        }
+        TextStringBuilder sql = new TextStringBuilder("SELECT ");
+        sql.append(Col.SERVER_ID).append(", ")
+                .append(Col.DATE).append(", ")
+                .append(Col.PLAYERS_ONLINE)
+                .append(" FROM ").append(tableName)
+                .append(" WHERE ")
+                .append(Col.DATE.get()).append(">").append(System.currentTimeMillis() - TimeAmount.WEEK.toMillis(2L))
+                .append(" AND (");
+        sql.appendWithSeparators(servers.stream().map(server -> Col.SERVER_ID + "=" + server.getId()).iterator(), " OR ");
+        sql.append(")");
 
-        String sql = sqlParser.toString();
-
-        return query(new QueryAllStatement<Map<Integer, List<TPS>>>(sql, 10000) {
+        return query(new QueryAllStatement<Map<Integer, List<TPS>>>(sql.toString(), 10000) {
             @Override
             public Map<Integer, List<TPS>> processResults(ResultSet set) throws SQLException {
                 Map<Integer, List<TPS>> map = new HashMap<>();
