@@ -13,7 +13,9 @@ public enum ResponseType {
     HTML("text/html; charset=utf-8"),
     CSS("text/css"),
     JSON("application/json"),
-    JAVASCRIPT("application/javascript");
+    JAVASCRIPT("application/javascript"),
+    IMAGE("image/gif"),
+    X_ICON("image/x-icon");
 
     private final String type;
 

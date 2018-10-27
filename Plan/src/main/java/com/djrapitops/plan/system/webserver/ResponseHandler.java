@@ -66,7 +66,6 @@ public class ResponseHandler extends TreePageHandler {
     }
 
     public void registerPages() {
-        registerPage("favicon.ico", responseFactory.redirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"), 5);
         registerPage("debug", debugPageHandler);
         registerPage("players", playersPageHandler);
         registerPage("player", playerPageHandler);
@@ -123,6 +122,9 @@ public class ResponseHandler extends TreePageHandler {
         }
         if (targetString.endsWith(".js")) {
             return ResponseCache.loadResponse(PageId.JS.of(targetString), () -> responseFactory.javaScriptResponse(targetString));
+        }
+        if (targetString.endsWith("favicon.ico")) {
+            return ResponseCache.loadResponse(PageId.FAVICON.id(), responseFactory::faviconResponse);
         }
         boolean isNotInfoRequest = target.isEmpty() || !target.get(0).equals("info");
         boolean isAuthRequired = webServer.get().isAuthRequired() && isNotInfoRequest;

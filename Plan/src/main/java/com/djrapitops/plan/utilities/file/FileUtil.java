@@ -4,10 +4,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.logging.L;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -32,6 +29,31 @@ public class FileUtil {
             }
         }
         return lines(plugin, defaults);
+    }
+
+    public static InputStream stream(PlanPlugin plugin, File savedFile, String defaults) {
+        try {
+            if (savedFile.exists()) {
+                return stream(savedFile);
+            } else {
+                String fileName = savedFile.getName();
+                File found = attemptToFind(fileName, new File(plugin.getDataFolder(), "web"));
+                if (found != null) {
+                    return stream(found);
+                }
+            }
+        } catch (FileNotFoundException ignore) {
+            // File was not found, use jar version
+        }
+        return stream(plugin, defaults);
+    }
+
+    private static InputStream stream(PlanPlugin plugin, String resource) {
+        return plugin.getResource(resource);
+    }
+
+    private static InputStream stream(File savedFile) throws FileNotFoundException {
+        return new FileInputStream(savedFile);
     }
 
     /**

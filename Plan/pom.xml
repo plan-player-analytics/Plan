@@ -223,6 +223,7 @@
                     <include>**/*.js</include>
                     <include>**/*.css</include>
                     <include>locale/*.txt</include>
+                    <include>**/*.ico</include>
                 </includes>
             </resource>
         </resources>

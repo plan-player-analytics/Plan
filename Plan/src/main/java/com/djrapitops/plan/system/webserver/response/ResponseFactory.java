@@ -115,6 +115,10 @@ public class ResponseFactory {
         return new RedirectResponse(location);
     }
 
+    public Response faviconResponse() {
+        return new ByteResponse(ResponseType.X_ICON, "web/favicon.ico", files);
+    }
+
     public ErrorResponse pageNotFound404() {
         return notFound404(locale.getString(ErrorPageLang.UNKNOWN_PAGE_404));
     }

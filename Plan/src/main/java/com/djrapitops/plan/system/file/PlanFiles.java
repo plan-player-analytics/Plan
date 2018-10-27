@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -108,6 +109,10 @@ public class PlanFiles implements SubSystem {
         return flatten(FileUtil.lines(
                 plugin, new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName
         ));
+    }
+
+    public InputStream readCustomizableResource(String fileName) {
+        return FileUtil.stream(plugin, new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName);
     }
 
     private String flatten(List<String> lines) {
