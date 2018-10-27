@@ -27,7 +27,7 @@ import java.io.InputStream;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "4.4.7",
+        version = "4.5.0",
         description = "Player Analytics Plugin by Rsl1122",
         authors = {"Rsl1122"},
         dependencies = {
