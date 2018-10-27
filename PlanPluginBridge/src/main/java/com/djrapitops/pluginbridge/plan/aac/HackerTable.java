@@ -12,7 +12,6 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStat
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
-import me.konsolas.aac.api.HackType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,7 +65,7 @@ public class HackerTable extends Table {
                 while (set.next()) {
                     UUID uuid = UUID.fromString(set.getString(columnUUID));
                     long date = set.getLong(columnDate);
-                    HackType hackType = HackType.valueOf(set.getString(columnHackType));
+                    String hackType = set.getString(columnHackType);
                     int violationLevel = set.getInt(columnViolations);
                     hackObjects.add(new HackObject(uuid, date, hackType, violationLevel));
                 }
@@ -83,7 +82,7 @@ public class HackerTable extends Table {
                 while (set.next()) {
                     UUID uuid = UUID.fromString(set.getString(columnUUID));
                     long date = set.getLong(columnDate);
-                    HackType hackType = HackType.valueOf(set.getString(columnHackType));
+                    String hackType = set.getString(columnHackType);
                     int violationLevel = set.getInt(columnViolations);
                     List<HackObject> list = hackObjects.getOrDefault(uuid, new ArrayList<>());
                     list.add(new HackObject(uuid, date, hackType, violationLevel));
@@ -107,7 +106,7 @@ public class HackerTable extends Table {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, hackObject.getUuid().toString());
                 statement.setLong(2, hackObject.getDate());
-                statement.setString(3, hackObject.getHackType().name());
+                statement.setString(3, hackObject.getHackType());
                 statement.setInt(4, hackObject.getViolationLevel());
             }
         });

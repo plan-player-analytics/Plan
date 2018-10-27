@@ -41,10 +41,11 @@ class PlayerHackKickListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         HackType hackType = event.getHackType();
+        String hackTypeName = hackType.getName();
         long time = System.currentTimeMillis();
         int violations = AACAPIProvider.getAPI().getViolationLevel(player, hackType);
 
-        HackObject hackObject = new HackObject(uuid, time, hackType, violations);
+        HackObject hackObject = new HackObject(uuid, time, hackTypeName, violations);
 
         processing.submitNonCritical(() -> hackerTable.insertHackRow(hackObject));
     }

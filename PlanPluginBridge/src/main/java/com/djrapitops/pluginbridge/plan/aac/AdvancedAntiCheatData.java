@@ -56,7 +56,7 @@ class AdvancedAntiCheatData extends PluginData {
 
         for (HackObject hackObject : hackObjects) {
             String date = timestampFormatter.apply(hackObject.getDate());
-            String hack = new Format(hackObject.getHackType().getName()).capitalize().toString();
+            String hack = new Format(hackObject.getHackType()).capitalize().toString();
             hackTable.addRow(date, hack, hackObject.getViolationLevel());
         }
         inspectContainer.addTable("hackTable", hackTable);
