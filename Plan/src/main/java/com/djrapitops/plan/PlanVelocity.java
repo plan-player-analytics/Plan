@@ -13,12 +13,14 @@ import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.VelocityPlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 
@@ -29,23 +31,31 @@ import java.nio.file.Path;
  *
  * @author MicleBrick
  */
-@Plugin(id = "plan", name = "Plan", version = "4.4.6", description = "Player Analytics Plugin by Rsl1122", authors = {"Rsl1122"})
+@Plugin(
+        id = "plan",
+        name = "Plan",
+        version = "4.4.6",
+        description = "Player Analytics Plugin by Rsl1122",
+        authors = {"Rsl1122"}
+)
 public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 
     private PlanSystem system;
     private Locale locale;
 
     @com.google.inject.Inject
-    @DataDirectory
-    private Path dataFolderPath;
-    @com.google.inject.Inject
-    private ProxyServer proxy;
-    @com.google.inject.Inject
-    private Logger slf4jLogger;
+    public PlanVelocity(ProxyServer proxy, Logger slf4jLogger, @DataDirectory Path dataFolderPath) {
+        super(proxy, slf4jLogger, dataFolderPath);
+    }
 
-    @Override
-    public File getDataFolder() {
-        return dataFolderPath.toFile();
+    @Subscribe
+    public void onProxyStart(ProxyInitializeEvent event) {
+        onEnable();
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        onDisable();
     }
 
     @Override
@@ -63,11 +73,11 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
             logger.error("----------------------------------------");
             logger.error("Error: " + e.getMessage());
             logger.error("----------------------------------------");
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
             onDisable();
         } catch (Exception e) {
             errorHandler.log(L.CRITICAL, this.getClass(), e);
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
@@ -80,7 +90,7 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
     public void onDisable() {
         system.disable();
 
-        slf4jLogger.info(locale.getString(PluginLang.DISABLED));
+        logger.info(locale.getString(PluginLang.DISABLED));
     }
 
     @Override
@@ -90,7 +100,7 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 
     @Override
     public InputStream getResource(String resource) {
-        return getClass().getResourceAsStream(resource);
+        return getClass().getResourceAsStream("/" + resource);
     }
 
     @Override
@@ -106,15 +116,5 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
     @Override
     public boolean isReloading() {
         return reloading;
-    }
-
-    @Override
-    public ProxyServer getProxy() {
-        return proxy;
-    }
-
-    @Override
-    protected Logger getLogger() {
-        return slf4jLogger;
     }
 }

@@ -95,7 +95,7 @@
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>7.0.0</version>
+            <version>7.1.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -202,7 +202,7 @@
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
-            <version>2.16</version>
+            <version>2.17</version>
         </dependency>
     </dependencies>
 
@@ -238,7 +238,17 @@
                         <path>
                             <groupId>com.google.dagger</groupId>
                             <artifactId>dagger-compiler</artifactId>
-                            <version>2.16</version>
+                            <version>2.17</version>
+                        </path>
+                        <path>
+                            <groupId>com.velocitypowered</groupId>
+                            <artifactId>velocity-api</artifactId>
+                            <version>1.0-SNAPSHOT</version>
+                        </path>
+                        <path>
+                            <groupId>org.spongepowered</groupId>
+                            <artifactId>spongeapi</artifactId>
+                            <version>7.1.0</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -269,7 +279,7 @@
                             <exclude>org.mockito:*</exclude>
                             <exclude>org.easymock:*</exclude>
                             <exclude>junit:*</exclude>
-                            <!--<exclued>org.slf4j:*</exclued>-->
+                            <exclued>org.slf4j:*</exclued>
                         </excludes>
                     </artifactSet>
                     <relocations>
@@ -292,10 +302,10 @@
                             <pattern>com.zaxxer</pattern>
                             <shadedPattern>plan.com.zaxxer</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>org.slf4j</pattern>
-                            <shadedPattern>plan.org.slf4j</shadedPattern>
-                        </relocation>
+                        <!--<relocation>-->
+                        <!--<pattern>org.slf4j</pattern>-->
+                        <!--<shadedPattern>plan.org.slf4j</shadedPattern>-->
+                        <!--</relocation>-->
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>com.djrapitops.plan.utilities.metrics</shadedPattern>
