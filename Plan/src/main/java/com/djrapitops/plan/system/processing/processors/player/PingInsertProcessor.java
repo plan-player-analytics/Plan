@@ -72,6 +72,6 @@ public class PingInsertProcessor implements CriticalRunnable {
     }
 
     int getMeanValue(List<DateObj<Integer>> history) {
-        return (int) Median.forInt(history.stream().map(DateObj::getValue).collect(Collectors.toList())).calculate();
+        return (int) Median.forList(history.stream().map(DateObj::getValue).collect(Collectors.toList())).calculate();
     }
 }

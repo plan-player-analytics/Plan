@@ -2,6 +2,7 @@ package com.djrapitops.plan.utilities.analysis;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +21,7 @@ public class MedianTest {
         List<Integer> testValues = Arrays.asList(1, 3, 3, 6, 7, 8, 9);
         Collections.shuffle(testValues);
         double expected = 6;
-        double result = Median.forInt(testValues).calculate();
+        double result = Median.forList(testValues).calculate();
 
         assertEquals(expected, result, 0.01);
     }
@@ -30,7 +31,7 @@ public class MedianTest {
         List<Integer> testValues = Arrays.asList(1, 2, 3, 4, 5, 6, 8, 9);
         Collections.shuffle(testValues);
         double expected = 4.5;
-        double result = Median.forInt(testValues).calculate();
+        double result = Median.forList(testValues).calculate();
 
         assertEquals(expected, result, 0.01);
     }
@@ -38,7 +39,7 @@ public class MedianTest {
     @Test
     public void empty() {
         double expected = -1;
-        double result = Median.forInt(Collections.emptyList()).calculate();
+        double result = Median.forList(new ArrayList<Integer>()).calculate();
 
         assertEquals(expected, result, 0.01);
     }
@@ -46,7 +47,7 @@ public class MedianTest {
     @Test
     public void singleValue() {
         double expected = 50;
-        double result = Median.forInt(Collections.singletonList((int) expected)).calculate();
+        double result = Median.forList(Collections.singletonList((int) expected)).calculate();
 
         assertEquals(expected, result, 0.01);
     }
@@ -55,7 +56,7 @@ public class MedianTest {
     public void twoValues() {
         List<Integer> testValues = Arrays.asList(1, 2);
         double expected = 1.5;
-        double result = Median.forInt(testValues).calculate();
+        double result = Median.forList(testValues).calculate();
 
         assertEquals(expected, result, 0.01);
     }
@@ -64,7 +65,7 @@ public class MedianTest {
     public void overflowOdd() {
         List<Integer> testValues = Arrays.asList(Integer.MIN_VALUE, 2, Integer.MAX_VALUE);
         double expected = 2;
-        double result = Median.forInt(testValues).calculate();
+        double result = Median.forList(testValues).calculate();
 
         assertEquals(expected, result, 0.01);
     }
@@ -73,7 +74,7 @@ public class MedianTest {
     public void overflowEven() {
         List<Integer> testValues = Arrays.asList(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
         double expected = -0.5;
-        double result = Median.forInt(testValues).calculate();
+        double result = Median.forList(testValues).calculate();
 
         assertEquals(expected, result, 0.01);
     }
@@ -82,7 +83,7 @@ public class MedianTest {
     public void overflowEven2() {
         List<Integer> testValues = Arrays.asList(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
         double expected = Integer.MAX_VALUE;
-        double result = Median.forInt(testValues).calculate();
+        double result = Median.forList(testValues).calculate();
 
         assertEquals(expected, result, 0.01);
     }

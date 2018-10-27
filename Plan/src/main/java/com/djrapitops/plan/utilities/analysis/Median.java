@@ -1,36 +1,30 @@
 package com.djrapitops.plan.utilities.analysis;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Math utility for calculating the median from Integer values.
  *
  * @author Rsl1122
  */
-public class Median {
+public class Median<T extends Number & Comparable<? super T>> {
 
-    private final List<Long> values;
+    private final List<T> values;
     private int size;
 
-    private Median(Collection<Integer> values, int b) {
-        this(values.stream().map(i -> (long) i).collect(Collectors.toList()));
-    }
-
-    private Median(List<Long> values) {
+    private Median(List<T> values) {
         this.values = values;
         Collections.sort(values);
         size = values.size();
     }
 
-    public static Median forInt(Collection<Integer> integers) {
-        return new Median(integers, 0);
+    public static <T extends Number & Comparable<? super T>> Median<T> forList(List<T> list) {
+        return new Median<>(list);
     }
 
-    public static Median forLong(List<Long> longs) {
-        return new Median(longs);
+    public static <T extends Comparable<? super T>> void sort(List<T> list) {
+        list.sort(null);
     }
 
     public double calculate() {
@@ -46,13 +40,13 @@ public class Median {
 
     private double calculateEven() {
         int half = size / 2;
-        double x1 = values.get(half);
-        double x2 = values.get(half - 1);
+        double x1 = values.get(half).doubleValue();
+        double x2 = values.get(half - 1).doubleValue();
         return (x1 + x2) / 2;
     }
 
     private double calculateOdd() {
         int half = size / 2;
-        return (double) values.get(half);
+        return values.get(half).doubleValue();
     }
 }

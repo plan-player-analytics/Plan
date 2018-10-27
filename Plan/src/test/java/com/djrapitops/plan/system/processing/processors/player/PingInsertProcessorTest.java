@@ -37,7 +37,7 @@ public class PingInsertProcessorTest {
     public void medianCalculation() {
         List<Integer> collect = testPing.stream().map(DateObj::getValue).sorted().collect(Collectors.toList());
 
-        int expected = (int) Median.forInt(collect).calculate();
+        int expected = (int) Median.forList(collect).calculate();
         int result = new PingInsertProcessor(TestConstants.PLAYER_ONE_UUID, TestConstants.SERVER_UUID, new ArrayList<>(), null)
                 .getMeanValue(testPing);
 
