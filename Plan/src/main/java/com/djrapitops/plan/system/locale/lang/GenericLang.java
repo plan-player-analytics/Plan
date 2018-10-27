@@ -8,7 +8,9 @@ package com.djrapitops.plan.system.locale.lang;
 public enum GenericLang implements Lang {
     YES("Positive", "Yes"),
     NO("Negative", "No"),
-    UNKNOWN("Unknown", "Unknown");
+    UNKNOWN("Unknown", "Unknown"),
+    TODAY("Today", "'Today'"),
+    YESTERDAY("Yesterday", "'Yesterday'");
 
     private final String identifier;
     private final String defaultValue;

@@ -8,20 +8,26 @@ import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import me.lucko.luckperms.LuckPerms;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Hook for LuckPerms plugin.
  *
  * @author Vankka
  */
+@Singleton
 public class LuckPermsHook extends Hook {
-    public LuckPermsHook(HookHandler hookHandler) {
-        super("me.lucko.luckperms.LuckPerms", hookHandler);
+
+    @Inject
+    public LuckPermsHook() {
+        super("me.lucko.luckperms.LuckPerms");
     }
 
     @Override
-    public void hook() throws IllegalStateException {
+    public void hook(HookHandler handler) throws IllegalStateException {
         if (enabled) {
-            addPluginDataSource(new LuckPermsData(LuckPerms.getApi()));
+            handler.addPluginDataSource(new LuckPermsData(LuckPerms.getApi()));
         }
     }
 }

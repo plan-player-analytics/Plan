@@ -101,7 +101,7 @@ Disable                                         || Player Analytics ausgeschalte
 Disable - Processing                            || Verarbeite kritische unverarbeitete Aufgaben. (${0})
 Disable - Processing Complete                   || Verarbeitung komplett.
 Disable - WebServer                             || Webserver deaktiviert.
-Enable                                          || Player Analytics angeschaltet.
+Enable                                          || Player Analytics eingeschaltet.
 Enable - Database                               || ${0}-dDatenbankverbindung hergestellt.
 Enable - Notify Address Confirmation            || Versichere dich, dass die Adresse auf DIESEN Server verweist: ${0}
 Enable - Notify Empty IP                        || IP in der server.properties ist leer & AlternativeIP ist nicht in Verwendung. Es werden falsche Links verwendet!
@@ -243,7 +243,7 @@ HTML - WORLD_PLAYTIME                           || Spielzeit in der Welt
 HTML - WORST_PING                               || Schlechtester Ping
 HTML ERRORS - ACCESS_DENIED_403                 || Zugriff verweigert
 HTML ERRORS - ANALYSIS_REFRESH                  || Plan wird aktualisiert...
-HTML ERRORS - ANALYSIS_REFRESH_LONG             || Plan wird ausgeführt, lade in ein paar Sekunden neu
+HTML ERRORS - ANALYSIS_REFRESH_LONG             || Plan wird ausgeführt. Es wird in ein paar Sekunden neu geladen.
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Stelle sicher, dass du einen Account mit <b>/plan register</b> hinzugefügt hast.<br>- Überprüfe, ob Passwort und Benutzername korrekt sind<br>- Bei Benutzername und Passwort auf Groß- und Kleinschreibung achten! <br><br>- Wenn du dein Passwort vergessen hast, bitte ein Teammitglied deinen Account zu löschen und neu zu erstellen.
 HTML ERRORS - AUTHENTICATION_FAIlED_401         || Authentifizierung fehlgeschlagen.
 HTML ERRORS - FORBIDDEN_403                     || Verboten
@@ -292,8 +292,8 @@ Manage - Fail, Old version                      || §eFehlgeschlagen: Veraltete 
 Manage - Fail, Unauthorized                     || §eFehlgeschlagen: Zugriff verweigert. Server verwendet möglicherweise eine andere Datenbank.
 Manage - Fail, Unexpected Exception             || §eUnerwartete Ausnahme: ${0}
 Manage - List Importers                         || Importer: 
-Manage - Notify External Url                    || §eNicht-lokale Adresse, ist der Port offen?
-Manage - Remind HotSwap                         || §eDenk dran, zur neuen Datenbank zu wechseln (/plan m hotswap ${0}) und das Plugin neu zu laden.
+Manage - Notify External Url                    || §eNicht-lokale Adresse. Ist der Port offen?
+Manage - Remind HotSwap                         || §eDenk dran, zur neuen Datenbank zu wechseln (/plan m hotswap ${0}) und um das Plugin neu zu laden.
 Manage - Start                                  || > §2Verarbeite Daten...
 Manage - Success                                || > §aErfolgreich!
 Negative                                        || Nein
@@ -312,3 +312,25 @@ WebServer - Notify no Cert file                 || WebServer: Zertifikat KeyStor
 WebServer FAIL - Port Bind                      || WebServer wurde nicht erfolgreich initalisiert. Ist der Port (${0}) schon benutzt?
 WebServer FAIL - SSL Context                    || WebServer: SSL Context Initialisierung fehlgeschlagen.
 WebServer FAIL - Store Load                     || WebServer: SSL Zertifikat konnte nicht geladen werden.
+Yesterday                                       || 'Gestern'
+Today                                           || 'Heute'
+Health - Active Playtime Comparison Decrease    ||  Aktive Spieler haben möglicherweise nichts mehr zu tun (Gespielt ${0} vs ${1}. Das zeigt der Vergleich der letzten zwei Wochen zu den vorherigen 2 Wochen)
+Health - Active Playtime Comparison Increase    ||  Aktive Spieler haben möglicherweise etwas zu tun (Gespielt ${0} vs ${1}. Das zeigt der Vergleich der letzten zwei Wochen zu den vorherigen 2 Wochen)
+Health - Downtime                               || Gesamte Serverdowntime (Keine Daten) war ${0}
+Health - New Player Join Players, No            ||  Neue Spieler haben möglicherweise keine anderen Spielern, mit denen sie spielen können. (${0} im Durchschnitt)
+Health - New Player Join Players, Yes           ||  Neue Spieler haben andere Spieler, mit denen Spielen können. (${0} im Durchschnitt)
+Health - New Player Stickiness                  ||  ${0} von den neuen Spieler sind geblieben (${1}/${2})
+Health - No Servers Inaccuracy                  ||  Es sind keine Bukkit/Sponge-Server verfügbar um Sessiondaten zu sammeln - Diese Messungen sind ungenau.
+Health - Player Play on Network                 ||  Spieler spieltn im Netzwerk:
+Health - Player Register Server                 ||  Spieler wurden auf dem Server pro Tag/Server im Durchschnitt registriert. 
+Health - Player Visit Server                    ||  Spieler haben den Server am Tag/Server im Durchschnitt besucht.
+Health - Regular Activity Change                ||  Anzahl an regelmässigen Spielern beträgt
+Health - Regular Activity Change Decrease       || verringert um  (${0})
+Health - Regular Activity Change Increase       || Erhöht um (+${0})
+Health - Regular Activity Change Zero           || Bleibt gleich (+${0})
+Health - Regular Activity Remain                ||  ${0} von den regelmässigen Spielern sind aktiv geblieben (${1}/${2})
+Health - Single Servers Inaccuracy              ||  Einzelner Bukkit/Sponge um Sessiondaten zu sammelnm.
+Health - TPS Above Low Threshold                ||  Durchschnittliche TPS war über der unteren Grenze ${0} in der Zeit.
+Health - TPS Low Dips                           ||  Durchschnittliche TPS war unter der unteren Grenze. (${0}) ${1} male.
+HTML - FREE_DISK_SPACE                          || Freier Festplattenspeicher
+HTML - DISK_SPACE                               || Festplattenspeicher

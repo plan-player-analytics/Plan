@@ -1,13 +1,16 @@
 package com.djrapitops.plan.utilities.html.tables;
 
+import com.djrapitops.plan.api.ServerAPI;
+import com.djrapitops.plan.data.plugin.HookHandler;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import com.djrapitops.plugin.logging.console.TestPluginLogger;
+import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.junit.BeforeClass;
-import org.junit.ClassRule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import utilities.Teardown;
-import utilities.mocks.SystemMockUtil;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,14 +26,14 @@ import static org.junit.Assert.assertTrue;
  */
 public class PlayersTableTest {
 
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-
     @BeforeClass
-    public static void setUpClass() throws Exception {
-        SystemMockUtil.setUp(temporaryFolder.getRoot())
-                .enableConfigSystem();
-        Teardown.resetSettingsTempValues();
+    public static void setUpClass() {
+        new ServerAPI(
+                Mockito.mock(UUIDUtility.class),
+                Mockito.mock(HookHandler.class),
+                Mockito.mock(DBSystem.class),
+                new ConsoleErrorLogger(new TestPluginLogger())
+        );
     }
 
     @Test
@@ -38,7 +41,15 @@ public class PlayersTableTest {
         PlayerContainer container = new PlayerContainer();
         container.putRawData(PlayerKeys.SESSIONS, new ArrayList<>());
         List<PlayerContainer> players = Collections.singletonList(container);
-        String html = PlayersTable.forServerPage(players).parseHtml();
+        String html = new PlayersTable(
+                players,
+                50, // maxPlayers
+                60, // activeMinuteThreshold
+                5, // activeLoginThreshold
+                l -> "",
+                l -> "",
+                d -> ""
+        ).parseHtml();
 
         testHtmlValidity(html);
     }

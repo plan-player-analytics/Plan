@@ -5,15 +5,13 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
-import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
-import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility class for creating recent login list html.
@@ -26,14 +24,15 @@ public class RecentLoginList {
 
     private final List<PlayerContainer> players;
 
-    public RecentLoginList(List<PlayerContainer> players) {
+    private final Formatter<Long> secondLongFormatter;
+
+    public RecentLoginList(List<PlayerContainer> players, Formatter<Long> secondLongFormatter) {
         this.players = players;
+        this.secondLongFormatter = secondLongFormatter;
     }
 
     public String toHtml() {
         List<RecentLogin> recentLogins = getMostRecentLogins();
-
-        Formatter<DateHolder> formatter = Formatters.second();
 
         if (recentLogins.isEmpty()) {
             return "<li>No Recent Logins</li>";
@@ -49,7 +48,7 @@ public class RecentLoginList {
             String name = recentLogin.name;
             String url = PlanAPI.getInstance().getPlayerInspectPageLink(name);
             boolean isNew = recentLogin.isNew;
-            String start = formatter.apply(recentLogin);
+            String start = secondLongFormatter.apply(recentLogin.date);
 
             html.append("<li><a class=\"col-").append(isNew ? "light-green" : "blue").append(" font-bold\" href=\"").append(url)
                     .append("\">").append(name).append("</a><span class=\"pull-right\">").append(start).append("</span></li>");
@@ -81,13 +80,13 @@ public class RecentLoginList {
                 continue;
             }
             long mostRecentStart = session.getUnsafe(SessionKeys.START);
-            boolean isFirstSession = Math.abs(registerDate - mostRecentStart) < TimeAmount.SECOND.ms() * 10L;
+            boolean isFirstSession = Math.abs(registerDate - mostRecentStart) < TimeUnit.SECONDS.toMillis(10L);
             recentLogins.add(new RecentLogin(mostRecentStart, isFirstSession, name));
         }
         return recentLogins;
     }
 
-    class RecentLogin implements DateHolder {
+    class RecentLogin {
         final long date;
         final boolean isNew;
         final String name;
@@ -111,11 +110,6 @@ public class RecentLoginList {
         @Override
         public int hashCode() {
             return Objects.hash(date, isNew, name);
-        }
-
-        @Override
-        public long getDate() {
-            return date;
         }
     }
 

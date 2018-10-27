@@ -1,7 +1,7 @@
 name: Plan
 author: Rsl1122
 main: com.djrapitops.plan.Plan
-version: 4.4.7
+version: 4.5.0
 softdepend:
 - EssentialsX
 - Towny
@@ -95,7 +95,7 @@ permissions:
   plan.basic:
     children:
       plan.?: true
-      plan.inspect.base: true  
+      plan.inspect.base: true
       plan.qinspect.base: true
   plan.advanced:
     childer:

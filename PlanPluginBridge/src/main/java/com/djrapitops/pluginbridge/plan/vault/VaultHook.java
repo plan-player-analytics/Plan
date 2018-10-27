@@ -1,8 +1,14 @@
 package com.djrapitops.pluginbridge.plan.vault;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.system.cache.DataCache;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.pluginbridge.plan.Hook;
 import net.milkbowl.vault.economy.Economy;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -12,35 +18,33 @@ import static org.bukkit.Bukkit.getServer;
  * @author Rsl1122
  * @since 3.1.0
  */
+@Singleton
 public class VaultHook extends Hook {
 
-    /**
-     * Hooks the plugin and registers it's PluginData objects.
-     * <p>
-     * API#addPluginDataSource uses the same method from HookHandler.
-     *
-     * @param hookH HookHandler instance for registering the data sources.
-     * @throws NoClassDefFoundError when the plugin class can not be found.
-     */
-    public VaultHook(HookHandler hookH) throws NoClassDefFoundError {
-        super("net.milkbowl.vault.Vault", hookH);
+    private final DataCache dataCache;
+    private final Formatter<Double> decimalFormatter;
+
+    @Inject
+    public VaultHook(
+            DataCache dataCache,
+            Formatters formatters
+    ) throws NoClassDefFoundError {
+        super("net.milkbowl.vault.Vault");
+
+        this.dataCache = dataCache;
+        decimalFormatter = formatters.decimals();
     }
 
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (!enabled) {
             return;
         }
 
-//        try {
-//            Permission permSys = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
-//            addPluginDataSource(new VaultPermData(permSys));
-//        } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
-//        }
-
         try {
             Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
-            addPluginDataSource(new VaultEcoData(econ));
-        } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
+            handler.addPluginDataSource(new VaultEcoData(econ, dataCache, decimalFormatter));
+        } catch (NoSuchFieldError | NoSuchMethodError | Exception ignore) {
+            /* Economy service not present */
         }
     }
 }

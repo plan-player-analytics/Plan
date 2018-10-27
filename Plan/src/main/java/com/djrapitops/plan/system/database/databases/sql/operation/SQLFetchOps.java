@@ -13,7 +13,6 @@ import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +25,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
 
     @Override
     public NetworkContainer getNetworkContainer() {
-        NetworkContainer networkContainer = new NetworkContainer(getBungeeServerContainer());
+        NetworkContainer networkContainer = db.getNetworkContainerFactory().forBungeeContainer(getBungeeServerContainer());
         networkContainer.putCachingSupplier(NetworkKeys.BUKKIT_SERVERS, () -> getBukkitServers().values());
         return networkContainer;
     }
@@ -72,7 +71,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             return null;
         });
         container.putCachingSupplier(ServerKeys.RECENT_PEAK_PLAYERS, () -> {
-            long twoDaysAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2);
+            long twoDaysAgo = System.currentTimeMillis() - (TimeUnit.DAYS.toMillis(2L));
             Optional<TPS> lastPeak = tpsTable.getPeakPlayerCount(serverUUID, twoDaysAgo);
             if (lastPeak.isPresent()) {
                 TPS peak = lastPeak.get();
@@ -88,7 +87,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         container.putCachingSupplier(ServerKeys.OPERATORS, () -> PlayersMutator.forContainer(container).operators());
         container.putCachingSupplier(ServerKeys.SESSIONS, () -> {
             List<Session> sessions = PlayersMutator.forContainer(container).getSessions();
-            if (serverUUID.equals(ServerInfo.getServerUUID())) {
+            if (serverUUID.equals(serverInfo.get().getUuid())) {
                 sessions.addAll(SessionCache.getActiveSessions().values());
             }
             return sessions;
@@ -469,4 +468,13 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         return serverTable.getServerUUIDs();
     }
 
+    @Override
+    public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
+        return tpsTable.getPlayersOnlineForServers(servers);
+    }
+
+    @Override
+    public Map<Integer, Integer> getPlayersRegisteredForServers(Collection<Server> servers) {
+        return userInfoTable.getPlayersRegisteredForServers(servers);
+    }
 }

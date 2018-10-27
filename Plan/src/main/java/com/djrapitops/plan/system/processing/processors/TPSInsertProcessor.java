@@ -20,20 +20,24 @@ public class TPSInsertProcessor implements CriticalRunnable {
 
     private final List<TPS> tpsList;
 
-    public TPSInsertProcessor(List<TPS> tpsList) {
+    private final Database database;
+
+    TPSInsertProcessor(List<TPS> tpsList, Database database) {
         this.tpsList = tpsList;
+        this.database = database;
     }
 
     @Override
     public void run() {
         List<TPS> history = tpsList;
-        final long lastDate = history.get(history.size() - 1).getDate();
-        final double averageTPS = history.stream().mapToDouble(TPS::getTicksPerSecond).average().orElse(0);
-        final int peakPlayersOnline = history.stream().mapToInt(TPS::getPlayers).max().orElse(0);
-        final double averageCPUUsage = history.stream().mapToDouble(TPS::getCPUUsage).average().orElse(0);
-        final long averageUsedMemory = (long) history.stream().mapToLong(TPS::getUsedMemory).average().orElse(0);
-        final int averageEntityCount = (int) history.stream().mapToInt(TPS::getEntityCount).average().orElse(0);
-        final int averageChunksLoaded = (int) history.stream().mapToInt(TPS::getChunksLoaded).average().orElse(0);
+        long lastDate = history.get(history.size() - 1).getDate();
+        double averageTPS = history.stream().mapToDouble(TPS::getTicksPerSecond).average().orElse(0);
+        int peakPlayersOnline = history.stream().mapToInt(TPS::getPlayers).max().orElse(0);
+        double averageCPUUsage = history.stream().mapToDouble(TPS::getCPUUsage).average().orElse(0);
+        long averageUsedMemory = (long) history.stream().mapToLong(TPS::getUsedMemory).average().orElse(0);
+        int averageEntityCount = (int) history.stream().mapToInt(TPS::getEntityCount).average().orElse(0);
+        int averageChunksLoaded = (int) history.stream().mapToInt(TPS::getChunksLoaded).average().orElse(0);
+        long freeDiskSpace = (long) history.stream().mapToLong(TPS::getFreeDiskSpace).average().orElse(0);
 
         TPS tps = TPSBuilder.get()
                 .date(lastDate)
@@ -43,8 +47,9 @@ public class TPSInsertProcessor implements CriticalRunnable {
                 .usedMemory(averageUsedMemory)
                 .entities(averageEntityCount)
                 .chunksLoaded(averageChunksLoaded)
+                .freeDiskSpace(freeDiskSpace)
                 .toTPS();
 
-        Database.getActive().save().insertTPSforThisServer(tps);
+        database.save().insertTPSforThisServer(tps);
     }
 }

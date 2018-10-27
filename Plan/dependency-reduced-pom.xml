@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.djrapitops</groupId>
   <artifactId>Plan</artifactId>
-  <version>4.3.0-SNAPSHOT</version>
+    <version>4.5.0-SNAPSHOT</version>
   <build>
     <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
     <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
@@ -20,6 +20,7 @@
           <include>**/*.js</include>
           <include>**/*.css</include>
           <include>locale/*.txt</include>
+            <include>**/*.ico</include>
         </includes>
       </resource>
     </resources>
@@ -31,6 +32,23 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+            <annotationProcessorPaths>
+                <path>
+                    <groupId>com.google.dagger</groupId>
+                    <artifactId>dagger-compiler</artifactId>
+                    <version>2.17</version>
+                </path>
+                <path>
+                    <groupId>com.velocitypowered</groupId>
+                    <artifactId>velocity-api</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                </path>
+                <path>
+                    <groupId>org.spongepowered</groupId>
+                    <artifactId>spongeapi</artifactId>
+                    <version>7.1.0</version>
+                </path>
+            </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
@@ -58,6 +76,7 @@
               <exclude>org.mockito:*</exclude>
               <exclude>org.easymock:*</exclude>
               <exclude>junit:*</exclude>
+                <exclued>org.slf4j:*</exclued>
             </excludes>
           </artifactSet>
           <relocations>
@@ -79,10 +98,6 @@
             <relocation>
               <pattern>com.zaxxer</pattern>
               <shadedPattern>plan.com.zaxxer</shadedPattern>
-            </relocation>
-            <relocation>
-              <pattern>org.slf4j</pattern>
-              <shadedPattern>plan.org.slf4j</shadedPattern>
             </relocation>
             <relocation>
               <pattern>org.bstats</pattern>
@@ -147,9 +162,13 @@
       <url>https://repo.spongepowered.org/maven</url>
     </repository>
     <repository>
-      <id>md_5-snapshots</id>
-      <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+        <id>velocity-repo</id>
+        <url>https://repo.velocitypowered.com/snapshots/</url>
     </repository>
+      <repository>
+          <id>md_5-snapshots</id>
+          <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+      </repository>
     <repository>
       <id>bstats-repo</id>
       <url>http://repo.bstats.org/content/repositories/releases/</url>
@@ -293,71 +312,109 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.spongepowered</groupId>
-      <artifactId>spongeapi</artifactId>
-      <version>7.0.0</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>error_prone_annotations</artifactId>
-          <groupId>com.google.errorprone</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>guice</artifactId>
-          <groupId>com.google.inject</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>guava</artifactId>
-          <groupId>com.github.ben-manes.caffeine</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>plugin-meta</artifactId>
-          <groupId>org.spongepowered</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>configurate-hocon</artifactId>
-          <groupId>ninja.leaping.configurate</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>configurate-gson</artifactId>
-          <groupId>ninja.leaping.configurate</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>configurate-yaml</artifactId>
-          <groupId>ninja.leaping.configurate</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>flow-math</artifactId>
-          <groupId>com.flowpowered</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>flow-noise</artifactId>
-          <groupId>com.flowpowered</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jsr305</artifactId>
-          <groupId>com.google.code.findbugs</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>asm</artifactId>
-          <groupId>org.ow2.asm</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>gson</artifactId>
-          <groupId>com.google.code.gson</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>guava</artifactId>
-          <groupId>com.google.guava</groupId>
-        </exclusion>
-      </exclusions>
+        <groupId>com.velocitypowered</groupId>
+        <artifactId>velocity-api</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <scope>provided</scope>
+        <exclusions>
+            <exclusion>
+                <artifactId>text</artifactId>
+                <groupId>net.kyori</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>toml4j</artifactId>
+                <groupId>com.moandjiezana.toml</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>guice</artifactId>
+                <groupId>com.google.inject</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>checker-qual</artifactId>
+                <groupId>org.checkerframework</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>gson</artifactId>
+                <groupId>com.google.code.gson</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>guava</artifactId>
+                <groupId>com.google.guava</groupId>
+            </exclusion>
+        </exclusions>
     </dependency>
+      <dependency>
+          <groupId>org.spongepowered</groupId>
+          <artifactId>spongeapi</artifactId>
+          <version>7.1.0</version>
+          <scope>provided</scope>
+          <exclusions>
+              <exclusion>
+                  <artifactId>error_prone_annotations</artifactId>
+                  <groupId>com.google.errorprone</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>guava</artifactId>
+                  <groupId>com.github.ben-manes.caffeine</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>plugin-meta</artifactId>
+                  <groupId>org.spongepowered</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>configurate-hocon</artifactId>
+                  <groupId>org.spongepowered</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>configurate-gson</artifactId>
+                  <groupId>org.spongepowered</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>configurate-yaml</artifactId>
+                  <groupId>org.spongepowered</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>flow-math</artifactId>
+                  <groupId>com.flowpowered</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>flow-noise</artifactId>
+                  <groupId>com.flowpowered</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>jsr305</artifactId>
+                  <groupId>com.google.code.findbugs</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>guice</artifactId>
+                  <groupId>com.google.inject</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>asm</artifactId>
+                  <groupId>org.ow2.asm</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>gson</artifactId>
+                  <groupId>com.google.code.gson</groupId>
+              </exclusion>
+              <exclusion>
+                  <artifactId>guava</artifactId>
+                  <groupId>com.google.guava</groupId>
+              </exclusion>
+          </exclusions>
+      </dependency>
     <dependency>
       <groupId>com.imaginarycode.minecraft</groupId>
       <artifactId>RedisBungee</artifactId>
       <version>0.3.8-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-nop</artifactId>
+          <version>1.7.25</version>
+          <scope>runtime</scope>
+      </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>

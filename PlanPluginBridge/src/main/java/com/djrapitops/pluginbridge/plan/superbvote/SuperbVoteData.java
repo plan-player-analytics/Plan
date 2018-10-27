@@ -22,10 +22,10 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class SuperbVoteData extends PluginData {
+class SuperbVoteData extends PluginData {
     private final VoteStorage store;
 
-    public SuperbVoteData(VoteStorage store) {
+    SuperbVoteData(VoteStorage store) {
         super(ContainerSize.THIRD, "SuperbVote");
         setPluginIcon(Icon.called("check").of(Color.TEAL).build());
         this.store = store;

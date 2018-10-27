@@ -7,15 +7,11 @@ package com.djrapitops.plan.system.info.request;
 import com.djrapitops.plan.api.exceptions.connection.BadRequestException;
 import com.djrapitops.plan.api.exceptions.connection.InternalErrorException;
 import com.djrapitops.plan.api.exceptions.connection.WebException;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.data.store.containers.AnalysisContainer;
-import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
-import com.djrapitops.plan.utilities.html.pages.AnalysisPage;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Collections;
@@ -29,17 +25,41 @@ import java.util.UUID;
  */
 public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implements GenerateRequest {
 
-    private boolean runningAnalysis = false;
-    private final UUID serverUUID;
+    private final InfoRequestFactory infoRequestFactory;
+    private final ServerInfo serverInfo;
+    private final InfoSystem infoSystem;
+    private final PageFactory pageFactory;
 
-    public GenerateAnalysisPageRequest(UUID serverUUID) {
+    private boolean runningAnalysis = false;
+    private UUID serverUUID;
+
+    GenerateAnalysisPageRequest(
+            InfoRequestFactory infoRequestFactory,
+            ServerInfo serverInfo,
+            InfoSystem infoSystem,
+            PageFactory pageFactory
+    ) {
+        this.infoRequestFactory = infoRequestFactory;
+        this.serverInfo = serverInfo;
+        this.infoSystem = infoSystem;
+        this.pageFactory = pageFactory;
+    }
+
+    GenerateAnalysisPageRequest(
+            UUID serverUUID,
+            InfoRequestFactory infoRequestFactory,
+            ServerInfo serverInfo,
+            InfoSystem infoSystem,
+            PageFactory pageFactory
+    ) {
+        this.infoRequestFactory = infoRequestFactory;
+        this.serverInfo = serverInfo;
+        this.infoSystem = infoSystem;
+        this.pageFactory = pageFactory;
+
         Verify.nullCheck(serverUUID);
         this.serverUUID = serverUUID;
         variables.put("server", serverUUID.toString());
-    }
-
-    private GenerateAnalysisPageRequest() {
-        serverUUID = null;
     }
 
     @Override
@@ -50,7 +70,7 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
         Verify.nullCheck(server, () -> new BadRequestException("Server UUID 'server' variable not supplied in the request."));
 
         UUID serverUUID = UUID.fromString(server);
-        if (!ServerInfo.getServerUUID().equals(serverUUID)) {
+        if (!serverInfo.getServerUUID().equals(serverUUID)) {
             throw new BadRequestException("Requested Analysis page from wrong server.");
         }
 
@@ -62,15 +82,14 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
     }
 
     private void generateAndCache(UUID serverUUID) throws WebException {
-        InfoSystem infoSystem = InfoSystem.getInstance();
-        infoSystem.sendRequest(new CacheAnalysisPageRequest(serverUUID, analyseAndGetHtml()));
-        infoSystem.updateNetworkPage();
+        infoSystem.sendRequest(infoRequestFactory.cacheAnalysisPageRequest(serverUUID, analyseAndGetHtml()));
     }
 
     @Override
     public void runLocally() throws WebException {
         // Get the handler from ConnectionSystem and run the request.
-        InfoSystem.getInstance().getConnectionSystem()
+        // This is done to keep the concurrent analysis in check with runningAnalysis variable.
+        infoSystem.getConnectionSystem()
                 .getInfoRequest(this.getClass().getSimpleName())
                 .handleRequest(Collections.singletonMap("server", serverUUID.toString()));
     }
@@ -78,24 +97,13 @@ public class GenerateAnalysisPageRequest extends InfoRequestWithVariables implem
     private String analyseAndGetHtml() throws InternalErrorException {
         try {
             runningAnalysis = true;
-            UUID serverUUID = ServerInfo.getServerUUID();
-            AnalysisContainer analysisContainer = new AnalysisContainer(Database.getActive().fetch().getServerContainer(serverUUID));
-            return new AnalysisPage(analysisContainer).toHtml();
-        } catch (DBOpException e) {
-            if (!e.getCause().getMessage().contains("Connection is closed")) {
-                Log.toLog(this.getClass(), e);
-            }
-            throw new InternalErrorException("Analysis failed due to exception", e);
+            UUID serverUUID = serverInfo.getServerUUID();
+            return pageFactory.analysisPage(serverUUID).toHtml();
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
             throw new InternalErrorException("Analysis failed due to exception", e);
         } finally {
             runningAnalysis = false;
         }
-    }
-
-    public static GenerateAnalysisPageRequest createHandler() {
-        return new GenerateAnalysisPageRequest();
     }
 
     public UUID getServerUUID() {

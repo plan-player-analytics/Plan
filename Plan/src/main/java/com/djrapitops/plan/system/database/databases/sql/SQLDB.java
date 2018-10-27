@@ -2,6 +2,7 @@ package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.data.store.containers.NetworkContainer;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.*;
 import com.djrapitops.plan.system.database.databases.sql.operation.*;
@@ -12,10 +13,14 @@ import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -26,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -37,7 +43,15 @@ import java.util.stream.Collectors;
  */
 public abstract class SQLDB extends Database {
 
-    protected final Supplier<Locale> locale;
+    private final Supplier<UUID> serverUUIDSupplier;
+
+    protected final Locale locale;
+    protected final PlanConfig config;
+    protected final NetworkContainer.Factory networkContainerFactory;
+    protected final RunnableFactory runnableFactory;
+    protected final PluginLogger logger;
+    protected final Timings timings;
+    protected final ErrorHandler errorHandler;
 
     private final UsersTable usersTable;
     private final UserInfoTable userInfoTable;
@@ -63,12 +77,25 @@ public abstract class SQLDB extends Database {
     private final SQLSaveOps saveOps;
     private final SQLTransferOps transferOps;
 
-    private final boolean usingMySQL;
-    private ITask dbCleanTask;
+    private PluginTask dbCleanTask;
 
-    public SQLDB(Supplier<Locale> locale) {
+    public SQLDB(
+            Supplier<UUID> serverUUIDSupplier,
+            Locale locale,
+            PlanConfig config,
+            NetworkContainer.Factory networkContainerFactory, RunnableFactory runnableFactory,
+            PluginLogger logger,
+            Timings timings,
+            ErrorHandler errorHandler
+    ) {
+        this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
-        usingMySQL = this instanceof MySQLDB;
+        this.config = config;
+        this.networkContainerFactory = networkContainerFactory;
+        this.runnableFactory = runnableFactory;
+        this.logger = logger;
+        this.timings = timings;
+        this.errorHandler = errorHandler;
 
         serverTable = new ServerTable(this);
         securityTable = new SecurityTable(this);
@@ -116,7 +143,7 @@ public abstract class SQLDB extends Database {
 
     @Override
     public void scheduleClean(long secondsDelay) {
-        dbCleanTask = RunnableFactory.createNew("DB Clean Task", new AbsRunnable() {
+        dbCleanTask = runnableFactory.create("DB Clean Task", new AbsRunnable() {
             @Override
             public void run() {
                 try {
@@ -124,11 +151,11 @@ public abstract class SQLDB extends Database {
                         clean();
                     }
                 } catch (DBOpException e) {
-                    Log.toLog(this.getClass(), e);
+                    errorHandler.log(L.ERROR, this.getClass(), e);
                     cancel();
                 }
             }
-        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay, TimeAmount.MINUTE.ticks() * 5L);
+        }).runTaskTimerAsynchronously(TimeAmount.toTicks(secondsDelay, TimeUnit.SECONDS), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
     }
 
     /**
@@ -153,12 +180,13 @@ public abstract class SQLDB extends Database {
                     new IPHashPatch(this),
                     new IPAnonPatch(this),
                     new NicknameLastSeenPatch(this),
-                    new VersionTableRemovalPatch(this)
+                    new VersionTableRemovalPatch(this),
+                    new DiskUsagePatch(this)
             };
 
             try {
-                RunnableFactory.createNew("Database Patch", new PatchTask(patches, locale))
-                        .runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
+                runnableFactory.create("Database Patch", new PatchTask(patches, locale, logger, errorHandler))
+                        .runTaskLaterAsynchronously(TimeAmount.toTicks(5L, TimeUnit.SECONDS));
             } catch (Exception ignore) {
                 // Task failed to register because plugin is being disabled
             }
@@ -222,7 +250,7 @@ public abstract class SQLDB extends Database {
         pingTable.clean();
 
         long now = System.currentTimeMillis();
-        long keepActiveAfter = now - TimeAmount.DAY.ms() * Settings.KEEP_INACTIVE_PLAYERS_DAYS.getNumber();
+        long keepActiveAfter = now - TimeUnit.DAYS.toMillis(config.getNumber(Settings.KEEP_INACTIVE_PLAYERS_DAYS));
 
         List<UUID> inactivePlayers = sessionsTable.getLastSeenForAllPlayers().entrySet().stream()
                 .filter(entry -> entry.getValue() < keepActiveAfter)
@@ -233,7 +261,7 @@ public abstract class SQLDB extends Database {
         }
         int removed = inactivePlayers.size();
         if (removed > 0) {
-            Log.info(locale.get().getString(PluginLang.DB_NOTIFY_CLEAN, removed));
+            logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
         }
     }
 
@@ -243,25 +271,14 @@ public abstract class SQLDB extends Database {
 
     public abstract void returnToPool(Connection connection);
 
-    /**
-     * Reverts transaction when using SQLite Database.
-     * <p>
-     * MySQL has Auto Commit enabled.
-     */
-    public void rollback(Connection connection) throws SQLException {
-        try {
-            if (!usingMySQL) {
-                connection.rollback();
-            }
-        } finally {
-            returnToPool(connection);
-        }
-    }
-
     public boolean execute(ExecStatement statement) {
         Connection connection = null;
         try {
             connection = getConnection();
+            // Inject Timings to the statement for benchmarking
+            if (config.isTrue(Settings.DEV_MODE)) {
+                statement.setTimings(timings);
+            }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
                 return statement.execute(preparedStatement);
             }
@@ -287,8 +304,8 @@ public abstract class SQLDB extends Database {
             try {
                 execute(statement);
             } catch (DBOpException e) {
-                if (Settings.DEV_MODE.isTrue()) {
-                    Log.toLog(this.getClass(), e);
+                if (config.isTrue(Settings.DEV_MODE)) {
+                    errorHandler.log(L.ERROR, this.getClass(), e);
                 }
             }
         }
@@ -298,6 +315,10 @@ public abstract class SQLDB extends Database {
         Connection connection = null;
         try {
             connection = getConnection();
+            // Inject Timings to the statement for benchmarking
+            if (config.isTrue(Settings.DEV_MODE)) {
+                statement.setTimings(timings);
+            }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
                 statement.executeBatch(preparedStatement);
             }
@@ -312,6 +333,10 @@ public abstract class SQLDB extends Database {
         Connection connection = null;
         try {
             connection = getConnection();
+            // Inject Timings to the statement for benchmarking
+            if (config.isTrue(Settings.DEV_MODE)) {
+                statement.setTimings(timings);
+            }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
                 return statement.executeQuery(preparedStatement);
             }
@@ -379,7 +404,7 @@ public abstract class SQLDB extends Database {
     }
 
     public boolean isUsingMySQL() {
-        return usingMySQL;
+        return false;
     }
 
     @Override
@@ -427,11 +452,23 @@ public abstract class SQLDB extends Database {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SQLDB sqldb = (SQLDB) o;
-        return usingMySQL == sqldb.usingMySQL && getName().equals(sqldb.getName());
+        return getName().equals(sqldb.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(usingMySQL, getName());
+        return Objects.hash(getName());
+    }
+
+    public Supplier<UUID> getServerUUIDSupplier() {
+        return serverUUIDSupplier;
+    }
+
+    public PlanConfig getConfig() {
+        return config;
+    }
+
+    public NetworkContainer.Factory getNetworkContainerFactory() {
+        return networkContainerFactory;
     }
 }

@@ -170,6 +170,7 @@
                 <div class="col-xs-10 col-sm-10 col-lg-10">
                     <div class="version">
                         <b>Player Analytics: </b> v${version}
+                        ${update}
                     </div>
                 </div>
                 <div class="col-xs-2 col-sm-2 col-lg-2">
@@ -838,6 +839,9 @@
                                             <li role="presentation"><a href="#ping" data-toggle="tab"><i
                                                     class="fa fa-signal"></i>
                                                 PING</a></li>
+                                            <li role="presentation"><a href="#disk" data-toggle="tab"><i
+                                                    class="fa fa-hdd"></i>
+                                                DISK SPACE</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -858,6 +862,9 @@
                                     </div>
                                     <div role="tabpanel" class="tab-pane fade" id="ping">
                                         <div id="pingGraph" style="height: 500px;"></div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="disk">
+                                        <div id="diskGraph" style="height: 500px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -1163,6 +1170,7 @@
 <script src="js/charts/performanceGraph.js"></script>
 <script src="js/charts/tpsGraph.js"></script>
 <script src="js/charts/resourceGraph.js"></script>
+<script src="js/charts/diskGraph.js"></script>
 <script src="js/charts/worldGraph.js"></script>
 <script src="js/charts/worldMap.js"></script>
 <script src="js/charts/onlineActivityCalendar.js"></script>
@@ -1199,6 +1207,8 @@
         values: {
             tpsMed: ${tpsMedium},
             tpsHigh: ${tpsHigh},
+            diskMed: ${diskMedium},
+            diskHigh: ${diskHigh},
             firstDay: ${firstDay}
         },
         data: {
@@ -1223,7 +1233,8 @@
             country: ${countrySeries},
             avgPing: ${avgPingSeries},
             maxPing: ${maxPingSeries},
-            minPing: ${minPingSeries}
+            minPing: ${minPingSeries},
+            disk: ${diskSeries}
         }
     };
 
@@ -1235,12 +1246,13 @@
             newPlayers: 'New Players',
             tps: 'TPS',
             cpu: 'CPU Usage (%)',
-            ram: 'RAM Usage (MB)',
+            ram: 'RAM Usage (Mb)',
             entities: 'Loaded Entities',
             chunks: 'Loaded Chunks',
             maxPing: 'Worst Ping',
             minPing: 'Best Ping',
-            avgPing: 'Average Ping'
+            avgPing: 'Average Ping',
+            disk: 'Free Disk Space (Mb)'
         },
         tooltip: {
             twoDecimals: {
@@ -1263,6 +1275,16 @@
                 color: v.colors.tpsMed
             }, {
                 value: 30,
+                color: v.colors.tpsHigh
+            }],
+            disk: [{
+                value: v.values.diskMed,
+                color: v.colors.tpsLow
+            }, {
+                value: v.values.diskHigh,
+                color: v.colors.tpsMed
+            }, {
+                value: Number.MAX_VALUE,
                 color: v.colors.tpsHigh
             }]
         }
@@ -1383,6 +1405,13 @@
             color: v.colors.chunks,
             yAxis: 2
         },
+        disk: {
+            name: s.name.disk,
+            type: s.type.spline,
+            zones: s.zones.disk,
+            tooltip: s.tooltip.zeroDecimals,
+            data: v.data.disk
+        },
         activityPie: {
             name: 'Players',
             colorByPoint: true,
@@ -1461,6 +1490,7 @@
         onlineActivityCalendar('#calendar', v.data.calendar, v.values.firstDay);
         horizontalBarChart('countryBarChart', v.data.countryCategories, [series.country], 'Players');
         lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
+        diskChart('diskGraph', [series.disk]);
         ${sessionTabGraphViewFunctions}
 
         /**/

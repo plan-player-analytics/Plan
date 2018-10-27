@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.store.keys;
 
+import com.djrapitops.plan.data.container.TPS;
 import com.djrapitops.plan.data.store.Key;
 import com.djrapitops.plan.data.store.PlaceholderKey;
 import com.djrapitops.plan.data.store.Type;
@@ -37,6 +38,7 @@ public class NetworkKeys {
     public static final PlaceholderKey<Integer> PLAYERS_NEW_WEEK = CommonPlaceholderKeys.PLAYERS_NEW_WEEK;
     public static final PlaceholderKey<Integer> PLAYERS_NEW_MONTH = CommonPlaceholderKeys.PLAYERS_NEW_MONTH;
 
+    public static final PlaceholderKey<String> SERVERS_TAB = new PlaceholderKey<>(String.class, "tabContentServers");
     public static final PlaceholderKey<String> WORLD_MAP_SERIES = CommonPlaceholderKeys.WORLD_MAP_SERIES;
     public static final PlaceholderKey<String> PLAYERS_ONLINE_SERIES = CommonPlaceholderKeys.PLAYERS_ONLINE_SERIES;
     public static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = CommonPlaceholderKeys.ACTIVITY_STACK_SERIES;
@@ -55,6 +57,8 @@ public class NetworkKeys {
 
     public static final Key<Collection<Server>> BUKKIT_SERVERS = new Key<>(new Type<Collection<Server>>() {}, "BUKKIT_SERVERS");
     public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = CommonKeys.ACTIVITY_DATA;
+    public static final Key<Map<Integer, List<TPS>>> NETWORK_PLAYER_ONLINE_DATA = new Key<>(new Type<Map<Integer, List<TPS>>>() {}, "NETWORK_PLAYER_ONLINE_DATA");
+    public static final Key<Map<Integer, Integer>> SERVER_REGISTER_DATA = new Key<>(new Type<Map<Integer, Integer>>() {}, "SERVER_REGISTER_DATA");
 
     private NetworkKeys() {
         /* static variable class */

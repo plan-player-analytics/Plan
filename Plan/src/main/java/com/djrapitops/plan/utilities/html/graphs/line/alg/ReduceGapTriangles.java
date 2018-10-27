@@ -2,12 +2,12 @@ package com.djrapitops.plan.utilities.html.graphs.line.alg;
 
 import com.djrapitops.plan.utilities.comparators.PointComparator;
 import com.djrapitops.plan.utilities.html.graphs.line.Point;
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility for reducing Points in LineGraphs.
@@ -42,7 +42,7 @@ public class ReduceGapTriangles {
 
             if (Double.compare(y, lastY) != 0
                     && Math.abs(lastY - y) > 0.5
-                    && lastDate < date - TimeAmount.MINUTE.ms() * 10L) {
+                    && lastDate < date - TimeUnit.MINUTES.toMillis(10L)) {
                 toAdd.add(new Point(lastDate + 1, lastY));
                 toAdd.add(new Point(date - 1, lastY));
             }

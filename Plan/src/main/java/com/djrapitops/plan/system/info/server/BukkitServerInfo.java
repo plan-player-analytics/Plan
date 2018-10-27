@@ -4,16 +4,18 @@
  */
 package com.djrapitops.plan.system.info.server;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plan.system.info.server.properties.BukkitServerProperties;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.webserver.WebServerSystem;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.webserver.WebServer;
+import dagger.Lazy;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,25 +27,33 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class BukkitServerInfo extends ServerInfo {
 
+    private final Lazy<WebServer> webServer;
+    private final PlanConfig config;
     private ServerInfoFile serverInfoFile;
-    private Database database;
+    private DBSystem dbSystem;
 
-    public BukkitServerInfo(Plan plugin) {
-        this(new BukkitServerProperties(plugin.getServer()));
-    }
-
-    public BukkitServerInfo(ServerProperties serverProperties) {
+    @Inject
+    public BukkitServerInfo(
+            ServerProperties serverProperties,
+            ServerInfoFile serverInfoFile,
+            DBSystem dbSystem,
+            Lazy<WebServer> webServer,
+            PlanConfig config
+    ) {
         super(serverProperties);
+        this.serverInfoFile = serverInfoFile;
+        this.dbSystem = dbSystem;
+        this.webServer = webServer;
+        this.config = config;
     }
 
     @Override
     public void enable() throws EnableException {
-        database = Database.getActive();
-
         try {
-            serverInfoFile = new ServerInfoFile(FileSystem.getDataFolder());
+            serverInfoFile.prepare();
         } catch (IOException e) {
             throw new EnableException("Failed to read ServerInfoFile.yml", e);
         }
@@ -64,12 +74,13 @@ public class BukkitServerInfo extends ServerInfo {
     }
 
     private Server updateDbInfo(UUID serverUUID) throws IOException {
+        Database database = dbSystem.getDatabase();
         Optional<Integer> serverID = database.fetch().getServerID(serverUUID);
         if (!serverID.isPresent()) {
             return registerServer(serverUUID);
         }
-        String name = Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_");
-        String webAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
+        String name = config.getString(Settings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
+        String webAddress = webServer.get().getAccessAddress();
         if ("plan".equalsIgnoreCase(name)) {
             name = "Server " + serverID.get();
         }
@@ -81,31 +92,34 @@ public class BukkitServerInfo extends ServerInfo {
     }
 
     private Server registerServer() throws IOException {
-        return registerServer(generateNewUUID(serverProperties));
+        return registerServer(generateNewUUID());
     }
 
     private Server registerServer(UUID serverUUID) throws IOException {
-        String webAddress = WebServerSystem.getInstance().getWebServer().getAccessAddress();
-        String name = Settings.SERVER_NAME.toString().replaceAll("[^a-zA-Z0-9_\\s]", "_");
-        int maxPlayers = ServerInfo.getServerProperties().getMaxPlayers();
+        String webAddress = webServer.get().getAccessAddress();
+        String name = config.getString(Settings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_");
+        int maxPlayers = serverProperties.getMaxPlayers();
 
         Server server = new Server(-1, serverUUID, name, webAddress, maxPlayers);
+
+        Database database = dbSystem.getDatabase();
         database.save().serverInfoForThisServer(server);
 
         Optional<Integer> serverID = database.fetch().getServerID(serverUUID);
-        if (!serverID.isPresent()) {
-            throw new IllegalStateException("Failed to Register Server (ID not found)");
-        }
-
-        int id = serverID.get();
+        int id = serverID.orElseThrow(() -> new IllegalStateException("Failed to Register Server (ID not found)"));
         server.setId(id);
 
         serverInfoFile.saveServerUUID(serverUUID);
         return server;
     }
 
-    private UUID generateNewUUID(ServerProperties serverProperties) {
-        String seed = serverProperties.getServerId() + serverProperties.getName() + serverProperties.getIp() + serverProperties.getPort() + serverProperties.getVersion() + serverProperties.getImplVersion();
+    private UUID generateNewUUID() {
+        String seed = serverProperties.getServerId() +
+                serverProperties.getName() +
+                serverProperties.getIp() +
+                serverProperties.getPort() +
+                serverProperties.getVersion() +
+                serverProperties.getImplVersion();
         return UUID.nameUUIDFromBytes(seed.getBytes());
     }
 }

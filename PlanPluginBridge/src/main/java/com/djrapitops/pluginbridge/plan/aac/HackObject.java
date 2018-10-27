@@ -4,8 +4,6 @@
  */
 package com.djrapitops.pluginbridge.plan.aac;
 
-import me.konsolas.aac.api.HackType;
-
 import java.util.UUID;
 
 /**
@@ -17,10 +15,10 @@ public class HackObject {
 
     private final UUID uuid;
     private final long date;
-    private final HackType hackType;
+    private final String hackType;
     private final int violationLevel;
 
-    public HackObject(UUID uuid, long date, HackType hackType, int violationLevel) {
+    public HackObject(UUID uuid, long date, String hackType, int violationLevel) {
         this.uuid = uuid;
         this.date = date;
         this.hackType = hackType;
@@ -35,7 +33,7 @@ public class HackObject {
         return date;
     }
 
-    public HackType getHackType() {
+    public String getHackType() {
         return hackType;
     }
 

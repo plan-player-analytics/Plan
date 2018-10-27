@@ -4,23 +4,14 @@ import com.djrapitops.plan.data.element.AnalysisContainer;
 import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.data.store.keys.AnalysisKeys;
-import com.djrapitops.plan.data.store.keys.PlayerKeys;
-import com.djrapitops.plan.data.store.mutators.PlayersMutator;
-import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +19,7 @@ import java.util.stream.Collectors;
  *
  * @author BrainStone
  */
-public class SpongeEconomyData extends PluginData {
+class SpongeEconomyData extends PluginData {
     private static final Color color = Color.AMBER;
     private static final String nameMoneyIcon = "money-bill-wave";
     private static final Icon moneyIcon = Icon.called(nameMoneyIcon).build();
@@ -36,7 +27,7 @@ public class SpongeEconomyData extends PluginData {
     
     private final EconomyService economyService;
     
-    public SpongeEconomyData(EconomyService economyService) {
+    SpongeEconomyData(EconomyService economyService) {
         super(ContainerSize.THIRD, "Sponge Economy");
         
         this.economyService = economyService;
@@ -46,12 +37,6 @@ public class SpongeEconomyData extends PluginData {
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
-        String name = DataCache.getInstance().getName(uuid);
-        
-        if (name == null) {
-            return inspectContainer;
-        }
-        
         Optional<UniqueAccount> uOpt = economyService.getOrCreateAccount(uuid);
         
         if (!uOpt.isPresent()) {

@@ -10,7 +10,6 @@ import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
 import com.djrapitops.plan.system.database.databases.sql.tables.UsersTable;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +70,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Start Batch Copy Everything");
         toDB.removeAllData();
 
         copyServers(toDB);
@@ -98,7 +96,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy Commands");
         toDB.db.getCommandUseTable().insertCommandUsage(db.getCommandUseTable().getAllCommandUsages());
     }
 
@@ -106,7 +103,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy IPs, Geolocations & Last used dates");
         toDB.db.getGeoInfoTable().insertAllGeoInfo(db.getGeoInfoTable().getAllGeoInfo());
     }
 
@@ -114,7 +110,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy Nicknames");
         toDB.db.getNicknamesTable().insertNicknames(db.getNicknamesTable().getAllNicknames());
     }
 
@@ -122,7 +117,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy WebUsers");
         toDB.db.getSecurityTable().addUsers(db.getSecurityTable().getUsers());
     }
 
@@ -130,7 +124,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy Servers");
         ServerTable serverTable = db.getServerTable();
         List<Server> servers = new ArrayList<>(serverTable.getBukkitServers().values());
         serverTable.getBungeeInfo().ifPresent(servers::add);
@@ -141,7 +134,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy TPS");
         toDB.db.getTpsTable().insertAllTPS(db.getTpsTable().getAllTPS());
     }
 
@@ -149,7 +141,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy UserInfo");
         toDB.db.getUserInfoTable().insertUserInfo(db.getUserInfoTable().getAllUserInfo());
     }
 
@@ -157,7 +148,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy Worlds");
         toDB.db.getWorldTable().saveWorlds(db.getWorldTable().getAllWorlds());
     }
 
@@ -165,7 +155,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy Users");
         UsersTable fromTable = db.getUsersTable();
         UsersTable toTable = toDB.db.getUsersTable();
         Map<UUID, UserInfo> users = fromTable.getUsers();
@@ -177,7 +166,6 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        Log.debug("Batch Copy Sessions");
         toDB.db.getSessionsTable().insertSessions(db.getSessionsTable().getAllSessions(true), true);
     }
 }

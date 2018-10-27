@@ -10,7 +10,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.HtmlUtils;
 import com.djrapitops.plan.utilities.html.icon.Color;
@@ -19,25 +19,30 @@ import com.djrapitops.plan.utilities.html.icon.Icon;
 import io.github.nucleuspowered.nucleus.api.NucleusAPI;
 import io.github.nucleuspowered.nucleus.api.nucleusdata.*;
 import io.github.nucleuspowered.nucleus.api.service.*;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.*;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
+
 /**
  * PluginData for Nucleus plugin.
  *
  * @author Vankka
  */
-public class NucleusData extends PluginData {
+class NucleusData extends PluginData {
+
     private UserStorageService userStorageService = null;
 
-    public NucleusData() {
+    private final Formatter<Long> timestampFormatter;
+
+    NucleusData(Formatter<Long> timestampFormatter) {
         super(ContainerSize.TWO_THIRDS, "Nucleus");
+        this.timestampFormatter = timestampFormatter;
         setPluginIcon(Icon.called("flask").of(Color.DEEP_ORANGE).build());
 
         Sponge.getServiceManager().provide(UserStorageService.class).ifPresent(storageService -> userStorageService = storageService);
@@ -84,11 +89,11 @@ public class NucleusData extends PluginData {
     }
 
     private String formatTimeStampYear(Instant instant) {
-        return FormatUtils.formatTimeStampYear(instant.toEpochMilli());
+        return timestampFormatter.apply(instant.toEpochMilli());
     }
 
     private String formatTimeStampYear(Duration duration) {
-        return FormatUtils.formatTimeStampYear(duration.plusMillis(System.currentTimeMillis()).toMillis());
+        return timestampFormatter.apply(duration.plusMillis(System.currentTimeMillis()).toMillis());
     }
 
     /*

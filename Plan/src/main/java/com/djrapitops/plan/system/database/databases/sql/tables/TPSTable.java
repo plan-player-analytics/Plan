@@ -12,9 +12,9 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,8 +32,10 @@ import java.util.*;
  */
 public class TPSTable extends Table {
 
+    public static final String TABLE_NAME = "plan_tps";
+
     public TPSTable(SQLDB db) {
-        super("plan_tps", db);
+        super(TABLE_NAME, db);
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " ("
                 + Col.SERVER_ID + ", "
@@ -43,10 +45,11 @@ public class TPSTable extends Table {
                 + Col.CPU_USAGE + ", "
                 + Col.RAM_USAGE + ", "
                 + Col.ENTITIES + ", "
-                + Col.CHUNKS
+                + Col.CHUNKS + ", "
+                + Col.FREE_DISK
                 + ") VALUES ("
                 + serverTable.statementSelectServerID + ", "
-                + "?, ?, ?, ?, ?, ?, ?)";
+                + "?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
     private final ServerTable serverTable;
@@ -63,6 +66,7 @@ public class TPSTable extends Table {
                 .column(Col.RAM_USAGE, Sql.LONG).notNull()
                 .column(Col.ENTITIES, Sql.INT).notNull()
                 .column(Col.CHUNKS, Sql.INT).notNull()
+                .column(Col.FREE_DISK, Sql.LONG).notNull()
                 .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
                 .toString()
         );
@@ -92,6 +96,7 @@ public class TPSTable extends Table {
                             .usedMemory(set.getLong(Col.RAM_USAGE.get()))
                             .entities(set.getInt(Col.ENTITIES.get()))
                             .chunksLoaded(set.getInt(Col.CHUNKS.get()))
+                            .freeDiskSpace(set.getLong(Col.FREE_DISK.get()))
                             .toTPS();
 
                     data.add(tps);
@@ -105,7 +110,7 @@ public class TPSTable extends Table {
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() {
-        return getTPSData(ServerInfo.getServerUUID());
+        return getTPSData(getServerUUID());
     }
 
     /**
@@ -127,7 +132,7 @@ public class TPSTable extends Table {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // More than 3 Months ago.
-                long threeMonths = TimeAmount.MONTH.ms() * 3L;
+                long threeMonths = TimeAmount.MONTH.toMillis(3L);
                 statement.setLong(1, System.currentTimeMillis() - threeMonths);
                 statement.setInt(2, pValue);
             }
@@ -138,7 +143,7 @@ public class TPSTable extends Table {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setString(1, getServerUUID().toString());
                 statement.setLong(2, tps.getDate());
                 statement.setDouble(3, tps.getTicksPerSecond());
                 statement.setInt(4, tps.getPlayers());
@@ -146,6 +151,7 @@ public class TPSTable extends Table {
                 statement.setLong(6, tps.getUsedMemory());
                 statement.setDouble(7, tps.getEntityCount());
                 statement.setDouble(8, tps.getChunksLoaded());
+                statement.setLong(9, tps.getFreeDiskSpace());
             }
         });
     }
@@ -180,6 +186,7 @@ public class TPSTable extends Table {
                             .usedMemory(set.getLong(Col.RAM_USAGE.get()))
                             .entities(set.getInt(Col.ENTITIES.get()))
                             .chunksLoaded(set.getInt(Col.CHUNKS.get()))
+                            .freeDiskSpace(set.getLong(Col.FREE_DISK.get()))
                             .toTPS();
 
                     return Optional.of(tps);
@@ -198,7 +205,7 @@ public class TPSTable extends Table {
     }
 
     public Optional<TPS> getPeakPlayerCount(long afterDate) {
-        return getPeakPlayerCount(ServerInfo.getServerUUID(), afterDate);
+        return getPeakPlayerCount(getServerUUID(), afterDate);
     }
 
     public Map<UUID, List<TPS>> getAllTPS() {
@@ -212,6 +219,7 @@ public class TPSTable extends Table {
                 Col.RAM_USAGE + ", " +
                 Col.ENTITIES + ", " +
                 Col.CHUNKS + ", " +
+                Col.FREE_DISK + ", " +
                 serverUUIDColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
@@ -233,6 +241,7 @@ public class TPSTable extends Table {
                             .usedMemory(set.getLong(Col.RAM_USAGE.get()))
                             .entities(set.getInt(Col.ENTITIES.get()))
                             .chunksLoaded(set.getInt(Col.CHUNKS.get()))
+                            .freeDiskSpace(set.getLong(Col.FREE_DISK.get()))
                             .toTPS();
 
                     tpsList.add(tps);
@@ -302,9 +311,46 @@ public class TPSTable extends Table {
                         statement.setLong(6, tps.getUsedMemory());
                         statement.setDouble(7, tps.getEntityCount());
                         statement.setDouble(8, tps.getChunksLoaded());
+                        statement.setLong(9, tps.getFreeDiskSpace());
                         statement.addBatch();
                     }
                 }
+            }
+        });
+    }
+
+    public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
+        TextStringBuilder sql = new TextStringBuilder("SELECT ");
+        sql.append(Col.SERVER_ID).append(", ")
+                .append(Col.DATE).append(", ")
+                .append(Col.PLAYERS_ONLINE)
+                .append(" FROM ").append(tableName)
+                .append(" WHERE ")
+                .append(Col.DATE.get()).append(">").append(System.currentTimeMillis() - TimeAmount.WEEK.toMillis(2L))
+                .append(" AND (");
+        sql.appendWithSeparators(servers.stream().map(server -> Col.SERVER_ID + "=" + server.getId()).iterator(), " OR ");
+        sql.append(")");
+
+        return query(new QueryAllStatement<Map<Integer, List<TPS>>>(sql.toString(), 10000) {
+            @Override
+            public Map<Integer, List<TPS>> processResults(ResultSet set) throws SQLException {
+                Map<Integer, List<TPS>> map = new HashMap<>();
+                while (set.next()) {
+                    int serverID = set.getInt(Col.SERVER_ID.get());
+                    int playersOnline = set.getInt(Col.PLAYERS_ONLINE.get());
+                    long date = set.getLong(Col.DATE.get());
+
+                    List<TPS> tpsList = map.getOrDefault(serverID, new ArrayList<>());
+
+                    TPS tps = TPSBuilder.get().date(date)
+                            .skipTPS()
+                            .playersOnline(playersOnline)
+                            .toTPS();
+                    tpsList.add(tps);
+
+                    map.put(serverID, tpsList);
+                }
+                return map;
             }
         });
     }
@@ -317,7 +363,8 @@ public class TPSTable extends Table {
         CPU_USAGE("cpu_usage"),
         RAM_USAGE("ram_usage"),
         ENTITIES("entities"),
-        CHUNKS("chunks_loaded");
+        CHUNKS("chunks_loaded"),
+        FREE_DISK("free_disk_space");
 
         private final String column;
 

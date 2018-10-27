@@ -40,7 +40,7 @@ public class RandomData {
         for (int i = 0; i < 20; i++) {
             int randInt = r.nextInt();
             long randLong = r.nextLong();
-            test.add(new TPS(randLong, randLong, randInt, randLong, randLong, randInt, randInt));
+            test.add(new TPS(randLong, randLong, randInt, randLong, randLong, randInt, randInt, randLong));
         }
         return test;
     }

@@ -1,13 +1,6 @@
 package com.djrapitops.plan.system.settings;
 
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.config.Config;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
-
-import java.io.IOException;
-import java.util.List;
+import com.djrapitops.plan.system.settings.config.Setting;
 
 /**
  * This enum contains all of the config settings used by the plugin for easier
@@ -16,7 +9,7 @@ import java.util.List;
  * @author Rsl1122
  * @since 2.3.2
  */
-public enum Settings {
+public enum Settings implements Setting {
     // Boolean
     BUNGEE_COPY_CONFIG("Plugin.Bungee-Override.CopyBungeeConfig"),
     BUNGEE_OVERRIDE_STANDALONE_MODE("Plugin.Bungee-Override.StandaloneMode"),
@@ -37,8 +30,8 @@ public enum Settings {
     DISPLAY_PLAYER_IPS("Customization.Display.PlayerIPs"),
     DISPLAY_GAPS_IN_GRAPH_DATA("Customization.Display.GapsInGraphData"),
     DATA_GEOLOCATIONS("Data.Geolocations"),
-    ALLOW_UPDATE("Plugin.Allow-Update-Command"),
     NOTIFY_ABOUT_DEV_RELEASES("Plugin.Notify-About-DEV-Releases"),
+    CHECK_FOR_UPDATES("Plugin.Check-for-updates"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),
@@ -99,6 +92,8 @@ public enum Settings {
     THEME_BASE("Theme.Base"),
     THEME_GRAPH_TPS_THRESHOLD_HIGH("Theme.Graphs.TPS.High-Threshold"),
     THEME_GRAPH_TPS_THRESHOLD_MED("Theme.Graphs.TPS.Medium-Threshold"),
+    THEME_GRAPH_DISK_THRESHOLD_HIGH("Theme.Graphs.Disk.High-Threshold"),
+    THEME_GRAPH_DISK_THRESHOLD_MED("Theme.Graphs.Disk.Medium-Threshold"),
 
     // StringList
     HIDE_FACTIONS("Plugins.Factions.HideFactions"),
@@ -110,97 +105,24 @@ public enum Settings {
     BUNGEE_IP("Server.IP"),
     BUNGEE_NETWORK_NAME("Network.Name");
 
-    private static final ServerSpecificSettings serverSpecificSettings = new ServerSpecificSettings();
-
     private final String configPath;
-    private Object tempValue;
 
     Settings(String path) {
         this.configPath = path;
     }
 
-    public static ServerSpecificSettings serverSpecific() {
-        if (!Check.isBungeeAvailable()) {
-            throw new IllegalStateException("Not supposed to call this method on Bukkit");
-        }
-
-        return serverSpecificSettings;
-    }
-
-    /**
-     * If the settings is a boolean, this method should be used.
-     *
-     * @return Boolean value of the config setting, false if not boolean.
-     */
-    public boolean isTrue() {
-        if (tempValue != null) {
-            return (Boolean) tempValue;
-        }
-        return getConfig().getBoolean(configPath);
-    }
-
-    public boolean isFalse() {
-        return !isTrue();
-    }
-
-    public static void save() {
-        try {
-            ConfigSystem.getConfig().save();
-        } catch (IOException e) {
-            Log.toLog(Settings.class, e);
-        }
-    }
-
-    /**
-     * If the settings is a String, this method should be used.
-     *
-     * @return String value of the config setting.
-     */
     @Override
-    public String toString() {
-        if (tempValue != null) {
-            return String.valueOf(tempValue);
-        }
-        return getConfig().getString(configPath);
-    }
-
-    /**
-     * If the settings is a number, this method should be used.
-     *
-     * @return Integer value of the config setting
-     */
-    public int getNumber() {
-        if (tempValue != null) {
-            return (Integer) tempValue;
-        }
-        return getConfig().getInt(configPath);
-    }
-
-    public List<String> getStringList() {
-        return getConfig().getStringList(configPath);
-    }
-
-    /**
-     * Used to get the String path of a the config setting eg.
-     * Settings.WebServer.Enabled
-     *
-     * @return Path of the config setting.
-     */
     public String getPath() {
         return configPath;
     }
 
-    public void setTemporaryValue(Object value) {
-        this.tempValue = value;
-    }
-
-    public void set(Object value) {
-        getConfig().set(getPath(), value);
-    }
-
-    private Config getConfig() {
-        Config config = ConfigSystem.getConfig();
-        Verify.nullCheck(config, () -> new IllegalStateException("Settings are not supposed to be called before ConfigSystem is Enabled!"));
-        return config;
+    /**
+     * @return What getPath returns
+     * @deprecated Old access method used to return string value in config. Use {@link com.djrapitops.plan.system.settings.config.PlanConfig#getString(Setting)} instead
+     */
+    @Deprecated
+    @Override
+    public String toString() {
+        return getPath();
     }
 }

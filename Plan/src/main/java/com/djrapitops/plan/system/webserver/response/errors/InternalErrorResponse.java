@@ -1,7 +1,11 @@
 package com.djrapitops.plan.system.webserver.response.errors;
 
+import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Icon;
+
+import java.io.IOException;
 
 /**
  * @author Rsl1122
@@ -9,7 +13,8 @@ import com.djrapitops.plan.utilities.html.icon.Icon;
  */
 public class InternalErrorResponse extends ErrorResponse {
 
-    public InternalErrorResponse(String cause, Throwable e) {
+    public InternalErrorResponse(String cause, Throwable e, VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
+        super(versionCheckSystem, files);
         super.setHeader("HTTP/1.1 500 Internal Error");
 
         super.setTitle(Icon.called("bug") + " 500 Internal Error occurred");

@@ -3,7 +3,8 @@ package com.djrapitops.plan.system.listeners.sponge;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
@@ -12,6 +13,7 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
+import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,6 +24,18 @@ import java.util.UUID;
  */
 public class SpongeWorldChangeListener {
 
+    private final WorldAliasSettings worldAliasSettings;
+    private ErrorHandler errorHandler;
+
+    @Inject
+    public SpongeWorldChangeListener(
+            WorldAliasSettings worldAliasSettings,
+            ErrorHandler errorHandler
+    ) {
+        this.worldAliasSettings = worldAliasSettings;
+        this.errorHandler = errorHandler;
+    }
+
     @Listener(order = Order.POST)
     public void onWorldChange(MoveEntityEvent.Teleport event, @First Player player) {
         if (event.isCancelled()) {
@@ -31,7 +45,7 @@ public class SpongeWorldChangeListener {
         try {
             actOnEvent(event, player);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -43,7 +57,7 @@ public class SpongeWorldChangeListener {
         String worldName = event.getToTransform().getExtent().getName();
         String gameMode = getGameMode(player);
 
-        WorldAliasSettings.addWorld(worldName);
+        worldAliasSettings.addWorld(worldName);
 
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));

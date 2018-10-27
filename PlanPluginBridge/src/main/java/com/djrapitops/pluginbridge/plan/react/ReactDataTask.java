@@ -1,8 +1,6 @@
 package com.djrapitops.pluginbridge.plan.react;
 
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.volmit.react.React;
 import com.volmit.react.api.GraphSampleLine;
@@ -14,13 +12,14 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Task in charge of collecting data from React.
  *
  * @author Rsl1122
  */
-public class ReactDataTask extends AbsRunnable {
+class ReactDataTask extends AbsRunnable {
 
     private static final SampledType[] STORED_TYPES = new SampledType[]{
             SampledType.ENT,
@@ -43,11 +42,12 @@ public class ReactDataTask extends AbsRunnable {
             SampledType.REACT_TASK_TIME
     };
     private final ReactDataTable table;
+    private final Processing processing;
     private final Map<SampledType, List<ReactValue>> history;
 
-    public ReactDataTask(ReactDataTable table) {
-        super(ReactDataTask.class.getSimpleName());
+    public ReactDataTask(ReactDataTable table, Processing processing) {
         this.table = table;
+        this.processing = processing;
         history = new EnumMap<>(SampledType.class);
     }
 
@@ -60,7 +60,6 @@ public class ReactDataTask extends AbsRunnable {
                 processType(samplers, type);
             }
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
             cancel();
         }
     }
@@ -76,8 +75,8 @@ public class ReactDataTask extends AbsRunnable {
                 .sorted()
                 .forEachOrdered(storedValues::add);
 
-        if (storedValues.get(0).getDate() < System.currentTimeMillis() - TimeAmount.MINUTE.ms()) {
-            Processing.submitNonCritical(new ValueStoringProcessor(table, type, storedValues));
+        if (storedValues.get(0).getDate() < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1L)) {
+            processing.submitNonCritical(new ValueStoringProcessor(table, type, storedValues));
             history.remove(type);
         } else {
             history.put(type, storedValues);

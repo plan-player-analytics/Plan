@@ -11,7 +11,6 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -134,7 +133,7 @@ public class SessionsTable extends UserIDTable {
                 statement.setInt(4, session.getUnsafe(SessionKeys.DEATH_COUNT));
                 statement.setInt(5, session.getUnsafe(SessionKeys.MOB_KILL_COUNT));
                 statement.setLong(6, session.getUnsafe(SessionKeys.AFK_TIME));
-                statement.setString(7, ServerInfo.getServerUUID().toString());
+                statement.setString(7, getServerUUID().toString());
             }
         });
     }
@@ -239,7 +238,7 @@ public class SessionsTable extends UserIDTable {
      * @return Milliseconds played on THIS server. 0 if player or server not found.
      */
     public long getPlaytime(UUID uuid) {
-        return getPlaytime(uuid, ServerInfo.getServerUUID());
+        return getPlaytime(uuid, getServerUUID());
     }
 
     /**
@@ -250,7 +249,7 @@ public class SessionsTable extends UserIDTable {
      * @return Milliseconds played on THIS server. 0 if player or server not found.
      */
     public long getPlaytime(UUID uuid, long afterDate) {
-        return getPlaytime(uuid, ServerInfo.getServerUUID(), afterDate);
+        return getPlaytime(uuid, getServerUUID(), afterDate);
     }
 
     /**
@@ -357,7 +356,7 @@ public class SessionsTable extends UserIDTable {
      * @return How many sessions player has. 0 if player or server not found.
      */
     public int getSessionCount(UUID uuid, long afterDate) {
-        return getSessionCount(uuid, ServerInfo.getServerUUID(), afterDate);
+        return getSessionCount(uuid, getServerUUID(), afterDate);
     }
 
     public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) {
@@ -404,7 +403,7 @@ public class SessionsTable extends UserIDTable {
     }
 
     public Map<UUID, List<Session>> getSessionInfoOfServer() {
-        return getSessionInfoOfServer(ServerInfo.getServerUUID());
+        return getSessionInfoOfServer(getServerUUID());
     }
 
     public Map<UUID, Long> getLastSeenForAllPlayers() {

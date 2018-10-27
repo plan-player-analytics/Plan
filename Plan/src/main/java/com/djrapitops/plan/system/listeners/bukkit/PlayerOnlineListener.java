@@ -2,12 +2,13 @@ package com.djrapitops.plan.system.listeners.bukkit;
 
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
+import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.processing.processors.info.NetworkPageUpdateProcessor;
-import com.djrapitops.plan.system.processing.processors.info.PlayerPageUpdateProcessor;
-import com.djrapitops.plan.system.processing.processors.player.*;
-import com.djrapitops.plugin.api.systems.NotificationCenter;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +19,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import javax.inject.Inject;
 import java.net.InetAddress;
 import java.util.UUID;
 
@@ -31,8 +33,35 @@ public class PlayerOnlineListener implements Listener {
 
     private static boolean countKicks = true;
 
+    private final PlanConfig config;
+    private final Processors processors;
+    private final Processing processing;
+    private final ServerInfo serverInfo;
+    private final SessionCache sessionCache;
+    private final ErrorHandler errorHandler;
+    private final RunnableFactory runnableFactory;
+
     public static void setCountKicks(boolean value) {
         countKicks = value;
+    }
+
+    @Inject
+    public PlayerOnlineListener(
+            PlanConfig config,
+            Processors processors,
+            Processing processing,
+            ServerInfo serverInfo,
+            SessionCache sessionCache,
+            RunnableFactory runnableFactory,
+            ErrorHandler errorHandler
+    ) {
+        this.config = config;
+        this.processors = processors;
+        this.processing = processing;
+        this.serverInfo = serverInfo;
+        this.sessionCache = sessionCache;
+        this.runnableFactory = runnableFactory;
+        this.errorHandler = errorHandler;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -42,9 +71,9 @@ public class PlayerOnlineListener implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             boolean op = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
-            Processing.submit(new BanAndOpProcessor(uuid, () -> banned, op));
+            processing.submit(processors.player().banAndOpProcessor(uuid, () -> banned, op));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -67,9 +96,9 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
 
-            Processing.submit(new KickProcessor(uuid));
+            processing.submit(processors.player().kickProcessor(uuid));
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -78,13 +107,13 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnJoinEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
     private void actOnJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        NotificationCenter.checkNotifications(player);
+        // TODO Move update notification to the website.
 
         UUID uuid = player.getUniqueId();
         long time = System.currentTimeMillis();
@@ -99,16 +128,16 @@ public class PlayerOnlineListener implements Listener {
         String playerName = player.getName();
         String displayName = player.getDisplayName();
 
-        SessionCache.getInstance().cacheSession(uuid, new Session(uuid, time, world, gm));
+        boolean gatheringGeolocations = config.isTrue(Settings.DATA_GEOLOCATIONS);
 
-        RunnableFactory.createNew("Player Register: " + uuid,
-                new RegisterProcessor(uuid, player::getFirstPlayed, playerName,
-                        new IPUpdateProcessor(uuid, address, time),
-                        new NameProcessor(uuid, playerName, displayName),
-                        new PlayerPageUpdateProcessor(uuid)
+        processing.submitCritical(() -> sessionCache.cacheSession(uuid, new Session(uuid, serverInfo.getServerUUID(), time, world, gm)));
+        runnableFactory.create("Player Register: " + uuid,
+                processors.player().registerProcessor(uuid, player::getFirstPlayed, playerName,
+                        gatheringGeolocations ? processors.player().ipUpdateProcessor(uuid, address, time) : null,
+                        processors.player().nameProcessor(uuid, playerName, displayName),
+                        processors.info().playerPageUpdateProcessor(uuid)
                 )
         ).runTaskAsynchronously();
-        Processing.submit(new NetworkPageUpdateProcessor());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -116,7 +145,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnQuitEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -127,9 +156,8 @@ public class PlayerOnlineListener implements Listener {
 
         AFKListener.AFK_TRACKER.loggedOut(uuid, time);
 
-        Processing.submit(new BanAndOpProcessor(uuid, player::isBanned, player.isOp()));
-        Processing.submit(new EndSessionProcessor(uuid, time));
-        Processing.submit(new NetworkPageUpdateProcessor());
-        Processing.submit(new PlayerPageUpdateProcessor(uuid));
+        processing.submit(processors.player().banAndOpProcessor(uuid, player::isBanned, player.isOp()));
+        processing.submit(processors.player().endSessionProcessor(uuid, time));
+        processing.submit(processors.info().playerPageUpdateProcessor(uuid));
     }
 }

@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -28,9 +29,9 @@ public class TPSMutatorTest {
         testData = new ArrayList<>();
 
         time = System.currentTimeMillis();
-        long twoMonthsAgo = time - TimeAmount.MONTH.ms() * 2L;
+        long twoMonthsAgo = time - TimeAmount.MONTH.toMillis(2L);
 
-        for (long date = twoMonthsAgo; date < time; date += TimeAmount.MINUTE.ms()) {
+        for (long date = twoMonthsAgo; date < time; date += TimeUnit.MINUTES.toMillis(1L)) {
             testData.add(
                     TPSBuilder.get().date(date)
                             .tps(0.0)
@@ -39,6 +40,7 @@ public class TPSMutatorTest {
                             .usedMemory(0)
                             .entities(0)
                             .chunksLoaded(0)
+                            .freeDiskSpace(0)
                             .toTPS()
             );
         }
@@ -55,13 +57,14 @@ public class TPSMutatorTest {
     public void noDownTimeOnSingleEntry() {
         long expected = 0;
         long result = new TPSMutator(Collections.singletonList(
-                TPSBuilder.get().date(time - TimeAmount.DAY.ms())
+                TPSBuilder.get().date(time - TimeUnit.DAYS.toMillis(1L))
                         .tps(0.0)
                         .playersOnline(0)
                         .usedCPU(0.0)
                         .usedMemory(0)
                         .entities(0)
                         .chunksLoaded(0)
+                        .freeDiskSpace(0)
                         .toTPS()
         )).serverDownTime();
         assertEquals(expected, result);
@@ -69,8 +72,8 @@ public class TPSMutatorTest {
 
     @Test
     public void fullDownTime() {
-        long periodLength = TimeAmount.MINUTE.ms() * 5L;
-        long expected = TimeAmount.MONTH.ms() * 2L - periodLength;
+        long periodLength = TimeUnit.MINUTES.toMillis(5L);
+        long expected = TimeAmount.MONTH.toMillis(2L) - periodLength;
 
         TPSMutator tpsMutator = new TPSMutator(testData.stream()
                 .filter(tps -> (tps.getDate() - time) % (periodLength) == 0)
@@ -84,10 +87,10 @@ public class TPSMutatorTest {
 
     @Test
     public void filteredFullMonthDownTime() {
-        long periodLength = TimeAmount.MINUTE.ms() * 5L;
-        long expected = TimeAmount.MONTH.ms() - periodLength;
+        long periodLength = TimeUnit.MINUTES.toMillis(5L);
+        long expected = TimeAmount.MONTH.toMillis(1L) - periodLength;
 
-        long monthAgo = time - TimeAmount.MONTH.ms();
+        long monthAgo = time - TimeAmount.MONTH.toMillis(1L);
         TPSMutator tpsMutator = new TPSMutator(testData.stream()
                 .filter(tps -> (tps.getDate() - time) % (periodLength) == 0)
                 .collect(Collectors.toList()))
@@ -102,12 +105,12 @@ public class TPSMutatorTest {
 
     @Test
     public void filteredFullMonthDownTimeWhenRandomOrder() {
-        long periodLength = TimeAmount.MINUTE.ms() * 5L;
-        long expected = TimeAmount.MONTH.ms() - periodLength;
+        long periodLength = TimeUnit.MINUTES.toMillis(5L);
+        long expected = TimeAmount.MONTH.toMillis(1L) - periodLength;
 
-        List<TPS> randomOrder = testData;
+        List<TPS> randomOrder = new ArrayList<>(testData);
         Collections.shuffle(randomOrder);
-        long monthAgo = time - TimeAmount.MONTH.ms();
+        long monthAgo = time - TimeAmount.MONTH.toMillis(1L);
         TPSMutator tpsMutator = new TPSMutator(randomOrder.stream()
                 .filter(tps -> (tps.getDate() - time) % (periodLength) == 0)
                 .collect(Collectors.toList()))
@@ -122,7 +125,7 @@ public class TPSMutatorTest {
 
     @Test
     public void filterWorksCorrectly() {
-        long monthAgo = time - TimeAmount.MONTH.ms();
+        long monthAgo = time - TimeAmount.MONTH.toMillis(1L);
         List<TPS> filtered = new TPSMutator(testData).filterDataBetween(monthAgo, time).all();
 
         for (TPS tps : filtered) {

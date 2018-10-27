@@ -3,12 +3,14 @@ package com.djrapitops.plan.system.listeners.sponge;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.living.humanoid.ChangeGameModeEvent;
 
+import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,6 +21,18 @@ import java.util.UUID;
  */
 public class SpongeGMChangeListener {
 
+    private final WorldAliasSettings worldAliasSettings;
+    private ErrorHandler errorHandler;
+
+    @Inject
+    public SpongeGMChangeListener(
+            WorldAliasSettings worldAliasSettings,
+            ErrorHandler errorHandler
+    ) {
+        this.worldAliasSettings = worldAliasSettings;
+        this.errorHandler = errorHandler;
+    }
+
     @Listener(order = Order.POST)
     public void onGMChange(ChangeGameModeEvent.TargetPlayer event) {
         if (event.isCancelled()) {
@@ -28,7 +42,7 @@ public class SpongeGMChangeListener {
         try {
             actOnGMChangeEvent(event);
         } catch (Exception e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
     }
 
@@ -40,7 +54,7 @@ public class SpongeGMChangeListener {
         String gameMode = event.getGameMode().getName().toUpperCase();
         String worldName = player.getWorld().getName();
 
-        WorldAliasSettings.addWorld(worldName);
+        worldAliasSettings.addWorld(worldName);
 
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));

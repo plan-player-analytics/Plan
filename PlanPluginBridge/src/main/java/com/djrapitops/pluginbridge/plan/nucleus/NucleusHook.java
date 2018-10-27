@@ -5,22 +5,36 @@
 package com.djrapitops.pluginbridge.plan.nucleus;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.pluginbridge.plan.Hook;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Hook for AdvancedBan plugin.
  *
  * @author Vankka
  */
+@Singleton
 public class NucleusHook extends Hook {
-    public NucleusHook(HookHandler hookHandler) {
-        super("io.github.nucleuspowered.nucleus.NucleusPlugin", hookHandler);
+
+    private final Formatter<Long> timestampFormatter;
+
+    @Inject
+    public NucleusHook(
+            Formatters formatters
+    ) {
+        super("io.github.nucleuspowered.nucleus.NucleusPlugin");
+
+        timestampFormatter = formatters.yearLong();
     }
 
     @Override
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (enabled) {
-            addPluginDataSource(new NucleusData());
+            handler.addPluginDataSource(new NucleusData(timestampFormatter));
         }
     }
 }

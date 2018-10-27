@@ -48,7 +48,7 @@ function resourceChart(id, cpuSeries, ramSeries, playersOnlineSeries) {
         }, {
             labels: {
                 formatter: function () {
-                    return this.value + ' MB';
+                    return this.value + ' Mb';
                 }
             }
         }],

@@ -5,12 +5,7 @@
  */
 package com.djrapitops.pluginbridge.plan.protocolsupport;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.viaversion.ProtocolTable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,6 +15,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import protocolsupport.api.ProtocolSupportAPI;
 import protocolsupport.api.ProtocolVersion;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -28,9 +25,19 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 4.1.0
  */
+@Singleton
 public class PlayerVersionListener implements Listener {
 
-    public PlayerVersionListener() {
+    private final Processing processing;
+    private final ProtocolTable protocolTable;
+
+    @Inject
+    public PlayerVersionListener(
+            Processing processing,
+            ProtocolTable protocolTable
+    ) {
+        this.processing = processing;
+        this.protocolTable = protocolTable;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -39,13 +46,6 @@ public class PlayerVersionListener implements Listener {
         UUID uuid = player.getUniqueId();
         ProtocolVersion protocolVersion = ProtocolSupportAPI.getProtocolVersion(player);
         int playerVersion = protocolVersion.getId();
-        Plan plan = Plan.getInstance();
-        Processing.submitNonCritical(() -> {
-            try {
-                new ProtocolTable((SQLDB) Database.getActive()).saveProtocolVersion(uuid, playerVersion);
-            } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
-            }
-        });
+        processing.submitNonCritical(() -> protocolTable.saveProtocolVersion(uuid, playerVersion));
     }
 }

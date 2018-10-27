@@ -3,12 +3,13 @@ package com.djrapitops.plan.data.store.mutators.health;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.HealthInfoLang;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icons;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractHealthInfo {
 
@@ -20,9 +21,29 @@ public abstract class AbstractHealthInfo {
 
     protected double serverHealth;
 
-    public AbstractHealthInfo(long now, long monthAgo) {
+    protected final Locale locale;
+    protected final int activeMinuteThreshold;
+    protected final int activeLoginThreshold;
+    protected final Formatter<Long> timeAmountFormatter;
+    protected final Formatter<Double> decimalFormatter;
+    protected final Formatter<Double> percentageFormatter;
+
+    public AbstractHealthInfo(
+            long now, long monthAgo,
+            Locale locale, int activeMinuteThreshold,
+            int activeLoginThreshold,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Double> decimalFormatter,
+            Formatter<Double> percentageFormatter
+    ) {
         this.now = now;
         this.monthAgo = monthAgo;
+        this.locale = locale;
+        this.activeMinuteThreshold = activeMinuteThreshold;
+        this.activeLoginThreshold = activeLoginThreshold;
+        this.timeAmountFormatter = timeAmountFormatter;
+        this.decimalFormatter = decimalFormatter;
+        this.percentageFormatter = percentageFormatter;
         serverHealth = 100.0;
 
         this.notes = new ArrayList<>();
@@ -63,43 +84,47 @@ public abstract class AbstractHealthInfo {
         regularRemainCompareSet.removeAll(veryActiveNow);
         int notRegularAnymore = regularRemainCompareSet.size();
         int remain = activeFWAGNum - notRegularAnymore;
-        double percRemain = activeFWAGNum != 0 ? remain * 100.0 / activeFWAGNum : 100.0;
+        double percRemain = activeFWAGNum != 0 ? remain * 1.0 / activeFWAGNum : 1.0;
 
         int newActive = getNewActive(veryActiveNow, activeNow, regularNow, veryActiveFWAG, activeFWAG, regularFWAG);
 
         int change = newActive - notRegularAnymore;
 
-        String remainNote = "";
+        StringBuilder remainNote = new StringBuilder();
         if (activeFWAGNum != 0) {
-            remainNote = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            if (percRemain > 50) {
-                remainNote += Icons.GREEN_THUMB;
-            } else if (percRemain > 20) {
-                remainNote += Icons.YELLOW_FLAG;
+            remainNote.append(subNote);
+            if (percRemain > 0.5) {
+                remainNote.append(Icons.GREEN_THUMB);
+            } else if (percRemain > 0.2) {
+                remainNote.append(Icons.YELLOW_FLAG);
             } else {
-                remainNote += Icons.RED_WARN;
+                remainNote.append(Icons.RED_WARN);
                 serverHealth -= 2.5;
             }
 
-            remainNote += " " + FormatUtils.cutDecimals(percRemain) + "% of regular players have remained active ("
-                    + remain + "/" + activeFWAGNum + ")";
+            remainNote.append(locale.getString(HealthInfoLang.REGULAR_ACTIVITY_REMAIN,
+                    percentageFormatter.apply(percRemain),
+                    remain, activeFWAGNum
+            ));
         }
+
+        String sentenceStart = locale.getString(HealthInfoLang.REGULAR_CHANGE);
         if (change > 0) {
-            addNote(Icons.GREEN_THUMB + " Number of regular players has increased (+" + change + ")" + remainNote);
+            addNote(Icons.GREEN_THUMB + sentenceStart + locale.getString(HealthInfoLang.REGULAR_CHANGE_INCREASE, change) + remainNote);
         } else if (change == 0) {
-            addNote(Icons.GREEN_THUMB + " Number of regular players has stayed the same (+" + change + ")" + remainNote);
+            addNote(Icons.GREEN_THUMB + sentenceStart + locale.getString(HealthInfoLang.REGULAR_CHANGE_ZERO, change) + remainNote);
         } else if (change > -20) {
-            addNote(Icons.YELLOW_FLAG + " Number of regular players has decreased (" + change + ")" + remainNote);
+            addNote(Icons.YELLOW_FLAG + sentenceStart + locale.getString(HealthInfoLang.REGULAR_CHANGE_DECREASE, change) + remainNote);
             serverHealth -= 5;
         } else {
-            addNote(Icons.RED_WARN + " Number of regular players has decreased (" + change + ")" + remainNote);
+            addNote(Icons.RED_WARN + sentenceStart + locale.getString(HealthInfoLang.REGULAR_CHANGE_DECREASE, change) + remainNote);
             serverHealth -= 10;
         }
     }
 
     protected void activePlayerPlaytimeChange(PlayersMutator playersMutator) {
-        PlayersMutator currentlyActive = playersMutator.filterActive(now, 1.75);
-        long twoWeeksAgo = (now - (now - monthAgo)) / 2L;
+        PlayersMutator currentlyActive = playersMutator.filterActive(now, activeMinuteThreshold, activeLoginThreshold, 1.75);
+        long twoWeeksAgo = now - ((now - monthAgo) / 2L);
 
         long totalFourToTwoWeeks = 0;
         long totalLastTwoWeeks = 0;
@@ -113,21 +138,18 @@ public abstract class AbstractHealthInfo {
         if (activeCount != 0) {
             long avgFourToTwoWeeks = totalFourToTwoWeeks / (long) activeCount;
             long avgLastTwoWeeks = totalLastTwoWeeks / (long) activeCount;
-            String avgLastTwoWeeksString = Formatters.timeAmount().apply(avgLastTwoWeeks);
-            String avgFourToTwoWeeksString = Formatters.timeAmount().apply(avgFourToTwoWeeks);
+            String avgLastTwoWeeksString = timeAmountFormatter.apply(avgLastTwoWeeks);
+            String avgFourToTwoWeeksString = timeAmountFormatter.apply(avgFourToTwoWeeks);
             if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
-                addNote(Icons.GREEN_THUMB + " Active players seem to have things to do (Played "
-                        + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ", last two weeks vs weeks 2-4)");
-            } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeAmount.HOUR.ms() * 2L) {
-                addNote(Icons.RED_WARN + " Active players might be running out of things to do (Played "
-                        + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ", last two weeks vs weeks 2-4)");
+                addNote(Icons.GREEN_THUMB + locale.getString(HealthInfoLang.ACTIVE_PLAY_COMPARISON_INCREASE,
+                        avgLastTwoWeeksString, avgFourToTwoWeeksString));
+            } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeUnit.HOURS.toMillis(2L)) {
+                addNote(Icons.RED_WARN + locale.getString(HealthInfoLang.ACTIVE_PLAY_COMPARISON_DECREASE,
+                        avgLastTwoWeeksString, avgFourToTwoWeeksString));
                 serverHealth -= 5;
             } else {
-                addNote(Icons.YELLOW_FLAG + " Active players might be running out of things to do (Played "
-                        + avgLastTwoWeeksString + " vs " + avgFourToTwoWeeksString
-                        + ", last two weeks vs weeks 2-4)");
+                addNote(Icons.YELLOW_FLAG + locale.getString(HealthInfoLang.ACTIVE_PLAY_COMPARISON_DECREASE,
+                        avgLastTwoWeeksString, avgFourToTwoWeeksString));
             }
         }
     }

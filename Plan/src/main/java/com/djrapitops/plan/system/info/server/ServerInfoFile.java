@@ -4,11 +4,11 @@
  */
 package com.djrapitops.plan.system.info.server;
 
-import com.djrapitops.plan.system.file.FileSystem;
-import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.io.File;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,9 +22,17 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class ServerInfoFile extends Config {
-    public ServerInfoFile(File dataFolder) throws IOException {
-        super(new File(dataFolder, "ServerInfoFile.yml"));
-        copyDefaults(FileSystem.readFromResource("DefaultServerInfoFile.yml"));
+
+    private final PlanFiles files;
+
+    @Inject
+    public ServerInfoFile(PlanFiles files) {
+        super(files.getFileFromPluginFolder("ServerInfoFile.yml"));
+        this.files = files;
+    }
+
+    public void prepare() throws IOException {
+        copyDefaults(files.readFromResource("DefaultServerInfoFile.yml"));
         save();
     }
 

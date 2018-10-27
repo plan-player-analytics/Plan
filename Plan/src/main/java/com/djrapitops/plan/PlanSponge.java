@@ -2,20 +2,18 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.system.SpongeSystem;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsSponge;
 import com.djrapitops.plugin.SpongePlugin;
-import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.DebugLog;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.settings.ColorScheme;
-import com.google.inject.Inject;
+import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.logging.L;
 import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
+import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -29,7 +27,7 @@ import java.io.InputStream;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "4.4.7",
+        version = "4.5.0",
         description = "Player Analytics Plugin by Rsl1122",
         authors = {"Rsl1122"},
         dependencies = {
@@ -39,16 +37,16 @@ import java.io.InputStream;
 )
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
-    @Inject
+    @com.google.inject.Inject
     private Metrics metrics;
 
-    @Inject
-    private Logger logger;
+    @com.google.inject.Inject
+    private Logger slf4jLogger;
 
-    @Inject
+    @com.google.inject.Inject
     @ConfigDir(sharedRoot = false)
     private File dataFolder;
-    private SpongeSystem system;
+    private PlanSystem system;
     private Locale locale;
 
     @Listener
@@ -61,36 +59,37 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         onDisable();
     }
 
-    public static PlanSponge getInstance() {
-        return (PlanSponge) StaticHolder.getInstance(PlanSponge.class);
-    }
-
     @Override
     public void onEnable() {
-        super.onEnable();
+        PlanSpongeComponent component = DaggerPlanSpongeComponent.builder().plan(this).build();
         try {
-            system = new SpongeSystem(this);
+            system = component.system();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            new BStatsSponge(metrics).registerMetrics();
+            new BStatsSponge(
+                    metrics,
+                    system.getDatabaseSystem().getDatabase()
+            ).registerMetrics();
 
-            Log.info(locale.getString(PluginLang.ENABLED));
+            slf4jLogger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
-            Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            slf4jLogger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            Log.error("----------------------------------------");
-            Log.error("Error: " + e.getMessage());
-            Log.error("----------------------------------------");
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            slf4jLogger.error("----------------------------------------");
+            slf4jLogger.error("Error: " + e.getMessage());
+            slf4jLogger.error("----------------------------------------");
+            slf4jLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             onDisable();
         } catch (Exception e) {
-            Log.toLog(this.getClass().getSimpleName() + "-v" + getVersion(), e);
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            slf4jLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            slf4jLogger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("plan", new PlanCommand(this));
+        PlanCommand command = component.planCommand();
+        command.registerCommands();
+        registerCommand("plan", command);
     }
 
     @Override
@@ -99,9 +98,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             system.disable();
         }
 
-        Log.info(locale.getString(PluginLang.DISABLED));
-        Benchmark.pluginDisabled(PlanSponge.class);
-        DebugLog.pluginDisabled(PlanSponge.class);
+        logger.info(locale.getString(PluginLang.DISABLED));
     }
 
     @Override
@@ -111,7 +108,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Override
     public ColorScheme getColorScheme() {
-        return PlanColorScheme.create();
+        return PlanColorScheme.create(system.getConfigSystem().getConfig(), logger);
     }
 
     @Override
@@ -126,7 +123,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Override
     public Logger getLogger() {
-        return logger;
+        return slf4jLogger;
     }
 
     @Override
@@ -140,7 +137,11 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     }
 
     @Override
-    public SpongeSystem getSystem() {
+    public PlanSystem getSystem() {
         return system;
+    }
+
+    public Game getGame() {
+        return Sponge.getGame();
     }
 }

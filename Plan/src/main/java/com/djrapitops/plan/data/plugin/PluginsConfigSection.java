@@ -1,8 +1,7 @@
 package com.djrapitops.plan.data.plugin;
 
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plugin.api.config.ConfigNode;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.config.ConfigNode;
 
 import java.io.IOException;
 
@@ -15,6 +14,14 @@ import java.io.IOException;
  */
 public class PluginsConfigSection {
 
+    private final PlanConfig config;
+
+    public PluginsConfigSection(
+            PlanConfig config
+    ) {
+        this.config = config;
+    }
+
     public boolean hasSection(PluginData dataSource) {
         ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
@@ -23,20 +30,16 @@ public class PluginsConfigSection {
     }
 
     private ConfigNode getPluginsSection() {
-        return ConfigSystem.getConfig().getConfigNode("Plugins");
+        return config.getConfigNode("Plugins");
     }
 
-    public void createSection(PluginData dataSource) {
+    public void createSection(PluginData dataSource) throws IOException {
         ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
 
         section.set(pluginName + ".Enabled", true);
-        try {
-            section.sort();
-            section.save();
-        } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
-        }
+        section.sort();
+        section.save();
     }
 
     public boolean isEnabled(PluginData dataSource) {

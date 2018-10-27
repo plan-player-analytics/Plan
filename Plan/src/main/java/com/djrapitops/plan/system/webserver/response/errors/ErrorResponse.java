@@ -4,11 +4,9 @@
  */
 package com.djrapitops.plan.system.webserver.response.errors;
 
-import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.response.pages.PageResponse;
-import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.file.FileUtil;
-import com.djrapitops.plugin.api.utility.log.Log;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.IOException;
@@ -25,12 +23,15 @@ public class ErrorResponse extends PageResponse {
     private String title;
     private String paragraph;
 
-    public ErrorResponse() {
-        try {
-            setContent(Theme.replaceColors(FileUtil.getStringFromResource("web/error.html")));
-        } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
-        }
+    private VersionCheckSystem versionCheckSystem;
+
+    public ErrorResponse(VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
+        this.versionCheckSystem = versionCheckSystem;
+        setContent(files.readCustomizableResourceFlat("web/error.html"));
+    }
+
+    public ErrorResponse(String message) {
+        setContent(message);
     }
 
     public void replacePlaceholders() {
@@ -39,7 +40,8 @@ public class ErrorResponse extends PageResponse {
         String[] split = title.split(">", 3);
         placeHolders.put("titleText", split.length == 3 ? split[2] : title);
         placeHolders.put("paragraph", paragraph);
-        placeHolders.put("version", MiscUtils.getPlanVersion());
+        placeHolders.put("version", versionCheckSystem.getCurrentVersion());
+        placeHolders.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
 
         setContent(StringSubstitutor.replace(getContent(), placeHolders));
     }

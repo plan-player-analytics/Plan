@@ -1,6 +1,8 @@
 package com.djrapitops.plan.system.webserver.response;
 
-import com.djrapitops.plan.system.settings.theme.Theme;
+import com.djrapitops.plan.system.file.PlanFiles;
+
+import java.io.IOException;
 
 /**
  * @author Rsl1122
@@ -8,9 +10,9 @@ import com.djrapitops.plan.system.settings.theme.Theme;
  */
 public class CSSResponse extends FileResponse {
 
-    public CSSResponse(String fileName) {
-        super(format(fileName));
+    public CSSResponse(String fileName, PlanFiles files) throws IOException {
+        super(format(fileName), files);
         super.setType(ResponseType.CSS);
-        setContent(Theme.replaceColors(getContent()));
+        setContent(getContent());
     }
 }

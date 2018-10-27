@@ -25,25 +25,24 @@ import java.util.UUID;
  */
 public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables implements CacheRequest {
 
-    private final UUID player;
-    private final String html;
+    private final ServerInfo serverInfo;
 
-    private CacheInspectPluginsTabRequest() {
-        player = null;
-        html = null;
+    private UUID player;
+    private String html;
+
+    CacheInspectPluginsTabRequest(ServerInfo serverInfo) {
+        this.serverInfo = serverInfo;
     }
 
-    public CacheInspectPluginsTabRequest(UUID player, String nav, String html) {
+    CacheInspectPluginsTabRequest(UUID player, String nav, String html, ServerInfo serverInfo) {
+        this.serverInfo = serverInfo;
+
         Verify.nullCheck(player, nav);
         variables.put("player", player.toString());
         variables.put("nav", nav);
         variables.put("html", Base64Util.encode(html));
         this.player = player;
         this.html = html;
-    }
-
-    public static CacheInspectPluginsTabRequest createHandler() {
-        return new CacheInspectPluginsTabRequest();
     }
 
     @Override
@@ -72,6 +71,6 @@ public class CacheInspectPluginsTabRequest extends InfoRequestWithVariables impl
 
     @Override
     public void runLocally() {
-        getPluginsTab(player).addTab(ServerInfo.getServerUUID(), variables.get("nav"), html);
+        getPluginsTab(player).addTab(serverInfo.getServerUUID(), variables.get("nav"), html);
     }
 }

@@ -9,7 +9,6 @@ import com.djrapitops.plan.system.database.databases.sql.statements.Column;
 import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.statements.Sql;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -94,7 +93,7 @@ public class CommandUseTable extends Table {
      * @return command - times used Map
      */
     public Map<String, Integer> getCommandUse() {
-        return getCommandUse(ServerInfo.getServerUUID());
+        return getCommandUse(getServerUUID());
     }
 
     public void commandUsed(String command) {
@@ -110,7 +109,7 @@ public class CommandUseTable extends Table {
         boolean updated = execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, ServerInfo.getServerUUID().toString());
+                statement.setString(1, getServerUUID().toString());
                 statement.setString(2, command);
             }
         });
@@ -144,7 +143,7 @@ public class CommandUseTable extends Table {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, command);
                 statement.setInt(2, 1);
-                statement.setString(3, ServerInfo.getServerUUID().toString());
+                statement.setString(3, getServerUUID().toString());
             }
         });
     }

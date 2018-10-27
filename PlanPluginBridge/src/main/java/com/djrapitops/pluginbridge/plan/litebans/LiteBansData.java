@@ -13,14 +13,13 @@ import com.djrapitops.plan.data.plugin.BanData;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 import com.djrapitops.plan.utilities.html.structure.TabsElement;
-import com.djrapitops.plugin.api.utility.log.Log;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,12 +29,18 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class LiteBansData extends PluginData implements BanData {
+class LiteBansData extends PluginData implements BanData {
 
     private final LiteBansDatabaseQueries db;
 
-    public LiteBansData(LiteBansDatabaseQueries db) {
+    private final Formatter<Long> timestampFormatter;
+
+    LiteBansData(
+            LiteBansDatabaseQueries db,
+            Formatter<Long> timestampFormatter
+    ) {
         super(ContainerSize.TAB, "LiteBans");
+        this.timestampFormatter = timestampFormatter;
         setPluginIcon(Icon.called("ban").of(Color.RED).build());
         this.db = db;
     }
@@ -62,7 +67,7 @@ public class LiteBansData extends PluginData implements BanData {
             } else {
                 for (LiteBansDBObj ban : bans) {
                     long expiry = ban.getExpiry();
-                    String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
+                    String expires = expiry <= 0 ? "Never" : timestampFormatter.apply(expiry);
                     table.addRow(
                             "<span title=\"" + ban.getReason() + "\">Ban</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(ban.getBannedBy()), ban.getBannedBy()),
@@ -71,7 +76,7 @@ public class LiteBansData extends PluginData implements BanData {
                 }
                 for (LiteBansDBObj mute : mutes) {
                     long expiry = mute.getExpiry();
-                    String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
+                    String expires = expiry <= 0 ? "Never" : timestampFormatter.apply(expiry);
                     table.addRow(
                             "<span title=\"" + mute.getReason() + "\">Mute</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(mute.getBannedBy()), mute.getBannedBy()),
@@ -80,7 +85,7 @@ public class LiteBansData extends PluginData implements BanData {
                 }
                 for (LiteBansDBObj warn : warns) {
                     long expiry = warn.getExpiry();
-                    String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
+                    String expires = expiry <= 0 ? "Never" : timestampFormatter.apply(expiry);
                     table.addRow(
                             "<span title=\"" + warn.getReason() + "\">Warning</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(warn.getBannedBy()), warn.getBannedBy()),
@@ -89,7 +94,7 @@ public class LiteBansData extends PluginData implements BanData {
                 }
                 for (LiteBansDBObj kick : kicks) {
                     long expiry = kick.getExpiry();
-                    String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
+                    String expires = expiry <= 0 ? "Never" : timestampFormatter.apply(expiry);
                     table.addRow(
                             "<span title=\"" + kick.getReason() + "\">Kick</span>",
                             Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(kick.getBannedBy()), kick.getBannedBy()),
@@ -98,7 +103,6 @@ public class LiteBansData extends PluginData implements BanData {
                 }
             }
         } catch (DBOpException ex) {
-            Log.toLog(this.getClass().getName(), ex);
             table.addRow("Error: " + ex);
         } catch (IllegalStateException e) {
             inspectContainer.addValue(getWithIcon("Error", Icons.RED_WARN), "Database connection is not available");
@@ -185,9 +189,9 @@ public class LiteBansData extends PluginData implements BanData {
                 UUID uuid = object.getUuid();
                 String name = playerNames.getOrDefault(uuid, uuid.toString());
                 long expiry = object.getExpiry();
-                String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
+                String expires = expiry <= 0 ? "Never" : timestampFormatter.apply(expiry);
                 long time = object.getTime();
-                String given = time <= 0 ? "Unknown" : FormatUtils.formatTimeStampSecond(time);
+                String given = time <= 0 ? "Unknown" : timestampFormatter.apply(time);
 
                 table.addRow(
                         Html.LINK.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name),
@@ -206,9 +210,8 @@ public class LiteBansData extends PluginData implements BanData {
         try {
             return db.getBans(uuid).stream().anyMatch(LiteBansDBObj::isActive);
         } catch (DBOpException e) {
-            Log.toLog(this.getClass(), e);
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -221,8 +224,7 @@ public class LiteBansData extends PluginData implements BanData {
 
             return collection.stream().filter(banned::contains).collect(Collectors.toSet());
         } catch (DBOpException e) {
-            Log.toLog(this.getClass(), e);
+            return new HashSet<>();
         }
-        return new HashSet<>();
     }
 }

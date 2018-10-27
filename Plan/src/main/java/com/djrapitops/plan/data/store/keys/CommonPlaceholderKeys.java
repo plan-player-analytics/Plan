@@ -22,8 +22,8 @@ class CommonPlaceholderKeys {
     static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = new PlaceholderKey<>(String.class, "activityStackSeries");
     static final PlaceholderKey<String> ACTIVITY_STACK_CATEGORIES = new PlaceholderKey<>(String.class, "activityStackCategories");
     static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = new PlaceholderKey<>(String.class, "activityPieSeries");
-    public static final PlaceholderKey<String> COUNTRY_CATEGORIES = new PlaceholderKey<>(String.class, "countryCategories");
-    public static final PlaceholderKey<String> COUNTRY_SERIES = new PlaceholderKey<>(String.class, "countrySeries");
+    static final PlaceholderKey<String> COUNTRY_CATEGORIES = new PlaceholderKey<>(String.class, "countryCategories");
+    static final PlaceholderKey<String> COUNTRY_SERIES = new PlaceholderKey<>(String.class, "countrySeries");
     
     static final PlaceholderKey<String> HEALTH_NOTES = new PlaceholderKey<>(String.class, "healthNotes");
     static final PlaceholderKey<Double> HEALTH_INDEX = new PlaceholderKey<>(Double.class, "healthIndex");
@@ -36,6 +36,7 @@ class CommonPlaceholderKeys {
     static final PlaceholderKey<Integer> PLAYERS_NEW_MONTH = new PlaceholderKey<>(Integer.class, "playersNewMonth");
 
     static final PlaceholderKey<String> REFRESH_TIME_F = new PlaceholderKey<>(String.class, "refresh");
+    static final PlaceholderKey<String> REFRESH_TIME_FULL_F = new PlaceholderKey<>(String.class, "refreshFull");
     static final PlaceholderKey<String> LAST_PEAK_TIME_F = new PlaceholderKey<>(String.class, "lastPeakTime");
     static final PlaceholderKey<String> ALL_TIME_PEAK_TIME_F = new PlaceholderKey<>(String.class, "bestPeakTime");
     static final PlaceholderKey<String> PLAYERS_LAST_PEAK = new PlaceholderKey<>(String.class, "playersLastPeak");

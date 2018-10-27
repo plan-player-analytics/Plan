@@ -7,7 +7,7 @@ import com.djrapitops.plan.utilities.html.HtmlStructure;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
-import com.djrapitops.plan.utilities.html.structure.AbstractAccordion;
+import com.djrapitops.plan.utilities.html.structure.Accordion;
 import com.djrapitops.plan.utilities.html.structure.AccordionElement;
 import com.djrapitops.plan.utilities.html.structure.AccordionElementContentBuilder;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
@@ -25,12 +25,12 @@ import java.util.Set;
  *
  * @author Rsl1122
  */
-public class TownsAccordion extends AbstractAccordion {
+class TownsAccordion extends Accordion {
 
     private final List<Town> towns;
     private final PlayersMutator playersMutator;
 
-    public TownsAccordion(List<Town> towns, PlayersMutator playersMutator) {
+    TownsAccordion(List<Town> towns, PlayersMutator playersMutator) {
         super("towny_accordion");
         this.towns = towns;
         this.playersMutator = playersMutator;
@@ -48,7 +48,8 @@ public class TownsAccordion extends AbstractAccordion {
             try {
                 Coord homeBlock = town.getHomeBlock().getCoord();
                 coordinates = "x: " + homeBlock.getX() + " z: " + homeBlock.getZ();
-            } catch (TownyException e) {
+            } catch (TownyException ignore) {
+                /* Town has no home block */
             }
 
             List<Resident> residents = town.getResidents();

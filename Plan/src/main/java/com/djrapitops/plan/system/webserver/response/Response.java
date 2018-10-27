@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.webserver.response;
 
 import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.settings.theme.Theme;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -83,14 +84,17 @@ public abstract class Response {
         this.responseHeaders = responseHeaders;
     }
 
-    public void send(HttpExchange exchange, Locale locale) throws IOException {
+    public void send(HttpExchange exchange, Locale locale, Theme theme) throws IOException {
         responseHeaders.set("Content-Type", type);
         responseHeaders.set("Content-Encoding", "gzip");
         exchange.sendResponseHeaders(getCode(), 0);
 
-        String sentContent = this instanceof JavaScriptResponse
-                ? getContent()
-                : locale.replaceMatchingLanguage(getContent());
+        String sentContent = getContent();
+        // TODO Smell
+        if (!(this instanceof JavaScriptResponse)) {
+            sentContent = locale.replaceMatchingLanguage(sentContent);
+        }
+        sentContent = theme.replaceThemeColors(sentContent);
 
         try (
                 GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());

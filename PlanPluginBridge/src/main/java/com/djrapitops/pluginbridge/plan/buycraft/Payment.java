@@ -13,7 +13,7 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class Payment implements Comparable<Payment> {
+class Payment implements Comparable<Payment> {
 
     private final double amount;
     private final String currency;
@@ -22,7 +22,7 @@ public class Payment implements Comparable<Payment> {
     private final long date;
     private final String packages;
 
-    public Payment(double amount, String currency, UUID uuid, String playerName, long date, String packages) {
+    Payment(double amount, String currency, UUID uuid, String playerName, long date, String packages) {
         this.amount = amount;
         this.currency = currency;
         this.uuid = uuid;

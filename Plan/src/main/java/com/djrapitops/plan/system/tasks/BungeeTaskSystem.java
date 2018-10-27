@@ -6,13 +6,16 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
-import com.djrapitops.plan.system.tasks.bungee.EnableConnectionTask;
-import com.djrapitops.plan.system.tasks.server.NetworkPageRefreshTask;
-import com.djrapitops.plan.system.tasks.server.PingCountTimerBungee;
-import com.djrapitops.plan.utilities.file.export.HtmlExport;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.tasks.proxy.NetworkPageRefreshTask;
+import com.djrapitops.plan.system.tasks.proxy.bungee.BungeeTPSCountTimer;
+import com.djrapitops.plan.system.tasks.proxy.bungee.PingCountTimerBungee;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
+
+import javax.inject.Inject;
+import java.util.concurrent.TimeUnit;
 
 /**
  * TaskSystem responsible for registering tasks for Bungee.
@@ -22,10 +25,30 @@ import com.djrapitops.plugin.task.RunnableFactory;
 public class BungeeTaskSystem extends TaskSystem {
 
     private final PlanBungee plugin;
+    private final PlanConfig config;
+    private final NetworkPageRefreshTask networkPageRefreshTask;
+    private final PingCountTimerBungee pingCountTimer;
+    private final LogsFolderCleanTask logsFolderCleanTask;
+    private final PlayersPageRefreshTask playersPageRefreshTask;
 
-    public BungeeTaskSystem(PlanBungee plugin) {
-        super(new BungeeTPSCountTimer(plugin));
+    @Inject
+    public BungeeTaskSystem(
+            PlanBungee plugin,
+            PlanConfig config,
+            RunnableFactory runnableFactory,
+            BungeeTPSCountTimer bungeeTPSCountTimer,
+            NetworkPageRefreshTask networkPageRefreshTask,
+            PingCountTimerBungee pingCountTimer,
+            LogsFolderCleanTask logsFolderCleanTask,
+            PlayersPageRefreshTask playersPageRefreshTask) {
+        super(runnableFactory, bungeeTPSCountTimer);
         this.plugin = plugin;
+        this.config = config;
+
+        this.networkPageRefreshTask = networkPageRefreshTask;
+        this.pingCountTimer = pingCountTimer;
+        this.logsFolderCleanTask = logsFolderCleanTask;
+        this.playersPageRefreshTask = playersPageRefreshTask;
     }
 
     @Override
@@ -34,16 +57,21 @@ public class BungeeTaskSystem extends TaskSystem {
     }
 
     private void registerTasks() {
-        registerTask(new EnableConnectionTask()).runTaskAsynchronously();
-        registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
-        registerTask(new NetworkPageRefreshTask()).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
-        if (Settings.ANALYSIS_EXPORT.isTrue()) {
-            registerTask(new HtmlExport(plugin)).runTaskAsynchronously();
-        }
-        PingCountTimerBungee pingCountTimer = new PingCountTimerBungee();
+        registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
+        registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
+        registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
+        registerTask("Settings Save", new AbsRunnable() {
+            @Override
+            public void run() {
+                config.getNetworkSettings().placeSettingsToDB();
+            }
+        }).runTaskAsynchronously();
+
         plugin.registerListener(pingCountTimer);
-        long startDelay = TimeAmount.SECOND.ticks() * (long) Settings.PING_SERVER_ENABLE_DELAY.getNumber();
-        RunnableFactory.createNew("PingCountTimer", pingCountTimer)
-                .runTaskTimer(startDelay, PingCountTimerBungee.PING_INTERVAL);
+        long startDelay = TimeAmount.toTicks(config.getNumber(Settings.PING_SERVER_ENABLE_DELAY), TimeUnit.SECONDS);
+        runnableFactory.create("PingCountTimer", pingCountTimer).runTaskTimer(startDelay, PingCountTimerBungee.PING_INTERVAL);
+
+        registerTask(playersPageRefreshTask)
+                .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
     }
 }

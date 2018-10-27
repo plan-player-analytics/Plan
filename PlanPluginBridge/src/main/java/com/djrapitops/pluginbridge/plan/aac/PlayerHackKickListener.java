@@ -5,10 +5,7 @@
  */
 package com.djrapitops.pluginbridge.plan.aac;
 
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plugin.api.utility.log.Log;
 import me.konsolas.aac.api.AACAPIProvider;
 import me.konsolas.aac.api.HackType;
 import me.konsolas.aac.api.PlayerViolationCommandEvent;
@@ -17,7 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -26,7 +22,15 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 4.1.0
  */
-public class PlayerHackKickListener implements Listener {
+class PlayerHackKickListener implements Listener {
+
+    private final HackerTable hackerTable;
+    private final Processing processing;
+
+    PlayerHackKickListener(HackerTable hackerTable, Processing processing) {
+        this.hackerTable = hackerTable;
+        this.processing = processing;
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onKick(PlayerViolationCommandEvent event) {
@@ -37,17 +41,12 @@ public class PlayerHackKickListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         HackType hackType = event.getHackType();
+        String hackTypeName = hackType.getName();
         long time = System.currentTimeMillis();
         int violations = AACAPIProvider.getAPI().getViolationLevel(player, hackType);
 
-        HackObject hackObject = new HackObject(uuid, time, hackType, violations);
+        HackObject hackObject = new HackObject(uuid, time, hackTypeName, violations);
 
-        Processing.submitNonCritical(() -> {
-            try {
-                new HackerTable((SQLDB) Database.getActive()).insertHackRow(hackObject);
-            } catch (SQLException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
-        });
+        processing.submitNonCritical(() -> hackerTable.insertHackRow(hackObject));
     }
 }

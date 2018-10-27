@@ -7,17 +7,18 @@ import java.util.List;
 
 public class PingGraph {
 
-    private final AbstractLineGraph maxGraph;
-    private final AbstractLineGraph minGraph;
-    private final AbstractLineGraph avgGraph;
+    private final LineGraph maxGraph;
+    private final LineGraph minGraph;
+    private final LineGraph avgGraph;
 
     /**
      * Constructor.
      *
-     * @param pings List of Ping values:
-     *              List should be filtered so that only a single entry for each date exists.
+     * @param pings       List of Ping values:
+     *                    List should be filtered so that only a single entry for each date exists.
+     * @param displayGaps Should data gaps be displayed.
      */
-    public PingGraph(List<Ping> pings) {
+    PingGraph(List<Ping> pings, boolean displayGaps) {
         List<Point> max = new ArrayList<>();
         List<Point> min = new ArrayList<>();
         List<Point> avg = new ArrayList<>();
@@ -30,9 +31,9 @@ public class PingGraph {
             avg.add(new Point(date, ping.getAverage()));
         }
 
-        maxGraph = new AbstractLineGraph(max);
-        minGraph = new AbstractLineGraph(min);
-        avgGraph = new AbstractLineGraph(avg);
+        maxGraph = new LineGraph(max, displayGaps);
+        minGraph = new LineGraph(min, displayGaps);
+        avgGraph = new LineGraph(avg, displayGaps);
     }
 
     public String toMaxSeries() {

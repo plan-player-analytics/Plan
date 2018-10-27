@@ -1,9 +1,14 @@
 package com.djrapitops.pluginbridge.plan.sponge;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.economy.EconomyService;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
@@ -12,22 +17,29 @@ import java.util.Optional;
  * @author BrainStone
  * @since 4.4.6
  */
+@Singleton
 public class SpongeEconomyHook extends Hook {
-    public SpongeEconomyHook(HookHandler hookHandler) {
-        super("org.spongepowered.api.Sponge", hookHandler);
+
+    @Inject
+    public SpongeEconomyHook(
+            ErrorHandler errorHandler
+    ) {
+        super("org.spongepowered.api.Sponge");
         
         try {
             Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
             enabled = serviceOpt.isPresent();
         } catch(NoClassDefFoundError e) {
             enabled = false;
+        } catch (IllegalStateException e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
     @Override
-    public void hook() {
+    public void hook(HookHandler handler) {
         if (enabled) {
-            addPluginDataSource(new SpongeEconomyData(Sponge.getServiceManager().provide(EconomyService.class).get()));
+            handler.addPluginDataSource(new SpongeEconomyData(Sponge.getServiceManager().provide(EconomyService.class).get()));
         }
     }
 }

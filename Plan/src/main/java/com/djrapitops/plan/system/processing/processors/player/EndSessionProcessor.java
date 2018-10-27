@@ -19,13 +19,16 @@ public class EndSessionProcessor implements CriticalRunnable {
     private final UUID uuid;
     private final long time;
 
-    public EndSessionProcessor(UUID uuid, long time) {
+    private final SessionCache sessionCache;
+
+    EndSessionProcessor(UUID uuid, long time, SessionCache sessionCache) {
         this.uuid = uuid;
         this.time = time;
+        this.sessionCache = sessionCache;
     }
 
     @Override
     public void run() {
-        SessionCache.getInstance().endSession(uuid, time);
+        sessionCache.endSession(uuid, time);
     }
 }

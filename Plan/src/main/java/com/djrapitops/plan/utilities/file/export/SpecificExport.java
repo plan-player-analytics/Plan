@@ -4,15 +4,14 @@
  */
 package com.djrapitops.plan.utilities.file.export;
 
-import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.AbsRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,33 +27,42 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public abstract class SpecificExport extends AbsRunnable {
+public abstract class SpecificExport implements Runnable {
+
+    private final PlanFiles files;
+    private final PlanConfig config;
+    private final ServerInfo serverInfo;
 
     protected final File outputFolder;
-    protected final boolean usingBungee;
+    private final boolean usingProxy;
 
-    protected SpecificExport(String taskName) {
-        super(taskName);
+    protected SpecificExport(
+            PlanFiles files,
+            PlanConfig config,
+            ServerInfo serverInfo
+    ) {
+        this.files = files;
+        this.config = config;
+        this.serverInfo = serverInfo;
         outputFolder = getFolder();
-        usingBungee = Check.isBungeeAvailable();
+        usingProxy = Check.isBungeeAvailable() || Check.isVelocityAvailable();
     }
 
     protected File getFolder() {
-        String path = Settings.ANALYSIS_EXPORT_PATH.toString();
+        File folder;
 
-        Log.logDebug("Export", "Path: " + path);
+        String path = config.getString(Settings.ANALYSIS_EXPORT_PATH);
         boolean isAbsolute = Paths.get(path).isAbsolute();
-        Log.logDebug("Export", "Absolute: " + (isAbsolute ? "Yes" : "No"));
         if (isAbsolute) {
-            File folder = new File(path);
-            if (!folder.exists() || !folder.isDirectory()) {
-                folder.mkdirs();
-            }
-            return folder;
+            folder = new File(path);
+        } else {
+            File dataFolder = files.getDataFolder();
+            folder = new File(dataFolder, path);
         }
-        File dataFolder = PlanPlugin.getInstance().getDataFolder();
-        File folder = new File(dataFolder, path);
-        folder.mkdirs();
+
+        if (!folder.exists() || !folder.isDirectory()) {
+            folder.mkdirs();
+        }
         return folder;
     }
 
@@ -104,8 +112,8 @@ public abstract class SpecificExport extends AbsRunnable {
                 .replace("src=\"js/", "src=\"../js/");
 
         File htmlLocation;
-        if (usingBungee) {
-            if (serverUUID.equals(ServerInfo.getServerUUID())) {
+        if (usingProxy) {
+            if (serverUUID.equals(serverInfo.getServerUUID())) {
                 htmlLocation = new File(outputFolder, "network");
             } else {
                 htmlLocation = new File(getServerFolder(), serverName.replace(" ", "%20").replace(".", "%2E"));

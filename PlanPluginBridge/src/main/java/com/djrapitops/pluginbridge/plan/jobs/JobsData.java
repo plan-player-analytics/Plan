@@ -9,7 +9,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.gamingmesh.jobs.Jobs;
@@ -23,10 +23,13 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class JobsData extends PluginData {
+class JobsData extends PluginData {
 
-    public JobsData() {
+    private final Formatter<Double> decimalFormatter;
+
+    JobsData(Formatter<Double> decimalFormatter) {
         super(ContainerSize.THIRD, "Jobs");
+        this.decimalFormatter = decimalFormatter;
         setPluginIcon(Icon.called("suitcase").of(Color.BROWN).build());
     }
 
@@ -84,7 +87,7 @@ public class JobsData extends PluginData {
                         job,
                         amountOfWorkers,
                         totalLevel,
-                        amountOfWorkers != 0 ? FormatUtils.cutDecimals(totalLevel / amountOfWorkers) : "-"
+                        amountOfWorkers != 0 ? decimalFormatter.apply(totalLevel * 1.0 / amountOfWorkers) : "-"
                 );
             }
         }

@@ -1,8 +1,13 @@
 package com.djrapitops.pluginbridge.plan.askyblock;
 
 import com.djrapitops.plan.data.plugin.HookHandler;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.pluginbridge.plan.Hook;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * A Class responsible for hooking to ASkyBlock and registering data sources.
@@ -10,24 +15,25 @@ import com.wasteofplastic.askyblock.ASkyBlockAPI;
  * @author Rsl1122
  * @since 3.5.0
  */
+@Singleton
 public class ASkyBlockHook extends Hook {
 
-    /**
-     * Hooks the plugin and registers it's PluginData objects.
-     * <p>
-     * API#addPluginDataSource uses the same method from HookHandler.
-     *
-     * @param hookH HookHandler instance for registering the data sources.
-     * @throws NoClassDefFoundError when the plugin class can not be found.
-     */
-    public ASkyBlockHook(HookHandler hookH) throws NoClassDefFoundError {
-        super("com.wasteofplastic.askyblock.ASkyBlock", hookH);
+    private final Formatter<Double> percentageFormatter;
+
+    @Inject
+    public ASkyBlockHook(
+            Formatters formatters
+    ) throws NoClassDefFoundError {
+        super("com.wasteofplastic.askyblock.ASkyBlock");
+
+        percentageFormatter = formatters.percentage();
     }
 
-    public void hook() throws NoClassDefFoundError {
+    @Override
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (enabled) {
             ASkyBlockAPI api = ASkyBlockAPI.getInstance();
-            addPluginDataSource(new ASkyBlockData(api));
+            handler.addPluginDataSource(new ASkyBlockData(api, percentageFormatter));
         }
     }
 }

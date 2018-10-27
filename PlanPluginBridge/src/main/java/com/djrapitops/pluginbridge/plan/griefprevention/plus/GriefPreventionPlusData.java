@@ -12,9 +12,9 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
-import com.djrapitops.plugin.utilities.FormatUtils;
 import net.kaikk.mc.gpp.Claim;
 import net.kaikk.mc.gpp.DataStore;
+import org.bukkit.Location;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,11 +24,11 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class GriefPreventionPlusData extends PluginData {
+class GriefPreventionPlusData extends PluginData {
 
     private final DataStore dataStore;
 
-    public GriefPreventionPlusData(DataStore dataStore) {
+    GriefPreventionPlusData(DataStore dataStore) {
         super(ContainerSize.THIRD, "GriefPreventionPlus");
         setPluginIcon(Icon.called("shield-alt").of(Color.BLUE_GREY).build());
         this.dataStore = dataStore;
@@ -40,7 +40,7 @@ public class GriefPreventionPlusData extends PluginData {
                 .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.getOwnerID()))
                 .collect(Collectors.toMap(
-                        claim -> FormatUtils.formatLocation(claim.getGreaterBoundaryCorner()),
+                        claim -> formatLocation(claim.getGreaterBoundaryCorner()),
                         Claim::getArea)
                 );
         long totalArea = claims.values().stream().mapToInt(i -> i).sum();
@@ -81,5 +81,9 @@ public class GriefPreventionPlusData extends PluginData {
         analysisContainer.addPlayerTableValues(getWithIcon("Claimed Area", Icon.called("map").of(Family.REGULAR)), area);
 
         return analysisContainer;
+    }
+
+    private String formatLocation(Location greaterBoundaryCorner) {
+        return "x: " + greaterBoundaryCorner.getBlockX() + " z: " + greaterBoundaryCorner.getBlockZ();
     }
 }

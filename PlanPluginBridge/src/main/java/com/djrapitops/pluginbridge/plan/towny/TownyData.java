@@ -13,6 +13,7 @@ import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -32,16 +33,21 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class TownyData extends PluginData {
+class TownyData extends PluginData {
 
-    public TownyData() {
+    private final PlanConfig config;
+    private final DataCache dataCache;
+
+    TownyData(PlanConfig config, DataCache dataCache) {
         super(ContainerSize.TAB, "Towny");
+        this.config = config;
+        this.dataCache = dataCache;
         setPluginIcon(Icon.called("university").of(Color.BROWN).build());
     }
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
-        String playerName = DataCache.getInstance().getName(uuid);
+        String playerName = dataCache.getName(uuid);
 
         try {
             Resident resident = TownyUniverse.getDataSource().getResident(playerName);
@@ -59,7 +65,8 @@ public class TownyData extends PluginData {
                     Coord homeBlock = town.getHomeBlock().getCoord();
                     String coordinates = "x: " + homeBlock.getX() + " z: " + homeBlock.getZ();
                     inspectContainer.addValue(getWithIcon("Town Coordinates", Icon.called("map-pin").of(Color.RED)), coordinates);
-                } catch (TownyException e) {
+                } catch (TownyException ignore) {
+                    /* Town has no home block */
                 }
 
                 int residents = town.getResidents().size();
@@ -69,7 +76,7 @@ public class TownyData extends PluginData {
         } catch (NotRegisteredException ignore) {
             /* No Towny Resident. */
         }
-        inspectContainer.addValue(getWithIcon("Town", "bank", "brown"), "No Town");
+        inspectContainer.addValue(getWithIcon("Town", Icon.called("bank").of(Color.BROWN)), "No Town");
         return inspectContainer;
     }
 
@@ -85,7 +92,6 @@ public class TownyData extends PluginData {
             for (Town town : towns) {
                 String townName = town.getName();
                 String mayor = town.getMayor().getName();
-                DataCache dataCache = DataCache.getInstance();
                 UUID mayorUUID = dataCache.getUUIDof(mayor);
                 town.getResidents().stream()
                         .map(Resident::getName)
@@ -110,7 +116,7 @@ public class TownyData extends PluginData {
     private List<Town> getTopTowns() {
         List<Town> topTowns = TownyUniverse.getDataSource().getTowns();
         topTowns.sort(new TownComparator());
-        List<String> hide = Settings.HIDE_TOWNS.getStringList();
+        List<String> hide = config.getStringList(Settings.HIDE_TOWNS);
         return topTowns.stream()
                 .filter(town -> !hide.contains(town.getName()))
                 .collect(Collectors.toList());

@@ -4,6 +4,11 @@
  */
 package com.djrapitops.plan.system.webserver.response.errors;
 
+import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
+
+import java.io.IOException;
+
 /**
  * ErrorResponse for GatewayException.
  *
@@ -11,7 +16,8 @@ package com.djrapitops.plan.system.webserver.response.errors;
  */
 public class GatewayErrorResponse extends ErrorResponse {
 
-    public GatewayErrorResponse(String message) {
+    public GatewayErrorResponse(String message, VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {
+        super(versionCheckSystem, files);
         super.setHeader("HTTP/1.1 504 Gateway Error");
         super.setTitle("Failed to Connect (Gateway Error)");
         super.setParagraph(message);

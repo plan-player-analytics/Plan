@@ -26,7 +26,7 @@ public enum PageId {
     JS("js:"),
     CSS("css:"),
 
-    FAVICON_REDIRECT("Redirect:Favicon"),
+    FAVICON("Favicon"),
 
     PLAYER_PLUGINS_TAB("playerPluginsTab:"),
     NETWORK_CONTENT("networkContent");

@@ -2,13 +2,9 @@ package com.djrapitops.plan.utilities.file;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plugin.logging.L;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -22,15 +18,6 @@ public class FileUtil {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String getStringFromResource(String fileName) throws IOException {
-        StringBuilder html = new StringBuilder();
-        PlanPlugin plugin = PlanPlugin.getInstance();
-
-        lines(PlanPlugin.getInstance(), new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName)
-                .forEach(line -> html.append(line).append("\r\n"));
-        return html.toString();
-    }
-
     public static List<String> lines(PlanPlugin plugin, File savedFile, String defaults) throws IOException {
         if (savedFile.exists()) {
             return lines(savedFile);
@@ -42,6 +29,31 @@ public class FileUtil {
             }
         }
         return lines(plugin, defaults);
+    }
+
+    public static InputStream stream(PlanPlugin plugin, File savedFile, String defaults) {
+        try {
+            if (savedFile.exists()) {
+                return stream(savedFile);
+            } else {
+                String fileName = savedFile.getName();
+                File found = attemptToFind(fileName, new File(plugin.getDataFolder(), "web"));
+                if (found != null) {
+                    return stream(found);
+                }
+            }
+        } catch (FileNotFoundException ignore) {
+            // File was not found, use jar version
+        }
+        return stream(plugin, defaults);
+    }
+
+    private static InputStream stream(PlanPlugin plugin, String resource) {
+        return plugin.getResource(resource);
+    }
+
+    private static InputStream stream(File savedFile) throws FileNotFoundException {
+        return new FileInputStream(savedFile);
     }
 
     /**
@@ -81,7 +93,7 @@ public class FileUtil {
                 lines.add(scanner.nextLine());
             }
         } catch (NullPointerException e) {
-            Log.infoColor("§ea Resource was not found inside the jar (" + resource + "), Plan does not support /reload or updates using " +
+            plugin.getPluginLogger().log(L.INFO_COLOR, "§ea Resource was not found inside the jar (" + resource + "), Plan does not support /reload or updates using " +
                     "Plugin Managers, restart the server and see if the error persists.");
             throw new FileNotFoundException("File not found inside jar: " + resource);
         } finally {
@@ -96,7 +108,7 @@ public class FileUtil {
 
     public static List<String> lines(File file, Charset charset) throws IOException {
         List<String> lines = new ArrayList<>();
-        if (Verify.exists(file)) {
+        if (file != null && file.exists()) {
             try (Stream<String> linesStream = Files.lines(file.toPath(), charset)) {
                 lines = linesStream.collect(Collectors.toList());
             }

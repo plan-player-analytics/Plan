@@ -9,7 +9,7 @@ import com.djrapitops.plan.data.element.InspectContainer;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -27,10 +27,13 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class McMmoData extends PluginData {
+class McMmoData extends PluginData {
 
-    public McMmoData() {
+    private final Formatter<Double> decimalFormatter;
+
+    McMmoData(Formatter<Double> decimalFormatter) {
         super(ContainerSize.THIRD, "MCMMO");
+        this.decimalFormatter = decimalFormatter;
         setPluginIcon(Icon.called("compass").of(Color.INDIGO).of(Family.REGULAR).build());
     }
 
@@ -80,7 +83,7 @@ public class McMmoData extends PluginData {
             skillTable.addRow(
                     StringUtils.capitalize(skill.getName().toLowerCase()),
                     total,
-                    FormatUtils.cutDecimals(total * 1.0 / profiles.size())
+                    decimalFormatter.apply(total * 1.0 / profiles.size())
             );
         }
 

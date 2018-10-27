@@ -11,7 +11,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatemen
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.*;
-import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
@@ -69,7 +69,7 @@ public class UserInfoTable extends UserIDTable {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
                 statement.setLong(2, registered);
-                statement.setString(3, ServerInfo.getServerUUID().toString());
+                statement.setString(3, getServerUUID().toString());
             }
         });
     }
@@ -95,7 +95,7 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public boolean isRegistered(UUID uuid) {
-        return isRegistered(uuid, ServerInfo.getServerUUID());
+        return isRegistered(uuid, getServerUUID());
     }
 
     public void updateOpStatus(UUID uuid, boolean op) {
@@ -166,7 +166,7 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public UserInfo getUserInfo(UUID uuid) {
-        return getAllUserInfo(uuid).get(ServerInfo.getServerUUID());
+        return getAllUserInfo(uuid).get(getServerUUID());
     }
 
     public List<UserInfo> getServerUserInfo(UUID serverUUID) {
@@ -213,7 +213,7 @@ public class UserInfoTable extends UserIDTable {
      * @return List of UserInfo objects.
      */
     public List<UserInfo> getServerUserInfo() {
-        return getServerUserInfo(ServerInfo.getServerUUID());
+        return getServerUserInfo(getServerUUID());
     }
 
     public Map<UUID, List<UserInfo>> getAllUserInfo() {
@@ -310,6 +310,34 @@ public class UserInfoTable extends UserIDTable {
                 return 0;
             }
         });
+    }
+
+    public boolean isRegisteredOnThisServer(UUID player) {
+        return isRegistered(player, getServerUUID());
+    }
+
+    public Map<Integer, Integer> getPlayersRegisteredForServers(Collection<Server> servers) {
+        if (servers.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        String sql = "SELECT " + Col.SERVER_ID + ", " +
+                "COUNT(" + Col.REGISTERED + ") AS count" +
+                " FROM " + tableName +
+                " GROUP BY " + Col.SERVER_ID;
+        return query(new QueryAllStatement<Map<Integer, Integer>>(sql, 10000) {
+            @Override
+            public Map<Integer, Integer> processResults(ResultSet set) throws SQLException {
+                Map<Integer, Integer> map = new HashMap<>();
+                while (set.next()) {
+                    int serverID = set.getInt(Col.SERVER_ID.get());
+                    int count = set.getInt("count");
+                    map.put(serverID, count);
+                }
+                return map;
+            }
+        });
+
     }
 
     public enum Col implements Column {

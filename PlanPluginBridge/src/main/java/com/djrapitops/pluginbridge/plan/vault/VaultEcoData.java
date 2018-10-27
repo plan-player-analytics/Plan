@@ -10,7 +10,7 @@ import com.djrapitops.plan.data.plugin.ContainerSize;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.system.cache.DataCache;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
@@ -25,19 +25,28 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class VaultEcoData extends PluginData {
+class VaultEcoData extends PluginData {
 
     private final Economy econ;
 
-    public VaultEcoData(Economy econ) {
+    private final DataCache dataCache;
+    private final Formatter<Double> decimalFormatter;
+
+    VaultEcoData(
+            Economy econ,
+            DataCache dataCache,
+            Formatter<Double> decimalFormatter
+    ) {
         super(ContainerSize.THIRD, "Economy (" + econ.getName() + ")");
+        this.dataCache = dataCache;
+        this.decimalFormatter = decimalFormatter;
         setPluginIcon(Icon.called("money-bill-wave").of(Color.GREEN).build());
         this.econ = econ;
     }
 
     @Override
     public InspectContainer getPlayerData(UUID uuid, InspectContainer inspectContainer) {
-        String name = DataCache.getInstance().getName(uuid);
+        String name = dataCache.getName(uuid);
         if (name == null) {
             return inspectContainer;
         }
@@ -62,7 +71,7 @@ public class VaultEcoData extends PluginData {
             totalBalance += bal;
             balances.put(p.getUniqueId(), econ.format(bal));
         }
-        analysisContainer.addValue(getWithIcon("Server Balance", Icon.called("money-bill-wave").of(Color.GREEN)), FormatUtils.cutDecimals(totalBalance));
+        analysisContainer.addValue(getWithIcon("Server Balance", Icon.called("money-bill-wave").of(Color.GREEN)), decimalFormatter.apply(totalBalance));
         analysisContainer.addPlayerTableValues(getWithIcon("Balance", Icon.called("money-bill-wave")), balances);
 
         return analysisContainer;

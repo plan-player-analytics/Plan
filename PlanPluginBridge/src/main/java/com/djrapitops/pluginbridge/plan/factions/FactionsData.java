@@ -12,7 +12,8 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.keys.AnalysisKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Icon;
@@ -28,10 +29,21 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class FactionsData extends PluginData {
+class FactionsData extends PluginData {
 
-    public FactionsData() {
+    private final PlanConfig config;
+    private final Formatter<Long> timestampFormatter;
+    private final Formatter<Double> decimalFormatter;
+
+    FactionsData(
+            PlanConfig config,
+            Formatter<Long> timestampFormatter,
+            Formatter<Double> decimalFormatter
+    ) {
         super(ContainerSize.TAB, "Factions");
+        this.config = config;
+        this.timestampFormatter = timestampFormatter;
+        this.decimalFormatter = decimalFormatter;
         setPluginIcon(Icon.called("map").of(Color.DEEP_PURPLE).build());
     }
 
@@ -57,7 +69,7 @@ public class FactionsData extends PluginData {
 
         double power = mPlayer.getPower();
         double maxPower = mPlayer.getPowerMax();
-        String powerString = FormatUtils.cutDecimals(power) + " / " + FormatUtils.cutDecimals(maxPower);
+        String powerString = decimalFormatter.apply(power) + " / " + decimalFormatter.apply(maxPower);
         inspectContainer.addValue(getWithIcon("Power", Icon.called("bolt").of(Color.PURPLE)), powerString);
 
         return inspectContainer;
@@ -73,8 +85,8 @@ public class FactionsData extends PluginData {
             FactionsAccordion factionsAccordion = new FactionsAccordion(
                     factions,
                     Optional.ofNullable(analysisData).flatMap(c -> c.getValue(AnalysisKeys.PLAYERS_MUTATOR))
-                            .orElse(new PlayersMutator(new ArrayList<>()))
-            );
+                            .orElse(new PlayersMutator(new ArrayList<>())),
+                    timestampFormatter, decimalFormatter);
             analysisContainer.addHtml("factionAccordion", factionsAccordion.toHtml());
 
             Map<UUID, String> userFactions = new HashMap<>();
@@ -94,7 +106,7 @@ public class FactionsData extends PluginData {
                 }
             }
 
-            analysisContainer.addPlayerTableValues(getWithIcon("Faction", "flag"), userFactions);
+            analysisContainer.addPlayerTableValues(getWithIcon("Faction", Icon.called("flag")), userFactions);
         }
 
         return analysisContainer;
@@ -105,7 +117,7 @@ public class FactionsData extends PluginData {
         topFactions.remove(FactionColl.get().getWarzone());
         topFactions.remove(FactionColl.get().getSafezone());
         topFactions.remove(FactionColl.get().getNone());
-        List<String> hide = Settings.HIDE_FACTIONS.getStringList();
+        List<String> hide = config.getStringList(Settings.HIDE_FACTIONS);
         return topFactions.stream()
                 .filter(faction -> !hide.contains(faction.getName()))
                 .sorted(new FactionComparator())

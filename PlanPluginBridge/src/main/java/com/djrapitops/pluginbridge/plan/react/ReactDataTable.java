@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class ReactDataTable extends Table {
 
-    public static final String TABLE_NAME = "plan_react_data";
+    private static final String TABLE_NAME = "plan_react_data";
 
     public ReactDataTable(SQLDB db) {
         super(TABLE_NAME, db);
@@ -44,18 +44,18 @@ public class ReactDataTable extends Table {
                 .toString());
     }
 
-    public void clean() throws SQLException {
+    public void clean() {
         String sql = "DELETE FROM " + tableName + " WHERE " + Col.DATE + "<?";
 
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, System.currentTimeMillis() - TimeAmount.MONTH.ms());
+                statement.setLong(1, System.currentTimeMillis() - TimeAmount.MONTH.toMillis(1L));
             }
         });
     }
 
-    public void addData(ReactValue value) throws SQLException {
+    public void addData(ReactValue value) {
         String sql = "INSERT INTO " + tableName + " (" +
                 Col.SAMPLED_TYPE + ", " +
                 Col.DATE + ", " +
@@ -72,7 +72,7 @@ public class ReactDataTable extends Table {
         });
     }
 
-    public Map<SampledType, List<ReactValue>> getAllData() throws SQLException {
+    public Map<SampledType, List<ReactValue>> getAllData() {
         String sql = Select.all(tableName).toString();
 
         return query(new QueryAllStatement<Map<SampledType, List<ReactValue>>>(sql, 50000) {

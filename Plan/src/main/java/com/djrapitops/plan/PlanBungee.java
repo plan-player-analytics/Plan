@@ -6,21 +6,16 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanBungeeCommand;
-import com.djrapitops.plan.system.BungeeSystem;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBungee;
 import com.djrapitops.plugin.BungeePlugin;
-import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.DebugLog;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.logging.L;
 
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Bungee Main class.
@@ -29,48 +24,48 @@ import java.util.logging.Logger;
  */
 public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
-    private BungeeSystem system;
+    private PlanSystem system;
     private Locale locale;
-
-    public static PlanBungee getInstance() {
-        return (PlanBungee) StaticHolder.getInstance(PlanBungee.class);
-    }
 
     @Override
     public void onEnable() {
-        super.onEnable();
+        PlanBungeeComponent component = DaggerPlanBungeeComponent.builder().plan(this).build();
         try {
-            system = new BungeeSystem(this);
+            system = component.system();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            new BStatsBungee(this).registerMetrics();
+            new BStatsBungee(
+                    this,
+                    system.getDatabaseSystem().getDatabase(),
+                    system.getInfoSystem().getConnectionSystem()
+            ).registerMetrics();
 
-            Log.info(locale.getString(PluginLang.ENABLED));
+            logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
-            Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            Log.error("----------------------------------------");
-            Log.error("Error: " + e.getMessage());
-            Log.error("----------------------------------------");
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+            logger.error("----------------------------------------");
+            logger.error("Error: " + e.getMessage());
+            logger.error("----------------------------------------");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
             onDisable();
         } catch (Exception e) {
-            Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
-            Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("planbungee", new PlanBungeeCommand(this));
+        PlanBungeeCommand command = component.planCommand();
+        command.registerCommands();
+        registerCommand("planbungee", command);
     }
 
     @Override
     public void onDisable() {
         system.disable();
 
-        Log.info(locale.getString(PluginLang.DISABLED));
-        Benchmark.pluginDisabled(PlanBungee.class);
-        DebugLog.pluginDisabled(PlanBungee.class);
+        logger.info(locale.getString(PluginLang.DISABLED));
     }
 
     @Override
@@ -90,11 +85,11 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Override
     public ColorScheme getColorScheme() {
-        return PlanColorScheme.create();
+        return PlanColorScheme.create(system.getConfigSystem().getConfig(), logger);
     }
 
     @Override
-    public BungeeSystem getSystem() {
+    public PlanSystem getSystem() {
         return system;
     }
 

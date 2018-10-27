@@ -24,6 +24,7 @@ public class TPS implements DateHolder {
     private final long usedMemory;
     private final int entityCount;
     private final int chunksLoaded;
+    private final long freeDiskSpace;
 
     /**
      * Constructor.
@@ -32,11 +33,21 @@ public class TPS implements DateHolder {
      * @param ticksPerSecond average ticksPerSecond for the last minute.
      * @param players        players for the minute.
      * @param cpuUsage       CPU usage for the minute
-     * @param usedMemory     used memory at the time of fetching
+     * @param usedMemory     used memory (megabytes) at the time of fetching
      * @param entityCount    amount of entities at the time of fetching
      * @param chunksLoaded   amount of chunks loaded at the time of fetching
+     * @param freeDiskSpace  free megabytes in the partition the server is running in.
      */
-    public TPS(long date, double ticksPerSecond, int players, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded) {
+    public TPS(
+            long date,
+            double ticksPerSecond,
+            int players,
+            double cpuUsage,
+            long usedMemory,
+            int entityCount,
+            int chunksLoaded,
+            long freeDiskSpace
+    ) {
         this.date = date;
         this.ticksPerSecond = ticksPerSecond;
         this.players = players;
@@ -44,6 +55,7 @@ public class TPS implements DateHolder {
         this.usedMemory = usedMemory;
         this.entityCount = entityCount;
         this.chunksLoaded = chunksLoaded;
+        this.freeDiskSpace = freeDiskSpace;
     }
 
     @Override
@@ -105,6 +117,15 @@ public class TPS implements DateHolder {
         return chunksLoaded;
     }
 
+    /**
+     * Get free megabytes of disk space on the server disk.
+     *
+     * @return Amount of megabytes in use.
+     */
+    public long getFreeDiskSpace() {
+        return freeDiskSpace;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,12 +137,13 @@ public class TPS implements DateHolder {
                 Double.compare(tps.cpuUsage, cpuUsage) == 0 &&
                 usedMemory == tps.usedMemory &&
                 entityCount == tps.entityCount &&
-                chunksLoaded == tps.chunksLoaded;
+                chunksLoaded == tps.chunksLoaded &&
+                freeDiskSpace == tps.freeDiskSpace;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded);
+        return Objects.hash(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace);
     }
 
     @Override
@@ -133,6 +155,7 @@ public class TPS implements DateHolder {
                 "cpuUsage=" + cpuUsage + ", " +
                 "usedMemory=" + usedMemory + ", " +
                 "entityCount=" + entityCount + ", " +
-                "chunksLoaded=" + chunksLoaded + '}';
+                "chunksLoaded=" + chunksLoaded + ", " +
+                "freeDiskSpace=" + freeDiskSpace + '}';
     }
 }

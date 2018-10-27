@@ -1,9 +1,7 @@
 package com.djrapitops.pluginbridge.plan.react;
 
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.volmit.react.api.SampledType;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -11,13 +9,13 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-public class ValueStoringProcessor implements Runnable {
+class ValueStoringProcessor implements Runnable {
 
     private final ReactDataTable table;
     private final SampledType type;
     private final List<ReactValue> values;
 
-    public ValueStoringProcessor(ReactDataTable table, SampledType type, List<ReactValue> values) {
+    ValueStoringProcessor(ReactDataTable table, SampledType type, List<ReactValue> values) {
         this.table = table;
         this.type = type;
         this.values = values;
@@ -31,11 +29,7 @@ public class ValueStoringProcessor implements Runnable {
             return;
         }
 
-        try {
-            table.addData(average);
-        } catch (SQLException e) {
-            Log.toLog(this.getClass(), e);
-        }
+        table.addData(average);
     }
 
     private ReactValue avgValue(List<ReactValue> values) {

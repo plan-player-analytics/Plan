@@ -8,7 +8,9 @@ import com.djrapitops.plan.data.store.keys.NetworkKeys;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.lang.HealthInfoLang;
+import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.icon.Icon;
 import com.djrapitops.plan.utilities.html.icon.Icons;
 
@@ -18,10 +20,21 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
     private final NetworkContainer container;
 
-    public NetworkHealthInformation(NetworkContainer container) {
+    public NetworkHealthInformation(
+            NetworkContainer container,
+            Locale locale,
+            int activeMinuteThreshold,
+            int activeLoginThreshold,
+            Formatter<Long> timeAmountFormatter,
+            Formatter<Double> decimalFormatter,
+            Formatter<Double> percentageFormatter
+    ) {
         super(
                 container.getUnsafe(NetworkKeys.REFRESH_TIME),
-                container.getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO)
+                container.getUnsafe(NetworkKeys.REFRESH_TIME_MONTH_AGO),
+                locale,
+                activeMinuteThreshold, activeLoginThreshold,
+                timeAmountFormatter, decimalFormatter, percentageFormatter
         );
         this.container = container;
         calculate();
@@ -40,12 +53,12 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                 .orElse(Collections.emptyList());
 
         if (servers.isEmpty()) {
-            addNote(Icons.HELP_RING + " No Bukkit/Sponge servers to gather session data - These measures are inaccurate.");
+            addNote(Icons.HELP_RING + locale.getString(HealthInfoLang.NO_SERVERS_INACCURACY));
             return;
         }
         int serverCount = servers.size();
         if (serverCount == 1) {
-            addNote(Icons.HELP_RING + " Single Bukkit/Sponge server to gather session data.");
+            addNote(Icons.HELP_RING + locale.getString(HealthInfoLang.SINGLE_SERVER_INACCURACY));
             return;
         }
 
@@ -60,7 +73,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
     private void uniquePlayersNote(int serverCount, Key<Server> serverKey, List<DataContainer> perServerContainers) {
         Icon icon;
-        String uniquePlayersNote = " players visit on servers per day/server on average.";
+        String uniquePlayersNote = locale.getString(HealthInfoLang.PLAYER_VISIT_PER_SERVER);
         double average = perServerContainers.stream()
                 .mapToInt(c -> c.getUnsafe(AnalysisKeys.AVG_PLAYERS_MONTH))
                 .average().orElse(0.0);
@@ -82,12 +95,12 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                     return subNote + (playersPerMonth >= average && playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
                             server.getName() + ": " + playersPerMonth;
                 }).forEach(subNotes::append);
-        addNote(icon + " " + FormatUtils.cutDecimals(average) + uniquePlayersNote + subNotes.toString());
+        addNote(icon + " " + decimalFormatter.apply(average) + uniquePlayersNote + subNotes.toString());
     }
 
     private void newPlayersNote(int serverCount, Key<Server> serverKey, List<DataContainer> perServerContainers) {
         Icon icon;
-        String newPlayersNote = " players register on servers per day/server on average.";
+        String newPlayersNote = locale.getString(HealthInfoLang.PLAYER_REGISTER_PER_SERVER);
         double average = perServerContainers.stream()
                 .mapToInt(c -> c.getUnsafe(AnalysisKeys.AVG_PLAYERS_NEW_MONTH))
                 .average().orElse(0.0);
@@ -109,7 +122,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
                     return subNote + (playersPerMonth >= average && playersPerMonth > 0 ? Icons.GREEN_PLUS : Icons.RED_MINUS) + " " +
                             server.getName() + ": " + playersPerMonth;
                 }).forEach(subNotes::append);
-        addNote(icon + " " + FormatUtils.cutDecimals(average) + newPlayersNote + subNotes.toString());
+        addNote(icon + " " + decimalFormatter.apply(average) + newPlayersNote + subNotes.toString());
     }
 
     private List<DataContainer> getPerServerContainers(PlayersMutator playersMutator, Collection<Server> servers, Key<Server> serverKey) {
@@ -139,7 +152,7 @@ public class NetworkHealthInformation extends AbstractHealthInfo {
 
     private void playersNote(Key<Server> serverKey, List<DataContainer> perServerContainers) {
         Icon icon = Icons.HELP_RING;
-        String uniquePlayersNote = "${playersMonth} players played on the network:";
+        String uniquePlayersNote = "${playersMonth}" + locale.getString(HealthInfoLang.PLAYER_PLAY_ON_NETWORK);
         StringBuilder subNotes = new StringBuilder();
         perServerContainers.stream()
                 .sorted(Comparator.comparingInt(c -> 0 - c.getUnsafe(AnalysisKeys.PLAYERS_MONTH)))

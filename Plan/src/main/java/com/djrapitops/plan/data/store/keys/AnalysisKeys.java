@@ -30,6 +30,8 @@ public class AnalysisKeys {
     public static final PlaceholderKey<Integer> FIRST_DAY = new PlaceholderKey<>(Integer.class, "firstDay");
     public static final PlaceholderKey<Integer> TPS_MEDIUM = new PlaceholderKey<>(Integer.class, "tpsMedium");
     public static final PlaceholderKey<Integer> TPS_HIGH = new PlaceholderKey<>(Integer.class, "tpsHigh");
+    public static final PlaceholderKey<Integer> DISK_MEDIUM = new PlaceholderKey<>(Integer.class, "diskMedium");
+    public static final PlaceholderKey<Integer> DISK_HIGH = new PlaceholderKey<>(Integer.class, "diskHigh");
     public static final PlaceholderKey<Integer> PLAYERS_MAX = new PlaceholderKey<>(Integer.class, "playersMax");
     public static final PlaceholderKey<Integer> PLAYERS_ONLINE = CommonPlaceholderKeys.PLAYERS_ONLINE;
     public static final PlaceholderKey<Integer> PLAYERS_TOTAL = CommonPlaceholderKeys.PLAYERS_TOTAL;
@@ -60,6 +62,7 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> PLUGINS_TAB_NAV = new PlaceholderKey<>(String.class, "navPluginsTabs");
     // Formatted time values
     public static final PlaceholderKey<String> REFRESH_TIME_F = CommonPlaceholderKeys.REFRESH_TIME_F;
+    public static final PlaceholderKey<String> REFRESH_TIME_FULL_F = CommonPlaceholderKeys.REFRESH_TIME_FULL_F;
     public static final PlaceholderKey<String> LAST_PEAK_TIME_F = CommonPlaceholderKeys.LAST_PEAK_TIME_F;
     public static final PlaceholderKey<String> ALL_TIME_PEAK_TIME_F = CommonPlaceholderKeys.ALL_TIME_PEAK_TIME_F;
     public static final PlaceholderKey<String> AVERAGE_SESSION_LENGTH_F = new PlaceholderKey<>(String.class, "sessionAverage");
@@ -126,6 +129,7 @@ public class AnalysisKeys {
     public static final PlaceholderKey<String> RAM_SERIES = new PlaceholderKey<>(String.class, "ramSeries");
     public static final PlaceholderKey<String> ENTITY_SERIES = new PlaceholderKey<>(String.class, "entitySeries");
     public static final PlaceholderKey<String> CHUNK_SERIES = new PlaceholderKey<>(String.class, "chunkSeries");
+    public static final PlaceholderKey<String> DISK_SERIES = new PlaceholderKey<>(String.class, "diskSeries");
     public static final PlaceholderKey<String> PUNCHCARD_SERIES = new PlaceholderKey<>(String.class, "punchCardSeries");
     public static final PlaceholderKey<String> WORLD_MAP_SERIES = CommonPlaceholderKeys.WORLD_MAP_SERIES;
     public static final PlaceholderKey<String> ACTIVITY_STACK_SERIES = CommonPlaceholderKeys.ACTIVITY_STACK_SERIES;
@@ -151,6 +155,7 @@ public class AnalysisKeys {
     public static final Key<Long> ANALYSIS_TIME_MONTH_AGO = new Key<>(Long.class, "ANALYSIS_TIME_MONTH_AGO");
     public static final Key<Map<UUID, String>> PLAYER_NAMES = new Key<>(new Type<Map<UUID, String>>() {}, "PLAYER_NAMES");
     public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = CommonKeys.ACTIVITY_DATA;
+    @Deprecated
     public static final Key<Set<UUID>> BAN_DATA = new Key<>(new Type<Set<UUID>>() {}, "BAN_DATA");
     public static final Key<TreeMap<Long, Integer>> UNIQUE_PLAYERS_PER_DAY = new Key<>(new Type<TreeMap<Long, Integer>>() {}, "UNIQUE_PLAYERS_PER_DAY");
     public static final Key<TreeMap<Long, Integer>> NEW_PLAYERS_PER_DAY = new Key<>(new Type<TreeMap<Long, Integer>>() {}, "NEW_PLAYERS_PER_DAY");

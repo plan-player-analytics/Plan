@@ -1,11 +1,8 @@
 package com.djrapitops.plan.system.database.databases;
 
-import com.djrapitops.plan.api.exceptions.connection.UnsupportedTransferDatabaseException;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.operation.*;
-import com.djrapitops.plugin.utilities.Verify;
 
 /**
  * Abstract class representing a Database.
@@ -17,12 +14,6 @@ import com.djrapitops.plugin.utilities.Verify;
 public abstract class Database {
 
     protected boolean open = false;
-
-    public static Database getActive() {
-        Database database = DBSystem.getInstance().getActiveDatabase();
-        Verify.nullCheck(database, () -> new IllegalStateException("Database was not initialized."));
-        return database;
-    }
 
     public abstract void init() throws DBInitException;
 
@@ -40,13 +31,6 @@ public abstract class Database {
 
     public abstract SaveOperations save();
 
-    /**
-     * Used to get the name of the database type.
-     * <p>
-     * Thread safe.
-     *
-     * @return SQLite/MySQL
-     */
     public abstract String getName();
 
     /**
@@ -68,5 +52,5 @@ public abstract class Database {
 
     public abstract void scheduleClean(long delay);
 
-    public abstract TransferOperations transfer() throws UnsupportedTransferDatabaseException;
+    public abstract TransferOperations transfer();
 }

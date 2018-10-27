@@ -5,19 +5,26 @@
 package com.djrapitops.plan.utilities.file.export;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.exceptions.ParseException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.container.UserInfo;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.info.server.ServerInfo;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.system.webserver.response.pages.PlayersPageResponse;
 import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.html.pages.PageFactory;
 import com.djrapitops.plugin.api.Check;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.logging.L;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,31 +36,76 @@ import java.util.*;
  *
  * @author Rsl1122
  */
+@Singleton
 public class HtmlExport extends SpecificExport {
 
     private final PlanPlugin plugin;
+    private final Theme theme;
+    private final Processing processing;
+    private final PlanFiles files;
+    private final DBSystem dbSystem;
+    private final PageFactory pageFactory;
+    private final ConnectionSystem connectionSystem;
+    private final ErrorHandler errorHandler;
 
-    public HtmlExport(PlanPlugin plugin) {
-        super("HtmlExportTask");
+    @Inject
+    public HtmlExport(
+            PlanPlugin plugin,
+            PlanFiles files,
+            PlanConfig config,
+            Theme theme,
+            Processing processing,
+            DBSystem dbSystem,
+            PageFactory pageFactory,
+            ServerInfo serverInfo,
+            ConnectionSystem connectionSystem,
+            ErrorHandler errorHandler
+    ) {
+        super(files, config, serverInfo);
         this.plugin = plugin;
+        this.theme = theme;
+        this.processing = processing;
+        this.files = files;
+        this.dbSystem = dbSystem;
+        this.pageFactory = pageFactory;
+        this.connectionSystem = connectionSystem;
+        this.errorHandler = errorHandler;
     }
 
-    public static void exportServer(UUID serverUUID) {
-        Optional<String> serverName = Database.getActive().fetch().getServerName(serverUUID);
-        serverName.ifPresent(s -> RunnableFactory.createNew(new AnalysisExport(serverUUID, s)).runTaskAsynchronously());
+    public void exportServer(UUID serverUUID) {
+        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+            return;
+        }
+        Optional<String> serverName = dbSystem.getDatabase().fetch().getServerName(serverUUID);
+        serverName.ifPresent(name -> processing.submitNonCritical(() -> {
+            try {
+                exportAvailableServerPage(serverUUID, name);
+            } catch (IOException e) {
+                errorHandler.log(L.WARN, this.getClass(), e);
+            }
+        }));
     }
 
-    public static void exportPlayer(UUID playerUUID) {
-        String playerName = Database.getActive().fetch().getPlayerName(playerUUID);
+    public void exportPlayer(UUID uuid) {
+        if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
+            return;
+        }
+        String playerName = dbSystem.getDatabase().fetch().getPlayerName(uuid);
         if (playerName != null) {
-            RunnableFactory.createNew(new PlayerExport(playerUUID, playerName)).runTaskAsynchronously();
+            processing.submitNonCritical(() -> {
+                try {
+                    exportAvailablePlayerPage(uuid, playerName);
+                } catch (IOException e) {
+                    errorHandler.log(L.WARN, this.getClass(), e);
+                }
+            });
         }
     }
 
     @Override
     public void run() {
         try {
-            if (Check.isBukkitAvailable() && ConnectionSystem.getInstance().isServerAvailable()) {
+            if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
                 return;
             }
 
@@ -64,20 +116,13 @@ public class HtmlExport extends SpecificExport {
             exportAvailableServerPages();
             exportAvailablePlayers();
             exportPlayersPage();
-        } catch (IOException | DBOpException e) {
-            Log.toLog(this.getClass(), e);
-        } finally {
-            try {
-                this.cancel();
-            } catch (ConcurrentModificationException | IllegalArgumentException ignore) {
-            }
+        } catch (IOException | DBOpException | ParseException e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
-    private void exportPlayersPage() throws IOException {
-        PlayersPageResponse playersPageResponse = new PlayersPageResponse();
-
-        String html = playersPageResponse.getContent()
+    private void exportPlayersPage() throws IOException, ParseException {
+        String html = pageFactory.playersPage().toHtml()
                 .replace("href=\"plugins/", "href=\"../plugins/")
                 .replace("href=\"css/", "href=\"../css/")
                 .replace("src=\"plugins/", "src=\"../plugins/")
@@ -92,13 +137,13 @@ public class HtmlExport extends SpecificExport {
     }
 
     private void exportAvailablePlayers() throws IOException {
-        for (Map.Entry<UUID, UserInfo> entry : Database.getActive().fetch().getUsers().entrySet()) {
+        for (Map.Entry<UUID, UserInfo> entry : dbSystem.getDatabase().fetch().getUsers().entrySet()) {
             exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
         }
     }
 
     private void exportAvailableServerPages() throws IOException {
-        Map<UUID, String> serverNames = Database.getActive().fetch().getServerNames();
+        Map<UUID, String> serverNames = dbSystem.getDatabase().fetch().getServerNames();
 
         for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
             exportAvailableServerPage(entry.getKey(), entry.getValue());
@@ -128,6 +173,7 @@ public class HtmlExport extends SpecificExport {
                 "web/js/charts/playerGraph.js",
                 "web/js/charts/playerGraphNoNav.js",
                 "web/js/charts/resourceGraph.js",
+                "web/js/charts/diskGraph.js",
                 "web/js/charts/tpsGraph.js",
                 "web/js/charts/worldGraph.js",
                 "web/js/charts/worldMap.js",
@@ -141,15 +187,15 @@ public class HtmlExport extends SpecificExport {
         copyFromJar(resources);
 
         try {
-            String demo = FileUtil.getStringFromResource("web/js/demo.js")
-                    .replace("${defaultTheme}", Theme.getValue(ThemeVal.THEME_DEFAULT));
+            String demo = files.readFromResourceFlat("web/js/demo.js")
+                    .replace("${defaultTheme}", theme.getValue(ThemeVal.THEME_DEFAULT));
             List<String> lines = Arrays.asList(demo.split("\n"));
             File outputFolder = new File(this.outputFolder, "js");
             Verify.isTrue(outputFolder.exists() && outputFolder.isDirectory() || outputFolder.mkdirs(),
                     () -> new FileNotFoundException("Output folder could not be created at" + outputFolder.getAbsolutePath()));
             export(new File(outputFolder, "demo.js"), lines);
         } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
@@ -176,7 +222,7 @@ public class HtmlExport extends SpecificExport {
             try {
                 copyFromJar(resource);
             } catch (IOException e) {
-                Log.toLog(this.getClass(), e);
+                errorHandler.log(L.WARN, this.getClass(), e);
             }
         }
     }

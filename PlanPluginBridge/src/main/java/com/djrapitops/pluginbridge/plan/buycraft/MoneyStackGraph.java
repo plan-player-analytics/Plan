@@ -5,9 +5,10 @@
 package com.djrapitops.pluginbridge.plan.buycraft;
 
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.html.graphs.stack.AbstractStackGraph;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackDataSet;
+import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
 import com.djrapitops.plugin.api.TimeAmount;
 
 import java.time.Instant;
@@ -22,15 +23,14 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class MoneyStackGraph {
+class MoneyStackGraph {
 
-    private final AbstractStackGraph stackGraph;
+    private final StackGraph stackGraph;
+    private final ZoneId timeZoneID;
 
-    private MoneyStackGraph(AbstractStackGraph stackGraph) {
-        this.stackGraph = stackGraph;
-    }
+    MoneyStackGraph(List<Payment> payments, PlanConfig config) {
+        timeZoneID = config.isTrue(Settings.USE_SERVER_TIME) ? ZoneId.systemDefault() : ZoneOffset.UTC;
 
-    public static MoneyStackGraph create(List<Payment> payments) {
         long now = System.currentTimeMillis();
         long oldestDate = payments.isEmpty() ? now : payments.get(payments.size() - 1).getDate();
 
@@ -39,10 +39,10 @@ public class MoneyStackGraph {
 
         StackDataSet[] dataSets = getDataSets(labels, stacks);
 
-        return new MoneyStackGraph(new AbstractStackGraph(labels, dataSets));
+        this.stackGraph = new StackGraph(labels, dataSets);
     }
 
-    private static StackDataSet[] getDataSets(String[] labels, Map<String, List<Payment>> stacks) {
+    private StackDataSet[] getDataSets(String[] labels, Map<String, List<Payment>> stacks) {
         String[] colors = ThemeVal.GRAPH_GM_PIE.getDefaultValue().split(", ");
         int maxCol = colors.length;
 
@@ -62,10 +62,10 @@ public class MoneyStackGraph {
             i++;
         }
 
-        return stackDataSets.toArray(new StackDataSet[stackDataSets.size()]);
+        return stackDataSets.toArray(new StackDataSet[0]);
     }
 
-    private static List<Double> sortValuesByLabels(String[] labels, Map<String, Double> valueMap) {
+    private List<Double> sortValuesByLabels(String[] labels, Map<String, Double> valueMap) {
         List<Double> values = new ArrayList<>();
         for (String label : labels) {
             values.add(valueMap.getOrDefault(label, 0.0));
@@ -73,7 +73,7 @@ public class MoneyStackGraph {
         return values;
     }
 
-    private static Map<String, Double> getValueMap(List<Payment> payments) {
+    private Map<String, Double> getValueMap(List<Payment> payments) {
         Map<String, Double> valueMap = new HashMap<>();
         for (Payment payment : payments) {
             String label = getLabel(payment.getDate());
@@ -83,7 +83,7 @@ public class MoneyStackGraph {
         return valueMap;
     }
 
-    private static Map<String, List<Payment>> getStacks(List<Payment> payments) {
+    private Map<String, List<Payment>> getStacks(List<Payment> payments) {
         Map<String, List<Payment>> stacks = new HashMap<>();
         for (Payment payment : payments) {
             String currency = payment.getCurrency();
@@ -95,25 +95,24 @@ public class MoneyStackGraph {
         return stacks;
     }
 
-    private static String[] getLabels(long now, long oldestDate) {
-        long oneYearAgo = now - TimeAmount.YEAR.ms();
+    private String[] getLabels(long now, long oldestDate) {
+        long oneYearAgo = now - TimeAmount.YEAR.toMillis(1L);
 
         long leftLimit = Math.max(oldestDate, oneYearAgo);
 
         List<String> labels = new ArrayList<>();
-        for (long time = leftLimit; time < now; time += TimeAmount.MONTH.ms()) {
+        for (long time = leftLimit; time < now; time += TimeAmount.MONTH.toMillis(1L)) {
             labels.add(getLabel(time));
         }
 
-        return labels.toArray(new String[labels.size()]);
+        return labels.toArray(new String[0]);
     }
 
-    private static String getLabel(long time) {
+    private String getLabel(long time) {
         String locale = Settings.LOCALE.toString();
         Locale usedLocale = locale.equalsIgnoreCase("default") ? Locale.ENGLISH : Locale.forLanguageTag(locale);
-        ZoneId usedTimeZone = Settings.USE_SERVER_TIME.isTrue() ? ZoneId.systemDefault() : ZoneOffset.UTC;
 
-        LocalDate date = Instant.ofEpochMilli(time).atZone(usedTimeZone).toLocalDate();
+        LocalDate date = Instant.ofEpochMilli(time).atZone(timeZoneID).toLocalDate();
         String month = date.getMonth().getDisplayName(TextStyle.FULL, usedLocale);
         int year = date.getYear();
         return month + " " + year;

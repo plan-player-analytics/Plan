@@ -28,7 +28,7 @@ public class Request {
 
     public Request(HttpExchange exchange, Locale locale) {
         this.requestMethod = exchange.getRequestMethod();
-        this.target = exchange.getRequestURI().toString();
+        this.target = exchange.getRequestURI().getPath();
 
         remoteAddress = exchange.getRemoteAddress().getAddress().getHostAddress();
 

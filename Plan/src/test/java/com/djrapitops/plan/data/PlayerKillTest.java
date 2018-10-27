@@ -12,28 +12,43 @@ import utilities.RandomData;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
+ * Tests for {@link PlayerKill}.
+ *
  * @author Rsl1122
  */
 public class PlayerKillTest {
 
-    private String randomString = RandomData.randomString(10);
+    private String weapon = RandomData.randomString(10);
     private UUID testUUID = UUID.randomUUID();
-    private PlayerKill playerKill = new PlayerKill(testUUID, randomString, 100L);
+    private PlayerKill underTest = new PlayerKill(testUUID, weapon, 100L);
 
     @Test
-    public void testGetVictim() {
-        assertEquals(playerKill.getVictim(), testUUID);
+    public void victimUUIDIsReturned() {
+        assertEquals(testUUID, underTest.getVictim());
     }
 
     @Test
-    public void testGetDate() {
-        assertEquals(playerKill.getDate(), 100L);
+    public void dateIsReturned() {
+        assertEquals(100L, underTest.getDate());
     }
 
     @Test
-    public void testGetWeapon() {
-        assertEquals(playerKill.getWeapon(), randomString);
+    public void weaponIsReturned() {
+        assertEquals(weapon, underTest.getWeapon());
+    }
+
+    @Test
+    public void noVictimFound() {
+        assertFalse(underTest.getVictimName().isPresent());
+    }
+
+    @Test
+    public void victimFound() {
+        String expectedName = "Test Victim";
+        PlayerKill underTest = new PlayerKill(testUUID, weapon, 100L, expectedName);
+        assertEquals("Test Victim", underTest.getVictimName().orElse("Unknown"));
     }
 }

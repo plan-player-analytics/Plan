@@ -10,33 +10,33 @@ import com.djrapitops.plan.data.store.containers.PerServerContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.keys.PlayerKeys;
 import com.djrapitops.plan.data.store.mutators.*;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatter;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
-import com.djrapitops.plan.data.store.mutators.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
-import com.djrapitops.plan.utilities.FormatUtils;
-import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
-import com.djrapitops.plan.utilities.file.FileUtil;
+import com.djrapitops.plan.utilities.formatting.Formatter;
+import com.djrapitops.plan.utilities.formatting.Formatters;
+import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.utilities.html.HtmlStructure;
-import com.djrapitops.plan.utilities.html.graphs.PunchCardGraph;
+import com.djrapitops.plan.utilities.html.graphs.Graphs;
 import com.djrapitops.plan.utilities.html.graphs.calendar.PlayerCalendar;
-import com.djrapitops.plan.utilities.html.graphs.pie.ServerPreferencePie;
 import com.djrapitops.plan.utilities.html.graphs.pie.WorldPie;
+import com.djrapitops.plan.utilities.html.structure.Accordions;
 import com.djrapitops.plan.utilities.html.structure.ServerAccordion;
 import com.djrapitops.plan.utilities.html.structure.SessionAccordion;
-import com.djrapitops.plan.utilities.html.tables.*;
-import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plan.utilities.html.tables.HtmlTables;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.benchmarking.Timings;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Used for parsing Inspect page out of database data and the html.
@@ -45,30 +45,70 @@ import java.util.*;
  */
 public class InspectPage implements Page {
 
-    private final UUID uuid;
+    private final PlayerContainer player;
+    private final Map<UUID, String> serverNames;
 
-    public InspectPage(UUID uuid) {
-        this.uuid = uuid;
+    private final VersionCheckSystem versionCheckSystem;
+
+    private final PlanFiles files;
+    private final PlanConfig config;
+    private final Theme theme;
+    private final Graphs graphs;
+    private final HtmlTables tables;
+    private final Accordions accordions;
+    private final ServerInfo serverInfo;
+    private final Timings timings;
+
+    private final Formatter<Long> timeAmountFormatter;
+    private final Formatter<Long> clockLongFormatter;
+    private final Formatter<Long> secondLongFormatter;
+    private final Formatter<Long> yearLongFormatter;
+    private final Formatter<Double> decimalFormatter;
+
+    InspectPage(
+            PlayerContainer player, Map<UUID, String> serverNames,
+            VersionCheckSystem versionCheckSystem,
+            PlanFiles files,
+            PlanConfig config,
+            Theme theme,
+            Graphs graphs,
+            HtmlTables tables,
+            Accordions accordions,
+            Formatters formatters,
+            ServerInfo serverInfo,
+            Timings timings
+    ) {
+        this.player = player;
+        this.serverNames = serverNames;
+        this.versionCheckSystem = versionCheckSystem;
+        this.files = files;
+        this.config = config;
+        this.theme = theme;
+        this.graphs = graphs;
+        this.tables = tables;
+        this.accordions = accordions;
+        this.serverInfo = serverInfo;
+        this.timings = timings;
+
+        timeAmountFormatter = formatters.timeAmount();
+        clockLongFormatter = formatters.clockLong();
+        secondLongFormatter = formatters.secondLong();
+        yearLongFormatter = formatters.yearLong();
+        decimalFormatter = formatters.decimals();
     }
 
     @Override
     public String toHtml() throws ParseException {
         try {
-            if (uuid == null) {
-                throw new IllegalStateException("UUID was null!");
-            }
-            Benchmark.start("Inspect Parse, Fetch");
-            Database db = Database.getActive();
-            PlayerContainer container = Database.getActive().fetch().getPlayerContainer(uuid);
-            if (!container.getValue(PlayerKeys.REGISTERED).isPresent()) {
+            timings.start("Inspect Parse, Fetch");
+            if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
                 throw new IllegalStateException("Player is not registered");
             }
-            UUID serverUUID = ServerInfo.getServerUUID();
-            Map<UUID, String> serverNames = db.fetch().getServerNames();
+            UUID serverUUID = serverInfo.getServerUUID();
 
-            Benchmark.stop("Inspect Parse, Fetch");
+            timings.end("Inspect Parse, Fetch");
 
-            return parse(container, serverUUID, serverNames);
+            return parse(player, serverUUID, serverNames);
         } catch (Exception e) {
             throw new ParseException(e);
         }
@@ -76,12 +116,15 @@ public class InspectPage implements Page {
 
     public String parse(PlayerContainer player, UUID serverUUID, Map<UUID, String> serverNames) throws IOException {
         long now = System.currentTimeMillis();
+        UUID uuid = player.getUnsafe(PlayerKeys.UUID);
 
         PlaceholderReplacer replacer = new PlaceholderReplacer();
 
-        replacer.put("refresh", FormatUtils.formatTimeStampClock(now));
-        replacer.put("version", MiscUtils.getPlanVersion());
-        replacer.put("timeZone", MiscUtils.getTimeZoneOffsetHours());
+        replacer.put("refresh", clockLongFormatter.apply(now));
+        replacer.put("refreshFull", secondLongFormatter.apply(now));
+        replacer.put("version", versionCheckSystem.getCurrentVersion());
+        replacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
+        replacer.put("timeZone", config.getTimeZoneOffsetHours());
 
         boolean online = false;
         Optional<Session> activeSession = SessionCache.getCachedSession(uuid);
@@ -95,7 +138,7 @@ public class InspectPage implements Page {
         String playerName = player.getValue(PlayerKeys.NAME).orElse("Unknown");
         int timesKicked = player.getValue(PlayerKeys.KICK_COUNT).orElse(0);
 
-        replacer.addAllPlaceholdersFrom(player, Formatters.yearLongValue(),
+        replacer.addAllPlaceholdersFrom(player, yearLongFormatter,
                 PlayerKeys.REGISTERED, PlayerKeys.LAST_SEEN
         );
 
@@ -106,25 +149,25 @@ public class InspectPage implements Page {
         PerServerMutator perServerMutator = new PerServerMutator(perServerContainer);
 
         Map<UUID, WorldTimes> worldTimesPerServer = perServerMutator.worldTimesPerServer();
-        replacer.put("serverPieSeries", new ServerPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
-        replacer.put("worldPieColors", Theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
-        replacer.put("gmPieColors", Theme.getValue(ThemeVal.GRAPH_GM_PIE));
-        replacer.put("serverPieColors", Theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
+        replacer.put("serverPieSeries", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).toHighChartsSeries());
+        replacer.put("worldPieColors", theme.getValue(ThemeVal.GRAPH_WORLD_PIE));
+        replacer.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
+        replacer.put("serverPieColors", theme.getValue(ThemeVal.GRAPH_SERVER_PREF_PIE));
 
         String favoriteServer = serverNames.getOrDefault(perServerMutator.favoriteServer(), "Unknown");
         replacer.put("favoriteServer", favoriteServer);
 
-        replacer.put("tableBodyNicknames", new NicknameTable(
-                player.getValue(PlayerKeys.NICKNAMES).orElse(new ArrayList<>()), serverNames)
-                .parseBody());
-        replacer.put("tableBodyIPs", new GeoInfoTable(player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
+        replacer.put("tableBodyNicknames",
+                tables.nicknameTable(player.getValue(PlayerKeys.NICKNAMES).orElse(new ArrayList<>()), serverNames).parseBody()
+        );
+        replacer.put("tableBodyIPs", tables.geoInfoTable(player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>())).parseBody());
 
         PingMutator pingMutator = PingMutator.forContainer(player);
         double averagePing = pingMutator.average();
         int minPing = pingMutator.min();
         int maxPing = pingMutator.max();
         String unavailable = "Unavailable";
-        replacer.put("avgPing", averagePing != -1 ? FormatUtils.cutDecimals(averagePing) + " ms" : unavailable);
+        replacer.put("avgPing", averagePing != -1 ? decimalFormatter.apply(averagePing) + " ms" : unavailable);
         replacer.put("minPing", minPing != -1 ? minPing + " ms" : unavailable);
         replacer.put("maxPing", maxPing != -1 ? maxPing + " ms" : unavailable);
 
@@ -136,18 +179,18 @@ public class InspectPage implements Page {
         if (allSessions.isEmpty()) {
             replacer.put("accordionSessions", "<div class=\"body\">" + "<p>No Sessions</p>" + "</div>");
         } else {
-            if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
-                replacer.put("accordionSessions", new PlayerSessionTable(playerName, allSessions).parseHtml());
+            if (config.isTrue(Settings.DISPLAY_SESSIONS_AS_TABLE)) {
+                replacer.put("accordionSessions", tables.playerSessionTable(playerName, allSessions).parseHtml());
             } else {
-                SessionAccordion sessionAccordion = SessionAccordion.forPlayer(allSessions, () -> serverNames);
+                SessionAccordion sessionAccordion = accordions.playerSessionAccordion(allSessions, () -> serverNames);
                 replacer.put("accordionSessions", sessionAccordion.toHtml());
                 sessionAccordionViewScript = sessionAccordion.toViewScript();
             }
         }
 
-        ServerAccordion serverAccordion = new ServerAccordion(player, serverNames);
+        ServerAccordion serverAccordion = accordions.serverAccordion(player, serverNames);
 
-        PlayerCalendar playerCalendar = new PlayerCalendar(player);
+        PlayerCalendar playerCalendar = graphs.calendar().playerCalendar(player);
 
         replacer.put("calendarSeries", playerCalendar.toCalendarSeries());
         replacer.put("firstDay", 1);
@@ -155,9 +198,9 @@ public class InspectPage implements Page {
         replacer.put("accordionServers", serverAccordion.toHtml());
         replacer.put("sessionTabGraphViewFunctions", sessionAccordionViewScript + serverAccordion.toViewScript());
 
-        long dayAgo = now - TimeAmount.DAY.ms();
-        long weekAgo = now - TimeAmount.WEEK.ms();
-        long monthAgo = now - TimeAmount.MONTH.ms();
+        long dayAgo = now - TimeUnit.DAYS.toMillis(1L);
+        long weekAgo = now - TimeAmount.WEEK.toMillis(1L);
+        long monthAgo = now - TimeAmount.MONTH.toMillis(1L);
 
         SessionsMutator daySessionsMutator = sessionsMutator.filterSessionsBetween(dayAgo, now);
         SessionsMutator weekSessionsMutator = sessionsMutator.filterSessionsBetween(weekAgo, now);
@@ -165,10 +208,10 @@ public class InspectPage implements Page {
 
         sessionsAndPlaytime(replacer, sessionsMutator, daySessionsMutator, weekSessionsMutator, monthSessionsMutator);
 
-        String punchCardData = new PunchCardGraph(allSessions).toHighChartsSeries();
+        String punchCardData = graphs.special().punchCard(allSessions).toHighChartsSeries();
         WorldTimes worldTimes = player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes(new HashMap<>()));
 
-        WorldPie worldPie = new WorldPie(worldTimes);
+        WorldPie worldPie = graphs.pie().worldPie(worldTimes);
 
         replacer.put("worldPieSeries", worldPie.toHighChartsSeries());
         replacer.put("gmSeries", worldPie.toHighChartsDrilldown());
@@ -177,9 +220,11 @@ public class InspectPage implements Page {
 
         pvpAndPve(replacer, sessionsMutator, weekSessionsMutator, monthSessionsMutator);
 
-        ActivityIndex activityIndex = player.getActivityIndex(now);
+        ActivityIndex activityIndex = player.getActivityIndex(
+                now, config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD), config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
+        );
 
-        replacer.put("activityIndexNumber", activityIndex.getFormattedValue());
+        replacer.put("activityIndexNumber", activityIndex.getFormattedValue(decimalFormatter));
         replacer.put("activityIndexColor", activityIndex.getColor());
         replacer.put("activityIndex", activityIndex.getGroup());
 
@@ -190,11 +235,11 @@ public class InspectPage implements Page {
         String serverName = serverNames.get(serverUUID);
         replacer.put("networkName",
                 serverName.equalsIgnoreCase("bungeecord")
-                        ? Settings.BUNGEE_NETWORK_NAME.toString()
+                        ? config.getString(Settings.BUNGEE_NETWORK_NAME)
                         : serverName
         );
 
-        return replacer.apply(FileUtil.getStringFromResource("web/player.html"));
+        return replacer.apply(files.readCustomizableResourceFlat("web/player.html"));
     }
 
     private void sessionsAndPlaytime(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator daySessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {
@@ -230,7 +275,7 @@ public class InspectPage implements Page {
         long sessionAverageWeek = weekSessionsMutator.toAverageSessionLength();
         long sessionAverageMonth = monthSessionsMutator.toAverageSessionLength();
 
-        Formatter<Long> formatter = Formatters.timeAmount();
+        Formatter<Long> formatter = timeAmountFormatter;
         replacer.put("playtimeTotal", formatter.apply(playtime));
         replacer.put("playtimeDay", formatter.apply(playtimeDay));
         replacer.put("playtimeWeek", formatter.apply(playtimeWeek));
@@ -265,8 +310,8 @@ public class InspectPage implements Page {
     }
 
     private void pvpAndPve(PlaceholderReplacer replacer, SessionsMutator sessionsMutator, SessionsMutator weekSessionsMutator, SessionsMutator monthSessionsMutator) {
-        String playerKillsTable = new KillsTable(sessionsMutator.toPlayerKillList()).parseHtml();
-        String playerDeathTable = new DeathsTable(sessionsMutator.toPlayerDeathList()).parseHtml();
+        String playerKillsTable = tables.killsTable(sessionsMutator.toPlayerKillList(), "red").parseHtml();
+        String playerDeathTable = tables.deathsTable(sessionsMutator.toPlayerDeathList()).parseHtml();
 
         PvpInfoMutator pvpInfoMutator = PvpInfoMutator.forMutator(sessionsMutator);
         PvpInfoMutator pvpInfoMutatorMonth = PvpInfoMutator.forMutator(monthSessionsMutator);
@@ -280,23 +325,23 @@ public class InspectPage implements Page {
         replacer.put("playerDeathCount", pvpInfoMutator.playerCausedDeaths());
         replacer.put("mobDeathCount", pvpInfoMutator.mobCausedDeaths());
         replacer.put("deathCount", pvpInfoMutator.deaths());
-        replacer.put("KDR", FormatUtils.cutDecimals(pvpInfoMutator.killDeathRatio()));
-        replacer.put("mobKDR", FormatUtils.cutDecimals(pvpInfoMutator.mobKillDeathRatio()));
+        replacer.put("KDR", decimalFormatter.apply(pvpInfoMutator.killDeathRatio()));
+        replacer.put("mobKDR", decimalFormatter.apply(pvpInfoMutator.mobKillDeathRatio()));
 
         replacer.put("playerKillCountMonth", pvpInfoMutatorMonth.playerKills());
         replacer.put("mobKillCountMonth", pvpInfoMutatorMonth.mobKills());
         replacer.put("playerDeathCountMonth", pvpInfoMutatorMonth.playerCausedDeaths());
         replacer.put("mobDeathCountMonth", pvpInfoMutatorMonth.mobCausedDeaths());
         replacer.put("deathCountMonth", pvpInfoMutatorMonth.deaths());
-        replacer.put("KDRMonth", FormatUtils.cutDecimals(pvpInfoMutatorMonth.killDeathRatio()));
-        replacer.put("mobKDRMonth", FormatUtils.cutDecimals(pvpInfoMutatorMonth.mobKillDeathRatio()));
+        replacer.put("KDRMonth", decimalFormatter.apply(pvpInfoMutatorMonth.killDeathRatio()));
+        replacer.put("mobKDRMonth", decimalFormatter.apply(pvpInfoMutatorMonth.mobKillDeathRatio()));
 
         replacer.put("playerKillCountWeek", pvpInfoMutatorWeek.playerKills());
         replacer.put("mobKillCountWeek", pvpInfoMutatorWeek.mobKills());
         replacer.put("playerDeathCountWeek", pvpInfoMutatorWeek.playerCausedDeaths());
         replacer.put("mobDeathCountWeek", pvpInfoMutatorWeek.mobCausedDeaths());
         replacer.put("deathCountWeek", pvpInfoMutatorWeek.deaths());
-        replacer.put("KDRWeek", FormatUtils.cutDecimals(pvpInfoMutatorWeek.killDeathRatio()));
-        replacer.put("mobKDRWeek", FormatUtils.cutDecimals(pvpInfoMutatorWeek.mobKillDeathRatio()));
+        replacer.put("KDRWeek", decimalFormatter.apply(pvpInfoMutatorWeek.killDeathRatio()));
+        replacer.put("mobKDRWeek", decimalFormatter.apply(pvpInfoMutatorWeek.mobKillDeathRatio()));
     }
 }

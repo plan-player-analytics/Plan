@@ -5,11 +5,13 @@
 package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plugin.api.config.Config;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
+import dagger.Lazy;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
@@ -22,13 +24,30 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
+@Singleton
 public class ServerSpecificSettings {
 
-    public static void updateSettings(Map<String, String> settings) {
-        Log.debug("Checking new settings..");
-        Config config = ConfigSystem.getConfig();
+    private final Lazy<PlanPlugin> plugin;
+    private final Lazy<PlanConfig> config;
+
+    private final PluginLogger logger;
+
+    @Inject
+    public ServerSpecificSettings(
+            Lazy<PlanPlugin> plugin,
+            Lazy<PlanConfig> config,
+            PluginLogger logger
+    ) {
+        this.plugin = plugin;
+        this.config = config;
+        this.logger = logger;
+    }
+
+    public void updateSettings(Map<String, String> settings) throws IOException {
+        logger.debug("Checking new settings..");
 
         boolean changedSomething = false;
+        PlanConfig planConfig = config.get();
         for (Map.Entry<String, String> setting : settings.entrySet()) {
             try {
                 String path = setting.getKey();
@@ -37,33 +56,29 @@ public class ServerSpecificSettings {
                 }
                 String stringValue = setting.getValue();
                 Object value = getValue(stringValue);
-                String currentValue = config.getString(path);
+                String currentValue = planConfig.getString(path);
                 if (stringValue.equals(currentValue)) {
                     continue;
                 }
-                config.set(path, value);
-                Log.debug("  " + path + ": " + value);
+                planConfig.set(path, value);
+                logger.debug("  " + path + ": " + value);
             } catch (NullPointerException ignored) {
             }
             changedSomething = true;
         }
 
         if (changedSomething) {
-            try {
-                config.save();
-            } catch (IOException e) {
-                Log.toLog(ServerSpecificSettings.class, e);
-            }
-            Log.info("----------------------------------");
-            Log.info("The Received Bungee Settings changed the config values, restarting Plan..");
-            Log.info("----------------------------------");
-            PlanPlugin.getInstance().reloadPlugin(true);
+            planConfig.save();
+            logger.info("----------------------------------");
+            logger.info("The Received Bungee Settings changed the config values, restarting Plan..");
+            logger.info("----------------------------------");
+            plugin.get().reloadPlugin(true);
         } else {
-            Log.debug("Settings up to date");
+            logger.debug("Settings up to date");
         }
     }
 
-    private static Object getValue(String value) {
+    private Object getValue(String value) {
         try {
             return Integer.parseInt(value);
         } catch (Exception ignored) {
@@ -77,19 +92,15 @@ public class ServerSpecificSettings {
         return value;
     }
 
-    public void addOriginalBukkitSettings(UUID serverUUID, Map<String, Object> settings) {
-        try {
-            Config config = ConfigSystem.getConfig();
-            if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
-                return;
-            }
-            for (Map.Entry<String, Object> entry : settings.entrySet()) {
-                config.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
-            }
-            config.save();
-        } catch (IOException e) {
-            Log.toLog(this.getClass(), e);
+    public void addOriginalBukkitSettings(UUID serverUUID, Map<String, Object> settings) throws IOException {
+        PlanConfig planConfig = config.get();
+        if (!Verify.isEmpty(planConfig.getString("Servers." + serverUUID + ".ServerName"))) {
+            return;
         }
+        for (Map.Entry<String, Object> entry : settings.entrySet()) {
+            planConfig.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
+        }
+        planConfig.save();
     }
 
     private String getPath(UUID serverUUID, Settings setting) {
@@ -111,27 +122,24 @@ public class ServerSpecificSettings {
     }
 
     public boolean getBoolean(UUID serverUUID, Settings setting) {
-        Config config = ConfigSystem.getConfig();
         String path = getPath(serverUUID, setting);
-        return config.getBoolean(path);
+        return config.get().getBoolean(path);
     }
 
     public String getString(UUID serverUUID, Settings setting) {
-        Config config = ConfigSystem.getConfig();
         String path = getPath(serverUUID, setting);
-        return config.getString(path);
+        return config.get().getString(path);
     }
 
     public Integer getInt(UUID serverUUID, Settings setting) {
-        Config config = ConfigSystem.getConfig();
         String path = getPath(serverUUID, setting);
-        return config.getInt(path);
+        return config.get().getInt(path);
     }
 
     public void set(UUID serverUUID, Settings setting, Object value) throws IOException {
-        Config config = ConfigSystem.getConfig();
         String path = getPath(serverUUID, setting);
-        config.set(path, value);
-        config.save();
+        PlanConfig planConfig = config.get();
+        planConfig.set(path, value);
+        planConfig.save();
     }
 }

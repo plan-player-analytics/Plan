@@ -2,11 +2,8 @@ package com.djrapitops.plan.data.container;
 
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
-import com.djrapitops.plan.data.store.mutators.formatting.Formatters;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.WorldAliasSettings;
 
 import java.util.*;
 
@@ -30,11 +27,12 @@ public class Session extends DataContainer implements DateHolder {
      * Creates a new session.
      *
      * @param uuid         UUID of the Player.
+     * @param serverUUID   UUID of the server.
      * @param sessionStart Epoch ms the session started.
      * @param world        Starting world.
      * @param gm           Starting GameMode.
      */
-    public Session(UUID uuid, long sessionStart, String world, String gm) {
+    public Session(UUID uuid, UUID serverUUID, long sessionStart, String world, String gm) {
         this.sessionStart = sessionStart;
         worldTimes = new WorldTimes(world, gm, sessionStart);
         playerKills = new ArrayList<>();
@@ -44,6 +42,7 @@ public class Session extends DataContainer implements DateHolder {
         afkTime = 0;
 
         putRawData(SessionKeys.UUID, uuid);
+        putRawData(SessionKeys.SERVER_UUID, serverUUID);
         putSupplier(SessionKeys.START, this::getSessionStart);
         putSupplier(SessionKeys.WORLD_TIMES, this::getWorldTimes);
         putSupplier(SessionKeys.PLAYER_KILLS, this::getPlayerKills);
@@ -56,9 +55,8 @@ public class Session extends DataContainer implements DateHolder {
         putSupplier(SessionKeys.LENGTH, () ->
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
         putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
-        putSupplier(SessionKeys.SERVER_UUID, ServerInfo::getServerUUID);
 
-        putSupplier(SessionKeys.LONGEST_WORLD_PLAYED, this::getLongestWorldPlayed);
+        putRawData(SessionKeys.LONGEST_WORLD_PLAYED, "Key is Deprecated, use WorldAliasSettings#getLongestWorldPlayed(Session) instead.");
     }
 
     /**
@@ -101,7 +99,7 @@ public class Session extends DataContainer implements DateHolder {
                 getValue(SessionKeys.END).orElse(System.currentTimeMillis()) - getUnsafe(SessionKeys.START));
         putSupplier(SessionKeys.ACTIVE_TIME, () -> getUnsafe(SessionKeys.LENGTH) - getUnsafe(SessionKeys.AFK_TIME));
 
-        putSupplier(SessionKeys.LONGEST_WORLD_PLAYED, this::getLongestWorldPlayed);
+        putRawData(SessionKeys.LONGEST_WORLD_PLAYED, "Key is Deprecated, use WorldAliasSettings#getLongestWorldPlayed(Session) instead.");
     }
 
     /**
@@ -157,8 +155,17 @@ public class Session extends DataContainer implements DateHolder {
         this.worldTimes = worldTimes;
     }
 
-    public void setPlayerKills(List<PlayerKill> playerKills) {
-        this.playerKills = playerKills;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Session session = (Session) o;
+        return getUnsafe(SessionKeys.START).equals(session.getUnsafe(SessionKeys.START)) &&
+                getValue(SessionKeys.END).orElse(-1L).equals(session.getValue(SessionKeys.END).orElse(-1L)) &&
+                mobKills == session.mobKills &&
+                deaths == session.deaths &&
+                Objects.equals(playerKills, session.playerKills) &&
+                Objects.equals(worldTimes, session.worldTimes);
     }
 
     public boolean isFetchedFromDB() {
@@ -173,17 +180,8 @@ public class Session extends DataContainer implements DateHolder {
         putRawData(SessionKeys.DB_ID, sessionID);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Session session = (Session) o;
-        return getUnsafe(SessionKeys.START).equals(session.getUnsafe(SessionKeys.START)) &&
-                getValue(SessionKeys.END).orElse(-1L).equals(session.getValue(SessionKeys.END).orElse(-1L)) &&
-                mobKills == session.mobKills &&
-                deaths == session.deaths &&
-                Objects.equals(playerKills, session.playerKills) &&
-                Objects.equals(worldTimes, session.worldTimes);
+    public List<PlayerKill> getPlayerKills() {
+        return playerKills;
     }
 
     @Override
@@ -199,8 +197,8 @@ public class Session extends DataContainer implements DateHolder {
         return worldTimes;
     }
 
-    public List<PlayerKill> getPlayerKills() {
-        return playerKills;
+    public void setPlayerKills(List<PlayerKill> playerKills) {
+        this.playerKills = playerKills;
     }
 
     private int getMobKills() {
@@ -213,49 +211,5 @@ public class Session extends DataContainer implements DateHolder {
 
     private long getAfkTime() {
         return afkTime;
-    }
-
-    private String getLongestWorldPlayed() {
-        Map<String, String> aliases = WorldAliasSettings.getAliases();
-        if (worldTimes == null) {
-            return "No World Time Data";
-        }
-        if (!supports(SessionKeys.END)) {
-            return "Current: " + aliases.get(worldTimes.getCurrentWorld());
-        }
-
-        Map<String, Long> playtimePerAlias = worldTimes.getPlaytimePerAlias();
-
-        long longest = 0;
-        String theWorld = "-";
-        for (Map.Entry<String, Long> entry : playtimePerAlias.entrySet()) {
-            String world = entry.getKey();
-            long time = entry.getValue();
-            if (time > longest) {
-                longest = time;
-                theWorld = world;
-            }
-        }
-
-        long total = worldTimes.getTotal();
-        // Prevent arithmetic error if 0
-        if (total <= 0) {
-            total = -1;
-        }
-        double quotient = longest * 1.0 / total;
-
-        return theWorld + " (" + Formatters.percentage().apply(quotient) + ")";
-    }
-
-    @Override
-    public String toString() {
-        return "Session{" +
-                "sessionStart=" + sessionStart +
-                ", worldTimes=" + worldTimes +
-                ", playerKills=" + playerKills +
-                ", mobKills=" + mobKills +
-                ", deaths=" + deaths +
-                ", afkTime=" + afkTime +
-                '}';
     }
 }

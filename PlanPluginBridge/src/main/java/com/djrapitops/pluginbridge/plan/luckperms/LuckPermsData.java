@@ -12,21 +12,23 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.utilities.html.icon.Color;
 import com.djrapitops.plan.utilities.html.icon.Family;
 import com.djrapitops.plan.utilities.html.icon.Icon;
-import java.util.*;
-import java.util.stream.Collectors;
 import me.lucko.luckperms.api.*;
 import me.lucko.luckperms.api.caching.MetaData;
 import org.apache.commons.text.TextStringBuilder;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * PluginData for LuckPerms plugin.
  *
  * @author Vankka
  */
-public class LuckPermsData extends PluginData {
-    private LuckPermsApi api;
+class LuckPermsData extends PluginData {
 
-    public LuckPermsData(LuckPermsApi api) {
+    private final LuckPermsApi api;
+
+    LuckPermsData(LuckPermsApi api) {
         super(ContainerSize.THIRD, "LuckPerms");
         setPluginIcon(Icon.called("exclamation-triangle").of(Color.LIGHT_GREEN).build());
 

@@ -5,11 +5,7 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-import com.djrapitops.plan.api.exceptions.database.DBOpException;
-import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plugin.api.utility.log.Log;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -23,24 +19,27 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class BungeePlayerVersionListener implements Listener {
+class BungeePlayerVersionListener implements Listener {
 
-    private ViaAPI viaAPI;
+    private final ViaAPI viaAPI;
 
-    public BungeePlayerVersionListener(ViaAPI viaAPI) {
+    private final ProtocolTable protocolTable;
+    private final Processing processing;
+
+    BungeePlayerVersionListener(
+            ViaAPI viaAPI,
+            ProtocolTable protocolTable,
+            Processing processing
+    ) {
         this.viaAPI = viaAPI;
+        this.protocolTable = protocolTable;
+        this.processing = processing;
     }
 
     @EventHandler
     public void onJoin(PostLoginEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         int playerVersion = viaAPI.getPlayerVersion(uuid);
-        Processing.submitNonCritical(() -> {
-            try {
-                new ProtocolTable((SQLDB) Database.getActive()).saveProtocolVersion(uuid, playerVersion);
-            } catch (DBOpException e) {
-                Log.toLog(this.getClass(), e);
-            }
-        });
+        processing.submitNonCritical(() -> protocolTable.saveProtocolVersion(uuid, playerVersion));
     }
 }

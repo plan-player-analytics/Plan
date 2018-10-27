@@ -7,7 +7,6 @@ package com.djrapitops.plan.system.processing.processors.player;
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.database.databases.Database;
-import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.CriticalRunnable;
 import com.djrapitops.plan.utilities.analysis.Median;
 
@@ -26,11 +25,19 @@ import java.util.stream.Collectors;
 public class PingInsertProcessor implements CriticalRunnable {
 
     private final UUID uuid;
+    private final UUID serverUUID;
     private final List<DateObj<Integer>> pingList;
 
-    public PingInsertProcessor(UUID uuid, List<DateObj<Integer>> pingList) {
+    private final Database database;
+
+    PingInsertProcessor(
+            UUID uuid, UUID serverUUID, List<DateObj<Integer>> pingList,
+            Database database
+    ) {
         this.uuid = uuid;
+        this.serverUUID = serverUUID;
         this.pingList = pingList;
+        this.database = database;
     }
 
     @Override
@@ -52,12 +59,9 @@ public class PingInsertProcessor implements CriticalRunnable {
 
         int maxValue = max.getAsInt();
 
-        Ping ping = new Ping(lastDate, ServerInfo.getServerUUID(),
-                minValue,
-                maxValue,
-                meanValue);
+        Ping ping = new Ping(lastDate, serverUUID, minValue, maxValue, meanValue);
 
-        Database.getActive().save().ping(uuid, ping);
+        database.save().ping(uuid, ping);
     }
 
     int getMinValue(List<DateObj<Integer>> history) {

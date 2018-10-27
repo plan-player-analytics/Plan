@@ -21,19 +21,14 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.system.BukkitSystem;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.processing.importing.ImporterManager;
-import com.djrapitops.plan.system.processing.importing.importers.OfflinePlayerImporter;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.metrics.BStatsBukkit;
 import com.djrapitops.plugin.BukkitPlugin;
-import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.api.Benchmark;
-import com.djrapitops.plugin.api.utility.log.DebugLog;
-import com.djrapitops.plugin.api.utility.log.Log;
-import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.benchmarking.Benchmark;
+import com.djrapitops.plugin.command.ColorScheme;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.logging.Level;
@@ -47,55 +42,45 @@ import java.util.logging.Logger;
  */
 public class Plan extends BukkitPlugin implements PlanPlugin {
 
-    private BukkitSystem system;
+    private PlanSystem system;
     private Locale locale;
-
-    /**
-     * Used to get the plugin-instance singleton.
-     *
-     * @return this object.
-     */
-    public static Plan getInstance() {
-        return (Plan) StaticHolder.getInstance(Plan.class);
-    }
 
     @Override
     public void onEnable() {
-        super.onEnable();
+        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(this).build();
         try {
-            Benchmark.start("Enable");
-            system = new BukkitSystem(this);
+            timings.start("Enable");
+            system = component.system();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            ImporterManager.registerImporter(new OfflinePlayerImporter());
-
             new BStatsBukkit(this).registerMetrics();
 
-            Log.debug("Verbose debug messages are enabled.");
-            Benchmark.stop("Enable", "Enable");
-            Log.logDebug("Enable");
-            Log.info(locale.getString(PluginLang.ENABLED));
+            logger.debug("Verbose debug messages are enabled.");
+            String benchTime = " (" + timings.end("Enable").map(Benchmark::toDurationString).orElse("-") + ")";
+            logger.info(locale.getString(PluginLang.ENABLED) + benchTime);
         } catch (AbstractMethodError e) {
-            Log.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            Log.error("----------------------------------------");
-            Log.error("Error: " + e.getMessage());
-            Log.error("----------------------------------------");
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("----------------------------------------");
+            logger.error("Error: " + e.getMessage());
+            logger.error("----------------------------------------");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             onDisable();
         } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
-            Log.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            Log.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        registerCommand("plan", new PlanCommand(this));
+        PlanCommand command = component.planCommand();
+        command.registerCommands();
+        registerCommand("plan", command);
     }
 
     @Override
     public ColorScheme getColorScheme() {
-        return PlanColorScheme.create();
+        return PlanColorScheme.create(system.getConfigSystem().getConfig(), logger);
     }
 
     /**
@@ -103,11 +88,11 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
      */
     @Override
     public void onDisable() {
-        system.disable();
+        if (system != null) {
+            system.disable();
+        }
 
-        Log.info(locale.getString(PluginLang.DISABLED));
-        Benchmark.pluginDisabled(Plan.class);
-        DebugLog.pluginDisabled(Plan.class);
+        logger.info(locale != null ? locale.getString(PluginLang.DISABLED) : PluginLang.DISABLED.getDefault());
     }
 
     @Override
@@ -162,7 +147,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     }
 
     @Override
-    public BukkitSystem getSystem() {
+    public PlanSystem getSystem() {
         return system;
     }
 }

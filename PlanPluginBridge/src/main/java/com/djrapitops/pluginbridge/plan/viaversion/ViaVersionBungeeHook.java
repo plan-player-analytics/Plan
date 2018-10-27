@@ -2,13 +2,17 @@ package com.djrapitops.pluginbridge.plan.viaversion;
 
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.api.exceptions.database.DBException;
+import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.plugin.HookHandler;
-import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.pluginbridge.plan.Hook;
 import us.myles.ViaVersion.api.Via;
 import us.myles.ViaVersion.api.ViaAPI;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * A Class responsible for hooking to ViaVersion and registering data sources.
@@ -16,33 +20,37 @@ import us.myles.ViaVersion.api.ViaAPI;
  * @author Rsl1122
  * @since 3.1.0
  */
+@Singleton
 public class ViaVersionBungeeHook extends Hook {
 
-    /**
-     * Hooks the plugin and registers it's PluginData objects.
-     * <p>
-     * API#addPluginDataSource uses the same method from HookHandler.
-     *
-     * @param hookH HookHandler instance for registering the data sources.
-     */
-    public ViaVersionBungeeHook(HookHandler hookH) {
-        super("us.myles.ViaVersion.BungeePlugin", hookH);
+    private final PlanBungee plugin;
+    private final DBSystem dbSystem;
+    private final Processing processing;
+
+    @Inject
+    public ViaVersionBungeeHook(
+            PlanBungee plugin,
+            DBSystem dbSystem,
+            Processing processing
+    ) {
+        super("us.myles.ViaVersion.BungeePlugin");
+        this.plugin = plugin;
+        this.dbSystem = dbSystem;
+        this.processing = processing;
     }
 
-    public void hook() throws NoClassDefFoundError {
+    public void hook(HookHandler handler) throws NoClassDefFoundError {
         if (!enabled) {
             return;
         }
-        PlanBungee plan = PlanBungee.getInstance();
         ViaAPI api = Via.getAPI();
-        ProtocolTable table = new ProtocolTable((SQLDB) Database.getActive());
+        ProtocolTable protocolTable = new ProtocolTable((SQLDB) dbSystem.getDatabase());
         try {
-            table.createTable();
+            protocolTable.createTable();
         } catch (DBException e) {
-            Log.toLog(this.getClass().getName(), e);
-            return;
+            throw new DBOpException("Failed to create protocol table", e);
         }
-        plan.registerListener(new BungeePlayerVersionListener(api));
-        addPluginDataSource(new ViaVersionData(table));
+        plugin.registerListener(new BungeePlayerVersionListener(api, protocolTable, processing));
+        handler.addPluginDataSource(new ViaVersionData(protocolTable));
     }
 }

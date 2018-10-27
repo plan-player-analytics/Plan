@@ -9,6 +9,7 @@ import com.djrapitops.plan.system.settings.Settings;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public abstract class Patch {
 
@@ -38,7 +39,7 @@ public abstract class Patch {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
                 if (usingMySQL) {
-                    statement.setString(2, Settings.DB_DATABASE.toString());
+                    statement.setString(2, db.getConfig().getString(Settings.DB_DATABASE));
                 }
             }
 
@@ -57,7 +58,7 @@ public abstract class Patch {
                     public void prepare(PreparedStatement statement) throws SQLException {
                         statement.setString(1, tableName);
                         statement.setString(2, columnName);
-                        statement.setString(3, Settings.DB_DATABASE.toString());
+                        statement.setString(3, db.getConfig().getString(Settings.DB_DATABASE));
                     }
 
                     @Override
@@ -93,4 +94,7 @@ public abstract class Patch {
         db.execute(sql);
     }
 
+    protected UUID getServerUUID() {
+        return db.getServerUUIDSupplier().get();
+    }
 }
