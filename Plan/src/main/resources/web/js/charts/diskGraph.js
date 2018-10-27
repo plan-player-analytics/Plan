@@ -1,7 +1,7 @@
-function resourceChart(id, cpuSeries, ramSeries, playersOnlineSeries) {
+function diskChart(id, series) {
     Highcharts.stockChart(id, {
         rangeSelector: {
-            selected: 1,
+            selected: 2,
             buttons: [{
                 type: 'hour',
                 count: 12,
@@ -23,38 +23,19 @@ function resourceChart(id, cpuSeries, ramSeries, playersOnlineSeries) {
                 text: 'All'
             }]
         },
-        tooltip: {
-            split: true
-        },
-        title: {text: ''},
-        plotOptions: {
-            areaspline: {
-                fillOpacity: 0.4
-            }
-        },
-        yAxis: [{
-            labels: {
-                formatter: function () {
-                    return this.value + ' Players';
-                }
-            }
-        }, {
-            opposite: true,
-            labels: {
-                formatter: function () {
-                    return this.value + '%';
-                }
-            }
-        }, {
+        yAxis: {
             labels: {
                 formatter: function () {
                     return this.value + ' Mb';
                 }
-            }
-        }],
+            },
+            softMax: 2,
+            softMin: 0
+        },
+        title: {text: ''},
         legend: {
             enabled: true
         },
-        series: [cpuSeries, ramSeries, playersOnlineSeries]
+        series: series
     });
 }
