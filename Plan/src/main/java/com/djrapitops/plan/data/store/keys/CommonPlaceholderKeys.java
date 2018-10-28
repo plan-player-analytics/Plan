@@ -1,3 +1,19 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  LGNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.djrapitops.plan.data.store.keys;
 
 import com.djrapitops.plan.data.store.PlaceholderKey;
@@ -24,7 +40,7 @@ class CommonPlaceholderKeys {
     static final PlaceholderKey<String> ACTIVITY_PIE_SERIES = new PlaceholderKey<>(String.class, "activityPieSeries");
     static final PlaceholderKey<String> COUNTRY_CATEGORIES = new PlaceholderKey<>(String.class, "countryCategories");
     static final PlaceholderKey<String> COUNTRY_SERIES = new PlaceholderKey<>(String.class, "countrySeries");
-    
+
     static final PlaceholderKey<String> HEALTH_NOTES = new PlaceholderKey<>(String.class, "healthNotes");
     static final PlaceholderKey<Double> HEALTH_INDEX = new PlaceholderKey<>(Double.class, "healthIndex");
 

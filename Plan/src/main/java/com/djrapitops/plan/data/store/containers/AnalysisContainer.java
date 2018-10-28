@@ -1,3 +1,19 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  LGNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.djrapitops.plan.data.store.containers;
 
 import com.djrapitops.plan.data.store.Key;
@@ -276,14 +292,14 @@ public class AnalysisContainer extends DataContainer {
         });
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_WEEK_PERC, () -> {
                     Integer playersNewWeek = getUnsafe(AnalysisKeys.PLAYERS_NEW_WEEK);
-            return playersNewWeek != 0 ? formatters.percentage().apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
+                    return playersNewWeek != 0 ? formatters.percentage().apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_WEEK) / playersNewWeek) : "-";
                 }
         );
         putSupplier(AnalysisKeys.PLAYERS_RETAINED_MONTH_PERC, () -> {
                     Integer playersNewMonth = getUnsafe(AnalysisKeys.PLAYERS_NEW_MONTH);
-            return playersNewMonth != 0
-                    ? formatters.percentage().apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth)
-                    : "-";
+                    return playersNewMonth != 0
+                            ? formatters.percentage().apply(1.0 * getUnsafe(AnalysisKeys.PLAYERS_RETAINED_MONTH) / playersNewMonth)
+                            : "-";
                 }
         );
     }
@@ -320,9 +336,9 @@ public class AnalysisContainer extends DataContainer {
         );
         putSupplier(AnalysisKeys.AVERAGE_PLAYTIME_F, () -> {
                     long players = getUnsafe(AnalysisKeys.PLAYERS_TOTAL);
-            return players != 0
-                    ? formatters.timeAmount().apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL) / players)
-                    : "-";
+                    return players != 0
+                            ? formatters.timeAmount().apply(getUnsafe(AnalysisKeys.PLAYTIME_TOTAL) / players)
+                            : "-";
                 }
         );
         putSupplier(AnalysisKeys.AVERAGE_SESSION_LENGTH_F,
