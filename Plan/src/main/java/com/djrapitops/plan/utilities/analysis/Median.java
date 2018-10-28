@@ -39,10 +39,6 @@ public class Median<T extends Number & Comparable<? super T>> {
         return new Median<>(list);
     }
 
-    public static <T extends Comparable<? super T>> void sort(List<T> list) {
-        list.sort(null);
-    }
-
     public double calculate() {
         if (values.isEmpty()) {
             return -1;
