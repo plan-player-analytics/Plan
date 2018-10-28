@@ -314,22 +314,22 @@ WebServer FAIL - SSL Context                    || WebServer: SSL Context Initia
 WebServer FAIL - Store Load                     || WebServer: SSL Zertifikat konnte nicht geladen werden.
 Yesterday                                       || 'Gestern'
 Today                                           || 'Heute'
-Health - Active Playtime Comparison Decrease    ||  Aktive Spieler haben möglicherweise nichts mehr zu tun (Gespielt ${0} vs ${1}. Das zeigt der Vergleich der letzten zwei Wochen zu den vorherigen 2 Wochen)
-Health - Active Playtime Comparison Increase    ||  Aktive Spieler haben möglicherweise etwas zu tun (Gespielt ${0} vs ${1}. Das zeigt der Vergleich der letzten zwei Wochen zu den vorherigen 2 Wochen)
+Health - Active Playtime Comparison Decrease    ||  Aktive Spieler haben möglicherweise nichts mehr zu tun (Vergleich der letzten zwei Wochen: ${0} zu den vorletzten zwei Wochen: ${1}.
+Health - Active Playtime Comparison Increase    ||  Aktive Spieler haben möglicherweise mehr zu tun (Vergleich der letzten zwei Wochen: ${0} ; zu den vorletzten zwei Wochen: ${1}.
 Health - Downtime                               || Gesamte Serverdowntime (Keine Daten) war ${0}
 Health - New Player Join Players, No            ||  Neue Spieler haben möglicherweise keine anderen Spielern, mit denen sie spielen können. (${0} im Durchschnitt)
 Health - New Player Join Players, Yes           ||  Neue Spieler haben andere Spieler, mit denen Spielen können. (${0} im Durchschnitt)
 Health - New Player Stickiness                  ||  ${0} von den neuen Spieler sind geblieben (${1}/${2})
 Health - No Servers Inaccuracy                  ||  Es sind keine Bukkit/Sponge-Server verfügbar um Sessiondaten zu sammeln - Diese Messungen sind ungenau.
-Health - Player Play on Network                 ||  Spieler spieltn im Netzwerk:
+Health - Player Play on Network                 ||  Spieler spielten im Netzwerk. Auf den Servern sieht's wie folgt aus:
 Health - Player Register Server                 ||  Spieler wurden auf dem Server pro Tag/Server im Durchschnitt registriert. 
 Health - Player Visit Server                    ||  Spieler haben den Server am Tag/Server im Durchschnitt besucht.
-Health - Regular Activity Change                ||  Anzahl an regelmässigen Spielern beträgt
+Health - Regular Activity Change                ||  Anzahl an regelmässigen Spielern 
 Health - Regular Activity Change Decrease       || verringert um  (${0})
-Health - Regular Activity Change Increase       || Erhöht um (+${0})
+Health - Regular Activity Change Increase       || erhöht um (+${0})
 Health - Regular Activity Change Zero           || Bleibt gleich (+${0})
 Health - Regular Activity Remain                ||  ${0} von den regelmässigen Spielern sind aktiv geblieben (${1}/${2})
-Health - Single Servers Inaccuracy              ||  Einzelner Bukkit/Sponge um Sessiondaten zu sammelnm.
+Health - Single Servers Inaccuracy              ||  Einzelner Bukkit/Sponge um Sessiondaten zu sammeln.
 Health - TPS Above Low Threshold                ||  Durchschnittliche TPS war über der unteren Grenze ${0} in der Zeit.
 Health - TPS Low Dips                           ||  Durchschnittliche TPS war unter der unteren Grenze. (${0}) ${1} male.
 HTML - FREE_DISK_SPACE                          || Freier Festplattenspeicher
