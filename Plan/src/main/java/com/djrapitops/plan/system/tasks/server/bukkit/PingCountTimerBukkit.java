@@ -122,7 +122,7 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
     private static boolean isPingMethodAvailable() {
         try {
             //Only available in Paper
-            Class.forName("org.bukkit.entity.Player.Spigot").getDeclaredMethod("getPing");
+            Class.forName("org.bukkit.entity.Player$Spigot").getDeclaredMethod("getPing");
             return true;
         } catch (ClassNotFoundException | NoSuchMethodException noSuchMethodEx) {
             return false;
