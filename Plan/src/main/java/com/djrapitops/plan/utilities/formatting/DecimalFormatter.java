@@ -28,14 +28,14 @@ import java.text.DecimalFormat;
  */
 public class DecimalFormatter implements Formatter<Double> {
 
-    private final PlanConfig config;
+    private final DecimalFormat decimalFormat;
 
     public DecimalFormatter(PlanConfig config) {
-        this.config = config;
+        decimalFormat = new DecimalFormat(config.getString(Settings.FORMAT_DECIMALS));
     }
 
     @Override
     public String apply(Double value) {
-        return new DecimalFormat(config.getString(Settings.FORMAT_DECIMALS)).format(value);
+        return decimalFormat.format(value);
     }
 }
