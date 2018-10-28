@@ -28,7 +28,7 @@ import java.text.DecimalFormat;
  */
 public class DecimalFormatter implements Formatter<Double> {
 
-    private final volatile DecimalFormat decimalFormat;
+    private volatile DecimalFormat decimalFormat;
 
     public DecimalFormatter(PlanConfig config) {
         decimalFormat = new DecimalFormat(config.getString(Settings.FORMAT_DECIMALS));
