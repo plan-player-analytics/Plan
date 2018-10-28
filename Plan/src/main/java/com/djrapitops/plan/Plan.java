@@ -1,21 +1,18 @@
 /*
- *    Player Analytics Bukkit plugin for monitoring server activity.
- *    Copyright (C) 2017  Risto Lahtela / Rsl1122
+ *  This file is part of Player Analytics (Plan).
  *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the Plan License. (LICENSE)
- *    Modified software can only be redistributed if allowed in the licence.
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    License for more details.
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  LGNU Lesser General Public License for more details.
  *
- *    You should have received a copy of the License
- *    along with this program.
- *    If not it should be visible on the distribution page.
- *    Or here
- *    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/LICENSE
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
 package com.djrapitops.plan;
 
