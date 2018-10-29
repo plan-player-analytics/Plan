@@ -116,7 +116,7 @@ public class BukkitTPSCountTimer extends TPSCountTimer {
 
         return TPSBuilder.get()
                 .date(now)
-                .tps(0)
+                .tps(tpsN)
                 .playersOnline(playersOnline)
                 .usedCPU(cpuUsage)
                 .usedMemory(usedMemory)
