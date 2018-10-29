@@ -160,7 +160,7 @@ public class SessionsMutator {
 
     public long toMedianSessionLength() {
         List<Long> sessionLengths = sessions.stream().map(Session::getLength).collect(Collectors.toList());
-        return (long) Median.forLong(sessionLengths).calculate();
+        return (long) Median.forList(sessionLengths).calculate();
     }
 
     public int toAverageUniqueJoinsPerDay() {
