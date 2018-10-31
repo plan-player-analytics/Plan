@@ -31,10 +31,12 @@ public abstract class Patch {
 
     protected final SQLDB db;
     protected final boolean usingMySQL;
+    protected final boolean usingH2;
 
     public Patch(SQLDB db) {
         this.db = db;
         usingMySQL = db.isUsingMySQL();
+        usingH2 = db.isUsingH2();
     }
 
     public abstract boolean hasBeenApplied();
@@ -46,15 +48,20 @@ public abstract class Patch {
     }
 
     public boolean hasTable(String tableName) {
-        String sql = usingMySQL ?
-                "SELECT * FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=? LIMIT 1" :
-                "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?";
+        String sql;
+        if (usingH2) {
+            sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=?";
+        } else if (usingMySQL) {
+            sql = "SELECT * FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=? LIMIT 1";
+        } else {
+            sql = "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?";
+        }
 
         return query(new QueryStatement<Boolean>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
-                if (usingMySQL) {
+                if (usingMySQL && !usingH2) {
                     statement.setString(2, db.getConfig().getString(Settings.DB_DATABASE));
                 }
             }
@@ -67,32 +74,45 @@ public abstract class Patch {
     }
 
     protected boolean hasColumn(String tableName, String columnName) {
-        return usingMySQL ?
-                query(new QueryStatement<Boolean>("SELECT * FROM information_schema.COLUMNS" +
-                        " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=?") {
-                    @Override
-                    public void prepare(PreparedStatement statement) throws SQLException {
-                        statement.setString(1, tableName);
-                        statement.setString(2, columnName);
+        if (usingMySQL) {
+            String query;
+
+            if (!usingH2) {
+                query = "SELECT * FROM information_schema.COLUMNS" +
+                        " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=?";
+            } else {
+                query = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS" +
+                        " WHERE TABLE_NAME=? AND COLUMN_NAME=?";
+            }
+
+            return query(new QueryStatement<Boolean>(query) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, tableName);
+                    statement.setString(2, columnName);
+                    if (!usingH2) {
                         statement.setString(3, db.getConfig().getString(Settings.DB_DATABASE));
                     }
+                }
 
-                    @Override
-                    public Boolean processResults(ResultSet set) throws SQLException {
-                        return set.next();
-                    }
-                }) :
-                query(new QueryAllStatement<Boolean>("PRAGMA table_info(" + tableName + ")") {
-                    @Override
-                    public Boolean processResults(ResultSet set) throws SQLException {
-                        while (set.next()) {
-                            if (columnName.equals(set.getString("name"))) {
-                                return true;
-                            }
+                @Override
+                public Boolean processResults(ResultSet set) throws SQLException {
+                    return set.next();
+                }
+            });
+        } else {
+            return query(new QueryAllStatement<Boolean>("PRAGMA table_info(" + tableName + ")") {
+                @Override
+                public Boolean processResults(ResultSet set) throws SQLException {
+                    while (set.next()) {
+                        if (columnName.equals(set.getString("name"))) {
+                            return true;
                         }
-                        return false;
                     }
-                });
+                    return false;
+                }
+            });
+        }
     }
 
     protected void addColumn(String tableName, String columnInfo) {

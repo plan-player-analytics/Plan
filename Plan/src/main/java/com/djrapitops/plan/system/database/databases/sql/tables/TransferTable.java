@@ -51,15 +51,33 @@ public class TransferTable extends Table {
         super(TABLE_NAME, db);
 
         serverTable = db.getServerTable();
-        insertStatementNoParts = "REPLACE INTO " + tableName + " (" +
-                Col.SENDER_ID + ", " +
-                Col.EXPIRY + ", " +
-                Col.INFO_TYPE + ", " +
-                Col.EXTRA_VARIABLES + ", " +
-                Col.CONTENT +
-                ") VALUES (" +
-                serverTable.statementSelectServerID + ", " +
-                "?, ?, ?, ?)";
+
+        if (db.isUsingH2()) {
+            insertStatementNoParts = "INSERT INTO " + tableName + " (" +
+                    Col.SENDER_ID + ", " +
+                    Col.EXPIRY + ", " +
+                    Col.INFO_TYPE + ", " +
+                    Col.EXTRA_VARIABLES + ", " +
+                    Col.CONTENT +
+                    ") VALUES (" +
+                    serverTable.statementSelectServerID + ", " +
+                    "?, ?, ?, ?)" +
+                    " ON DUPLICATE KEY UPDATE" +
+                    " " + Col.EXPIRY + "=?," +
+                    " " + Col.INFO_TYPE + "=?," +
+                    " " + Col.EXTRA_VARIABLES + "=?," +
+                    " " + Col.CONTENT + "=?";
+        } else {
+            insertStatementNoParts = "REPLACE INTO " + tableName + " (" +
+                    Col.SENDER_ID + ", " +
+                    Col.EXPIRY + ", " +
+                    Col.INFO_TYPE + ", " +
+                    Col.EXTRA_VARIABLES + ", " +
+                    Col.CONTENT +
+                    ") VALUES (" +
+                    serverTable.statementSelectServerID + ", " +
+                    "?, ?, ?, ?)";
+        }
 
         selectStatement = "SELECT * FROM " + tableName +
                 " WHERE " + Col.INFO_TYPE + "= ?" +
@@ -111,11 +129,21 @@ public class TransferTable extends Table {
         execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
+                long expiration = System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1L);
+
                 statement.setString(1, getServerUUID().toString());
-                statement.setLong(2, System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1L));
+                statement.setLong(2, expiration);
                 statement.setString(3, "configSettings");
                 statement.setString(4, null);
                 statement.setString(5, encodedSettingString);
+
+                if (db.isUsingH2()) {
+                    statement.setLong(6, expiration);
+                    statement.setString(7, "configSettings");
+                    statement.setString(8, null);
+                    statement.setString(9, encodedSettingString);
+
+                }
             }
         });
     }

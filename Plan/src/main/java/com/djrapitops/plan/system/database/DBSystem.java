@@ -21,6 +21,7 @@ import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.databases.Database;
+import com.djrapitops.plan.system.database.databases.sql.H2DB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -44,6 +45,7 @@ public abstract class DBSystem implements SubSystem {
 
     protected final Locale locale;
     private final SQLiteDB.Factory sqLiteFactory;
+    private final H2DB.Factory h2Factory;
     protected final PluginLogger logger;
     protected final Timings timings;
     protected final ErrorHandler errorHandler;
@@ -54,12 +56,14 @@ public abstract class DBSystem implements SubSystem {
     public DBSystem(
             Locale locale,
             SQLiteDB.Factory sqLiteDB,
+            H2DB.Factory h2Factory,
             PluginLogger logger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
         this.locale = locale;
-        sqLiteFactory = sqLiteDB;
+        this.sqLiteFactory = sqLiteDB;
+        this.h2Factory = h2Factory;
         this.logger = logger;
         this.timings = timings;
         this.errorHandler = errorHandler;
@@ -115,5 +119,9 @@ public abstract class DBSystem implements SubSystem {
 
     public SQLiteDB.Factory getSqLiteFactory() {
         return sqLiteFactory;
+    }
+
+    public H2DB.Factory getH2Factory() {
+        return h2Factory;
     }
 }

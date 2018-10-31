@@ -77,12 +77,12 @@ public class ManageMoveCommand extends CommandNode {
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 2, Arrays.toString(this.getArguments()))));
 
         String fromDB = args[0].toLowerCase();
-        boolean isCorrectDB = Verify.equalsOne(fromDB, "sqlite", "mysql");
+        boolean isCorrectDB = Verify.equalsOne(fromDB, "sqlite", "mysql", "h2");
         Verify.isTrue(isCorrectDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, fromDB)));
 
         String toDB = args[1].toLowerCase();
-        isCorrectDB = Verify.equalsOne(toDB, "sqlite", "mysql");
+        isCorrectDB = Verify.equalsOne(toDB, "sqlite", "mysql", "h2");
         Verify.isTrue(isCorrectDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, toDB)));
 

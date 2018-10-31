@@ -21,8 +21,8 @@ import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.sql.H2DB;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
-import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.Settings;
@@ -50,10 +50,14 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 /**
- * @author Rsl1122
+ * Test for the H2 database
+ *
+ * @author Rsl1122, Fuzzlemann
+ * @see SQLiteTest
+ * @since 4.5.1
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class SQLiteTest {
+public class H2Test {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -82,7 +86,9 @@ public class SQLiteTest {
         system.enable();
 
         dbSystem = system.getDatabaseSystem();
-        db = (SQLDB) dbSystem.getDatabase();
+        db = (SQLDB) dbSystem.getActiveDatabaseByName("H2");
+
+        db.init();
         System.out.println("--- Class Setup Complete ---\n");
     }
 
@@ -102,11 +108,6 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testInit() throws DBInitException {
-        db.init();
-    }
-
-    @Test
     public void testNoExceptionWhenCommitEmpty() throws Exception {
         db.commit(db.getConnection());
         db.commit(db.getConnection());
@@ -114,13 +115,13 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testSQLiteGetConfigName() {
-        assertEquals("sqlite", db.getConfigName());
+    public void testH2GetConfigName() {
+        assertEquals("h2", db.getConfigName());
     }
 
     @Test
-    public void testSQLiteGetName() {
-        assertEquals("SQLite", db.getName());
+    public void testH2GetName() {
+        assertEquals("H2", db.getName());
     }
 
     @Test(timeout = 3000)
@@ -657,39 +658,6 @@ public class SQLiteTest {
     }
 
     @Test
-    public void testServerTableBungeeSave() throws DBInitException {
-        ServerTable serverTable = db.getServerTable();
-
-        Optional<Server> bungeeInfo = serverTable.getBungeeInfo();
-        assertFalse(bungeeInfo.isPresent());
-
-        UUID bungeeUUID = UUID.randomUUID();
-        Server bungeeCord = new Server(-1, bungeeUUID, "BungeeCord", "Random:1234", 20);
-        serverTable.saveCurrentServerInfo(bungeeCord);
-
-        commitTest();
-
-        bungeeCord.setId(2);
-
-        bungeeInfo = serverTable.getBungeeInfo();
-        assertTrue(bungeeInfo.isPresent());
-        assertEquals(bungeeCord, bungeeInfo.get());
-
-        Optional<Integer> serverID = serverTable.getServerID(bungeeUUID);
-        assertTrue(serverID.isPresent());
-        assertEquals(2, (int) serverID.get());
-    }
-
-    @Test
-    public void testServerTableBungee() throws DBInitException {
-        testServerTableBungeeSave();
-        ServerTable serverTable = db.getServerTable();
-
-        Map<UUID, Server> bukkitServers = serverTable.getBukkitServers();
-        assertEquals(1, bukkitServers.size());
-    }
-
-    @Test
     public void testSessionTableNPEWhenNoPlayers() {
         Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
         assertTrue(lastSeen.isEmpty());
@@ -749,7 +717,7 @@ public class SQLiteTest {
     @Test
     public void testBackupAndRestore() throws Exception {
         System.out.println("- Creating Backup Database -");
-        SQLiteDB backup = dbSystem.getSqLiteFactory().usingFile(temporaryFolder.newFile("backup.db"));
+        H2DB backup = dbSystem.getH2Factory().usingFile(temporaryFolder.newFile("backup.db"));
         backup.init();
         System.out.println("- Backup Database Created  -");
 

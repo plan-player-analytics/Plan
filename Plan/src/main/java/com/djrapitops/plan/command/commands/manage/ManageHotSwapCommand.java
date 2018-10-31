@@ -73,7 +73,7 @@ public class ManageHotSwapCommand extends CommandNode {
 
         String dbName = args[0].toLowerCase();
 
-        boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql");
+        boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql", "h2");
         Verify.isTrue(isCorrectDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 

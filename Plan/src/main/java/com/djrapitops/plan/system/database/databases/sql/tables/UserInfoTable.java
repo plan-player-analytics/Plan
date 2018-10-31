@@ -64,7 +64,7 @@ public class UserInfoTable extends UserIDTable {
 
     public void registerUserInfo(UUID uuid, long registered) {
         if (!usersTable.isRegistered(uuid)) {
-            usersTable.registerUser(uuid, registered, "Waiting for Update..");
+            usersTable.registerUser(uuid, registered, "waitingForUpdate");
         }
 
         String sql = "INSERT INTO " + tableName + " (" +

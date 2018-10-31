@@ -423,6 +423,10 @@ public abstract class SQLDB extends Database {
         return false;
     }
 
+    public boolean isUsingH2() {
+        return false;
+    }
+
     @Override
     public BackupOperations backup() {
         return backupOps;
