@@ -29,7 +29,6 @@ import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
@@ -37,7 +36,9 @@ import dagger.Lazy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Objects;
 
 /**
@@ -105,30 +106,9 @@ public class SQLiteDB extends SQLDB {
         stopConnectionPingTask();
         try {
             // Maintains Connection.
-            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(), new AbsRunnable() {
-                @Override
-                public void run() {
-                    Statement statement = null;
-                    ResultSet resultSet = null;
-                    try {
-                        if (connection != null && !connection.isClosed()) {
-                            statement = connection.createStatement();
-                            resultSet = statement.executeQuery("/* ping */ SELECT 1");
-                        }
-                    } catch (SQLException e) {
-                        logger.debug("Something went wrong during SQLite Connection upkeep task.");
-                        try {
-                            connection = getNewConnection(databaseFile);
-                        } catch (SQLException e1) {
-                            errorHandler.log(L.ERROR, this.getClass(), e1);
-                            logger.error("SQLite connection maintaining task had to be closed due to exception.");
-                            this.cancel();
-                        }
-                    } finally {
-                        MiscUtils.close(statement, resultSet);
-                    }
-                }
-            }).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
+            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
+                    new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
+            ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
         } catch (Exception ignored) {
         }
     }
@@ -248,4 +228,5 @@ public class SQLiteDB extends SQLDB {
         }
 
     }
+
 }
