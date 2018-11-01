@@ -37,7 +37,7 @@ public abstract class Table {
 
     protected final String tableName;
     protected final SQLDB db;
-    protected final boolean usingMySQL;
+    protected final boolean supportsMySQLQueries;
 
     /**
      * Constructor.
@@ -48,7 +48,7 @@ public abstract class Table {
     public Table(String name, SQLDB db) {
         this.tableName = name;
         this.db = db;
-        this.usingMySQL = db != null && db.isUsingMySQL();
+        this.supportsMySQLQueries = db != null && db.getType().supportsMySQLQueries();
     }
 
     public abstract void createTable() throws DBInitException;
@@ -118,13 +118,13 @@ public abstract class Table {
 
     protected void addColumns(String... columnInfo) {
         for (int i = 0; i < columnInfo.length; i++) {
-            columnInfo[i] = "ALTER TABLE " + tableName + " ADD " + (usingMySQL ? "" : "COLUMN ") + columnInfo[i];
+            columnInfo[i] = "ALTER TABLE " + tableName + " ADD " + (supportsMySQLQueries ? "" : "COLUMN ") + columnInfo[i];
         }
         executeUnsafe(columnInfo);
     }
 
     protected void removeColumns(String... columnNames) {
-        if (usingMySQL) {
+        if (supportsMySQLQueries) {
             StringBuilder sqlBuild = new StringBuilder();
             sqlBuild.append("ALTER TABLE ").append(tableName);
             for (int i = 0; i < columnNames.length; i++) {
@@ -147,7 +147,7 @@ public abstract class Table {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Table table = (Table) o;
-        return usingMySQL == table.usingMySQL &&
+        return supportsMySQLQueries == table.supportsMySQLQueries &&
                 Objects.equal(tableName, table.tableName) &&
                 Objects.equal(db, table.db);
     }
@@ -162,7 +162,7 @@ public abstract class Table {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(tableName, db, usingMySQL);
+        return Objects.hashCode(tableName, db, supportsMySQLQueries);
     }
 
     protected boolean execute(ExecStatement statement) {

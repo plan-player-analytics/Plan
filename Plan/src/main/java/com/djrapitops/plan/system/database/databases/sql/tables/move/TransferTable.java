@@ -37,7 +37,7 @@ public class TransferTable extends Table {
     }
 
     protected void renameTable(String from, String to) {
-        String sql = usingMySQL ?
+        String sql = supportsMySQLQueries ?
                 "RENAME TABLE " + from + " TO " + to :
                 "ALTER TABLE " + from + " RENAME TO " + to;
         execute(sql);

@@ -419,14 +419,6 @@ public abstract class SQLDB extends Database {
         return pingTable;
     }
 
-    public boolean isUsingMySQL() {
-        return false;
-    }
-
-    public boolean isUsingH2() {
-        return false;
-    }
-
     @Override
     public BackupOperations backup() {
         return backupOps;
@@ -472,12 +464,12 @@ public abstract class SQLDB extends Database {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SQLDB sqldb = (SQLDB) o;
-        return getName().equals(sqldb.getName());
+        return getType().getName().equals(sqldb.getType().getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName());
+        return Objects.hash(getType().getName());
     }
 
     public Supplier<UUID> getServerUUIDSupplier() {

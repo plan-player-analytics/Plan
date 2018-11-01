@@ -127,12 +127,12 @@ public class H2Test {
 
     @Test
     public void testH2GetConfigName() {
-        assertEquals("h2", db.getConfigName());
+        assertEquals("h2", db.getType().getConfigName());
     }
 
     @Test
     public void testH2GetName() {
-        assertEquals("H2", db.getName());
+        assertEquals("H2", db.getType().getName());
     }
 
     @Test(timeout = 3000)

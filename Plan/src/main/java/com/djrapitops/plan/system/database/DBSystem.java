@@ -72,7 +72,7 @@ public abstract class DBSystem implements SubSystem {
 
     public Database getActiveDatabaseByName(String dbName) {
         for (Database database : getDatabases()) {
-            String dbConfigName = database.getConfigName();
+            String dbConfigName = database.getType().getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
                 return database;
             }
@@ -104,11 +104,11 @@ public abstract class DBSystem implements SubSystem {
         try {
             db.init();
             db.scheduleClean(20L);
-            logger.info(locale.getString(PluginLang.ENABLED_DATABASE, db.getName()));
+            logger.info(locale.getString(PluginLang.ENABLED_DATABASE, db.getType().getName()));
         } catch (DBInitException e) {
             Throwable cause = e.getCause();
             String message = cause == null ? e.getMessage() : cause.getMessage();
-            throw new EnableException((db != null ? db.getName() : "Database") + " init failure: " + message, cause);
+            throw new EnableException((db != null ? db.getType().getName() : "Database") + " init failure: " + message, cause);
         }
     }
 

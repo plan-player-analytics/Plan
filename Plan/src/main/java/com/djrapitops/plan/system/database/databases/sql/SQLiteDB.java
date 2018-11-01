@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
@@ -104,7 +105,7 @@ public class SQLiteDB extends SQLDB {
         stopConnectionPingTask();
         try {
             // Maintains Connection.
-            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getName(), new AbsRunnable() {
+            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(), new AbsRunnable() {
                 @Override
                 public void run() {
                     Statement statement = null;
@@ -141,12 +142,9 @@ public class SQLiteDB extends SQLDB {
         }
     }
 
-    /**
-     * @return the name of the Database
-     */
     @Override
-    public String getName() {
-        return "SQLite";
+    public DBType getType() {
+        return DBType.SQLite;
     }
 
     @Override

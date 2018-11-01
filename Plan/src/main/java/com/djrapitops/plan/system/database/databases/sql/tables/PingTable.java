@@ -56,14 +56,14 @@ public class PingTable extends UserIDTable {
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(TABLE_NAME)
-                .primaryKeyIDColumn(usingMySQL, Col.ID)
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
                 .column(Col.USER_ID, Sql.INT).notNull()
                 .column(Col.SERVER_ID, Sql.INT).notNull()
                 .column(Col.DATE, Sql.LONG).notNull()
                 .column(Col.MAX_PING, Sql.INT).notNull()
                 .column(Col.MIN_PING, Sql.INT).notNull()
                 .column(Col.AVG_PING, Sql.DOUBLE).notNull()
-                .primaryKey(usingMySQL, Col.ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
                 .foreignKey(Col.SERVER_ID, ServerTable.TABLE_NAME, ServerTable.Col.SERVER_ID)
                 .toString());

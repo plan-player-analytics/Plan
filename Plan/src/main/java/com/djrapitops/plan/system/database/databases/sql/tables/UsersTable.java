@@ -59,12 +59,12 @@ public class UsersTable extends UserIDTable {
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, Col.ID)
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
                 .column(Col.UUID, Sql.varchar(36)).notNull().unique()
                 .column(Col.REGISTERED, Sql.LONG).notNull()
                 .column(Col.USER_NAME, Sql.varchar(16)).notNull()
                 .column(Col.TIMES_KICKED, Sql.INT).notNull().defaultValue("0")
-                .primaryKey(usingMySQL, Col.ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .toString()
         );
     }

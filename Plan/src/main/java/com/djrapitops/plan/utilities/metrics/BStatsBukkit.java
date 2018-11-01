@@ -41,7 +41,7 @@ public class BStatsBukkit {
         if ("CraftBukkit".equals(serverType) && Check.isSpigotAvailable()) {
             serverType = "Spigot";
         }
-        String databaseType = plugin.getSystem().getDatabaseSystem().getDatabase().getName();
+        String databaseType = plugin.getSystem().getDatabaseSystem().getDatabase().getType().getName();
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);

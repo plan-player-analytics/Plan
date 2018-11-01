@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
@@ -115,7 +116,7 @@ public class H2DB extends SQLDB {
         stopConnectionPingTask();
         try {
             // Maintains Connection.
-            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getName(), new AbsRunnable() {
+            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(), new AbsRunnable() {
                 @Override
                 public void run() {
                     Statement statement = null;
@@ -152,22 +153,9 @@ public class H2DB extends SQLDB {
         }
     }
 
-    /**
-     * @return the name of the Database
-     */
     @Override
-    public String getName() {
-        return "H2";
-    }
-
-    @Override
-    public boolean isUsingMySQL() {
-        return true;
-    }
-
-    @Override
-    public boolean isUsingH2() {
-        return true;
+    public DBType getType() {
+        return DBType.H2;
     }
 
     @Override

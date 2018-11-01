@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -52,7 +53,7 @@ public class TransferTable extends Table {
 
         serverTable = db.getServerTable();
 
-        if (db.isUsingH2()) {
+        if (db.getType() == DBType.H2) {
             insertStatementNoParts = "INSERT INTO " + tableName + " (" +
                     Col.SENDER_ID + ", " +
                     Col.EXPIRY + ", " +
@@ -93,7 +94,7 @@ public class TransferTable extends Table {
                 .column(Col.EXPIRY, Sql.LONG).notNull().defaultValue("0")
                 .column(Col.INFO_TYPE, Sql.varchar(100)).notNull()
                 .column(Col.EXTRA_VARIABLES, Sql.varchar(255)).defaultValue("''")
-                .column(Col.CONTENT, usingMySQL ? "MEDIUMTEXT" : Sql.varchar(1)) // SQLite does not enforce varchar limits.
+                .column(Col.CONTENT, supportsMySQLQueries ? "MEDIUMTEXT" : Sql.varchar(1)) // SQLite does not enforce varchar limits.
                 .column(Col.PART, Sql.LONG).notNull().defaultValue("0")
                 .foreignKey(Col.SENDER_ID, serverTable.toString(), ServerTable.Col.SERVER_ID)
                 .toString()
@@ -137,7 +138,7 @@ public class TransferTable extends Table {
                 statement.setString(4, null);
                 statement.setString(5, encodedSettingString);
 
-                if (db.isUsingH2()) {
+                if (db.getType() == DBType.H2) {
                     statement.setLong(6, expiration);
                     statement.setString(7, "configSettings");
                     statement.setString(8, null);

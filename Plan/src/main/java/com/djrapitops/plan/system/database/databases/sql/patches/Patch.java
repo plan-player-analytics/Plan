@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.system.database.databases.sql.patches;
 
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -30,13 +31,11 @@ import java.util.UUID;
 public abstract class Patch {
 
     protected final SQLDB db;
-    protected final boolean usingMySQL;
-    protected final boolean usingH2;
+    protected final DBType dbType;
 
     public Patch(SQLDB db) {
         this.db = db;
-        usingMySQL = db.isUsingMySQL();
-        usingH2 = db.isUsingH2();
+        this.dbType = db.getType();
     }
 
     public abstract boolean hasBeenApplied();
@@ -49,9 +48,9 @@ public abstract class Patch {
 
     public boolean hasTable(String tableName) {
         String sql;
-        if (usingH2) {
+        if (dbType == DBType.H2) {
             sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=?";
-        } else if (usingMySQL) {
+        } else if (dbType.supportsMySQLQueries()) {
             sql = "SELECT * FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=? LIMIT 1";
         } else {
             sql = "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?";
@@ -61,7 +60,7 @@ public abstract class Patch {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
-                if (usingMySQL && !usingH2) {
+                if (dbType == DBType.H2) {
                     statement.setString(2, db.getConfig().getString(Settings.DB_DATABASE));
                 }
             }
@@ -74,15 +73,15 @@ public abstract class Patch {
     }
 
     protected boolean hasColumn(String tableName, String columnName) {
-        if (usingMySQL) {
+        if (dbType.supportsMySQLQueries()) {
             String query;
 
-            if (!usingH2) {
-                query = "SELECT * FROM information_schema.COLUMNS" +
-                        " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=?";
-            } else {
+            if (dbType == DBType.H2) {
                 query = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS" +
                         " WHERE TABLE_NAME=? AND COLUMN_NAME=?";
+            } else {
+                query = "SELECT * FROM information_schema.COLUMNS" +
+                        " WHERE TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=?";
             }
 
             return query(new QueryStatement<Boolean>(query) {
@@ -90,7 +89,7 @@ public abstract class Patch {
                 public void prepare(PreparedStatement statement) throws SQLException {
                     statement.setString(1, tableName);
                     statement.setString(2, columnName);
-                    if (!usingH2) {
+                    if (dbType != DBType.H2) {
                         statement.setString(3, db.getConfig().getString(Settings.DB_DATABASE));
                     }
                 }
@@ -116,7 +115,7 @@ public abstract class Patch {
     }
 
     protected void addColumn(String tableName, String columnInfo) {
-        db.executeUnsafe("ALTER TABLE " + tableName + " ADD " + (usingMySQL ? "" : "COLUMN ") + columnInfo);
+        db.executeUnsafe("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
     }
 
     protected void dropTable(String name) {
@@ -124,7 +123,7 @@ public abstract class Patch {
     }
 
     protected void renameTable(String from, String to) {
-        String sql = usingMySQL ?
+        String sql = dbType.supportsMySQLQueries() ?
                 "RENAME TABLE " + from + " TO " + to :
                 "ALTER TABLE " + from + " RENAME TO " + to;
         db.execute(sql);

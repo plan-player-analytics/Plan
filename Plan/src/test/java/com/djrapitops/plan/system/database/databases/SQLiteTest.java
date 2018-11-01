@@ -126,12 +126,12 @@ public class SQLiteTest {
 
     @Test
     public void testSQLiteGetConfigName() {
-        assertEquals("sqlite", db.getConfigName());
+        assertEquals("sqlite", db.getType().getConfigName());
     }
 
     @Test
     public void testSQLiteGetName() {
-        assertEquals("SQLite", db.getName());
+        assertEquals("SQLite", db.getType().getName());
     }
 
     @Test(timeout = 3000)

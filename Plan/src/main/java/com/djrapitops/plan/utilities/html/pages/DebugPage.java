@@ -227,7 +227,7 @@ public class DebugPage implements Page {
                 .append(" (").append(serverProperties.getVersion());
         content.append(")<br>");
 
-        content.append("**Database:** ").append(database.getName());
+        content.append("**Database:** ").append(database.getType().getName());
         content.append("<br><br>");
 
         Properties properties = System.getProperties();

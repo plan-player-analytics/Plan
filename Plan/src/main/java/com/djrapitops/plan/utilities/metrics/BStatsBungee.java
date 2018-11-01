@@ -46,7 +46,7 @@ public class BStatsBungee {
 
     private void registerConfigSettingGraphs() {
         String serverType = plugin.getProxy().getName();
-        String databaseType = database.getName();
+        String databaseType = database.getType().getName();
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);

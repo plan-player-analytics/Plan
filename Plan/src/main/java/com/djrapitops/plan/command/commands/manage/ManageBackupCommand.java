@@ -19,6 +19,7 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.api.exceptions.database.DBException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.locale.Locale;
@@ -93,7 +94,7 @@ public class ManageBackupCommand extends CommandNode {
 
             String dbName = args[0].toLowerCase();
 
-            boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql", "h2");
+            boolean isCorrectDB = DBType.exists(dbName);
             Verify.isTrue(isCorrectDB,
                     () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 

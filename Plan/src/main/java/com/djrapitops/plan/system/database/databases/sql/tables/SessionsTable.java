@@ -66,7 +66,7 @@ public class SessionsTable extends UserIDTable {
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(this.tableName)
-                .primaryKeyIDColumn(usingMySQL, Col.ID)
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
                 .column(Col.USER_ID, Sql.INT).notNull()
                 .column(Col.SERVER_ID, Sql.INT).notNull()
                 .column(Col.SESSION_START, Sql.LONG).notNull()
@@ -76,7 +76,7 @@ public class SessionsTable extends UserIDTable {
                 .column(Col.AFK_TIME, Sql.LONG).notNull()
                 .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
                 .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
-                .primaryKey(usingMySQL, Col.ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .toString()
         );
     }

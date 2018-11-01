@@ -26,6 +26,6 @@ import com.djrapitops.plan.system.database.databases.Database;
 public class UnsupportedTransferDatabaseException extends WebException {
 
     public UnsupportedTransferDatabaseException(Database db) {
-        super(db.getName() + " does not support Transfer operations!");
+        super(db.getType().getName() + " does not support Transfer operations!");
     }
 }
