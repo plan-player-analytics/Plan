@@ -47,20 +47,25 @@ public abstract class Patch {
     }
 
     public boolean hasTable(String tableName) {
+        boolean secondParameter;
+
         String sql;
         if (dbType == DBType.H2) {
             sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=?";
+            secondParameter = false;
         } else if (dbType.supportsMySQLQueries()) {
             sql = "SELECT * FROM information_schema.TABLES WHERE table_name=? AND TABLE_SCHEMA=? LIMIT 1";
+            secondParameter = true;
         } else {
             sql = "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?";
+            secondParameter = false;
         }
 
         return query(new QueryStatement<Boolean>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
-                if (dbType != DBType.H2) {
+                if (secondParameter) {
                     statement.setString(2, db.getConfig().getString(Settings.DB_DATABASE));
                 }
             }
