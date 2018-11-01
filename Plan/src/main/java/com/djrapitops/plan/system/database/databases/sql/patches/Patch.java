@@ -60,7 +60,7 @@ public abstract class Patch {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
-                if (dbType == DBType.H2) {
+                if (dbType != DBType.H2) {
                     statement.setString(2, db.getConfig().getString(Settings.DB_DATABASE));
                 }
             }
