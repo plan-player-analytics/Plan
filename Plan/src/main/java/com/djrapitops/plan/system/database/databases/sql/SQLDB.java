@@ -464,7 +464,7 @@ public abstract class SQLDB extends Database {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SQLDB sqldb = (SQLDB) o;
-        return getType().getName().equals(sqldb.getType().getName());
+        return getType() == sqldb.getType();
     }
 
     @Override
