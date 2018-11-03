@@ -126,7 +126,7 @@ public abstract class CommonDBTest {
         db.commit(db.getConnection());
     }
 
-    @Test(timeout = 3000)
+    @Test
     public void testSaveCommandUse() throws DBInitException {
         CommandUseTable commandUseTable = db.getCommandUseTable();
         Map<String, Integer> expected = new HashMap<>();
