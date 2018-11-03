@@ -187,8 +187,7 @@ public class UserInfoTable extends UserIDTable {
             return new ArrayList<>();
         }
 
-        Map<UUID, String> playerNames = usersTable.getPlayerNames();
-        Map<Integer, UUID> uuidsByID = usersTable.getUUIDsByID();
+        Map<Integer, Map.Entry<UUID, String>> uuidsAndNamesByID = usersTable.getUUIDsAndNamesByID();
 
         String sql = "SELECT * FROM " + tableName +
                 " WHERE " + Col.SERVER_ID + "=?";
@@ -207,8 +206,11 @@ public class UserInfoTable extends UserIDTable {
                     boolean op = set.getBoolean(Col.OP.get());
                     boolean banned = set.getBoolean(Col.BANNED.get());
                     int userId = set.getInt(Col.USER_ID.get());
-                    UUID uuid = uuidsByID.get(userId);
-                    String name = playerNames.getOrDefault(uuid, "Unknown");
+
+                    Map.Entry<UUID, String> uuidNameEntry = uuidsAndNamesByID.get(userId);
+                    UUID uuid = uuidNameEntry.getKey();
+                    String name = uuidNameEntry.getValue();
+
                     UserInfo info = new UserInfo(uuid, name, registered, op, banned);
                     if (!userInfo.contains(info)) {
                         userInfo.add(info);
