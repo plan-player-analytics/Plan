@@ -288,6 +288,10 @@ public abstract class SQLDB extends Database {
     public abstract void returnToPool(Connection connection);
 
     public boolean execute(ExecStatement statement) {
+        if (!isOpen()) {
+            throw new DBOpException("SQL Statement tried to execute while connection closed");
+        }
+
         Connection connection = null;
         try {
             connection = getConnection();
@@ -328,6 +332,10 @@ public abstract class SQLDB extends Database {
     }
 
     public void executeBatch(ExecStatement statement) {
+        if (!isOpen()) {
+            throw new DBOpException("SQL Batch tried to execute while connection closed");
+        }
+
         Connection connection = null;
         try {
             connection = getConnection();
@@ -346,6 +354,10 @@ public abstract class SQLDB extends Database {
     }
 
     public <T> T query(QueryStatement<T> statement) {
+        if (!isOpen()) {
+            throw new DBOpException("SQL Query tried to execute while connection closed");
+        }
+
         Connection connection = null;
         try {
             connection = getConnection();

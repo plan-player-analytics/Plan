@@ -24,6 +24,7 @@ import com.djrapitops.plan.data.store.mutators.PerServerMutator;
 import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.SessionsMutator;
 import com.djrapitops.plan.data.store.objects.DateObj;
+import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.cache.SessionCache;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
@@ -123,6 +124,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
         Map<UUID, List<GeoInfo>> geoInfo = geoInfoTable.getAllGeoInfo();
         Map<UUID, List<Ping>> allPings = pingTable.getAllPings();
+        Map<UUID, List<Nickname>> allNicknames = nicknamesTable.getAllNicknamesUnmapped();
 
         Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer(serverUUID);
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -144,7 +146,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             container.putRawData(PlayerKeys.KICK_COUNT, timesKicked.get(uuid));
             container.putRawData(PlayerKeys.GEO_INFO, geoInfo.get(uuid));
             container.putRawData(PlayerKeys.PING, allPings.get(uuid));
-            container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> nicknamesTable.getNicknameInformation(uuid));
+            container.putRawData(PlayerKeys.NICKNAMES, allNicknames.get(uuid));
             container.putRawData(PlayerKeys.PER_SERVER, perServerInfo.get(uuid));
 
             container.putRawData(PlayerKeys.BANNED, userInfo.isBanned());
@@ -187,6 +189,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
         Map<UUID, Integer> timesKicked = usersTable.getAllTimesKicked();
         Map<UUID, List<GeoInfo>> geoInfo = geoInfoTable.getAllGeoInfo();
         Map<UUID, List<Ping>> allPings = pingTable.getAllPings();
+        Map<UUID, List<Nickname>> allNicknames = nicknamesTable.getAllNicknamesUnmapped();
 
         Map<UUID, Map<UUID, List<Session>>> sessions = sessionsTable.getAllSessions(false);
         Map<UUID, List<UserInfo>> allUserInfo = userInfoTable.getAllUserInfo();
@@ -202,7 +205,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
             container.putRawData(PlayerKeys.KICK_COUNT, timesKicked.get(uuid));
             container.putRawData(PlayerKeys.GEO_INFO, geoInfo.get(uuid));
             container.putRawData(PlayerKeys.PING, allPings.get(uuid));
-            container.putCachingSupplier(PlayerKeys.NICKNAMES, () -> nicknamesTable.getNicknameInformation(uuid));
+            container.putRawData(PlayerKeys.NICKNAMES, allNicknames.get(uuid));
             container.putRawData(PlayerKeys.PER_SERVER, perServerInfo.get(uuid));
 
             container.putCachingSupplier(PlayerKeys.SESSIONS, () -> {

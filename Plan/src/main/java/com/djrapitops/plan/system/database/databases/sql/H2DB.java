@@ -145,13 +145,13 @@ public class H2DB extends SQLDB {
 
     @Override
     public void close() {
+        super.close();
         stopConnectionPingTask();
+
         if (connection != null) {
             logger.debug("H2DB " + dbName + ": Closed Connection");
             MiscUtils.close(connection);
         }
-
-        super.close();
     }
 
     @Override

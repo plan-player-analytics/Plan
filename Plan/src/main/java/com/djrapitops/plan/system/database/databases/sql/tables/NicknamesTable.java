@@ -162,6 +162,42 @@ public class NicknamesTable extends UserIDTable {
         });
     }
 
+    /**
+     * Get nicknames of all users but doesn't map them by Server
+     *
+     * @return a {@code Map<UUID, List<Nickname>} with all nicknames of all users
+     * @see NicknamesTable#getAllNicknames();
+     */
+    public Map<UUID, List<Nickname>> getAllNicknamesUnmapped() {
+        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
+        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
+        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
+        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
+        String sql = "SELECT " +
+                Col.NICKNAME + ", " +
+                Col.LAST_USED + ", " +
+                usersUUIDColumn + ", " +
+                serverUUIDColumn +
+                " FROM " + tableName +
+                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID +
+                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
+        return query(new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
+            @Override
+            public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<Nickname>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    List<Nickname> nicknames = map.computeIfAbsent(uuid, x -> new ArrayList<>());
+                    nicknames.add(new Nickname(
+                            set.getString(Col.NICKNAME.get()), set.getLong(Col.LAST_USED.get()), serverUUID
+                    ));
+                }
+                return map;
+            }
+        });
+    }
+
     public void saveUserName(UUID uuid, Nickname name) {
         List<Nickname> saved = getNicknameInformation(uuid);
         if (saved.contains(name)) {

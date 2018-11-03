@@ -42,12 +42,12 @@ public class SQLiteTest extends CommonDBTest {
     }
 
     @Test
-    public void testH2GetConfigName() {
+    public void testSQLiteGetConfigName() {
         assertEquals("sqlite", db.getType().getConfigName());
     }
 
     @Test
-    public void testH2GetName() {
+    public void testSQLiteGetName() {
         assertEquals("SQLite", db.getType().getName());
     }
 

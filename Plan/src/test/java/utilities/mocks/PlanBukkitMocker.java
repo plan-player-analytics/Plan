@@ -14,7 +14,7 @@ import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
+import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -23,6 +23,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.mockito.Mockito;
 import utilities.TestConstants;
 import utilities.mocks.objects.TestLogger;
+import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,7 +55,7 @@ public class PlanBukkitMocker extends Mocker {
         doReturn("1.0.0").when(planMock).getVersion();
 
         TestLogger testLogger = new TestLogger();
-        ThreadRunnableFactory runnableFactory = new ThreadRunnableFactory();
+        RunnableFactory runnableFactory = new TestRunnableFactory();
         PluginLogger testPluginLogger = new TestPluginLogger();
         DebugLogger debugLogger = new CombineDebugLogger(new MemoryDebugLogger());
         ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);

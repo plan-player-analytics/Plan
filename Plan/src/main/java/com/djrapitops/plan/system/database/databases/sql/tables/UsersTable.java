@@ -416,6 +416,30 @@ public class UsersTable extends UserIDTable {
         });
     }
 
+    /**
+     * Gets the {@code UUID} and the name of the player mapped to the user ID
+     *
+     * @return a {@code Map<Integer, Map.Entry<UUID, String>>} where the key is the user ID
+     * and the value is an {@code Map.Entry<UUID, String>>} of the player's {@code UUID} and name
+     */
+    public Map<Integer, Map.Entry<UUID, String>> getUUIDsAndNamesByID() {
+        String sql = Select.from(tableName, Col.ID, Col.UUID, Col.USER_NAME).toString();
+        return query(new QueryAllStatement<Map<Integer, Map.Entry<UUID, String>>>(sql, 20000) {
+            @Override
+            public Map<Integer, Map.Entry<UUID, String>> processResults(ResultSet set) throws SQLException {
+                Map<Integer, Map.Entry<UUID, String>> uuidsAndNamesByID = new TreeMap<>();
+                while (set.next()) {
+                    int id = set.getInt(Col.ID.get());
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    String name = set.getString(Col.USER_NAME.get());
+                    uuidsAndNamesByID.put(id, new AbstractMap.SimpleEntry<>(uuid, name));
+                }
+                return uuidsAndNamesByID;
+            }
+        });
+    }
+
+
     public DataContainer getUserInformation(UUID uuid) {
         Key<DataContainer> user_data = new Key<>(DataContainer.class, "plan_users_data");
         DataContainer returnValue = new DataContainer();
