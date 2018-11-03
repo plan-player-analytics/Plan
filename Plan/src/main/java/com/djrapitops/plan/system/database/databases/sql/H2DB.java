@@ -22,7 +22,7 @@ import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.lang.PluginLang;
+import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plugin.benchmarking.Timings;
@@ -32,26 +32,29 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.PluginTask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
+import org.h2.jdbcx.JdbcDataSource;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Objects;
 
 /**
- * @author Rsl1122
+ * Implementation of the H2 database
+ *
+ * @author Fuzzlemann
+ * @since 4.5.1
  */
-public class SQLiteDB extends SQLDB {
+public class H2DB extends SQLDB {
 
     private final File databaseFile;
     private final String dbName;
     private Connection connection;
     private PluginTask connectionPingTask;
 
-    private SQLiteDB(
+    private H2DB(
             File databaseFile,
             Locale locale,
             PlanConfig config,
@@ -70,36 +73,40 @@ public class SQLiteDB extends SQLDB {
     @Override
     public void setupDataSource() throws DBInitException {
         try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+            errorHandler.log(L.CRITICAL, this.getClass(), e);
+        }
+
+        try {
             connection = getNewConnection(databaseFile);
         } catch (SQLException e) {
             throw new DBInitException(e);
         }
+
+        execute("SET REFERENTIAL_INTEGRITY FALSE");
         startConnectionPingTask();
     }
 
     public Connection getNewConnection(File dbFile) throws SQLException {
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            errorHandler.log(L.CRITICAL, this.getClass(), e);
-            return null; // Should never happen.
-        }
-
         String dbFilePath = dbFile.getAbsolutePath();
 
         Connection newConnection = getConnectionFor(dbFilePath);
-        logger.debug("SQLite " + dbName + ": Opened a new Connection");
+        logger.debug("H2 " + dbName + ": Opened a new Connection");
         newConnection.setAutoCommit(false);
         return newConnection;
     }
 
     private Connection getConnectionFor(String dbFilePath) throws SQLException {
-        try {
-            return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath + "?journal_mode=WAL");
-        } catch (SQLException ignored) {
-            logger.info(locale.getString(PluginLang.DB_NOTIFY_SQLITE_WAL));
-            return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
-        }
+        String username = config.getString(Settings.DB_USER);
+        String password = config.getString(Settings.DB_PASS);
+
+        JdbcDataSource jdbcDataSource = new JdbcDataSource();
+        jdbcDataSource.setURL("jdbc:h2:file:" + dbFilePath + ";mode=MySQL");
+        jdbcDataSource.setUser(username);
+        jdbcDataSource.setPassword(password);
+
+        return jdbcDataSource.getConnection();
     }
 
     private void startConnectionPingTask() {
@@ -124,7 +131,7 @@ public class SQLiteDB extends SQLDB {
 
     @Override
     public DBType getType() {
-        return DBType.SQLite;
+        return DBType.H2;
     }
 
     @Override
@@ -132,6 +139,7 @@ public class SQLiteDB extends SQLDB {
         if (connection == null) {
             connection = getNewConnection(databaseFile);
         }
+
         return connection;
     }
 
@@ -139,9 +147,10 @@ public class SQLiteDB extends SQLDB {
     public void close() {
         stopConnectionPingTask();
         if (connection != null) {
-            logger.debug("SQLite " + dbName + ": Closed Connection");
+            logger.debug("H2DB " + dbName + ": Closed Connection");
             MiscUtils.close(connection);
         }
+
         super.close();
     }
 
@@ -166,8 +175,8 @@ public class SQLiteDB extends SQLDB {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        SQLiteDB sqLiteDB = (SQLiteDB) o;
-        return Objects.equals(dbName, sqLiteDB.dbName);
+        H2DB h2DB = (H2DB) o;
+        return Objects.equals(dbName, h2DB.dbName);
     }
 
     @Override
@@ -211,16 +220,16 @@ public class SQLiteDB extends SQLDB {
             this.errorHandler = errorHandler;
         }
 
-        public SQLiteDB usingDefaultFile() {
-            return usingFileCalled("database");
+        public H2DB usingDefaultFile() {
+            return usingFileCalled("h2database");
         }
 
-        public SQLiteDB usingFileCalled(String fileName) {
-            return usingFile(files.getFileFromPluginFolder(fileName + ".db"));
+        public H2DB usingFileCalled(String fileName) {
+            return usingFile(files.getFileFromPluginFolder(fileName));
         }
 
-        public SQLiteDB usingFile(File databaseFile) {
-            return new SQLiteDB(databaseFile,
+        public H2DB usingFile(File databaseFile) {
+            return new H2DB(databaseFile,
                     locale, config, serverInfo,
                     networkContainerFactory,
                     runnableFactory, logger, timings, errorHandler
@@ -228,5 +237,4 @@ public class SQLiteDB extends SQLDB {
         }
 
     }
-
 }

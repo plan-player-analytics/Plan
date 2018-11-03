@@ -17,6 +17,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -77,12 +78,12 @@ public class ManageMoveCommand extends CommandNode {
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 2, Arrays.toString(this.getArguments()))));
 
         String fromDB = args[0].toLowerCase();
-        boolean isCorrectDB = Verify.equalsOne(fromDB, "sqlite", "mysql");
+        boolean isCorrectDB = DBType.exists(fromDB);
         Verify.isTrue(isCorrectDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, fromDB)));
 
         String toDB = args[1].toLowerCase();
-        isCorrectDB = Verify.equalsOne(toDB, "sqlite", "mysql");
+        isCorrectDB = DBType.exists(toDB);
         Verify.isTrue(isCorrectDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, toDB)));
 
@@ -115,9 +116,9 @@ public class ManageMoveCommand extends CommandNode {
 
                 sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
 
-                boolean movingToCurrentDB = toDatabase.getConfigName().equalsIgnoreCase(dbSystem.getDatabase().getConfigName());
+                boolean movingToCurrentDB = toDatabase.getType() == dbSystem.getDatabase().getType();
                 if (movingToCurrentDB) {
-                    sender.sendMessage(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getConfigName()));
+                    sender.sendMessage(locale.getString(ManageLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
                 }
             } catch (Exception e) {
                 errorHandler.log(L.ERROR, this.getClass(), e);

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.database;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.database.databases.sql.H2DB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.database.databases.sql.SpongeMySQLDB;
 import com.djrapitops.plan.system.locale.Locale;
@@ -44,16 +45,18 @@ public class SpongeDBSystem extends DBSystem {
             Locale locale,
             SpongeMySQLDB spongeMySQLDB,
             SQLiteDB.Factory sqLiteDB,
+            H2DB.Factory h2DB,
             PlanConfig config,
             PluginLogger logger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(locale, sqLiteDB, logger, timings, errorHandler);
+        super(locale, sqLiteDB, h2DB, logger, timings, errorHandler);
         this.config = config;
 
         databases.add(spongeMySQLDB);
         databases.add(sqLiteDB.usingDefaultFile());
+        databases.add(h2DB.usingDefaultFile());
     }
 
     @Override

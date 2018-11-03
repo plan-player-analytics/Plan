@@ -18,6 +18,7 @@ package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -73,11 +74,11 @@ public class ManageHotSwapCommand extends CommandNode {
 
         String dbName = args[0].toLowerCase();
 
-        boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql");
+        boolean isCorrectDB = DBType.exists(dbName);
         Verify.isTrue(isCorrectDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
-        Verify.isFalse(dbName.equals(dbSystem.getDatabase().getConfigName()),
+        Verify.isFalse(dbName.equals(dbSystem.getDatabase().getType().getConfigName()),
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_SAME_DB)));
 
         try {

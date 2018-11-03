@@ -27,3 +27,4 @@ Documentation can be found [On the Wiki](https://github.com/Rsl1122/Plan-PlayerA
   - **[jQuery Datatables](https://datatables.net/)** | [MIT License](https://datatables.net/license/mit)
 - **[Font Awesome Icons](http://fontawesome.io/icons/)** | [SIL Open Font License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 - **[MaxMind GeoIP2](https://www.maxmind.com/en/geoip-demo)** | [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/)
+- **[H2 Database](http://www.h2database.com)** | [MPL 2.0](http://www.h2database.com/html/license.html#mpl2) or [EPL 1.0](http://www.h2database.com/html/license.html#eclipse_license)

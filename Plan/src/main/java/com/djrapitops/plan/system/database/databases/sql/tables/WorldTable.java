@@ -57,10 +57,10 @@ public class WorldTable extends Table {
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, Col.ID)
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
                 .column(Col.NAME, Sql.varchar(100)).notNull()
                 .column(Col.SERVER_ID, Sql.INT).notNull()
-                .primaryKey(usingMySQL, Col.ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .foreignKey(Col.SERVER_ID, ServerTable.TABLE_NAME, ServerTable.Col.SERVER_ID)
                 .toString()
         );

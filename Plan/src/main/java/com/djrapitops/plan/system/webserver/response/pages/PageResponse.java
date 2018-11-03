@@ -27,6 +27,12 @@ import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
  */
 public class PageResponse extends Response {
 
+    private static final HtmlCompressor HTML_COMPRESSOR = new HtmlCompressor();
+
+    static {
+        HTML_COMPRESSOR.setRemoveIntertagSpaces(true);
+    }
+
     public PageResponse(ResponseType type) {
         super(type);
     }
@@ -36,8 +42,6 @@ public class PageResponse extends Response {
 
     @Override
     public void setContent(String content) {
-        HtmlCompressor compressor = new HtmlCompressor();
-        compressor.setRemoveIntertagSpaces(true);
-        super.setContent(compressor.compress(content));
+        super.setContent(HTML_COMPRESSOR.compress(content));
     }
 }

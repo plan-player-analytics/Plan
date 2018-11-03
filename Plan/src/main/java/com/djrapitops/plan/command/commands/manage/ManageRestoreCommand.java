@@ -17,6 +17,7 @@
 package com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.file.PlanFiles;
@@ -84,7 +85,7 @@ public class ManageRestoreCommand extends CommandNode {
         String backupDbName = args[0];
 
         String dbName = args[1].toLowerCase();
-        boolean isCorrectDB = Verify.equalsOne(dbName, "sqlite", "mysql");
+        boolean isCorrectDB = DBType.exists(dbName);
         Verify.isTrue(isCorrectDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 
@@ -96,7 +97,7 @@ public class ManageRestoreCommand extends CommandNode {
             database.init();
 
             if (!Verify.contains("-a", args)) {
-                sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_OVERWRITE, database.getName())));
+                sender.sendMessage(locale.getString(ManageLang.CONFIRMATION, locale.getString(ManageLang.CONFIRM_OVERWRITE, database.getType().getName())));
                 return;
             }
 

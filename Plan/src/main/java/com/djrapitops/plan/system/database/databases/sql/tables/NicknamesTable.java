@@ -81,8 +81,6 @@ public class NicknamesTable extends UserIDTable {
 
     /**
      * Get nicknames of the user on a server.
-     * <p>
-     * Get's nicknames from other servers as well.
      *
      * @param uuid       UUID of the Player
      * @param serverUUID UUID of the server
@@ -119,8 +117,6 @@ public class NicknamesTable extends UserIDTable {
 
     /**
      * Get nicknames of the user on THIS server.
-     * <p>
-     * Get's nicknames from other servers as well.
      *
      * @param uuid UUID of the Player
      * @return The nicknames of the User

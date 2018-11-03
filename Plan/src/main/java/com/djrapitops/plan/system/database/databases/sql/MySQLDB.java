@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.database.databases.sql;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.data.store.containers.NetworkContainer;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -67,12 +68,9 @@ public class MySQLDB extends SQLDB {
         increment++;
     }
 
-    /**
-     * @return the name of the Database
-     */
     @Override
-    public String getName() {
-        return "MySQL";
+    public DBType getType() {
+        return DBType.MySQL;
     }
 
     /**
@@ -156,11 +154,6 @@ public class MySQLDB extends SQLDB {
     @Override
     public void commit(Connection connection) {
         returnToPool(connection);
-    }
-
-    @Override
-    public boolean isUsingMySQL() {
-        return true;
     }
 
     @Override

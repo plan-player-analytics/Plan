@@ -110,7 +110,7 @@ public class ManageRemoveCommand extends CommandNode {
                 if (!Verify.contains("-a", args)) {
                     sender.sendMessage(
                             locale.getString(ManageLang.CONFIRMATION,
-                                    locale.getString(ManageLang.CONFIRM_REMOVAL, db.getName())
+                                    locale.getString(ManageLang.CONFIRM_REMOVAL, db.getType().getName())
                             )
                     );
                     return;
