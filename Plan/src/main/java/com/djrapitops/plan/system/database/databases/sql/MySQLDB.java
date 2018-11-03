@@ -134,10 +134,11 @@ public class MySQLDB extends SQLDB {
 
     @Override
     public void close() {
+        super.close();
+
         if (dataSource instanceof HikariDataSource) {
             ((HikariDataSource) dataSource).close();
         }
-        super.close();
     }
 
     @Override

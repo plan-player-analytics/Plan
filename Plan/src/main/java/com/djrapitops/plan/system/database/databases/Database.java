@@ -29,7 +29,7 @@ import com.djrapitops.plan.system.database.databases.operation.*;
  */
 public abstract class Database {
 
-    protected boolean open = false;
+    protected volatile boolean open = false;
 
     public abstract void init() throws DBInitException;
 
