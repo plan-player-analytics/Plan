@@ -323,6 +323,7 @@
                             <shadedPattern>com.djrapitops.plan.utilities.metrics</shadedPattern>
                         </relocation>
                     </relocations>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
             </plugin>
             <plugin>
