@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.ShutdownHook;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
@@ -40,12 +41,14 @@ import java.util.concurrent.TimeUnit;
 public class BukkitTaskSystem extends ServerTaskSystem {
 
     private final Plan plugin;
+    private final ShutdownHook shutdownHook;
     private final PingCountTimerBukkit pingCountTimer;
 
     @Inject
     public BukkitTaskSystem(
             Plan plugin,
             PlanConfig config,
+            ShutdownHook shutdownHook,
             RunnableFactory runnableFactory,
             PaperTPSCountTimer paperTPSCountTimer,
             BukkitTPSCountTimer bukkitTPSCountTimer,
@@ -64,6 +67,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
                 logsFolderCleanTask,
                 playersPageRefreshTask);
         this.plugin = plugin;
+        this.shutdownHook = shutdownHook;
         this.pingCountTimer = pingCountTimer;
     }
 
@@ -78,6 +82,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
         } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {
             // Running CraftBukkit
         }
+        shutdownHook.register();
     }
 
     @Override
