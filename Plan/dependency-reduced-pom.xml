@@ -76,7 +76,6 @@
               <exclude>org.mockito:*</exclude>
               <exclude>org.easymock:*</exclude>
               <exclude>junit:*</exclude>
-              <exclued>org.slf4j:*</exclued>
             </excludes>
           </artifactSet>
           <relocations>
@@ -103,6 +102,10 @@
               <pattern>org.h2</pattern>
               <shadedPattern>plan.org.h2</shadedPattern>
             </relocation>
+              <relocation>
+                  <pattern>org.slf4j</pattern>
+                  <shadedPattern>plan.org.slf4j</shadedPattern>
+              </relocation>
             <relocation>
               <pattern>org.bstats</pattern>
               <shadedPattern>com.djrapitops.plan.utilities.metrics</shadedPattern>
@@ -412,12 +415,6 @@
       <artifactId>RedisBungee</artifactId>
       <version>0.3.8-SNAPSHOT</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-nop</artifactId>
-      <version>1.7.25</version>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
