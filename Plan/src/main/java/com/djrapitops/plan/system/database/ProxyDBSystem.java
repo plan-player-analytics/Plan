@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.system.database;
 
+import com.djrapitops.plan.system.database.databases.sql.H2DB;
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.locale.Locale;
@@ -39,11 +40,12 @@ public class ProxyDBSystem extends DBSystem {
             Locale locale,
             MySQLDB mySQLDB,
             SQLiteDB.Factory sqLiteDB,
+            H2DB.Factory h2DB,
             PluginLogger logger,
             Timings timings,
             ErrorHandler errorHandler
     ) {
-        super(locale, sqLiteDB, logger, timings, errorHandler);
+        super(locale, sqLiteDB, h2DB, logger, timings, errorHandler);
         databases.add(mySQLDB);
         db = mySQLDB;
     }

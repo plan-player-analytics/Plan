@@ -31,7 +31,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.0
  */
-class BukkitPlayerVersionListener implements Listener {
+public class BukkitPlayerVersionListener implements Listener {
 
     private final ViaAPI viaAPI;
 

@@ -52,11 +52,11 @@ public class ReactDataTable extends Table {
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(TABLE_NAME)
-                .primaryKey(usingMySQL, Col.ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .column(Col.DATE, Sql.LONG)
                 .column(Col.SAMPLED_TYPE, Sql.varchar(30))
                 .column(Col.MINUTE_AVERAGE, Sql.DOUBLE)
-                .primaryKeyIDColumn(usingMySQL, Col.ID)
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
                 .toString());
     }
 

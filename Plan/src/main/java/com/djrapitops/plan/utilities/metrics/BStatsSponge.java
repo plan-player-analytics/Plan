@@ -39,7 +39,7 @@ public class BStatsSponge {
 
     private void registerConfigSettingGraphs() {
         String serverType = "Sponge";
-        String databaseType = database.getName();
+        String databaseType = database.getType().getName();
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);

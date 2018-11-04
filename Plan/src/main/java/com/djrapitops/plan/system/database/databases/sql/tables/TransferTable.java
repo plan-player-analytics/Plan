@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -51,15 +52,33 @@ public class TransferTable extends Table {
         super(TABLE_NAME, db);
 
         serverTable = db.getServerTable();
-        insertStatementNoParts = "REPLACE INTO " + tableName + " (" +
-                Col.SENDER_ID + ", " +
-                Col.EXPIRY + ", " +
-                Col.INFO_TYPE + ", " +
-                Col.EXTRA_VARIABLES + ", " +
-                Col.CONTENT +
-                ") VALUES (" +
-                serverTable.statementSelectServerID + ", " +
-                "?, ?, ?, ?)";
+
+        if (db.getType() == DBType.H2) {
+            insertStatementNoParts = "INSERT INTO " + tableName + " (" +
+                    Col.SENDER_ID + ", " +
+                    Col.EXPIRY + ", " +
+                    Col.INFO_TYPE + ", " +
+                    Col.EXTRA_VARIABLES + ", " +
+                    Col.CONTENT +
+                    ") VALUES (" +
+                    serverTable.statementSelectServerID + ", " +
+                    "?, ?, ?, ?)" +
+                    " ON DUPLICATE KEY UPDATE" +
+                    " " + Col.EXPIRY + "=?," +
+                    " " + Col.INFO_TYPE + "=?," +
+                    " " + Col.EXTRA_VARIABLES + "=?," +
+                    " " + Col.CONTENT + "=?";
+        } else {
+            insertStatementNoParts = "REPLACE INTO " + tableName + " (" +
+                    Col.SENDER_ID + ", " +
+                    Col.EXPIRY + ", " +
+                    Col.INFO_TYPE + ", " +
+                    Col.EXTRA_VARIABLES + ", " +
+                    Col.CONTENT +
+                    ") VALUES (" +
+                    serverTable.statementSelectServerID + ", " +
+                    "?, ?, ?, ?)";
+        }
 
         selectStatement = "SELECT * FROM " + tableName +
                 " WHERE " + Col.INFO_TYPE + "= ?" +
@@ -75,7 +94,7 @@ public class TransferTable extends Table {
                 .column(Col.EXPIRY, Sql.LONG).notNull().defaultValue("0")
                 .column(Col.INFO_TYPE, Sql.varchar(100)).notNull()
                 .column(Col.EXTRA_VARIABLES, Sql.varchar(255)).defaultValue("''")
-                .column(Col.CONTENT, usingMySQL ? "MEDIUMTEXT" : Sql.varchar(1)) // SQLite does not enforce varchar limits.
+                .column(Col.CONTENT, supportsMySQLQueries ? "MEDIUMTEXT" : Sql.varchar(1)) // SQLite does not enforce varchar limits.
                 .column(Col.PART, Sql.LONG).notNull().defaultValue("0")
                 .foreignKey(Col.SENDER_ID, serverTable.toString(), ServerTable.Col.SERVER_ID)
                 .toString()
@@ -111,11 +130,21 @@ public class TransferTable extends Table {
         execute(new ExecStatement(insertStatementNoParts) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
+                long expiration = System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1L);
+
                 statement.setString(1, getServerUUID().toString());
-                statement.setLong(2, System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1L));
+                statement.setLong(2, expiration);
                 statement.setString(3, "configSettings");
                 statement.setString(4, null);
                 statement.setString(5, encodedSettingString);
+
+                if (db.getType() == DBType.H2) {
+                    statement.setLong(6, expiration);
+                    statement.setString(7, "configSettings");
+                    statement.setString(8, null);
+                    statement.setString(9, encodedSettingString);
+
+                }
             }
         });
     }

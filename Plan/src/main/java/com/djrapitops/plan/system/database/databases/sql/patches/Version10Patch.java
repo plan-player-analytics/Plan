@@ -109,7 +109,7 @@ public class Version10Patch extends Patch {
                 " FROM " + tempNickTableName;
         db.execute(statement);
         try {
-            if (usingMySQL) {
+            if (dbType.supportsMySQLQueries()) {
                 db.execute("SET foreign_key_checks = 0");
             }
             statement = "INSERT INTO plan_kills " +
@@ -118,7 +118,7 @@ public class Version10Patch extends Patch {
                     " FROM " + tempKillsTableName;
             db.execute(statement);
         } finally {
-            if (usingMySQL) {
+            if (dbType.supportsMySQLQueries()) {
                 db.execute("SET foreign_key_checks = 1");
             }
         }

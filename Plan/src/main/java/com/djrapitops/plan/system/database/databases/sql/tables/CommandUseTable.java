@@ -62,11 +62,11 @@ public class CommandUseTable extends Table {
     public void createTable() throws DBInitException {
         ServerTable serverTable = db.getServerTable();
         createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, Col.COMMAND_ID)
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.COMMAND_ID)
                 .column(Col.COMMAND, Sql.varchar(20)).notNull()
                 .column(Col.TIMES_USED, Sql.INT).notNull()
                 .column(Col.SERVER_ID, Sql.INT).notNull()
-                .primaryKey(usingMySQL, Col.COMMAND_ID)
+                .primaryKey(supportsMySQLQueries, Col.COMMAND_ID)
                 .foreignKey(Col.SERVER_ID, serverTable.toString(), ServerTable.Col.SERVER_ID)
                 .toString()
         );

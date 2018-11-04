@@ -19,6 +19,7 @@ package com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
@@ -78,7 +79,7 @@ public class ManageClearCommand extends CommandNode {
 
         String dbName = args[0].toLowerCase();
 
-        boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
+        boolean isCorrectDB = DBType.exists(dbName);
         Verify.isTrue(isCorrectDB,
                 () -> new IllegalArgumentException(locale.getString(ManageLang.FAIL_INCORRECT_DB, dbName)));
 

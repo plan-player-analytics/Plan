@@ -33,7 +33,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 4.1.0
  */
-class PlayerHackKickListener implements Listener {
+public class PlayerHackKickListener implements Listener {
 
     private final HackerTable hackerTable;
     private final Processing processing;

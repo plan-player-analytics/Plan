@@ -63,13 +63,13 @@ public class ServerTable extends Table {
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, Col.SERVER_ID)
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.SERVER_ID)
                 .column(Col.SERVER_UUID, Sql.varchar(36)).notNull().unique()
                 .column(Col.NAME, Sql.varchar(100))
                 .column(Col.WEBSERVER_ADDRESS, Sql.varchar(100))
                 .column(Col.INSTALLED, Sql.BOOL).notNull().defaultValue(true)
                 .column(Col.MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
-                .primaryKey(usingMySQL, Col.SERVER_ID)
+                .primaryKey(supportsMySQLQueries, Col.SERVER_ID)
                 .toString()
         );
     }

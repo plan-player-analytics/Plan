@@ -59,12 +59,12 @@ public class UsersTable extends UserIDTable {
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, Col.ID)
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
                 .column(Col.UUID, Sql.varchar(36)).notNull().unique()
                 .column(Col.REGISTERED, Sql.LONG).notNull()
                 .column(Col.USER_NAME, Sql.varchar(16)).notNull()
                 .column(Col.TIMES_KICKED, Sql.INT).notNull().defaultValue("0")
-                .primaryKey(usingMySQL, Col.ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .toString()
         );
     }
@@ -261,13 +261,13 @@ public class UsersTable extends UserIDTable {
      * @return a list of distinct names.
      */
     public List<String> getMatchingNames(String name) {
-        String searchString = "%" + name.toLowerCase() + "%";
+        String searchString = "%" + name + "%";
         NicknamesTable nicknamesTable = db.getNicknamesTable();
         String sql = "SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
-                " WHERE " + Col.USER_NAME + " LIKE ?" +
+                " WHERE LOWER(" + Col.USER_NAME + ") LIKE LOWER(?)" +
                 " UNION SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
                 " INNER JOIN " + nicknamesTable + " on " + Col.ID + "=" + nicknamesTable + "." + NicknamesTable.Col.USER_ID +
-                " WHERE " + NicknamesTable.Col.NICKNAME + " LIKE ?";
+                " WHERE LOWER(" + NicknamesTable.Col.NICKNAME + ") LIKE LOWER(?)";
 
         return query(new QueryStatement<List<String>>(sql, 5000) {
             @Override
@@ -415,6 +415,30 @@ public class UsersTable extends UserIDTable {
             }
         });
     }
+
+    /**
+     * Gets the {@code UUID} and the name of the player mapped to the user ID
+     *
+     * @return a {@code Map<Integer, Map.Entry<UUID, String>>} where the key is the user ID
+     * and the value is an {@code Map.Entry<UUID, String>>} of the player's {@code UUID} and name
+     */
+    public Map<Integer, Map.Entry<UUID, String>> getUUIDsAndNamesByID() {
+        String sql = Select.from(tableName, Col.ID, Col.UUID, Col.USER_NAME).toString();
+        return query(new QueryAllStatement<Map<Integer, Map.Entry<UUID, String>>>(sql, 20000) {
+            @Override
+            public Map<Integer, Map.Entry<UUID, String>> processResults(ResultSet set) throws SQLException {
+                Map<Integer, Map.Entry<UUID, String>> uuidsAndNamesByID = new TreeMap<>();
+                while (set.next()) {
+                    int id = set.getInt(Col.ID.get());
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    String name = set.getString(Col.USER_NAME.get());
+                    uuidsAndNamesByID.put(id, new AbstractMap.SimpleEntry<>(uuid, name));
+                }
+                return uuidsAndNamesByID;
+            }
+        });
+    }
+
 
     public DataContainer getUserInformation(UUID uuid) {
         Key<DataContainer> user_data = new Key<>(DataContainer.class, "plan_users_data");

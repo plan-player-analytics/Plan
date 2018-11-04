@@ -29,7 +29,7 @@ import com.djrapitops.plan.system.database.databases.operation.*;
  */
 public abstract class Database {
 
-    protected boolean open = false;
+    protected volatile boolean open = false;
 
     public abstract void init() throws DBInitException;
 
@@ -47,18 +47,13 @@ public abstract class Database {
 
     public abstract SaveOperations save();
 
-    public abstract String getName();
-
     /**
-     * Used to get the config name of the database type.
-     * <p>
-     * Thread safe.
+     * Used to get the {@code DBType} of the Database
      *
-     * @return sqlite/mysql
+     * @return the {@code DBType}
+     * @see DBType
      */
-    public String getConfigName() {
-        return getName().toLowerCase().trim();
-    }
+    public abstract DBType getType();
 
     public abstract void close() throws DBException;
 

@@ -288,6 +288,10 @@ public abstract class SQLDB extends Database {
     public abstract void returnToPool(Connection connection);
 
     public boolean execute(ExecStatement statement) {
+        if (!isOpen()) {
+            throw new DBOpException("SQL Statement tried to execute while connection closed");
+        }
+
         Connection connection = null;
         try {
             connection = getConnection();
@@ -328,6 +332,10 @@ public abstract class SQLDB extends Database {
     }
 
     public void executeBatch(ExecStatement statement) {
+        if (!isOpen()) {
+            throw new DBOpException("SQL Batch tried to execute while connection closed");
+        }
+
         Connection connection = null;
         try {
             connection = getConnection();
@@ -346,6 +354,10 @@ public abstract class SQLDB extends Database {
     }
 
     public <T> T query(QueryStatement<T> statement) {
+        if (!isOpen()) {
+            throw new DBOpException("SQL Query tried to execute while connection closed");
+        }
+
         Connection connection = null;
         try {
             connection = getConnection();
@@ -419,10 +431,6 @@ public abstract class SQLDB extends Database {
         return pingTable;
     }
 
-    public boolean isUsingMySQL() {
-        return false;
-    }
-
     @Override
     public BackupOperations backup() {
         return backupOps;
@@ -468,12 +476,12 @@ public abstract class SQLDB extends Database {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SQLDB sqldb = (SQLDB) o;
-        return getName().equals(sqldb.getName());
+        return getType() == sqldb.getType();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName());
+        return Objects.hash(getType().getName());
     }
 
     public Supplier<UUID> getServerUUIDSupplier() {
