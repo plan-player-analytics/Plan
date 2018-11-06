@@ -16,12 +16,20 @@
  */
 package com.djrapitops.plan.system.importing;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Placeholder for a ImportSystem.
  *
  * @author Rsl1122
  */
+@Singleton
 public class EmptyImportSystem extends ImportSystem {
+
+    @Inject
+    public EmptyImportSystem() {
+    }
 
     @Override
     void registerImporters() {

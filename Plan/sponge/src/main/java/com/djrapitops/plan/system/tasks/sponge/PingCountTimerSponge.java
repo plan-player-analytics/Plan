@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.djrapitops.plan.system.tasks.server.sponge;
+package com.djrapitops.plan.system.tasks.sponge;
 
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;

@@ -22,7 +22,6 @@ import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
 import com.djrapitops.plan.system.settings.theme.PlanColorScheme;
-import com.djrapitops.plan.utilities.metrics.BStatsSponge;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;

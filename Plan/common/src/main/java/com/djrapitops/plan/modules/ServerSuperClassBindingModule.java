@@ -14,36 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.plugin;
+package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.PlanSponge;
-import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plugin.command.CommandNode;
+import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.api.ServerAPI;
+import com.djrapitops.plan.system.info.InfoSystem;
+import com.djrapitops.plan.system.info.ServerInfoSystem;
+import com.djrapitops.plan.system.info.connection.ConnectionSystem;
+import com.djrapitops.plan.system.info.connection.ServerConnectionSystem;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 /**
- * Dagger module for binding PlanSponge instance.
+ * Module for binding Server specific classes to the interface implementations.
  *
  * @author Rsl1122
  */
 @Module
-public class SpongePlanModule {
+public interface ServerSuperClassBindingModule {
 
-    @Provides
-    @Singleton
-    PlanPlugin providePlanPlugin(PlanSponge plugin) {
-        return plugin;
-    }
+    @Binds
+    PlanAPI bindServerPlanAPI(ServerAPI serverAPI);
 
-    @Provides
-    @Singleton
-    @Named("mainCommand")
-    CommandNode provideMainCommand(PlanCommand command) {
-        return command;
-    }
+    @Binds
+    InfoSystem bindServerInfoSystem(ServerInfoSystem serverInfoSystem);
+
+    @Binds
+    ConnectionSystem bindServerConnectionSystem(ServerConnectionSystem serverConnectionSystem);
 }

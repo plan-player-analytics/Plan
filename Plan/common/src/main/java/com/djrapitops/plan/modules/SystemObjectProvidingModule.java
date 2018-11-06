@@ -14,43 +14,35 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.server;
+package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.api.ServerAPI;
-import com.djrapitops.plan.system.info.InfoSystem;
-import com.djrapitops.plan.system.info.ServerInfoSystem;
-import com.djrapitops.plan.system.info.connection.ConnectionSystem;
-import com.djrapitops.plan.system.info.connection.ServerConnectionSystem;
+import com.djrapitops.plan.data.plugin.PluginsConfigSection;
+import com.djrapitops.plan.system.locale.Locale;
+import com.djrapitops.plan.system.locale.LocaleSystem;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
 /**
- * Module for binding Server specific classes to the interface implementations.
+ * Module for binding object instances found inside other systems.
  *
  * @author Rsl1122
  */
 @Module
-public class ServerSuperClassBindingModule {
+public class SystemObjectProvidingModule {
 
     @Provides
     @Singleton
-    PlanAPI provideServerPlanAPI(ServerAPI serverAPI) {
-        return serverAPI;
+    Locale provideLocale(LocaleSystem localeSystem) {
+        return localeSystem.getLocale();
     }
 
     @Provides
     @Singleton
-    InfoSystem provideServerInfoSystem(ServerInfoSystem serverInfoSystem) {
-        return serverInfoSystem;
-    }
-
-    @Provides
-    @Singleton
-    ConnectionSystem provideServerConnectionSystem(ServerConnectionSystem serverConnectionSystem) {
-        return serverConnectionSystem;
+    PluginsConfigSection providePluginsConfigSection(PlanConfig config) {
+        return config.getPluginsConfigSection();
     }
 
 }

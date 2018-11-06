@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.tasks.server.sponge;
+package com.djrapitops.plan.system.tasks.sponge;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.data.container.TPS;

@@ -17,14 +17,10 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FilesModule;
-import com.djrapitops.plan.modules.SuperClassBindingModule;
-import com.djrapitops.plan.modules.SystemObjectBindingModule;
-import com.djrapitops.plan.modules.plugin.SpongePlanModule;
-import com.djrapitops.plan.modules.server.ServerSuperClassBindingModule;
-import com.djrapitops.plan.modules.server.sponge.SpongeServerPropertiesModule;
-import com.djrapitops.plan.modules.server.sponge.SpongeSuperClassBindingModule;
+import com.djrapitops.plan.modules.*;
+import com.djrapitops.plan.modules.sponge.SpongePlanModule;
+import com.djrapitops.plan.modules.sponge.SpongeServerPropertiesModule;
+import com.djrapitops.plan.modules.sponge.SpongeSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.pluginbridge.plan.PluginBridgeModule;
 import dagger.BindsInstance;
@@ -41,7 +37,7 @@ import javax.inject.Singleton;
 @Component(modules = {
         SpongePlanModule.class,
         SuperClassBindingModule.class,
-        SystemObjectBindingModule.class,
+        SystemObjectProvidingModule.class,
         APFModule.class,
         FilesModule.class,
         ServerSuperClassBindingModule.class,

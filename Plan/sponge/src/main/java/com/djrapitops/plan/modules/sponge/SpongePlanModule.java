@@ -14,35 +14,29 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules;
+package com.djrapitops.plan.modules.sponge;
 
-import com.djrapitops.plan.data.plugin.PluginsConfigSection;
-import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.locale.LocaleSystem;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.PlanSponge;
+import com.djrapitops.plan.command.PlanCommand;
+import com.djrapitops.plugin.command.CommandNode;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 
-import javax.inject.Singleton;
+import javax.inject.Named;
 
 /**
- * Module for binding object instances found inside other systems.
+ * Dagger module for binding PlanSponge instance.
  *
  * @author Rsl1122
  */
 @Module
-public class SystemObjectBindingModule {
+public interface SpongePlanModule {
 
-    @Provides
-    @Singleton
-    Locale provideLocale(LocaleSystem localeSystem) {
-        return localeSystem.getLocale();
-    }
+    @Binds
+    PlanPlugin bindPlanPlugin(PlanSponge plugin);
 
-    @Provides
-    @Singleton
-    PluginsConfigSection providePluginsConfigSection(PlanConfig config) {
-        return config.getPluginsConfigSection();
-    }
-
+    @Binds
+    @Named("mainCommand")
+    CommandNode bindMainCommand(PlanCommand command);
 }

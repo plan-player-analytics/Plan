@@ -23,6 +23,7 @@ import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.status.Status;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -55,6 +56,7 @@ public class SpongePlayerListener {
     private final Processing processing;
     private final ServerInfo serverInfo;
     private SessionCache sessionCache;
+    private final Status status;
     private RunnableFactory runnableFactory;
     private ErrorHandler errorHandler;
 
@@ -65,6 +67,7 @@ public class SpongePlayerListener {
             Processing processing,
             ServerInfo serverInfo,
             SessionCache sessionCache,
+            Status status,
             RunnableFactory runnableFactory,
             ErrorHandler errorHandler
     ) {
@@ -73,6 +76,7 @@ public class SpongePlayerListener {
         this.processing = processing;
         this.serverInfo = serverInfo;
         this.sessionCache = sessionCache;
+        this.status = status;
         this.runnableFactory = runnableFactory;
         this.errorHandler = errorHandler;
     }
@@ -97,7 +101,7 @@ public class SpongePlayerListener {
     public void onKick(KickPlayerEvent event) {
         try {
             UUID uuid = event.getTargetEntity().getUniqueId();
-            if (SpongeAFKListener.AFK_TRACKER.isAfk(uuid)) {
+            if (!status.areKicksCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(uuid)) {
                 return;
             }
             processing.submit(processors.player().kickProcessor(uuid));

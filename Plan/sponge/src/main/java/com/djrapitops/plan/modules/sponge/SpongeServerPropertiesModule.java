@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.server.sponge;
+package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;

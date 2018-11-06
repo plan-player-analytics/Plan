@@ -16,9 +16,6 @@
  */
 package com.djrapitops.plan.system.info.server.properties;
 
-import org.spongepowered.api.Game;
-
-import java.net.InetSocketAddress;
 import java.util.function.Supplier;
 
 /**
@@ -52,24 +49,6 @@ public abstract class ServerProperties {
         this.ip = ip;
         this.maxPlayers = maxPlayers;
         this.onlinePlayers = onlinePlayers;
-    }
-
-    public ServerProperties(Game game) {
-        if (game == null) {
-            throw new IllegalStateException("Game did not inject.");
-        }
-        version = game.getPlatform().getMinecraftVersion().getName();
-        ip = () -> game.getServer().getBoundAddress()
-                .orElseGet(() -> new InetSocketAddress(25565))
-                .getAddress().getHostAddress();
-        name = "Sponge";
-        port = game.getServer().getBoundAddress().orElseGet(() -> new InetSocketAddress(25565)).getPort();
-        implVersion = version;
-
-        id = game.getServer().getMotd().toPlain();
-
-        maxPlayers = game.getServer().getMaxPlayers();
-        onlinePlayers = () -> game.getServer().getOnlinePlayers().size();
     }
 
     /**

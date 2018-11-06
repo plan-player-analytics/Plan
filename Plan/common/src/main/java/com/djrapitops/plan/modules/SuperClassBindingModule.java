@@ -18,10 +18,8 @@ package com.djrapitops.plan.modules;
 
 import com.djrapitops.plan.system.cache.DataCache;
 import com.djrapitops.plan.system.cache.SessionCache;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-
-import javax.inject.Singleton;
 
 /**
  * Module for binding instances of implementations to super classes.
@@ -29,12 +27,9 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Module
-public class SuperClassBindingModule {
+public interface SuperClassBindingModule {
 
-    @Provides
-    @Singleton
-    SessionCache provideSessionCache(DataCache cache) {
-        return cache;
-    }
+    @Binds
+    SessionCache bindSessionCache(DataCache cache);
 
 }

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.server.sponge;
+package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.SpongeDBSystem;
@@ -28,10 +28,8 @@ import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.config.SpongeConfigSystem;
 import com.djrapitops.plan.system.tasks.SpongeTaskSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-
-import javax.inject.Singleton;
 
 /**
  * Module for binding Sponge specific classes to the interface implementations.
@@ -39,42 +37,24 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Module
-public class SpongeSuperClassBindingModule {
+public interface SpongeSuperClassBindingModule {
 
-    @Provides
-    @Singleton
-    ServerInfo provideSpongeServerInfo(ServerServerInfo serverServerInfo) {
-        return serverServerInfo;
-    }
+    @Binds
+    ServerInfo bindSpongeServerInfo(ServerServerInfo serverServerInfo);
 
-    @Provides
-    @Singleton
-    DBSystem provideSpongeDatabaseSystem(SpongeDBSystem dbSystem) {
-        return dbSystem;
-    }
+    @Binds
+    DBSystem bindSpongeDatabaseSystem(SpongeDBSystem dbSystem);
 
-    @Provides
-    @Singleton
-    ConfigSystem provideSpongeConfigSystem(SpongeConfigSystem spongeConfigSystem) {
-        return spongeConfigSystem;
-    }
+    @Binds
+    ConfigSystem bindSpongeConfigSystem(SpongeConfigSystem spongeConfigSystem);
 
-    @Provides
-    @Singleton
-    TaskSystem provideSpongeTaskSystem(SpongeTaskSystem spongeTaskSystem) {
-        return spongeTaskSystem;
-    }
+    @Binds
+    TaskSystem bindSpongeTaskSystem(SpongeTaskSystem spongeTaskSystem);
 
-    @Provides
-    @Singleton
-    ListenerSystem provideSpongeListenerSystem(SpongeListenerSystem spongeListenerSystem) {
-        return spongeListenerSystem;
-    }
+    @Binds
+    ListenerSystem bindSpongeListenerSystem(SpongeListenerSystem spongeListenerSystem);
 
-    @Provides
-    @Singleton
-    ImportSystem provideImportSystem() {
-        return new EmptyImportSystem();
-    }
+    @Binds
+    ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
 
 }
