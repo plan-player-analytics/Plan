@@ -14,10 +14,29 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.importing.importers;
+package com.djrapitops.plan.modules.bukkit;
 
-public interface Importer {
-    void processImport();
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.command.PlanCommand;
+import com.djrapitops.plugin.command.CommandNode;
+import dagger.Binds;
+import dagger.Module;
 
-    String getName();
+import javax.inject.Named;
+
+/**
+ * Dagger module for binding Plan instance.
+ *
+ * @author Rsl1122
+ */
+@Module
+public interface BukkitPlanModule {
+
+    @Binds
+    PlanPlugin bindPlanPlugin(Plan plugin);
+
+    @Binds
+    @Named("mainCommand")
+    CommandNode bindMainCommand(PlanCommand command);
 }

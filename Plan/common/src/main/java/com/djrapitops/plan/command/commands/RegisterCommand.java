@@ -26,7 +26,6 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
@@ -81,9 +80,6 @@ public class RegisterCommand extends CommandNode {
         setArguments("<password>", "[name]", "[lvl]");
         setShortHelp(locale.getString(CmdHelpLang.WEB_REGISTER));
         setInDepthHelp(locale.getArray(DeepHelpLang.WEB_REGISTER));
-        if (Check.isBukkitAvailable()) {
-            setupFilter();
-        }
 
         notEnoughArgsMsg = locale.getString(CommandLang.FAIL_REQ_ARGS, 3, Arrays.toString(getArguments()));
     }
@@ -162,12 +158,5 @@ public class RegisterCommand extends CommandNode {
                 errorHandler.log(L.WARN, this.getClass(), e);
             }
         });
-    }
-
-    /**
-     * Setups the command console output filter
-     */
-    private void setupFilter() {
-        new RegisterCommandFilter().registerFilter();
     }
 }

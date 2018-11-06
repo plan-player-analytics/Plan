@@ -14,10 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.importing.importers;
+package com.djrapitops.plan.modules.bukkit;
 
-public interface Importer {
-    void processImport();
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.system.info.server.properties.BukkitServerProperties;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import dagger.Module;
+import dagger.Provides;
 
-    String getName();
+import javax.inject.Singleton;
+
+/**
+ * Dagger module for Bukkit ServerProperties.
+ *
+ * @author Rsl1122
+ */
+@Module
+public class BukkitServerPropertiesModule {
+
+    @Provides
+    @Singleton
+    ServerProperties provideServerProperties(Plan plugin) {
+        return new BukkitServerProperties(plugin.getServer());
+    }
 }

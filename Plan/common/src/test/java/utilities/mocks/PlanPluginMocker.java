@@ -4,7 +4,6 @@
  */
 package utilities.mocks;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
@@ -33,7 +32,7 @@ public class PlanPluginMocker extends Mocker {
     }
 
     private PlanPluginMocker mockPlugin() {
-        planMock = Mockito.mock(Plan.class);
+        planMock = Mockito.mock(PlanPlugin.class);
         super.planMock = planMock;
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();

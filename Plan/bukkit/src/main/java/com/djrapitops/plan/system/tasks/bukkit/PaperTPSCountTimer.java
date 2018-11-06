@@ -1,0 +1,78 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  LGNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
+package com.djrapitops.plan.system.tasks.bukkit;
+
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.data.container.TPS;
+import com.djrapitops.plan.data.container.builders.TPSBuilder;
+import com.djrapitops.plan.system.info.server.properties.ServerProperties;
+import com.djrapitops.plan.system.processing.Processing;
+import com.djrapitops.plan.system.processing.processors.Processors;
+import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.error.ErrorHandler;
+import org.bukkit.World;
+
+import javax.inject.Inject;
+
+public class PaperTPSCountTimer extends BukkitTPSCountTimer {
+
+    @Inject
+    public PaperTPSCountTimer(
+            Plan plugin,
+            Processors processors,
+            Processing processing,
+            ServerProperties serverProperties,
+            PluginLogger logger,
+            ErrorHandler errorHandler
+    ) {
+        super(plugin, processors, processing, serverProperties, logger, errorHandler);
+    }
+
+    @Override
+    protected TPS getTPS(long diff, long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline, long freeDiskSpace) {
+        double tps;
+        try {
+            tps = plugin.getServer().getTPS()[0];
+        } catch (NoSuchMethodError e) {
+            return super.getTPS(diff, now, cpuUsage, usedMemory, entityCount, chunksLoaded, playersOnline, freeDiskSpace);
+        }
+
+        if (tps > 20) {
+            tps = 20;
+        }
+
+        return TPSBuilder.get()
+                .date(now)
+                .tps(tps)
+                .playersOnline(playersOnline)
+                .usedCPU(cpuUsage)
+                .usedMemory(usedMemory)
+                .entities(entityCount)
+                .chunksLoaded(chunksLoaded)
+                .freeDiskSpace(freeDiskSpace)
+                .toTPS();
+    }
+
+    @Override
+    protected int getEntityCount() {
+        try {
+            return plugin.getServer().getWorlds().stream().mapToInt(World::getEntityCount).sum();
+        } catch (BootstrapMethodError | NoSuchMethodError e) {
+            return super.getEntityCount();
+        }
+    }
+}

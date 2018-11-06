@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.system.listeners.bukkit.PlayerOnlineListener;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
+import com.djrapitops.plan.system.status.Status;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
@@ -39,12 +39,17 @@ import java.util.Arrays;
 public class ManageDisableCommand extends CommandNode {
 
     private final Locale locale;
+    private final Status status;
 
     @Inject
-    public ManageDisableCommand(Locale locale) {
+    public ManageDisableCommand(
+            Locale locale,
+            Status status
+    ) {
         super("disable", Permissions.MANAGE.getPermission(), CommandType.PLAYER_OR_ARGS);
 
         this.locale = locale;
+        this.status = status;
 
         setArguments("<feature>");
         setShortHelp(locale.getString(CmdHelpLang.MANAGE_DISABLE));
@@ -58,7 +63,7 @@ public class ManageDisableCommand extends CommandNode {
 
         switch (args[0].toLowerCase()) {
             case "kickcount":
-                PlayerOnlineListener.setCountKicks(false);
+                status.setCountKicks(false);
                 sender.sendMessage(locale.getString(CommandLang.FEATURE_DISABLED, "Kick Counting"));
                 break;
             default:
