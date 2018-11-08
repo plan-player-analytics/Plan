@@ -10,6 +10,7 @@
         <module>bukkit</module>
         <module>sponge</module>
         <module>bungeecord</module>
+        <module>velocity</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -198,6 +199,12 @@
                 <groupId>com.maxmind.geoip2</groupId>
                 <artifactId>geoip2</artifactId>
                 <version>2.9.0</version>
+            </dependency>
+
+            <dependency> <!-- Guava -->
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>17.0-rc2</version> <!-- version available on all running platforms -->
             </dependency>
 
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.djrapitops.plan.system.tasks.proxy.velocity;
+package com.djrapitops.plan.system.tasks.velocity;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.data.store.objects.DateObj;

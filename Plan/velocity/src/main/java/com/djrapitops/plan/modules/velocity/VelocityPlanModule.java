@@ -14,17 +14,16 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.plugin;
+package com.djrapitops.plan.modules.velocity;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.command.PlanVelocityCommand;
 import com.djrapitops.plugin.command.CommandNode;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 /**
  * Dagger module for binding PlanVelocity instance.
@@ -32,18 +31,12 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Module
-public class VelocityPlanModule {
+public interface VelocityPlanModule {
 
-    @Provides
-    @Singleton
-    PlanPlugin providePlanPlugin(PlanVelocity plugin) {
-        return plugin;
-    }
+    @Binds
+    PlanPlugin providePlanPlugin(PlanVelocity plugin);
 
-    @Provides
-    @Singleton
+    @Binds
     @Named("mainCommand")
-    CommandNode provideMainCommand(PlanVelocityCommand command) {
-        return command;
-    }
+    CommandNode provideMainCommand(PlanVelocityCommand command);
 }

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.proxy.velocity;
+package com.djrapitops.plan.modules.velocity;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;

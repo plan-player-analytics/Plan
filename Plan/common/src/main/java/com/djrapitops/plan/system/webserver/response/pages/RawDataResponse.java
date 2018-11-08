@@ -19,7 +19,6 @@ package com.djrapitops.plan.system.webserver.response.pages;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.ResponseType;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +42,15 @@ public class RawDataResponse extends Response {
 
         super.setHeader("HTTP/1.1 200 OK");
 
-        Gson gson = new Gson();
-        super.setContent(gson.toJson(values));
+        try {
+            Class<?> gsonClass = Class.forName("com.google.gson.Gson");
+            Object gson = gsonClass.getConstructor().newInstance();
+            Object json = gsonClass.getMethod("toJson", Object.class).invoke(gson, values);
+
+            super.setContent(json.toString());
+        } catch (ReflectiveOperationException e) {
+            super.setContent("{\"error\":\"Gson for raw json responses not available on this server: " + e.toString() + "\"}");
+        }
     }
 
     private Map<String, Object> mapToNormalMap(DataContainer player) {

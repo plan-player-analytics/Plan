@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.proxy.velocity;
+package com.djrapitops.plan.modules.velocity;
 
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.info.server.VelocityServerInfo;
@@ -22,10 +22,8 @@ import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.listeners.VelocityListenerSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.tasks.VelocityTaskSystem;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-
-import javax.inject.Singleton;
 
 /**
  * Module for binding Velocity specific classes to the interface implementations.
@@ -33,23 +31,14 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Module
-public class VelocitySuperClassBindingModule {
+public interface VelocitySuperClassBindingModule {
 
-    @Provides
-    @Singleton
-    ServerInfo provideVelocityServerInfo(VelocityServerInfo velocityServerInfo) {
-        return velocityServerInfo;
-    }
+    @Binds
+    ServerInfo provideVelocityServerInfo(VelocityServerInfo velocityServerInfo);
 
-    @Provides
-    @Singleton
-    TaskSystem provideVelocityTaskSystem(VelocityTaskSystem velocityTaskSystem) {
-        return velocityTaskSystem;
-    }
+    @Binds
+    TaskSystem provideVelocityTaskSystem(VelocityTaskSystem velocityTaskSystem);
 
-    @Provides
-    @Singleton
-    ListenerSystem provideVelocityListenerSystem(VelocityListenerSystem velocityListenerSystem) {
-        return velocityListenerSystem;
-    }
+    @Binds
+    ListenerSystem provideVelocityListenerSystem(VelocityListenerSystem velocityListenerSystem);
 }

@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.tasks.proxy.velocity;
+package com.djrapitops.plan.system.tasks.velocity;
 
 import com.djrapitops.plan.PlanVelocity;
 import com.velocitypowered.api.proxy.Player;

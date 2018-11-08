@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.proxy;
+package com.djrapitops.plan.modules;
 
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.api.ProxyAPI;
@@ -30,10 +30,8 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.connection.ProxyConnectionSystem;
 import com.djrapitops.plan.system.settings.config.ConfigSystem;
 import com.djrapitops.plan.system.settings.config.ProxyConfigSystem;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-
-import javax.inject.Singleton;
 
 /**
  * Dagger module for binding proxy server classes to super classes.
@@ -41,48 +39,27 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Module
-public class ProxySuperClassBindingModule {
+public interface ProxySuperClassBindingModule {
 
-    @Provides
-    @Singleton
-    PlanAPI provideProxyPlanAPI(ProxyAPI proxyAPI) {
-        return proxyAPI;
-    }
+    @Binds
+    PlanAPI bindProxyPlanAPI(ProxyAPI proxyAPI);
 
-    @Provides
-    @Singleton
-    DBSystem provideProxyDatabaseSystem(ProxyDBSystem proxyDBSystem) {
-        return proxyDBSystem;
-    }
+    @Binds
+    DBSystem bindProxyDatabaseSystem(ProxyDBSystem proxyDBSystem);
 
-    @Provides
-    @Singleton
-    ConfigSystem provideProxyConfigSystem(ProxyConfigSystem proxyConfigSystem) {
-        return proxyConfigSystem;
-    }
+    @Binds
+    ConfigSystem bindProxyConfigSystem(ProxyConfigSystem proxyConfigSystem);
 
-    @Provides
-    @Singleton
-    InfoSystem provideProxyInfoSystem(ProxyInfoSystem proxyInfoSystem) {
-        return proxyInfoSystem;
-    }
+    @Binds
+    InfoSystem bindProxyInfoSystem(ProxyInfoSystem proxyInfoSystem);
 
-    @Provides
-    @Singleton
-    ConnectionSystem provideProxyConnectionSystem(ProxyConnectionSystem proxyConnectionSystem) {
-        return proxyConnectionSystem;
-    }
+    @Binds
+    ConnectionSystem bindProxyConnectionSystem(ProxyConnectionSystem proxyConnectionSystem);
 
-    @Provides
-    @Singleton
-    DataCache provideProxyDataCache(ProxyDataCache proxyDataCache) {
-        return proxyDataCache;
-    }
+    @Binds
+    DataCache bindProxyDataCache(ProxyDataCache proxyDataCache);
 
-    @Provides
-    @Singleton
-    ImportSystem provideImportSystem() {
-        return new EmptyImportSystem();
-    }
+    @Binds
+    ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
 
 }
