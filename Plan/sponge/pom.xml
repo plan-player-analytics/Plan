@@ -11,17 +11,6 @@
 
     <artifactId>Plan-sponge</artifactId>
 
-    <repositories>
-        <repository>
-            <id>sponge-repo</id>
-            <url>https://repo.spongepowered.org/maven</url>
-        </repository>
-        <repository>
-            <id>bstats-repo</id>
-            <url>http://repo.bstats.org/content/repositories/releases/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency> <!-- Plan Common classes -->
             <groupId>com.djrapitops</groupId>
@@ -40,20 +29,17 @@
         <dependency> <!-- Sponge part of Abstract Plugin Framework -->
             <groupId>com.djrapitops</groupId>
             <artifactId>AbstractPluginFramework-sponge</artifactId>
-            <version>3.4.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency> <!-- Metrics -->
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-sponge</artifactId>
-            <version>1.2</version>
         </dependency>
 
         <dependency> <!-- Sponge API -->
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>7.1.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency> <!-- Metrics (Sponge)-->
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-sponge</artifactId>
         </dependency>
     </dependencies>
 

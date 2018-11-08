@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>Plan-bukkit</artifactId>
+    <artifactId>Plan-bungeecord</artifactId>
 
     <dependencies>
         <dependency> <!-- Plan Common classes -->
@@ -26,30 +26,26 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency> <!-- Bukkit part of Abstract Plugin Framework -->
+        <dependency>
             <groupId>com.djrapitops</groupId>
-            <artifactId>AbstractPluginFramework-bukkit</artifactId>
+            <artifactId>AbstractPluginFramework-bungeecord</artifactId>
         </dependency>
 
-        <dependency> <!-- Metrics -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.imaginarycode.minecraft</groupId>
+            <artifactId>RedisBungee</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-        </dependency>
-
-        <dependency> <!-- Paper API -->
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency> <!-- Spigot API -->
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency> <!-- Bukkit API -->
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <scope>provided</scope>
+            <artifactId>bstats-bungeecord</artifactId>
         </dependency>
     </dependencies>
 </project>

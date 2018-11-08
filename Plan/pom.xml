@@ -9,8 +9,40 @@
         <module>common</module>
         <module>bukkit</module>
         <module>sponge</module>
+        <module>bungeecord</module>
     </modules>
     <packaging>pom</packaging>
+
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>paper-repo</id>
+            <url>https://repo.destroystokyo.com/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>sponge-repo</id>
+            <url>https://repo.spongepowered.org/maven</url>
+        </repository>
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+        <repository> <!-- RedisBungee Repository -->
+            <id>md_5-snapshots</id>
+            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>velocity-repo</id>
+            <url>https://repo.velocitypowered.com/snapshots/</url>
+        </repository>
+        <repository>
+            <id>bstats-repo</id>
+            <url>http://repo.bstats.org/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -46,6 +78,146 @@
             <version>2.19</version>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency> <!-- Abstract Plugin Framework (API) -->
+                <groupId>com.djrapitops</groupId>
+                <artifactId>AbstractPluginFramework-api</artifactId>
+                <version>3.4.0-SNAPSHOT</version>
+            </dependency>
+            <dependency> <!-- Abstract Plugin Framework (Bukkit) -->
+                <groupId>com.djrapitops</groupId>
+                <artifactId>AbstractPluginFramework-bukkit</artifactId>
+                <version>3.4.0-SNAPSHOT</version>
+            </dependency>
+            <dependency> <!-- Abstract Plugin Framework (Sponge) -->
+                <groupId>com.djrapitops</groupId>
+                <artifactId>AbstractPluginFramework-sponge</artifactId>
+                <version>3.4.0-SNAPSHOT</version>
+            </dependency>
+            <dependency> <!-- Abstract Plugin Framework (BungeeCord) -->
+                <groupId>com.djrapitops</groupId>
+                <artifactId>AbstractPluginFramework-bungeecord</artifactId>
+                <version>3.4.0-SNAPSHOT</version>
+            </dependency>
+            <dependency> <!--  Abstract Plugin Framework (Velocity) -->
+                <groupId>com.djrapitops</groupId>
+                <artifactId>AbstractPluginFramework-velocity</artifactId>
+                <version>3.4.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency> <!-- SoftDepended Plugins -->
+                <groupId>com.djrapitops</groupId>
+                <artifactId>PlanPluginBridge</artifactId>
+                <version>4.5.0-SNAPSHOT</version>
+            </dependency>
+
+
+            <dependency> <!-- Bukkit API -->
+                <groupId>org.bukkit</groupId>
+                <artifactId>bukkit</artifactId>
+                <version>1.12.2-R0.1-SNAPSHOT</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency> <!-- Spigot API -->
+                <groupId>org.spigotmc</groupId>
+                <artifactId>spigot-api</artifactId>
+                <version>1.12.2-R0.1-SNAPSHOT</version>
+                <type>jar</type>
+                <scope>provided</scope>
+            </dependency>
+            <dependency> <!-- Paper API -->
+                <groupId>com.destroystokyo.paper</groupId>
+                <artifactId>paper-api</artifactId>
+                <version>1.12.2-R0.1-SNAPSHOT</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency> <!-- Sponge API -->
+                <groupId>org.spongepowered</groupId>
+                <artifactId>spongeapi</artifactId>
+                <version>7.1.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency> <!-- BungeeCord API -->
+                <groupId>net.md-5</groupId>
+                <artifactId>bungeecord-api</artifactId>
+                <version>1.12-SNAPSHOT</version>
+            </dependency>
+            <dependency> <!-- Velocity API -->
+                <groupId>com.velocitypowered</groupId>
+                <artifactId>velocity-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency> <!-- RedisBungee -->
+                <groupId>com.imaginarycode.minecraft</groupId>
+                <artifactId>RedisBungee</artifactId>
+                <version>0.3.8-SNAPSHOT</version>
+            </dependency>
+
+
+            <dependency> <!-- HttpClient -->
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.6</version>
+            </dependency>
+            <dependency> <!-- String Replacer -->
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>1.3</version>
+            </dependency>
+            <dependency> <!--  HTML Compression -->
+                <groupId>com.googlecode.htmlcompressor</groupId>
+                <artifactId>htmlcompressor</artifactId>
+                <version>1.5.2</version>
+            </dependency>
+            <dependency> <!--  Cache with invalidation -->
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>2.6.2</version>
+            </dependency>
+
+            <dependency> <!-- H2 -->
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.196</version> <!-- This version is necessary so Sponge will not crash -->
+            </dependency>
+            <dependency> <!-- MySQL Connection Pool -->
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>3.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-nop</artifactId>
+                <version>1.7.25</version>
+            </dependency>
+
+            <dependency> <!-- Geo IP -->
+                <groupId>com.maxmind.geoip2</groupId>
+                <artifactId>geoip2</artifactId>
+                <version>2.9.0</version>
+            </dependency>
+
+
+            <dependency> <!-- Metrics (Bukkit) -->
+                <groupId>org.bstats</groupId>
+                <artifactId>bstats-bukkit</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <dependency> <!-- Metrics (Sponge) -->
+                <groupId>org.bstats</groupId>
+                <artifactId>bstats-sponge</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <dependency> <!-- Metrics (BungeeCord) -->
+                <groupId>org.bstats</groupId>
+                <artifactId>bstats-bungeecord</artifactId>
+                <version>1.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

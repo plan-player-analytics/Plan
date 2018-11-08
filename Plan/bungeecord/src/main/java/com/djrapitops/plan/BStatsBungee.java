@@ -14,9 +14,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.metrics;
+package com.djrapitops.plan;
 
-import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import org.bstats.bungeecord.Metrics;

@@ -17,14 +17,10 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanBungeeCommand;
-import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FilesModule;
-import com.djrapitops.plan.modules.SuperClassBindingModule;
-import com.djrapitops.plan.modules.SystemObjectProvidingModule;
-import com.djrapitops.plan.modules.plugin.BungeePlanModule;
-import com.djrapitops.plan.modules.proxy.ProxySuperClassBindingModule;
-import com.djrapitops.plan.modules.proxy.bungee.BungeeServerPropertiesModule;
-import com.djrapitops.plan.modules.proxy.bungee.BungeeSuperClassBindingModule;
+import com.djrapitops.plan.modules.*;
+import com.djrapitops.plan.modules.bungee.BungeePlanModule;
+import com.djrapitops.plan.modules.bungee.BungeeServerPropertiesModule;
+import com.djrapitops.plan.modules.bungee.BungeeSuperClassBindingModule;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.pluginbridge.plan.PluginBridgeModule;
 import dagger.BindsInstance;

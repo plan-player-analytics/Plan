@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.commands.command;
+package com.djrapitops.plan.command.commands;
 
 import com.google.common.collect.ImmutableSet;
 import org.apache.logging.log4j.Level;

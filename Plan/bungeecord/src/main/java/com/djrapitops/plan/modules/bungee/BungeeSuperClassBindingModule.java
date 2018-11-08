@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.proxy.bungee;
+package com.djrapitops.plan.modules.bungee;
 
 import com.djrapitops.plan.system.info.server.BungeeServerInfo;
 import com.djrapitops.plan.system.info.server.ServerInfo;
@@ -22,10 +22,8 @@ import com.djrapitops.plan.system.listeners.BungeeListenerSystem;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.tasks.BungeeTaskSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-
-import javax.inject.Singleton;
 
 /**
  * Module for binding Bungee specific classes to the interface implementations.
@@ -33,23 +31,14 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Module
-public class BungeeSuperClassBindingModule {
+public interface BungeeSuperClassBindingModule {
 
-    @Provides
-    @Singleton
-    ServerInfo provideBungeeServerInfo(BungeeServerInfo bungeeServerInfo) {
-        return bungeeServerInfo;
-    }
+    @Binds
+    ServerInfo bindBungeeServerInfo(BungeeServerInfo bungeeServerInfo);
 
-    @Provides
-    @Singleton
-    TaskSystem provideBungeeTaskSystem(BungeeTaskSystem bungeeTaskSystem) {
-        return bungeeTaskSystem;
-    }
+    @Binds
+    TaskSystem bindBungeeTaskSystem(BungeeTaskSystem bungeeTaskSystem);
 
-    @Provides
-    @Singleton
-    ListenerSystem provideBungeeListenerSystem(BungeeListenerSystem bungeeListenerSystem) {
-        return bungeeListenerSystem;
-    }
+    @Binds
+    ListenerSystem bindBungeeListenerSystem(BungeeListenerSystem bungeeListenerSystem);
 }
