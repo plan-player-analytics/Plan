@@ -21,7 +21,9 @@ abstract class Mocker {
     PlanPlugin planMock;
 
     File getFile(String fileName) {
-        return new File(getClass().getResource(fileName).getPath());
+        // For some reason on Windows this path will contain a '!': ...Plan-common-<version>.jar!\fileName
+        // That caused every test that calls withPluginFiles to fail.
+        return new File(PlanPlugin.class.getResource(fileName).getPath().replace("!", ""));
     }
 
     private void withPluginFile(String fileName) throws Exception {

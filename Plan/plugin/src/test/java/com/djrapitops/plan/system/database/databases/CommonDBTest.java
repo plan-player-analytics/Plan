@@ -80,7 +80,7 @@ public abstract class CommonDBTest {
     @Rule
     public Timeout globalTimeout = Timeout.seconds(5);
 
-    public static void handleSetup(String dbName) throws Exception {
+    static void handleSetup(String dbName) throws Exception {
         System.out.println("--- Test Class Setup     ---");
         PlanBukkitMocker mockUtil = PlanBukkitMocker.setUp()
                 .withDataFolder(temporaryFolder.newFolder())
@@ -101,7 +101,7 @@ public abstract class CommonDBTest {
 
     @AfterClass
     public static void tearDownClass() {
-        system.disable();
+        Optional.ofNullable(system).ifPresent(PlanSystem::disable);
     }
 
     @Before

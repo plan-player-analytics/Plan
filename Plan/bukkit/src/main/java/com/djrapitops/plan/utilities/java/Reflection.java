@@ -24,6 +24,7 @@
 package com.djrapitops.plan.utilities.java;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -43,7 +44,7 @@ import java.util.regex.Pattern;
 public final class Reflection {
 
     // Deduce the net.minecraft.server.v* package
-    private static final String OBC_PREFIX = Bukkit.getServer().getClass().getPackage().getName();
+    private static final String OBC_PREFIX = getOBCPrefix();
     private static final String NMS_PREFIX = OBC_PREFIX.replace("org.bukkit.craftbukkit", "net.minecraft.server");
     private static final String VERSION = OBC_PREFIX.replace("org.bukkit.craftbukkit", "").replace(".", "");
     // Variable replacement
@@ -51,6 +52,11 @@ public final class Reflection {
 
     private Reflection() {
         // Seal class
+    }
+
+    private static String getOBCPrefix() {
+        Server server = Bukkit.getServer();
+        return server != null ? server.getClass().getPackage().getName() : Server.class.getPackage().getName();
     }
 
     /**

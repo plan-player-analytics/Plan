@@ -76,11 +76,12 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
         MethodHandle localHandle = null;
         MethodHandle localPing = null;
         if (!PING_METHOD_AVAILABLE) {
-            Class<?> craftPlayerClass = Reflection.getCraftBukkitClass("entity.CraftPlayer");
-            Class<?> entityPlayer = Reflection.getMinecraftClass("EntityPlayer");
-
-            Lookup lookup = MethodHandles.publicLookup();
             try {
+                Class<?> craftPlayerClass = Reflection.getCraftBukkitClass("entity.CraftPlayer");
+                Class<?> entityPlayer = Reflection.getMinecraftClass("EntityPlayer");
+
+                Lookup lookup = MethodHandles.publicLookup();
+
                 Method getHandleMethod = craftPlayerClass.getDeclaredMethod("getHandle");
                 localHandle = lookup.unreflect(getHandleMethod);
 
@@ -88,8 +89,13 @@ public class PingCountTimerBukkit extends AbsRunnable implements Listener {
             } catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException reflectiveEx) {
                 Logger.getGlobal().log(
                         Level.WARNING,
-                        "Reflective exception in static initializer of Plan PingCountTimer",
+                        "Plan: Reflective exception in static initializer of PingCountTimer",
                         reflectiveEx
+                );
+            } catch (IllegalArgumentException e) {
+                Logger.getGlobal().log(
+                        Level.WARNING,
+                        "Plan: No Ping method handle found - Ping will not be recorded."
                 );
             }
         }

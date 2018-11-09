@@ -11,6 +11,7 @@
         <module>sponge</module>
         <module>bungeecord</module>
         <module>velocity</module>
+        <module>plugin</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -119,26 +120,21 @@
                 <groupId>org.bukkit</groupId>
                 <artifactId>bukkit</artifactId>
                 <version>1.12.2-R0.1-SNAPSHOT</version>
-                <scope>provided</scope>
             </dependency>
             <dependency> <!-- Spigot API -->
                 <groupId>org.spigotmc</groupId>
                 <artifactId>spigot-api</artifactId>
                 <version>1.12.2-R0.1-SNAPSHOT</version>
-                <type>jar</type>
-                <scope>provided</scope>
             </dependency>
             <dependency> <!-- Paper API -->
                 <groupId>com.destroystokyo.paper</groupId>
                 <artifactId>paper-api</artifactId>
                 <version>1.12.2-R0.1-SNAPSHOT</version>
-                <scope>provided</scope>
             </dependency>
             <dependency> <!-- Sponge API -->
                 <groupId>org.spongepowered</groupId>
                 <artifactId>spongeapi</artifactId>
                 <version>7.1.0</version>
-                <scope>provided</scope>
             </dependency>
             <dependency> <!-- BungeeCord API -->
                 <groupId>net.md-5</groupId>
@@ -204,7 +200,7 @@
             <dependency> <!-- Guava -->
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>17.0-rc2</version> <!-- version available on all running platforms -->
+                <version>26.0-jre</version>
             </dependency>
 
 

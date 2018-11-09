@@ -11,6 +11,12 @@
 
     <artifactId>Plan-common</artifactId>
 
+    <description>
+        Module that includes common functionality between all platforms.
+        - Contains functionality related dependencies.
+        - Contains abstractions and interfaces
+    </description>
+
     <dependencies>
         <!--        Framework for easier plugin development -->
         <dependency>

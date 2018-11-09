@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.system.database.databases;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,11 +36,6 @@ public class H2Test extends CommonDBTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         handleSetup("H2");
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-        system.disable();
     }
 
     @Test
