@@ -17,6 +17,38 @@
         - Allows testing system interactions
     </description>
 
+    <build>
+        <defaultGoal>clean package install</defaultGoal>
+        <finalName>${project.parent.artifactId}-${project.parent.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <artifactSet>
+                        <includes>
+                            <include>com.djrapitops:Plan-common</include>
+                            <include>com.djrapitops:Plan-bukkit</include>
+                            <include>com.djrapitops:Plan-sponge</include>
+                            <include>com.djrapitops:Plan-bungeecord</include>
+                            <include>com.djrapitops:Plan-velocity</include>
+                        </includes>
+                    </artifactSet>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>com.djrapitops</groupId>
