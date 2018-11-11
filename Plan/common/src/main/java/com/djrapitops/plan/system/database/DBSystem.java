@@ -108,7 +108,7 @@ public abstract class DBSystem implements SubSystem {
         } catch (DBInitException e) {
             Throwable cause = e.getCause();
             String message = cause == null ? e.getMessage() : cause.getMessage();
-            throw new EnableException((db != null ? db.getType().getName() : "Database") + " init failure: " + message, cause);
+            throw new EnableException(db.getType().getName() + " init failure: " + message, cause);
         }
     }
 
