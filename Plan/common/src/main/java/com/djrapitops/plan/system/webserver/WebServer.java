@@ -258,9 +258,12 @@ public class WebServer implements SubSystem {
             ExecutorService service = (ExecutorService) executor;
             service.shutdown();
             try {
-                service.awaitTermination(5, TimeUnit.SECONDS);
-            } catch (InterruptedException timeoutExceededEx) {
-                service.shutdownNow();
+                if (!service.awaitTermination(5, TimeUnit.SECONDS)) {
+                    service.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                logger.error("WebServer ExecutorService shutdown thread interrupted on disable: " + e.getMessage());
+                Thread.currentThread().interrupt();
             }
         }
     }

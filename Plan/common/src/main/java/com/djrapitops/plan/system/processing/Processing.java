@@ -145,15 +145,18 @@ public class Processing implements SubSystem {
                 errorHandler.log(L.WARN, this.getClass(), e);
             }
         }
-        if (!nonCriticalExecutor.isTerminated()) {
-            try {
-                nonCriticalExecutor.awaitTermination(1, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
+        try {
+            if (!nonCriticalExecutor.isTerminated() && !nonCriticalExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
                 nonCriticalExecutor.shutdownNow();
             }
-        }
-        if (!criticalExecutor.isTerminated()) {
+            if (!criticalExecutor.isTerminated()) {
+                criticalExecutor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            logger.error("Processing shutdown thread interrupted: " + e.getMessage());
+            nonCriticalExecutor.shutdownNow();
             criticalExecutor.shutdownNow();
+            Thread.currentThread().interrupt();
         }
         logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING_COMPLETE));
     }
