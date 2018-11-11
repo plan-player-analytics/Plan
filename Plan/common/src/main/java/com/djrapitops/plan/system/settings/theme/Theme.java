@@ -65,7 +65,7 @@ public class Theme implements SubSystem {
 
     @Override
     public void disable() {
-
+        // No need to save theme on disable
     }
 
     private String getColor(ThemeVal variable) {

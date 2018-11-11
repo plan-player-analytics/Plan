@@ -277,7 +277,7 @@ public class WebServer implements SubSystem {
     }
 
     public boolean isAuthRequired() {
-        return usingHttps;
+        return isUsingHTTPS();
     }
 
     public String getAccessAddress() {

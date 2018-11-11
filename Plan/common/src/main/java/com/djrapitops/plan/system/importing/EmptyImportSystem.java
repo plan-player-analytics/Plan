@@ -29,6 +29,7 @@ public class EmptyImportSystem extends ImportSystem {
 
     @Inject
     public EmptyImportSystem() {
+        // Inject constructor required for dagger
     }
 
     @Override

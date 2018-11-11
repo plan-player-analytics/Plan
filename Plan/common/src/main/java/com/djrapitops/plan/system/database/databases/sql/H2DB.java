@@ -111,13 +111,10 @@ public class H2DB extends SQLDB {
 
     private void startConnectionPingTask() {
         stopConnectionPingTask();
-        try {
-            // Maintains Connection.
-            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
-                    new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
-            ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
-        } catch (Exception ignored) {
-        }
+        // Maintains Connection.
+        connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
+                new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
+        ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
     }
 
     private void stopConnectionPingTask() {
@@ -125,6 +122,8 @@ public class H2DB extends SQLDB {
             try {
                 connectionPingTask.cancel();
             } catch (Exception ignored) {
+                // Sometimes task systems fail to cancel a task,
+                // usually this is called on disable, so no need for users to report this.
             }
         }
     }

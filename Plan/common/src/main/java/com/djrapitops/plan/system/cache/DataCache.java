@@ -64,6 +64,7 @@ public class DataCache extends SessionCache implements SubSystem {
 
     @Override
     public void enable() {
+        // Nothing to enable
     }
 
     @Override

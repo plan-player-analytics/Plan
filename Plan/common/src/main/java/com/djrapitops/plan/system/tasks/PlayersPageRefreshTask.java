@@ -28,6 +28,7 @@ public class PlayersPageRefreshTask extends AbsRunnable {
 
     @Inject
     public PlayersPageRefreshTask() {
+        // Inject constructor required for dagger
     }
 
     @Override
