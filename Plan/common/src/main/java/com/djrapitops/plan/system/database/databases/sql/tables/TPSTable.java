@@ -294,7 +294,6 @@ public class TPSTable extends Table {
 
                     TPS tps = TPSBuilder.get()
                             .date(set.getLong(Col.DATE.get()))
-                            .skipTPS()
                             .playersOnline(set.getInt(Col.PLAYERS_ONLINE.get()))
                             .toTPS();
 
@@ -359,7 +358,6 @@ public class TPSTable extends Table {
                     List<TPS> tpsList = map.getOrDefault(serverID, new ArrayList<>());
 
                     TPS tps = TPSBuilder.get().date(date)
-                            .skipTPS()
                             .playersOnline(playersOnline)
                             .toTPS();
                     tpsList.add(tps);

@@ -40,78 +40,51 @@ public class TPSBuilder {
     private TPSBuilder() {
     }
 
-    public static TPSBuilder.Date get() {
-        return new TPSBuilder.DiskSpace();
+    public static TPSBuilder get() {
+        return new TPSBuilder();
     }
 
     public TPS toTPS() {
         return new TPS(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace);
     }
 
-    public static class Date extends TPSBuilder {
-
-        public Ticks date(long date) {
-            this.date = date;
-            return (Ticks) this;
-        }
+    public TPSBuilder date(long date) {
+        this.date = date;
+        return this;
     }
 
-    public static class Ticks extends Date {
-
-        public Players tps(double tps) {
-            ticksPerSecond = tps;
-            return (Players) this;
-        }
-
-        public Players skipTPS() {
-            return (Players) this;
-        }
+    public TPSBuilder tps(double tps) {
+        ticksPerSecond = tps;
+        return this;
     }
 
-    public static class Players extends Ticks {
-
-        public CPU playersOnline(int online) {
-            players = online;
-            return (CPU) this;
-        }
+    public TPSBuilder playersOnline(int online) {
+        players = online;
+        return this;
     }
 
-    public static class CPU extends Players {
-
-        public Memory usedCPU(double cpu) {
-            cpuUsage = cpu;
-            return (Memory) this;
-        }
+    public TPSBuilder usedCPU(double cpu) {
+        cpuUsage = cpu;
+        return this;
     }
 
-    public static class Memory extends CPU {
-
-        public Entities usedMemory(long ram) {
-            usedMemory = ram;
-            return (Entities) this;
-        }
+    public TPSBuilder usedMemory(long ram) {
+        usedMemory = ram;
+        return this;
     }
 
-    public static class Entities extends Memory {
-
-        public Chunks entities(int count) {
-            entityCount = count;
-            return (Chunks) this;
-        }
+    public TPSBuilder entities(int count) {
+        entityCount = count;
+        return this;
     }
 
-    public static class Chunks extends Entities {
-
-        public DiskSpace chunksLoaded(int chunksLoaded) {
-            this.chunksLoaded = chunksLoaded;
-            return (DiskSpace) this;
-        }
+    public TPSBuilder chunksLoaded(int chunksLoaded) {
+        this.chunksLoaded = chunksLoaded;
+        return this;
     }
 
-    public static class DiskSpace extends Chunks {
-        public TPSBuilder freeDiskSpace(long freeDiskSpace) {
-            this.freeDiskSpace = freeDiskSpace;
-            return this;
-        }
+    public TPSBuilder freeDiskSpace(long freeDiskSpace) {
+        this.freeDiskSpace = freeDiskSpace;
+        return this;
     }
 }

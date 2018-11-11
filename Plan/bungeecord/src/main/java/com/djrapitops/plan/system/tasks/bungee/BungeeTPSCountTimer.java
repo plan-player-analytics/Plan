@@ -50,7 +50,6 @@ public class BungeeTPSCountTimer extends TPSCountTimer {
         int onlineCount = serverProperties.getOnlinePlayers();
         TPS tps = TPSBuilder.get()
                 .date(now)
-                .skipTPS()
                 .playersOnline(onlineCount)
                 .usedCPU(getCPUUsage())
                 .usedMemory(getUsedMemory())
