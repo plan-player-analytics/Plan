@@ -65,6 +65,7 @@ public class PlanSystem implements SubSystem {
 
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
+    private final HtmlUtilities htmlUtilities;
     private final HookHandler hookHandler;
     private final PlanAPI planAPI;
     private final ErrorHandler errorHandler;
@@ -85,6 +86,7 @@ public class PlanSystem implements SubSystem {
             Processing processing,
             ImportSystem importSystem,
             ExportSystem exportSystem,
+            HtmlUtilities htmlUtilities,
             HookHandler hookHandler,
             PlanAPI planAPI,
             ErrorHandler errorHandler
@@ -103,6 +105,7 @@ public class PlanSystem implements SubSystem {
         this.processing = processing;
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
+        this.htmlUtilities = htmlUtilities;
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;
         this.errorHandler = errorHandler;
@@ -230,5 +233,9 @@ public class PlanSystem implements SubSystem {
 
     public LocaleSystem getLocaleSystem() {
         return localeSystem;
+    }
+
+    public HtmlUtilities getHtmlUtilities() {
+        return htmlUtilities;
     }
 }
