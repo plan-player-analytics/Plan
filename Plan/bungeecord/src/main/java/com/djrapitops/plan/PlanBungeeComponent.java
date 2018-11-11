@@ -16,8 +16,9 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.command.PlanBungeeCommand;
+import com.djrapitops.plan.command.PlanProxyCommand;
 import com.djrapitops.plan.modules.*;
+import com.djrapitops.plan.modules.bungee.BungeeCommandModule;
 import com.djrapitops.plan.modules.bungee.BungeePlanModule;
 import com.djrapitops.plan.modules.bungee.BungeeServerPropertiesModule;
 import com.djrapitops.plan.modules.bungee.BungeeSuperClassBindingModule;
@@ -36,6 +37,7 @@ import javax.inject.Singleton;
 @Singleton
 @Component(modules = {
         BungeePlanModule.class,
+        BungeeCommandModule.class,
         SuperClassBindingModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
@@ -47,7 +49,7 @@ import javax.inject.Singleton;
 })
 public interface PlanBungeeComponent {
 
-    PlanBungeeCommand planCommand();
+    PlanProxyCommand planCommand();
 
     PlanSystem system();
 

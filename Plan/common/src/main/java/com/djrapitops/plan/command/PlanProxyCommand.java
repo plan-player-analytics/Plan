@@ -30,6 +30,7 @@ import com.djrapitops.plugin.command.TreeCmdNode;
 import dagger.Lazy;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
@@ -41,7 +42,7 @@ import javax.inject.Singleton;
  * @since 1.0.0
  */
 @Singleton
-public class PlanBungeeCommand extends TreeCmdNode {
+public class PlanProxyCommand extends TreeCmdNode {
 
     private final NetworkCommand networkCommand;
     private final ListServersCommand listServersCommand;
@@ -58,7 +59,8 @@ public class PlanBungeeCommand extends TreeCmdNode {
     private boolean commandsRegistered;
 
     @Inject
-    public PlanBungeeCommand(
+    public PlanProxyCommand(
+            @Named("mainCommandName") String mainCommandName,
             ColorScheme colorScheme,
             Locale locale,
             // Group 1
@@ -76,7 +78,7 @@ public class PlanBungeeCommand extends TreeCmdNode {
             ReloadCommand reloadCommand,
             DisableCommand disableCommand
     ) {
-        super("planbungee", Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
+        super(mainCommandName, Permissions.MANAGE.getPermission(), CommandType.CONSOLE, null);
         this.uninstalledCommand = uninstalledCommand;
 
         commandsRegistered = false;

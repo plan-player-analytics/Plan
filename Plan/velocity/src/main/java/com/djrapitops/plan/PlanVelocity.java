@@ -17,7 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.command.PlanVelocityCommand;
+import com.djrapitops.plan.command.PlanProxyCommand;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -93,7 +93,7 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        PlanVelocityCommand command = component.planCommand();
+        PlanProxyCommand command = component.planCommand();
         command.registerCommands();
         registerCommand("planvelocity", command);
     }

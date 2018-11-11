@@ -17,7 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
-import com.djrapitops.plan.command.PlanBungeeCommand;
+import com.djrapitops.plan.command.PlanProxyCommand;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
@@ -67,7 +67,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        PlanBungeeCommand command = component.planCommand();
+        PlanProxyCommand command = component.planCommand();
         command.registerCommands();
         registerCommand("planbungee", command);
     }

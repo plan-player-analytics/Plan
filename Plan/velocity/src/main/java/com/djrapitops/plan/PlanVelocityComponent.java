@@ -16,8 +16,9 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.command.PlanVelocityCommand;
+import com.djrapitops.plan.command.PlanProxyCommand;
 import com.djrapitops.plan.modules.*;
+import com.djrapitops.plan.modules.velocity.VelocityCommandModule;
 import com.djrapitops.plan.modules.velocity.VelocityPlanModule;
 import com.djrapitops.plan.modules.velocity.VelocityServerPropertiesModule;
 import com.djrapitops.plan.modules.velocity.VelocitySuperClassBindingModule;
@@ -36,6 +37,7 @@ import javax.inject.Singleton;
 @Singleton
 @Component(modules = {
         VelocityPlanModule.class,
+        VelocityCommandModule.class,
         SuperClassBindingModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
@@ -47,7 +49,7 @@ import javax.inject.Singleton;
 })
 public interface PlanVelocityComponent {
 
-    PlanVelocityCommand planCommand();
+    PlanProxyCommand planCommand();
 
     PlanSystem system();
 

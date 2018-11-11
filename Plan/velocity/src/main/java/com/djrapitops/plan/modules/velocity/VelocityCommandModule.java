@@ -14,29 +14,20 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules.bungee;
+package com.djrapitops.plan.modules.velocity;
 
-import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.command.PlanProxyCommand;
-import com.djrapitops.plugin.command.CommandNode;
-import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 
 import javax.inject.Named;
 
-/**
- * Dagger module for binding PlanBungee instance.
- *
- * @author Rsl1122
- */
 @Module
-public interface BungeePlanModule {
+public class VelocityCommandModule {
 
-    @Binds
-    PlanPlugin bindPlanPlugin(PlanBungee plugin);
+    @Provides
+    @Named("mainCommandName")
+    String provideMainCommandName() {
+        return "planvelocity";
+    }
 
-    @Binds
-    @Named("mainCommand")
-    CommandNode bindMainCommand(PlanProxyCommand command);
 }
