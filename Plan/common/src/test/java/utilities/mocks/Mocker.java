@@ -6,8 +6,7 @@ package utilities.mocks;
 
 import com.djrapitops.plan.PlanPlugin;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
 
 import static org.mockito.Mockito.doReturn;
 
@@ -21,9 +20,29 @@ abstract class Mocker {
     PlanPlugin planMock;
 
     File getFile(String fileName) {
-        // For some reason on Windows this path will contain a '!': ...Plan-common-<version>.jar!\fileName
-        // That caused every test that calls withPluginFiles to fail.
-        return new File(PlanPlugin.class.getResource(fileName).getPath().replace("!", ""));
+        // Read the resource from jar to a temporary file
+        File file = new File(new File(planMock.getDataFolder(), "jar"), fileName);
+        try {
+            file.getParentFile().mkdirs();
+            if (!file.exists() && !file.createNewFile()) {
+                throw new FileNotFoundException("Could not create file: " + fileName);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        try (InputStream in = PlanPlugin.class.getResourceAsStream(fileName);
+             OutputStream out = new FileOutputStream(file)) {
+
+            int read;
+            byte[] bytes = new byte[1024];
+
+            while ((read = in.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return file;
     }
 
     private void withPluginFile(String fileName) throws Exception {

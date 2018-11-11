@@ -42,6 +42,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -162,8 +163,13 @@ public class WebServer implements SubSystem {
             return true;
         }
 
-        if (!Paths.get(keyStorePath).isAbsolute()) {
-            keyStorePath = files.getDataFolder() + File.separator + keyStorePath;
+        try {
+            if (!Paths.get(keyStorePath).isAbsolute()) {
+                keyStorePath = files.getDataFolder() + File.separator + keyStorePath;
+            }
+        } catch (InvalidPathException e) {
+            logger.error("WebServer: Could not find Keystore: " + e.getMessage());
+            errorHandler.log(L.ERROR, this.getClass(), e);
         }
 
         char[] storepass = config.getString(Settings.WEBSERVER_CERTIFICATE_STOREPASS).toCharArray();
