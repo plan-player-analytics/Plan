@@ -39,8 +39,6 @@ import javax.inject.Singleton;
 @Singleton
 public class ServerInfoSystem extends InfoSystem {
 
-    private final PluginLogger logger;
-
     @Inject
     public ServerInfoSystem(
             ConnectionSystem connectionSystem,
@@ -50,7 +48,6 @@ public class ServerInfoSystem extends InfoSystem {
             PluginLogger logger
     ) {
         super(infoRequestFactory, connectionSystem, serverInfo, webServer, logger);
-        this.logger = logger;
     }
 
     @Override
