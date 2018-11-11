@@ -124,7 +124,7 @@ public class SQLiteDB extends SQLDB {
 
     @Override
     public DBType getType() {
-        return DBType.SQLite;
+        return DBType.SQLITE;
     }
 
     @Override

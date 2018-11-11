@@ -70,7 +70,7 @@ public class MySQLDB extends SQLDB {
 
     @Override
     public DBType getType() {
-        return DBType.MySQL;
+        return DBType.MYSQL;
     }
 
     /**

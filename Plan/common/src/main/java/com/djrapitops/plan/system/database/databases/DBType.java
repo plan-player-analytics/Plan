@@ -26,8 +26,8 @@ import java.util.Optional;
  */
 public enum DBType {
 
-    MySQL("MySQL", true),
-    SQLite("SQLite", false),
+    MYSQL("MySQL", true),
+    SQLITE("SQLite", false),
     H2("H2", true);
 
     private final String name;
