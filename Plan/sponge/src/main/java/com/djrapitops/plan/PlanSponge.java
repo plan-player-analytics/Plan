@@ -87,19 +87,19 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
                     system.getDatabaseSystem().getDatabase()
             ).registerMetrics();
 
-            slf4jLogger.info(locale.getString(PluginLang.ENABLED));
+            logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
-            slf4jLogger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            slf4jLogger.error("----------------------------------------");
-            slf4jLogger.error("Error: " + e.getMessage());
-            slf4jLogger.error("----------------------------------------");
-            slf4jLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("----------------------------------------");
+            logger.error("Error: " + e.getMessage());
+            logger.error("----------------------------------------");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             onDisable();
         } catch (Exception e) {
             errorHandler.log(L.CRITICAL, this.getClass(), e);
-            slf4jLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            slf4jLogger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
         PlanCommand command = component.planCommand();
