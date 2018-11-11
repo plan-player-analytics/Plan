@@ -86,27 +86,27 @@
             <dependency> <!-- Abstract Plugin Framework (API) -->
                 <groupId>com.djrapitops</groupId>
                 <artifactId>AbstractPluginFramework-api</artifactId>
-                <version>3.4.0-SNAPSHOT</version>
+                <version>3.4.0</version>
             </dependency>
             <dependency> <!-- Abstract Plugin Framework (Bukkit) -->
                 <groupId>com.djrapitops</groupId>
                 <artifactId>AbstractPluginFramework-bukkit</artifactId>
-                <version>3.4.0-SNAPSHOT</version>
+                <version>3.4.0</version>
             </dependency>
             <dependency> <!-- Abstract Plugin Framework (Sponge) -->
                 <groupId>com.djrapitops</groupId>
                 <artifactId>AbstractPluginFramework-sponge</artifactId>
-                <version>3.4.0-SNAPSHOT</version>
+                <version>3.4.0</version>
             </dependency>
             <dependency> <!-- Abstract Plugin Framework (BungeeCord) -->
                 <groupId>com.djrapitops</groupId>
                 <artifactId>AbstractPluginFramework-bungeecord</artifactId>
-                <version>3.4.0-SNAPSHOT</version>
+                <version>3.4.0</version>
             </dependency>
             <dependency> <!--  Abstract Plugin Framework (Velocity) -->
                 <groupId>com.djrapitops</groupId>
                 <artifactId>AbstractPluginFramework-velocity</artifactId>
-                <version>3.4.0-SNAPSHOT</version>
+                <version>3.4.0</version>
             </dependency>
 
             <dependency> <!-- SoftDepended Plugins -->
