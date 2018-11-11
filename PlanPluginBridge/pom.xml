@@ -173,7 +173,7 @@
         <dependency>
             <groupId>io.github.nucleuspowered</groupId>
             <artifactId>nucleus-api</artifactId>
-            <version>1.6.0-PR1-S7.0</version>
+            <version>1.6.3-S7.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency> <!-- Maven Central -->
