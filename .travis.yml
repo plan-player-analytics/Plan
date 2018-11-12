@@ -14,12 +14,11 @@ jobs:
     include:
       - stage: "Tests"
         name: "Prepare build"
-        script: ./scripts/prepareBuild.sh
-      - name: "Unit tests"
-        script: ./scripts/runTests.sh
+        script: bash /scripts/prepareBuild.sh
+        script: bash /scripts/runTests.sh
       - stage: "System Tests"
         name: "Test environment setup"
-        script: ./scripts/prepareServerJars.sh
+        script: bash /scripts/prepareServerJars.sh
 cache:
   directories:
     - '$HOME/.m2/repository'
