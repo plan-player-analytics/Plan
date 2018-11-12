@@ -13,12 +13,12 @@ jdk:
 jobs:
     include:
       - stage: "Tests"
-        name: "Prepare build"
-        script: bash /scripts/prepareBuild.sh
-        script: bash /scripts/runTests.sh
+        name: "Unit tests"
+        script: bash scripts/prepareBuild.sh
+        script: bash scripts/runTests.sh
       - stage: "System Tests"
         name: "Test environment setup"
-        script: bash /scripts/prepareServerJars.sh
+        script: bash scripts/prepareServerJars.sh
 cache:
   directories:
     - '$HOME/.m2/repository'
