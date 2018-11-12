@@ -178,7 +178,7 @@
             <dependency> <!-- H2 -->
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
-                <version>1.4.196</version> <!-- This version is necessary so Sponge will not crash -->
+                <version>1.4.197</version> <!-- This version is necessary so Sponge will not crash -->
             </dependency>
             <dependency> <!-- MySQL Connection Pool -->
                 <groupId>com.zaxxer</groupId>
