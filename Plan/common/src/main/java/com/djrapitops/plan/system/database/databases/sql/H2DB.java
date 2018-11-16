@@ -73,12 +73,6 @@ public class H2DB extends SQLDB {
     @Override
     public void setupDataSource() throws DBInitException {
         try {
-            Class.forName("org.h2.Driver");
-        } catch (ClassNotFoundException e) {
-            errorHandler.log(L.CRITICAL, this.getClass(), e);
-        }
-
-        try {
             connection = getNewConnection(databaseFile);
         } catch (SQLException e) {
             throw new DBInitException(e);

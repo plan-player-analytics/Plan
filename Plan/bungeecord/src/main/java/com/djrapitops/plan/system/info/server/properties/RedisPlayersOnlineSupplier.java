@@ -18,17 +18,17 @@ package com.djrapitops.plan.system.info.server.properties;
 
 import com.imaginarycode.minecraft.redisbungee.RedisBungee;
 
-import java.util.function.Supplier;
+import java.util.function.IntSupplier;
 
 /**
  * Players online supplier when using RedisBungee.
  *
  * @author Rsl1122
  */
-public class RedisPlayersOnlineSupplier implements Supplier<Integer> {
+public class RedisPlayersOnlineSupplier implements IntSupplier {
 
     @Override
-    public Integer get() {
+    public int getAsInt() {
         return RedisBungee.getApi().getPlayerCount();
     }
 }

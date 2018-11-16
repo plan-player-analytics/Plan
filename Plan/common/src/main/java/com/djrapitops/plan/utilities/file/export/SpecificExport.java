@@ -27,7 +27,7 @@ import com.djrapitops.plugin.api.Check;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -79,7 +79,7 @@ public abstract class SpecificExport implements Runnable {
     }
 
     protected void export(File to, List<String> lines) throws IOException {
-        Files.write(to.toPath(), lines, Charset.forName("UTF-8"));
+        Files.write(to.toPath(), lines, StandardCharsets.UTF_8);
     }
 
     protected File getServerFolder() {

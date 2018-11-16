@@ -24,7 +24,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.UUID;
-import java.util.function.Supplier;
+import java.util.function.LongSupplier;
 
 /**
  * Registers the user to the database and marks first session if the user has no actions.
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 public class RegisterProcessor extends AbsRunnable {
 
     private final UUID uuid;
-    private final Supplier<Long> registered;
+    private final LongSupplier registered;
     private final String name;
     private final Runnable[] afterProcess;
 
@@ -42,7 +42,7 @@ public class RegisterProcessor extends AbsRunnable {
     private final Database database;
 
     RegisterProcessor(
-            UUID uuid, Supplier<Long> registered, String name,
+            UUID uuid, LongSupplier registered, String name,
             Processing processing, Database database,
             Runnable... afterProcess
     ) {
@@ -62,10 +62,10 @@ public class RegisterProcessor extends AbsRunnable {
         SaveOperations save = database.save();
         try {
             if (!check.isPlayerRegistered(uuid)) {
-                save.registerNewUser(uuid, registered.get(), name);
+                save.registerNewUser(uuid, registered.getAsLong(), name);
             }
             if (!check.isPlayerRegisteredOnThisServer(uuid)) {
-                save.registerNewUserOnThisServer(uuid, registered.get());
+                save.registerNewUserOnThisServer(uuid, registered.getAsLong());
             }
         } finally {
             for (Runnable runnable : afterProcess) {

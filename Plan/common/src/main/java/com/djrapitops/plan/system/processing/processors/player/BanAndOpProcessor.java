@@ -20,7 +20,7 @@ import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
 
 import java.util.UUID;
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 
 /**
  * Updates ban and OP status of the player to the database.
@@ -30,13 +30,13 @@ import java.util.function.Supplier;
 public class BanAndOpProcessor implements Runnable {
 
     private final UUID uuid;
-    private final Supplier<Boolean> banned;
+    private final BooleanSupplier banned;
     private final boolean op;
 
     private final Database database;
 
     BanAndOpProcessor(
-            UUID uuid, Supplier<Boolean> banned, boolean op,
+            UUID uuid, BooleanSupplier banned, boolean op,
             Database database
     ) {
         this.uuid = uuid;
@@ -48,7 +48,7 @@ public class BanAndOpProcessor implements Runnable {
     @Override
     public void run() {
         SaveOperations save = database.save();
-        save.banStatus(uuid, banned.get());
+        save.banStatus(uuid, banned.getAsBoolean());
         save.opStatus(uuid, op);
     }
 }
