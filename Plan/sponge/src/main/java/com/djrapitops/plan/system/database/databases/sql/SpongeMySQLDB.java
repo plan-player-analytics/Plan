@@ -85,7 +85,7 @@ public class SpongeMySQLDB extends MySQLDB {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public synchronized Connection getConnection() throws SQLException {
         try {
             return super.getConnection();
         } catch (SQLException e) {

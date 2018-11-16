@@ -48,7 +48,7 @@ public class MySQLDB extends SQLDB {
 
     private static int increment = 1;
 
-    protected volatile DataSource dataSource;
+    protected DataSource dataSource;
 
     @Inject
     public MySQLDB(
@@ -114,7 +114,7 @@ public class MySQLDB extends SQLDB {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public synchronized Connection getConnection() throws SQLException {
         Connection connection = dataSource.getConnection();
         if (!connection.isValid(5)) {
             connection.close();
