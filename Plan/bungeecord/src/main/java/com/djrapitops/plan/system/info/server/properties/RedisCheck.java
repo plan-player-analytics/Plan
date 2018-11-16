@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.system.info.server.properties;
 
+import com.djrapitops.plugin.api.Check;
+
 /**
  * Utility class for checking if RedisBungee API is available.
  *
@@ -23,13 +25,12 @@ package com.djrapitops.plan.system.info.server.properties;
  */
 public class RedisCheck {
 
+    private RedisCheck() {
+        /* Static method class */
+    }
+
     public static boolean isClassAvailable() {
-        try {
-            Class.forName("com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+        return Check.isAvailable("com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI");
     }
 
 }

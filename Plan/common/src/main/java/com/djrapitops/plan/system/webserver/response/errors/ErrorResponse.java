@@ -24,6 +24,7 @@ import org.apache.commons.text.StringSubstitutor;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents generic HTTP Error response that has the page style in it.
@@ -64,5 +65,20 @@ public class ErrorResponse extends PageResponse {
 
     public void setParagraph(String paragraph) {
         this.paragraph = paragraph;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ErrorResponse)) return false;
+        if (!super.equals(o)) return false;
+        ErrorResponse that = (ErrorResponse) o;
+        return Objects.equals(title, that.title) &&
+                Objects.equals(paragraph, that.paragraph);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), title, paragraph);
     }
 }

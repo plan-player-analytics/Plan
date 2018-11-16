@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.info.request;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Map object that holds {@link InfoRequest} objects used for handling incoming requests.
@@ -28,31 +29,42 @@ import java.util.HashMap;
  * @author Rsl1122
  */
 @Singleton
-public class InfoRequests extends HashMap<String, InfoRequest> {
+public class InfoRequests {
 
-    private final InfoRequestHandlerFactory handlers;
+    private final InfoRequestFactory.Handlers handlerFactory;
+
+    private final Map<String, InfoRequest> requestHandlers;
 
     @Inject
-    public InfoRequests(InfoRequestHandlerFactory handlers) {
-        this.handlers = handlers;
+    public InfoRequests(InfoRequestFactory.Handlers handlerFactory) {
+        this.handlerFactory = handlerFactory;
+        this.requestHandlers = new HashMap<>();
     }
 
     public void initializeRequests() {
-        putRequest(handlers.cacheAnalysisPageRequest());
-        putRequest(handlers.cacheInspectPageRequest());
-        putRequest(handlers.cacheInspectPluginsTabRequest());
-        putRequest(handlers.cacheNetworkPageContentRequest());
+        putRequest(handlerFactory.cacheAnalysisPageRequest());
+        putRequest(handlerFactory.cacheInspectPageRequest());
+        putRequest(handlerFactory.cacheInspectPluginsTabRequest());
+        putRequest(handlerFactory.cacheNetworkPageContentRequest());
 
-        putRequest(handlers.generateAnalysisPageRequest());
-        putRequest(handlers.generateInspectPageRequest());
-        putRequest(handlers.generateInspectPluginsTabRequest());
+        putRequest(handlerFactory.generateAnalysisPageRequest());
+        putRequest(handlerFactory.generateInspectPageRequest());
+        putRequest(handlerFactory.generateInspectPluginsTabRequest());
 
-        putRequest(handlers.saveDBSettingsRequest());
-        putRequest(handlers.sendDBSettingsRequest());
-        putRequest(handlers.checkConnectionRequest());
+        putRequest(handlerFactory.saveDBSettingsRequest());
+        putRequest(handlerFactory.sendDBSettingsRequest());
+        putRequest(handlerFactory.checkConnectionRequest());
     }
 
     private void putRequest(InfoRequest request) {
-        put(request.getClass().getSimpleName().toLowerCase(), request);
+        requestHandlers.put(request.getClass().getSimpleName().toLowerCase(), request);
+    }
+
+    public InfoRequest get(String name) {
+        return requestHandlers.get(name);
+    }
+
+    public void clear() {
+        requestHandlers.clear();
     }
 }

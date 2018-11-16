@@ -23,6 +23,10 @@ package com.djrapitops.plan.system;
  */
 public class DebugChannels {
 
+    private DebugChannels() {
+        /* Static variable class */
+    }
+
     public static final String ANALYSIS = "Analysis";
     public static final String INFO_REQUESTS = "InfoRequests";
     public static final String CONNECTIONS = "Connections";
