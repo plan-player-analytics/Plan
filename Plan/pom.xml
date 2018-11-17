@@ -44,6 +44,14 @@
             <id>bstats-repo</id>
             <url>http://repo.bstats.org/content/repositories/releases/</url>
         </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-rsl1122-Plan-repository</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/rsl1122/Plan-repository</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -112,7 +120,7 @@
             <dependency> <!-- SoftDepended Plugins -->
                 <groupId>com.djrapitops</groupId>
                 <artifactId>PlanPluginBridge</artifactId>
-                <version>4.5.0-SNAPSHOT</version>
+                <version>4.5.1</version>
             </dependency>
 
 
