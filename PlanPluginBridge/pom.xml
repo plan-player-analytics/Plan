@@ -94,7 +94,7 @@
     <dependencies>
         <dependency>
             <groupId>com.djrapitops</groupId>
-            <artifactId>Plan</artifactId>
+            <artifactId>Plan-plugin</artifactId>
             <version>4.5.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -288,6 +288,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -318,4 +319,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-rsl1122-Plan-repository</id>
+            <name>rsl1122-Plan-repository</name>
+            <url>https://api.bintray.com/maven/rsl1122/Plan-repository/PlanPluginBridge/;publish=1</url>
+        </repository>
+    </distributionManagement>
 </project>
