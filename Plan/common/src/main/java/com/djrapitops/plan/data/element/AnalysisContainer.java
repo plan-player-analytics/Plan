@@ -56,11 +56,6 @@ public final class AnalysisContainer extends InspectContainer {
         playerTableValues.put(columnName, values);
     }
 
-    @Override
-    public boolean isEmpty() {
-        return playerTableValues.isEmpty() && super.isEmpty();
-    }
-
     public boolean hasPlayerTableValues() {
         return !playerTableValues.isEmpty();
     }
