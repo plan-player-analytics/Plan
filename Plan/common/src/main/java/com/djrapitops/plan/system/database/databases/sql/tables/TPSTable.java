@@ -335,6 +335,9 @@ public class TPSTable extends Table {
     }
 
     public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
+        if (servers.isEmpty()) {
+            return new HashMap<>();
+        }
         TextStringBuilder sql = new TextStringBuilder("SELECT ");
         sql.append(Col.SERVER_ID).append(", ")
                 .append(Col.DATE).append(", ")
