@@ -626,8 +626,8 @@
 		var i;
 
 		if ( entry === false ) {
-
-        } else if ( entry === true ) {
+			return;
+		} else if ( entry === true ) {
 
 			parsed.tooltips = [];
 
