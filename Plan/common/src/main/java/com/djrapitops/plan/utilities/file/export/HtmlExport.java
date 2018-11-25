@@ -174,6 +174,7 @@ public class HtmlExport extends SpecificExport {
 
     private void exportJs() {
         String[] resources = new String[]{
+                "web/js/demo.js",
                 "web/js/admin.js",
                 "web/js/helpers.js",
                 "web/js/script.js",

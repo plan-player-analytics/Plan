@@ -31,6 +31,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import org.bukkit.Bukkit;
 
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -88,6 +89,6 @@ public class BukkitTaskSystem extends ServerTaskSystem {
     @Override
     public void disable() {
         super.disable();
-        Bukkit.getScheduler().cancelTasks(plugin);
+        Optional.ofNullable(Bukkit.getScheduler()).ifPresent(scheduler -> scheduler.cancelTasks(plugin));
     }
 }
