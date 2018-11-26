@@ -1,7 +1,5 @@
 package com.djrapitops.plan.system.webserver;
 
-import com.djrapitops.plan.DaggerPlanBukkitComponent;
-import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
@@ -16,9 +14,10 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.WebDriver;
+import rules.BukkitComponentMocker;
+import rules.ComponentMocker;
 import rules.SeleniumDriver;
 import utilities.TestConstants;
-import utilities.mocks.PlanBukkitMocker;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -39,20 +38,15 @@ public class JSErrorRegressionTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     @ClassRule
+    public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
+    @ClassRule
     public static SeleniumDriver seleniumDriver = new SeleniumDriver();
 
     private static PlanSystem bukkitSystem;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        PlanBukkitMocker mocker = PlanBukkitMocker.setUp()
-                .withDataFolder(temporaryFolder.getRoot())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withServer();
-        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(mocker.getPlanMock()).build();
-
-        bukkitSystem = component.system();
+        bukkitSystem = component.getPlanSystem();
 
         PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
         config.set(Settings.WEBSERVER_PORT, 9005);

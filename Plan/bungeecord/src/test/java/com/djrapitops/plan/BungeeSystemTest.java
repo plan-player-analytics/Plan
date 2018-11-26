@@ -9,12 +9,16 @@ import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.PlanBungeeMocker;
+import rules.BungeeComponentMocker;
+import rules.ComponentMocker;
 
 /**
  * Test for Bungee PlanSystem.
@@ -26,47 +30,27 @@ public class BungeeSystemTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    private static PlanBungee PLUGIN_MOCK;
+    @ClassRule
+    public static ComponentMocker component = new BungeeComponentMocker(temporaryFolder);
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private PlanBungeeComponent component;
-    private PlanSystem bungeeSystem;
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        PlanBungeeMocker mocker = PlanBungeeMocker.setUp()
-                .withDataFolder(temporaryFolder.newFolder())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withProxy();
-        PLUGIN_MOCK = mocker.getPlanMock();
-    }
-
-    @Before
-    public void setUp() {
-        component = DaggerPlanBungeeComponent.builder().plan(PLUGIN_MOCK).build();
-    }
-
-    @After
-    public void tearDown() {
-        if (bungeeSystem != null) {
-            bungeeSystem.disable();
-        }
-    }
-
     @Test
     public void bungeeEnables() throws Exception {
-        bungeeSystem = component.system();
+        PlanSystem bungeeSystem = component.getPlanSystem();
+        try {
+            PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+            config.set(Settings.WEBSERVER_PORT, 9005);
+            config.set(Settings.BUNGEE_IP, "8.8.8.8");
 
-        PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-        config.set(Settings.WEBSERVER_PORT, 9005);
-        config.set(Settings.BUNGEE_IP, "8.8.8.8");
+            DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
+            dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
 
-        DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
-        dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
-
-        bungeeSystem.enable();
+            bungeeSystem.enable();
+        } finally {
+            bungeeSystem.disable();
+        }
     }
 
     @Test
@@ -75,16 +59,19 @@ public class BungeeSystemTest {
         thrown.expect(EnableException.class);
         thrown.expectMessage("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
 
-        bungeeSystem = component.system();
+        PlanSystem bungeeSystem = component.getPlanSystem();
+        try {
+            PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+            config.set(Settings.WEBSERVER_PORT, 9005);
+            config.set(Settings.BUNGEE_IP, "0.0.0.0");
 
-        PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-        config.set(Settings.WEBSERVER_PORT, 9005);
-        config.set(Settings.BUNGEE_IP, "0.0.0.0");
+            DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
+            dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
 
-        DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
-        dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
-
-        bungeeSystem.enable();
+            bungeeSystem.enable();
+        } finally {
+            bungeeSystem.disable();
+        }
     }
 
     @Test
@@ -93,12 +80,15 @@ public class BungeeSystemTest {
         thrown.expect(EnableException.class);
         thrown.expectMessage("Database failed to initialize");
 
-        bungeeSystem = component.system();
+        PlanSystem bungeeSystem = component.getPlanSystem();
+        try {
+            PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+            config.set(Settings.WEBSERVER_PORT, 9005);
+            config.set(Settings.BUNGEE_IP, "8.8.8.8");
 
-        PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-        config.set(Settings.WEBSERVER_PORT, 9005);
-        config.set(Settings.BUNGEE_IP, "8.8.8.8");
-
-        bungeeSystem.enable();
+            bungeeSystem.enable();
+        } finally {
+            bungeeSystem.disable();
+        }
     }
 }

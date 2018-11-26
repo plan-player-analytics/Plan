@@ -47,7 +47,7 @@ abstract class Mocker {
         return file;
     }
 
-    private void withPluginFile(String fileName) throws Exception {
+    private void withPluginFile(String fileName) throws FileNotFoundException {
         if (planMock.getDataFolder() == null) {
             throw new IllegalStateException("withDataFolder needs to be called before setting files");
         }
@@ -59,7 +59,7 @@ abstract class Mocker {
         }
     }
 
-    void withPluginFiles() throws Exception {
+    void withPluginFiles() throws FileNotFoundException {
         when(planMock.getResource(Mockito.anyString())).thenCallRealMethod();
         for (String fileName : new String[]{
                 "bungeeconfig.yml",

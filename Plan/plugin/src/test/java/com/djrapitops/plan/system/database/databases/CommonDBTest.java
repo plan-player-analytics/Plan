@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.system.database.databases;
 
-import com.djrapitops.plan.DaggerPlanBukkitComponent;
-import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
@@ -42,10 +40,11 @@ import com.djrapitops.plan.utilities.SHA256Hash;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
+import rules.BukkitComponentMocker;
+import rules.ComponentMocker;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
-import utilities.mocks.PlanBukkitMocker;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -68,6 +67,9 @@ public abstract class CommonDBTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @ClassRule
+    public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
+
     public static DBSystem dbSystem;
     public static SQLDB db;
     public static PlanSystem system;
@@ -82,13 +84,7 @@ public abstract class CommonDBTest {
 
     static void handleSetup(String dbName) throws Exception {
         System.out.println("--- Test Class Setup     ---");
-        PlanBukkitMocker mockUtil = PlanBukkitMocker.setUp()
-                .withDataFolder(temporaryFolder.newFolder())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withServer();
-        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(mockUtil.getPlanMock()).build();
-        system = component.system();
+        system = component.getPlanSystem();
         system.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
         system.enable();
 
