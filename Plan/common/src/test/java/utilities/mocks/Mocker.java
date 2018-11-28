@@ -5,12 +5,10 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.PlanPlugin;
-import org.mockito.Mockito;
 
 import java.io.*;
 
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 /**
  * Abstract Mocker for methods that can be used for both Bungee and Bukkit.
@@ -60,7 +58,6 @@ abstract class Mocker {
     }
 
     void withPluginFiles() throws FileNotFoundException {
-        when(planMock.getResource(Mockito.anyString())).thenCallRealMethod();
         for (String fileName : new String[]{
                 "bungeeconfig.yml",
                 "config.yml",
@@ -69,6 +66,7 @@ abstract class Mocker {
 
                 "web/server.html",
                 "web/player.html",
+                "web/players.html",
                 "web/network.html",
                 "web/error.html",
 
