@@ -131,7 +131,7 @@ public class TPS implements DateHolder {
     /**
      * Get free megabytes of disk space on the server disk.
      *
-     * @return Amount of megabytes in use.
+     * @return Amount of free megabytes available on disk.
      */
     public long getFreeDiskSpace() {
         return freeDiskSpace;

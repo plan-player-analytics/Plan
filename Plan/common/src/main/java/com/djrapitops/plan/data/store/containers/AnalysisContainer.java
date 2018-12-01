@@ -74,7 +74,8 @@ public class AnalysisContainer extends DataContainer {
     private final Accordions accordions;
     private final AnalysisPluginsTabContentCreator pluginsTabContentCreator;
 
-    private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {}, "SERVER_NAMES");
+    private static final Key<Map<UUID, String>> serverNames = new Key<>(new Type<Map<UUID, String>>() {
+    }, "SERVER_NAMES");
 
     public AnalysisContainer(
             ServerContainer serverContainer,
@@ -446,18 +447,29 @@ public class AnalysisContainer extends DataContainer {
         putSupplier(AnalysisKeys.AVG_RAM_MONTH, () -> getUnsafe(tpsMonth).averageRAM());
         putSupplier(AnalysisKeys.AVG_ENTITY_MONTH, () -> getUnsafe(tpsMonth).averageEntities());
         putSupplier(AnalysisKeys.AVG_CHUNK_MONTH, () -> getUnsafe(tpsMonth).averageChunks());
+        putSupplier(AnalysisKeys.AVG_FREE_DISK_MONTH, () -> getUnsafe(tpsMonth).averageFreeDisk());
+        putSupplier(AnalysisKeys.MAX_FREE_DISK_MONTH, () -> getUnsafe(tpsMonth).maxFreeDisk());
+        putSupplier(AnalysisKeys.MIN_FREE_DISK_MONTH, () -> getUnsafe(tpsMonth).minFreeDisk());
+
         putSupplier(AnalysisKeys.TPS_SPIKE_WEEK, () -> getUnsafe(tpsWeek).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_WEEK, () -> getUnsafe(tpsWeek).averageTPS());
         putSupplier(AnalysisKeys.AVG_CPU_WEEK, () -> getUnsafe(tpsWeek).averageCPU());
         putSupplier(AnalysisKeys.AVG_RAM_WEEK, () -> getUnsafe(tpsWeek).averageRAM());
         putSupplier(AnalysisKeys.AVG_ENTITY_WEEK, () -> getUnsafe(tpsWeek).averageEntities());
         putSupplier(AnalysisKeys.AVG_CHUNK_WEEK, () -> getUnsafe(tpsWeek).averageChunks());
+        putSupplier(AnalysisKeys.AVG_FREE_DISK_WEEK, () -> getUnsafe(tpsWeek).averageFreeDisk());
+        putSupplier(AnalysisKeys.MAX_FREE_DISK_WEEK, () -> getUnsafe(tpsWeek).maxFreeDisk());
+        putSupplier(AnalysisKeys.MIN_FREE_DISK_WEEK, () -> getUnsafe(tpsWeek).minFreeDisk());
+
         putSupplier(AnalysisKeys.TPS_SPIKE_DAY, () -> getUnsafe(tpsDay).lowTpsSpikeCount(threshold));
         putSupplier(AnalysisKeys.AVG_TPS_DAY, () -> getUnsafe(tpsDay).averageTPS());
         putSupplier(AnalysisKeys.AVG_CPU_DAY, () -> getUnsafe(tpsDay).averageCPU());
         putSupplier(AnalysisKeys.AVG_RAM_DAY, () -> getUnsafe(tpsDay).averageRAM());
         putSupplier(AnalysisKeys.AVG_ENTITY_DAY, () -> getUnsafe(tpsDay).averageEntities());
         putSupplier(AnalysisKeys.AVG_CHUNK_DAY, () -> getUnsafe(tpsDay).averageChunks());
+        putSupplier(AnalysisKeys.AVG_FREE_DISK_DAY, () -> getUnsafe(tpsDay).averageFreeDisk());
+        putSupplier(AnalysisKeys.MAX_FREE_DISK_DAY, () -> getUnsafe(tpsDay).maxFreeDisk());
+        putSupplier(AnalysisKeys.MIN_FREE_DISK_DAY, () -> getUnsafe(tpsDay).minFreeDisk());
     }
 
     private void addCommandSuppliers() {
@@ -482,7 +494,8 @@ public class AnalysisContainer extends DataContainer {
 
     private void addPluginSuppliers() {
         // TODO Refactor into a system that supports running the analysis on Bungee
-        Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {}, "NAV_AND_TABS");
+        Key<String[]> navAndTabs = new Key<>(new Type<String[]>() {
+        }, "NAV_AND_TABS");
         putCachingSupplier(navAndTabs, () -> pluginsTabContentCreator.createContent(
                 this, getValue(AnalysisKeys.PLAYERS_MUTATOR).orElse(new PlayersMutator(new ArrayList<>()))
         ));
