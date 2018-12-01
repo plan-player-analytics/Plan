@@ -24,7 +24,6 @@ import com.djrapitops.plan.utilities.html.graphs.line.Point;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalDouble;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -192,57 +191,58 @@ public class TPSMutator {
     }
 
     public double averageTPS() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getTicksPerSecond)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
     }
 
     public double averageCPU() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getCPUUsage)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
     }
 
     public double averageRAM() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getUsedMemory)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
     }
 
     public double averageEntities() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getEntityCount)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
     }
 
     public double averageChunks() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getChunksLoaded)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
+    }
+
+    public double averageFreeDisk() {
+        return tpsData.stream()
+                .mapToDouble(TPS::getFreeDiskSpace)
+                .filter(num -> num >= 0)
+                .average().orElse(-1);
+    }
+
+    public long maxFreeDisk() {
+        return tpsData.stream()
+                .mapToLong(TPS::getFreeDiskSpace)
+                .filter(num -> num >= 0)
+                .max().orElse(-1);
+    }
+
+    public long minFreeDisk() {
+        return tpsData.stream()
+                .mapToLong(TPS::getFreeDiskSpace)
+                .filter(num -> num >= 0)
+                .min().orElse(-1);
     }
 }
