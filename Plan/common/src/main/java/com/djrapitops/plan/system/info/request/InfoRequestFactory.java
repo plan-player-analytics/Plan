@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -47,7 +47,6 @@ public class InfoRequestFactory {
     private final Lazy<InfoSystem> infoSystem;
     private final Lazy<ConnectionSystem> connectionSystem;
     private final Lazy<ServerInfo> serverInfo;
-    private final Lazy<InfoRequestFactory> infoRequestFactory;
     private final Lazy<ResponseFactory> responseFactory;
     private final Lazy<PageFactory> pageFactory;
     private final Lazy<HtmlExport> htmlExport;
@@ -62,7 +61,6 @@ public class InfoRequestFactory {
             Lazy<InfoSystem> infoSystem,
             Lazy<ConnectionSystem> connectionSystem,
             Lazy<ServerInfo> serverInfo,
-            Lazy<InfoRequestFactory> infoRequestFactory,
             Lazy<ResponseFactory> responseFactory,
             Lazy<PageFactory> pageFactory,
             Lazy<HtmlExport> htmlExport,
@@ -75,7 +73,6 @@ public class InfoRequestFactory {
         this.infoSystem = infoSystem;
         this.connectionSystem = connectionSystem;
         this.serverInfo = serverInfo;
-        this.infoRequestFactory = infoRequestFactory;
         this.responseFactory = responseFactory;
         this.pageFactory = pageFactory;
         this.htmlExport = htmlExport;
@@ -100,7 +97,7 @@ public class InfoRequestFactory {
     }
 
     public GenerateRequest generateAnalysisPageRequest(UUID serverUUID) {
-        return new GenerateAnalysisPageRequest(serverUUID, infoRequestFactory.get(), serverInfo.get(), infoSystem.get(), pageFactory.get());
+        return new GenerateAnalysisPageRequest(serverUUID, this, serverInfo.get(), infoSystem.get(), pageFactory.get());
     }
 
     public GenerateRequest generateInspectPageRequest(UUID uuid) {
@@ -121,5 +118,89 @@ public class InfoRequestFactory {
 
     public CheckConnectionRequest checkConnectionRequest(String webAddress) {
         return new CheckConnectionRequest(webAddress, connectionSystem.get());
+    }
+
+    @Singleton
+    public static class Handlers {
+
+        private final InfoRequestFactory factory;
+
+        @Inject
+        public Handlers(InfoRequestFactory factory) {
+            this.factory = factory;
+        }
+
+        CacheRequest cacheAnalysisPageRequest() {
+            return new CacheAnalysisPageRequest(
+                    factory.config.get(),
+                    factory.processing.get(),
+                    factory.htmlExport.get(),
+                    factory.serverInfo.get().getServerUUID()
+            );
+        }
+
+        CacheRequest cacheInspectPageRequest() {
+            return new CacheInspectPageRequest(
+                    factory.config.get(),
+                    factory.processing.get(),
+                    factory.serverInfo.get(),
+                    factory.htmlExport.get()
+            );
+        }
+
+        CacheRequest cacheInspectPluginsTabRequest() {
+            return new CacheInspectPluginsTabRequest(factory.serverInfo.get());
+        }
+
+        CacheRequest cacheNetworkPageContentRequest() {
+            return new CacheNetworkPageContentRequest(factory.serverInfo.get());
+        }
+
+        CheckConnectionRequest checkConnectionRequest() {
+            return new CheckConnectionRequest(factory.connectionSystem.get());
+        }
+
+        GenerateRequest generateAnalysisPageRequest() {
+            return new GenerateAnalysisPageRequest(
+                    factory,
+                    factory.serverInfo.get(),
+                    factory.infoSystem.get(),
+                    factory.pageFactory.get()
+            );
+        }
+
+        GenerateRequest generateInspectPageRequest() {
+            return new GenerateInspectPageRequest(
+                    factory,
+                    factory.responseFactory.get(),
+                    factory.pageFactory.get(),
+                    factory.infoSystem.get()
+            );
+        }
+
+        GenerateRequest generateInspectPluginsTabRequest() {
+            return new GenerateInspectPluginsTabRequest(
+                    factory.infoSystem.get(),
+                    factory,
+                    factory.pageFactory.get()
+            );
+        }
+
+        SetupRequest saveDBSettingsRequest() {
+            return new SaveDBSettingsRequest(
+                    factory.plugin.get(),
+                    factory.config.get(),
+                    factory.logger.get(),
+                    factory.runnableFactory.get()
+            );
+        }
+
+        SetupRequest sendDBSettingsRequest() {
+            return new SendDBSettingsRequest(
+                    factory.config.get(),
+                    factory,
+                    factory.connectionSystem.get()
+            );
+        }
     }
 }

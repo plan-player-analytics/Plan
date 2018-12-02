@@ -1,7 +1,5 @@
 package com.djrapitops.plan.system.webserver;
 
-import com.djrapitops.plan.DaggerPlanBukkitComponent;
-import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.PlanSystem;
@@ -13,9 +11,10 @@ import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.PlanBukkitMocker;
+import rules.BukkitComponentMocker;
+import rules.ComponentMocker;
+import utilities.HTTPConnector;
 
-import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -28,22 +27,20 @@ public class HTTPSWebServerAuthTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @ClassRule
+    public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
+
     private static PlanSystem bukkitSystem;
+
+    private HTTPConnector connector = new HTTPConnector();
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        PlanBukkitMocker mocker = PlanBukkitMocker.setUp()
-                .withDataFolder(temporaryFolder.getRoot())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withServer();
-        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(mocker.getPlanMock()).build();
-
         URL resource = HTTPSWebServerAuthTest.class.getResource("/Cert.keystore");
         String keyStore = resource.getPath();
         String absolutePath = new File(keyStore).getAbsolutePath();
 
-        bukkitSystem = component.system();
+        bukkitSystem = component.getPlanSystem();
 
         PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
 
@@ -67,31 +64,6 @@ public class HTTPSWebServerAuthTest {
         }
     }
 
-    private static final TrustManager[] trustAllCerts = new TrustManager[]{
-            new X509TrustManager() {
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                    //No need to implement.
-                }
-
-                @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                    //No need to implement.
-                }
-            }
-    };
-
-    private SSLSocketFactory getRelaxedSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
-        SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        return sc.getSocketFactory();
-    }
-
     /**
      * Test case against "Perm level 0 required, got 0".
      */
@@ -100,19 +72,7 @@ public class HTTPSWebServerAuthTest {
     public void testHTTPSAuthForPages() throws IOException, WebException, KeyManagementException, NoSuchAlgorithmException {
         String address = "https://localhost:9005";
         URL url = new URL(address);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        if (address.startsWith("https")) {
-            HttpsURLConnection httpsConn = (HttpsURLConnection) connection;
-
-            // Disables unsigned certificate & hostname check, because we're trusting the user given certificate.
-            // This allows https connections internally to local ports.
-            httpsConn.setHostnameVerifier((hostname, session) -> true);
-            httpsConn.setSSLSocketFactory(getRelaxedSocketFactory());
-        }
-        connection.setConnectTimeout(10000);
-        connection.setInstanceFollowRedirects(false);
-        connection.setRequestMethod("GET");
-        connection.setUseCaches(false);
+        HttpURLConnection connection = connector.getConnection("HET", address);
 
         String user = Base64Util.encode("test:testPass");
         connection.setRequestProperty("Authorization", "Basic " + user);

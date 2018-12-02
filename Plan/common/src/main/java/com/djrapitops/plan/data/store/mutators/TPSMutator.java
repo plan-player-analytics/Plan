@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -24,7 +24,6 @@ import com.djrapitops.plan.utilities.html.graphs.line.Point;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalDouble;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -192,57 +191,58 @@ public class TPSMutator {
     }
 
     public double averageTPS() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getTicksPerSecond)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
     }
 
     public double averageCPU() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getCPUUsage)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
     }
 
     public double averageRAM() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getUsedMemory)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
     }
 
     public double averageEntities() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getEntityCount)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
     }
 
     public double averageChunks() {
-        OptionalDouble average = tpsData.stream()
+        return tpsData.stream()
                 .mapToDouble(TPS::getChunksLoaded)
                 .filter(num -> num >= 0)
-                .average();
-        if (average.isPresent()) {
-            return average.getAsDouble();
-        }
-        return -1;
+                .average().orElse(-1);
+    }
+
+    public double averageFreeDisk() {
+        return tpsData.stream()
+                .mapToDouble(TPS::getFreeDiskSpace)
+                .filter(num -> num >= 0)
+                .average().orElse(-1);
+    }
+
+    public long maxFreeDisk() {
+        return tpsData.stream()
+                .mapToLong(TPS::getFreeDiskSpace)
+                .filter(num -> num >= 0)
+                .max().orElse(-1);
+    }
+
+    public long minFreeDisk() {
+        return tpsData.stream()
+                .mapToLong(TPS::getFreeDiskSpace)
+                .filter(num -> num >= 0)
+                .min().orElse(-1);
     }
 }

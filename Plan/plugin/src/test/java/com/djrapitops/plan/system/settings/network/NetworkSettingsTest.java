@@ -1,41 +1,30 @@
 package com.djrapitops.plan.system.settings.network;
 
-import com.djrapitops.plan.DaggerPlanBukkitComponent;
-import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import utilities.mocks.PlanBukkitMocker;
+import rules.BukkitComponentMocker;
+import rules.ComponentMocker;
 
 public class NetworkSettingsTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    private static PlanBukkitComponent COMPONENT;
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        PlanBukkitMocker mocker = PlanBukkitMocker.setUp()
-                .withDataFolder(temporaryFolder.getRoot())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withServer();
-        COMPONENT = DaggerPlanBukkitComponent.builder().plan(mocker.getPlanMock()).build();
-    }
+    @ClassRule
+    public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
 
     @AfterClass
     public static void tearDownClass() {
-        COMPONENT.system().disable();
+        component.getPlanSystem().disable();
     }
 
     @Test
     public void transferDoesNotProduceException() throws EnableException {
-        PlanSystem system = COMPONENT.system();
+        PlanSystem system = component.getPlanSystem();
         system.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
         system.enable();
 

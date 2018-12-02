@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -48,7 +48,7 @@ public class MySQLDB extends SQLDB {
 
     private static int increment = 1;
 
-    protected volatile DataSource dataSource;
+    protected DataSource dataSource;
 
     @Inject
     public MySQLDB(
@@ -70,7 +70,7 @@ public class MySQLDB extends SQLDB {
 
     @Override
     public DBType getType() {
-        return DBType.MySQL;
+        return DBType.MYSQL;
     }
 
     /**
@@ -114,7 +114,7 @@ public class MySQLDB extends SQLDB {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public synchronized Connection getConnection() throws SQLException {
         Connection connection = dataSource.getConnection();
         if (!connection.isValid(5)) {
             connection.close();

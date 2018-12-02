@@ -2,22 +2,20 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
 package com.djrapitops.plan.system.database.databases;
 
-import com.djrapitops.plan.DaggerPlanBukkitComponent;
-import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.data.container.*;
@@ -42,10 +40,11 @@ import com.djrapitops.plan.utilities.SHA256Hash;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
+import rules.BukkitComponentMocker;
+import rules.ComponentMocker;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
-import utilities.mocks.PlanBukkitMocker;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -61,13 +60,16 @@ import static org.junit.Assert.*;
 /**
  * Contains all common Database Tests for all Database Types
  *
- * @author Fuzzlemann
+ * @author Rsl1122 (Refactored into this class by Fuzzlemann)
  * @since 4.5.1
  */
 public abstract class CommonDBTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @ClassRule
+    public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
+
     public static DBSystem dbSystem;
     public static SQLDB db;
     public static PlanSystem system;
@@ -82,13 +84,7 @@ public abstract class CommonDBTest {
 
     static void handleSetup(String dbName) throws Exception {
         System.out.println("--- Test Class Setup     ---");
-        PlanBukkitMocker mockUtil = PlanBukkitMocker.setUp()
-                .withDataFolder(temporaryFolder.newFolder())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withServer();
-        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder().plan(mockUtil.getPlanMock()).build();
-        system = component.system();
+        system = component.getPlanSystem();
         system.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
         system.enable();
 
@@ -109,8 +105,8 @@ public abstract class CommonDBTest {
         System.out.println("\n-- Clearing Test Database --");
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
-        serverTable.saveCurrentServerInfo(new Server(-1, TestConstants.SERVER_UUID, "ServerName", "", 20));
-        assertEquals(db.getServerUUIDSupplier().get(), TestConstants.SERVER_UUID);
+        serverTable.saveCurrentServerInfo(new Server(-1, serverUUID, "ServerName", "", 20));
+        assertEquals(serverUUID, db.getServerUUIDSupplier().get());
         System.out.println("--     Clear Complete     --\n");
     }
 
@@ -274,7 +270,7 @@ public abstract class CommonDBTest {
         saveUserOne();
         NicknamesTable nickTable = db.getNicknamesTable();
 
-        Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), TestConstants.SERVER_UUID);
+        Nickname expected = new Nickname("TestNickname", System.currentTimeMillis(), serverUUID);
         nickTable.saveUserName(playerUUID, expected);
         nickTable.saveUserName(playerUUID, expected);
         commitTest();
@@ -352,7 +348,7 @@ public abstract class CommonDBTest {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -369,7 +365,6 @@ public abstract class CommonDBTest {
         assertEquals(expectedLength, sessionsTable.getPlaytime(playerUUID));
         assertEquals(0L, sessionsTable.getPlaytime(playerUUID, 30000L));
 
-        UUID serverUUID = TestConstants.SERVER_UUID;
         long playtimeOfServer = sessionsTable.getPlaytimeOfServer(serverUUID);
         assertEquals(expectedLength, playtimeOfServer);
         assertEquals(0L, sessionsTable.getPlaytimeOfServer(serverUUID, 30000L));
@@ -383,7 +378,7 @@ public abstract class CommonDBTest {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -547,13 +542,13 @@ public abstract class CommonDBTest {
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds();
 
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
         sessionsTable.saveSession(playerUUID, session);
-        nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
+        nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID));
         geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L, "3"));
 
         assertTrue(usersTable.isRegistered(playerUUID));
@@ -613,13 +608,13 @@ public abstract class CommonDBTest {
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds(database);
 
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
 
         sessionsTable.saveSession(playerUUID, session);
-        nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
+        nicknamesTable.saveUserName(playerUUID, new Nickname("TestNick", System.currentTimeMillis(), serverUUID));
         geoInfoTable.saveGeoInfo(playerUUID, new GeoInfo("1.2.3.4", "TestLoc", 223456789L,
                 new SHA256Hash("1.2.3.4").create()));
 
@@ -651,7 +646,7 @@ public abstract class CommonDBTest {
         }
 
         pingTable.insertPing(playerUUID, new Ping(
-                System.currentTimeMillis(), TestConstants.SERVER_UUID,
+                System.currentTimeMillis(), serverUUID,
                 r.nextInt(), r.nextInt(), r.nextDouble()
         ));
 
@@ -670,7 +665,7 @@ public abstract class CommonDBTest {
         saveUserOne();
         saveUserTwo();
 
-        Session session = new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, 12345L, "", "");
+        Session session = new Session(playerUUID, serverUUID, 12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
         session.setPlayerKills(createKills());
@@ -753,7 +748,7 @@ public abstract class CommonDBTest {
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
         worldTimesTable.saveWorldTimes(playerUUID, 1, worldTimes);
 
-        Session session = new Session(1, playerUUID, TestConstants.SERVER_UUID, 12345L, 23456L, 0, 0, 0);
+        Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
         Map<Integer, Session> sessions = new HashMap<>();
         sessions.put(1, session);
         worldTimesTable.addWorldTimesToSessions(playerUUID, sessions);
@@ -767,7 +762,7 @@ public abstract class CommonDBTest {
         WorldTimes worldTimes = createWorldTimes();
         System.out.println(worldTimes);
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        Session session = new Session(1, playerUUID, TestConstants.SERVER_UUID, 12345L, 23456L, 0, 0, 0);
+        Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -790,7 +785,7 @@ public abstract class CommonDBTest {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
         System.out.println(worldTimes);
-        Session session = new Session(1, playerUUID, TestConstants.SERVER_UUID, 12345L, 23456L, 0, 0, 0);
+        Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
@@ -817,7 +812,7 @@ public abstract class CommonDBTest {
     @Test
     public void testGetServerWorldTimes() {
         testSaveSessionsWorldTimes();
-        WorldTimes worldTimesOfServer = db.getWorldTimesTable().getWorldTimesOfServer(TestConstants.SERVER_UUID);
+        WorldTimes worldTimesOfServer = db.getWorldTimesTable().getWorldTimesOfServer(serverUUID);
         assertEquals(createWorldTimes(), worldTimesOfServer);
     }
 
@@ -834,7 +829,7 @@ public abstract class CommonDBTest {
     @Test
     public void testWorldTableGetWorldNamesNoException() throws NoSuchAlgorithmException {
         saveAllData(db);
-        Set<String> worldNames = db.getWorldTable().getWorldNames(TestConstants.SERVER_UUID);
+        Set<String> worldNames = db.getWorldTable().getWorldNames(serverUUID);
         assertEquals(new HashSet<>(worlds), worldNames);
     }
 
@@ -907,7 +902,7 @@ public abstract class CommonDBTest {
         assertTrue(container.supports(PlayerKeys.PLAYER_KILL_COUNT));
 
         assertFalse(container.supports(PlayerKeys.ACTIVE_SESSION));
-        container.putRawData(PlayerKeys.ACTIVE_SESSION, new Session(TestConstants.PLAYER_ONE_UUID, serverUUID, System.currentTimeMillis(), "TestWorld", "SURVIVAL"));
+        container.putRawData(PlayerKeys.ACTIVE_SESSION, new Session(playerUUID, serverUUID, System.currentTimeMillis(), "TestWorld", "SURVIVAL"));
         assertTrue(container.supports(PlayerKeys.ACTIVE_SESSION));
 
         long end = System.nanoTime();
@@ -923,7 +918,7 @@ public abstract class CommonDBTest {
                 Collections.singletonList(new GeoInfo("1.2.3.4", "TestLoc", 223456789, "ZpT4PJ9HbaMfXfa8xSADTn5X1CHSR7nTT0ntv8hKdkw="));
         OptionalAssert.equals(expectedGeoInfo, container.getValue(PlayerKeys.GEO_INFO));
 
-        List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, TestConstants.SERVER_UUID));
+        List<Nickname> expectedNicknames = Collections.singletonList(new Nickname("TestNick", -1, serverUUID));
         OptionalAssert.equals(expectedNicknames, container.getValue(PlayerKeys.NICKNAMES));
 
         OptionalAssert.equals(false, container.getValue(PlayerKeys.OPERATOR));
@@ -936,7 +931,7 @@ public abstract class CommonDBTest {
     public void playerContainerSupportsAllPlayerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
         saveAllData(db);
 
-        PlayerContainer playerContainer = db.fetch().getPlayerContainer(TestConstants.PLAYER_ONE_UUID);
+        PlayerContainer playerContainer = db.fetch().getPlayerContainer(playerUUID);
         // Active sessions are added after fetching
         playerContainer.putRawData(PlayerKeys.ACTIVE_SESSION, RandomData.randomSession());
 
@@ -945,6 +940,7 @@ public abstract class CommonDBTest {
             if (!Modifier.isPublic(field.getModifiers())) {
                 continue;
             }
+            // the field is static and no object is needed for access.
             Key key = (Key) field.get(null);
             if (!playerContainer.supports(key)) {
                 unsupported.add(field.getName());
@@ -958,13 +954,14 @@ public abstract class CommonDBTest {
     public void serverContainerSupportsAllServerKeys() throws NoSuchAlgorithmException, IllegalAccessException {
         saveAllData(db);
 
-        ServerContainer serverContainer = db.fetch().getServerContainer(TestConstants.SERVER_UUID);
+        ServerContainer serverContainer = db.fetch().getServerContainer(serverUUID);
 
         List<String> unsupported = new ArrayList<>();
         for (Field field : ServerKeys.class.getDeclaredFields()) {
             if (!Modifier.isPublic(field.getModifiers())) {
                 continue;
             }
+            // the field is static and no object is needed for access.
             Key key = (Key) field.get(null);
             if (!serverContainer.supports(key)) {
                 unsupported.add(field.getName());
@@ -975,18 +972,18 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    @Ignore
     public void analysisContainerSupportsAllAnalysisKeys() throws IllegalAccessException, NoSuchAlgorithmException {
         serverContainerSupportsAllServerKeys();
-        AnalysisContainer.Factory factory = null;
+        AnalysisContainer.Factory factory = constructAnalysisContainerFactory();
         AnalysisContainer analysisContainer = factory.forServerContainer(
-                db.fetch().getServerContainer(TestConstants.SERVER_UUID)
+                db.fetch().getServerContainer(serverUUID)
         );
-        List<String> unsupported = new ArrayList<>();
+        Collection<String> unsupported = new ArrayList<>();
         for (Field field : AnalysisKeys.class.getDeclaredFields()) {
             if (!Modifier.isPublic(field.getModifiers())) {
                 continue;
             }
+            // the field is static and no object is needed for access.
             Key key = (Key) field.get(null);
             if (!analysisContainer.supports(key)) {
                 unsupported.add(field.getName());
@@ -994,6 +991,22 @@ public abstract class CommonDBTest {
         }
 
         assertTrue("Some keys are not supported by AnalysisContainer: AnalysisKeys." + unsupported.toString(), unsupported.isEmpty());
+    }
+
+    private AnalysisContainer.Factory constructAnalysisContainerFactory() {
+        return new AnalysisContainer.Factory(
+                "1.0.0",
+                system.getConfigSystem().getConfig(),
+                system.getLocaleSystem().getLocale(),
+                system.getConfigSystem().getTheme(),
+                dbSystem,
+                system.getServerInfo().getServerProperties(),
+                system.getHtmlUtilities().getFormatters(),
+                system.getHtmlUtilities().getGraphs(),
+                system.getHtmlUtilities().getHtmlTables(),
+                system.getHtmlUtilities().getAccordions(),
+                system.getHtmlUtilities().getAnalysisPluginsTabContentCreator()
+        );
     }
 
     @Test
@@ -1040,11 +1053,11 @@ public abstract class CommonDBTest {
         UUID uuid = UUID.randomUUID();
         String userName = RandomData.randomString(10);
         db.getUsersTable().registerUser(uuid, 0L, userName);
-        db.getUsersTable().registerUser(TestConstants.PLAYER_ONE_UUID, 1L, "Not random");
+        db.getUsersTable().registerUser(playerUUID, 1L, "Not random");
 
         String nickname = "2" + RandomData.randomString(10);
-        db.getNicknamesTable().saveUserName(uuid, new Nickname(nickname, System.currentTimeMillis(), TestConstants.SERVER_UUID));
-        db.getNicknamesTable().saveUserName(TestConstants.PLAYER_ONE_UUID, new Nickname("No nick", System.currentTimeMillis(), TestConstants.SERVER_UUID));
+        db.getNicknamesTable().saveUserName(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID));
+        db.getNicknamesTable().saveUserName(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID));
 
         String search = "2";
 

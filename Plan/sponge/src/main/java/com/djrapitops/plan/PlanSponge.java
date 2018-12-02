@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -42,7 +42,7 @@ import java.io.InputStream;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "4.5.1",
+        version = "4.5.2",
         description = "Player Analytics Plugin by Rsl1122",
         authors = {"Rsl1122"},
         dependencies = {
@@ -87,19 +87,19 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
                     system.getDatabaseSystem().getDatabase()
             ).registerMetrics();
 
-            slf4jLogger.info(locale.getString(PluginLang.ENABLED));
+            logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
-            slf4jLogger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            slf4jLogger.error("----------------------------------------");
-            slf4jLogger.error("Error: " + e.getMessage());
-            slf4jLogger.error("----------------------------------------");
-            slf4jLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("----------------------------------------");
+            logger.error("Error: " + e.getMessage());
+            logger.error("----------------------------------------");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             onDisable();
         } catch (Exception e) {
             errorHandler.log(L.CRITICAL, this.getClass(), e);
-            slf4jLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            slf4jLogger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
         PlanCommand command = component.planCommand();

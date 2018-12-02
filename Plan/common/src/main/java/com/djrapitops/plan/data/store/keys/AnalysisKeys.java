@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -136,6 +136,15 @@ public class AnalysisKeys {
     public static final PlaceholderKey<Double> AVG_CHUNK_MONTH = new PlaceholderKey<>(Double.class, "chunkAverageMonth");
     public static final PlaceholderKey<Double> AVG_CHUNK_WEEK = new PlaceholderKey<>(Double.class, "chunkAverageWeek");
     public static final PlaceholderKey<Double> AVG_CHUNK_DAY = new PlaceholderKey<>(Double.class, "chunkAverageDay");
+    public static final PlaceholderKey<Double> AVG_FREE_DISK_MONTH = new PlaceholderKey<>(Double.class, "freeDiskAverageMonth");
+    public static final PlaceholderKey<Double> AVG_FREE_DISK_WEEK = new PlaceholderKey<>(Double.class, "freeDiskAverageWeek");
+    public static final PlaceholderKey<Double> AVG_FREE_DISK_DAY = new PlaceholderKey<>(Double.class, "freeDiskAverageDay");
+    public static final PlaceholderKey<Long> MAX_FREE_DISK_MONTH = new PlaceholderKey<>(Long.class, "freeDiskMaximumMonth");
+    public static final PlaceholderKey<Long> MAX_FREE_DISK_WEEK = new PlaceholderKey<>(Long.class, "freeDiskMaximumWeek");
+    public static final PlaceholderKey<Long> MAX_FREE_DISK_DAY = new PlaceholderKey<>(Long.class, "freeDiskMaximumDay");
+    public static final PlaceholderKey<Long> MIN_FREE_DISK_MONTH = new PlaceholderKey<>(Long.class, "freeDiskMinimumMonth");
+    public static final PlaceholderKey<Long> MIN_FREE_DISK_WEEK = new PlaceholderKey<>(Long.class, "freeDiskMinimumWeek");
+    public static final PlaceholderKey<Long> MIN_FREE_DISK_DAY = new PlaceholderKey<>(Long.class, "freeDiskMinimumDay");
     // Data for Charts
     public static final PlaceholderKey<String> WORLD_PIE_SERIES = new PlaceholderKey<>(String.class, "worldSeries");
     public static final PlaceholderKey<String> GM_PIE_SERIES = new PlaceholderKey<>(String.class, "gmSeries");
@@ -169,12 +178,13 @@ public class AnalysisKeys {
     public static final Key<Long> ANALYSIS_TIME_DAY_AGO = new Key<>(Long.class, "ANALYSIS_TIME_DAY_AGO");
     public static final Key<Long> ANALYSIS_TIME_WEEK_AGO = new Key<>(Long.class, "ANALYSIS_TIME_WEEK_AGO");
     public static final Key<Long> ANALYSIS_TIME_MONTH_AGO = new Key<>(Long.class, "ANALYSIS_TIME_MONTH_AGO");
-    public static final Key<Map<UUID, String>> PLAYER_NAMES = new Key<>(new Type<Map<UUID, String>>() {}, "PLAYER_NAMES");
+    public static final Key<Map<UUID, String>> PLAYER_NAMES = new Key<>(new Type<Map<UUID, String>>() {
+    }, "PLAYER_NAMES");
     public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = CommonKeys.ACTIVITY_DATA;
-    @Deprecated
-    public static final Key<Set<UUID>> BAN_DATA = new Key<>(new Type<Set<UUID>>() {}, "BAN_DATA");
-    public static final Key<TreeMap<Long, Integer>> UNIQUE_PLAYERS_PER_DAY = new Key<>(new Type<TreeMap<Long, Integer>>() {}, "UNIQUE_PLAYERS_PER_DAY");
-    public static final Key<TreeMap<Long, Integer>> NEW_PLAYERS_PER_DAY = new Key<>(new Type<TreeMap<Long, Integer>>() {}, "NEW_PLAYERS_PER_DAY");
+    public static final Key<TreeMap<Long, Integer>> UNIQUE_PLAYERS_PER_DAY = new Key<>(new Type<TreeMap<Long, Integer>>() {
+    }, "UNIQUE_PLAYERS_PER_DAY");
+    public static final Key<TreeMap<Long, Integer>> NEW_PLAYERS_PER_DAY = new Key<>(new Type<TreeMap<Long, Integer>>() {
+    }, "NEW_PLAYERS_PER_DAY");
 
     private AnalysisKeys() {
         /* Static variable class */

@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -258,9 +258,12 @@ public class WebServer implements SubSystem {
             ExecutorService service = (ExecutorService) executor;
             service.shutdown();
             try {
-                service.awaitTermination(5, TimeUnit.SECONDS);
-            } catch (InterruptedException timeoutExceededEx) {
-                service.shutdownNow();
+                if (!service.awaitTermination(5, TimeUnit.SECONDS)) {
+                    service.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                logger.error("WebServer ExecutorService shutdown thread interrupted on disable: " + e.getMessage());
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -274,7 +277,7 @@ public class WebServer implements SubSystem {
     }
 
     public boolean isAuthRequired() {
-        return usingHttps;
+        return isUsingHTTPS();
     }
 
     public String getAccessAddress() {

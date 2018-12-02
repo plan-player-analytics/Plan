@@ -7,7 +7,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,7 +27,7 @@ public class LocaleFileWriterTest {
         new LocaleFileWriter(new Locale()).writeToFile(file);
 
         long expected = LocaleSystem.getIdentifiers().size();
-        int result = FileUtil.lines(file, Charset.forName("UTF-8")).size();
+        int result = FileUtil.lines(file, StandardCharsets.UTF_8).size();
         assertEquals(expected, result);
     }
 

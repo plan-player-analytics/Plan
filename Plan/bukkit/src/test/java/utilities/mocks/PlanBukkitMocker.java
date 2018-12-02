@@ -28,6 +28,7 @@ import utilities.mocks.objects.TestRunnableFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static org.mockito.Mockito.doReturn;
 
@@ -92,7 +93,7 @@ public class PlanBukkitMocker extends Mocker {
         return this;
     }
 
-    public PlanBukkitMocker withResourceFetchingFromJar() throws Exception {
+    public PlanBukkitMocker withResourceFetchingFromJar() throws IOException {
         withPluginFiles();
         return this;
     }

@@ -45,7 +45,7 @@ abstract class Mocker {
         return file;
     }
 
-    private void withPluginFile(String fileName) throws Exception {
+    private void withPluginFile(String fileName) throws FileNotFoundException {
         if (planMock.getDataFolder() == null) {
             throw new IllegalStateException("withDataFolder needs to be called before setting files");
         }
@@ -57,15 +57,62 @@ abstract class Mocker {
         }
     }
 
-    void withPluginFiles() throws Exception {
-        withPluginFile("bungeeconfig.yml");
-        withPluginFile("config.yml");
-        withPluginFile("web/server.html");
-        withPluginFile("web/player.html");
-        withPluginFile("web/network.html");
-        withPluginFile("web/error.html");
-        withPluginFile("themes/theme.yml");
-        withPluginFile("DefaultServerInfoFile.yml");
+    void withPluginFiles() throws FileNotFoundException {
+        for (String fileName : new String[]{
+                "bungeeconfig.yml",
+                "config.yml",
+                "DefaultServerInfoFile.yml",
+                "themes/theme.yml",
+
+                "web/server.html",
+                "web/player.html",
+                "web/players.html",
+                "web/network.html",
+                "web/error.html",
+
+                "web/css/main.css",
+                "web/css/materialize.css",
+                "web/css/style.css",
+                "web/css/themes/all-themes.css",
+
+                "web/js/demo.js",
+                "web/js/admin.js",
+                "web/js/helpers.js",
+                "web/js/script.js",
+                "web/js/charts/activityPie.js",
+                "web/js/charts/lineGraph.js",
+                "web/js/charts/horizontalBarGraph.js",
+                "web/js/charts/stackGraph.js",
+                "web/js/charts/performanceGraph.js",
+                "web/js/charts/playerGraph.js",
+                "web/js/charts/playerGraphNoNav.js",
+                "web/js/charts/resourceGraph.js",
+                "web/js/charts/diskGraph.js",
+                "web/js/charts/tpsGraph.js",
+                "web/js/charts/worldGraph.js",
+                "web/js/charts/worldMap.js",
+                "web/js/charts/punchCard.js",
+                "web/js/charts/serverPie.js",
+                "web/js/charts/worldPie.js",
+                "web/js/charts/healthGauge.js",
+                "web/js/charts/sessionCalendar.js",
+                "web/js/charts/onlineActivityCalendar.js",
+
+                "web/plugins/bootstrap/css/bootstrap.css",
+                "web/plugins/node-waves/waves.css",
+                "web/plugins/node-waves/waves.js",
+                "web/plugins/animate-css/animate.css",
+                "web/plugins/jquery-slimscroll/jquery.slimscroll.js",
+                "web/plugins/jquery/jquery.min.js",
+                "web/plugins/bootstrap/js/bootstrap.js",
+                "web/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js",
+                "web/plugins/jquery-datatable/jquery.dataTables.js",
+                "web/plugins/fullcalendar/fullcalendar.min.js",
+                "web/plugins/fullcalendar/fullcalendar.min.css",
+                "web/plugins/momentjs/moment.js"
+        }) {
+            withPluginFile(fileName);
+        }
     }
 
 }

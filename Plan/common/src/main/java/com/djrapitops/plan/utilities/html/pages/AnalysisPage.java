@@ -158,14 +158,18 @@ public class AnalysisPage implements Page {
         placeholderReplacer.addAllPlaceholdersFrom(analysisContainer,
                 TPS_SPIKE_MONTH, TPS_SPIKE_WEEK, TPS_SPIKE_DAY
         );
-        placeholderReplacer.addAllPlaceholdersFrom(analysisContainer, decimalFormatter,
-                AVG_TPS_MONTH, AVG_TPS_WEEK, AVG_TPS_DAY,
-                AVG_RAM_MONTH, AVG_RAM_WEEK, AVG_RAM_DAY,
-                AVG_ENTITY_MONTH, AVG_ENTITY_WEEK, AVG_ENTITY_DAY,
-                AVG_CHUNK_MONTH, AVG_CHUNK_WEEK, AVG_CHUNK_DAY
+        placeholderReplacer.addAllPlaceholdersFrom(analysisContainer,
+                value -> value != -1L ? Long.toString(value) : "Unavailable",
+                MAX_FREE_DISK_MONTH, MAX_FREE_DISK_WEEK, MAX_FREE_DISK_DAY,
+                MIN_FREE_DISK_MONTH, MIN_FREE_DISK_WEEK, MIN_FREE_DISK_DAY
         );
         placeholderReplacer.addAllPlaceholdersFrom(analysisContainer,
                 value -> value != -1 ? decimalFormatter.apply(value) : "Unavailable",
+                AVG_TPS_MONTH, AVG_TPS_WEEK, AVG_TPS_DAY,
+                AVG_RAM_MONTH, AVG_RAM_WEEK, AVG_RAM_DAY,
+                AVG_ENTITY_MONTH, AVG_ENTITY_WEEK, AVG_ENTITY_DAY,
+                AVG_CHUNK_MONTH, AVG_CHUNK_WEEK, AVG_CHUNK_DAY,
+                AVG_FREE_DISK_MONTH, AVG_FREE_DISK_WEEK, AVG_FREE_DISK_DAY,
                 AVG_CPU_MONTH, AVG_CPU_WEEK, AVG_CPU_DAY
         );
         timings.end(CHANNEL, CHANNEL + " Performance Numbers");

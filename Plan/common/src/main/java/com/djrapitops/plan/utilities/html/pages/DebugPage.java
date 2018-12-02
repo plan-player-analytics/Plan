@@ -60,7 +60,7 @@ public class DebugPage implements Page {
     private final ConnectionSystem connectionSystem;
     private final CombineDebugLogger debugLogger;
     private final Timings timings;
-    private final DefaultErrorHandler errorHandler;
+    private final ErrorHandler errorHandler;
 
     private final Formatter<DateHolder> secondFormatter;
     private final Formatter<Long> yearFormatter;
@@ -79,7 +79,7 @@ public class DebugPage implements Page {
         this.connectionSystem = connectionSystem;
         this.debugLogger = (CombineDebugLogger) debugLogger;
         this.timings = timings;
-        this.errorHandler = (DefaultErrorHandler) errorHandler;
+        this.errorHandler = errorHandler;
 
         this.secondFormatter = formatters.second();
         this.yearFormatter = formatters.yearLong();
@@ -268,6 +268,16 @@ public class DebugPage implements Page {
     private void appendLoggedErrors(StringBuilder content) {
         content.append("<pre>### Logged Errors<br>");
 
+        if (errorHandler instanceof DefaultErrorHandler) {
+            appendErrorLines(content, (DefaultErrorHandler) errorHandler);
+        } else {
+            content.append("Using incompatible ErrorHandler");
+        }
+
+        content.append("</pre>");
+    }
+
+    private void appendErrorLines(StringBuilder content, DefaultErrorHandler errorHandler) {
         List<String> lines = errorHandler.getErrorHandler(FolderTimeStampErrorFileLogger.class)
                 .flatMap(FolderTimeStampFileLogger::getCurrentFile)
                 .map(file -> {
@@ -300,7 +310,6 @@ public class DebugPage implements Page {
         } else {
             content.append("**No Errors logged.**<br>");
         }
-        content.append("</pre>");
     }
 
     private void appendDebugLog(StringBuilder content) {

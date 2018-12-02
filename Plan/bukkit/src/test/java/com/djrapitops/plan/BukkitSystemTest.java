@@ -8,11 +8,13 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.PlanBukkitMocker;
+import rules.BukkitComponentMocker;
+import rules.ComponentMocker;
 
 /**
  * Test for Bukkit PlanSystem.
@@ -24,35 +26,18 @@ public class BukkitSystemTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    private PlanSystem bukkitSystem;
-    private static PlanBukkitComponent COMPONENT;
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        PlanBukkitMocker mockUtil = PlanBukkitMocker.setUp()
-                .withDataFolder(temporaryFolder.newFolder())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withServer();
-        COMPONENT = DaggerPlanBukkitComponent.builder().plan(mockUtil.getPlanMock()).build();
-    }
-
-    @Before
-    public void setUp() {
-        bukkitSystem = COMPONENT.system();
-    }
-
-    @After
-    public void tearDown() {
-        if (bukkitSystem != null) {
-            bukkitSystem.disable();
-        }
-    }
+    @ClassRule
+    public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
 
     @Test
     public void testEnable() throws EnableException {
-        PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
-        config.set(Settings.WEBSERVER_PORT, 9005);
-        bukkitSystem.enable();
+        PlanSystem bukkitSystem = component.getPlanSystem();
+        try {
+            PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
+            config.set(Settings.WEBSERVER_PORT, 9005);
+            bukkitSystem.enable();
+        } finally {
+            bukkitSystem.disable();
+        }
     }
 }

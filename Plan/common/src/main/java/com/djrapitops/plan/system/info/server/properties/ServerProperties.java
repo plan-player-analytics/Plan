@@ -2,20 +2,21 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
 package com.djrapitops.plan.system.info.server.properties;
 
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -35,12 +36,18 @@ public abstract class ServerProperties {
     private final Supplier<String> ip;
     private final int maxPlayers;
 
-    private final Supplier<Integer> onlinePlayers;
+    private final IntSupplier onlinePlayers;
 
     protected ServerProperties(
-            String id, String name, int port,
-            String version, String implVersion,
-            Supplier<String> ip, int maxPlayers, Supplier<Integer> onlinePlayers) {
+            String id,
+            String name,
+            int port,
+            String version,
+            String implVersion,
+            Supplier<String> ip,
+            int maxPlayers,
+            IntSupplier onlinePlayers
+    ) {
         this.id = id;
         this.name = name;
         this.port = port;
@@ -85,6 +92,6 @@ public abstract class ServerProperties {
     }
 
     public int getOnlinePlayers() {
-        return onlinePlayers.get();
+        return onlinePlayers.getAsInt();
     }
 }

@@ -7,11 +7,13 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.settings.Settings;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.PlanSpongeMocker;
+import rules.ComponentMocker;
+import rules.SpongeComponentMocker;
 
 /**
  * Test for Sponge PlanSystem.
@@ -23,36 +25,17 @@ public class SpongeSystemTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    private static PlanSponge planMock;
-    private PlanSystem spongeSystem;
-    private PlanSpongeComponent component;
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        PlanSpongeMocker mockUtil = PlanSpongeMocker.setUp()
-                .withDataFolder(temporaryFolder.getRoot())
-                .withResourceFetchingFromJar()
-                .withGame();
-        planMock = mockUtil.getPlanMock();
-    }
-
-    @Before
-    public void setUp() {
-        component = DaggerPlanSpongeComponent.builder().plan(planMock).build();
-    }
-
-    @After
-    public void tearDown() {
-        if (spongeSystem != null) {
-            spongeSystem.disable();
-        }
-    }
+    @ClassRule
+    public static ComponentMocker component = new SpongeComponentMocker(temporaryFolder);
 
     @Test
     public void testEnable() throws EnableException {
-        spongeSystem = component.system();
-        spongeSystem.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
-
-        spongeSystem.enable();
+        PlanSystem spongeSystem = component.getPlanSystem();
+        try {
+            spongeSystem.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
+            spongeSystem.enable();
+        } finally {
+            spongeSystem.disable();
+        }
     }
 }

@@ -18,6 +18,7 @@ package com.djrapitops.plan.utilities.html.graphs.stack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a value set for a Stack graph.
@@ -45,5 +46,20 @@ public class StackDataSet extends ArrayList<Double> {
 
     public String getColor() {
         return color;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StackDataSet)) return false;
+        if (!super.equals(o)) return false;
+        StackDataSet doubles = (StackDataSet) o;
+        return Objects.equals(name, doubles.name) &&
+                Objects.equals(color, doubles.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, color);
     }
 }

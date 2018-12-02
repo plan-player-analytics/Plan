@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -104,13 +104,10 @@ public class SQLiteDB extends SQLDB {
 
     private void startConnectionPingTask() {
         stopConnectionPingTask();
-        try {
-            // Maintains Connection.
-            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
-                    new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
-            ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
-        } catch (Exception ignored) {
-        }
+        // Maintains Connection.
+        connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
+                new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
+        ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
     }
 
     private void stopConnectionPingTask() {
@@ -118,13 +115,15 @@ public class SQLiteDB extends SQLDB {
             try {
                 connectionPingTask.cancel();
             } catch (Exception ignored) {
+                // Sometimes task systems fail to cancel a task,
+                // usually this is called on disable, so no need for users to report this.
             }
         }
     }
 
     @Override
     public DBType getType() {
-        return DBType.SQLite;
+        return DBType.SQLITE;
     }
 
     @Override

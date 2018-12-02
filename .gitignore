@@ -5,9 +5,6 @@ PlanPluginBridge.iml
 
 *.db
 
-# Shell files
-*.sh
-
 # Created by https://www.gitignore.io/api/maven,eclipse,intellij,netbeans,osx,windows,notepadpp,windows,java
 
 ### Maven ###
@@ -20,7 +17,7 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-
+settings.xml
 
 ### Eclipse ###
 

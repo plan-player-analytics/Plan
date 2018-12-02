@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -145,15 +145,18 @@ public class Processing implements SubSystem {
                 errorHandler.log(L.WARN, this.getClass(), e);
             }
         }
-        if (!nonCriticalExecutor.isTerminated()) {
-            try {
-                nonCriticalExecutor.awaitTermination(1, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
+        try {
+            if (!nonCriticalExecutor.isTerminated() && !nonCriticalExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
                 nonCriticalExecutor.shutdownNow();
             }
-        }
-        if (!criticalExecutor.isTerminated()) {
+            if (!criticalExecutor.isTerminated()) {
+                criticalExecutor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            logger.error("Processing shutdown thread interrupted: " + e.getMessage());
+            nonCriticalExecutor.shutdownNow();
             criticalExecutor.shutdownNow();
+            Thread.currentThread().interrupt();
         }
         logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING_COMPLETE));
     }

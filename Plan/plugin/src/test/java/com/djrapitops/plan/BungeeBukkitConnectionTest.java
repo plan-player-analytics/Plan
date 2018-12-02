@@ -12,8 +12,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import utilities.mocks.PlanBukkitMocker;
-import utilities.mocks.PlanBungeeMocker;
+import rules.BukkitComponentMocker;
+import rules.BungeeComponentMocker;
+import rules.ComponentMocker;
 
 import java.util.UUID;
 
@@ -25,8 +26,10 @@ public class BungeeBukkitConnectionTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    private static PlanBukkitComponent BUKKIT_COMPONENT;
-    private static PlanBungeeComponent BUNGEE_COMPONENT;
+    @ClassRule
+    public static ComponentMocker bukkitComponent = new BukkitComponentMocker(temporaryFolder);
+    @ClassRule
+    public static ComponentMocker bungeeComponent = new BungeeComponentMocker(temporaryFolder);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -36,23 +39,6 @@ public class BungeeBukkitConnectionTest {
 
     private UUID bukkitUUID;
     private UUID bungeeUUID;
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        PlanBukkitMocker planBukkitMocker = PlanBukkitMocker.setUp()
-                .withDataFolder(temporaryFolder.getRoot())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withServer();
-        BUKKIT_COMPONENT = DaggerPlanBukkitComponent.builder().plan(planBukkitMocker.getPlanMock()).build();
-
-        PlanBungeeMocker planBungeeMocker = PlanBungeeMocker.setUp()
-                .withDataFolder(temporaryFolder.getRoot())
-                .withPluginDescription()
-                .withResourceFetchingFromJar()
-                .withProxy();
-        BUNGEE_COMPONENT = DaggerPlanBungeeComponent.builder().plan(planBungeeMocker.getPlanMock()).build();
-    }
 
     @After
     public void tearDown() {
@@ -68,8 +54,8 @@ public class BungeeBukkitConnectionTest {
     }
 
     public void enable() throws Exception {
-        bukkitSystem = BUKKIT_COMPONENT.system();
-        bungeeSystem = BUNGEE_COMPONENT.system();
+        bukkitSystem = bukkitComponent.getPlanSystem();
+        bungeeSystem = bungeeComponent.getPlanSystem();
 
         bukkitSystem.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
         bungeeSystem.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9250);

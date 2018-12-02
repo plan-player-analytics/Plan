@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -20,10 +20,7 @@ import com.djrapitops.plugin.api.utility.Version;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Utility for loading version information from github.
@@ -34,6 +31,10 @@ public class VersionInfoLoader {
 
     private static final String VERSION_TXT_URL =
             "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/versions.txt";
+
+    private VersionInfoLoader() {
+        /* Static method class */
+    }
 
     /**
      * Loads version information from github.
@@ -49,25 +50,31 @@ public class VersionInfoLoader {
 
         try (Scanner websiteScanner = new Scanner(url.openStream())) {
             while (websiteScanner.hasNextLine()) {
-                String line = websiteScanner.nextLine();
-                if (!line.startsWith("REL") && !line.startsWith("DEV")) {
-                    continue;
-                }
-                String[] parts = line.split("\\|");
-                if (parts.length < 4) {
-                    continue;
-                }
-                boolean release = parts[0].equals("REL");
-                Version version = new Version(parts[1]);
-                String downloadUrl = parts[2];
-                String changeLogUrl = parts[3];
+                checkLine(websiteScanner).ifPresent(lineParts -> {
+                    boolean release = lineParts[0].equals("REL");
+                    Version version = new Version(lineParts[1]);
+                    String downloadUrl = lineParts[2];
+                    String changeLogUrl = lineParts[3];
 
-                versionInfo.add(new VersionInfo(release, version, downloadUrl, changeLogUrl));
+                    versionInfo.add(new VersionInfo(release, version, downloadUrl, changeLogUrl));
+                });
             }
         }
 
         Collections.sort(versionInfo);
         return versionInfo;
+    }
+
+    private static Optional<String[]> checkLine(Scanner websiteScanner) {
+        String line = websiteScanner.nextLine();
+        if (!line.startsWith("REL") && !line.startsWith("DEV")) {
+            return Optional.empty();
+        }
+        String[] parts = line.split("\\|");
+        if (parts.length < 4) {
+            return Optional.empty();
+        }
+        return Optional.of(parts);
     }
 
 }

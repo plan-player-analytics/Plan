@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -65,6 +65,7 @@ public class PlanSystem implements SubSystem {
 
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
+    private final HtmlUtilities htmlUtilities;
     private final HookHandler hookHandler;
     private final PlanAPI planAPI;
     private final ErrorHandler errorHandler;
@@ -85,6 +86,7 @@ public class PlanSystem implements SubSystem {
             Processing processing,
             ImportSystem importSystem,
             ExportSystem exportSystem,
+            HtmlUtilities htmlUtilities,
             HookHandler hookHandler,
             PlanAPI planAPI,
             ErrorHandler errorHandler
@@ -103,6 +105,7 @@ public class PlanSystem implements SubSystem {
         this.processing = processing;
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
+        this.htmlUtilities = htmlUtilities;
         this.hookHandler = hookHandler;
         this.planAPI = planAPI;
         this.errorHandler = errorHandler;
@@ -116,6 +119,7 @@ public class PlanSystem implements SubSystem {
                 localeSystem,
                 versionCheckSystem,
                 databaseSystem,
+                importSystem,
                 exportSystem,
                 webServerSystem,
                 processing,
@@ -141,6 +145,7 @@ public class PlanSystem implements SubSystem {
                 hookHandler,
                 cacheSystem,
                 listenerSystem,
+                importSystem,
                 exportSystem,
                 processing,
                 databaseSystem,
@@ -230,5 +235,9 @@ public class PlanSystem implements SubSystem {
 
     public LocaleSystem getLocaleSystem() {
         return localeSystem;
+    }
+
+    public HtmlUtilities getHtmlUtilities() {
+        return htmlUtilities;
     }
 }

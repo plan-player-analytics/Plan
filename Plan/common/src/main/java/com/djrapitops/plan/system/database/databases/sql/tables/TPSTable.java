@@ -2,14 +2,14 @@
  *  This file is part of Player Analytics (Plan).
  *
  *  Plan is free software: you can redistribute it and/or modify
- *  it under the terms of the LGNU Lesser General Public License v3 as published by
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  Plan is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  LGNU Lesser General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
@@ -294,7 +294,6 @@ public class TPSTable extends Table {
 
                     TPS tps = TPSBuilder.get()
                             .date(set.getLong(Col.DATE.get()))
-                            .skipTPS()
                             .playersOnline(set.getInt(Col.PLAYERS_ONLINE.get()))
                             .toTPS();
 
@@ -336,6 +335,9 @@ public class TPSTable extends Table {
     }
 
     public Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers) {
+        if (servers.isEmpty()) {
+            return new HashMap<>();
+        }
         TextStringBuilder sql = new TextStringBuilder("SELECT ");
         sql.append(Col.SERVER_ID).append(", ")
                 .append(Col.DATE).append(", ")
@@ -359,7 +361,6 @@ public class TPSTable extends Table {
                     List<TPS> tpsList = map.getOrDefault(serverID, new ArrayList<>());
 
                     TPS tps = TPSBuilder.get().date(date)
-                            .skipTPS()
                             .playersOnline(playersOnline)
                             .toTPS();
                     tpsList.add(tps);

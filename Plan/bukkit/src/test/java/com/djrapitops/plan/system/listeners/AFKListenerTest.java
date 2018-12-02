@@ -12,10 +12,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
@@ -36,30 +32,25 @@ public class AFKListenerTest {
 
     @Test
     public void afkPermissionIsNotCalledMoreThanOnce() {
-        Collection<Boolean> calls = new ArrayList<>();
-
-        Player player = mockPlayer(calls);
+        Player player = mockPlayer();
         PlayerMoveEvent event = mockMoveEvent(player);
 
         underTest.onMove(event);
-        assertEquals(1, calls.size());
         underTest.onMove(event);
-        assertEquals(1, calls.size());
+
+        verify(player, times(1)).hasPermission(anyString());
     }
 
     private PlayerMoveEvent mockMoveEvent(Player player) {
         PlayerMoveEvent event = Mockito.mock(PlayerMoveEvent.class);
-        doReturn(player).when(event).getPlayer();
+        when(event.getPlayer()).thenReturn(player);
         return event;
     }
 
-    private Player mockPlayer(Collection<Boolean> calls) {
+    private Player mockPlayer() {
         Player player = Mockito.mock(Player.class);
-        Mockito.doReturn(TestConstants.PLAYER_ONE_UUID).when(player).getUniqueId();
-        doAnswer(perm -> {
-            calls.add(true);
-            return true;
-        }).when(player).hasPermission(Mockito.anyString());
+        when(player.getUniqueId()).thenReturn(TestConstants.PLAYER_ONE_UUID);
+        when(player.hasPermission(anyString())).thenReturn(true);
         return player;
     }
 
