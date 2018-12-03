@@ -20,7 +20,7 @@ import com.djrapitops.plan.api.exceptions.PassEncryptException;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.xml.bind.DatatypeConverter;
+import java.util.Base64;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -177,11 +177,11 @@ public class PassEncryptUtil {
     }
 
     private static byte[] fromBase64(String hex) {
-        return DatatypeConverter.parseBase64Binary(hex);
+        return Base64.getDecoder().decode(hex);
     }
 
     private static String toBase64(byte[] array) {
-        return DatatypeConverter.printBase64Binary(array);
+        return Base64.getEncoder().encodeToString(array);
     }
 
     @SuppressWarnings("serial")
