@@ -5,6 +5,8 @@ PlanPluginBridge.iml
 
 *.db
 
+**/.gradle
+
 # Created by https://www.gitignore.io/api/maven,eclipse,intellij,netbeans,osx,windows,notepadpp,windows,java
 
 ### Maven ###

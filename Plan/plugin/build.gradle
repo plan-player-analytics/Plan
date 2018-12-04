@@ -1,0 +1,18 @@
+dependencies {
+    compile project(":common")
+    compile project(":bukkit")
+    compile project(":sponge")
+    compile project(":bungeecord")
+    compile project(":velocity")
+
+    testCompile project(":common")
+    testCompile project(":bukkit")
+    testCompile project(":sponge")
+    testCompile project(":bungeecord")
+    testCompile project(":velocity")
+}
+
+shadowJar {
+    destinationDir = file("$rootDir/builds/")
+    classifier = null
+}

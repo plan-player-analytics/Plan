@@ -1,0 +1,33 @@
+/**
+ *         Module that includes common functionality between all platforms.
+ *         - Contains functionality related dependencies.
+ *         - Contains abstractions and interfaces
+ */
+
+dependencies {
+    compile "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
+    compile "com.djrapitops:PlanPluginBridge:$planPluginBridgeVersion"
+    compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
+    compile "org.apache.commons:commons-text:$commonsTextVersion"
+    compile "com.googlecode.htmlcompressor:htmlcompressor:$htmlCompressorVersion"
+    compile "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+    compile "com.h2database:h2:$h2Version"
+    compile "com.zaxxer:HikariCP:$hikariVersion"
+    runtime "org.slf4j:slf4j-nop:$slf4jVersion"
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "com.maxmind.geoip2:geoip2:$geoIpVersion"
+    compileOnly "com.google.guava:guava:$guavaVersion"
+}
+
+shadowJar {
+    relocate 'org.apache', 'plan.org.apache', {
+        exclude 'org/apache/logging/**'
+    }
+
+    relocate 'com.maxmind', 'plan.com.maxmind'
+    relocate 'com.fasterxml', 'plan.com.fasterxml'
+    relocate 'com.zaxxer', 'plan.com.zaxxer'
+    relocate 'org.h2', 'plan.org.h2'
+    relocate 'org.bstats', 'plan.org.bstats'
+    relocate 'org.slf4j', 'plan.org.slf4j'
+}

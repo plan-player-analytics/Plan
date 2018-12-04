@@ -1,0 +1,20 @@
+dependencies {
+    compile project(":common")
+    compile "com.djrapitops:AbstractPluginFramework-bukkit:$abstractPluginFrameworkVersion"
+    compile "org.bstats:bstats-bukkit:$bstatsVersion"
+
+    compileOnly "org.bukkit:bukkit:$bukkitVersion"
+    compileOnly "org.spigotmc:spigot-api:$spigotVersion"
+    compileOnly "com.destroystokyo.paper:paper-api:$paperVersion"
+
+    testCompile "org.bukkit:bukkit:$bukkitVersion"
+    testCompile "org.spigotmc:spigot-api:$spigotVersion"
+    testCompile "com.destroystokyo.paper:paper-api:$paperVersion"
+
+    testCompile project(":common")
+}
+
+shadowJar {
+    relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
+    relocate 'org.slf4j', 'plan.org.slf4j'
+}
