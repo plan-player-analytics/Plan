@@ -6,8 +6,9 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.ProxySettings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -34,8 +35,8 @@ public class VelocitySystemTest {
         PlanSystem velocitySystem = component.getPlanSystem();
         try {
             PlanConfig config = velocitySystem.getConfigSystem().getConfig();
-            config.set(Settings.WEBSERVER_PORT, 9005);
-            config.set(Settings.BUNGEE_IP, "8.8.8.8");
+            config.set(WebserverSettings.PORT, 9005);
+            config.set(ProxySettings.IP, "8.8.8.8");
 
             DBSystem dbSystem = velocitySystem.getDatabaseSystem();
             dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());

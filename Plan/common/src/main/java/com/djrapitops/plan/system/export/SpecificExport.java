@@ -14,12 +14,10 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.file.export;
+package com.djrapitops.plan.system.export;
 
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.Settings;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.djrapitops.plan.system.webserver.response.Response;
@@ -39,31 +37,26 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public abstract class SpecificExport implements Runnable {
+public abstract class SpecificExport {
 
     private final PlanFiles files;
-    private final PlanConfig config;
     private final ServerInfo serverInfo;
 
-    protected final File outputFolder;
     private final boolean usingProxy;
 
     protected SpecificExport(
             PlanFiles files,
-            PlanConfig config,
             ServerInfo serverInfo
     ) {
         this.files = files;
-        this.config = config;
         this.serverInfo = serverInfo;
-        outputFolder = getFolder();
         usingProxy = Check.isBungeeAvailable() || Check.isVelocityAvailable();
     }
 
     protected File getFolder() {
         File folder;
 
-        String path = config.getString(Settings.ANALYSIS_EXPORT_PATH);
+        String path = getPath();
         boolean isAbsolute = Paths.get(path).isAbsolute();
         if (isAbsolute) {
             folder = new File(path);
@@ -78,18 +71,20 @@ public abstract class SpecificExport implements Runnable {
         return folder;
     }
 
+    protected abstract String getPath();
+
     protected void export(File to, List<String> lines) throws IOException {
         Files.write(to.toPath(), lines, StandardCharsets.UTF_8);
     }
 
     protected File getServerFolder() {
-        File server = new File(outputFolder, "server");
+        File server = new File(getFolder(), "server");
         server.mkdirs();
         return server;
     }
 
     protected File getPlayerFolder() {
-        File player = new File(outputFolder, "player");
+        File player = new File(getFolder(), "player");
         player.mkdirs();
         return player;
     }
@@ -126,7 +121,7 @@ public abstract class SpecificExport implements Runnable {
         File htmlLocation;
         if (usingProxy) {
             if (serverUUID.equals(serverInfo.getServerUUID())) {
-                htmlLocation = new File(outputFolder, "network");
+                htmlLocation = new File(getFolder(), "network");
             } else {
                 htmlLocation = new File(getServerFolder(), serverName.replace(" ", "%20").replace(".", "%2E"));
                 html = html.replace("../", "../../");

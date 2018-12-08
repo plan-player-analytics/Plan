@@ -17,14 +17,12 @@
 package com.djrapitops.plan.system.settings.theme;
 
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.config.ConfigNode;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,10 +33,8 @@ import java.util.List;
  *
  * @author Rsl1122
  */
-@Singleton
 public class ThemeConfig extends Config {
 
-    @Inject
     public ThemeConfig(PlanFiles files, PlanConfig config, PluginLogger logger) {
         this(getConfigFile(files), getDefaults(files, config, logger));
     }
@@ -56,7 +52,7 @@ public class ThemeConfig extends Config {
     }
 
     private static List<String> getDefaults(PlanFiles files, PlanConfig config, PluginLogger logger) {
-        String fileName = config.getString(Settings.THEME_BASE);
+        String fileName = config.get(DisplaySettings.THEME);
         String fileLocation = getFileLocation(fileName);
 
         try {

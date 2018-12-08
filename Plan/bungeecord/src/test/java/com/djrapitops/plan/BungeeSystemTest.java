@@ -7,8 +7,9 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.ProxySettings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -41,8 +42,8 @@ public class BungeeSystemTest {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(Settings.WEBSERVER_PORT, 9005);
-            config.set(Settings.BUNGEE_IP, "8.8.8.8");
+            config.set(WebserverSettings.PORT, 9005);
+            config.set(ProxySettings.IP, "8.8.8.8");
 
             DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
             dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
@@ -62,8 +63,8 @@ public class BungeeSystemTest {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(Settings.WEBSERVER_PORT, 9005);
-            config.set(Settings.BUNGEE_IP, "0.0.0.0");
+            config.set(WebserverSettings.PORT, 9005);
+            config.set(ProxySettings.IP, "0.0.0.0");
 
             DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
             dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
@@ -83,8 +84,8 @@ public class BungeeSystemTest {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(Settings.WEBSERVER_PORT, 9005);
-            config.set(Settings.BUNGEE_IP, "8.8.8.8");
+            config.set(WebserverSettings.PORT, 9005);
+            config.set(ProxySettings.IP, "8.8.8.8");
 
             bungeeSystem.enable();
         } finally {

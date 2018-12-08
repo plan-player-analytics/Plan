@@ -20,8 +20,9 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.ServerSpecificSettings;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.*;
+import com.djrapitops.plan.system.settings.paths.key.Setting;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
@@ -38,14 +39,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.djrapitops.plan.system.settings.Settings.*;
-
 /**
  * Class for managing Config setting transfer from Bungee to Bukkit servers.
  *
  * @author Rsl1122
  */
 @Singleton
+@Deprecated
 public class NetworkSettings {
 
     private static final String SPLIT = ";;SETTING;;";
@@ -84,7 +84,7 @@ public class NetworkSettings {
         }
 
         PlanConfig planConfig = config.get();
-        if (planConfig.isTrue(BUNGEE_OVERRIDE_STANDALONE_MODE) || planConfig.isFalse(BUNGEE_COPY_CONFIG)) {
+        if (planConfig.isFalse(PluginSettings.BUNGEE_COPY_CONFIG)) {
             // Don't load settings if they are overridden.
             return;
         }
@@ -175,65 +175,64 @@ public class NetworkSettings {
     private Map<String, Object> getConfigValues() {
         logger.debug("NetworkSettings: Loading Config Values..");
         Map<String, Object> configValues = new HashMap<>();
-        addConfigValue(configValues, DB_TYPE, "mysql");
-        Settings[] sameStrings = new Settings[]{
-                DB_HOST,
-                DB_USER,
-                DB_PASS,
-                DB_DATABASE,
-                DB_LAUNCH_OPTIONS,
-                FORMAT_DECIMALS,
-                FORMAT_SECONDS,
-                FORMAT_DAY,
-                FORMAT_DAYS,
-                FORMAT_HOURS,
-                FORMAT_MINUTES,
-                FORMAT_MONTHS,
-                FORMAT_MONTH,
-                FORMAT_YEAR,
-                FORMAT_YEARS,
-                FORMAT_ZERO_SECONDS,
-                USE_SERVER_TIME,
-                DISPLAY_SESSIONS_AS_TABLE,
-                APPEND_WORLD_PERC,
-                ORDER_WORLD_PIE_BY_PERC,
-                MAX_SESSIONS,
-                MAX_PLAYERS,
-                MAX_PLAYERS_PLAYERS_PAGE,
-                PLAYERTABLE_FOOTER,
-                FORMAT_DATE_RECENT_DAYS,
-                FORMAT_DATE_RECENT_DAYS_PATTERN,
-                FORMAT_DATE_CLOCK,
-                FORMAT_DATE_NO_SECONDS,
-                FORMAT_DATE_FULL,
-                DISPLAY_PLAYER_IPS,
-                ACTIVE_LOGIN_THRESHOLD,
-                ACTIVE_PLAY_THRESHOLD,
-                DISPLAY_GAPS_IN_GRAPH_DATA,
-                AFK_THRESHOLD_MINUTES,
-                DATA_GEOLOCATIONS,
-                KEEP_LOGS_DAYS,
-                KEEP_INACTIVE_PLAYERS_DAYS,
-                PING_SERVER_ENABLE_DELAY,
-                PING_PLAYER_LOGIN_DELAY
+        addConfigValue(configValues, DatabaseSettings.TYPE, "mysql");
+        Setting[] sameStrings = new Setting[]{
+                DatabaseSettings.MYSQL_HOST,
+                DatabaseSettings.MYSQL_USER,
+                DatabaseSettings.MYSQL_PASS,
+                DatabaseSettings.MYSQL_DATABASE,
+                DatabaseSettings.MYSQL_LAUNCH_OPTIONS,
+                FormatSettings.DECIMALS,
+                FormatSettings.SECONDS,
+                FormatSettings.DAY,
+                FormatSettings.DAYS,
+                FormatSettings.HOURS,
+                FormatSettings.MINUTES,
+                FormatSettings.MONTHS,
+                FormatSettings.MONTH,
+                FormatSettings.YEAR,
+                FormatSettings.YEARS,
+                FormatSettings.ZERO_SECONDS,
+                TimeSettings.USE_SERVER_TIME,
+                DisplaySettings.REPLACE_SESSION_ACCORDION_WITH_TABLE,
+                DisplaySettings.SESSION_MOST_PLAYED_WORLD_IN_TITLE,
+                DisplaySettings.ORDER_WORLD_PIE_BY_PERC,
+                DisplaySettings.SESSIONS_PER_PAGE,
+                DisplaySettings.PLAYERS_PER_SERVER_PAGE,
+                DisplaySettings.PLAYERS_PER_PLAYERS_PAGE,
+                FormatSettings.DATE_RECENT_DAYS,
+                FormatSettings.DATE_RECENT_DAYS_PATTERN,
+                FormatSettings.DATE_CLOCK,
+                FormatSettings.DATE_NO_SECONDS,
+                FormatSettings.DATE_FULL,
+                DisplaySettings.PLAYER_IPS,
+                TimeSettings.ACTIVE_LOGIN_THRESHOLD,
+                TimeSettings.ACTIVE_PLAY_THRESHOLD,
+                DisplaySettings.GAPS_IN_GRAPH_DATA,
+                TimeSettings.AFK_THRESHOLD,
+                DataGatheringSettings.GEOLOCATIONS,
+                PluginSettings.KEEP_LOGS_DAYS,
+                TimeSettings.KEEP_INACTIVE_PLAYERS,
+                TimeSettings.PING_SERVER_ENABLE_DELAY,
+                TimeSettings.PING_PLAYER_LOGIN_DELAY
         };
         logger.debug("NetworkSettings: Adding Config Values..");
         PlanConfig planConfig = config.get();
-        for (Settings setting : sameStrings) {
-            addConfigValue(configValues, setting, planConfig.getString(setting));
+        for (Setting setting : sameStrings) {
+            addConfigValue(configValues, setting, planConfig.get(setting));
         }
-        addConfigValue(configValues, DB_PORT, planConfig.getNumber(DB_PORT));
+        addConfigValue(configValues, DatabaseSettings.MYSQL_PORT, planConfig.get(DatabaseSettings.MYSQL_PORT));
         addServerSpecificValues(configValues);
         return configValues;
     }
 
-    private void addConfigValue(Map<String, Object> configValues, Settings setting, Object value) {
+    private void addConfigValue(Map<String, Object> configValues, Setting setting, Object value) {
         if (value != null) {
             configValues.put(setting.getPath(), value);
         }
     }
 
-    private void addConfigValue(Map<String, Object> configValues, UUID serverUUID, Settings setting, Object value) {
+    private void addConfigValue(Map<String, Object> configValues, UUID serverUUID, Setting setting, Object value) {
         if (value != null) {
             configValues.put(serverUUID + ":" + setting.getPath(), value);
         }
@@ -243,18 +242,18 @@ public class NetworkSettings {
         logger.debug("NetworkSettings: Adding Server-specific Config Values..");
 
         for (UUID serverUUID : dbSystem.get().getDatabase().fetch().getServerUUIDs()) {
-            String theme = serverSpecificSettings.getString(serverUUID, THEME_BASE);
-            Integer port = serverSpecificSettings.getInt(serverUUID, WEBSERVER_PORT);
-            String name = serverSpecificSettings.getString(serverUUID, SERVER_NAME);
+            String theme = serverSpecificSettings.getString(serverUUID, DisplaySettings.THEME);
+            Integer port = serverSpecificSettings.getInt(serverUUID, WebserverSettings.PORT);
+            String name = serverSpecificSettings.getString(serverUUID, PluginSettings.SERVER_NAME);
 
             if (!Verify.isEmpty(theme)) {
-                addConfigValue(configValues, serverUUID, THEME_BASE, theme);
+                addConfigValue(configValues, serverUUID, DisplaySettings.THEME, theme);
             }
             if (port != null && port != 0) {
-                addConfigValue(configValues, serverUUID, WEBSERVER_PORT, port);
+                addConfigValue(configValues, serverUUID, WebserverSettings.PORT, port);
             }
             if (!Verify.isEmpty(name)) {
-                addConfigValue(configValues, serverUUID, SERVER_NAME, name);
+                addConfigValue(configValues, serverUUID, PluginSettings.SERVER_NAME, name);
             }
         }
     }

@@ -19,7 +19,6 @@ package com.djrapitops.plan.modules.bungee;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.system.info.server.properties.BungeeServerProperties;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import dagger.Module;
 import dagger.Provides;
@@ -37,6 +36,6 @@ public class BungeeServerPropertiesModule {
     @Provides
     @Singleton
     ServerProperties provideServerProperties(PlanBungee plugin, PlanConfig config) {
-        return new BungeeServerProperties(plugin.getProxy(), config.getString(Settings.BUNGEE_IP));
+        return new BungeeServerProperties(plugin.getProxy(), config);
     }
 }

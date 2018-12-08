@@ -4,8 +4,8 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.operation.SaveOperations;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.webserver.cache.PageId;
 import com.djrapitops.plan.system.webserver.cache.ResponseCache;
 import com.jayway.awaitility.Awaitility;
@@ -49,7 +49,7 @@ public class JSErrorRegressionTest {
         bukkitSystem = component.getPlanSystem();
 
         PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
-        config.set(Settings.WEBSERVER_PORT, 9005);
+        config.set(WebserverSettings.PORT, 9005);
 
         bukkitSystem.enable();
         savePlayerData();

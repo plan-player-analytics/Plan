@@ -21,8 +21,8 @@ import com.djrapitops.plan.system.database.databases.sql.H2DB;
 import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -61,7 +61,7 @@ public class BukkitDBSystem extends DBSystem {
 
     @Override
     public void enable() throws EnableException {
-        String dbType = config.getString(Settings.DB_TYPE).toLowerCase().trim();
+        String dbType = config.getString(DatabaseSettings.TYPE).toLowerCase().trim();
         db = getActiveDatabaseByName(dbType);
         super.enable();
     }

@@ -22,8 +22,8 @@ import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -94,7 +94,7 @@ public class WebServer implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        this.port = config.getNumber(Settings.WEBSERVER_PORT);
+        this.port = config.getNumber(WebserverSettings.PORT);
 
         initServer();
 
@@ -102,7 +102,7 @@ public class WebServer implements SubSystem {
             if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
                 throw new EnableException(locale.getString(PluginLang.ENABLE_FAIL_NO_WEB_SERVER_BUNGEE));
             }
-            if (config.isTrue(Settings.WEBSERVER_DISABLED)) {
+            if (config.isTrue(WebserverSettings.DISABLED)) {
                 logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
             } else {
                 logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_PORT_BIND, port));
@@ -116,7 +116,7 @@ public class WebServer implements SubSystem {
      * Starts up the WebServer in a new Thread Pool.
      */
     private void initServer() {
-        if (!(Check.isBungeeAvailable() || Check.isVelocityAvailable()) && config.isTrue(Settings.WEBSERVER_DISABLED)) {
+        if (!(Check.isBungeeAvailable() || Check.isVelocityAvailable()) && config.isTrue(WebserverSettings.DISABLED)) {
             // Bukkit WebServer has been disabled.
             return;
         }
@@ -133,10 +133,10 @@ public class WebServer implements SubSystem {
 
             if (!usingHttps) {
                 logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
-                server = HttpServer.create(new InetSocketAddress(config.getString(Settings.WEBSERVER_IP), port), 10);
+                server = HttpServer.create(new InetSocketAddress(config.getString(WebserverSettings.INTERNAL_IP), port), 10);
             } else if (server == null) {
                 logger.log(L.INFO_COLOR, "§eWebServer: Proxy HTTPS Override enabled. HTTP Server in use, make sure that your Proxy webserver is routing with HTTPS and AlternativeIP.Link points to the Proxy");
-                server = HttpServer.create(new InetSocketAddress(config.getString(Settings.WEBSERVER_IP), port), 10);
+                server = HttpServer.create(new InetSocketAddress(config.getString(WebserverSettings.INTERNAL_IP), port), 10);
             }
             server.createContext("/", requestHandler);
 
@@ -157,7 +157,7 @@ public class WebServer implements SubSystem {
     }
 
     private boolean startHttpsServer() {
-        String keyStorePath = config.getString(Settings.WEBSERVER_CERTIFICATE_PATH);
+        String keyStorePath = config.getString(WebserverSettings.CERTIFICATE_PATH);
 
         if (keyStorePath.equalsIgnoreCase("proxy")) {
             return true;
@@ -172,9 +172,9 @@ public class WebServer implements SubSystem {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
 
-        char[] storepass = config.getString(Settings.WEBSERVER_CERTIFICATE_STOREPASS).toCharArray();
-        char[] keypass = config.getString(Settings.WEBSERVER_CERTIFICATE_KEYPASS).toCharArray();
-        String alias = config.getString(Settings.WEBSERVER_CERTIFICATE_ALIAS);
+        char[] storepass = config.getString(WebserverSettings.CERTIFICATE_STOREPASS).toCharArray();
+        char[] keypass = config.getString(WebserverSettings.CERTIFICATE_KEYPASS).toCharArray();
+        String alias = config.getString(WebserverSettings.CERTIFICATE_ALIAS);
 
         boolean startSuccessful = false;
         try (FileInputStream fIn = new FileInputStream(keyStorePath)) {
@@ -195,7 +195,7 @@ public class WebServer implements SubSystem {
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
             trustManagerFactory.init(keystore);
 
-            server = HttpsServer.create(new InetSocketAddress(config.getString(Settings.WEBSERVER_IP), port), 10);
+            server = HttpsServer.create(new InetSocketAddress(config.getString(WebserverSettings.INTERNAL_IP), port), 10);
             SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(keyManagerFactory.getKeyManagers(), null/*trustManagerFactory.getTrustManagers()*/, null);
 
@@ -281,12 +281,12 @@ public class WebServer implements SubSystem {
     }
 
     public String getAccessAddress() {
-        return isEnabled() ? getProtocol() + "://" + getIP() : config.getString(Settings.EXTERNAL_WEBSERVER_LINK);
+        return isEnabled() ? getProtocol() + "://" + getIP() : config.getString(WebserverSettings.EXTERNAL_LINK);
     }
 
     private String getIP() {
-        return config.isTrue(Settings.SHOW_ALTERNATIVE_IP)
-                ? config.getString(Settings.ALTERNATIVE_IP).replace("%port%", String.valueOf(port))
+        return config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP)
+                ? config.getString(WebserverSettings.ALTERNATIVE_IP).replace("%port%", String.valueOf(port))
                 : serverProperties.getIp() + ":" + port;
     }
 }

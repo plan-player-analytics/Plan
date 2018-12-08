@@ -18,8 +18,10 @@ package com.djrapitops.plan.utilities.formatting.time;
 
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.GenericLang;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.FormatSettings;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 
 import java.text.SimpleDateFormat;
@@ -45,8 +47,8 @@ public abstract class DateFormatter implements Formatter<Long> {
     public abstract String apply(Long value);
 
     protected String format(long epochMs, String format) {
-        boolean useServerTime = config.isTrue(Settings.USE_SERVER_TIME);
-        String locale = config.getString(Settings.LOCALE);
+        boolean useServerTime = config.isTrue(TimeSettings.USE_SERVER_TIME);
+        String locale = config.getString(PluginSettings.LOCALE);
         java.util.Locale usedLocale = locale.equalsIgnoreCase("default")
                 ? java.util.Locale.ENGLISH
                 : java.util.Locale.forLanguageTag(locale);
@@ -57,7 +59,7 @@ public abstract class DateFormatter implements Formatter<Long> {
     }
 
     protected String replaceRecentDays(long epochMs, String format) {
-        return replaceRecentDays(epochMs, format, config.getString(Settings.FORMAT_DATE_RECENT_DAYS_PATTERN));
+        return replaceRecentDays(epochMs, format, config.getString(FormatSettings.DATE_RECENT_DAYS_PATTERN));
     }
 
     protected String replaceRecentDays(long epochMs, String format, String pattern) {

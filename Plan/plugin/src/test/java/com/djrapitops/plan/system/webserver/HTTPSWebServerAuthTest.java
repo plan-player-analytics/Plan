@@ -3,8 +3,8 @@ package com.djrapitops.plan.system.webserver;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.data.WebUser;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.*;
@@ -44,12 +44,12 @@ public class HTTPSWebServerAuthTest {
 
         PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
 
-        config.set(Settings.WEBSERVER_CERTIFICATE_PATH, absolutePath);
-        config.set(Settings.WEBSERVER_CERTIFICATE_KEYPASS, "MnD3bU5HpmPXag0e");
-        config.set(Settings.WEBSERVER_CERTIFICATE_STOREPASS, "wDwwf663NLTm73gL");
-        config.set(Settings.WEBSERVER_CERTIFICATE_ALIAS, "DefaultPlanCert");
+        config.set(WebserverSettings.CERTIFICATE_PATH, absolutePath);
+        config.set(WebserverSettings.CERTIFICATE_KEYPASS, "MnD3bU5HpmPXag0e");
+        config.set(WebserverSettings.CERTIFICATE_STOREPASS, "wDwwf663NLTm73gL");
+        config.set(WebserverSettings.CERTIFICATE_ALIAS, "DefaultPlanCert");
 
-        config.set(Settings.WEBSERVER_PORT, 9005);
+        config.set(WebserverSettings.PORT, 9005);
 
         bukkitSystem.enable();
 

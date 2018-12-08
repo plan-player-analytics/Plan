@@ -38,7 +38,7 @@ public abstract class AbstractHealthInfo {
     protected double serverHealth;
 
     protected final Locale locale;
-    protected final int activeMinuteThreshold;
+    protected final long activeMsThreshold;
     protected final int activeLoginThreshold;
     protected final Formatter<Long> timeAmountFormatter;
     protected final Formatter<Double> decimalFormatter;
@@ -46,7 +46,8 @@ public abstract class AbstractHealthInfo {
 
     public AbstractHealthInfo(
             long now, long monthAgo,
-            Locale locale, int activeMinuteThreshold,
+            Locale locale,
+            long activeMsThreshold,
             int activeLoginThreshold,
             Formatter<Long> timeAmountFormatter,
             Formatter<Double> decimalFormatter,
@@ -55,7 +56,7 @@ public abstract class AbstractHealthInfo {
         this.now = now;
         this.monthAgo = monthAgo;
         this.locale = locale;
-        this.activeMinuteThreshold = activeMinuteThreshold;
+        this.activeMsThreshold = activeMsThreshold;
         this.activeLoginThreshold = activeLoginThreshold;
         this.timeAmountFormatter = timeAmountFormatter;
         this.decimalFormatter = decimalFormatter;
@@ -139,7 +140,7 @@ public abstract class AbstractHealthInfo {
     }
 
     protected void activePlayerPlaytimeChange(PlayersMutator playersMutator) {
-        PlayersMutator currentlyActive = playersMutator.filterActive(now, activeMinuteThreshold, activeLoginThreshold, 1.75);
+        PlayersMutator currentlyActive = playersMutator.filterActive(now, activeMsThreshold, activeLoginThreshold, 1.75);
         long twoWeeksAgo = now - ((now - monthAgo) / 2L);
 
         long totalFourToTwoWeeks = 0;

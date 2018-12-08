@@ -32,8 +32,8 @@ import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.locale.lang.GenericLang;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
@@ -138,8 +138,8 @@ public class QInspectCommand extends CommandNode {
 
         ActivityIndex activityIndex = player.getActivityIndex(
                 now,
-                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
-                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD)
+                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
+                config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD)
         );
         Long registered = player.getValue(PlayerKeys.REGISTERED).orElse(0L);
         Long lastSeen = player.getValue(PlayerKeys.LAST_SEEN).orElse(0L);

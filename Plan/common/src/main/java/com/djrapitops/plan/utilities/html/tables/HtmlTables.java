@@ -23,8 +23,9 @@ import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.data.store.containers.DataContainer;
 import com.djrapitops.plan.data.store.containers.PlayerContainer;
 import com.djrapitops.plan.data.store.objects.Nickname;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 
 import javax.inject.Inject;
@@ -81,7 +82,7 @@ public class HtmlTables {
      * @return a new {@link GeoInfoTable}.
      */
     public TableContainer geoInfoTable(List<GeoInfo> geoInfo) {
-        return new GeoInfoTable(geoInfo, config.isTrue(Settings.DISPLAY_PLAYER_IPS), formatters.year());
+        return new GeoInfoTable(geoInfo, config.isTrue(DisplaySettings.PLAYER_IPS), formatters.year());
     }
 
     /**
@@ -126,7 +127,7 @@ public class HtmlTables {
     public TableContainer playerSessionTable(String playerName, List<Session> sessions) {
         return new PlayerSessionTable(
                 playerName, sessions,
-                config.getNumber(Settings.MAX_SESSIONS), config.getWorldAliasSettings(), formatters.year(), formatters.timeAmount()
+                config.get(DisplaySettings.SESSIONS_PER_PAGE), config.getWorldAliasSettings(), formatters.year(), formatters.timeAmount()
         );
     }
 
@@ -140,7 +141,7 @@ public class HtmlTables {
     public TableContainer serverSessionTable(Map<UUID, String> playerNames, List<Session> sessions) {
         return new ServerSessionTable(
                 playerNames, sessions,
-                config.getNumber(Settings.MAX_SESSIONS), config.getWorldAliasSettings(), formatters.year(), formatters.timeAmount()
+                config.get(DisplaySettings.SESSIONS_PER_PAGE), config.getWorldAliasSettings(), formatters.year(), formatters.timeAmount()
         );
     }
 
@@ -153,9 +154,9 @@ public class HtmlTables {
     public TableContainer playerTableForServerPage(List<PlayerContainer> players) {
         return new PlayersTable(
                 players,
-                config.getNumber(Settings.MAX_PLAYERS),
-                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD),
-                config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD),
+                config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE),
+                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
+                config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD),
                 formatters.timeAmount(), formatters.yearLong(), formatters.decimals()
         );
     }
@@ -168,8 +169,10 @@ public class HtmlTables {
      */
     public TableContainer playerTableForPlayersPage(List<PlayerContainer> players) {
         return new PlayersTable(
-                players, config.getNumber(Settings.MAX_PLAYERS_PLAYERS_PAGE),
-                config.getNumber(Settings.ACTIVE_PLAY_THRESHOLD), config.getNumber(Settings.ACTIVE_LOGIN_THRESHOLD), formatters.timeAmount(), formatters.yearLong(), formatters.decimals()
+                players, config.get(DisplaySettings.PLAYERS_PER_PLAYERS_PAGE),
+                config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
+                config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD),
+                formatters.timeAmount(), formatters.yearLong(), formatters.decimals()
         );
     }
 
@@ -181,6 +184,6 @@ public class HtmlTables {
      * @return a new {@link PluginPlayersTable}.
      */
     public TableContainer pluginPlayersTable(Map<PluginData, AnalysisContainer> containers, Collection<PlayerContainer> players) {
-        return new PluginPlayersTable(containers, players, config.getNumber(Settings.MAX_PLAYERS));
+        return new PluginPlayersTable(containers, players, config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE));
     }
 }

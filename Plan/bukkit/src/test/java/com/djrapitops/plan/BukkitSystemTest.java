@@ -6,8 +6,8 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -34,7 +34,7 @@ public class BukkitSystemTest {
         PlanSystem bukkitSystem = component.getPlanSystem();
         try {
             PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
-            config.set(Settings.WEBSERVER_PORT, 9005);
+            config.set(WebserverSettings.PORT, 9005);
             bukkitSystem.enable();
         } finally {
             bukkitSystem.disable();

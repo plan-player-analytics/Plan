@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -35,19 +36,24 @@ import java.io.IOException;
 @Singleton
 public class ProxyConfigSystem extends ConfigSystem {
 
+    private final ConfigUpdater configUpdater;
+
     @Inject
     public ProxyConfigSystem(
             PlanFiles files,
             PlanConfig config,
+            ConfigUpdater configUpdater,
             Theme theme,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         super(files, config, theme, logger, errorHandler);
+        this.configUpdater = configUpdater;
     }
 
     @Override
     protected void copyDefaults() throws IOException {
+        configUpdater.applyConfigUpdate(config);
         config.copyDefaults(files.readFromResource("bungeeconfig.yml"));
     }
 }

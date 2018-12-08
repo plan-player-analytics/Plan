@@ -18,6 +18,10 @@ package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.djrapitops.plan.system.settings.paths.key.Setting;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 import dagger.Lazy;
@@ -37,6 +41,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
+@Deprecated
 public class ServerSpecificSettings {
 
     private final Lazy<PlanPlugin> plugin;
@@ -115,40 +120,35 @@ public class ServerSpecificSettings {
         planConfig.save();
     }
 
-    private String getPath(UUID serverUUID, Settings setting) {
+    private String getPath(UUID serverUUID, Setting setting) {
         String path = "Servers." + serverUUID;
-        switch (setting) {
-            case WEBSERVER_PORT:
-                path += ".WebServerPort";
-                break;
-            case SERVER_NAME:
-                path += ".ServerName";
-                break;
-            case THEME_BASE:
-                path += ".ThemeBase";
-                break;
-            default:
-                break;
+
+        if (setting.equals(WebserverSettings.PORT)) {
+            path += ".WebServerPort";
+        } else if (setting.equals(PluginSettings.SERVER_NAME)) {
+            path += ".ServerName";
+        } else if (setting.equals(DisplaySettings.THEME)) {
+            path += ".ThemeBase";
         }
         return path;
     }
 
-    public boolean getBoolean(UUID serverUUID, Settings setting) {
+    public boolean getBoolean(UUID serverUUID, Setting setting) {
         String path = getPath(serverUUID, setting);
         return config.get().getBoolean(path);
     }
 
-    public String getString(UUID serverUUID, Settings setting) {
+    public String getString(UUID serverUUID, Setting setting) {
         String path = getPath(serverUUID, setting);
         return config.get().getString(path);
     }
 
-    public Integer getInt(UUID serverUUID, Settings setting) {
+    public Integer getInt(UUID serverUUID, Setting setting) {
         String path = getPath(serverUUID, setting);
         return config.get().getInt(path);
     }
 
-    public void set(UUID serverUUID, Settings setting, Object value) throws IOException {
+    public void set(UUID serverUUID, Setting setting, Object value) throws IOException {
         String path = getPath(serverUUID, setting);
         PlanConfig planConfig = config.get();
         planConfig.set(path, value);

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.file.export;
+package com.djrapitops.plan.system.export;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.ParseException;
@@ -26,6 +26,7 @@ import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.ExportSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.file.FileUtil;
@@ -52,6 +53,7 @@ import java.util.*;
 public class HtmlExport extends SpecificExport {
 
     private final PlanPlugin plugin;
+    private final PlanConfig config;
     private final Theme theme;
     private final Processing processing;
     private final PlanFiles files;
@@ -73,8 +75,9 @@ public class HtmlExport extends SpecificExport {
             ConnectionSystem connectionSystem,
             ErrorHandler errorHandler
     ) {
-        super(files, config, serverInfo);
+        super(files, serverInfo);
         this.plugin = plugin;
+        this.config = config;
         this.theme = theme;
         this.processing = processing;
         this.files = files;
@@ -84,18 +87,23 @@ public class HtmlExport extends SpecificExport {
         this.errorHandler = errorHandler;
     }
 
+    @Override
+    protected String getPath() {
+        return config.get(ExportSettings.HTML_EXPORT_PATH);
+    }
+
     public void exportServer(UUID serverUUID) {
         if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
             return;
         }
         Optional<String> serverName = dbSystem.getDatabase().fetch().getServerName(serverUUID);
-        serverName.ifPresent(name -> processing.submitNonCritical(() -> {
+        serverName.ifPresent(name -> {
             try {
                 exportAvailableServerPage(serverUUID, name);
             } catch (IOException e) {
                 errorHandler.log(L.WARN, this.getClass(), e);
             }
-        }));
+        });
     }
 
     public void exportPlayer(UUID uuid) {
@@ -104,65 +112,56 @@ public class HtmlExport extends SpecificExport {
         }
         String playerName = dbSystem.getDatabase().fetch().getPlayerName(uuid);
         if (playerName != null) {
-            processing.submitNonCritical(() -> {
-                try {
-                    exportAvailablePlayerPage(uuid, playerName);
-                } catch (IOException e) {
-                    errorHandler.log(L.WARN, this.getClass(), e);
-                }
-            });
+            try {
+                exportAvailablePlayerPage(uuid, playerName);
+            } catch (IOException e) {
+                errorHandler.log(L.WARN, this.getClass(), e);
+            }
         }
     }
 
-    @Override
-    public void run() {
+    public void exportPlayersPage() {
         try {
-            if (Check.isBukkitAvailable() && connectionSystem.isServerAvailable()) {
-                return;
-            }
+            String html = pageFactory.playersPage().toHtml()
+                    .replace("href=\"plugins/", "href=\"../plugins/")
+                    .replace("href=\"css/", "href=\"../css/")
+                    .replace("src=\"plugins/", "src=\"../plugins/")
+                    .replace("src=\"js/", "src=\"../js/");
+            List<String> lines = Arrays.asList(html.split("\n"));
 
-            exportCss();
-            exportJs();
-            exportPlugins();
-
-            exportAvailableServerPages();
-            exportAvailablePlayers();
-            exportPlayersPage();
+            File htmlLocation = new File(getFolder(), "players");
+            Verify.isTrue(htmlLocation.exists() && htmlLocation.isDirectory() || htmlLocation.mkdirs(),
+                    () -> new FileNotFoundException("Output folder could not be created at" + htmlLocation.getAbsolutePath()));
+            File exportFile = new File(htmlLocation, "index.html");
+            export(exportFile, lines);
         } catch (IOException | DBOpException | ParseException e) {
             errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
-    private void exportPlayersPage() throws IOException, ParseException {
-        String html = pageFactory.playersPage().toHtml()
-                .replace("href=\"plugins/", "href=\"../plugins/")
-                .replace("href=\"css/", "href=\"../css/")
-                .replace("src=\"plugins/", "src=\"../plugins/")
-                .replace("src=\"js/", "src=\"../js/");
-        List<String> lines = Arrays.asList(html.split("\n"));
-
-        File htmlLocation = new File(outputFolder, "players");
-        Verify.isTrue(htmlLocation.exists() && htmlLocation.isDirectory() || htmlLocation.mkdirs(),
-                () -> new FileNotFoundException("Output folder could not be created at" + htmlLocation.getAbsolutePath()));
-        File exportFile = new File(htmlLocation, "index.html");
-        export(exportFile, lines);
-    }
-
-    private void exportAvailablePlayers() throws IOException {
-        for (Map.Entry<UUID, UserInfo> entry : dbSystem.getDatabase().fetch().getUsers().entrySet()) {
-            exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
+    public void exportAvailablePlayers() {
+        try {
+            for (Map.Entry<UUID, UserInfo> entry : dbSystem.getDatabase().fetch().getUsers().entrySet()) {
+                exportAvailablePlayerPage(entry.getKey(), entry.getValue().getName());
+            }
+        } catch (IOException | DBOpException e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
-    private void exportAvailableServerPages() throws IOException {
-        Map<UUID, String> serverNames = dbSystem.getDatabase().fetch().getServerNames();
+    public void exportAvailableServerPages() {
+        try {
+            Map<UUID, String> serverNames = dbSystem.getDatabase().fetch().getServerNames();
 
-        for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
-            exportAvailableServerPage(entry.getKey(), entry.getValue());
+            for (Map.Entry<UUID, String> entry : serverNames.entrySet()) {
+                exportAvailableServerPage(entry.getKey(), entry.getValue());
+            }
+        } catch (IOException | DBOpException e) {
+            errorHandler.log(L.WARN, this.getClass(), e);
         }
     }
 
-    private void exportCss() {
+    public void exportCss() {
         String[] resources = new String[]{
                 "web/css/main.css",
                 "web/css/materialize.css",
@@ -172,7 +171,7 @@ public class HtmlExport extends SpecificExport {
         copyFromJar(resources);
     }
 
-    private void exportJs() {
+    public void exportJs() {
         String[] resources = new String[]{
                 "web/js/demo.js",
                 "web/js/admin.js",
@@ -203,7 +202,7 @@ public class HtmlExport extends SpecificExport {
             String demo = files.readFromResourceFlat("web/js/demo.js")
                     .replace("${defaultTheme}", theme.getValue(ThemeVal.THEME_DEFAULT));
             List<String> lines = Arrays.asList(demo.split("\n"));
-            File outputFolder = new File(this.outputFolder, "js");
+            File outputFolder = new File(getFolder(), "js");
             Verify.isTrue(outputFolder.exists() && outputFolder.isDirectory() || outputFolder.mkdirs(),
                     () -> new FileNotFoundException("Output folder could not be created at" + outputFolder.getAbsolutePath()));
             export(new File(outputFolder, "demo.js"), lines);
@@ -212,7 +211,7 @@ public class HtmlExport extends SpecificExport {
         }
     }
 
-    private void exportPlugins() {
+    public void exportPlugins() {
         String[] resources = new String[]{
                 "web/plugins/bootstrap/css/bootstrap.css",
                 "web/plugins/node-waves/waves.css",
@@ -244,7 +243,7 @@ public class HtmlExport extends SpecificExport {
         String possibleFile = resource.replace("web/", "").replace("/", File.separator);
         List<String> lines = FileUtil.lines(plugin, new File(plugin.getDataFolder(), possibleFile), resource);
         String outputFile = possibleFile.replace("web/", "");
-        File to = new File(outputFolder, outputFile);
+        File to = new File(getFolder(), outputFile);
         File locationFolder = to.getParentFile();
         Verify.isTrue(locationFolder.exists() && locationFolder.isDirectory() || locationFolder.mkdirs(),
                 () -> new FileNotFoundException("Output folder could not be created at" + locationFolder.getAbsolutePath()));

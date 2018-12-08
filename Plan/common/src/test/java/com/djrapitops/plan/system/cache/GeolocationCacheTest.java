@@ -3,8 +3,8 @@ package com.djrapitops.plan.system.cache;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -63,10 +63,10 @@ public class GeolocationCacheTest {
 
     @Before
     public void setUp() throws EnableException {
-        when(config.isTrue(Settings.DATA_GEOLOCATIONS)).thenReturn(true);
+        when(config.isTrue(DataGatheringSettings.GEOLOCATIONS)).thenReturn(true);
         when(files.getFileFromPluginFolder("GeoIP.dat")).thenReturn(IP_STORE);
 
-        assertTrue(config.isTrue(Settings.DATA_GEOLOCATIONS));
+        assertTrue(config.isTrue(DataGatheringSettings.GEOLOCATIONS));
 
         underTest = new GeolocationCache(new Locale(), files, config, new TestPluginLogger());
         underTest.enable();

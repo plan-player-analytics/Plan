@@ -16,8 +16,9 @@
  */
 package com.djrapitops.pluginbridge.plan.buycraft;
 
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackDataSet;
 import com.djrapitops.plan.utilities.html.graphs.stack.StackGraph;
@@ -39,9 +40,11 @@ class MoneyStackGraph {
 
     private final StackGraph stackGraph;
     private final ZoneId timeZoneID;
+    private String locale;
 
     MoneyStackGraph(List<Payment> payments, PlanConfig config) {
-        timeZoneID = config.isTrue(Settings.USE_SERVER_TIME) ? ZoneId.systemDefault() : ZoneOffset.UTC;
+        timeZoneID = config.get(TimeSettings.USE_SERVER_TIME) ? ZoneId.systemDefault() : ZoneOffset.UTC;
+        locale = config.get(PluginSettings.LOCALE);
 
         long now = System.currentTimeMillis();
         long oldestDate = payments.isEmpty() ? now : payments.get(payments.size() - 1).getDate();
@@ -121,7 +124,6 @@ class MoneyStackGraph {
     }
 
     private String getLabel(long time) {
-        String locale = Settings.LOCALE.toString();
         Locale usedLocale = locale.equalsIgnoreCase("default") ? Locale.ENGLISH : Locale.forLanguageTag(locale);
 
         LocalDate date = Instant.ofEpochMilli(time).atZone(timeZoneID).toLocalDate();

@@ -26,8 +26,8 @@ package com.djrapitops.plan.system.tasks.bungee;
 import com.djrapitops.plan.data.store.objects.DateObj;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.processing.processors.Processors;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
@@ -125,7 +125,7 @@ public class PingCountTimerBungee extends AbsRunnable implements Listener {
                     addPlayer(player);
                 }
             }
-        }).runTaskLater(TimeAmount.toTicks(config.getNumber(Settings.PING_PLAYER_LOGIN_DELAY), TimeUnit.SECONDS));
+        }).runTaskLater(TimeAmount.toTicks(config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY), TimeUnit.MILLISECONDS));
     }
 
     @EventHandler

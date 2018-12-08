@@ -50,7 +50,7 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class BukkitBridge extends Bridge {
+public class BukkitBridge extends AbstractBridge {
 
     private final AdvancedAntiCheatHook advancedAntiCheatHook;
     private final AdvancedAchievementsHook advancedAchievementsHook;

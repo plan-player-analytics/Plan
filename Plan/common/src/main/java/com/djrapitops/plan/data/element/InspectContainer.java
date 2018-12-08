@@ -93,7 +93,7 @@ public class InspectContainer {
     }
 
     public boolean isEmpty() {
-        return values.isEmpty() && html.isEmpty() && tables.isEmpty();
+        return values.isEmpty() && hasOnlyValues();
     }
 
     public final boolean hasValues() {

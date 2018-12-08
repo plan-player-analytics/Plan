@@ -2,7 +2,7 @@ package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class NetworkSettingsTest {
     @Test
     public void transferDoesNotProduceException() throws EnableException {
         PlanSystem system = component.getPlanSystem();
-        system.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
+        system.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9005);
         system.enable();
 
         NetworkSettings networkSettings = system.getConfigSystem().getConfig().getNetworkSettings();

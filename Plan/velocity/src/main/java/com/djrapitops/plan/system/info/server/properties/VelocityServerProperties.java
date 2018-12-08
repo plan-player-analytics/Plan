@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.system.info.server.properties;
 
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.velocitypowered.api.proxy.ProxyServer;
 
 /**
@@ -27,14 +29,14 @@ import com.velocitypowered.api.proxy.ProxyServer;
  */
 public class VelocityServerProperties extends ServerProperties {
 
-    public VelocityServerProperties(ProxyServer server, String serverIP) {
+    public VelocityServerProperties(ProxyServer server, PlanConfig config) {
         super(
                 server.getAllServers().toString(),
                 "Velocity",
                 server.getBoundAddress().getPort(),
                 server.getClass().getPackage().getImplementationVersion(),
                 server.getClass().getPackage().getImplementationVersion(),
-                () -> serverIP,
+                () -> config.get(ProxySettings.IP),
                 -1,
                 server::getPlayerCount
         );

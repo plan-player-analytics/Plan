@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.system.settings.theme;
 
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -35,9 +35,9 @@ public class PlanColorScheme extends ColorScheme {
 
     public static PlanColorScheme create(PlanConfig config, PluginLogger logger) {
         try {
-            String main = "§" + config.getString(Settings.COLOR_MAIN).charAt(1);
-            String secondary = "§" + config.getString(Settings.COLOR_SEC).charAt(1);
-            String tertiary = "§" + config.getString(Settings.COLOR_TER).charAt(1);
+            String main = "§" + config.get(DisplaySettings.CMD_COLOR_MAIN).charAt(1);
+            String secondary = "§" + config.get(DisplaySettings.CMD_COLOR_SECONDARY).charAt(1);
+            String tertiary = "§" + config.get(DisplaySettings.CMD_COLOR_TERTIARY).charAt(1);
 
             return new PlanColorScheme(main, secondary, tertiary);
         } catch (Exception e) {

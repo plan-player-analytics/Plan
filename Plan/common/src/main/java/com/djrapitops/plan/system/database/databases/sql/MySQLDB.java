@@ -23,8 +23,8 @@ import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -81,18 +81,18 @@ public class MySQLDB extends SQLDB {
         try {
             HikariConfig hikariConfig = new HikariConfig();
 
-            String host = config.getString(Settings.DB_HOST);
-            String port = config.getString(Settings.DB_PORT);
-            String database = config.getString(Settings.DB_DATABASE);
-            String launchOptions = config.getString(Settings.DB_LAUNCH_OPTIONS);
+            String host = config.getString(DatabaseSettings.MYSQL_HOST);
+            String port = config.getString(DatabaseSettings.MYSQL_PORT);
+            String database = config.getString(DatabaseSettings.MYSQL_DATABASE);
+            String launchOptions = config.getString(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
             if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
             hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
-            String username = config.getString(Settings.DB_USER);
-            String password = config.getString(Settings.DB_PASS);
+            String username = config.getString(DatabaseSettings.MYSQL_USER);
+            String password = config.getString(DatabaseSettings.MYSQL_PASS);
 
             hikariConfig.setUsername(username);
             hikariConfig.setPassword(password);

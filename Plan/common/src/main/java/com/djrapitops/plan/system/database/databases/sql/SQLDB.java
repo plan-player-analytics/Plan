@@ -28,8 +28,9 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryStateme
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.L;
@@ -171,7 +172,10 @@ public abstract class SQLDB extends Database {
                     cancel();
                 }
             }
-        }).runTaskTimerAsynchronously(TimeAmount.toTicks(secondsDelay, TimeUnit.SECONDS), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
+        }).runTaskTimerAsynchronously(
+                TimeAmount.toTicks(secondsDelay, TimeUnit.SECONDS),
+                TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS)
+        );
     }
 
     /**
@@ -266,7 +270,7 @@ public abstract class SQLDB extends Database {
         pingTable.clean();
 
         long now = System.currentTimeMillis();
-        long keepActiveAfter = now - TimeUnit.DAYS.toMillis(config.getNumber(Settings.KEEP_INACTIVE_PLAYERS_DAYS));
+        long keepActiveAfter = now - config.get(TimeSettings.KEEP_INACTIVE_PLAYERS);
 
         List<UUID> inactivePlayers = sessionsTable.getLastSeenForAllPlayers().entrySet().stream()
                 .filter(entry -> entry.getValue() < keepActiveAfter)
@@ -296,7 +300,7 @@ public abstract class SQLDB extends Database {
         try {
             connection = getConnection();
             // Inject Timings to the statement for benchmarking
-            if (config.isTrue(Settings.DEV_MODE)) {
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
                 statement.setTimings(timings);
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
@@ -324,7 +328,7 @@ public abstract class SQLDB extends Database {
             try {
                 execute(statement);
             } catch (DBOpException e) {
-                if (config.isTrue(Settings.DEV_MODE)) {
+                if (config.isTrue(PluginSettings.DEV_MODE)) {
                     errorHandler.log(L.ERROR, this.getClass(), e);
                 }
             }
@@ -340,7 +344,7 @@ public abstract class SQLDB extends Database {
         try {
             connection = getConnection();
             // Inject Timings to the statement for benchmarking
-            if (config.isTrue(Settings.DEV_MODE)) {
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
                 statement.setTimings(timings);
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {
@@ -362,7 +366,7 @@ public abstract class SQLDB extends Database {
         try {
             connection = getConnection();
             // Inject Timings to the statement for benchmarking
-            if (config.isTrue(Settings.DEV_MODE)) {
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
                 statement.setTimings(timings);
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement.getSql())) {

@@ -25,8 +25,8 @@ import com.djrapitops.plan.system.locale.lang.CmdHelpLang;
 import com.djrapitops.plan.system.locale.lang.CommandLang;
 import com.djrapitops.plan.system.locale.lang.ManageLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.Sender;
@@ -95,7 +95,7 @@ public class ManageHotSwapCommand extends CommandNode {
         }
 
         try {
-            config.set(Settings.DB_TYPE, dbName);
+            config.set(DatabaseSettings.TYPE, dbName);
             config.save();
         } catch (IOException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);

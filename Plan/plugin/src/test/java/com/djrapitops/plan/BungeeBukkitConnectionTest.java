@@ -6,7 +6,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
@@ -57,8 +57,8 @@ public class BungeeBukkitConnectionTest {
         bukkitSystem = bukkitComponent.getPlanSystem();
         bungeeSystem = bungeeComponent.getPlanSystem();
 
-        bukkitSystem.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
-        bungeeSystem.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9250);
+        bukkitSystem.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9005);
+        bungeeSystem.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9250);
 
         DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
         dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());

@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ShutdownHook;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.bukkit.BukkitTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bukkit.PaperTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bukkit.PingCountTimerBukkit;
@@ -77,7 +77,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
         super.enable();
         try {
             plugin.registerListener(pingCountTimer);
-            long startDelay = TimeAmount.toTicks(config.getNumber(Settings.PING_SERVER_ENABLE_DELAY), TimeUnit.SECONDS);
+            long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);
             registerTask("PingCountTimer", pingCountTimer)
                     .runTaskTimer(startDelay, 40L);
         } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {

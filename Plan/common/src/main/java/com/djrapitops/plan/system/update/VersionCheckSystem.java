@@ -19,8 +19,8 @@ package com.djrapitops.plan.system.update;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -67,12 +67,12 @@ public class VersionCheckSystem implements SubSystem {
 
     @Override
     public void enable() {
-        if (config.isFalse(Settings.CHECK_FOR_UPDATES)) {
+        if (config.isFalse(PluginSettings.CHECK_FOR_UPDATES)) {
             return;
         }
         try {
             List<VersionInfo> versions = VersionInfoLoader.load();
-            if (config.isFalse(Settings.NOTIFY_ABOUT_DEV_RELEASES)) {
+            if (config.isFalse(PluginSettings.NOTIFY_ABOUT_DEV_RELEASES)) {
                 versions = versions.stream().filter(VersionInfo::isRelease).collect(Collectors.toList());
             }
             VersionInfo newestVersion = versions.get(0);

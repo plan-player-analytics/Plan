@@ -18,6 +18,8 @@ package com.djrapitops.plan.system.settings.theme;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
+import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.utilities.Verify;
 
@@ -37,11 +39,15 @@ import static com.djrapitops.plan.system.settings.theme.ThemeVal.*;
 @Singleton
 public class Theme implements SubSystem {
 
-    private final ThemeConfig config;
+    private final PlanFiles files;
+    private final PlanConfig config;
     private final PluginLogger logger;
 
+    private ThemeConfig themeConfig;
+
     @Inject
-    public Theme(ThemeConfig config, PluginLogger logger) {
+    public Theme(PlanFiles files, PlanConfig config, PluginLogger logger) {
+        this.files = files;
         this.config = config;
         this.logger = logger;
     }
@@ -57,7 +63,8 @@ public class Theme implements SubSystem {
     @Override
     public void enable() throws EnableException {
         try {
-            config.save();
+            themeConfig = new ThemeConfig(files, config, logger);
+            themeConfig.save();
         } catch (IOException e) {
             throw new EnableException("theme.yml could not be saved.", e);
         }
@@ -71,7 +78,7 @@ public class Theme implements SubSystem {
     private String getColor(ThemeVal variable) {
         String path = variable.getThemePath();
         try {
-            String value = config.getString(path);
+            String value = themeConfig.getString(path);
 
             if (value.contains(".")) {
                 return "url(\"" + value + "\")";
@@ -115,6 +122,6 @@ public class Theme implements SubSystem {
     }
 
     private String getThemeValue(ThemeVal color) {
-        return config.getString(color.getThemePath());
+        return themeConfig.getString(color.getThemePath());
     }
 }

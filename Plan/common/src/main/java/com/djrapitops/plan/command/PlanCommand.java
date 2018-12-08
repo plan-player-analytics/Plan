@@ -20,8 +20,8 @@ import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.system.settings.Permissions;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.command.CommandNode;
 import com.djrapitops.plugin.command.CommandType;
@@ -128,7 +128,7 @@ public class PlanCommand extends TreeCmdNode {
                 infoCommand,
                 reloadCommand,
                 manageCommand.get(),
-                config.isTrue(Settings.DEV_MODE) ? devCommand : null
+                config.isTrue(PluginSettings.DEV_MODE) ? devCommand : null
         };
         setNodeGroups(analyticsGroup, webGroup, manageGroup);
         commandsRegistered = true;

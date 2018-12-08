@@ -1,8 +1,8 @@
 package com.djrapitops.plan.system.listeners;
 
 import com.djrapitops.plan.system.listeners.bukkit.AFKListener;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.bukkit.entity.Player;
@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.*;
 
@@ -26,7 +28,7 @@ public class AFKListenerTest {
     @Before
     public void setUp() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
-        when(config.getNumber(Settings.AFK_THRESHOLD_MINUTES)).thenReturn(3);
+        when(config.get(TimeSettings.AFK_THRESHOLD)).thenReturn(TimeUnit.MINUTES.toMillis(3));
         underTest = new AFKListener(config, new ConsoleErrorLogger(new TestPluginLogger()));
     }
 

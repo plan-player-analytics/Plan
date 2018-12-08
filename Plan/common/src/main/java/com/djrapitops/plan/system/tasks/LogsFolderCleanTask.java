@@ -17,8 +17,8 @@
 package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
 
@@ -38,9 +38,8 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class LogsFolderCleanTask extends AbsRunnable {
 
-    private final int keepLogDayThreshold;
-
     private final File folder;
+    private final PlanConfig config;
     private final PluginLogger logger;
 
     @Inject
@@ -50,7 +49,7 @@ public class LogsFolderCleanTask extends AbsRunnable {
             PluginLogger logger
     ) {
         this.folder = files.getLogsFolder();
-        this.keepLogDayThreshold = config.getNumber(Settings.KEEP_LOGS_DAYS);
+        this.config = config;
         this.logger = logger;
     }
 
@@ -75,7 +74,7 @@ public class LogsFolderCleanTask extends AbsRunnable {
     private void cleanFolder() {
         long now = System.currentTimeMillis();
         for (File file : Objects.requireNonNull(folder.listFiles())) {
-            long forDaysMs = TimeUnit.DAYS.toMillis(keepLogDayThreshold);
+            long forDaysMs = TimeUnit.DAYS.toMillis(config.get(PluginSettings.KEEP_LOGS_DAYS));
             if (now - file.lastModified() > (forDaysMs > 0 ? forDaysMs : TimeUnit.DAYS.toMillis(1L))) {
                 try {
                     Files.delete(file.toPath());

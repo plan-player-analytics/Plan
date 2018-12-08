@@ -18,7 +18,9 @@ package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
+import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -41,11 +43,12 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
     public SpongeConfigSystem(
             PlanFiles files,
             PlanConfig config,
+            ConfigUpdater configUpdater,
             Theme theme,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(files, config, theme, logger, errorHandler);
+        super(files, config, configUpdater, theme, logger, errorHandler);
     }
 
     @Override
@@ -59,11 +62,11 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
         super.copyDefaults();
         if (firstInstall) {
             logger.info("§eWebServer and Geolocations disabled by default on Sponge servers. You can enable them in the config:");
-            logger.info("§e  " + Settings.WEBSERVER_DISABLED.getPath());
-            logger.info("§e  " + Settings.DATA_GEOLOCATIONS.getPath());
+            logger.info("§e  " + WebserverSettings.DISABLED.getPath());
+            logger.info("§e  " + DataGatheringSettings.GEOLOCATIONS.getPath());
 
-            config.set(Settings.WEBSERVER_DISABLED, true);
-            config.set(Settings.DATA_GEOLOCATIONS, false);
+            config.set(WebserverSettings.DISABLED, true);
+            config.set(DataGatheringSettings.GEOLOCATIONS, false);
             config.save();
         }
     }

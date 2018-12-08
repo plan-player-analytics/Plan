@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.settings.config;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -82,7 +82,7 @@ public abstract class ConfigSystem implements SubSystem {
     }
 
     private void setDebugMode() {
-        String debugMode = config.getString(Settings.DEBUG);
+        String debugMode = config.getString(PluginSettings.DEBUG);
 
         List<DebugLogger> loggers = new ArrayList<>();
         if (Verify.equalsOne(debugMode, "true", "both", "console")) {

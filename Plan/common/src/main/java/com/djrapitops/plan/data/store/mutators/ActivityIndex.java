@@ -24,20 +24,19 @@ import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class ActivityIndex {
 
     private final double value;
 
-    private final int playThreshold;
+    private final long playtimeMsThreshold;
     private final int loginThreshold;
 
     public ActivityIndex(
             DataContainer container, long date,
-            int minuteThreshold, int loginThreshold
+            long playtimeMsThreshold, int loginThreshold
     ) {
-        this.playThreshold = minuteThreshold;
+        this.playtimeMsThreshold = playtimeMsThreshold;
         this.loginThreshold = loginThreshold;
 
         value = calculate(container, date);
@@ -53,7 +52,7 @@ public class ActivityIndex {
         long twoWeeksAgo = date - 2L * week;
         long threeWeeksAgo = date - 3L * week;
 
-        long activePlayThreshold = TimeUnit.MINUTES.toMillis(playThreshold);
+        long activePlayThreshold = playtimeMsThreshold;
         int activeLoginThreshold = loginThreshold;
 
         Optional<List<Session>> sessionsValue = container.getValue(PlayerKeys.SESSIONS);

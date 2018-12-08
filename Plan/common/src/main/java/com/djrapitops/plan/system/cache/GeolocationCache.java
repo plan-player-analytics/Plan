@@ -21,8 +21,8 @@ import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.locale.lang.PluginLang;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.maxmind.geoip2.DatabaseReader;
@@ -82,7 +82,7 @@ public class GeolocationCache implements SubSystem {
     @Override
     public void enable() throws EnableException {
         geolocationDB = files.getFileFromPluginFolder("GeoIP.dat");
-        if (config.isTrue(Settings.DATA_GEOLOCATIONS)) {
+        if (config.isTrue(DataGatheringSettings.GEOLOCATIONS)) {
             try {
                 checkDB();
             } catch (UnknownHostException e) {

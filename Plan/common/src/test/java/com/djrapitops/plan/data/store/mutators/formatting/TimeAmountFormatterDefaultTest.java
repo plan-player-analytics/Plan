@@ -1,7 +1,7 @@
 package com.djrapitops.plan.data.store.mutators.formatting;
 
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.FormatSettings;
 import com.djrapitops.plan.utilities.formatting.time.TimeAmountFormatter;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,18 +24,18 @@ public class TimeAmountFormatterDefaultTest {
     @BeforeClass
     public static void setUpClass() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
-        when(config.getString(Settings.FORMAT_YEAR)).thenReturn("1 year, ");
-        when(config.getString(Settings.FORMAT_YEARS)).thenReturn("%years% years, ");
-        when(config.getString(Settings.FORMAT_MONTH)).thenReturn("1 month, ");
-        when(config.getString(Settings.FORMAT_YEAR)).thenReturn("1 year, ");
-        when(config.getString(Settings.FORMAT_MONTH)).thenReturn("1 month, ");
-        when(config.getString(Settings.FORMAT_MONTHS)).thenReturn("%months% months, ");
-        when(config.getString(Settings.FORMAT_DAY)).thenReturn("1d ");
-        when(config.getString(Settings.FORMAT_DAYS)).thenReturn("%days%d ");
-        when(config.getString(Settings.FORMAT_HOURS)).thenReturn("%hours%h ");
-        when(config.getString(Settings.FORMAT_MINUTES)).thenReturn("%minutes%m ");
-        when(config.getString(Settings.FORMAT_SECONDS)).thenReturn("%seconds%s");
-        when(config.getString(Settings.FORMAT_ZERO_SECONDS)).thenReturn("0s");
+        when(config.getString(FormatSettings.YEAR)).thenReturn("1 year, ");
+        when(config.getString(FormatSettings.YEARS)).thenReturn("%years% years, ");
+        when(config.getString(FormatSettings.MONTH)).thenReturn("1 month, ");
+        when(config.getString(FormatSettings.YEAR)).thenReturn("1 year, ");
+        when(config.getString(FormatSettings.MONTH)).thenReturn("1 month, ");
+        when(config.getString(FormatSettings.MONTHS)).thenReturn("%months% months, ");
+        when(config.getString(FormatSettings.DAY)).thenReturn("1d ");
+        when(config.getString(FormatSettings.DAYS)).thenReturn("%days%d ");
+        when(config.getString(FormatSettings.HOURS)).thenReturn("%hours%h ");
+        when(config.getString(FormatSettings.MINUTES)).thenReturn("%minutes%m ");
+        when(config.getString(FormatSettings.SECONDS)).thenReturn("%seconds%s");
+        when(config.getString(FormatSettings.ZERO_SECONDS)).thenReturn("0s");
         underTest = new TimeAmountFormatter(config);
     }
 

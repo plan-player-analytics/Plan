@@ -17,8 +17,8 @@
 package com.djrapitops.plan.utilities.formatting.time;
 
 import com.djrapitops.plan.system.locale.Locale;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.FormatSettings;
 
 /**
  * Formatter for a timestamp which includes days as the smallest entry.
@@ -39,7 +39,7 @@ public class DayFormatter extends DateFormatter {
     private String format(Long date) {
         String format = "MMMMM d";
 
-        if (config.isTrue(Settings.FORMAT_DATE_RECENT_DAYS)) {
+        if (config.isTrue(FormatSettings.DATE_RECENT_DAYS)) {
             format = replaceRecentDays(date, format, "MMMMM");
         }
 

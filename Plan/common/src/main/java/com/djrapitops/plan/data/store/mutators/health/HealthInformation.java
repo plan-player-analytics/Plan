@@ -47,7 +47,7 @@ public class HealthInformation extends AbstractHealthInfo {
             AnalysisContainer analysisContainer,
             Locale locale,
             int lowTPSThreshold,
-            int activeMinuteThreshold,
+            long activeMsThreshold,
             int activeLoginThreshold,
             Formatter<Long> timeAmountFormatter,
             Formatter<Double> decimalFormatter,
@@ -57,7 +57,7 @@ public class HealthInformation extends AbstractHealthInfo {
                 analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME),
                 analysisContainer.getUnsafe(AnalysisKeys.ANALYSIS_TIME_MONTH_AGO),
                 locale,
-                activeMinuteThreshold, activeLoginThreshold,
+                activeMsThreshold, activeLoginThreshold,
                 timeAmountFormatter, decimalFormatter, percentageFormatter
         );
         this.analysisContainer = analysisContainer;

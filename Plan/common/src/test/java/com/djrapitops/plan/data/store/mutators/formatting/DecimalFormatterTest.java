@@ -1,7 +1,7 @@
 package com.djrapitops.plan.data.store.mutators.formatting;
 
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.FormatSettings;
 import com.djrapitops.plan.utilities.formatting.DecimalFormatter;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class DecimalFormatterTest {
     @Before
     public void setUp() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
-        when(config.getString(Settings.FORMAT_DECIMALS)).thenReturn("#.##");
+        when(config.getString(FormatSettings.DECIMALS)).thenReturn("#.##");
 
         underTest = new DecimalFormatter(config);
     }

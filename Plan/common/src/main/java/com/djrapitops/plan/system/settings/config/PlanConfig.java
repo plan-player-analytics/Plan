@@ -17,9 +17,10 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.data.plugin.PluginsConfigSection;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
+import com.djrapitops.plan.system.settings.paths.key.Setting;
 import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.config.ConfigNode;
 
@@ -58,7 +59,7 @@ public class PlanConfig extends Config {
     }
 
     public int getTimeZoneOffsetHours() {
-        if (isTrue(Settings.USE_SERVER_TIME)) {
+        if (isTrue(TimeSettings.USE_SERVER_TIME)) {
             int offset = TimeZone.getDefault().getOffset(System.currentTimeMillis());
             int hourMs = (int) TimeUnit.HOURS.toMillis(1L);
             return -offset / hourMs;
@@ -66,11 +67,20 @@ public class PlanConfig extends Config {
         return 0; // UTC
     }
 
-    public boolean isTrue(Setting setting) {
-        return getBoolean(setting.getPath());
+    public <T> T get(Setting<T> setting) {
+        T value = setting.getValueFrom(this);
+        boolean valid = setting.isValid(value);
+        if (!valid) {
+            throw new IllegalStateException("Config value for " + setting.getPath() + " has a bad value: '" + value + "'");
+        }
+        return value;
     }
 
-    public boolean isFalse(Setting setting) {
+    public boolean isTrue(Setting<Boolean> setting) {
+        return get(setting);
+    }
+
+    public boolean isFalse(Setting<Boolean> setting) {
         return !isTrue(setting);
     }
 
@@ -79,8 +89,8 @@ public class PlanConfig extends Config {
      *
      * @return String value of the config setting.
      */
-    public String getString(Setting setting) {
-        return getString(setting.getPath());
+    public String getString(Setting<String> setting) {
+        return get(setting);
     }
 
     /**
@@ -88,19 +98,19 @@ public class PlanConfig extends Config {
      *
      * @return Integer value of the config setting
      */
-    public int getNumber(Setting setting) {
-        return getInt(setting.getPath());
+    public int getNumber(Setting<Integer> setting) {
+        return get(setting);
     }
 
-    public List<String> getStringList(Setting setting) {
-        return getStringList(setting.getPath());
+    public List<String> getStringList(Setting<List<String>> setting) {
+        return get(setting);
     }
 
-    public ConfigNode getConfigNode(Setting setting) {
-        return getConfigNode(setting.getPath());
+    public ConfigNode getConfigNode(Setting<ConfigNode> setting) {
+        return get(setting);
     }
 
-    public void set(Setting setting, Object value) {
+    public <T> void set(Setting<T> setting, T value) {
         set(setting.getPath(), value);
     }
 

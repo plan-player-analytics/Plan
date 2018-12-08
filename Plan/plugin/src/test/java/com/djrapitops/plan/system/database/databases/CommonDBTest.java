@@ -34,7 +34,7 @@ import com.djrapitops.plan.system.database.databases.sql.H2DB;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import org.junit.*;
@@ -85,7 +85,7 @@ public abstract class CommonDBTest {
     static void handleSetup(String dbName) throws Exception {
         System.out.println("--- Test Class Setup     ---");
         system = component.getPlanSystem();
-        system.getConfigSystem().getConfig().set(Settings.WEBSERVER_PORT, 9005);
+        system.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9005);
         system.enable();
 
         dbSystem = system.getDatabaseSystem();

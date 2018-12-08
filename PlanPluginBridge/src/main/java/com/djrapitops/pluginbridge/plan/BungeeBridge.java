@@ -33,7 +33,7 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class BungeeBridge extends Bridge {
+public class BungeeBridge extends AbstractBridge {
 
     private final AdvancedBanHook advancedBanHook;
     private final BuyCraftHook buyCraftHook;

@@ -22,6 +22,7 @@ import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
 import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.Formatters;
 import com.djrapitops.plugin.config.ConfigNode;
@@ -66,7 +67,7 @@ public class WorldAliasSettings {
     }
 
     private ConfigNode getAliasSection() {
-        return config.get().getConfigNode(Settings.WORLD_ALIASES);
+        return config.get().get(DisplaySettings.WORLD_ALIASES);
     }
 
     /**

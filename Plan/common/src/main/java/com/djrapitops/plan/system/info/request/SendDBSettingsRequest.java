@@ -19,8 +19,10 @@ package com.djrapitops.plan.system.info.request;
 import com.djrapitops.plan.api.exceptions.connection.*;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.Server;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.webserver.response.DefaultResponses;
 import com.djrapitops.plan.system.webserver.response.Response;
 import com.djrapitops.plan.system.webserver.response.errors.BadRequestResponse;
@@ -64,9 +66,9 @@ public class SendDBSettingsRequest extends InfoRequestWithVariables implements S
 
         Verify.nullCheck(webServerAddress, () -> new IllegalArgumentException("webServerAddress can not be null."));
         variables.put("address", webServerAddress);
-        variables.put("WebServerPort", config.getString(Settings.WEBSERVER_PORT));
-        variables.put("ServerName", config.getString(Settings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_"));
-        variables.put("ThemeBase", config.getString(Settings.THEME_BASE));
+        variables.put("WebServerPort", config.get(WebserverSettings.PORT).toString());
+        variables.put("ServerName", config.get(PluginSettings.SERVER_NAME).replaceAll("[^a-zA-Z0-9_\\s]", "_"));
+        variables.put("ThemeBase", config.get(DisplaySettings.THEME));
     }
 
     @Override

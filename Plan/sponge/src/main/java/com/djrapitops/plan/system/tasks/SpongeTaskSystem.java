@@ -18,8 +18,8 @@ package com.djrapitops.plan.system.tasks;
 
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.ShutdownHook;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plan.system.tasks.sponge.PingCountTimerSponge;
@@ -69,7 +69,7 @@ public class SpongeTaskSystem extends ServerTaskSystem {
         super.enable();
 
         plugin.registerListener(pingCountTimer);
-        long startDelay = TimeAmount.toTicks(config.getNumber(Settings.PING_SERVER_ENABLE_DELAY), TimeUnit.SECONDS);
+        long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);
         runnableFactory.create("PingCountTimer", pingCountTimer)
                 .runTaskTimer(startDelay, PingCountTimerSponge.PING_INTERVAL);
 

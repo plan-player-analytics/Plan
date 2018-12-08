@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
 
@@ -44,7 +45,7 @@ public class PlayersTableTest {
         String html = new PlayersTable(
                 players,
                 50, // maxPlayers
-                60, // activeMinuteThreshold
+                TimeUnit.MINUTES.toMillis(60), // activeMsThreshold
                 5, // activeLoginThreshold
                 l -> "",
                 l -> "",

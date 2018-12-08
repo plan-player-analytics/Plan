@@ -21,7 +21,7 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
-import com.djrapitops.plan.system.settings.Settings;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,7 +46,7 @@ public abstract class Patch {
         return db.query(query);
     }
 
-    public boolean hasTable(String tableName) {
+    protected boolean hasTable(String tableName) {
         boolean secondParameter;
 
         String sql;
@@ -66,7 +66,7 @@ public abstract class Patch {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
                 if (secondParameter) {
-                    statement.setString(2, db.getConfig().getString(Settings.DB_DATABASE));
+                    statement.setString(2, db.getConfig().getString(DatabaseSettings.MYSQL_DATABASE));
                 }
             }
 
@@ -95,7 +95,7 @@ public abstract class Patch {
                     statement.setString(1, tableName);
                     statement.setString(2, columnName);
                     if (dbType != DBType.H2) {
-                        statement.setString(3, db.getConfig().getString(Settings.DB_DATABASE));
+                        statement.setString(3, db.getConfig().getString(DatabaseSettings.MYSQL_DATABASE));
                     }
                 }
 

@@ -18,8 +18,8 @@ package com.djrapitops.plan.utilities.html.graphs.line;
 
 import com.djrapitops.plan.data.container.Ping;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
-import com.djrapitops.plan.system.settings.Settings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,38 +43,42 @@ public class LineGraphFactory {
     }
 
     public LineGraph lineGraph(List<Point> points) {
-        return new LineGraph(points, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+        return new LineGraph(points, shouldDisplayGapsInData());
     }
 
     public LineGraph chunkGraph(TPSMutator mutator) {
-        return new ChunkGraph(mutator, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+        return new ChunkGraph(mutator, shouldDisplayGapsInData());
     }
 
     public LineGraph cpuGraph(TPSMutator mutator) {
-        return new CPUGraph(mutator, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+        return new CPUGraph(mutator, shouldDisplayGapsInData());
     }
 
     public LineGraph entityGraph(TPSMutator mutator) {
-        return new EntityGraph(mutator, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+        return new EntityGraph(mutator, shouldDisplayGapsInData());
     }
 
     public LineGraph playersOnlineGraph(TPSMutator mutator) {
-        return new PlayersOnlineGraph(mutator, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+        return new PlayersOnlineGraph(mutator, shouldDisplayGapsInData());
     }
 
     public PingGraph pingGraph(List<Ping> pingList) {
-        return new PingGraph(pingList, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+        return new PingGraph(pingList, shouldDisplayGapsInData());
     }
 
     public LineGraph ramGraph(TPSMutator mutator) {
-        return new RamGraph(mutator, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+        return new RamGraph(mutator, shouldDisplayGapsInData());
     }
 
     public LineGraph tpsGraph(TPSMutator mutator) {
-        return new TPSGraph(mutator, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+        return new TPSGraph(mutator, shouldDisplayGapsInData());
     }
 
     public LineGraph diskGraph(TPSMutator mutator) {
-        return new DiskGraph(mutator, config.isTrue(Settings.DISPLAY_GAPS_IN_GRAPH_DATA));
+        return new DiskGraph(mutator, shouldDisplayGapsInData());
+    }
+
+    private boolean shouldDisplayGapsInData() {
+        return config.isTrue(DisplaySettings.GAPS_IN_GRAPH_DATA);
     }
 }
