@@ -78,14 +78,18 @@ public class ManageImportCommand extends CommandNode {
             return;
         }
 
-        findImporter(sender, importArg);
+        findAndProcessImporter(sender, importArg);
     }
 
-    private void findImporter(Sender sender, String importArg) {
+    private void findAndProcessImporter(Sender sender, String importArg) {
         Optional<Importer> foundImporter = importSystem.getImporter(importArg);
         if (foundImporter.isPresent()) {
             Importer importer = foundImporter.get();
-            processing.submitNonCritical(importer::processImport);
+            processing.submitNonCritical(() -> {
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_START));
+                importer.processImport();
+                sender.sendMessage(locale.getString(ManageLang.PROGRESS_SUCCESS));
+            });
         } else {
             sender.sendMessage(locale.getString(ManageLang.FAIL_IMPORTER_NOT_FOUND, importArg));
         }
