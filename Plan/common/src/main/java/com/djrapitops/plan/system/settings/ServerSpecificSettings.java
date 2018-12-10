@@ -23,7 +23,6 @@ import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.utilities.Verify;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -107,17 +106,6 @@ public class ServerSpecificSettings {
         }
         // Value is a string
         return value;
-    }
-
-    public void addOriginalBukkitSettings(UUID serverUUID, Map<String, Object> settings) throws IOException {
-        PlanConfig planConfig = config.get();
-        if (!Verify.isEmpty(planConfig.getString("Servers." + serverUUID + ".ServerName"))) {
-            return;
-        }
-        for (Map.Entry<String, Object> entry : settings.entrySet()) {
-            planConfig.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
-        }
-        planConfig.save();
     }
 
     private String getPath(UUID serverUUID, Setting setting) {

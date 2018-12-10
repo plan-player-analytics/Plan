@@ -61,11 +61,11 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
         this.runnableFactory = runnableFactory;
 
         variables.put("DB_TYPE", "mysql"); // DatabaseSettings.TYPE
-        variables.put("DB_HOST", config.getString(DatabaseSettings.MYSQL_HOST));
-        variables.put("DB_USER", config.getString(DatabaseSettings.MYSQL_USER));
-        variables.put("DB_PASS", config.getString(DatabaseSettings.MYSQL_PASS));
-        variables.put("DB_DATABASE", config.getString(DatabaseSettings.MYSQL_DATABASE));
-        variables.put("DB_PORT", config.getString(DatabaseSettings.MYSQL_PORT));
+        variables.put("DB_HOST", config.get(DatabaseSettings.MYSQL_HOST));
+        variables.put("DB_USER", config.get(DatabaseSettings.MYSQL_USER));
+        variables.put("DB_PASS", config.get(DatabaseSettings.MYSQL_PASS));
+        variables.put("DB_DATABASE", config.get(DatabaseSettings.MYSQL_DATABASE));
+        variables.put("DB_PORT", config.get(DatabaseSettings.MYSQL_PORT));
     }
 
     @Override
@@ -116,11 +116,7 @@ public class SaveDBSettingsRequest extends InfoRequestWithVariables implements S
         Verify.nullCheck(database, () -> new BadRequestException("DB_DATABASE not specified in the request."));
         Verify.nullCheck(portS, () -> new BadRequestException("DB_PORT not specified in the request."));
 
-        try {
-            config.set(DatabaseSettings.MYSQL_PORT, portS);
-        } catch (NumberFormatException e) {
-            throw new BadRequestException("DB_PORT was not a number.");
-        }
+        config.set(DatabaseSettings.MYSQL_PORT, portS);
         config.set(DatabaseSettings.TYPE, type);
         config.set(DatabaseSettings.MYSQL_HOST, host);
         config.set(DatabaseSettings.MYSQL_USER, user);

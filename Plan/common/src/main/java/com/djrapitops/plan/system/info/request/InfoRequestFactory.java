@@ -127,7 +127,7 @@ public class InfoRequestFactory {
     }
 
     public SetupRequest sendDBSettingsRequest(String addressOfThisServer) {
-        return new SendDBSettingsRequest(addressOfThisServer, config.get(), this, connectionSystem.get());
+        return new SendDBSettingsRequest(addressOfThisServer, this, connectionSystem.get());
     }
 
     public CheckConnectionRequest checkConnectionRequest(String webAddress) {
@@ -213,7 +213,6 @@ public class InfoRequestFactory {
 
         SetupRequest sendDBSettingsRequest() {
             return new SendDBSettingsRequest(
-                    factory.config.get(),
                     factory,
                     factory.connectionSystem.get()
             );
