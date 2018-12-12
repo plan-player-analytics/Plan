@@ -41,7 +41,10 @@ public class WorldsServerIDPatch extends Patch {
     public boolean hasBeenApplied() {
         String tableName = WorldTable.TABLE_NAME;
         String columnName = WorldTable.Col.SERVER_ID.get();
-        return hasColumn(tableName, columnName)
+
+        // WorldOptimizationPatch makes this patch incompatible with newer patch versions.
+        return hasColumn(tableName, "server_uuid")
+                || hasColumn(tableName, columnName)
                 && allValuesHaveServerID(tableName, columnName);
     }
 
@@ -134,7 +137,7 @@ public class WorldsServerIDPatch extends Patch {
         String sql = "UPDATE " + worldTimesTable + " SET " +
                 WorldTimesTable.Col.WORLD_ID + "=?" +
                 " WHERE " + WorldTimesTable.Col.WORLD_ID + "=?" +
-                " AND " + WorldTimesTable.Col.SERVER_ID + "=?";
+                " AND " + "server_id=?";
         db.executeBatch(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

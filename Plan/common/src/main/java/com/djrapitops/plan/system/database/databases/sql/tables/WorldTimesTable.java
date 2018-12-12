@@ -59,35 +59,33 @@ public class WorldTimesTable extends UserIDTable {
         sessionsTable = db.getSessionsTable();
         serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
-                Col.USER_ID + ", " +
+                Col.UUID + ", " +
                 Col.WORLD_ID + ", " +
-                Col.SERVER_ID + ", " +
+                Col.SERVER_UUID + ", " +
                 Col.SESSION_ID + ", " +
                 Col.SURVIVAL + ", " +
                 Col.CREATIVE + ", " +
                 Col.ADVENTURE + ", " +
                 Col.SPECTATOR +
-                ") VALUES (" +
-                usersTable.statementSelectID + ", " +
+                ") VALUES (?, " +
                 worldTable.statementSelectID + ", " +
-                serverTable.statementSelectServerID + ", " +
-                "?, ?, ?, ?, ?)";
+                "?, ?, ?, ?, ?, ?)";
     }
 
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .column(Col.USER_ID, Sql.INT).notNull()
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
+                .column(Col.UUID, Sql.varchar(36)).notNull()
                 .column(Col.WORLD_ID, Sql.INT).notNull()
-                .column(Col.SERVER_ID, Sql.INT).notNull()
+                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(Col.SESSION_ID, Sql.INT).notNull()
                 .column(Col.SURVIVAL, Sql.LONG).notNull().defaultValue("0")
                 .column(Col.CREATIVE, Sql.LONG).notNull().defaultValue("0")
                 .column(Col.ADVENTURE, Sql.LONG).notNull().defaultValue("0")
                 .column(Col.SPECTATOR, Sql.LONG).notNull().defaultValue("0")
-                .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .foreignKey(Col.WORLD_ID, worldTable.getTableName(), WorldTable.Col.ID)
-                .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
                 .foreignKey(Col.SESSION_ID, sessionsTable.getTableName(), SessionsTable.Col.ID)
                 .toString()
         );
@@ -105,7 +103,7 @@ public class WorldTimesTable extends UserIDTable {
                 worldNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID;
+                " WHERE " + Col.UUID + "=?";
 
         query(new QueryStatement<Object>(sql, 2000) {
             @Override
@@ -185,7 +183,7 @@ public class WorldTimesTable extends UserIDTable {
                 worldNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " WHERE " + tableName + "." + Col.SERVER_ID + "=" + db.getServerTable().statementSelectServerID +
+                " WHERE " + tableName + "." + Col.SERVER_UUID + "=?" +
                 " GROUP BY " + Col.WORLD_ID;
 
         return query(new QueryStatement<WorldTimes>(sql, 1000) {
@@ -227,7 +225,7 @@ public class WorldTimesTable extends UserIDTable {
                 worldNameColumn +
                 " FROM " + tableName +
                 " INNER JOIN " + worldTable + " on " + worldIDColumn + "=" + Col.WORLD_ID +
-                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID +
+                " WHERE " + Col.UUID + "=?" +
                 " GROUP BY " + Col.WORLD_ID;
 
         return query(new QueryStatement<WorldTimes>(sql) {
@@ -366,9 +364,43 @@ public class WorldTimesTable extends UserIDTable {
         });
     }
 
+    @Override
+    public void removeUser(UUID uuid) {
+        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.UUID + "=?)";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+        });
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WorldTimesTable)) return false;
+        if (!super.equals(o)) return false;
+        WorldTimesTable that = (WorldTimesTable) o;
+        return Objects.equals(serverTable, that.serverTable) &&
+                Objects.equals(worldTable, that.worldTable) &&
+                Objects.equals(sessionsTable, that.sessionsTable) &&
+                Objects.equals(insertStatement, that.insertStatement);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), serverTable, worldTable, sessionsTable, insertStatement);
+    }
+
     public enum Col implements Column {
+        ID("id"),
+        @Deprecated
         USER_ID(UserIDTable.Col.USER_ID.get()),
+        UUID("uuid"),
+        @Deprecated
         SERVER_ID("server_id"),
+        SERVER_UUID("server_uuid"),
         SESSION_ID("session_id"),
         WORLD_ID("world_id"),
         SURVIVAL("survival_time"),
@@ -391,22 +423,5 @@ public class WorldTimesTable extends UserIDTable {
         public String toString() {
             return column;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WorldTimesTable)) return false;
-        if (!super.equals(o)) return false;
-        WorldTimesTable that = (WorldTimesTable) o;
-        return Objects.equals(serverTable, that.serverTable) &&
-                Objects.equals(worldTable, that.worldTable) &&
-                Objects.equals(sessionsTable, that.sessionsTable) &&
-                Objects.equals(insertStatement, that.insertStatement);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), serverTable, worldTable, sessionsTable, insertStatement);
     }
 }
