@@ -89,19 +89,17 @@ public class WorldsServerIDPatch extends Patch {
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
         SessionsTable sessionsTable = db.getSessionsTable();
 
-        String statementSelectServerID = db.getServerTable().statementSelectServerID;
-
         String worldIDColumn = worldTimesTable + "." + WorldTimesTable.Col.WORLD_ID;
         String worldSessionIDColumn = worldTimesTable + "." + WorldTimesTable.Col.SESSION_ID;
         String sessionIDColumn = sessionsTable + "." + SessionsTable.Col.ID;
-        String sessionServerIDColumn = sessionsTable + "." + SessionsTable.Col.SERVER_ID;
+        String sessionServerUUIDColumn = sessionsTable + "." + SessionsTable.Col.SERVER_UUID;
 
         String sql = "SELECT DISTINCT " +
                 WorldTable.Col.NAME + " FROM " +
                 WorldTable.TABLE_NAME +
                 " INNER JOIN " + worldTimesTable + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + "." + WorldTable.Col.ID +
                 " INNER JOIN " + sessionsTable + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
-                " WHERE " + statementSelectServerID + "=" + sessionServerIDColumn;
+                " WHERE " + sessionServerUUIDColumn + "=?";
 
         return query(new QueryStatement<Set<String>>(sql, 1000) {
             @Override

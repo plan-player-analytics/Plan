@@ -202,8 +202,9 @@ public abstract class SQLDB extends Database {
                     new NicknameLastSeenPatch(this),
                     new VersionTableRemovalPatch(this),
                     new DiskUsagePatch(this),
+                    new WorldsOptimizationPatch(this),
                     new WorldTimesOptimizationPatch(this),
-                    new WorldsOptimizationPatch(this)
+                    new SessionsOptimizationPatch(this)
             };
 
             try {
