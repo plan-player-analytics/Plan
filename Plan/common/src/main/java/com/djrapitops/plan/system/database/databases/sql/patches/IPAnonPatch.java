@@ -23,7 +23,6 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.GeoInfoTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.move.Version18TransferTable;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -106,7 +105,21 @@ public class IPAnonPatch extends Patch {
 
     private void groupHashedIPs() {
         try {
-            new Version18TransferTable(db).alterTableV18();
+            String tempTableName = "plan_ips_temp";
+            String ipTableName = "plan_ips";
+            try {
+                renameTable(ipTableName, tempTableName);
+            } catch (DBOpException e) {
+                // Temp table already exists
+                if (!e.getMessage().contains("plan_ips_temp")) {
+                    throw e;
+                }
+            }
+            db.getGeoInfoTable().createTable();
+            db.execute("INSERT INTO plan_ips (" +
+                    "id, uuid, ip, ip_hash, geolocation, last_used" +
+                    ") SELECT id, uuid, ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, uuid, ip, geolocation");
+            dropTable(tempTableName);
         } catch (DBInitException e) {
             throw new DBOpException(e.getMessage(), e);
         }

@@ -39,25 +39,28 @@ import java.util.*;
  * <p>
  * Table Name: plan_ips
  * <p>
- * For contained columns {@see Col}
+ * Patches related to this table:
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.GeoInfoLastUsedPatch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.IPAnonPatch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.IPHashPatch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.GeoInfoOptimizationPatch}
  *
  * @author Rsl1122
  */
-public class GeoInfoTable extends UserIDTable {
+public class GeoInfoTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_ips";
 
     public GeoInfoTable(SQLDB db) {
         super(TABLE_NAME, db);
         insertStatement = "INSERT INTO " + tableName + " ("
-                + Col.USER_ID + ", "
+                + Col.UUID + ", "
                 + Col.IP + ", "
                 + Col.IP_HASH + ", "
                 + Col.GEOLOCATION + ", "
                 + Col.LAST_USED
-                + ") VALUES ("
-                + usersTable.statementSelectID + ", "
-                + "?, ?, ?, ?)";
+                + ") VALUES (?, ?, ?, ?, ?)";
     }
 
     private String insertStatement;
@@ -65,19 +68,20 @@ public class GeoInfoTable extends UserIDTable {
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .column(Col.USER_ID, Sql.INT).notNull()
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
+                .column(Col.UUID, Sql.varchar(36)).notNull()
                 .column(Col.IP, Sql.varchar(39)).notNull()
                 .column(Col.GEOLOCATION, Sql.varchar(50)).notNull()
                 .column(Col.IP_HASH, Sql.varchar(200))
                 .column(Col.LAST_USED, Sql.LONG).notNull().defaultValue("0")
-                .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .toString()
         );
     }
 
     public List<GeoInfo> getGeoInfo(UUID uuid) {
         String sql = "SELECT DISTINCT * FROM " + tableName +
-                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID;
+                " WHERE " + Col.UUID + "=?";
 
         return query(new QueryStatement<List<GeoInfo>>(sql, 100) {
             @Override
@@ -103,7 +107,7 @@ public class GeoInfoTable extends UserIDTable {
     private void updateGeoInfo(UUID uuid, GeoInfo info) {
         String sql = "UPDATE " + tableName + " SET "
                 + Col.LAST_USED + "=?" +
-                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID +
+                " WHERE " + Col.UUID + "=?" +
                 " AND " + Col.IP_HASH + "=?" +
                 " AND " + Col.GEOLOCATION + "=?";
 
@@ -162,23 +166,20 @@ public class GeoInfoTable extends UserIDTable {
     }
 
     public Map<UUID, List<GeoInfo>> getAllGeoInfo() {
-        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
-        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
         String sql = "SELECT " +
                 Col.IP + ", " +
                 Col.GEOLOCATION + ", " +
                 Col.LAST_USED + ", " +
                 Col.IP_HASH + ", " +
-                usersUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID;
+                Col.UUID +
+                " FROM " + tableName;
 
         return query(new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 50000) {
             @Override
             public Map<UUID, List<GeoInfo>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<GeoInfo>> geoLocations = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString("uuid"));
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
 
                     List<GeoInfo> userGeoInfo = geoLocations.getOrDefault(uuid, new ArrayList<>());
 
@@ -241,7 +242,10 @@ public class GeoInfoTable extends UserIDTable {
     }
 
     public enum Col implements Column {
+        ID("id"),
+        @Deprecated
         USER_ID(UserIDTable.Col.USER_ID.get()),
+        UUID(UserUUIDTable.Col.UUID.get()),
         IP("ip"),
         IP_HASH("ip_hash"),
         GEOLOCATION("geolocation"),
