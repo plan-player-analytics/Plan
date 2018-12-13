@@ -134,5 +134,5 @@ public interface FetchOperations {
 
     Map<Integer, List<TPS>> getPlayersOnlineForServers(Collection<Server> servers);
 
-    Map<Integer, Integer> getPlayersRegisteredForServers(Collection<Server> servers);
+    Map<UUID, Integer> getPlayersRegisteredForServers(Collection<Server> servers);
 }

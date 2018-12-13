@@ -415,30 +415,6 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    public void testUserInfoTableRegisterUnRegistered() throws DBInitException {
-        UserInfoTable userInfoTable = db.getUserInfoTable();
-        assertFalse(userInfoTable.isRegistered(playerUUID));
-        UsersTable usersTable = db.getUsersTable();
-        assertFalse(usersTable.isRegistered(playerUUID));
-
-        userInfoTable.registerUserInfo(playerUUID, 123456789L);
-
-        commitTest();
-
-        assertTrue(usersTable.isRegistered(playerUUID));
-        assertTrue(userInfoTable.isRegistered(playerUUID));
-
-        UserInfo userInfo = userInfoTable.getUserInfo(playerUUID);
-        assertEquals(playerUUID, userInfo.getUuid());
-        assertEquals(123456789L, (long) usersTable.getRegisterDates().get(0));
-        assertEquals(123456789L, userInfo.getRegistered());
-        assertEquals(1, userInfoTable.getServerUserCount(serverUUID));
-        assertEquals("waitingForUpdate", userInfo.getName());
-        assertFalse(userInfo.isBanned());
-        assertFalse(userInfo.isOperator());
-    }
-
-    @Test
     public void testUserInfoTableRegisterRegistered() throws DBInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
@@ -466,6 +442,8 @@ public abstract class CommonDBTest {
 
     @Test
     public void testUserInfoTableUpdateBannedOpped() throws DBInitException {
+        UsersTable usersTable = db.getUsersTable();
+        usersTable.registerUser(playerUUID, 223456789L, "Test_name");
         UserInfoTable userInfoTable = db.getUserInfoTable();
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         assertTrue(userInfoTable.isRegistered(playerUUID));
@@ -539,6 +517,7 @@ public abstract class CommonDBTest {
         NicknamesTable nicknamesTable = db.getNicknamesTable();
         GeoInfoTable geoInfoTable = db.getGeoInfoTable();
 
+        usersTable.registerUser(playerUUID, 223456789L, "Test_name");
         userInfoTable.registerUserInfo(playerUUID, 223456789L);
         saveTwoWorlds();
 

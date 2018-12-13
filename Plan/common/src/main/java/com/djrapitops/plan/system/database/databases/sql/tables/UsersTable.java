@@ -249,7 +249,7 @@ public class UsersTable extends UserUUIDTable {
         String sql = "SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
                 " WHERE LOWER(" + Col.USER_NAME + ") LIKE LOWER(?)" +
                 " UNION SELECT DISTINCT " + Col.USER_NAME + " FROM " + tableName +
-                " INNER JOIN " + nicknamesTable + " on " + Col.UUID + "=" + nicknamesTable + "." + NicknamesTable.Col.UUID +
+                " INNER JOIN " + nicknamesTable + " on " + tableName + "." + Col.UUID + "=" + nicknamesTable + "." + NicknamesTable.Col.UUID +
                 " WHERE LOWER(" + NicknamesTable.Col.NICKNAME + ") LIKE LOWER(?)";
 
         return query(new QueryStatement<List<String>>(sql, 5000) {
@@ -422,7 +422,6 @@ public class UsersTable extends UserUUIDTable {
             }
         });
     }
-
 
     public DataContainer getUserInformation(UUID uuid) {
         Key<DataContainer> user_data = new Key<>(DataContainer.class, "plan_users_data");

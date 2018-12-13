@@ -207,7 +207,8 @@ public abstract class SQLDB extends Database {
                     new KillsOptimizationPatch(this),
                     new SessionsOptimizationPatch(this),
                     new PingOptimizationPatch(this),
-                    new NicknamesOptimizationPatch(this)
+                    new NicknamesOptimizationPatch(this),
+                    new UserInfoOptimizationPatch(this)
             };
 
             try {

@@ -43,10 +43,7 @@ import dagger.Lazy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -108,14 +105,13 @@ public class NetworkContainer extends DataContainer {
         putSupplier(NetworkKeys.SERVERS_TAB, () -> {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
-            Map<Integer, Integer> registerData = getValue(NetworkKeys.SERVER_REGISTER_DATA).orElse(new HashMap<>());
+            Map<UUID, Integer> registerData = getValue(NetworkKeys.SERVER_REGISTER_DATA).orElse(new HashMap<>());
             getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>())
                     .stream()
                     .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
                     .forEach(server -> {
-                        int serverId = server.getId();
-                        TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(serverId, new ArrayList<>()));
-                        int registered = registerData.getOrDefault(serverId, 0);
+                        TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(server.getId(), new ArrayList<>()));
+                        int registered = registerData.getOrDefault(server.getUuid(), 0);
                         NetworkServerBox serverBox = new NetworkServerBox(server, registered, tpsMutator, graphs);
                         serverBoxes.append(serverBox.toHtml());
                     });

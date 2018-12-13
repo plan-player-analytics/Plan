@@ -19,7 +19,7 @@ package com.djrapitops.plan.system.database.databases.sql.operation;
 import com.djrapitops.plan.system.database.databases.operation.RemoveOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.Table;
-import com.djrapitops.plan.system.database.databases.sql.tables.UserIDTable;
+import com.djrapitops.plan.system.database.databases.sql.tables.UserUUIDTable;
 
 import java.util.UUID;
 
@@ -38,11 +38,11 @@ public class SQLRemoveOps extends SQLOps implements RemoveOperations {
         String webUser = usersTable.getPlayerName(uuid);
 
         for (Table t : db.getAllTablesInRemoveOrder()) {
-            if (!(t instanceof UserIDTable)) {
+            if (!(t instanceof UserUUIDTable)) {
                 continue;
             }
 
-            UserIDTable table = (UserIDTable) t;
+            UserUUIDTable table = (UserUUIDTable) t;
             table.removeUser(uuid);
         }
 

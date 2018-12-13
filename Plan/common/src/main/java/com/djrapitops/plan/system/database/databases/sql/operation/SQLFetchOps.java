@@ -493,7 +493,7 @@ public class SQLFetchOps extends SQLOps implements FetchOperations {
     }
 
     @Override
-    public Map<Integer, Integer> getPlayersRegisteredForServers(Collection<Server> servers) {
+    public Map<UUID, Integer> getPlayersRegisteredForServers(Collection<Server> servers) {
         return userInfoTable.getPlayersRegisteredForServers(servers);
     }
 }
