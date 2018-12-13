@@ -104,27 +104,27 @@ public class TableSqlParser extends SqlParser {
         return this;
     }
 
-    public TableSqlParser primaryKeyIDColumn(boolean mySQL, Column column) {
-        return primaryKeyIDColumn(mySQL, column.get());
+    public TableSqlParser primaryKeyIDColumn(boolean supportsMySQLQueries, Column column) {
+        return primaryKeyIDColumn(supportsMySQLQueries, column.get());
     }
 
-    public TableSqlParser primaryKeyIDColumn(boolean mySQL, String column) {
+    public TableSqlParser primaryKeyIDColumn(boolean supportsMySQLQueries, String column) {
         if (columns > 0) {
             append(", ");
         }
         append(column).addSpace();
         append(Sql.INT).addSpace();
-        append((mySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY");
+        append((supportsMySQLQueries) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY");
         columns++;
         return this;
     }
 
-    public TableSqlParser primaryKey(boolean mySQL, Column column) {
-        return primaryKey(mySQL, column.get());
+    public TableSqlParser primaryKey(boolean supportsMySQLQueries, Column column) {
+        return primaryKey(supportsMySQLQueries, column.get());
     }
 
-    public TableSqlParser primaryKey(boolean mySQL, String column) {
-        if (mySQL) {
+    public TableSqlParser primaryKey(boolean supportsMySQLQueries, String column) {
+        if (supportsMySQLQueries) {
             if (columns > 0) {
                 append(", ");
             }

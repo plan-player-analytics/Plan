@@ -90,8 +90,8 @@ public class NicknameLastSeenPatch extends Patch {
     private void updateLastUsed(Map<UUID, Integer> serverIDsByUUID, Map<Integer, Set<Nickname>> nicknames) {
         String updateSQL = "UPDATE " + NicknamesTable.TABLE_NAME + " SET " + NicknamesTable.Col.LAST_USED + "=?" +
                 " WHERE " + NicknamesTable.Col.NICKNAME + "=?" +
-                " AND " + NicknamesTable.Col.USER_ID + "=?" +
-                " AND " + NicknamesTable.Col.SERVER_ID + "=?";
+                " AND user_id=?" +
+                " AND server_id=?";
 
         db.executeBatch(new ExecStatement(updateSQL) {
             @Override

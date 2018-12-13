@@ -37,44 +37,42 @@ import java.util.*;
  * <p>
  * Table Name: plan_nicknames
  * <p>
- * For contained columns {@see Col}
+ * Patches related to this table:
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.NicknameLastSeenPatch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.NicknamesOptimizationPatch}
  *
  * @author Rsl1122
  */
-public class NicknamesTable extends UserIDTable {
+public class NicknamesTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_nicknames";
-    private final ServerTable serverTable;
     private String insertStatement;
     private final String updateStatement;
 
     public NicknamesTable(SQLDB db) {
         super(TABLE_NAME, db);
-        serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
-                Col.USER_ID + ", " +
-                Col.SERVER_ID + ", " +
+                Col.UUID + ", " +
+                Col.SERVER_UUID + ", " +
                 Col.NICKNAME + ", " +
                 Col.LAST_USED +
-                ") VALUES (" +
-                usersTable.statementSelectID + ", " +
-                serverTable.statementSelectServerID + ", " +
-                "?, ?)";
+                ") VALUES (?, ?, ?, ?)";
         updateStatement = "UPDATE " + tableName + " SET " + Col.LAST_USED + "=?" +
                 " WHERE " + Col.NICKNAME + "=?" +
-                " AND " + Col.USER_ID + "=" + usersTable.statementSelectID +
-                " AND " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
+                " AND " + Col.UUID + "=?" +
+                " AND " + Col.SERVER_UUID + "=?";
     }
 
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(tableName)
-                .column(Col.USER_ID, Sql.INT).notNull()
+                .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
+                .column(Col.UUID, Sql.varchar(36)).notNull()
                 .column(Col.NICKNAME, Sql.varchar(75)).notNull()
-                .column(Col.SERVER_ID, Sql.INT).notNull()
+                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(Col.LAST_USED, Sql.LONG).notNull()
-                .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
-                .foreignKey(Col.SERVER_ID, serverTable.getTableName(), ServerTable.Col.SERVER_ID)
+                .primaryKey(supportsMySQLQueries, Col.ID)
                 .toString()
         );
     }
@@ -88,8 +86,8 @@ public class NicknamesTable extends UserIDTable {
      */
     public List<String> getNicknames(UUID uuid, UUID serverUUID) {
         String sql = "SELECT " + Col.NICKNAME + " FROM " + tableName +
-                " WHERE (" + Col.USER_ID + "=" + usersTable.statementSelectID + ")" +
-                " AND " + Col.SERVER_ID + "=" + serverTable.statementSelectServerID;
+                " WHERE (" + Col.UUID + "=?)" +
+                " AND " + Col.SERVER_UUID + "=?";
 
         return query(new QueryStatement<List<String>>(sql, 1000) {
             @Override
@@ -126,26 +124,20 @@ public class NicknamesTable extends UserIDTable {
     }
 
     public Map<UUID, Map<UUID, List<Nickname>>> getAllNicknames() {
-        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
-        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
                 Col.NICKNAME + ", " +
                 Col.LAST_USED + ", " +
-                usersUUIDColumn + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
+                Col.UUID + ", " +
+                Col.SERVER_UUID +
+                " FROM " + tableName;
 
         return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Nickname>>>>(sql, 5000) {
             @Override
             public Map<UUID, Map<UUID, List<Nickname>>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Map<UUID, List<Nickname>>> map = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-                    UUID uuid = UUID.fromString(set.getString("uuid"));
+                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
 
                     Map<UUID, List<Nickname>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
                     List<Nickname> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
@@ -169,25 +161,19 @@ public class NicknamesTable extends UserIDTable {
      * @see NicknamesTable#getAllNicknames();
      */
     public Map<UUID, List<Nickname>> getAllNicknamesUnmapped() {
-        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
-        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
                 Col.NICKNAME + ", " +
                 Col.LAST_USED + ", " +
-                usersUUIDColumn + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + Col.USER_ID +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID;
+                Col.UUID + ", " +
+                Col.SERVER_UUID +
+                " FROM " + tableName;
         return query(new QueryAllStatement<Map<UUID, List<Nickname>>>(sql, 5000) {
             @Override
             public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<Nickname>> map = new HashMap<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString("uuid"));
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
                     List<Nickname> nicknames = map.computeIfAbsent(uuid, x -> new ArrayList<>());
                     nicknames.add(new Nickname(
                             set.getString(Col.NICKNAME.get()), set.getLong(Col.LAST_USED.get()), serverUUID
@@ -232,15 +218,12 @@ public class NicknamesTable extends UserIDTable {
     }
 
     public List<Nickname> getNicknameInformation(UUID uuid) {
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
                 Col.NICKNAME + ", " +
                 Col.LAST_USED + ", " +
-                serverUUIDColumn +
+                Col.SERVER_UUID +
                 " FROM " + tableName +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + Col.SERVER_ID +
-                " WHERE (" + Col.USER_ID + "=" + usersTable.statementSelectID + ")";
+                " WHERE (" + Col.UUID + "=?)";
 
         return query(new QueryStatement<List<Nickname>>(sql, 5000) {
 
@@ -253,7 +236,7 @@ public class NicknamesTable extends UserIDTable {
             public List<Nickname> processResults(ResultSet set) throws SQLException {
                 List<Nickname> nicknames = new ArrayList<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
                     String nickname = set.getString(Col.NICKNAME.get());
                     nicknames.add(new Nickname(nickname, set.getLong(Col.LAST_USED.get()), serverUUID));
                 }
@@ -291,8 +274,13 @@ public class NicknamesTable extends UserIDTable {
     }
 
     public enum Col implements Column {
+        ID("id"),
+        @Deprecated
         USER_ID(UserIDTable.Col.USER_ID.get()),
+        UUID(UserUUIDTable.Col.UUID.get()),
+        @Deprecated
         SERVER_ID("server_id"),
+        SERVER_UUID("server_uuid"),
         NICKNAME("nickname"),
         LAST_USED("last_used");
 
