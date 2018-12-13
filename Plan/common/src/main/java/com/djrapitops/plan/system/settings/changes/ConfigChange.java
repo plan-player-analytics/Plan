@@ -73,7 +73,7 @@ public interface ConfigChange {
             ConfigNode newNode = config.getConfigNode(newPath);
             ConfigNode oldNode = config.getConfigNode(oldPath);
             newNode.copyDefaults(oldNode);
-            newNode.set(oldNode.getValue());
+            newNode.set(oldNode.getString());
         }
 
         @Override
