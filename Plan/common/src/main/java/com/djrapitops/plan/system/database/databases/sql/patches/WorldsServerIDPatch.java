@@ -40,9 +40,9 @@ public class WorldsServerIDPatch extends Patch {
     @Override
     public boolean hasBeenApplied() {
         String tableName = WorldTable.TABLE_NAME;
-        String columnName = WorldTable.Col.SERVER_ID.get();
+        String columnName = "server_id";
 
-        // WorldOptimizationPatch makes this patch incompatible with newer patch versions.
+        // WorldsOptimizationPatch makes this patch incompatible with newer patch versions.
         return hasColumn(tableName, "server_uuid")
                 || hasColumn(tableName, columnName)
                 && allValuesHaveServerID(tableName, columnName);
@@ -82,7 +82,7 @@ public class WorldsServerIDPatch extends Patch {
         }
 
         updateWorldTimesTableWorldIDs();
-        db.executeUnsafe("DELETE FROM " + WorldTable.TABLE_NAME + " WHERE " + WorldTable.Col.SERVER_ID + "=0");
+        db.executeUnsafe("DELETE FROM " + WorldTable.TABLE_NAME + " WHERE server_id=0");
     }
 
     private Set<String> getWorldNamesOld(UUID serverUUID) {
@@ -162,7 +162,7 @@ public class WorldsServerIDPatch extends Patch {
                 List<WorldObj> objects = new ArrayList<>();
                 while (set.next()) {
                     int worldID = set.getInt(WorldTable.Col.ID.get());
-                    int serverID = set.getInt(WorldTable.Col.SERVER_ID.get());
+                    int serverID = set.getInt("server_id");
                     String worldName = set.getString(WorldTable.Col.NAME.get());
                     objects.add(new WorldObj(worldID, serverID, worldName));
                 }

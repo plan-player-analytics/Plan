@@ -41,7 +41,13 @@ import java.util.stream.Collectors;
  * <p>
  * Table Name: plan_world_times
  * <p>
- * For contained columns {@see Col}
+ * For contained columns {@link Col}
+ * <p>
+ * Patches related to this table:
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.Version10Patch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldTimesSeverIDPatch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldsServerIDPatch}
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldTimesOptimizationPatch}
  *
  * @author Rsl1122
  */
