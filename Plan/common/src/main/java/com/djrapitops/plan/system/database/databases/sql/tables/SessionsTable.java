@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class SessionsTable extends UserIDTable {
+public class SessionsTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_sessions";
 
@@ -597,22 +597,10 @@ public class SessionsTable extends UserIDTable {
         });
     }
 
-    @Override
-    public void removeUser(UUID uuid) {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.UUID + "=?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-        });
-    }
-
     public enum Col implements Column {
         @Deprecated
         USER_ID(UserIDTable.Col.USER_ID.get()),
-        UUID("uuid"),
+        UUID(UserUUIDTable.Col.UUID.get()),
         ID("id"),
         @Deprecated
         SERVER_ID("server_id"),

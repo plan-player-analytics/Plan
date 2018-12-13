@@ -42,7 +42,7 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class UsersTable extends UserIDTable {
+public class UsersTable extends UserUUIDTable {
 
     public UsersTable(SQLDB db) {
         super("plan_users", db);
@@ -84,23 +84,6 @@ public class UsersTable extends UserIDTable {
                     uuids.add(uuid);
                 }
                 return uuids;
-            }
-        });
-    }
-
-    /**
-     * Remove a user from Users Table.
-     *
-     * @param uuid the UUID of the user that should be removed.
-     */
-    @Override
-    public void removeUser(UUID uuid) {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.UUID + "=?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
             }
         });
     }
@@ -397,6 +380,7 @@ public class UsersTable extends UserIDTable {
         });
     }
 
+    @Deprecated
     public Map<Integer, UUID> getUUIDsByID() {
         String sql = Select.from(tableName, Col.ID, Col.UUID).toString();
 

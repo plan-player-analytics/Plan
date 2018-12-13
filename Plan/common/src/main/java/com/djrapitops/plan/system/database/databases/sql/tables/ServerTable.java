@@ -205,6 +205,7 @@ public class ServerTable extends Table {
         });
     }
 
+    @Deprecated
     public Map<Integer, UUID> getServerUUIDsByID() {
         String sql = Select.from(tableName,
                 Col.SERVER_ID, Col.SERVER_UUID)

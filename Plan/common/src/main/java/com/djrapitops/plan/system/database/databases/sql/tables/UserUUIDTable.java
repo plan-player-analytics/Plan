@@ -25,16 +25,29 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * Represents a Table that uses UsersTable IDs to get their data.
+ * Represents a Table that uses UUIDs to get their data.
  *
  * @author Rsl1122
- * @since 3.7.0
  */
-@Deprecated
-public abstract class UserIDTable extends Table {
+public abstract class UserUUIDTable extends Table {
+
+    public UserUUIDTable(String name, SQLDB db) {
+        super(name, db);
+    }
+
+    public void removeUser(UUID uuid) {
+        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.UUID + "=?)";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+        });
+    }
 
     public enum Col implements Column {
-        USER_ID("user_id");
+        UUID("uuid");
 
         private final String column;
 
@@ -51,23 +64,5 @@ public abstract class UserIDTable extends Table {
         public String toString() {
             return column;
         }
-    }
-
-    protected final UsersTable usersTable;
-
-    public UserIDTable(String name, SQLDB db) {
-        super(name, db);
-        usersTable = db.getUsersTable();
-    }
-
-    public void removeUser(UUID uuid) {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.USER_ID + "=" + usersTable.statementSelectID + ")";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-        });
     }
 }

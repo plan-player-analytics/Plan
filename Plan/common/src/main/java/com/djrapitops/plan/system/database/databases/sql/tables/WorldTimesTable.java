@@ -51,10 +51,9 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class WorldTimesTable extends UserIDTable {
+public class WorldTimesTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_world_times";
-    private final ServerTable serverTable;
     private final WorldTable worldTable;
     private final SessionsTable sessionsTable;
     private String insertStatement;
@@ -63,7 +62,6 @@ public class WorldTimesTable extends UserIDTable {
         super(TABLE_NAME, db);
         worldTable = db.getWorldTable();
         sessionsTable = db.getSessionsTable();
-        serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
                 Col.UUID + ", " +
                 Col.WORLD_ID + ", " +
@@ -371,39 +369,26 @@ public class WorldTimesTable extends UserIDTable {
     }
 
     @Override
-    public void removeUser(UUID uuid) {
-        String sql = "DELETE FROM " + tableName + " WHERE (" + Col.UUID + "=?)";
-
-        execute(new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, uuid.toString());
-            }
-        });
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof WorldTimesTable)) return false;
         if (!super.equals(o)) return false;
         WorldTimesTable that = (WorldTimesTable) o;
-        return Objects.equals(serverTable, that.serverTable) &&
-                Objects.equals(worldTable, that.worldTable) &&
+        return Objects.equals(worldTable, that.worldTable) &&
                 Objects.equals(sessionsTable, that.sessionsTable) &&
                 Objects.equals(insertStatement, that.insertStatement);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), serverTable, worldTable, sessionsTable, insertStatement);
+        return Objects.hash(super.hashCode(), worldTable, sessionsTable, insertStatement);
     }
 
     public enum Col implements Column {
         ID("id"),
         @Deprecated
         USER_ID(UserIDTable.Col.USER_ID.get()),
-        UUID("uuid"),
+        UUID(UserUUIDTable.Col.UUID.get()),
         @Deprecated
         SERVER_ID("server_id"),
         SERVER_UUID("server_uuid"),

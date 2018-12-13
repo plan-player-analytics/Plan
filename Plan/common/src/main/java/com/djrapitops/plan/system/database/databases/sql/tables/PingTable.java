@@ -32,40 +32,42 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class PingTable extends UserIDTable {
+/**
+ * Table that represents plan_ping in the database.
+ * <p>
+ * Patches related to this table:
+ * {@link com.djrapitops.plan.system.database.databases.sql.patches.PingOptimizationPatch}
+ *
+ * @author Rsl1122
+ */
+public class PingTable extends UserUUIDTable {
 
     public static final String TABLE_NAME = "plan_ping";
     private final String insertStatement;
-    private final ServerTable serverTable;
 
     public PingTable(SQLDB db) {
         super(TABLE_NAME, db);
-        serverTable = db.getServerTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
-                Col.USER_ID + ", " +
-                Col.SERVER_ID + ", " +
+                Col.UUID + ", " +
+                Col.SERVER_UUID + ", " +
                 Col.DATE + ", " +
                 Col.MIN_PING + ", " +
                 Col.MAX_PING + ", " +
                 Col.AVG_PING +
-                ") VALUES (" +
-                usersTable.statementSelectID + ", " +
-                serverTable.statementSelectServerID + ", ?, ?, ?, ?)";
+                ") VALUES (?, ?, ?, ?, ?, ?)";
     }
 
     @Override
     public void createTable() throws DBInitException {
         createTable(TableSqlParser.createTable(TABLE_NAME)
                 .primaryKeyIDColumn(supportsMySQLQueries, Col.ID)
-                .column(Col.USER_ID, Sql.INT).notNull()
-                .column(Col.SERVER_ID, Sql.INT).notNull()
+                .column(Col.UUID, Sql.varchar(36)).notNull()
+                .column(Col.SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(Col.DATE, Sql.LONG).notNull()
                 .column(Col.MAX_PING, Sql.INT).notNull()
                 .column(Col.MIN_PING, Sql.INT).notNull()
                 .column(Col.AVG_PING, Sql.DOUBLE).notNull()
                 .primaryKey(supportsMySQLQueries, Col.ID)
-                .foreignKey(Col.USER_ID, usersTable.getTableName(), UsersTable.Col.ID)
-                .foreignKey(Col.SERVER_ID, ServerTable.TABLE_NAME, ServerTable.Col.SERVER_ID)
                 .toString());
     }
 
@@ -98,9 +100,8 @@ public class PingTable extends UserIDTable {
     }
 
     public List<Ping> getPing(UUID uuid) {
-        Map<Integer, UUID> serverUUIDs = serverTable.getServerUUIDsByID();
         String sql = "SELECT * FROM " + tableName +
-                " WHERE " + Col.USER_ID + "=" + usersTable.statementSelectID;
+                " WHERE " + Col.UUID + "=?";
 
         return query(new QueryStatement<List<Ping>>(sql, 10000) {
             @Override
@@ -115,7 +116,7 @@ public class PingTable extends UserIDTable {
                 while (set.next()) {
                     pings.add(new Ping(
                                     set.getLong(Col.DATE.get()),
-                                    serverUUIDs.get(set.getInt(Col.SERVER_ID.get())),
+                            UUID.fromString(set.getString(Col.SERVER_UUID.get())),
                                     set.getInt(Col.MIN_PING.get()),
                                     set.getInt(Col.MAX_PING.get()),
                                     set.getDouble(Col.AVG_PING.get())
@@ -129,28 +130,22 @@ public class PingTable extends UserIDTable {
     }
 
     public Map<UUID, List<Ping>> getAllPings() {
-        String usersIDColumn = usersTable + "." + UsersTable.Col.ID;
-        String usersUUIDColumn = usersTable + "." + UsersTable.Col.UUID + " as uuid";
-        String serverIDColumn = serverTable + "." + ServerTable.Col.SERVER_ID;
-        String serverUUIDColumn = serverTable + "." + ServerTable.Col.SERVER_UUID + " as s_uuid";
         String sql = "SELECT " +
                 Col.DATE + ", " +
                 Col.MAX_PING + ", " +
                 Col.MIN_PING + ", " +
                 Col.AVG_PING + ", " +
-                usersUUIDColumn + ", " +
-                serverUUIDColumn +
-                " FROM " + tableName +
-                " INNER JOIN " + usersTable + " on " + usersIDColumn + "=" + UserInfoTable.Col.USER_ID +
-                " INNER JOIN " + serverTable + " on " + serverIDColumn + "=" + UserInfoTable.Col.SERVER_ID;
+                Col.UUID + ", " +
+                Col.SERVER_UUID +
+                " FROM " + tableName;
         return query(new QueryAllStatement<Map<UUID, List<Ping>>>(sql, 100000) {
             @Override
             public Map<UUID, List<Ping>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<Ping>> userPings = new HashMap<>();
 
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString("uuid"));
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
+                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
                     long date = set.getLong(Col.DATE.get());
                     double avgPing = set.getDouble(Col.AVG_PING.get());
                     int minPing = set.getInt(Col.MIN_PING.get());
@@ -198,8 +193,12 @@ public class PingTable extends UserIDTable {
 
     public enum Col implements Column {
         ID("id"),
+        @Deprecated
         USER_ID(UserIDTable.Col.USER_ID.get()),
+        UUID(UserUUIDTable.Col.UUID.get()),
+        @Deprecated
         SERVER_ID("server_id"),
+        SERVER_UUID("server_uuid"),
         DATE("date"),
         MAX_PING("max_ping"),
         AVG_PING("avg_ping"),
