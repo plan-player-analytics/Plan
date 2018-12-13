@@ -243,8 +243,6 @@ public class GeoInfoTable extends UserUUIDTable {
 
     public enum Col implements Column {
         ID("id"),
-        @Deprecated
-        USER_ID(UserIDTable.Col.USER_ID.get()),
         UUID(UserUUIDTable.Col.UUID.get()),
         IP("ip"),
         IP_HASH("ip_hash"),

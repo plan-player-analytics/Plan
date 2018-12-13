@@ -380,26 +380,6 @@ public class UsersTable extends UserUUIDTable {
         });
     }
 
-    @Deprecated
-    public Map<Integer, UUID> getUUIDsByID() {
-        String sql = Select.from(tableName, Col.ID, Col.UUID).toString();
-
-        return query(new QueryAllStatement<Map<Integer, UUID>>(sql, 20000) {
-            @Override
-            public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
-                Map<Integer, UUID> uuidsByID = new TreeMap<>();
-
-                while (set.next()) {
-                    int id = set.getInt(Col.ID.get());
-                    UUID uuid = UUID.fromString(set.getString(Col.UUID.get()));
-                    uuidsByID.put(id, uuid);
-                }
-
-                return uuidsByID;
-            }
-        });
-    }
-
     /**
      * Gets the {@code UUID} and the name of the player mapped to the user ID
      *

@@ -324,14 +324,8 @@ public class KillsTable extends UserUUIDTable {
 
     public enum Col implements Column {
         ID("id"),
-        @Deprecated
-        KILLER_ID("killer_id"),
         KILLER_UUID("killer_uuid"),
-        @Deprecated
-        VICTIM_ID("victim_id"),
         VICTIM_UUID("victim_uuid"),
-        @Deprecated
-        SERVER_ID("server_id"),
         SERVER_UUID("server_uuid"),
         SESSION_ID("session_id"),
         WEAPON("weapon"),

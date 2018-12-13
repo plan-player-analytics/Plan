@@ -178,8 +178,6 @@ public class WorldTable extends Table {
 
     public enum Col implements Column {
         ID("id"),
-        @Deprecated
-        SERVER_ID("server_id"),
         SERVER_UUID("server_uuid"),
         NAME("world_name");
 

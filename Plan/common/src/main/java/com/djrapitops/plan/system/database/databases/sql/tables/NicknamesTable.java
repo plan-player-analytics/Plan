@@ -275,11 +275,7 @@ public class NicknamesTable extends UserUUIDTable {
 
     public enum Col implements Column {
         ID("id"),
-        @Deprecated
-        USER_ID(UserIDTable.Col.USER_ID.get()),
         UUID(UserUUIDTable.Col.UUID.get()),
-        @Deprecated
-        SERVER_ID("server_id"),
         SERVER_UUID("server_uuid"),
         NICKNAME("nickname"),
         LAST_USED("last_used");

@@ -598,12 +598,8 @@ public class SessionsTable extends UserUUIDTable {
     }
 
     public enum Col implements Column {
-        @Deprecated
-        USER_ID(UserIDTable.Col.USER_ID.get()),
         UUID(UserUUIDTable.Col.UUID.get()),
         ID("id"),
-        @Deprecated
-        SERVER_ID("server_id"),
         SERVER_UUID("server_uuid"),
         SESSION_START("session_start"),
         SESSION_END("session_end"),

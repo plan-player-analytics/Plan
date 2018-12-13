@@ -21,7 +21,6 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable;
-import com.djrapitops.plan.system.database.databases.sql.tables.UserIDTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,6 +43,11 @@ public class NicknameLastSeenPatch extends Patch {
         addColumn(NicknamesTable.TABLE_NAME,
                 NicknamesTable.Col.LAST_USED + " bigint NOT NULL DEFAULT '0'"
         );
+
+        if (hasColumn(NicknamesTable.TABLE_NAME, NicknamesTable.Col.UUID.get())) {
+            // NicknamesOptimizationPatch makes this patch incompatible with newer patch versions.
+            return;
+        }
 
         // Create table if has failed already
         db.executeUnsafe("CREATE TABLE IF NOT EXISTS plan_actions " +
@@ -70,7 +74,7 @@ public class NicknameLastSeenPatch extends Patch {
 
                 while (set.next()) {
                     long date = set.getLong("date");
-                    int userID = set.getInt(UserIDTable.Col.USER_ID.get());
+                    int userID = set.getInt("user_id");
                     int serverID = set.getInt("server_id");
                     UUID serverUUID = serverUUIDsByID.get(serverID);
                     Nickname nick = new Nickname(set.getString("additional_info"), date, serverUUID);
