@@ -20,7 +20,9 @@ import com.djrapitops.plan.data.store.objects.Nickname;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
+import com.djrapitops.plan.system.database.databases.sql.statements.Select;
 import com.djrapitops.plan.system.database.databases.sql.tables.NicknamesTable;
+import com.djrapitops.plan.system.database.databases.sql.tables.ServerTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,7 +55,7 @@ public class NicknameLastSeenPatch extends Patch {
         db.executeUnsafe("CREATE TABLE IF NOT EXISTS plan_actions " +
                 "(action_id integer, date bigint, server_id integer, user_id integer, additional_info varchar(1))");
 
-        Map<Integer, UUID> serverUUIDsByID = db.getServerTable().getServerUUIDsByID();
+        Map<Integer, UUID> serverUUIDsByID = getServerUUIDsByID();
         Map<UUID, Integer> serverIDsByUUID = new HashMap<>();
         for (Map.Entry<Integer, UUID> entry : serverUUIDsByID.entrySet()) {
             serverIDsByUUID.put(entry.getValue(), entry.getKey());
@@ -63,6 +65,24 @@ public class NicknameLastSeenPatch extends Patch {
         updateLastUsed(serverIDsByUUID, nicknames);
 
         db.executeUnsafe("DROP TABLE plan_actions");
+    }
+
+    private Map<Integer, UUID> getServerUUIDsByID() {
+        String sql = Select.from(ServerTable.TABLE_NAME,
+                ServerTable.Col.SERVER_ID, ServerTable.Col.SERVER_UUID)
+                .toString();
+
+        return query(new QueryAllStatement<Map<Integer, UUID>>(sql) {
+            @Override
+            public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
+                Map<Integer, UUID> uuids = new HashMap<>();
+                while (set.next()) {
+                    int id = set.getInt(ServerTable.Col.SERVER_ID.get());
+                    uuids.put(id, UUID.fromString(set.getString(ServerTable.Col.SERVER_UUID.get())));
+                }
+                return uuids;
+            }
+        });
     }
 
     private Map<Integer, Set<Nickname>> getNicknamesByUserID(Map<Integer, UUID> serverUUIDsByID) {

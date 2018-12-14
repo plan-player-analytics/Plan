@@ -29,7 +29,6 @@ import java.util.function.Predicate;
 public abstract class Setting<T> {
 
     protected final String path;
-    private final Type<T> type;
     private final Predicate<T> validator;
 
     public Setting(String path, Class<T> type) {
@@ -46,7 +45,6 @@ public abstract class Setting<T> {
 
     public Setting(String path, Type<T> type, Predicate<T> validator) {
         this.path = path;
-        this.type = type;
         this.validator = validator;
     }
 

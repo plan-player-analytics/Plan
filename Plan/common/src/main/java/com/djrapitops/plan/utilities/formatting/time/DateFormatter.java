@@ -48,10 +48,10 @@ public abstract class DateFormatter implements Formatter<Long> {
 
     protected String format(long epochMs, String format) {
         boolean useServerTime = config.isTrue(TimeSettings.USE_SERVER_TIME);
-        String locale = config.getString(PluginSettings.LOCALE);
-        java.util.Locale usedLocale = locale.equalsIgnoreCase("default")
+        String localeSetting = config.getString(PluginSettings.LOCALE);
+        java.util.Locale usedLocale = localeSetting.equalsIgnoreCase("default")
                 ? java.util.Locale.ENGLISH
-                : java.util.Locale.forLanguageTag(locale);
+                : java.util.Locale.forLanguageTag(localeSetting);
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, usedLocale);
         TimeZone timeZone = useServerTime ? TimeZone.getDefault() : TimeZone.getTimeZone("GMT");
         dateFormat.setTimeZone(timeZone);

@@ -75,7 +75,7 @@ public class RawDataResponse extends Response {
 
     private List handleList(List list) {
         if (list.stream().findAny().orElse(null) instanceof DataContainer) {
-            return ((List<Object>) list.stream().map((obj) -> mapToNormalMap((DataContainer) obj)).collect(Collectors.toList()));
+            return (List) list.stream().map((obj) -> mapToNormalMap((DataContainer) obj)).collect(Collectors.toList());
         }
         return list;
     }

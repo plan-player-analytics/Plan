@@ -55,7 +55,7 @@ public class FileWatcher extends Thread {
         this.running = false;
         this.watchedFiles = watchedFiles;
 
-        Verify.isTrue(Files.isDirectory(folder.toPath()), () -> new IllegalArgumentException("Given File " + folder.getAbsolutePath() + " was not a folder."));
+        Verify.isTrue(folder.isDirectory(), () -> new IllegalArgumentException("Given File " + folder.getAbsolutePath() + " was not a folder."));
 
         watchedPath = folder.toPath();
     }
@@ -69,35 +69,50 @@ public class FileWatcher extends Thread {
         this.running = true;
         try (WatchService watcher = FileSystems.getDefault().newWatchService()) {
             watchedPath.register(watcher, ENTRY_MODIFY);
-
-            while (running) {
-                WatchKey key = watcher.take();
-
-                if (key == null) {
-                    Thread.yield();
-                    continue;
-                }
-
-                for (WatchEvent<?> event : key.pollEvents()) {
-                    if (event.kind() != ENTRY_MODIFY) {
-                        Thread.yield();
-                    } else {
-                        @SuppressWarnings("unchecked")
-                        Path modifiedFile = ((WatchEvent<Path>) event).context();
-
-                        for (WatchedFile watchedFile : watchedFiles) {
-                            watchedFile.modified(modifiedFile);
-                        }
-                    }
-                    if (!key.reset()) {
-                        break;
-                    }
-                }
-            }
+            runLoop(watcher);
         } catch (IOException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
         } catch (InterruptedException e) {
             interrupt();
+        }
+    }
+
+    private void runLoop(WatchService watcher) throws InterruptedException {
+        while (running) {
+            // Blocking operation
+            WatchKey key = watcher.take();
+
+            if (key == null) {
+                Thread.yield();
+                continue;
+            }
+
+            pollEvents(key);
+        }
+    }
+
+    private void pollEvents(WatchKey key) {
+        for (WatchEvent<?> event : key.pollEvents()) {
+            handleEvent(event);
+            if (!key.reset()) {
+                break;
+            }
+        }
+    }
+
+    private void handleEvent(WatchEvent<?> event) {
+        if (event.kind() != ENTRY_MODIFY) {
+            Thread.yield();
+        } else {
+            @SuppressWarnings("unchecked")
+            Path modifiedFile = ((WatchEvent<Path>) event).context();
+            actOnModification(modifiedFile);
+        }
+    }
+
+    private void actOnModification(Path modifiedFile) {
+        for (WatchedFile watchedFile : watchedFiles) {
+            watchedFile.modified(modifiedFile);
         }
     }
 

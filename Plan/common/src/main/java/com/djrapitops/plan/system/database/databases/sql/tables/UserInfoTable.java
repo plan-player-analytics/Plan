@@ -48,12 +48,10 @@ public class UserInfoTable extends UserUUIDTable {
 
     private final String insertStatement;
 
-    private final ServerTable serverTable;
     private final UsersTable usersTable;
 
     public UserInfoTable(SQLDB db) {
         super(TABLE_NAME, db);
-        serverTable = db.getServerTable();
         usersTable = db.getUsersTable();
         insertStatement = "INSERT INTO " + tableName + " (" +
                 Col.UUID + ", " +

@@ -205,25 +205,6 @@ public class ServerTable extends Table {
         });
     }
 
-    @Deprecated
-    public Map<Integer, UUID> getServerUUIDsByID() {
-        String sql = Select.from(tableName,
-                Col.SERVER_ID, Col.SERVER_UUID)
-                .toString();
-
-        return query(new QueryAllStatement<Map<Integer, UUID>>(sql) {
-            @Override
-            public Map<Integer, UUID> processResults(ResultSet set) throws SQLException {
-                Map<Integer, UUID> uuids = new HashMap<>();
-                while (set.next()) {
-                    int id = set.getInt(Col.SERVER_ID.get());
-                    uuids.put(id, UUID.fromString(set.getString(Col.SERVER_UUID.get())));
-                }
-                return uuids;
-            }
-        });
-    }
-
     /**
      * Used to get BungeeCord WebServer info if present.
      *
