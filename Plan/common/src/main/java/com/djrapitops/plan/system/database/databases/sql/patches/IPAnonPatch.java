@@ -36,13 +36,22 @@ import java.util.UUID;
 
 public class IPAnonPatch extends Patch {
 
+    private String tableName;
+    private String tempTableName;
+
     public IPAnonPatch(SQLDB db) {
         super(db);
+        tableName = GeoInfoTable.TABLE_NAME;
+        tempTableName = "plan_ips_temp";
     }
 
     @Override
     public boolean hasBeenApplied() {
-        String sql = "SELECT * FROM " + GeoInfoTable.TABLE_NAME +
+        return !containsUnAnonymizedIPs() && !hasTable(tempTableName);
+    }
+
+    private Boolean containsUnAnonymizedIPs() {
+        String sql = "SELECT * FROM " + tableName +
                 " WHERE " + GeoInfoTable.Col.IP + " NOT LIKE ? LIMIT 1";
 
         return query(new QueryStatement<Boolean>(sql) {
@@ -53,7 +62,7 @@ public class IPAnonPatch extends Patch {
 
             @Override
             public Boolean processResults(ResultSet set) throws SQLException {
-                return !set.next();
+                return set.next();
             }
         });
     }
@@ -105,23 +114,29 @@ public class IPAnonPatch extends Patch {
 
     private void groupHashedIPs() {
         try {
-            String tempTableName = "plan_ips_temp";
-            String ipTableName = "plan_ips";
-            try {
-                renameTable(ipTableName, tempTableName);
-            } catch (DBOpException e) {
-                // Temp table already exists
-                if (!e.getMessage().contains("plan_ips_temp")) {
-                    throw e;
-                }
+            if (!hasTable(tempTableName)) {
+                tempOldTable();
             }
             db.getGeoInfoTable().createTable();
+
+            boolean hasUserIdColumn = hasColumn(tempTableName, "user_id");
+            String identifiers = hasUserIdColumn ? "user_id" : "id, uuid";
+
             db.execute("INSERT INTO plan_ips (" +
-                    "id, uuid, ip, ip_hash, geolocation, last_used" +
-                    ") SELECT id, uuid, ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, uuid, ip, geolocation");
+                    identifiers + ", ip, ip_hash, geolocation, last_used" +
+                    ") SELECT " +
+                    identifiers + ", ip, ip_hash, geolocation, MAX(last_used) FROM plan_ips_temp GROUP BY ip_hash, " +
+                    (hasUserIdColumn ? "user_id" : "uuid") +
+                    ", ip, geolocation");
             dropTable(tempTableName);
         } catch (DBInitException e) {
             throw new DBOpException(e.getMessage(), e);
+        }
+    }
+
+    private void tempOldTable() {
+        if (!hasTable(tempTableName)) {
+            renameTable(tableName, tempTableName);
         }
     }
 }
