@@ -81,6 +81,17 @@
             <version>5.3.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency> <!-- JUnit 5, parameterized tests-->
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency> <!-- TempDirectory, TODO DEPENDENCY TO BE REMOVED ON JUNIT 5.4 RELEASE -->
+            <groupId>org.junit-pioneer</groupId>
+            <artifactId>junit-pioneer</artifactId>
+            <version>0.3.0</version>
+        </dependency>
         <dependency> <!-- Mockito -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
