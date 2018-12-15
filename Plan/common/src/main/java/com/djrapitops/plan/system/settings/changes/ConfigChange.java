@@ -49,8 +49,8 @@ public interface ConfigChange {
             ConfigNode newNode = config.getConfigNode(newPath);
             ConfigNode oldNode = config.getConfigNode(oldPath);
             newNode.copyDefaults(oldNode);
-            newNode.set(oldNode.getValue());
-            super.apply(config);
+            newNode.set(oldNode.getString());
+            removeNode(oldNode);
         }
 
         @Override
@@ -97,6 +97,10 @@ public interface ConfigChange {
         @Override
         public synchronized void apply(Config config) {
             ConfigNode node = config.getConfigNode(oldPath);
+            removeNode(node);
+        }
+
+        void removeNode(ConfigNode node) {
             ConfigNode parent = node.getParent();
             String key = node.getKey(false);
             parent.getChildren().remove(key);
