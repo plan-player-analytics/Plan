@@ -66,7 +66,7 @@ public abstract class Patch {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tableName);
                 if (secondParameter) {
-                    statement.setString(2, db.getConfig().getString(DatabaseSettings.MYSQL_DATABASE));
+                    statement.setString(2, db.getConfig().get(DatabaseSettings.MYSQL_DATABASE));
                 }
             }
 
@@ -95,7 +95,7 @@ public abstract class Patch {
                     statement.setString(1, tableName);
                     statement.setString(2, columnName);
                     if (dbType != DBType.H2) {
-                        statement.setString(3, db.getConfig().getString(DatabaseSettings.MYSQL_DATABASE));
+                        statement.setString(3, db.getConfig().get(DatabaseSettings.MYSQL_DATABASE));
                     }
                 }
 

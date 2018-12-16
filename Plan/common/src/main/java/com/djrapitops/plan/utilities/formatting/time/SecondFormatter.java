@@ -37,7 +37,7 @@ public class SecondFormatter extends DateFormatter {
     }
 
     private String format(Long date) {
-        String format = config.getString(FormatSettings.DATE_FULL);
+        String format = config.get(FormatSettings.DATE_FULL);
 
         if (config.isTrue(FormatSettings.DATE_RECENT_DAYS)) {
             format = replaceRecentDays(date, format);

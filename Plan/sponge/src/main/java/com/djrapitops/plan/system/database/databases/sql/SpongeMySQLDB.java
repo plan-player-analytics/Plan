@@ -63,18 +63,18 @@ public class SpongeMySQLDB extends MySQLDB {
             return;
         }
 
-        String host = config.getString(DatabaseSettings.MYSQL_HOST);
-        String port = config.getString(DatabaseSettings.MYSQL_PORT);
-        String database = config.getString(DatabaseSettings.MYSQL_DATABASE);
-        String launchOptions = config.getString(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
+        String host = config.get(DatabaseSettings.MYSQL_HOST);
+        String port = config.get(DatabaseSettings.MYSQL_PORT);
+        String database = config.get(DatabaseSettings.MYSQL_DATABASE);
+        String launchOptions = config.get(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
         if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
             logger.error("Launch Options were faulty, using default (?rewriteBatchedStatements=true&useSSL=false)");
             launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
         }
 
         String url = host + ":" + port + "/" + database + launchOptions;
-        String username = config.getString(DatabaseSettings.MYSQL_USER);
-        String password = config.getString(DatabaseSettings.MYSQL_PASS);
+        String username = config.get(DatabaseSettings.MYSQL_USER);
+        String password = config.get(DatabaseSettings.MYSQL_PASS);
         try {
             this.dataSource = sqlServiceProvider.get().getDataSource(
                     "jdbc:mysql://" + username + ":" + password + "@" + url

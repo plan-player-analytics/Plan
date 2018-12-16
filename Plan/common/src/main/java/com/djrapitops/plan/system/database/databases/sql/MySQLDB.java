@@ -81,18 +81,18 @@ public class MySQLDB extends SQLDB {
         try {
             HikariConfig hikariConfig = new HikariConfig();
 
-            String host = config.getString(DatabaseSettings.MYSQL_HOST);
-            String port = config.getString(DatabaseSettings.MYSQL_PORT);
-            String database = config.getString(DatabaseSettings.MYSQL_DATABASE);
-            String launchOptions = config.getString(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
+            String host = config.get(DatabaseSettings.MYSQL_HOST);
+            String port = config.get(DatabaseSettings.MYSQL_PORT);
+            String database = config.get(DatabaseSettings.MYSQL_DATABASE);
+            String launchOptions = config.get(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
             if (launchOptions.isEmpty() || !launchOptions.startsWith("?") || launchOptions.endsWith("&")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
             hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
-            String username = config.getString(DatabaseSettings.MYSQL_USER);
-            String password = config.getString(DatabaseSettings.MYSQL_PASS);
+            String username = config.get(DatabaseSettings.MYSQL_USER);
+            String password = config.get(DatabaseSettings.MYSQL_PASS);
 
             hikariConfig.setUsername(username);
             hikariConfig.setPassword(password);

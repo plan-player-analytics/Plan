@@ -24,16 +24,16 @@ public class TimeAmountFormatterExtraZerosTest {
     @BeforeClass
     public static void setUpClass() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
-        when(config.getString(FormatSettings.YEAR)).thenReturn("1 year, ");
-        when(config.getString(FormatSettings.YEARS)).thenReturn("%years% years, ");
-        when(config.getString(FormatSettings.MONTH)).thenReturn("1 month, ");
-        when(config.getString(FormatSettings.MONTHS)).thenReturn("%months% months, ");
-        when(config.getString(FormatSettings.DAY)).thenReturn("1d ");
-        when(config.getString(FormatSettings.DAYS)).thenReturn("%days%d ");
-        when(config.getString(FormatSettings.HOURS)).thenReturn("%zero%%hours%:");
-        when(config.getString(FormatSettings.MINUTES)).thenReturn("%hours%%zero%%minutes%:");
-        when(config.getString(FormatSettings.SECONDS)).thenReturn("%minutes%%zero%%seconds%");
-        when(config.getString(FormatSettings.ZERO_SECONDS)).thenReturn("00:00:00");
+        when(config.get(FormatSettings.YEAR)).thenReturn("1 year, ");
+        when(config.get(FormatSettings.YEARS)).thenReturn("%years% years, ");
+        when(config.get(FormatSettings.MONTH)).thenReturn("1 month, ");
+        when(config.get(FormatSettings.MONTHS)).thenReturn("%months% months, ");
+        when(config.get(FormatSettings.DAY)).thenReturn("1d ");
+        when(config.get(FormatSettings.DAYS)).thenReturn("%days%d ");
+        when(config.get(FormatSettings.HOURS)).thenReturn("%zero%%hours%:");
+        when(config.get(FormatSettings.MINUTES)).thenReturn("%hours%%zero%%minutes%:");
+        when(config.get(FormatSettings.SECONDS)).thenReturn("%minutes%%zero%%seconds%");
+        when(config.get(FormatSettings.ZERO_SECONDS)).thenReturn("00:00:00");
         underTest = new TimeAmountFormatter(config);
     }
 

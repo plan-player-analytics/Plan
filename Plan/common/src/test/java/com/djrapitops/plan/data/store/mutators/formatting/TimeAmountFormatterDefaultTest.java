@@ -24,18 +24,18 @@ public class TimeAmountFormatterDefaultTest {
     @BeforeClass
     public static void setUpClass() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
-        when(config.getString(FormatSettings.YEAR)).thenReturn("1 year, ");
-        when(config.getString(FormatSettings.YEARS)).thenReturn("%years% years, ");
-        when(config.getString(FormatSettings.MONTH)).thenReturn("1 month, ");
-        when(config.getString(FormatSettings.YEAR)).thenReturn("1 year, ");
-        when(config.getString(FormatSettings.MONTH)).thenReturn("1 month, ");
-        when(config.getString(FormatSettings.MONTHS)).thenReturn("%months% months, ");
-        when(config.getString(FormatSettings.DAY)).thenReturn("1d ");
-        when(config.getString(FormatSettings.DAYS)).thenReturn("%days%d ");
-        when(config.getString(FormatSettings.HOURS)).thenReturn("%hours%h ");
-        when(config.getString(FormatSettings.MINUTES)).thenReturn("%minutes%m ");
-        when(config.getString(FormatSettings.SECONDS)).thenReturn("%seconds%s");
-        when(config.getString(FormatSettings.ZERO_SECONDS)).thenReturn("0s");
+        when(config.get(FormatSettings.YEAR)).thenReturn("1 year, ");
+        when(config.get(FormatSettings.YEARS)).thenReturn("%years% years, ");
+        when(config.get(FormatSettings.MONTH)).thenReturn("1 month, ");
+        when(config.get(FormatSettings.YEAR)).thenReturn("1 year, ");
+        when(config.get(FormatSettings.MONTH)).thenReturn("1 month, ");
+        when(config.get(FormatSettings.MONTHS)).thenReturn("%months% months, ");
+        when(config.get(FormatSettings.DAY)).thenReturn("1d ");
+        when(config.get(FormatSettings.DAYS)).thenReturn("%days%d ");
+        when(config.get(FormatSettings.HOURS)).thenReturn("%hours%h ");
+        when(config.get(FormatSettings.MINUTES)).thenReturn("%minutes%m ");
+        when(config.get(FormatSettings.SECONDS)).thenReturn("%seconds%s");
+        when(config.get(FormatSettings.ZERO_SECONDS)).thenReturn("0s");
         underTest = new TimeAmountFormatter(config);
     }
 

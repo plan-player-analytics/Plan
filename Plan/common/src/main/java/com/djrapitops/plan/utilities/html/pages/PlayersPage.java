@@ -76,7 +76,7 @@ public class PlayersPage implements Page {
             if (Check.isBukkitAvailable()) {
                 placeholderReplacer.put("networkName", serverInfo.getServer().getName());
             } else {
-                placeholderReplacer.put("networkName", config.getString(ProxySettings.NETWORK_NAME));
+                placeholderReplacer.put("networkName", config.get(ProxySettings.NETWORK_NAME));
             }
 
             timings.start("Players page players table parsing");

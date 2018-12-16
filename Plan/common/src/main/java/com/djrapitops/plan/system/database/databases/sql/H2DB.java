@@ -92,8 +92,8 @@ public class H2DB extends SQLDB {
     }
 
     private Connection getConnectionFor(String dbFilePath) throws SQLException {
-        String username = config.getString(DatabaseSettings.MYSQL_USER);
-        String password = config.getString(DatabaseSettings.MYSQL_PASS);
+        String username = config.get(DatabaseSettings.MYSQL_USER);
+        String password = config.get(DatabaseSettings.MYSQL_PASS);
 
         JdbcDataSource jdbcDataSource = new JdbcDataSource();
         jdbcDataSource.setURL("jdbc:h2:file:" + dbFilePath + ";mode=MySQL");

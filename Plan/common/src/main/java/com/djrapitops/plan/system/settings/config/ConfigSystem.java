@@ -82,7 +82,7 @@ public abstract class ConfigSystem implements SubSystem {
     }
 
     private void setDebugMode() {
-        String debugMode = config.getString(PluginSettings.DEBUG);
+        String debugMode = config.get(PluginSettings.DEBUG);
 
         List<DebugLogger> loggers = new ArrayList<>();
         if (Verify.equalsOne(debugMode, "true", "both", "console")) {

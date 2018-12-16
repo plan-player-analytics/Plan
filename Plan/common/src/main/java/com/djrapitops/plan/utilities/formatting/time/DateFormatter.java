@@ -48,7 +48,7 @@ public abstract class DateFormatter implements Formatter<Long> {
 
     protected String format(long epochMs, String format) {
         boolean useServerTime = config.isTrue(TimeSettings.USE_SERVER_TIME);
-        String localeSetting = config.getString(PluginSettings.LOCALE);
+        String localeSetting = config.get(PluginSettings.LOCALE);
         java.util.Locale usedLocale = localeSetting.equalsIgnoreCase("default")
                 ? java.util.Locale.ENGLISH
                 : java.util.Locale.forLanguageTag(localeSetting);
@@ -59,7 +59,7 @@ public abstract class DateFormatter implements Formatter<Long> {
     }
 
     protected String replaceRecentDays(long epochMs, String format) {
-        return replaceRecentDays(epochMs, format, config.getString(FormatSettings.DATE_RECENT_DAYS_PATTERN));
+        return replaceRecentDays(epochMs, format, config.get(FormatSettings.DATE_RECENT_DAYS_PATTERN));
     }
 
     protected String replaceRecentDays(long epochMs, String format, String pattern) {

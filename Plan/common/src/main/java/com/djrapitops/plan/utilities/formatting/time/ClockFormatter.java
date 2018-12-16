@@ -37,7 +37,7 @@ public class ClockFormatter extends DateFormatter {
     }
 
     private String format(Long date) {
-        String format = config.getString(FormatSettings.DATE_CLOCK);
+        String format = config.get(FormatSettings.DATE_CLOCK);
 
         return format(date, format);
     }

@@ -61,7 +61,7 @@ public class SpongeDBSystem extends DBSystem {
 
     @Override
     public void enable() throws EnableException {
-        String dbType = config.getString(DatabaseSettings.TYPE).toLowerCase().trim();
+        String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();
         db = getActiveDatabaseByName(dbType);
         super.enable();
     }

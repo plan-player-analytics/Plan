@@ -37,7 +37,7 @@ public class YearFormatter extends DateFormatter {
     }
 
     private String format(Long date) {
-        String format = config.getString(FormatSettings.DATE_NO_SECONDS);
+        String format = config.get(FormatSettings.DATE_NO_SECONDS);
 
         if (config.isTrue(FormatSettings.DATE_RECENT_DAYS)) {
             format = replaceRecentDays(date, format);

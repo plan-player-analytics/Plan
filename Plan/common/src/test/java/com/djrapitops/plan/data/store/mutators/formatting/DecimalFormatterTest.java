@@ -22,7 +22,7 @@ public class DecimalFormatterTest {
     @Before
     public void setUp() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
-        when(config.getString(FormatSettings.DECIMALS)).thenReturn("#.##");
+        when(config.get(FormatSettings.DECIMALS)).thenReturn("#.##");
 
         underTest = new DecimalFormatter(config);
     }

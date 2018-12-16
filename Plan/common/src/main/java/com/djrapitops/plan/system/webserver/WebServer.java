@@ -133,10 +133,10 @@ public class WebServer implements SubSystem {
 
             if (!usingHttps) {
                 logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
-                server = HttpServer.create(new InetSocketAddress(config.getString(WebserverSettings.INTERNAL_IP), port), 10);
+                server = HttpServer.create(new InetSocketAddress(config.get(WebserverSettings.INTERNAL_IP), port), 10);
             } else if (server == null) {
                 logger.log(L.INFO_COLOR, "§eWebServer: Proxy HTTPS Override enabled. HTTP Server in use, make sure that your Proxy webserver is routing with HTTPS and AlternativeIP.Link points to the Proxy");
-                server = HttpServer.create(new InetSocketAddress(config.getString(WebserverSettings.INTERNAL_IP), port), 10);
+                server = HttpServer.create(new InetSocketAddress(config.get(WebserverSettings.INTERNAL_IP), port), 10);
             }
             server.createContext("/", requestHandler);
 
@@ -157,7 +157,7 @@ public class WebServer implements SubSystem {
     }
 
     private boolean startHttpsServer() {
-        String keyStorePath = config.getString(WebserverSettings.CERTIFICATE_PATH);
+        String keyStorePath = config.get(WebserverSettings.CERTIFICATE_PATH);
 
         if (keyStorePath.equalsIgnoreCase("proxy")) {
             return true;
@@ -172,9 +172,9 @@ public class WebServer implements SubSystem {
             errorHandler.log(L.ERROR, this.getClass(), e);
         }
 
-        char[] storepass = config.getString(WebserverSettings.CERTIFICATE_STOREPASS).toCharArray();
-        char[] keypass = config.getString(WebserverSettings.CERTIFICATE_KEYPASS).toCharArray();
-        String alias = config.getString(WebserverSettings.CERTIFICATE_ALIAS);
+        char[] storepass = config.get(WebserverSettings.CERTIFICATE_STOREPASS).toCharArray();
+        char[] keypass = config.get(WebserverSettings.CERTIFICATE_KEYPASS).toCharArray();
+        String alias = config.get(WebserverSettings.CERTIFICATE_ALIAS);
 
         boolean startSuccessful = false;
         try (FileInputStream fIn = new FileInputStream(keyStorePath)) {
@@ -195,7 +195,7 @@ public class WebServer implements SubSystem {
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
             trustManagerFactory.init(keystore);
 
-            server = HttpsServer.create(new InetSocketAddress(config.getString(WebserverSettings.INTERNAL_IP), port), 10);
+            server = HttpsServer.create(new InetSocketAddress(config.get(WebserverSettings.INTERNAL_IP), port), 10);
             SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(keyManagerFactory.getKeyManagers(), null/*trustManagerFactory.getTrustManagers()*/, null);
 
@@ -281,12 +281,12 @@ public class WebServer implements SubSystem {
     }
 
     public String getAccessAddress() {
-        return isEnabled() ? getProtocol() + "://" + getIP() : config.getString(WebserverSettings.EXTERNAL_LINK);
+        return isEnabled() ? getProtocol() + "://" + getIP() : config.get(WebserverSettings.EXTERNAL_LINK);
     }
 
     private String getIP() {
         return config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP)
-                ? config.getString(WebserverSettings.ALTERNATIVE_IP).replace("%port%", String.valueOf(port))
+                ? config.get(WebserverSettings.ALTERNATIVE_IP).replace("%port%", String.valueOf(port))
                 : serverProperties.getIp() + ":" + port;
     }
 }

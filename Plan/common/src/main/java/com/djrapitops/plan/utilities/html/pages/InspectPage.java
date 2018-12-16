@@ -249,7 +249,7 @@ public class InspectPage implements Page {
         String serverName = serverNames.get(serverUUID);
         replacer.put("networkName",
                 serverName.equalsIgnoreCase("bungeecord")
-                        ? config.getString(ProxySettings.NETWORK_NAME)
+                        ? config.get(ProxySettings.NETWORK_NAME)
                         : serverName
         );
 

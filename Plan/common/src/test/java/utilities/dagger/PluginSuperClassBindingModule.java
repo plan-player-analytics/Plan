@@ -59,7 +59,7 @@ public class PluginSuperClassBindingModule {
             @Override
             public void enable() throws EnableException {
                 databases.add(sqLiteDB.usingDefaultFile());
-                String dbType = config.getString(DatabaseSettings.TYPE).toLowerCase().trim();
+                String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();
                 db = getActiveDatabaseByName(dbType);
                 super.enable();
             }

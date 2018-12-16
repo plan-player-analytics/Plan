@@ -130,12 +130,12 @@ public class LocaleSystem implements SubSystem {
 
     private Optional<Locale> loadSettingLocale() {
         try {
-            String setting = config.getString(PluginSettings.LOCALE);
+            String setting = config.get(PluginSettings.LOCALE);
             if (!setting.equalsIgnoreCase("default")) {
                 return Optional.of(Locale.forLangCodeString(plugin, setting));
             }
         } catch (IOException e) {
-            logger.warn("Failed to read locale from jar: " + config.getString(PluginSettings.LOCALE) + ", " + e.toString());
+            logger.warn("Failed to read locale from jar: " + config.get(PluginSettings.LOCALE) + ", " + e.toString());
             logger.warn("Using Default Locale as a fallback (EN)");
         }
         return Optional.empty();

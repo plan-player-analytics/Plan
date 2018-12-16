@@ -23,6 +23,7 @@ import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
 import com.djrapitops.plugin.config.Config;
 import com.djrapitops.plugin.config.ConfigNode;
+import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -69,10 +70,9 @@ public class PlanConfig extends Config {
 
     public <T> T get(Setting<T> setting) {
         T value = setting.getValueFrom(this);
-        boolean valid = setting.isValid(value);
-        if (!valid) {
-            throw new IllegalStateException("Config value for " + setting.getPath() + " has a bad value: '" + value + "'");
-        }
+        Verify.isTrue(setting.isValid(value), () -> new IllegalStateException(
+                "Config value for " + setting.getPath() + " has a bad value: '" + value + "'"
+        ));
         return value;
     }
 

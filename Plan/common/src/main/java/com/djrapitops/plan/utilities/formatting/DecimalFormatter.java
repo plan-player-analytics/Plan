@@ -37,6 +37,6 @@ public class DecimalFormatter implements Formatter<Double> {
     @Override
     public String apply(Double value) {
         // DecimalFormat is initialized here because config is not fully enabled in the constructor
-        return new DecimalFormat(config.getString(FormatSettings.DECIMALS)).format(value);
+        return new DecimalFormat(config.get(FormatSettings.DECIMALS)).format(value);
     }
 }

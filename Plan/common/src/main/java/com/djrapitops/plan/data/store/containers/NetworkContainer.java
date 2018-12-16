@@ -145,7 +145,7 @@ public class NetworkContainer extends DataContainer {
 
         putCachingSupplier(NetworkKeys.NETWORK_NAME, () ->
                 Check.isBungeeAvailable() || Check.isVelocityAvailable() ?
-                        config.getString(ProxySettings.NETWORK_NAME) :
+                        config.get(ProxySettings.NETWORK_NAME) :
                         bungeeContainer.getValue(ServerKeys.NAME).orElse("Plan")
         );
         putSupplier(NetworkKeys.PLAYERS_ONLINE, serverProperties::getOnlinePlayers);
