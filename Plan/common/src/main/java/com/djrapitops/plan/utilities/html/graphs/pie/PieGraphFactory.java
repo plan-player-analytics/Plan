@@ -18,8 +18,8 @@ package com.djrapitops.plan.utilities.html.graphs.pie;
 
 import com.djrapitops.plan.data.time.GMTimes;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;

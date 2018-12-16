@@ -21,7 +21,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.element.TableContainer;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
-import com.djrapitops.plan.system.settings.WorldAliasSettings;
+import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.html.Html;
 

@@ -14,10 +14,11 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.settings.config;
+package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -27,19 +28,19 @@ import javax.inject.Singleton;
 import java.io.IOException;
 
 /**
- * ConfigSystem for Bungee.
+ * ConfigSystem for Bukkit.
  * <p>
  * Bukkit and Bungee have different default config file inside the jar.
  *
  * @author Rsl1122
  */
 @Singleton
-public class ProxyConfigSystem extends ConfigSystem {
+public class BukkitConfigSystem extends ConfigSystem {
 
     private final ConfigUpdater configUpdater;
 
     @Inject
-    public ProxyConfigSystem(
+    public BukkitConfigSystem(
             PlanFiles files,
             PlanConfig config,
             ConfigUpdater configUpdater,
@@ -54,6 +55,6 @@ public class ProxyConfigSystem extends ConfigSystem {
     @Override
     protected void copyDefaults() throws IOException {
         configUpdater.applyConfigUpdate(config);
-        config.copyDefaults(files.readFromResource("bungeeconfig.yml"));
+        config.copyDefaults(files.readFromResource("config.yml"));
     }
 }

@@ -28,8 +28,8 @@ import com.djrapitops.plan.system.info.InfoSystem;
 import com.djrapitops.plan.system.info.ProxyInfoSystem;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.connection.ProxyConnectionSystem;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
-import com.djrapitops.plan.system.settings.config.ProxyConfigSystem;
+import com.djrapitops.plan.system.settings.ConfigSystem;
+import com.djrapitops.plan.system.settings.ProxyConfigSystem;
 import dagger.Binds;
 import dagger.Module;
 

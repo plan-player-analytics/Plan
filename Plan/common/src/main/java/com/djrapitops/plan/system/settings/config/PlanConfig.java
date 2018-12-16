@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.data.plugin.PluginsConfigSection;
-import com.djrapitops.plan.system.settings.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.paths.key.Setting;

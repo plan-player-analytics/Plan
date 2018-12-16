@@ -29,7 +29,7 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.locale.LocaleSystem;
 import com.djrapitops.plan.system.processing.Processing;
-import com.djrapitops.plan.system.settings.config.ConfigSystem;
+import com.djrapitops.plan.system.settings.ConfigSystem;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.system.webserver.WebServerSystem;

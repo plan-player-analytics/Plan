@@ -14,10 +14,14 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.settings.config;
+package com.djrapitops.plan.system.settings;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -27,19 +31,17 @@ import javax.inject.Singleton;
 import java.io.IOException;
 
 /**
- * ConfigSystem for Bukkit.
- * <p>
- * Bukkit and Bungee have different default config file inside the jar.
+ * Sponge ConfigSystem that disables WebServer and Geolocations on first enable.
  *
  * @author Rsl1122
  */
 @Singleton
-public class BukkitConfigSystem extends ConfigSystem {
+public class SpongeConfigSystem extends BukkitConfigSystem {
 
-    private final ConfigUpdater configUpdater;
+    private boolean firstInstall;
 
     @Inject
-    public BukkitConfigSystem(
+    public SpongeConfigSystem(
             PlanFiles files,
             PlanConfig config,
             ConfigUpdater configUpdater,
@@ -47,13 +49,26 @@ public class BukkitConfigSystem extends ConfigSystem {
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(files, config, theme, logger, errorHandler);
-        this.configUpdater = configUpdater;
+        super(files, config, configUpdater, theme, logger, errorHandler);
+    }
+
+    @Override
+    public void enable() throws EnableException {
+        firstInstall = !files.getConfigFile().exists();
+        super.enable();
     }
 
     @Override
     protected void copyDefaults() throws IOException {
-        configUpdater.applyConfigUpdate(config);
-        config.copyDefaults(files.readFromResource("config.yml"));
+        super.copyDefaults();
+        if (firstInstall) {
+            logger.info("§eWebServer and Geolocations disabled by default on Sponge servers. You can enable them in the config:");
+            logger.info("§e  " + WebserverSettings.DISABLED.getPath());
+            logger.info("§e  " + DataGatheringSettings.GEOLOCATIONS.getPath());
+
+            config.set(WebserverSettings.DISABLED, true);
+            config.set(DataGatheringSettings.GEOLOCATIONS, false);
+            config.save();
+        }
     }
 }

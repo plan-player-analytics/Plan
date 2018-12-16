@@ -22,7 +22,7 @@ import com.djrapitops.plan.data.container.Session;
 import com.djrapitops.plan.data.store.keys.SessionKeys;
 import com.djrapitops.plan.data.store.objects.DateHolder;
 import com.djrapitops.plan.data.time.WorldTimes;
-import com.djrapitops.plan.system.settings.WorldAliasSettings;
+import com.djrapitops.plan.system.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plan.system.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
