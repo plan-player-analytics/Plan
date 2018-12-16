@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.system.settings.changes;
 
-import com.djrapitops.plugin.config.Config;
+import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;

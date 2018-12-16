@@ -31,7 +31,7 @@ import java.util.Scanner;
 public class ConfigReader implements Closeable {
 
     private static final ConfigValueParser.StringParser STRING_PARSER = new ConfigValueParser.StringParser();
-    private final InputStream in;
+    private InputStream in;
     private final Scanner scanner;
     private ConfigNode previousNode;
     private ConfigNode parent;
@@ -39,6 +39,23 @@ public class ConfigReader implements Closeable {
     public ConfigReader(InputStream in) {
         this.in = in;
         this.scanner = new Scanner(in);
+    }
+
+    public ConfigReader(Scanner scanner) {
+        this.scanner = scanner;
+    }
+
+    @Deprecated
+    public Config readAndClose() {
+        try {
+            return read();
+        } finally {
+            try {
+                close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Config read() {
@@ -166,6 +183,8 @@ public class ConfigReader implements Closeable {
     @Override
     public void close() throws IOException {
         scanner.close();
-        in.close();
+        if (in != null) {
+            in.close();
+        }
     }
 }

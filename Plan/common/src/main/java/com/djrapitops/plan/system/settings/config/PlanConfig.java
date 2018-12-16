@@ -20,8 +20,6 @@ import com.djrapitops.plan.data.plugin.PluginsConfigSection;
 import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
-import com.djrapitops.plugin.config.Config;
-import com.djrapitops.plugin.config.ConfigNode;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;

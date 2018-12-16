@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.settings.paths.key;
 
-import com.djrapitops.plugin.config.ConfigNode;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 
 import java.util.function.Predicate;
 
@@ -21,6 +21,6 @@ public class BooleanSetting extends Setting<Boolean> {
 
     @Override
     public Boolean getValueFrom(ConfigNode node) {
-        return node.contains(path) && node.getBoolean(path);
+        return node.getNode(path).map(ConfigNode::getBoolean).orElse(false);
     }
 }

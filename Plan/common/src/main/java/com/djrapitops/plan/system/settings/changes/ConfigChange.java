@@ -16,11 +16,8 @@
  */
 package com.djrapitops.plan.system.settings.changes;
 
-import com.djrapitops.plugin.config.Config;
-import com.djrapitops.plugin.config.ConfigNode;
-
-import java.lang.reflect.Field;
-import java.util.Collection;
+import com.djrapitops.plan.system.settings.config.Config;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 
 /**
  * Represents a change made to the config structure.
@@ -46,11 +43,7 @@ public interface ConfigChange {
 
         @Override
         public void apply(Config config) {
-            ConfigNode newNode = config.getConfigNode(newPath);
-            ConfigNode oldNode = config.getConfigNode(oldPath);
-            newNode.copyDefaults(oldNode);
-            newNode.set(oldNode.getString());
-            removeNode(oldNode);
+            config.moveChild(oldPath, newPath);
         }
 
         @Override
@@ -72,7 +65,7 @@ public interface ConfigChange {
         public void apply(Config config) {
             ConfigNode newNode = config.getConfigNode(newPath);
             ConfigNode oldNode = config.getConfigNode(oldPath);
-            newNode.copyDefaults(oldNode);
+            newNode.copyMissing(oldNode);
             newNode.set(oldNode.getString());
         }
 
@@ -96,26 +89,7 @@ public interface ConfigChange {
 
         @Override
         public synchronized void apply(Config config) {
-            ConfigNode node = config.getConfigNode(oldPath);
-            removeNode(node);
-        }
-
-        void removeNode(ConfigNode node) {
-            ConfigNode parent = node.getParent();
-            String key = node.getKey(false);
-            parent.getChildren().remove(key);
-
-            // Remove the child from child order, since it is otherwise trying to save null.
-            try {
-                Field field = ConfigNode.class.getDeclaredField("childOrder");
-                field.setAccessible(true);
-                Collection<String> childOrder = (Collection<String>) field.get(parent);
-                childOrder.remove(key);
-                field.set(parent, childOrder);
-                field.setAccessible(false);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-                throw new IllegalStateException("Error removing config node", e);
-            }
+            config.removeNode(oldPath);
         }
 
         @Override

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.settings.paths.key;
 
-import com.djrapitops.plugin.config.ConfigNode;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 
 import java.util.function.Predicate;
 
@@ -21,6 +21,6 @@ public class StringSetting extends Setting<String> {
 
     @Override
     public String getValueFrom(ConfigNode node) {
-        return node.contains(path) ? node.getString(path) : null;
+        return node.getString(path);
     }
 }

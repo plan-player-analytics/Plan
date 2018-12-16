@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.data.plugin;
 
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plugin.config.ConfigNode;
 
 import java.io.IOException;
 

@@ -16,8 +16,9 @@
  */
 package com.djrapitops.plan.system.settings.changes;
 
-import com.djrapitops.plugin.config.Config;
-import com.djrapitops.plugin.config.ConfigNode;
+import com.djrapitops.plan.system.settings.config.Config;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
+import com.djrapitops.plan.system.settings.config.ConfigReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,8 +27,10 @@ import org.junit.runner.RunWith;
 import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,7 +49,11 @@ class ConfigChangeTest {
     }
 
     private Config prepareConfig(String withValue) {
-        return new Config(temporaryFolder.resolve("config.yml").toFile(), Collections.singletonList(withValue));
+        try (ConfigReader reader = new ConfigReader(new Scanner(withValue))) {
+            return new Config(temporaryFolder.resolve("config.yml").toFile(), reader.read());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Test

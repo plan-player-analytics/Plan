@@ -17,10 +17,10 @@
 package com.djrapitops.plan.system.settings.theme;
 
 import com.djrapitops.plan.system.file.PlanFiles;
+import com.djrapitops.plan.system.settings.config.Config;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DisplaySettings;
-import com.djrapitops.plugin.config.Config;
-import com.djrapitops.plugin.config.ConfigNode;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 
 import java.io.File;

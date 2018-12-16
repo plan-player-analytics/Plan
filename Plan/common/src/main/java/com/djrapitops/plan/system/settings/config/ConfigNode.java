@@ -23,6 +23,8 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
+import org.apache.commons.text.TextStringBuilder;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -60,7 +62,7 @@ public class ConfigNode {
     }
 
     public Optional<ConfigNode> getNode(String path) {
-        String[] parts = path.split("\\.", 2);
+        String[] parts = splitPathInTwo(path);
         String key = parts[0];
         String leftover = parts[1];
 
@@ -71,10 +73,28 @@ public class ConfigNode {
         }
     }
 
+    private String[] splitPathInTwo(String path) {
+        String[] split = path.split("\\.", 2);
+        if (split.length <= 1) {
+            return new String[]{split[0], ""};
+        }
+        return split;
+    }
+
+    @Deprecated
+    public ConfigNode getConfigNode(String path) {
+        return getNode(path).orElse(null);
+    }
+
+    @Deprecated
+    public boolean contains(String path) {
+        return getNode(path).isPresent();
+    }
+
     protected void addNode(String path) {
         ConfigNode newParent = this;
         if (!path.isEmpty()) {
-            String[] parts = path.split("\\.", 2);
+            String[] parts = splitPathInTwo(path);
             String key = parts[0];
             String leftover = parts[1];
 
@@ -207,6 +227,11 @@ public class ConfigNode {
         return new ConfigValueParser.IntegerParser().compose(value);
     }
 
+    @Deprecated
+    public Integer getInt() {
+        return getInteger();
+    }
+
     public Long getLong() {
         return new ConfigValueParser.LongParser().compose(value);
     }
@@ -215,16 +240,21 @@ public class ConfigNode {
         return new ConfigValueParser.StringParser().compose(value);
     }
 
-    public boolean isTrue() {
+    public boolean getBoolean() {
         return new ConfigValueParser.BooleanParser().compose(value);
     }
 
     public List<String> getStringList(String path) {
-        return getNode(path).map(ConfigNode::getStringList).orElse(new ArrayList<>());
+        return getNode(path).map(ConfigNode::getStringList).orElse(Collections.emptyList());
     }
 
     public Integer getInteger(String path) {
         return getNode(path).map(ConfigNode::getInteger).orElse(null);
+    }
+
+    @Deprecated
+    public Integer getInt(String path) {
+        return getInteger(path);
     }
 
     public Long getLong(String path) {
@@ -235,8 +265,8 @@ public class ConfigNode {
         return getNode(path).map(ConfigNode::getString).orElse(null);
     }
 
-    public boolean isTrue(String path) {
-        return getNode(path).map(ConfigNode::isTrue).orElse(false);
+    public boolean getBoolean(String path) {
+        return getNode(path).map(ConfigNode::getBoolean).orElse(false);
     }
 
     public void copyMissing(ConfigNode from) {
@@ -262,5 +292,32 @@ public class ConfigNode {
 
     protected int getNodeDepth() {
         return parent != null ? parent.getNodeDepth() + 1 : 0;
+    }
+
+    @Deprecated
+    public Map<String, ConfigNode> getChildren() {
+        return childNodes;
+    }
+
+    public ConfigNode getParent() {
+        return parent;
+    }
+
+    @Deprecated
+    public String getValue() {
+        return value;
+    }
+
+    @Deprecated
+    public void copyDefaults(ConfigNode from) {
+        copyMissing(from);
+    }
+
+    @Deprecated
+    public void copyDefaults(List<String> from) throws IOException {
+        Scanner linesScanner = new Scanner(new TextStringBuilder().appendWithSeparators(from, "\n").toString());
+        try (ConfigReader reader = new ConfigReader(linesScanner)) {
+            copyMissing(reader.read());
+        }
     }
 }

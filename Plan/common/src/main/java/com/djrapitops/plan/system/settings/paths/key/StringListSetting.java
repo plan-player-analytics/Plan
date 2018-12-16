@@ -1,9 +1,8 @@
 package com.djrapitops.plan.system.settings.paths.key;
 
 import com.djrapitops.plan.data.store.Type;
-import com.djrapitops.plugin.config.ConfigNode;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -24,6 +23,6 @@ public class StringListSetting extends Setting<List<String>> {
 
     @Override
     public List<String> getValueFrom(ConfigNode node) {
-        return node.contains(path) ? node.getStringList(path) : Collections.emptyList();
+        return node.getStringList(path);
     }
 }

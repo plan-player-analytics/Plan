@@ -1,10 +1,10 @@
 package com.djrapitops.plan.system.settings.paths;
 
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 import com.djrapitops.plan.system.settings.paths.key.BooleanSetting;
 import com.djrapitops.plan.system.settings.paths.key.IntegerSetting;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
 import com.djrapitops.plan.system.settings.paths.key.StringSetting;
-import com.djrapitops.plugin.config.ConfigNode;
 
 /**
  * {@link Setting} values that are in "Display_options" section.

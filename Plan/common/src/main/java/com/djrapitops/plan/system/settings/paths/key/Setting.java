@@ -17,7 +17,7 @@
 package com.djrapitops.plan.system.settings.paths.key;
 
 import com.djrapitops.plan.data.store.Type;
-import com.djrapitops.plugin.config.ConfigNode;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 
 import java.util.function.Predicate;
 

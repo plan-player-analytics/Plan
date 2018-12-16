@@ -1,6 +1,6 @@
 package com.djrapitops.plan.system.settings.paths.key;
 
-import com.djrapitops.plugin.config.ConfigNode;
+import com.djrapitops.plan.system.settings.config.ConfigNode;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
