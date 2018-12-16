@@ -43,7 +43,6 @@ import java.util.UUID;
  * This command is used to refresh Inspect page and display link.
  *
  * @author Rsl1122
- * @since 1.0.0
  */
 public class InspectCommand extends CommandNode {
 

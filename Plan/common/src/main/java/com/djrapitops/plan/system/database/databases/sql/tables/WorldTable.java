@@ -41,8 +41,7 @@ import java.util.*;
  * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldsServerIDPatch}
  * {@link com.djrapitops.plan.system.database.databases.sql.patches.WorldsOptimizationPatch}
  *
- * @author Rsl1122
- * @since 3.6.0 / Database version 7
+ * @author Rsl1122 / Database version 7
  */
 public class WorldTable extends Table {
 

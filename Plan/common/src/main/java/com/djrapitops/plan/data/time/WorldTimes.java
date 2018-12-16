@@ -24,7 +24,6 @@ import java.util.Objects;
  * Class that tracks the time spent in each World based on GMTimes.
  *
  * @author Rsl1122
- * @since 4.0.0
  */
 public class WorldTimes {
 

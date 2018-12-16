@@ -35,7 +35,6 @@ import javax.inject.Inject;
  * This SubCommand is used to view the version and the database type in use.
  *
  * @author Rsl1122
- * @since 2.0.0
  */
 public class InfoCommand extends CommandNode {
 

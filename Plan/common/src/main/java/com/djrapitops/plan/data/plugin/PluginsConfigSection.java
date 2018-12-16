@@ -26,7 +26,6 @@ import java.io.IOException;
  * objects to the config.
  *
  * @author Rsl1122
- * @since 3.5.0
  */
 public class PluginsConfigSection {
 

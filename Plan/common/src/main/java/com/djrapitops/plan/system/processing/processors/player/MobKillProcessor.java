@@ -30,7 +30,6 @@ import java.util.UUID;
  * Adds PlayerKill or a Mob kill to the active Session.
  *
  * @author Rsl1122
- * @since 4.0.0
  */
 public class MobKillProcessor implements CriticalRunnable {
 

@@ -36,6 +36,7 @@ public abstract class Setting<T> {
     }
 
     public Setting(String path, Class<T> type, Predicate<T> validator) {
+        // null validator has to be called before the actual validator to avoid possible null errors.
         this(path, Type.ofClass(type), ((Predicate<T>) Setting::nullValidator).and(validator));
     }
 

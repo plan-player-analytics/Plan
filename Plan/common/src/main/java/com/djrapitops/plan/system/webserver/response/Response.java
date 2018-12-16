@@ -29,7 +29,6 @@ import java.util.zip.GZIPOutputStream;
 
 /**
  * @author Rsl1122
- * @since 3.5.2
  */
 public abstract class Response {
 

@@ -43,7 +43,6 @@ import java.util.Arrays;
  * plugin if the connection to the new database can be established.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 public class ManageHotSwapCommand extends CommandNode {
 

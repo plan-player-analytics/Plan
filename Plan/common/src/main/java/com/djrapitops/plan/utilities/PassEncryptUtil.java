@@ -20,10 +20,10 @@ import com.djrapitops.plan.api.exceptions.PassEncryptException;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.util.Base64;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 
 /**
  * Password Encryption utility.
@@ -31,7 +31,6 @@ import java.security.spec.InvalidKeySpecException;
  * https://github.com/defuse/password-hashing/blob/master/PasswordStorage.java
  *
  * @author Defuse
- * @since 3.5.2
  */
 public class PassEncryptUtil {
 

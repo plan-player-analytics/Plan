@@ -51,7 +51,6 @@ import java.util.zip.GZIPInputStream;
  * It caches all IPs with their matching country.
  *
  * @author Fuzzlemann
- * @since 3.5.5
  */
 @Singleton
 public class GeolocationCache implements SubSystem {

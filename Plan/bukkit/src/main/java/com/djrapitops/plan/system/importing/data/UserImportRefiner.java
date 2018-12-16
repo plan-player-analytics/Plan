@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
  * It also removes invalid data.
  *
  * @author Fuzzlemann
- * @since 4.0.0
  */
 public class UserImportRefiner {
 

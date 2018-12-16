@@ -33,7 +33,6 @@ import javax.inject.Inject;
  * Command used to display url to the player list page.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class ListPlayersCommand extends CommandNode {
 

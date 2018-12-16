@@ -56,7 +56,6 @@ import java.util.stream.Collectors;
  * Class containing main logic for different data related save and load functionality.
  *
  * @author Rsl1122
- * @since 2.0.0
  */
 public abstract class SQLDB extends Database {
 

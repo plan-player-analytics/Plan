@@ -28,7 +28,6 @@ import java.util.UUID;
  * Processor for updating name in the database if the player has changed it.
  *
  * @author Rsl1122
- * @since 4.0.0
  */
 public class NameProcessor implements CriticalRunnable {
 

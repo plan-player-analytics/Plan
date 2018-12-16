@@ -20,7 +20,6 @@ import java.util.Objects;
 
 /**
  * @author Rsl1122
- * @since 3.5.2
  */
 public class Point {
     private final double x;

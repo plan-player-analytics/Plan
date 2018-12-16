@@ -24,7 +24,6 @@ import java.util.Objects;
  * Class containing single datapoint of TPS / Players online / CPU Usage / Used Memory / Entity Count / Chunks loaded.
  *
  * @author Rsl1122
- * @since 3.5.0
  */
 public class TPS implements DateHolder {
 

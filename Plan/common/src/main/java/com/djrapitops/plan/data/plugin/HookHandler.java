@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
  * placeholder on Analysis and Inspect pages.
  *
  * @author Rsl1122
- * @since 2.6.0
  */
 @Singleton
 public class HookHandler implements SubSystem {

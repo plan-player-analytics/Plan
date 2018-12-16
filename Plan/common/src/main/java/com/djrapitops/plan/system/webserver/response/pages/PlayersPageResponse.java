@@ -21,7 +21,6 @@ import com.djrapitops.plan.utilities.html.pages.PlayersPage;
 
 /**
  * @author Rsl1122
- * @since 3.5.2
  */
 public class PlayersPageResponse extends PageResponse {
 

@@ -34,7 +34,6 @@ import java.util.UUID;
  * to register objects extending this class.
  *
  * @author Rsl1122
- * @since 4.1.0
  */
 public abstract class PluginData {
 

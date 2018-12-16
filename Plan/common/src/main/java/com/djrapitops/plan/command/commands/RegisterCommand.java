@@ -48,7 +48,6 @@ import java.util.Arrays;
  * {@code Permissions.MANAGE_WEB} required for registering other users.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 @Singleton
 public class RegisterCommand extends CommandNode {

@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author Fuzzlemann
- * @since 4.0.0
  */
 public abstract class BukkitImporter implements Importer {
 

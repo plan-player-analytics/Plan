@@ -37,7 +37,6 @@ import javax.inject.Singleton;
  * Uses the Abstract Plugin Framework for easier command management.
  *
  * @author Rsl1122
- * @since 1.0.0
  */
 @Singleton
 public class PlanCommand extends TreeCmdNode {

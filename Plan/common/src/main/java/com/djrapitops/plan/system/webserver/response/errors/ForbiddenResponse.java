@@ -25,7 +25,6 @@ import java.io.IOException;
 
 /**
  * @author Rsl1122
- * @since 3.5.2
  */
 public class ForbiddenResponse extends ErrorResponse {
     public ForbiddenResponse(String msg, VersionCheckSystem versionCheckSystem, PlanFiles files) throws IOException {

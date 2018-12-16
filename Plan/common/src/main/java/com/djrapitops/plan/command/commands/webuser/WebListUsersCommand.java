@@ -39,7 +39,6 @@ import java.util.List;
  * Subcommand for checking WebUser list.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 @Singleton
 public class WebListUsersCommand extends CommandNode {

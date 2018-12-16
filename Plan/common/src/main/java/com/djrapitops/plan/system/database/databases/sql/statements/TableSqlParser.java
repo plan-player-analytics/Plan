@@ -20,7 +20,6 @@ package com.djrapitops.plan.system.database.databases.sql.statements;
  * SqlParser Class for parsing table creation, removal and modification statements.
  *
  * @author Rsl1122
- * @since 3.7.0
  */
 public class TableSqlParser extends SqlParser {
 

@@ -34,7 +34,6 @@ import java.util.Set;
 
 /**
  * @author Fuzzlemann
- * @since 4.0.0
  */
 @Singleton
 public class OfflinePlayerImporter extends BukkitImporter {

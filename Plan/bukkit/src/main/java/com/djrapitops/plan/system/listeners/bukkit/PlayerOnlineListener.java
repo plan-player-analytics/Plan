@@ -44,7 +44,6 @@ import java.util.UUID;
  * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
  *
  * @author Rsl1122
- * @since 2.0.0
  */
 public class PlayerOnlineListener implements Listener {
 

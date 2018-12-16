@@ -39,7 +39,6 @@ import java.util.Optional;
  * This manage SubCommand is used to import data from 3rd party plugins.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 @Singleton
 public class ManageImportCommand extends CommandNode {

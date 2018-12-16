@@ -37,7 +37,6 @@ import javax.inject.Named;
  * Web subcommand used to manage Web users.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class WebUserCommand extends TreeCmdNode {
 

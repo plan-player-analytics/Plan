@@ -39,7 +39,6 @@ import java.util.Arrays;
  * Subcommand for deleting a WebUser.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 @Singleton
 public class WebDeleteCommand extends CommandNode {

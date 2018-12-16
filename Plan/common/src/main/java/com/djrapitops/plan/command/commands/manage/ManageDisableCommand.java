@@ -34,7 +34,6 @@ import java.util.Arrays;
  * This manage SubCommand is used to disable some features of the plugin temporarily.
  *
  * @author Rsl1122
- * @since 4.0.4
  */
 public class ManageDisableCommand extends CommandNode {
 

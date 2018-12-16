@@ -31,7 +31,6 @@ import java.util.Set;
  * Filters out WebUser registration command logs.
  *
  * @author Rsl1122
- * @since 3.5.2
  */
 public class RegisterCommandFilter extends AbstractFilter {
 

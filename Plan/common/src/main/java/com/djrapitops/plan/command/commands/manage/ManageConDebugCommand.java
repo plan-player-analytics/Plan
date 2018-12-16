@@ -45,7 +45,6 @@ import java.util.UUID;
  * This manage SubCommand is used to request settings from Bungee so that connection can be established.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 @Singleton
 public class ManageConDebugCommand extends CommandNode {

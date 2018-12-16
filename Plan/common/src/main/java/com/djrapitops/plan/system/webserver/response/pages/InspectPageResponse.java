@@ -28,7 +28,6 @@ import java.util.UUID;
 
 /**
  * @author Rsl1122
- * @since 3.5.2
  */
 public class InspectPageResponse extends PageResponse {
 

@@ -61,7 +61,6 @@ import static org.junit.Assert.*;
  * Contains all common Database Tests for all Database Types
  *
  * @author Rsl1122 (Refactored into this class by Fuzzlemann)
- * @since 4.5.1
  */
 public abstract class CommonDBTest {
 

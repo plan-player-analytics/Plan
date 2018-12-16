@@ -29,7 +29,6 @@ import java.util.UUID;
  * This class is used to store active sessions of players in memory.
  *
  * @author Rsl1122
- * @since 3.0.0
  */
 public class SessionCache {
 

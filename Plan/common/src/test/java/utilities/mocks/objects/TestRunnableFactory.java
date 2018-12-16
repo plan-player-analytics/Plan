@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Fuzzlemann
- * @since 4.5.1
  */
 public class TestRunnableFactory extends RunnableFactory {
 

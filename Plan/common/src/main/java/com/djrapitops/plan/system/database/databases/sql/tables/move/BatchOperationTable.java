@@ -44,7 +44,6 @@ import java.util.UUID;
  * Server and User tables should be copied first.
  *
  * @author Rsl1122
- * @since 4.0.0
  */
 public class BatchOperationTable extends Table {
 

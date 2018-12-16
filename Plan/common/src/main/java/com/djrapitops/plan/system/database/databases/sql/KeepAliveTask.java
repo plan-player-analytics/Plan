@@ -15,7 +15,6 @@ import java.sql.Statement;
  * The task which handles the upkeep of the {@code Connection}
  *
  * @author Fuzzlemann
- * @since 4.5.1
  */
 public class KeepAliveTask extends AbsRunnable {
     private Connection connection;

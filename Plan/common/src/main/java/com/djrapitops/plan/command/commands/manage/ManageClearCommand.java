@@ -43,7 +43,6 @@ import java.util.Arrays;
  * This manage SubCommand is used to clear a database of all data.
  *
  * @author Rsl1122
- * @since 2.3.0
  */
 @Singleton
 public class ManageClearCommand extends CommandNode {

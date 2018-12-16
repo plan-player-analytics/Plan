@@ -28,7 +28,6 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Rsl1122, Fuzzlemann
  * @see SQLiteTest
- * @since 4.5.1
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class H2Test extends CommonDBTest {

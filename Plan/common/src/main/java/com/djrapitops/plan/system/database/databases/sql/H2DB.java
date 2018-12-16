@@ -45,7 +45,6 @@ import java.util.Objects;
  * Implementation of the H2 database
  *
  * @author Fuzzlemann
- * @since 4.5.1
  */
 public class H2DB extends SQLDB {
 

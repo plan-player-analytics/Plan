@@ -20,7 +20,6 @@ package com.djrapitops.plan.system.database.databases.sql.statements;
  * Class for parsing different SQL strings.
  *
  * @author Rsl1122
- * @since 3.7.0
  */
 public class SqlParser {
 

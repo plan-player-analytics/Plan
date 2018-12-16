@@ -29,7 +29,6 @@ import java.util.List;
 
 /**
  * @author Rsl1122
- * @since 3.5.2
  */
 public class PromptAuthorizationResponse extends ErrorResponse {
 
