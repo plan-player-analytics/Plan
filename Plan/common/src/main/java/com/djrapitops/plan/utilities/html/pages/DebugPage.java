@@ -203,7 +203,7 @@ public class DebugPage implements Page {
             content.append("<pre>### Servers:<br><br>");
             List<Server> servers = connectionSystem.getBukkitServers();
             content.append("Server Name | Address <br>")
-                    .append("-- | -- | --<br>");
+                    .append("-- | --<br>");
             for (Server server : servers) {
                 content.append(server.getName()).append(" | ")
                         .append(server.getWebAddress()).append("<br>");
