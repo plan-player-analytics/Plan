@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.settings.changes;
 
 import com.djrapitops.plugin.config.Config;
+import com.djrapitops.plugin.config.ConfigNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,6 +54,23 @@ class ConfigChangeTest {
         config = prepareConfig("Test: 'value'");
 
         assertFalse(new ConfigChange.Moved("Test", "MovedTo").hasBeenApplied(config));
+    }
+
+    @Test
+    void configParentIsSameObject() {
+        config = prepareConfig("Test: 'value'");
+        ConfigNode node = config.getConfigNode("Test");
+        ConfigNode parent = node.getParent();
+        assertTrue(parent instanceof Config);
+        assertSame(config, parent);
+    }
+
+    @Test
+    void configParentChildrenIsSameObject() {
+        config = prepareConfig("Test: 'value'");
+        ConfigNode node = config.getConfigNode("Test");
+        ConfigNode parent = node.getParent();
+        assertSame(config.getChildren(), parent.getChildren());
     }
 
     @Test
