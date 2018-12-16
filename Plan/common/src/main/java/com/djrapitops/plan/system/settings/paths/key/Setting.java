@@ -72,4 +72,13 @@ public abstract class Setting<T> {
     public boolean isValid(T value) {
         return validator.test(value);
     }
+
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException(
+                "Setting#toString should not be called, relies on old behavior. " +
+                        "Use getValueFrom(ConfigNode) instead. " +
+                        "(Called path: '" + path + "')"
+        );
+    }
 }
