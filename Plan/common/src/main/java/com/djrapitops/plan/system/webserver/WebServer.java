@@ -94,7 +94,7 @@ public class WebServer implements SubSystem {
 
     @Override
     public void enable() throws EnableException {
-        this.port = config.getNumber(WebserverSettings.PORT);
+        this.port = config.get(WebserverSettings.PORT);
 
         initServer();
 

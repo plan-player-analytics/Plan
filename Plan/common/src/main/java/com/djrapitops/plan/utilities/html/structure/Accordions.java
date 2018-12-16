@@ -74,7 +74,7 @@ public class Accordions {
             Supplier<Map<UUID, String>> serverNamesSupplier
     ) {
         boolean appendWorldPercentage = config.isTrue(DisplaySettings.SESSION_MOST_PLAYED_WORLD_IN_TITLE);
-        int maxSessions = config.getNumber(DisplaySettings.SESSIONS_PER_PAGE);
+        int maxSessions = config.get(DisplaySettings.SESSIONS_PER_PAGE);
         return new SessionAccordion(
                 true, sessions,
                 serverNamesSupplier, HashMap::new,
@@ -98,7 +98,7 @@ public class Accordions {
             Supplier<Map<UUID, String>> playerNamesSupplier
     ) {
         boolean appendWorldPercentage = config.isTrue(DisplaySettings.SESSION_MOST_PLAYED_WORLD_IN_TITLE);
-        int maxSessions = config.getNumber(DisplaySettings.SESSIONS_PER_PAGE);
+        int maxSessions = config.get(DisplaySettings.SESSIONS_PER_PAGE);
         return new SessionAccordion(
                 false, sessions,
                 serverNamesSupplier, playerNamesSupplier,

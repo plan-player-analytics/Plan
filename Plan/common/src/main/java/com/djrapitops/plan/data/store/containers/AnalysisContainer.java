@@ -138,10 +138,10 @@ public class AnalysisContainer extends DataContainer {
         putRawData(AnalysisKeys.VERSION, version);
         putSupplier(AnalysisKeys.TIME_ZONE, config::getTimeZoneOffsetHours);
         putRawData(AnalysisKeys.FIRST_DAY, 1);
-        putRawData(AnalysisKeys.TPS_MEDIUM, config.getNumber(DisplaySettings.GRAPH_TPS_THRESHOLD_MED));
-        putRawData(AnalysisKeys.TPS_HIGH, config.getNumber(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH));
-        putRawData(AnalysisKeys.DISK_MEDIUM, config.getNumber(DisplaySettings.GRAPH_DISK_THRESHOLD_MED));
-        putRawData(AnalysisKeys.DISK_HIGH, config.getNumber(DisplaySettings.GRAPH_DISK_THRESHOLD_HIGH));
+        putRawData(AnalysisKeys.TPS_MEDIUM, config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED));
+        putRawData(AnalysisKeys.TPS_HIGH, config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH));
+        putRawData(AnalysisKeys.DISK_MEDIUM, config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_MED));
+        putRawData(AnalysisKeys.DISK_HIGH, config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_HIGH));
 
         addServerProperties();
         addThemeColors();
