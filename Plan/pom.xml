@@ -294,7 +294,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.1</version>
                 <executions> <!-- See https://dzone.com/articles/sharing-test-classes-between-multiple-modules-in-a -->
                     <execution>
                         <id>Create test jar</id>
