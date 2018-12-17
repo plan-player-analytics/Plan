@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.settings.changes;
 
 import com.djrapitops.plan.system.settings.config.Config;
-import com.djrapitops.plan.system.settings.config.ConfigNode;
 
 /**
  * Represents a change made to the config structure.
@@ -43,7 +42,9 @@ public interface ConfigChange {
 
         @Override
         public void apply(Config config) {
-            config.moveChild(oldPath, newPath);
+            if (!config.moveChild(oldPath, newPath)) {
+                throw new IllegalStateException("Failed to move config node from '" + oldPath + "' to '" + newPath + "'");
+            }
         }
 
         @Override
@@ -63,10 +64,7 @@ public interface ConfigChange {
 
         @Override
         public void apply(Config config) {
-            ConfigNode newNode = config.getConfigNode(newPath);
-            ConfigNode oldNode = config.getConfigNode(oldPath);
-            newNode.copyMissing(oldNode);
-            newNode.set(oldNode.getString());
+            config.getNode(oldPath).ifPresent(oldNode -> config.addNode(newPath).copyAll(oldNode));
         }
 
         @Override
@@ -84,12 +82,14 @@ public interface ConfigChange {
 
         @Override
         public boolean hasBeenApplied(Config config) {
-            return !config.contains(oldPath);
+            return !config.getNode(oldPath).isPresent();
         }
 
         @Override
         public synchronized void apply(Config config) {
-            config.removeNode(oldPath);
+            if (!config.removeNode(oldPath)) {
+                throw new IllegalStateException("Failed to remove config node from '" + oldPath + "'");
+            }
         }
 
         @Override
@@ -97,5 +97,4 @@ public interface ConfigChange {
             return "Removed " + oldPath;
         }
     }
-
 }

@@ -133,7 +133,7 @@ public class ServerSpecificSettings {
 
     public Integer getInt(UUID serverUUID, Setting setting) {
         String path = getPath(serverUUID, setting);
-        return config.get().getInt(path);
+        return config.get().getInteger(path);
     }
 
     public void set(UUID serverUUID, Setting setting, Object value) throws IOException {

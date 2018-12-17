@@ -42,7 +42,21 @@ public interface ConfigValueParser<T> {
         } else if (Integer.class.isAssignableFrom(type)) {
             return new IntegerParser();
         }
-        return new StringParser();
+        return toStringParser();
+    }
+
+    static ConfigValueParser toStringParser() {
+        return new ConfigValueParser() {
+            @Override
+            public Object compose(String fromValue) {
+                return fromValue;
+            }
+
+            @Override
+            public String decompose(Object ofValue) {
+                return ofValue.toString();
+            }
+        };
     }
 
     /**

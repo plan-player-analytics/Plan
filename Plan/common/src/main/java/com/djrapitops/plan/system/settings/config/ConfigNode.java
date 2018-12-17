@@ -23,8 +23,6 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
-import org.apache.commons.text.TextStringBuilder;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -81,29 +79,26 @@ public class ConfigNode {
         return split;
     }
 
-    @Deprecated
-    public ConfigNode getConfigNode(String path) {
-        return getNode(path).orElse(null);
-    }
-
-    @Deprecated
     public boolean contains(String path) {
         return getNode(path).isPresent();
     }
 
-    protected void addNode(String path) {
+    public ConfigNode addNode(String path) {
         ConfigNode newParent = this;
         if (!path.isEmpty()) {
             String[] parts = splitPathInTwo(path);
             String key = parts[0];
             String leftover = parts[1];
 
+            ConfigNode child;
             if (!childNodes.containsKey(key)) {
-                addChild(new ConfigNode(key, newParent, null));
+                child = addChild(new ConfigNode(key, newParent, null));
+            } else {
+                child = childNodes.get(key);
             }
-            ConfigNode child = childNodes.get(key);
-            child.addNode(leftover);
+            return leftover.isEmpty() ? child : child.addNode(leftover);
         }
+        throw new IllegalArgumentException("Can not add a node with empty path");
     }
 
     /**
@@ -119,16 +114,20 @@ public class ConfigNode {
     }
 
     public void remove() {
+        if (parent == null) {
+            throw new IllegalStateException("Can not remove root node from a tree.");
+        }
         parent.childNodes.remove(key);
         parent.nodeOrder.remove(key);
         updateParent(null);
     }
 
-    protected void addChild(ConfigNode child) {
+    protected ConfigNode addChild(ConfigNode child) {
         getNode(child.key).ifPresent(ConfigNode::remove);
         childNodes.put(child.key, child);
         nodeOrder.add(child.key);
         child.updateParent(this);
+        return child;
     }
 
     protected void removeChild(ConfigNode child) {
@@ -148,21 +147,22 @@ public class ConfigNode {
             return false;
         }
 
-        addNode(newPath);
-
         ConfigNode moveFrom = found.get();
-        ConfigNode moveTo = getNode(newPath).orElseThrow(() -> new IllegalStateException("Config node was not added properly: " + newPath));
+
+        ConfigNode moveTo = addNode(newPath);
         ConfigNode oldParent = moveFrom.parent;
         ConfigNode newParent = moveTo.parent;
+
         oldParent.removeChild(moveFrom);
+        moveTo.copyAll(moveFrom);
         newParent.addChild(moveTo);
 
         return getNode(newPath).isPresent();
     }
 
     public String getKey(boolean deep) {
-        if (deep && parent != null) {
-            String deepKey = parent.getKey(true) + "." + key;
+        if (deep) {
+            String deepKey = parent != null ? parent.getKey(true) + "." + key : "";
             if (deepKey.startsWith(".")) {
                 return deepKey.substring(1);
             }
@@ -197,14 +197,12 @@ public class ConfigNode {
     }
 
     public <T> void set(String path, T value) {
-        addNode(path);
-        ConfigNode node = getNode(path).orElseThrow(() -> new IllegalStateException("Config node was not added properly: " + path));
-        node.set(value);
+        addNode(path).set(value);
     }
 
     public <T> void set(T value) {
         if (value instanceof ConfigNode) {
-            addChild(((ConfigNode) value));
+            copyAll((ConfigNode) value);
         } else {
             ConfigValueParser<T> parser = ConfigValueParser.getParserFor(value.getClass());
             this.value = parser.decompose(value);
@@ -220,24 +218,23 @@ public class ConfigNode {
     }
 
     public List<String> getStringList() {
-        return new ConfigValueParser.StringListParser().compose(value);
+        return value == null ? Collections.emptyList()
+                : new ConfigValueParser.StringListParser().compose(value);
     }
 
     public Integer getInteger() {
-        return new ConfigValueParser.IntegerParser().compose(value);
-    }
-
-    @Deprecated
-    public Integer getInt() {
-        return getInteger();
+        return value == null ? null
+                : new ConfigValueParser.IntegerParser().compose(value);
     }
 
     public Long getLong() {
-        return new ConfigValueParser.LongParser().compose(value);
+        return value == null ? null
+                : new ConfigValueParser.LongParser().compose(value);
     }
 
     public String getString() {
-        return new ConfigValueParser.StringParser().compose(value);
+        return value == null ? null
+                : new ConfigValueParser.StringParser().compose(value);
     }
 
     public boolean getBoolean() {
@@ -250,11 +247,6 @@ public class ConfigNode {
 
     public Integer getInteger(String path) {
         return getNode(path).map(ConfigNode::getInteger).orElse(null);
-    }
-
-    @Deprecated
-    public Integer getInt(String path) {
-        return getInteger(path);
     }
 
     public Long getLong(String path) {
@@ -290,6 +282,20 @@ public class ConfigNode {
         }
     }
 
+    public void copyAll(ConfigNode from) {
+        comment = from.comment;
+        value = from.value;
+        for (String key : from.nodeOrder) {
+            ConfigNode newChild = from.childNodes.get(key);
+            if (childNodes.containsKey(key)) {
+                ConfigNode oldChild = childNodes.get(key);
+                oldChild.copyAll(newChild);
+            } else {
+                addChild(newChild);
+            }
+        }
+    }
+
     protected int getNodeDepth() {
         return parent != null ? parent.getNodeDepth() + 1 : 0;
     }
@@ -303,21 +309,7 @@ public class ConfigNode {
         return parent;
     }
 
-    @Deprecated
-    public String getValue() {
-        return value;
-    }
-
-    @Deprecated
-    public void copyDefaults(ConfigNode from) {
-        copyMissing(from);
-    }
-
-    @Deprecated
-    public void copyDefaults(List<String> from) throws IOException {
-        Scanner linesScanner = new Scanner(new TextStringBuilder().appendWithSeparators(from, "\n").toString());
-        try (ConfigReader reader = new ConfigReader(linesScanner)) {
-            copyMissing(reader.read());
-        }
+    public boolean isLeafNode() {
+        return nodeOrder.isEmpty();
     }
 }

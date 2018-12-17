@@ -24,14 +24,12 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plugin.utilities.Verify;
-import org.apache.commons.text.TextStringBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Scanner;
 
 /**
  * Configuration utility for storing settings in a .yml file.
@@ -60,11 +58,6 @@ public class Config extends ConfigNode {
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
-    }
-
-    @Deprecated
-    public Config(File configFile, Iterable<String> defaults) {
-        this(configFile, new ConfigReader(new Scanner(new TextStringBuilder().appendWithSeparators(defaults, "\n").toString())).readAndClose());
     }
 
     public Config(File configFile, ConfigNode defaults) {

@@ -99,6 +99,10 @@ public class PlanFiles implements SubSystem {
         return FileUtil.lines(plugin, fileName);
     }
 
+    public InputStream readStreamFromResource(String fileName) throws IOException {
+        return plugin.getResource(fileName);
+    }
+
     /**
      * Read a file from jar as a flat String.
      *

@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.info.server;
 
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.config.Config;
+import com.djrapitops.plan.system.settings.config.ConfigReader;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
@@ -44,7 +45,9 @@ public class ServerInfoFile extends Config {
     }
 
     public void prepare() throws IOException {
-        copyDefaults(files.readFromResource("DefaultServerInfoFile.yml"));
+        try (ConfigReader reader = new ConfigReader(files.readStreamFromResource("DefaultServerInfoFile.yml"))) {
+            copyMissing(reader.read());
+        }
         save();
     }
 

@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.settings.changes;
 
 import com.djrapitops.plan.system.settings.config.Config;
-import com.djrapitops.plan.system.settings.config.ConfigNode;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,30 +63,12 @@ class ConfigChangeTest {
     }
 
     @Test
-    void configParentIsSameObject() {
-        config = prepareConfig("Test: 'value'");
-        ConfigNode node = config.getConfigNode("Test");
-        ConfigNode parent = node.getParent();
-        assertTrue(parent instanceof Config);
-        assertSame(config, parent);
-    }
-
-    @Test
-    void configParentChildrenIsSameObject() {
-        config = prepareConfig("Test: 'value'");
-        ConfigNode node = config.getConfigNode("Test");
-        ConfigNode parent = node.getParent();
-        assertSame(config.getChildren(), parent.getChildren());
-    }
-
-    @Test
     void moveChangeRecognizesItHasBeenApplied() {
         config = prepareConfig("Test: 'value'");
 
         ConfigChange change = new ConfigChange.Moved("Test", "MovedTo");
         change.apply(config);
 
-        assertFalse(config.getChildren().containsKey("Test"));
         assertFalse(config.contains("Test"), "Old node was not removed");
         assertTrue(config.contains("MovedTo"), "New node was not created");
         assertTrue(change.hasBeenApplied(config), "Did not recognize it has been applied");
@@ -101,7 +82,7 @@ class ConfigChangeTest {
 
         assertFalse(config.contains("Test"), "Old node was not removed");
         assertTrue(config.contains("MovedTo"), "New node was not created");
-        String result = config.getConfigNode("MovedTo").getValue();
+        String result = config.getString("MovedTo");
         assertEquals("value", result);
     }
 
@@ -113,7 +94,7 @@ class ConfigChangeTest {
 
         assertFalse(config.contains("Test"), "Old node was not removed");
         assertTrue(config.contains("MovedTo"), "New node was not created");
-        String result = config.getConfigNode("MovedTo").getValue();
+        String result = config.getString("MovedTo");
         assertEquals("value", result);
     }
 
@@ -125,7 +106,7 @@ class ConfigChangeTest {
 
         assertFalse(config.contains("Test"), "Old node was not removed");
         assertTrue(config.contains("MovedTo"), "New node was not created");
-        String result = config.getConfigNode("MovedTo").getValue();
+        String result = config.getString("MovedTo");
         assertEquals("\"value\"", result);
     }
 
@@ -137,7 +118,7 @@ class ConfigChangeTest {
 
         assertFalse(config.contains("Test"), "Old node was not removed");
         assertTrue(config.contains("MovedTo"), "New node was not created");
-        String result = config.getConfigNode("MovedTo").getValue();
+        String result = config.getString("MovedTo");
         assertEquals("'value'", result);
     }
 

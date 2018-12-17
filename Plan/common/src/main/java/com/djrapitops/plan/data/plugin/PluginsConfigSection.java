@@ -40,12 +40,12 @@ public class PluginsConfigSection {
     public boolean hasSection(PluginData dataSource) {
         ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
-        return section.getChildren().containsKey(pluginName)
-                && section.getConfigNode(pluginName).getChildren().containsKey("Enabled");
+        return section.getNode(pluginName + ".Enabled").isPresent();
     }
 
     private ConfigNode getPluginsSection() {
-        return config.getConfigNode("Plugins");
+        return config.getNode("Plugins")
+                .orElse(config.addNode("Plugins"));
     }
 
     public void createSection(PluginData dataSource) throws IOException {

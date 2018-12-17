@@ -18,6 +18,7 @@ package com.djrapitops.plan.system.settings;
 
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
+import com.djrapitops.plan.system.settings.config.ConfigReader;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
@@ -55,6 +56,8 @@ public class BukkitConfigSystem extends ConfigSystem {
     @Override
     protected void copyDefaults() throws IOException {
         configUpdater.applyConfigUpdate(config);
-        config.copyDefaults(files.readFromResource("config.yml"));
+        try (ConfigReader reader = new ConfigReader(files.readStreamFromResource("config.yml"))) {
+            config.copyMissing(reader.read());
+        }
     }
 }

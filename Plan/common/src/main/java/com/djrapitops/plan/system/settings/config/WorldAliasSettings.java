@@ -93,7 +93,7 @@ public class WorldAliasSettings {
     public void addWorld(String world) {
         ConfigNode aliasSect = getAliasSection();
 
-        String previousValue = aliasSect.getConfigNode(world).getValue();
+        String previousValue = aliasSect.getString(world);
         if (Verify.isEmpty(previousValue)) {
             aliasSect.set(world, world);
             processing.submitNonCritical(() -> {

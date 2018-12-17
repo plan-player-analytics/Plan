@@ -32,7 +32,7 @@ public class DisplaySettings {
     public static final Setting<ConfigNode> WORLD_ALIASES = new Setting<ConfigNode>("World_aliases", ConfigNode.class) {
         @Override
         public ConfigNode getValueFrom(ConfigNode node) {
-            return node.getConfigNode(path);
+            return node.getNode(path).orElse(node.addNode(path));
         }
     };
 
