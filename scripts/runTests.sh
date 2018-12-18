@@ -1,7 +1,7 @@
 cd Plan
 
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then 
-	mvn test
+	mvn -T 1C test
 fi
 
 if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then 

@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import rules.ComponentMocker;
 import rules.SpongeComponentMocker;
+import utilities.RandomData;
 
 /**
  * Test for Sponge PlanSystem.
@@ -28,11 +29,13 @@ public class SpongeSystemTest {
     @ClassRule
     public static ComponentMocker component = new SpongeComponentMocker(temporaryFolder);
 
+    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+
     @Test
     public void testEnable() throws EnableException {
         PlanSystem spongeSystem = component.getPlanSystem();
         try {
-            spongeSystem.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9005);
+            spongeSystem.getConfigSystem().getConfig().set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             spongeSystem.enable();
         } finally {
             spongeSystem.disable();

@@ -17,6 +17,7 @@ import org.openqa.selenium.WebDriver;
 import rules.ComponentMocker;
 import rules.PluginComponentMocker;
 import rules.SeleniumDriver;
+import utilities.RandomData;
 import utilities.TestConstants;
 
 import java.util.UUID;
@@ -35,6 +36,8 @@ import static org.junit.Assert.assertFalse;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class JSErrorRegressionTest {
 
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     @ClassRule
@@ -49,7 +52,7 @@ public class JSErrorRegressionTest {
         bukkitSystem = component.getPlanSystem();
 
         PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
-        config.set(WebserverSettings.PORT, 9005);
+        config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
 
         bukkitSystem.enable();
         savePlayerData();
@@ -81,7 +84,7 @@ public class JSErrorRegressionTest {
     public void playerPageDoesNotHaveJavascriptErrors() {
         System.out.println("Testing Player Page");
         WebDriver driver = seleniumDriver.getDriver();
-        driver.get("http://localhost:9005/player/TestPlayer");
+        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/TestPlayer");
         assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
     }
 
@@ -91,7 +94,7 @@ public class JSErrorRegressionTest {
         System.out.println("Testing Server Page");
         WebDriver driver = seleniumDriver.getDriver();
         // Open the page that has refreshing info
-        driver.get("http://localhost:9005/server");
+        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
         assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
 
         // Wait until Plan caches analysis results
@@ -101,7 +104,7 @@ public class JSErrorRegressionTest {
 
         // Open the page with analysis stuff
         seleniumDriver.newTab();
-        driver.get("http://localhost:9005/server");
+        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
         assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
     }
 
@@ -110,7 +113,7 @@ public class JSErrorRegressionTest {
     public void playersPageDoesNotHaveJavascriptErrors() {
         System.out.println("Testing Players Page");
         WebDriver driver = seleniumDriver.getDriver();
-        driver.get("http://localhost:9005/players");
+        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/players");
         assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
     }
 
@@ -118,7 +121,7 @@ public class JSErrorRegressionTest {
     public void debugPageDoesNotHaveJavascriptErrors() {
         System.out.println("Testing Debug Page");
         WebDriver driver = seleniumDriver.getDriver();
-        driver.get("http://localhost:9005/debug");
+        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/debug");
         assertFalse(driver.getPageSource(), driver.getPageSource().contains("500 Internal Error occurred"));
     }
 }

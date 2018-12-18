@@ -319,6 +319,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M2</version>
                 <configuration>
+                    <parallel>classes</parallel>
                     <trimStackTrace>false</trimStackTrace>
                 </configuration>
             </plugin>

@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import rules.BukkitComponentMocker;
 import rules.ComponentMocker;
+import utilities.RandomData;
 
 /**
  * Test for Bukkit PlanSystem.
@@ -29,12 +30,14 @@ public class BukkitSystemTest {
     @ClassRule
     public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
 
+    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+
     @Test
     public void testEnable() throws EnableException {
         PlanSystem bukkitSystem = component.getPlanSystem();
         try {
             PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
-            config.set(WebserverSettings.PORT, 9005);
+            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             bukkitSystem.enable();
         } finally {
             bukkitSystem.disable();

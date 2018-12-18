@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import rules.BukkitComponentMocker;
 import rules.ComponentMocker;
 import utilities.HTTPConnector;
+import utilities.RandomData;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,8 @@ import java.security.NoSuchAlgorithmException;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class HTTPSWebServerAuthTest {
+
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -49,7 +52,7 @@ public class HTTPSWebServerAuthTest {
         config.set(WebserverSettings.CERTIFICATE_STOREPASS, "wDwwf663NLTm73gL");
         config.set(WebserverSettings.CERTIFICATE_ALIAS, "DefaultPlanCert");
 
-        config.set(WebserverSettings.PORT, 9005);
+        config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
 
         bukkitSystem.enable();
 
@@ -70,7 +73,7 @@ public class HTTPSWebServerAuthTest {
     @Test
     @Ignore("HTTPS Start fails due to paths being bad for some reason")
     public void testHTTPSAuthForPages() throws IOException, WebException, KeyManagementException, NoSuchAlgorithmException {
-        String address = "https://localhost:9005";
+        String address = "https://localhost:" + TEST_PORT_NUMBER;
         URL url = new URL(address);
         HttpURLConnection connection = connector.getConnection("HET", address);
 

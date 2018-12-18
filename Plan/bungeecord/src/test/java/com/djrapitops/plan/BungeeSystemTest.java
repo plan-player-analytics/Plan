@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import rules.BungeeComponentMocker;
 import rules.ComponentMocker;
+import utilities.RandomData;
 
 /**
  * Test for Bungee PlanSystem.
@@ -34,6 +35,8 @@ public class BungeeSystemTest {
     @ClassRule
     public static ComponentMocker component = new BungeeComponentMocker(temporaryFolder);
 
+    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -42,7 +45,7 @@ public class BungeeSystemTest {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(WebserverSettings.PORT, 9005);
+            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             config.set(ProxySettings.IP, "8.8.8.8");
 
             DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
@@ -63,7 +66,7 @@ public class BungeeSystemTest {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(WebserverSettings.PORT, 9005);
+            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             config.set(ProxySettings.IP, "0.0.0.0");
 
             DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
@@ -84,7 +87,7 @@ public class BungeeSystemTest {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(WebserverSettings.PORT, 9005);
+            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             config.set(ProxySettings.IP, "8.8.8.8");
 
             bungeeSystem.enable();

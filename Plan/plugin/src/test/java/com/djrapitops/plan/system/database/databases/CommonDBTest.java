@@ -64,6 +64,8 @@ import static org.junit.Assert.*;
  */
 public abstract class CommonDBTest {
 
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     @ClassRule
@@ -84,7 +86,7 @@ public abstract class CommonDBTest {
     static void handleSetup(String dbName) throws Exception {
         System.out.println("--- Test Class Setup     ---");
         system = component.getPlanSystem();
-        system.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9005);
+        system.getConfigSystem().getConfig().set(WebserverSettings.PORT, TEST_PORT_NUMBER);
         system.enable();
 
         dbSystem = system.getDatabaseSystem();

@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import rules.BukkitComponentMocker;
 import rules.ComponentMocker;
+import utilities.RandomData;
 
 public class NetworkSettingsTest {
 
@@ -16,6 +17,8 @@ public class NetworkSettingsTest {
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     @ClassRule
     public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
+
+    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     @AfterClass
     public static void tearDownClass() {
@@ -25,7 +28,7 @@ public class NetworkSettingsTest {
     @Test
     public void transferDoesNotProduceException() throws EnableException {
         PlanSystem system = component.getPlanSystem();
-        system.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9005);
+        system.getConfigSystem().getConfig().set(WebserverSettings.PORT, TEST_PORT_NUMBER);
         system.enable();
 
         NetworkSettings networkSettings = system.getConfigSystem().getConfig().getNetworkSettings();

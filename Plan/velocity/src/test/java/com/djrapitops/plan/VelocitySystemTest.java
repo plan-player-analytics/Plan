@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import rules.ComponentMocker;
 import rules.VelocityComponentMocker;
+import utilities.RandomData;
 
 /**
  * Test for Velocity PlanSystem.
@@ -30,12 +31,14 @@ public class VelocitySystemTest {
     @ClassRule
     public static ComponentMocker component = new VelocityComponentMocker(temporaryFolder);
 
+    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+
     @Test
     public void velocityEnables() throws Exception {
         PlanSystem velocitySystem = component.getPlanSystem();
         try {
             PlanConfig config = velocitySystem.getConfigSystem().getConfig();
-            config.set(WebserverSettings.PORT, 9005);
+            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             config.set(ProxySettings.IP, "8.8.8.8");
 
             DBSystem dbSystem = velocitySystem.getDatabaseSystem();

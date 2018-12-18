@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import rules.BukkitComponentMocker;
 import rules.BungeeComponentMocker;
 import rules.ComponentMocker;
+import utilities.RandomData;
 
 import java.util.UUID;
 
@@ -30,6 +31,8 @@ public class BungeeBukkitConnectionTest {
     public static ComponentMocker bukkitComponent = new BukkitComponentMocker(temporaryFolder);
     @ClassRule
     public static ComponentMocker bungeeComponent = new BungeeComponentMocker(temporaryFolder);
+
+    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -57,7 +60,7 @@ public class BungeeBukkitConnectionTest {
         bukkitSystem = bukkitComponent.getPlanSystem();
         bungeeSystem = bungeeComponent.getPlanSystem();
 
-        bukkitSystem.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9005);
+        bukkitSystem.getConfigSystem().getConfig().set(WebserverSettings.PORT, TEST_PORT_NUMBER);
         bungeeSystem.getConfigSystem().getConfig().set(WebserverSettings.PORT, 9250);
 
         DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
