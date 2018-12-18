@@ -18,9 +18,10 @@ package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plugin.utilities.Verify;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -35,7 +36,6 @@ import java.util.Scanner;
 public class ConfigReader implements Closeable {
 
     private static final ConfigValueParser.StringParser STRING_PARSER = new ConfigValueParser.StringParser();
-    private InputStream in;
     private final Scanner scanner;
     private ConfigNode previousNode;
     private ConfigNode parent;
@@ -44,9 +44,16 @@ public class ConfigReader implements Closeable {
     private int indentMode = 4;
     private List<String> unboundComment = new ArrayList<>();
 
+    public ConfigReader(Path filePath) throws IOException {
+        this(Files.newInputStream(filePath));
+    }
+
     public ConfigReader(InputStream in) {
-        this.in = in;
-        this.scanner = new Scanner(in);
+        this(new Scanner(new InputStreamReader(in, StandardCharsets.UTF_8)));
+    }
+
+    public ConfigReader(BufferedReader bufferedReader) {
+        this(new Scanner(bufferedReader));
     }
 
     public ConfigReader(Scanner scanner) {
@@ -197,8 +204,5 @@ public class ConfigReader implements Closeable {
     @Override
     public void close() throws IOException {
         scanner.close();
-        if (in != null) {
-            in.close();
-        }
     }
 }
