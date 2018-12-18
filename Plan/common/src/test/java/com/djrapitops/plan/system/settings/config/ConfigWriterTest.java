@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -110,6 +111,43 @@ class ConfigWriterTest {
             }
         }
         assertEquals(0, differing.length(), differing::toString);
+    }
+
+    @Test
+    void listIndent() throws IOException {
+        ConfigNode root = new ConfigNode(null, null, null);
+        root.addNode("Test").set(Arrays.asList("First", "Second", "Third"));
+
+        Path out = tempFolder.resolve("listIndent.yml");
+        new ConfigWriter(out).write(root);
+
+        List<String> writtenLines = FileUtil.lines(out.toFile());
+        List<String> expected = Arrays.asList(
+                "Test:",
+                "  - First",
+                "  - Second",
+                "  - Third"
+        );
+        assertEquals(expected, writtenLines);
+    }
+
+    @Test
+    void listIndentSecondLevel() throws IOException {
+        ConfigNode root = new ConfigNode(null, null, null);
+        root.addNode("Test").addNode("List").set(Arrays.asList("First", "Second", "Third"));
+
+        Path out = tempFolder.resolve("listIndent.yml");
+        new ConfigWriter(out).write(root);
+
+        List<String> writtenLines = FileUtil.lines(out.toFile());
+        List<String> expected = Arrays.asList(
+                "Test:",
+                "    List:",
+                "      - First",
+                "      - Second",
+                "      - Third"
+        );
+        assertEquals(expected, writtenLines);
     }
 
 }
