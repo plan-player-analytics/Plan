@@ -16,9 +16,13 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
+import com.djrapitops.plugin.utilities.Verify;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -36,6 +40,10 @@ public class ConfigReader implements Closeable {
     private ConfigNode previousNode;
     private ConfigNode parent;
 
+    // Indent mode assumes the number of spaces used to indent the file.
+    private int indentMode = 4;
+    private List<String> unboundComment = new ArrayList<>();
+
     public ConfigReader(InputStream in) {
         this.in = in;
         this.scanner = new Scanner(in);
@@ -43,19 +51,6 @@ public class ConfigReader implements Closeable {
 
     public ConfigReader(Scanner scanner) {
         this.scanner = scanner;
-    }
-
-    @Deprecated
-    public Config readAndClose() {
-        try {
-            return read();
-        } finally {
-            try {
-                close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public Config read() {
@@ -66,9 +61,21 @@ public class ConfigReader implements Closeable {
 
         while (scanner.hasNextLine()) {
             String line = readNewLine();
-            // Determine where the node belongs
-            parent = findParent(previousNode.getNodeDepth(), findCurrentDepth(line));
-            previousNode = parseNode(line.trim());
+            String trimmed = line.trim();
+
+            if (trimmed.isEmpty()) {
+                // Add an empty row comment in case user wants spacers
+                handleCommentLine(" ");
+            } else if (trimmed.startsWith("#")) {
+                handleCommentLine(trimmed);
+            } else {
+                // Determine where the node belongs
+                parent = findParent(previousNode.getNodeDepth(), findCurrentDepth(line));
+                Verify.nullCheck(parent, () -> new IllegalStateException("Parent became null on line: \"" + line + "\""));
+                previousNode = parseNode(trimmed);
+                Verify.nullCheck(previousNode, () -> new IllegalStateException("Parsed node became null on line: \"" + line + "\""));
+                handleUnboundComments();
+            }
         }
 
         return config;
@@ -78,7 +85,7 @@ public class ConfigReader implements Closeable {
         String line = scanner.nextLine();
 
         // Removing any dangling comments
-        int danglingComment = line.indexOf(" #");
+        int danglingComment = line.trim().indexOf(" #");
         if (danglingComment != -1) {
             line = line.substring(0, danglingComment);
         }
@@ -86,10 +93,6 @@ public class ConfigReader implements Closeable {
     }
 
     private ConfigNode parseNode(String line) {
-        if (line.startsWith("#")) {
-            return handleCommentLine(line);
-        }
-
         String[] keyAndValue = line.split(":", 2);
         if (keyAndValue.length <= 1) {
             return handleMultiline(line);
@@ -107,9 +110,15 @@ public class ConfigReader implements Closeable {
         }
     }
 
-    private ConfigNode handleCommentLine(String line) {
-        previousNode.comment.add(line.substring(1).trim());
-        return previousNode;
+    private void handleCommentLine(String line) {
+        unboundComment.add(line.substring(1).trim());
+    }
+
+    private void handleUnboundComments() {
+        if (!unboundComment.isEmpty()) {
+            previousNode.setComment(new ArrayList<>(unboundComment));
+            unboundComment.clear();
+        }
     }
 
     private ConfigNode handleMultilineString(String line) {
@@ -117,14 +126,13 @@ public class ConfigReader implements Closeable {
             previousNode.value = "";
         }
         // Append the new line to the end of the value.
-        previousNode.value += STRING_PARSER.compose(line.substring(2).trim());
+        previousNode.value += line.trim();
         return previousNode;
     }
 
     private ConfigNode handleNewNode(String key, String value) {
-        ConfigNode newNode = new ConfigNode(key, parent, STRING_PARSER.compose(value));
-        parent.addChild(newNode);
-        return newNode;
+        ConfigNode newNode = new ConfigNode(key, parent, value);
+        return parent.addChild(newNode);
     }
 
     private ConfigNode handleListCase(String line) {
@@ -132,7 +140,7 @@ public class ConfigReader implements Closeable {
             previousNode.value = "";
         }
         // Append list item to the value.
-        previousNode.value += "\n- " + STRING_PARSER.compose(line.substring(2).trim());
+        previousNode.value += "\n- " + line.substring(2).trim();
         return previousNode;
     }
 
@@ -146,9 +154,9 @@ public class ConfigReader implements Closeable {
             //     3:
             // 1:
             int helperDepth = previousDepth;
-            ConfigNode foundParent = parent;
+            ConfigNode foundParent = previousNode;
             while (helperDepth > currentDepth) {
-                helperDepth = parent.getNodeDepth();
+                helperDepth = foundParent.getNodeDepth();
                 foundParent = foundParent.parent; // Moves one level up the tree
             }
             return foundParent;
@@ -159,11 +167,17 @@ public class ConfigReader implements Closeable {
 
     private int findCurrentDepth(String line) {
         int indent = readIndent(line);
+
+        // Re-define indent mode if indent is 2 for configs indented with 2 spaces.
+        if (indent == 2 && indentMode == 4) {
+            indentMode = indent;
+        }
+
         int depth;
-        if (indent % 4 == 0) {
-            depth = indent / 4;
+        if (indent % indentMode == 0) {
+            depth = indent / indentMode;
         } else {
-            depth = (indent - (indent % 4)) / 4;
+            depth = ((indent - (indent % indentMode)) / indentMode) + 1; // Round up
         }
         return depth;
     }

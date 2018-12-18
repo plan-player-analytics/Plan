@@ -79,28 +79,29 @@ public interface ConfigValueParser<T> {
     class StringParser implements ConfigValueParser<String> {
         @Override
         public String compose(String fromValue) {
-            String parsed = fromValue;
-            boolean surroundedWithSingleQuotes = parsed.startsWith("'") && parsed.endsWith("'");
-            boolean surroundedWithDoubleQuotes = parsed.startsWith("\"") && parsed.endsWith("\"");
+            boolean surroundedWithSingleQuotes = fromValue.startsWith("'") && fromValue.endsWith("'");
+            boolean surroundedWithDoubleQuotes = fromValue.startsWith("\"") && fromValue.endsWith("\"");
             if (surroundedWithSingleQuotes || surroundedWithDoubleQuotes) {
-                parsed = parsed.substring(1, parsed.length() - 1);
+                return fromValue.substring(1, fromValue.length() - 1);
             }
-            return parsed;
+            return fromValue;
         }
 
         @Override
-        public String decompose(String ofValue) {
-            Verify.nullCheck(ofValue, () -> new IllegalArgumentException("Null value is not valid for saving"));
+        public String decompose(String value) {
+            Verify.nullCheck(value, () -> new IllegalArgumentException("Null value is not valid for saving"));
 
-            boolean surroundedWithSingleQuotes = ofValue.startsWith("'") && ofValue.endsWith("'");
-            if (surroundedWithSingleQuotes) {
-                return "\"" + ofValue + "\"";
+            boolean surroundedByQuotes = value.startsWith("'") || value.endsWith("'");
+            boolean surroundedByDoubleQuotes = value.startsWith("\"") || value.endsWith("\"");
+            boolean containsSpace = value.contains(" ");
+            boolean startsWithSpecialSymbol = value.startsWith("-") || value.startsWith("#") || value.startsWith("&");
+
+            if (surroundedByDoubleQuotes || containsSpace || startsWithSpecialSymbol) {
+                return "'" + value + "'";
+            } else if (surroundedByQuotes) {
+                return "\"" + value + "\"";
             }
-            boolean surroundedWithDoubleQuotes = ofValue.startsWith("\"") && ofValue.endsWith("\"");
-            if (surroundedWithDoubleQuotes) {
-                return "'" + ofValue + "'";
-            }
-            return ofValue;
+            return value;
         }
     }
 
@@ -157,6 +158,9 @@ public interface ConfigValueParser<T> {
         public List<String> compose(String fromValue) {
             List<String> values = new ArrayList<>();
             for (String line : fromValue.split("\\n")) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
                 // Removes '- ' in front of the value.
                 line = line.substring(2).trim();
                 // Handle quotes around the string

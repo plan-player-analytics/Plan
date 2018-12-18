@@ -4,7 +4,7 @@
 # https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Bukkit-Configuration
 # -----------------------------------------------------
 Server:
-  ServerName: 'Plan'
+  ServerName: Plan
 # -----------------------------------------------------
 Plugin:
   Logging:
@@ -33,7 +33,7 @@ Database:
     Password: minecraft
     Database: Plan
     # Launch options to append after mysql driver address
-    Launch_options: "?rewriteBatchedStatements=true&useSSL=false"
+    Launch_options: ?rewriteBatchedStatements=true&useSSL=false
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:
 # https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
@@ -57,7 +57,7 @@ Webserver:
   # ATTENTION: On BungeeCord systems it is not possible to disable the WebServer on the plugin due to connection requirements.
   # If the WebServer is disabled with this setting BungeeCord systems will cease to function.
   Disable_Webserver: false
-  External_Webserver_address: "https://www.example.address"
+  External_Webserver_address: https://www.example.address
 # -----------------------------------------------------
 Data_gathering:
   Geolocations: true
@@ -135,8 +135,8 @@ Formatting:
     Days: '%days%d '
     Hours: '%hours%h '
     Minutes: '%minutes%m '
-    Seconds: '%seconds%s'
-    Zero: '0s'
+    Seconds: %seconds%s
+    Zero: 0s
   # Dates settings use Java SimpleDateFormat.
   # You can find the patterns & examples here:
   # https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
@@ -147,7 +147,7 @@ Formatting:
       DatePattern: 'MMM d YYYY'
     Full: 'MMM d YYYY, HH:mm:ss'
     NoSeconds: 'MMM d YYYY, HH:mm'
-    JustClock: 'HH:mm:ss'
+    JustClock: HH:mm:ss
 # -----------------------------------------------------
 # World aliases can be used to rename worlds and to combine multiple worlds into a group.
 # -----------------------------------------------------
@@ -176,7 +176,7 @@ Export:
 Plugins:
   BuyCraft:
     # http://help.buycraft.net/article/36-where-to-find-the-secret-key
-    Secret: "-"
+    Secret: '-'
   Factions:
     HideFactions:
       - ExampleFaction

@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Writer for parsing {@link Config} into file-lines.
@@ -52,23 +53,42 @@ public class ConfigWriter {
     private List<String> parseLines(ConfigNode writing) {
         List<String> lines = new ArrayList<>();
 
-        indent = writing.getNodeDepth() * 4;
-
-        addComment(writing.comment, lines);
-        addValue(writing.key, writing.value, lines);
+        dfsTreeTraverseLineResolve(writing, lines);
 
         return lines;
     }
 
-    private void addValue(String key, String value, Collection<String> lines) {
-        if (value == null) {
-            return;
+    private void dfsTreeTraverseLineResolve(ConfigNode writing, Collection<String> lines) {
+        Map<String, ConfigNode> children = writing.getChildren();
+        for (String key : writing.getNodeOrder()) {
+            ConfigNode node = children.get(key);
+            if (node.value == null && node.nodeOrder.isEmpty()) {
+                continue;
+            }
+
+            indent = node.getNodeDepth() * 4;
+            addComment(node.comment, lines);
+            addValue(node, lines);
+
+            dfsTreeTraverseLineResolve(node, lines);
         }
-        if (value.contains("\n")) {
+    }
+
+    private void addValue(ConfigNode node, Collection<String> lines) {
+        String key = node.key;
+        String value = node.value;
+
+        if (value == null || value.isEmpty()) {
+            addKey(key, lines);
+        } else if (value.contains("\n")) {
             addListValue(key, value.split("\\n"), lines);
         } else {
             addNormalValue(key, value, lines);
         }
+    }
+
+    private void addKey(String key, Collection<String> lines) {
+        lines.add(indentedBuilder().append(key).append(":").toString());
     }
 
     private void addNormalValue(String key, String value, Collection<String> lines) {
@@ -77,13 +97,15 @@ public class ConfigWriter {
     }
 
     private void addListValue(String key, String[] listItems, Collection<String> lines) {
-        addNormalValue(key, "", lines);
+        addKey(key, lines);
         for (String listItem : listItems) {
             listItem = listItem.trim();
             if (listItem.isEmpty()) {
                 continue;
             }
-            StringBuilder lineBuilder = indentedBuilder().append(listItem);
+            StringBuilder lineBuilder = indentedBuilder()
+                    .append("  ") // Append spaces to adhere to yml format for lists
+                    .append(listItem);
             lines.add(lineBuilder.toString());
         }
     }

@@ -297,10 +297,10 @@ public class ConfigNode {
     }
 
     protected int getNodeDepth() {
-        return parent != null ? parent.getNodeDepth() + 1 : 0;
+        return parent != null ? parent.getNodeDepth() + 1 : -1; // Root node is -1
     }
 
-    @Deprecated
+    @Deprecated // Make protected
     public Map<String, ConfigNode> getChildren() {
         return childNodes;
     }
@@ -311,5 +311,9 @@ public class ConfigNode {
 
     public boolean isLeafNode() {
         return nodeOrder.isEmpty();
+    }
+
+    protected List<String> getNodeOrder() {
+        return nodeOrder;
     }
 }

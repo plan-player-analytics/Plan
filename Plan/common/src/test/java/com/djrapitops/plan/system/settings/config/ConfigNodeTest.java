@@ -31,8 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(JUnitPlatform.class)
 class ConfigNodeTest {
 
-    private static final ConfigValueParser<String> STRING_PARSER = new ConfigValueParser.StringParser();
-
     private static final String SIMPLE_STRING_NODE = "Simple_string_node";
     private static final String STRING_NODE_WITH_QUOTES = "String_node_with_quotes";
     private static final String STRING_NODE_WITH_DOUBLE_QUOTES = "String_node_with_double_quotes";
@@ -45,8 +43,8 @@ class ConfigNodeTest {
     void prepareTree() {
         testTree = new ConfigNode(null, null, null);
         testTree.addChild(new ConfigNode(SIMPLE_STRING_NODE, testTree, "String"));
-        testTree.addChild(new ConfigNode(STRING_NODE_WITH_QUOTES, testTree, "'String'"));
-        testTree.addChild(new ConfigNode(STRING_NODE_WITH_DOUBLE_QUOTES, testTree, "\"String\""));
+        testTree.addChild(new ConfigNode(STRING_NODE_WITH_QUOTES, testTree, "\"'String'\""));
+        testTree.addChild(new ConfigNode(STRING_NODE_WITH_DOUBLE_QUOTES, testTree, "'\"String\"'"));
         ConfigNode emptyNode = new ConfigNode(FIRST_LEVEL, testTree, null);
         testTree.addChild(emptyNode);
         emptyNode.addChild(new ConfigNode(SECOND_LEVEL, emptyNode, "String"));
@@ -56,17 +54,17 @@ class ConfigNodeTest {
 
     @Test
     void rootNodeReturnsDepthZero() {
-        assertEquals(0, testTree.getNodeDepth());
+        assertEquals(-1, testTree.getNodeDepth());
     }
 
     @Test
     void depthOneIsReturnedCorrectly() {
-        assertEquals(1, testTree.childNodes.get(SIMPLE_STRING_NODE).getNodeDepth());
+        assertEquals(0, testTree.childNodes.get(SIMPLE_STRING_NODE).getNodeDepth());
     }
 
     @Test
     void depthTwoIsReturnedCorrectly() {
-        assertEquals(2, testTree.childNodes.get(FIRST_LEVEL).childNodes.get(SECOND_LEVEL).getNodeDepth());
+        assertEquals(1, testTree.childNodes.get(FIRST_LEVEL).childNodes.get(SECOND_LEVEL).getNodeDepth());
     }
 
     @Test
@@ -95,28 +93,28 @@ class ConfigNodeTest {
 
     @Test
     void quotedStringValueIsParsedCorrectly() {
-        String expected = "String";
+        String expected = "'String'";
         String result = testTree.childNodes.get(STRING_NODE_WITH_QUOTES).getString();
         assertEquals(expected, result);
     }
 
     @Test
     void quotedStringValueIsParsedCorrectlyViaPath() {
-        String expected = "String";
+        String expected = "'String'";
         String result = testTree.getString(STRING_NODE_WITH_QUOTES);
         assertEquals(expected, result);
     }
 
     @Test
     void doubleQuotedStringValueIsParsedCorrectly() {
-        String expected = "String";
+        String expected = "\"String\"";
         String result = testTree.childNodes.get(STRING_NODE_WITH_DOUBLE_QUOTES).getString();
         assertEquals(expected, result);
     }
 
     @Test
     void doubleQuotedStringValueIsParsedCorrectlyViaPath() {
-        String expected = "String";
+        String expected = "\"String\"";
         String result = testTree.getString(STRING_NODE_WITH_DOUBLE_QUOTES);
         assertEquals(expected, result);
     }
