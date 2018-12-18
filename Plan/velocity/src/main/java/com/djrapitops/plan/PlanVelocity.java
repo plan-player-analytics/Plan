@@ -96,6 +96,9 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
         PlanProxyCommand command = component.planCommand();
         command.registerCommands();
         registerCommand("planvelocity", command);
+        if (system != null) {
+            system.getListenerSystem().callEnableEvent(this);
+        }
     }
 
     @Override

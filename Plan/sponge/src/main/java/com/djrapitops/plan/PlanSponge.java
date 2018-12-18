@@ -105,6 +105,9 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         PlanCommand command = component.planCommand();
         command.registerCommands();
         registerCommand("plan", command);
+        if (system != null) {
+            system.getListenerSystem().callEnableEvent(this);
+        }
     }
 
     @Override

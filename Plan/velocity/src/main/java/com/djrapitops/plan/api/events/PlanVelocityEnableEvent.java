@@ -14,35 +14,32 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan;
-
-import com.djrapitops.plan.system.PlanSystem;
-import com.djrapitops.plugin.IPlugin;
-import com.djrapitops.plugin.command.ColorScheme;
-
-import java.io.File;
-import java.io.InputStream;
+package com.djrapitops.plan.api.events;
 
 /**
- * Abstraction interface for both Plan and PlanBungee.
+ * Event that is called when Plan is enabled.
+ * <p>
+ * This includes, but might not be limited to:
+ * - First time the plugin enables successfully
+ * - Plan is reloaded
+ * - Bukkit-BungeeCord setup updates settings
+ * - Plan is enabled after it was disabled
+ * <p>
+ * {@code event.isPlanSystemEnabled()} can be called to determine if the enable was successful.
+ * It is not guaranteed that this event is called when the plugin fails to enable properly.
  *
  * @author Rsl1122
  */
-public interface PlanPlugin extends IPlugin {
+public class PlanVelocityEnableEvent {
 
-    @Override
-    File getDataFolder();
+    private final boolean enabled;
 
-    InputStream getResource(String resource);
-
-    ColorScheme getColorScheme();
-
-    @Override
-    boolean isReloading();
-
-    PlanSystem getSystem();
-
-    default boolean isSystemEnabled() {
-        return getSystem().isEnabled();
+    public PlanVelocityEnableEvent(boolean enabled) {
+        this.enabled = enabled;
     }
+
+    public boolean isPlanSystemEnabled() {
+        return enabled;
+    }
+
 }

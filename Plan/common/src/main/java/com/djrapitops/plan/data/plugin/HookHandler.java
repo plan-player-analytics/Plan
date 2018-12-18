@@ -93,6 +93,10 @@ public class HookHandler implements SubSystem {
                 configHandler.createSection(dataSource);
             }
             if (configHandler.isEnabled(dataSource)) {
+                additionalDataSources.stream()
+                        .filter(pluginData -> pluginData.getSourcePlugin().equals(dataSource.getSourcePlugin()))
+                        .findAny()
+                        .ifPresent(additionalDataSources::remove);
                 logger.debug("Registered a new datasource: " + dataSource.getSourcePlugin());
                 additionalDataSources.add(dataSource);
             }

@@ -49,6 +49,8 @@ import javax.inject.Singleton;
 @Singleton
 public class PlanSystem implements SubSystem {
 
+    private boolean enabled = false;
+
     private final PlanFiles files;
     private final ConfigSystem configSystem;
     private final VersionCheckSystem versionCheckSystem;
@@ -130,6 +132,7 @@ public class PlanSystem implements SubSystem {
                 taskSystem,
                 hookHandler
         );
+        enabled = true;
     }
 
     private void enableSystems(SubSystem... systems) throws EnableException {
@@ -140,6 +143,7 @@ public class PlanSystem implements SubSystem {
 
     @Override
     public void disable() {
+        enabled = false;
         disableSystems(
                 taskSystem,
                 hookHandler,
@@ -239,5 +243,9 @@ public class PlanSystem implements SubSystem {
 
     public HtmlUtilities getHtmlUtilities() {
         return htmlUtilities;
+    }
+
+    public boolean isEnabled() {
+        return false;
     }
 }

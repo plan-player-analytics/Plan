@@ -70,6 +70,9 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         PlanProxyCommand command = component.planCommand();
         command.registerCommands();
         registerCommand("planbungee", command);
+        if (system != null) {
+            system.getListenerSystem().callEnableEvent(this);
+        }
     }
 
     @Override

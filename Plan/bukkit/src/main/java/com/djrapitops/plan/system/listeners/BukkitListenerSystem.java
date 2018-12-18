@@ -17,8 +17,11 @@
 package com.djrapitops.plan.system.listeners;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.api.events.PlanBukkitEnableEvent;
 import com.djrapitops.plan.system.listeners.bukkit.*;
 import com.djrapitops.plan.system.status.Status;
+import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 
 import javax.inject.Inject;
@@ -76,5 +79,11 @@ public class BukkitListenerSystem extends ListenerSystem {
     @Override
     protected void unregisterListeners() {
         HandlerList.unregisterAll(plugin);
+    }
+
+    @Override
+    public void callEnableEvent(PlanPlugin plugin) {
+        PlanBukkitEnableEvent event = new PlanBukkitEnableEvent(plugin.isSystemEnabled());
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 }

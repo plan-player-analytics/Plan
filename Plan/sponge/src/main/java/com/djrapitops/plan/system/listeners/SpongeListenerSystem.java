@@ -16,9 +16,12 @@
  */
 package com.djrapitops.plan.system.listeners;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSponge;
+import com.djrapitops.plan.api.events.PlanSpongeEnableEvent;
 import com.djrapitops.plan.system.listeners.sponge.*;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.event.Event;
 
 import javax.inject.Inject;
 
@@ -71,5 +74,11 @@ public class SpongeListenerSystem extends ListenerSystem {
     @Override
     protected void unregisterListeners() {
         Sponge.getEventManager().unregisterPluginListeners(plugin);
+    }
+
+    @Override
+    public void callEnableEvent(PlanPlugin plugin) {
+        Event event = new PlanSpongeEnableEvent((PlanSponge) plugin);
+        Sponge.getEventManager().post(event);
     }
 }

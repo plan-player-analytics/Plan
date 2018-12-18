@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.system.listeners;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.system.SubSystem;
 
 public abstract class ListenerSystem implements SubSystem {
@@ -33,5 +34,7 @@ public abstract class ListenerSystem implements SubSystem {
     protected abstract void registerListeners();
 
     protected abstract void unregisterListeners();
+
+    public abstract void callEnableEvent(PlanPlugin plugin);
 
 }
