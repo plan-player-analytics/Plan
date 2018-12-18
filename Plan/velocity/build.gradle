@@ -1,9 +1,11 @@
 dependencies {
     compile project(":common")
     compile "com.djrapitops:AbstractPluginFramework-velocity:$abstractPluginFrameworkVersion"
-    compile "com.velocitypowered:velocity-api:$velocityVersion"
+
+    compileOnly "com.velocitypowered:velocity-api:$velocityVersion"
+    testCompile "com.velocitypowered:velocity-api:$velocityVersion"
 
     annotationProcessor "com.velocitypowered:velocity-api:$velocityVersion"
 
-    testCompile project(":common")
+    testCompile project(path: ":common", configuration: 'testArtifacts')
 }

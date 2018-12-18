@@ -3,15 +3,15 @@ dependencies {
     compile "com.djrapitops:AbstractPluginFramework-bukkit:$abstractPluginFrameworkVersion"
     compile "org.bstats:bstats-bukkit:$bstatsVersion"
 
+	compileOnly "com.destroystokyo.paper:paper-api:$paperVersion"
+	compileOnly "org.spigotmc:spigot-api:$spigotVersion"
     compileOnly "org.bukkit:bukkit:$bukkitVersion"
-    compileOnly "org.spigotmc:spigot-api:$spigotVersion"
-    compileOnly "com.destroystokyo.paper:paper-api:$paperVersion"
 
-    testCompile "org.bukkit:bukkit:$bukkitVersion"
+	testCompile "com.destroystokyo.paper:paper-api:$paperVersion"
     testCompile "org.spigotmc:spigot-api:$spigotVersion"
-    testCompile "com.destroystokyo.paper:paper-api:$paperVersion"
+    testCompile "org.bukkit:bukkit:$bukkitVersion"
 
-    testCompile project(":common")
+    testCompile project(path: ":common", configuration: 'testArtifacts')
 }
 
 shadowJar {

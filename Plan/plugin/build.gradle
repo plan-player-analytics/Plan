@@ -5,11 +5,11 @@ dependencies {
     compile project(":bungeecord")
     compile project(":velocity")
 
-    testCompile project(":common")
-    testCompile project(":bukkit")
-    testCompile project(":sponge")
-    testCompile project(":bungeecord")
-    testCompile project(":velocity")
+    testCompile project(path: ":common", configuration: 'testArtifacts')
+    testCompile project(path: ":bukkit", configuration: 'testArtifacts')
+    testCompile project(path: ":sponge", configuration: 'testArtifacts')
+    testCompile project(path: ":bungeecord", configuration: 'testArtifacts')
+    testCompile project(path: ":velocity", configuration: 'testArtifacts')
 }
 
 shadowJar {

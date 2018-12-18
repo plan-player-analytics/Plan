@@ -16,6 +16,7 @@
  */
 package utilities.dagger;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.H2DB;
@@ -86,6 +87,10 @@ public class PluginSuperClassBindingModule {
 
             @Override
             protected void unregisterListeners() {
+            }
+
+            @Override
+            public void callEnableEvent(PlanPlugin plugin) {
             }
         };
     }

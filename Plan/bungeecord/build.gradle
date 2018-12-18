@@ -2,11 +2,14 @@ dependencies {
     compile project(":common")
 
     compile "com.djrapitops:AbstractPluginFramework-bungeecord:$abstractPluginFrameworkVersion"
-    compile "net.md-5:bungeecord-api:$bungeeVersion"
-    compile "com.imaginarycode.minecraft:RedisBungee:$redisBungeeVersion"
     compile "org.bstats:bstats-bungeecord:$bstatsVersion"
 
-    testCompile project(":common")
+    compileOnly "net.md-5:bungeecord-api:$bungeeVersion"
+    compileOnly "com.imaginarycode.minecraft:RedisBungee:$redisBungeeVersion"
+    testCompile "net.md-5:bungeecord-api:$bungeeVersion"
+    testCompile "com.imaginarycode.minecraft:RedisBungee:$redisBungeeVersion"
+
+    testCompile project(path: ":common", configuration: 'testArtifacts')
 }
 
 shadowJar {

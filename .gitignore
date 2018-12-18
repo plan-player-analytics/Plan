@@ -2,6 +2,7 @@ temporaryTestFolder/
 Plan.iml
 PlanPluginBridge.iml
 .sonar/
+builds/
 
 *.db
 

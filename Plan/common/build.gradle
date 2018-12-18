@@ -20,7 +20,7 @@ dependencies {
 }
 
 shadowJar {
-    relocate 'org.apache', 'plan.org.apache', {
+    relocate ('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
     }
 
