@@ -1,0 +1,84 @@
+plugins {
+    id "java"
+    id "com.github.johnrengelman.shadow" version "2.0.4"
+}
+
+allprojects {
+    wrapper.gradleVersion = "5.0"
+
+    group "com.djrapitops"
+    version "4.5.0-SNAPSHOT"
+}
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "maven"
+    apply plugin: "com.github.johnrengelman.shadow"
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    ext.daggerVersion = "2.9"
+
+    ext.abstractPluginFrameworkVersion = "3.4.0"
+    ext.planPluginBridgeVersion = "4.5.1"
+    ext.bukkitVersion = "1.12.2-R0.1-SNAPSHOT"
+    ext.spigotVersion = "1.12.2-R0.1-SNAPSHOT"
+    ext.paperVersion = "1.12.2-R0.1-SNAPSHOT"
+    ext.spongeVersion = "7.1.0"
+    ext.bungeeVersion = "1.12-SNAPSHOT"
+    ext.velocityVersion = "1.0-SNAPSHOT"
+    ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
+    ext.httpClientVersion = "4.5.6"
+    ext.commonsTextVersion = "1.6"
+    ext.htmlCompressorVersion = "1.5.2"
+    ext.caffeineVersion = "2.6.2"
+    ext.h2Version = "1.4.196"
+    ext.hikariVersion = "3.2.0"
+    ext.slf4jVersion = "1.7.25"
+    ext.geoIpVersion = "2.12.0"
+    ext.guavaVersion = "26.0-jre"
+    ext.bstatsVersion = "1.2"
+
+    repositories {
+        mavenCentral()
+        maven {
+            url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+        }
+        maven {
+            url = "https://papermc.io/repo/repository/maven-public/"
+        }
+        maven {
+            url = "https://repo.spongepowered.org/maven"
+        }
+        maven {
+            url = "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+        maven {
+            url = "http://repo.md-5.net/content/repositories/snapshots/"
+        }
+        maven {
+            url = "https://repo.velocitypowered.com/snapshots/"
+        }
+        maven {
+            url = "http://repo.bstats.org/content/repositories/releases/"
+        }
+        maven {
+            url = "https://dl.bintray.com/rsl1122/Plan-repository"
+        }
+    }
+
+    dependencies {
+        compile "com.google.dagger:dagger:$daggerVersion"
+
+        annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+        // Dependencies for tests
+        testCompile "org.mockito:mockito-core:2.23.4"
+        testCompile "org.xerial:sqlite-jdbc:3.25.2"
+        testCompile "junit:junit:4.12"
+        testCompile "org.hamcrest:hamcrest-core:1.3"
+        testCompile "org.seleniumhq.selenium:selenium-java:3.14.0"
+        testCompile "com.jayway.awaitility:awaitility:1.7.0"
+    }
+}

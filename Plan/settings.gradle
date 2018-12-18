@@ -1,0 +1,8 @@
+rootProject.name = 'Plan'
+
+include 'common'
+include 'bukkit'
+include 'sponge'
+include 'bungeecord'
+include 'velocity'
+include 'plugin'
