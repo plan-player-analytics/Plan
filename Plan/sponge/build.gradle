@@ -1,5 +1,6 @@
 dependencies {
-    compile project(":common")
+    compile project(path: ":common", configuration: 'shadow')
+    
     compile "com.djrapitops:AbstractPluginFramework-sponge:$abstractPluginFrameworkVersion"
     compile "org.bstats:bstats-sponge:$bstatsVersion"
 
@@ -12,5 +13,7 @@ dependencies {
 }
 
 shadowJar {
+    configurations = [project.configurations.compile]
+
     relocate "org.bstats", "com.djrapitops.plan.utilities.metrics"
 }

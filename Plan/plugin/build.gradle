@@ -1,10 +1,9 @@
 dependencies {
-    compile project(":common")
-    compile project(":bukkit")
-    compile project(":sponge")
-    compile project(":bungeecord")
-    compile project(":velocity")
-
+    compile project(path: ":common", configuration: 'shadow')
+    compile project(path: ":bukkit", configuration: 'shadow')
+    compile project(path: ":sponge", configuration: 'shadow')
+    compile project(path: ":bungeecord", configuration: 'shadow')
+    compile project(path: ":velocity", configuration: 'shadow')
     testCompile project(path: ":common", configuration: 'testArtifacts')
     testCompile project(path: ":bukkit", configuration: 'testArtifacts')
     testCompile project(path: ":sponge", configuration: 'testArtifacts')
@@ -13,6 +12,8 @@ dependencies {
 }
 
 shadowJar {
+    configurations = [project.configurations.compile]
+
     destinationDir = file("$rootDir/builds/")
     classifier = null
 }

@@ -92,10 +92,11 @@ subprojects {
 		testCompile "org.xerial:sqlite-jdbc:3.25.2" // SQLite
     }
 
-    // Test classes available to other modules
+
     configurations {
         testArtifacts.extendsFrom testRuntime
     }
+    // Test classes available to other modules
     task testJar(type: Jar) {
         classifier "test"
         from sourceSets.test.output

@@ -1,5 +1,5 @@
 dependencies {
-    compile project(":common")
+    compile project(path: ":common", configuration: 'shadow')
     compile "com.djrapitops:AbstractPluginFramework-velocity:$abstractPluginFrameworkVersion"
 
     compileOnly "com.velocitypowered:velocity-api:$velocityVersion"
@@ -8,4 +8,8 @@ dependencies {
     annotationProcessor "com.velocitypowered:velocity-api:$velocityVersion"
 
     testCompile project(path: ":common", configuration: 'testArtifacts')
+}
+
+shadowJar {
+    configurations = [project.configurations.compile]
 }
