@@ -7,5 +7,5 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
 fi
 
 if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then 
-	mvn org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+	gradle sonarqube
 fi

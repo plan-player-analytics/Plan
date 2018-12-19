@@ -1,5 +1,7 @@
 plugins {
     id "java"
+    id "jacoco"
+    id "org.sonarqube" version "2.2"
     id "net.ltgt.apt" version "0.19"
     id "com.github.johnrengelman.shadow" version "4.0.2"
 }
@@ -16,6 +18,7 @@ subprojects {
     apply plugin: "maven"
     apply plugin: "net.ltgt.apt"
     apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: "jacoco"
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -103,5 +106,12 @@ subprojects {
     }
     artifacts {
         testArtifacts testJar
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "Java Gradle-based project analyzed on SonarCloud using Travis"
+        property "sonar.projectKey", "com.sonarqube.examples.java-gradle-travis-project"
     }
 }
