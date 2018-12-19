@@ -1,7 +1,9 @@
 cd Plan
 
+gradle tasks
+
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then 
-	mvn -T 1C test
+	gradle test
 fi
 
 if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then 
