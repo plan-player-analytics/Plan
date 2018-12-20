@@ -25,6 +25,7 @@ package com.djrapitops.plan.system.settings.config;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents a single node in a configuration file
@@ -245,6 +246,17 @@ public class ConfigNode {
         return getNode(path).map(ConfigNode::getStringList).orElse(Collections.emptyList());
     }
 
+    /**
+     * Return values in a Map.
+     *
+     * @param fullKeys Should the key be full keys of the Config node.
+     * @return Map with Config key - ConfigNode#getString.
+     */
+    public Map<String, String> getStringMap(boolean fullKeys) {
+        return childNodes.values().stream()
+                .collect(Collectors.toMap(node -> node.getKey(fullKeys), ConfigNode::getString));
+    }
+
     public Integer getInteger(String path) {
         return getNode(path).map(ConfigNode::getInteger).orElse(null);
     }
@@ -298,11 +310,6 @@ public class ConfigNode {
 
     protected int getNodeDepth() {
         return parent != null ? parent.getNodeDepth() + 1 : -1; // Root node is -1
-    }
-
-    @Deprecated // Make protected
-    public Map<String, ConfigNode> getChildren() {
-        return childNodes;
     }
 
     public ConfigNode getParent() {

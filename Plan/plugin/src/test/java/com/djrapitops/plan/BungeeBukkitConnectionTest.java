@@ -40,9 +40,6 @@ public class BungeeBukkitConnectionTest {
     private PlanSystem bukkitSystem;
     private PlanSystem bungeeSystem;
 
-    private UUID bukkitUUID;
-    private UUID bungeeUUID;
-
     @After
     public void tearDown() {
         System.out.println("------------------------------");
@@ -69,8 +66,8 @@ public class BungeeBukkitConnectionTest {
         bukkitSystem.enable();
         bungeeSystem.enable();
 
-        bukkitUUID = bukkitSystem.getServerInfo().getServerUUID();
-        bungeeUUID = bungeeSystem.getServerInfo().getServerUUID();
+        UUID bukkitUUID = bukkitSystem.getServerInfo().getServerUUID();
+        UUID bungeeUUID = bungeeSystem.getServerInfo().getServerUUID();
 
         System.out.println("------------------------------");
         System.out.println("Enable Complete");

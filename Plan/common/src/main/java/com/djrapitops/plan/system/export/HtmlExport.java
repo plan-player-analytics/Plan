@@ -24,7 +24,6 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.connection.ConnectionSystem;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.processing.Processing;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ExportSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -55,7 +54,6 @@ public class HtmlExport extends SpecificExport {
     private final PlanPlugin plugin;
     private final PlanConfig config;
     private final Theme theme;
-    private final Processing processing;
     private final PlanFiles files;
     private final DBSystem dbSystem;
     private final PageFactory pageFactory;
@@ -68,7 +66,6 @@ public class HtmlExport extends SpecificExport {
             PlanFiles files,
             PlanConfig config,
             Theme theme,
-            Processing processing,
             DBSystem dbSystem,
             PageFactory pageFactory,
             ServerInfo serverInfo,
@@ -79,7 +76,6 @@ public class HtmlExport extends SpecificExport {
         this.plugin = plugin;
         this.config = config;
         this.theme = theme;
-        this.processing = processing;
         this.files = files;
         this.dbSystem = dbSystem;
         this.pageFactory = pageFactory;

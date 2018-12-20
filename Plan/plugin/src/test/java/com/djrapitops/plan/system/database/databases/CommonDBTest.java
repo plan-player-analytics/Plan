@@ -42,6 +42,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
 import rules.BukkitComponentMocker;
 import rules.ComponentMocker;
+import utilities.FieldFetcher;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -49,8 +50,6 @@ import utilities.TestConstants;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -916,14 +915,10 @@ public abstract class CommonDBTest {
         playerContainer.putRawData(PlayerKeys.ACTIVE_SESSION, RandomData.randomSession());
 
         List<String> unsupported = new ArrayList<>();
-        for (Field field : PlayerKeys.class.getDeclaredFields()) {
-            if (!Modifier.isPublic(field.getModifiers())) {
-                continue;
-            }
-            // the field is static and no object is needed for access.
-            Key key = (Key) field.get(null);
+        List<Key> keys = FieldFetcher.getPublicStaticFields(PlayerKeys.class, Key.class);
+        for (Key key : keys) {
             if (!playerContainer.supports(key)) {
-                unsupported.add(field.getName());
+                unsupported.add(key.getKeyName());
             }
         }
 
@@ -937,14 +932,10 @@ public abstract class CommonDBTest {
         ServerContainer serverContainer = db.fetch().getServerContainer(serverUUID);
 
         List<String> unsupported = new ArrayList<>();
-        for (Field field : ServerKeys.class.getDeclaredFields()) {
-            if (!Modifier.isPublic(field.getModifiers())) {
-                continue;
-            }
-            // the field is static and no object is needed for access.
-            Key key = (Key) field.get(null);
+        List<Key> keys = FieldFetcher.getPublicStaticFields(ServerKeys.class, Key.class);
+        for (Key key : keys) {
             if (!serverContainer.supports(key)) {
-                unsupported.add(field.getName());
+                unsupported.add(key.getKeyName());
             }
         }
 
@@ -959,14 +950,10 @@ public abstract class CommonDBTest {
                 db.fetch().getServerContainer(serverUUID)
         );
         Collection<String> unsupported = new ArrayList<>();
-        for (Field field : AnalysisKeys.class.getDeclaredFields()) {
-            if (!Modifier.isPublic(field.getModifiers())) {
-                continue;
-            }
-            // the field is static and no object is needed for access.
-            Key key = (Key) field.get(null);
+        List<Key> keys = FieldFetcher.getPublicStaticFields(AnalysisKeys.class, Key.class);
+        for (Key key : keys) {
             if (!analysisContainer.supports(key)) {
-                unsupported.add(field.getName());
+                unsupported.add(key.getKeyName());
             }
         }
 
@@ -995,13 +982,10 @@ public abstract class CommonDBTest {
         NetworkContainer networkContainer = db.fetch().getNetworkContainer();
 
         List<String> unsupported = new ArrayList<>();
-        for (Field field : NetworkKeys.class.getDeclaredFields()) {
-            if (!Modifier.isPublic(field.getModifiers())) {
-                continue;
-            }
-            Key key = (Key) field.get(null);
+        List<Key> keys = FieldFetcher.getPublicStaticFields(NetworkKeys.class, Key.class);
+        for (Key key : keys) {
             if (!networkContainer.supports(key)) {
-                unsupported.add(field.getName());
+                unsupported.add(key.getKeyName());
             }
         }
 

@@ -71,10 +71,11 @@ public class ConnectionOut {
 
     /**
      * Constructor.
-     *  @param toServer    Full address to another Plan webserver. (http://something:port)
-     * @param serverUUID  UUID of server this outbound connection.
-     * @param infoRequest Type of the action this connection wants to be performed.
-     * @param connectionLog
+     *
+     * @param toServer      Full address to another Plan webserver. (http://something:port)
+     * @param serverUUID    UUID of server this outbound connection.
+     * @param infoRequest   Type of the action this connection wants to be performed.
+     * @param connectionLog Where the connection should be logged.
      */
     public ConnectionOut(
             Server toServer, UUID serverUUID, InfoRequest infoRequest,

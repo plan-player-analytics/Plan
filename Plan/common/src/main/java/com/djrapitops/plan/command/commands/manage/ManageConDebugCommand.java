@@ -95,9 +95,6 @@ public class ManageConDebugCommand extends CommandNode {
         try {
             connectionSystem.sendInfoRequest(infoRequestFactory.checkConnectionRequest(address), server);
             sender.sendMessage(getMsgFor(address, usingHttps, local, true, true));
-        } catch (ForbiddenException | BadRequestException | InternalErrorException e) {
-            sender.sendMessage(getMsgFor(address, usingHttps, local, false, false));
-            sender.sendMessage(locale.getString(ManageLang.CON_EXCEPTION, e.getClass().getSimpleName()));
         } catch (UnauthorizedServerException e) {
             sender.sendMessage(getMsgFor(address, usingHttps, local, true, false));
             sender.sendMessage(locale.getString(ManageLang.CON_UNAUTHORIZED));

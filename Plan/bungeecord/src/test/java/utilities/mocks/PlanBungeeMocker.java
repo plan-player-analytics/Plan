@@ -85,6 +85,7 @@ public class PlanBungeeMocker extends Mocker {
         return this;
     }
 
+    @SuppressWarnings("deprecation")
     public PlanBungeeMocker withProxy() {
         ProxyServer proxyMock = Mockito.mock(ProxyServer.class);
         doReturn("1.12.2").when(proxyMock).getVersion();

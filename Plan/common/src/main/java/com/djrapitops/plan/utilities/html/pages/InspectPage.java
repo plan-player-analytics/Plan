@@ -152,9 +152,8 @@ public class InspectPage implements Page {
         String playerName = player.getValue(PlayerKeys.NAME).orElse("Unknown");
         int timesKicked = player.getValue(PlayerKeys.KICK_COUNT).orElse(0);
 
-        replacer.addAllPlaceholdersFrom(player, yearLongFormatter,
-                PlayerKeys.REGISTERED, PlayerKeys.LAST_SEEN
-        );
+        replacer.addPlaceholderFrom(player, yearLongFormatter, PlayerKeys.REGISTERED);
+        replacer.addPlaceholderFrom(player, yearLongFormatter, PlayerKeys.LAST_SEEN);
 
         replacer.put("playerName", playerName);
         replacer.put("kickCount", timesKicked);

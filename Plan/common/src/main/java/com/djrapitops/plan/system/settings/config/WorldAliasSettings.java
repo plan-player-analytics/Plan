@@ -74,13 +74,7 @@ public class WorldAliasSettings {
      * @return Map: Original name, Alias
      */
     public Map<String, String> getAliases() {
-        ConfigNode aliasSect = getAliasSection();
-
-        Map<String, String> aliasMap = new HashMap<>();
-        for (Map.Entry<String, ConfigNode> world : aliasSect.getChildren().entrySet()) {
-            aliasMap.put(world.getKey(), world.getValue().getString());
-        }
-        return aliasMap;
+        return getAliasSection().getStringMap(false);
     }
 
     /**

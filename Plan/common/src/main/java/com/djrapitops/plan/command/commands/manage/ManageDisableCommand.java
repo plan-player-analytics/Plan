@@ -60,13 +60,11 @@ public class ManageDisableCommand extends CommandNode {
         Verify.isTrue(args.length >= 1,
                 () -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, Arrays.toString(this.getArguments()))));
 
-        switch (args[0].toLowerCase()) {
-            case "kickcount":
-                status.setCountKicks(false);
-                sender.sendMessage(locale.getString(CommandLang.FEATURE_DISABLED, "Kick Counting"));
-                break;
-            default:
-                sender.sendMessage(locale.getString(CommandLang.FAIL_NO_SUCH_FEATURE, "'kickcount'"));
+        if ("kickcount".equals(args[0].toLowerCase())) {
+            status.setCountKicks(false);
+            sender.sendMessage(locale.getString(CommandLang.FEATURE_DISABLED, "Kick Counting"));
+        } else {
+            sender.sendMessage(locale.getString(CommandLang.FAIL_NO_SUCH_FEATURE, "'kickcount'"));
         }
     }
 }

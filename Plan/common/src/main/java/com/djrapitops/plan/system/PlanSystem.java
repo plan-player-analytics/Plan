@@ -246,6 +246,6 @@ public class PlanSystem implements SubSystem {
     }
 
     public boolean isEnabled() {
-        return false;
+        return enabled;
     }
 }

@@ -110,18 +110,12 @@ public class ManageRestoreCommand extends CommandNode {
     private void runRestoreTask(String backupDbName, Sender sender, Database database) {
         processing.submitCritical(() -> {
             try {
-                String backupDBName = backupDbName;
-                boolean containsDBFileExtension = backupDBName.endsWith(".db");
-
-                File backupDBFile = files.getFileFromPluginFolder(backupDBName + (containsDBFileExtension ? "" : ".db"));
+                boolean containsDBFileExtension = backupDbName.endsWith(".db");
+                File backupDBFile = files.getFileFromPluginFolder(backupDbName + (containsDBFileExtension ? "" : ".db"));
 
                 if (!backupDBFile.exists()) {
                     sender.sendMessage(locale.getString(ManageLang.FAIL_FILE_NOT_FOUND, backupDBFile.getAbsolutePath()));
                     return;
-                }
-
-                if (containsDBFileExtension) {
-                    backupDBName = backupDBName.substring(0, backupDBName.length() - 3);
                 }
 
                 SQLiteDB backupDB = sqliteFactory.usingFile(backupDBFile);

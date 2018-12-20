@@ -59,7 +59,7 @@ public class ConfigWriter {
     }
 
     private void dfsTreeTraverseLineResolve(ConfigNode writing, Collection<String> lines) {
-        Map<String, ConfigNode> children = writing.getChildren();
+        Map<String, ConfigNode> children = writing.childNodes;
         for (String key : writing.getNodeOrder()) {
             ConfigNode node = children.get(key);
             if (node.value == null && node.nodeOrder.isEmpty()) {
