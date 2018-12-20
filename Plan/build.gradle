@@ -3,6 +3,7 @@ plugins {
     id "jacoco"
     id "org.sonarqube" version "2.6.2"
     id "net.ltgt.apt" version "0.19"
+    id "net.ltgt.apt-idea" version "0.19"
     id "com.github.johnrengelman.shadow" version "4.0.2"
 }
 
@@ -17,6 +18,7 @@ subprojects {
     apply plugin: "java"
     apply plugin: "maven"
     apply plugin: "net.ltgt.apt"
+    apply plugin: "net.ltgt.apt-idea"
     apply plugin: "com.github.johnrengelman.shadow"
     apply plugin: "jacoco"
 
