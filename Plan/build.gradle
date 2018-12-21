@@ -26,7 +26,7 @@ subprojects {
     targetCompatibility = 1.8
 
     ext.daggerVersion = "2.20"
-	ext.daggerCompilerVersion = "2.19"
+	ext.daggerCompilerVersion = "2.20"
 
     ext.abstractPluginFrameworkVersion = "3.4.0"
     ext.planPluginBridgeVersion = "4.6.0"
