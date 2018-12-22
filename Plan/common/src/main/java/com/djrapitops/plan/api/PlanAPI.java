@@ -16,9 +16,12 @@
  */
 package com.djrapitops.plan.api;
 
+import com.djrapitops.plan.api.data.PlayerContainer;
+import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.system.database.databases.operation.FetchOperations;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,5 +58,45 @@ public interface PlanAPI {
 
     Map<UUID, String> getKnownPlayerNames();
 
+    /**
+     * Fetch things from the database.
+     *
+     * @return FetchOperations object.
+     * @deprecated FetchOperations interface is going to removed since it is too rigid.
+     */
+    @Deprecated
     FetchOperations fetchFromPlanDB();
+
+    /**
+     * Fetch PlayerContainer from the database.
+     * <p>
+     * Blocking operation.
+     *
+     * @param uuid UUID of the player.
+     * @return a {@link PlayerContainer}.
+     */
+    default PlayerContainer fetchPlayerContainer(UUID uuid) {
+        return new PlayerContainer(fetchFromPlanDB().getPlayerContainer(uuid));
+    }
+
+    /**
+     * Fetch a ServerContainer from the database.
+     * <p>
+     * Blocking operation.
+     *
+     * @param serverUUID UUID of the server.
+     * @return a {@link ServerContainer}.
+     */
+    default ServerContainer fetchServerContainer(UUID serverUUID) {
+        return new ServerContainer(fetchFromPlanDB().getServerContainer(serverUUID));
+    }
+
+    /**
+     * Fetch server UUIDs.
+     *
+     * @return All Plan server UUIDs.
+     */
+    default Collection<UUID> fetchServerUUIDs() {
+        return fetchFromPlanDB().getServerUUIDs();
+    }
 }
