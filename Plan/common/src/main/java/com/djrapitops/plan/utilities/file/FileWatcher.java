@@ -23,8 +23,8 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
@@ -40,16 +40,16 @@ public class FileWatcher extends Thread {
     private volatile boolean running;
 
     private Path watchedPath;
-    private List<WatchedFile> watchedFiles;
+    private Set<WatchedFile> watchedFiles;
 
     public FileWatcher(File folder, ErrorHandler errorHandler) {
-        this(folder, errorHandler, new ArrayList<>());
+        this(folder, errorHandler, new HashSet<>());
     }
 
     public FileWatcher(
             File folder,
             ErrorHandler errorHandler,
-            List<WatchedFile> watchedFiles
+            Set<WatchedFile> watchedFiles
     ) {
         this.errorHandler = errorHandler;
         this.running = false;
@@ -61,6 +61,7 @@ public class FileWatcher extends Thread {
     }
 
     public void addToWatchlist(WatchedFile watchedFile) {
+        watchedFiles.remove(watchedFile);
         watchedFiles.add(watchedFile);
     }
 

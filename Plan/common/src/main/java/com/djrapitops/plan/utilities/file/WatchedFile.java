@@ -20,6 +20,7 @@ import com.djrapitops.plan.utilities.java.VoidFunction;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * File with a consumer that is called if the file is modified.
@@ -40,5 +41,18 @@ public class WatchedFile {
         if (modifiedPath != null && file.toPath().equals(modifiedPath)) {
             onChange.apply();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WatchedFile that = (WatchedFile) o;
+        return Objects.equals(file, that.file);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(file);
     }
 }

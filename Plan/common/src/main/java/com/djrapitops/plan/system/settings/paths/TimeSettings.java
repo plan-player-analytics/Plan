@@ -22,6 +22,7 @@ public class TimeSettings {
     public static final Setting<Long> ANALYSIS_REFRESH_PERIOD = new TimeSetting("Time.Periodic_tasks.Analysis_refresh_every");
     public static final Setting<Long> CLEAN_CACHE_PERIOD = new TimeSetting("Time.Periodic_tasks.Clean_caches_every");
     public static final Setting<Long> CLEAN_DATABASE_PERIOD = new TimeSetting("Time.Periodic_tasks.Clean_Database_every");
+    public static final Setting<Long> CONFIG_UPDATE_INTERVAL = new TimeSetting("Time.Periodic_tasks.Check_DB_for_server_config_files_every");
 
     private TimeSettings() {
         /* static variable class */
