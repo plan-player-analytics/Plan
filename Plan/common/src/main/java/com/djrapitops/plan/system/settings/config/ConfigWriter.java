@@ -34,8 +34,11 @@ import java.util.Map;
  */
 public class ConfigWriter {
 
-    private final Path outputPath;
+    private Path outputPath;
     private int indent;
+
+    public ConfigWriter() {
+    }
 
     public ConfigWriter(Path outputPath) {
         this.outputPath = outputPath;
@@ -50,7 +53,7 @@ public class ConfigWriter {
         writing.updateParent(storedParent);
     }
 
-    private List<String> parseLines(ConfigNode writing) {
+    public List<String> parseLines(ConfigNode writing) {
         List<String> lines = new ArrayList<>();
 
         dfsTreeTraverseLineResolve(writing, lines);
