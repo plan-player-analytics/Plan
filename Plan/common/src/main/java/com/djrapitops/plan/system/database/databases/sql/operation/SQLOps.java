@@ -36,6 +36,7 @@ public class SQLOps {
     protected final WorldTimesTable worldTimesTable;
     protected final ServerTable serverTable;
     protected final PingTable pingTable;
+    protected final SettingsTable settingsTable;
 
     public SQLOps(SQLDB db) {
         this.db = db;
@@ -53,5 +54,6 @@ public class SQLOps {
         worldTimesTable = db.getWorldTimesTable();
         serverTable = db.getServerTable();
         pingTable = db.getPingTable();
+        settingsTable = db.getSettingsTable();
     }
 }
