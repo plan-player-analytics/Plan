@@ -35,7 +35,6 @@ import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
-import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
@@ -813,15 +812,8 @@ public abstract class CommonDBTest {
     }
 
     @Test
+    @Ignore("Not yet re-implemented")
     public void testSettingTransfer() {
-        String testString = RandomData.randomString(100);
-
-        TransferTable transferTable = db.getTransferTable();
-        transferTable.storeConfigSettings(Base64Util.encode(testString));
-        Optional<String> configSettings = transferTable.getConfigSettings();
-
-        assertTrue(configSettings.isPresent());
-        assertEquals(testString, Base64Util.decode(configSettings.get()));
     }
 
     @Test

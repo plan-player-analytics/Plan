@@ -14,32 +14,23 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.system.database.databases.sql.operation;
+package com.djrapitops.plan.system.database.databases.sql.patches;
 
-import com.djrapitops.plan.system.database.databases.operation.TransferOperations;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 
-import java.util.Optional;
+public class TransferTableRemovalPatch extends Patch {
 
-/**
- * TransferOperations for MySQL Database.
- *
- * @author Rsl1122
- */
-public class SQLTransferOps extends SQLOps implements TransferOperations {
-
-    public SQLTransferOps(SQLDB db) {
+    public TransferTableRemovalPatch(SQLDB db) {
         super(db);
     }
 
     @Override
-    public void storeConfigSettings(String encodedSettingString) {
-        transferTable.storeConfigSettings(encodedSettingString);
+    public boolean hasBeenApplied() {
+        return !hasTable("plan_transfer");
     }
 
     @Override
-    public Optional<String> getEncodedConfigSettings() {
-        return transferTable.getConfigSettings();
+    public void apply() {
+        dropTable("plan_transfer");
     }
-
 }

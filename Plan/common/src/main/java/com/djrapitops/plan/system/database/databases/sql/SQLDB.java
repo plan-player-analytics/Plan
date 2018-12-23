@@ -81,7 +81,6 @@ public abstract class SQLDB extends Database {
     private final WorldTable worldTable;
     private final WorldTimesTable worldTimesTable;
     private final ServerTable serverTable;
-    private final TransferTable transferTable;
     private final PingTable pingTable;
 
     private final SQLBackupOps backupOps;
@@ -91,7 +90,6 @@ public abstract class SQLDB extends Database {
     private final SQLSearchOps searchOps;
     private final SQLCountOps countOps;
     private final SQLSaveOps saveOps;
-    private final SQLTransferOps transferOps;
 
     private PluginTask dbCleanTask;
 
@@ -127,7 +125,6 @@ public abstract class SQLDB extends Database {
         killsTable = new KillsTable(this);
         worldTable = new WorldTable(this);
         worldTimesTable = new WorldTimesTable(this);
-        transferTable = new TransferTable(this);
         pingTable = new PingTable(this);
 
         backupOps = new SQLBackupOps(this);
@@ -137,7 +134,6 @@ public abstract class SQLDB extends Database {
         countOps = new SQLCountOps(this);
         searchOps = new SQLSearchOps(this);
         saveOps = new SQLSaveOps(this);
-        transferOps = new SQLTransferOps(this);
     }
 
     /**
@@ -191,7 +187,6 @@ public abstract class SQLDB extends Database {
             Patch[] patches = new Patch[]{
                     new Version10Patch(this),
                     new GeoInfoLastUsedPatch(this),
-                    new TransferPartitionPatch(this),
                     new SessionAFKTimePatch(this),
                     new KillsServerIDPatch(this),
                     new WorldTimesSeverIDPatch(this),
@@ -208,7 +203,8 @@ public abstract class SQLDB extends Database {
                     new PingOptimizationPatch(this),
                     new NicknamesOptimizationPatch(this),
                     new UserInfoOptimizationPatch(this),
-                    new GeoInfoOptimizationPatch(this)
+                    new GeoInfoOptimizationPatch(this),
+                    new TransferTableRemovalPatch(this)
             };
 
             try {
@@ -243,7 +239,7 @@ public abstract class SQLDB extends Database {
                 serverTable, usersTable, userInfoTable, geoInfoTable,
                 nicknamesTable, sessionsTable, killsTable, pingTable,
                 commandUseTable, tpsTable, worldTable,
-                worldTimesTable, securityTable, transferTable
+                worldTimesTable, securityTable
         };
     }
 
@@ -254,7 +250,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
-                transferTable, geoInfoTable, nicknamesTable, killsTable,
+                geoInfoTable, nicknamesTable, killsTable,
                 worldTimesTable, sessionsTable, worldTable, pingTable,
                 userInfoTable, usersTable, commandUseTable,
                 tpsTable, securityTable, serverTable
@@ -273,7 +269,6 @@ public abstract class SQLDB extends Database {
 
     private void clean() {
         tpsTable.clean();
-        transferTable.clean();
         pingTable.clean();
 
         long now = System.currentTimeMillis();
@@ -434,10 +429,6 @@ public abstract class SQLDB extends Database {
         return userInfoTable;
     }
 
-    public TransferTable getTransferTable() {
-        return transferTable;
-    }
-
     public PingTable getPingTable() {
         return pingTable;
     }
@@ -475,11 +466,6 @@ public abstract class SQLDB extends Database {
     @Override
     public SaveOperations save() {
         return saveOps;
-    }
-
-    @Override
-    public TransferOperations transfer() {
-        return transferOps;
     }
 
     @Override

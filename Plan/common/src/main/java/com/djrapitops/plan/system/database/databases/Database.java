@@ -63,5 +63,4 @@ public abstract class Database {
 
     public abstract void scheduleClean(long delay);
 
-    public abstract TransferOperations transfer();
 }
