@@ -23,22 +23,26 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 /**
- * File with a consumer that is called if the file is modified.
+ * File or Path with a function that is called if the file is modified.
  *
  * @author Rsl1122
  */
 public class WatchedFile {
 
-    private final File file;
+    private final Path watchedPath;
     private final VoidFunction onChange;
 
     public WatchedFile(File file, VoidFunction onChange) {
-        this.file = file;
+        this(file.toPath(), onChange);
+    }
+
+    public WatchedFile(Path path, VoidFunction onChange) {
+        this.watchedPath = path;
         this.onChange = onChange;
     }
 
     public void modified(Path modifiedPath) {
-        if (modifiedPath != null && file.toPath().equals(modifiedPath)) {
+        if (watchedPath.equals(modifiedPath)) {
             onChange.apply();
         }
     }
@@ -48,11 +52,11 @@ public class WatchedFile {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WatchedFile that = (WatchedFile) o;
-        return Objects.equals(file, that.file);
+        return Objects.equals(watchedPath, that.watchedPath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(file);
+        return Objects.hash(watchedPath);
     }
 }

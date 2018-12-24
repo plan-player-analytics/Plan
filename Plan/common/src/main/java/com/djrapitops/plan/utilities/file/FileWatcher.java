@@ -42,22 +42,25 @@ public class FileWatcher extends Thread {
     private Path watchedPath;
     private Set<WatchedFile> watchedFiles;
 
-    public FileWatcher(File folder, ErrorHandler errorHandler) {
-        this(folder, errorHandler, new HashSet<>());
+    public FileWatcher(
+            File folder,
+            ErrorHandler errorHandler
+    ) {
+        this(folder.toPath(), errorHandler);
     }
 
     public FileWatcher(
-            File folder,
-            ErrorHandler errorHandler,
-            Set<WatchedFile> watchedFiles
+            Path watchedPath,
+            ErrorHandler errorHandler
     ) {
         this.errorHandler = errorHandler;
         this.running = false;
-        this.watchedFiles = watchedFiles;
+        this.watchedFiles = new HashSet<>();
 
-        Verify.isTrue(folder.isDirectory(), () -> new IllegalArgumentException("Given File " + folder.getAbsolutePath() + " was not a folder."));
 
-        watchedPath = folder.toPath();
+        Verify.isTrue(watchedPath.toFile().isDirectory(), () -> new IllegalArgumentException("Given File " + watchedPath.toString() + " was not a folder."));
+
+        this.watchedPath = watchedPath;
     }
 
     public void addToWatchlist(WatchedFile watchedFile) {
@@ -73,6 +76,7 @@ public class FileWatcher extends Thread {
             runLoop(watcher);
         } catch (IOException e) {
             errorHandler.log(L.ERROR, this.getClass(), e);
+            interrupt();
         } catch (InterruptedException e) {
             interrupt();
         }
@@ -107,7 +111,7 @@ public class FileWatcher extends Thread {
         } else {
             @SuppressWarnings("unchecked")
             Path modifiedFile = ((WatchEvent<Path>) event).context();
-            actOnModification(modifiedFile);
+            actOnModification(watchedPath.resolve(modifiedFile));
         }
     }
 
@@ -121,5 +125,9 @@ public class FileWatcher extends Thread {
     public void interrupt() {
         running = false;
         super.interrupt();
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }
