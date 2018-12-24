@@ -52,9 +52,9 @@ public class ConfigSettingKeyTest {
     }
 
     @Test
-    public void networkConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
+    public void proxyConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
         PlanConfig planConfig = createConfig("bungeeconfig.yml");
-        Collection<Setting> settings = getNetworkSettings();
+        Collection<Setting> settings = getProxySettings();
         hasValidDefaultValuesForAllSettings(planConfig, settings);
     }
 
@@ -97,7 +97,7 @@ public class ConfigSettingKeyTest {
         return settings;
     }
 
-    private Collection<Setting> getNetworkSettings() throws IllegalAccessException {
+    private Collection<Setting> getProxySettings() throws IllegalAccessException {
         List<Setting> settings = new ArrayList<>();
         for (Class settingKeyClass : new Class[]{
                 DatabaseSettings.class,
@@ -135,7 +135,7 @@ public class ConfigSettingKeyTest {
     }
 
     private PlanConfig createConfig(File configFile) throws IOException {
-        PlanConfig config = new PlanConfig(configFile, null, null);
+        PlanConfig config = new PlanConfig(configFile, null);
         config.save();
         return config;
     }

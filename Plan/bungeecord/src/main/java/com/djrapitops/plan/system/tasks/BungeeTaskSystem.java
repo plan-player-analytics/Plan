@@ -23,7 +23,6 @@ import com.djrapitops.plan.system.tasks.bungee.BungeeTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bungee.PingCountTimerBungee;
 import com.djrapitops.plan.system.tasks.proxy.NetworkPageRefreshTask;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
@@ -72,12 +71,6 @@ public class BungeeTaskSystem extends TaskSystem {
         registerTask(tpsCountTimer).runTaskTimerAsynchronously(1000, TimeAmount.toTicks(1L, TimeUnit.SECONDS));
         registerTask(networkPageRefreshTask).runTaskTimerAsynchronously(1500, TimeAmount.toTicks(5L, TimeUnit.MINUTES));
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
-        registerTask("Settings Save", new AbsRunnable() {
-            @Override
-            public void run() {
-                config.getNetworkSettings().placeSettingsToDB();
-            }
-        }).runTaskAsynchronously();
 
         plugin.registerListener(pingCountTimer);
         long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);

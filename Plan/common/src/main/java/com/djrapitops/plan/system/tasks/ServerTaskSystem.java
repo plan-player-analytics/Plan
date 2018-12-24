@@ -21,7 +21,6 @@ import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
 import java.util.concurrent.TimeUnit;
@@ -74,12 +73,6 @@ public abstract class ServerTaskSystem extends TaskSystem {
         }
 
         registerTask(logsFolderCleanTask).runTaskLaterAsynchronously(TimeAmount.toTicks(30L, TimeUnit.SECONDS));
-        registerTask("Settings Load", new AbsRunnable() {
-            @Override
-            public void run() {
-                config.getNetworkSettings().loadSettingsFromDB();
-            }
-        }).runTaskAsynchronously();
         registerTask(playersPageRefreshTask)
                 .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
     }

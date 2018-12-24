@@ -17,7 +17,6 @@
 package com.djrapitops.plan.system.settings.config;
 
 import com.djrapitops.plan.data.plugin.PluginsConfigSection;
-import com.djrapitops.plan.system.settings.network.NetworkSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.settings.paths.key.Setting;
 import com.djrapitops.plugin.utilities.Verify;
@@ -39,18 +38,15 @@ import java.util.concurrent.TimeUnit;
 public class PlanConfig extends Config {
 
     private final PluginsConfigSection pluginsConfigSection;
-    private final NetworkSettings networkSettings;
     private final WorldAliasSettings worldAliasSettings;
 
     @Inject
     public PlanConfig(
             @Named("configFile") File file,
-            NetworkSettings networkSettings,
             WorldAliasSettings worldAliasSettings
     ) {
         super(file);
 
-        this.networkSettings = networkSettings;
         this.worldAliasSettings = worldAliasSettings;
 
         pluginsConfigSection = new PluginsConfigSection(this);
@@ -113,10 +109,6 @@ public class PlanConfig extends Config {
 
     public PluginsConfigSection getPluginsConfigSection() {
         return pluginsConfigSection;
-    }
-
-    public NetworkSettings getNetworkSettings() {
-        return networkSettings;
     }
 
     public WorldAliasSettings getWorldAliasSettings() {
