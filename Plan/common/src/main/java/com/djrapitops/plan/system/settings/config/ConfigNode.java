@@ -323,4 +323,22 @@ public class ConfigNode {
     protected List<String> getNodeOrder() {
         return nodeOrder;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConfigNode that = (ConfigNode) o;
+        return Objects.equals(key, that.key) &&
+                Objects.equals(parent, that.parent) &&
+                nodeOrder.equals(that.nodeOrder) &&
+                childNodes.equals(that.childNodes) &&
+                comment.equals(that.comment) &&
+                Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, parent, nodeOrder, childNodes, comment, value);
+    }
 }

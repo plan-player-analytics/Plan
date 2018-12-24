@@ -1,6 +1,7 @@
 package com.djrapitops.plan.system.settings.network;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
+import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.PlanFiles;
@@ -29,7 +30,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * In charge of all configs on the network.
+ * In charge of updating network-server configs.
  * <p>
  * Performs the following tasks related to network configs:
  * - File modification watching related to server configs
@@ -39,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * @author Rsl1122
  */
 @Singleton
-public class NetworkSettingManager {
+public class NetworkSettingManager implements SubSystem {
 
     private final PlanFiles files;
     private final DBSystem dbSystem;
@@ -70,6 +71,7 @@ public class NetworkSettingManager {
         this.errorHandler = errorHandler;
     }
 
+    @Override
     public void enable() throws EnableException {
         serverSettingsFolder = createServerSettingsFolder();
 
@@ -79,6 +81,7 @@ public class NetworkSettingManager {
         scheduleDBCheckTask();
     }
 
+    @Override
     public void disable() {
         if (watcher != null) {
             watcher.interrupt();
