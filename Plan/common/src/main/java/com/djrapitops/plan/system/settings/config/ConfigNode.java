@@ -330,7 +330,6 @@ public class ConfigNode {
         if (o == null || getClass() != o.getClass()) return false;
         ConfigNode that = (ConfigNode) o;
         return Objects.equals(key, that.key) &&
-                Objects.equals(parent, that.parent) &&
                 nodeOrder.equals(that.nodeOrder) &&
                 childNodes.equals(that.childNodes) &&
                 comment.equals(that.comment) &&
@@ -339,6 +338,6 @@ public class ConfigNode {
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, parent, nodeOrder, childNodes, comment, value);
+        return Objects.hash(key, childNodes, comment, value);
     }
 }

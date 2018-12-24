@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,9 +42,9 @@ public class ServerSettingsManager implements SubSystem {
     private final PlanFiles files;
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private ServerInfo serverInfo;
     private final TaskSystem taskSystem;
     private final ErrorHandler errorHandler;
-    private final UUID serverUUID;
     private PluginLogger logger;
     private FileWatcher watcher;
 
@@ -62,10 +61,10 @@ public class ServerSettingsManager implements SubSystem {
         this.files = files;
         this.config = config;
         this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
         this.taskSystem = taskSystem;
         this.logger = logger;
         this.errorHandler = errorHandler;
-        serverUUID = serverInfo.getServerUUID();
     }
 
     @Override
@@ -92,7 +91,7 @@ public class ServerSettingsManager implements SubSystem {
 
         try {
             Config config = new ConfigReader(file.toPath()).read();
-            database.save().saveConfig(serverUUID, config);
+            database.save().saveConfig(serverInfo.getServerUUID(), config);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -112,7 +111,7 @@ public class ServerSettingsManager implements SubSystem {
         File configFile = files.getConfigFile();
         long lastModified = configFile.exists() ? configFile.lastModified() : -1;
 
-        Optional<Config> foundConfig = database.fetch().getNewConfig(lastModified, serverUUID);
+        Optional<Config> foundConfig = database.fetch().getNewConfig(lastModified, serverInfo.getServerUUID());
         if (foundConfig.isPresent()) {
             try {
                 new ConfigWriter(configFile.toPath()).write(foundConfig.get());
