@@ -1,6 +1,5 @@
 package com.djrapitops.plan.system.settings.network;
 
-import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.SubSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
@@ -70,7 +69,7 @@ public class ServerSettingsManager implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         watcher = prepareFileWatcher();
         scheduleDBCheckTask();
     }

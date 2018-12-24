@@ -20,6 +20,7 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.network.ServerSettingsManager;
 import com.djrapitops.plan.system.settings.paths.DataGatheringSettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
@@ -45,11 +46,12 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
             PlanFiles files,
             PlanConfig config,
             ConfigUpdater configUpdater,
+            ServerSettingsManager serverSettingsManager,
             Theme theme,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
-        super(files, config, configUpdater, theme, logger, errorHandler);
+        super(files, config, configUpdater, serverSettingsManager, theme, logger, errorHandler);
     }
 
     @Override

@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.system.settings;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.network.NetworkSettingManager;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -39,18 +41,33 @@ import java.io.IOException;
 public class ProxyConfigSystem extends ConfigSystem {
 
     private final ConfigUpdater configUpdater;
+    private final NetworkSettingManager networkSettingManager;
 
     @Inject
     public ProxyConfigSystem(
             PlanFiles files,
             PlanConfig config,
             ConfigUpdater configUpdater,
+            NetworkSettingManager networkSettingManager,
             Theme theme,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         super(files, config, theme, logger, errorHandler);
         this.configUpdater = configUpdater;
+        this.networkSettingManager = networkSettingManager;
+    }
+
+    @Override
+    public void enable() throws EnableException {
+        super.enable();
+        networkSettingManager.enable();
+    }
+
+    @Override
+    public void disable() {
+        networkSettingManager.disable();
+        super.disable();
     }
 
     @Override

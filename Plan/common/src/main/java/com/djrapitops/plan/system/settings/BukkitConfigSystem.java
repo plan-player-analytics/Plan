@@ -16,10 +16,13 @@
  */
 package com.djrapitops.plan.system.settings;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.settings.changes.ConfigUpdater;
 import com.djrapitops.plan.system.settings.config.ConfigReader;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.network.ServerSettingsManager;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.theme.Theme;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -39,18 +42,35 @@ import java.io.IOException;
 public class BukkitConfigSystem extends ConfigSystem {
 
     private final ConfigUpdater configUpdater;
+    private final ServerSettingsManager serverSettingsManager;
 
     @Inject
     public BukkitConfigSystem(
             PlanFiles files,
             PlanConfig config,
             ConfigUpdater configUpdater,
+            ServerSettingsManager serverSettingsManager,
             Theme theme,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         super(files, config, theme, logger, errorHandler);
         this.configUpdater = configUpdater;
+        this.serverSettingsManager = serverSettingsManager;
+    }
+
+    @Override
+    public void enable() throws EnableException {
+        super.enable();
+        if (config.isTrue(PluginSettings.BUNGEE_COPY_CONFIG)) {
+            serverSettingsManager.enable();
+        }
+    }
+
+    @Override
+    public void disable() {
+        serverSettingsManager.disable();
+        super.disable();
     }
 
     @Override
