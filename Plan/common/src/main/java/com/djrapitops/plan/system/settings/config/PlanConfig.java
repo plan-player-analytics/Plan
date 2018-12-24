@@ -114,4 +114,11 @@ public class PlanConfig extends Config {
     public WorldAliasSettings getWorldAliasSettings() {
         return worldAliasSettings;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        return super.equals(o);
+    }
 }

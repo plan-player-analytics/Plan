@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * Configuration utility for storing settings in a .yml file.
@@ -84,5 +85,17 @@ public class Config extends ConfigNode {
     @Override
     public void save() throws IOException {
         new ConfigWriter(configFilePath).write(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), configFilePath);
     }
 }

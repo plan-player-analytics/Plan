@@ -34,6 +34,8 @@ import com.djrapitops.plan.system.database.databases.sql.H2DB;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
+import com.djrapitops.plan.system.settings.config.Config;
+import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.SHA256Hash;
 import org.junit.*;
@@ -1022,6 +1024,31 @@ public abstract class CommonDBTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(userName, result.get(0));
+    }
+
+    @Test
+    public void configIsStoredInTheDatabase() {
+        PlanConfig config = system.getConfigSystem().getConfig();
+
+        SettingsTable settingsTable = db.getSettingsTable();
+        settingsTable.storeConfig(serverUUID, config);
+
+        Optional<Config> foundConfig = settingsTable.fetchNewerConfig(0, serverUUID);
+        assertTrue(foundConfig.isPresent());
+        assertEquals(config, foundConfig.get());
+    }
+
+    @Test
+    public void unchangedConfigDoesNotUpdateInDatabase() {
+        configIsStoredInTheDatabase();
+        long savedMs = System.currentTimeMillis();
+
+        PlanConfig config = system.getConfigSystem().getConfig();
+
+        SettingsTable settingsTable = db.getSettingsTable();
+        settingsTable.storeConfig(serverUUID, config);
+
+        assertFalse(settingsTable.fetchNewerConfig(savedMs, serverUUID).isPresent());
     }
 
 }

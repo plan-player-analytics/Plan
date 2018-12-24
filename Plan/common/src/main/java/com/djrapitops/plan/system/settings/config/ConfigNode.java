@@ -327,7 +327,7 @@ public class ConfigNode {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ConfigNode)) return false;
         ConfigNode that = (ConfigNode) o;
         return Objects.equals(key, that.key) &&
                 nodeOrder.equals(that.nodeOrder) &&
@@ -339,5 +339,15 @@ public class ConfigNode {
     @Override
     public int hashCode() {
         return Objects.hash(key, childNodes, comment, value);
+    }
+
+    @Override
+    public String toString() {
+        return "ConfigNode{" +
+                "key='" + key + '\'' +
+                ", nodeOrder=" + nodeOrder +
+                ", comment=" + comment +
+                ", value='" + value + '\'' +
+                '}';
     }
 }

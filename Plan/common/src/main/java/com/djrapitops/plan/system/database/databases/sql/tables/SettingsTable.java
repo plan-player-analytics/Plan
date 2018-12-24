@@ -1,7 +1,6 @@
 package com.djrapitops.plan.system.database.databases.sql.tables;
 
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
-import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.processing.ExecStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
@@ -55,26 +54,22 @@ public class SettingsTable extends Table {
      * @param config     Config of the server.
      */
     public void storeConfig(UUID serverUUID, Config config) {
-        String updateOnDuplicateKeyStatement = "INSERT INTO " + tableName + " (" +
-                Col.SERVER_UUID + ", " +
-                Col.UPDATED + ", " +
-                Col.CONFIG_CONTENT +
-                ") VALUES (?, ?, ?)" +
-                " ON DUPLICATE KEY UPDATE" +
-                " " + Col.UPDATED + "=?," +
-                " " + Col.CONFIG_CONTENT + "=?";
-        String replaceIntoStatement = "REPLACE INTO " + tableName + " (" +
-                Col.SERVER_UUID + ", " +
-                Col.UPDATED + ", " +
-                Col.CONFIG_CONTENT +
-                ") VALUES (?, ?, ?)";
-
-        String sql = db.getType() == DBType.H2 ? updateOnDuplicateKeyStatement : replaceIntoStatement;
-
         TextStringBuilder configTextBuilder = new TextStringBuilder();
         List<String> lines = new ConfigWriter().parseLines(config);
         configTextBuilder.appendWithSeparators(lines, "\n");
         String configSettings = configTextBuilder.toString();
+        if (isConfigStored(serverUUID)) {
+            updateConfig(serverUUID, configSettings);
+        } else {
+            insertConfig(serverUUID, configSettings);
+        }
+    }
+
+    private void insertConfig(UUID serverUUID, String configSettings) {
+        String sql = "INSERT INTO " + tableName + " (" +
+                Col.SERVER_UUID + ", " +
+                Col.UPDATED + ", " +
+                Col.CONFIG_CONTENT + ") VALUES (?,?,?)";
 
         execute(new ExecStatement(sql) {
             @Override
@@ -82,11 +77,39 @@ public class SettingsTable extends Table {
                 statement.setString(1, serverUUID.toString());
                 statement.setLong(2, System.currentTimeMillis());
                 statement.setString(3, configSettings);
+            }
+        });
+    }
 
-                if (db.getType() == DBType.H2) {
-                    statement.setLong(4, System.currentTimeMillis());
-                    statement.setString(5, configSettings);
-                }
+    private void updateConfig(UUID serverUUID, String configSettings) {
+        String sql = "UPDATE " + tableName + " SET " +
+                Col.CONFIG_CONTENT + "=?," +
+                Col.UPDATED + "=? WHERE " +
+                Col.SERVER_UUID + "=? AND " +
+                Col.CONFIG_CONTENT + "!=?";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, configSettings);
+                statement.setLong(2, System.currentTimeMillis());
+                statement.setString(3, serverUUID.toString());
+                statement.setString(4, configSettings);
+            }
+        });
+    }
+
+    private boolean isConfigStored(UUID serverUUID) {
+        String sql = "SELECT " + Col.SERVER_UUID + " FROM " + tableName + " WHERE " + Col.SERVER_UUID + "=? LIMIT 1";
+        return query(new QueryStatement<Boolean>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                return set.next() && set.getString(Col.SERVER_UUID.get()).equals(serverUUID.toString());
             }
         });
     }
