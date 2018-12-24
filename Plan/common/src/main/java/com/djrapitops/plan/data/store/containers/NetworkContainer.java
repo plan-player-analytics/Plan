@@ -24,6 +24,7 @@ import com.djrapitops.plan.data.store.mutators.PlayersMutator;
 import com.djrapitops.plan.data.store.mutators.TPSMutator;
 import com.djrapitops.plan.data.store.mutators.health.NetworkHealthInformation;
 import com.djrapitops.plan.system.database.DBSystem;
+import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.info.server.properties.ServerProperties;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
@@ -106,8 +107,8 @@ public class NetworkContainer extends DataContainer {
             StringBuilder serverBoxes = new StringBuilder();
             Map<Integer, List<TPS>> playersOnlineData = getValue(NetworkKeys.NETWORK_PLAYER_ONLINE_DATA).orElse(new HashMap<>());
             Map<UUID, Integer> registerData = getValue(NetworkKeys.SERVER_REGISTER_DATA).orElse(new HashMap<>());
-            getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>())
-                    .stream()
+            Collection<Server> servers = getValue(NetworkKeys.BUKKIT_SERVERS).orElse(new ArrayList<>());
+            servers.stream()
                     .sorted((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()))
                     .forEach(server -> {
                         TPSMutator tpsMutator = new TPSMutator(playersOnlineData.getOrDefault(server.getId(), new ArrayList<>()));
@@ -115,6 +116,18 @@ public class NetworkContainer extends DataContainer {
                         NetworkServerBox serverBox = new NetworkServerBox(server, registered, tpsMutator, graphs);
                         serverBoxes.append(serverBox.toHtml());
                     });
+            if (servers.isEmpty()) {
+                serverBoxes.append("<div class=\"row clearfix\">" +
+                        "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">" +
+                        "<div class=\"card\">" +
+                        "<div class=\"header\">" +
+                        "<div class=\"row clearfix\">" +
+                        "<div class=\"col-xs-6 col-sm-6 col-lg-6\">" +
+                        "<h2><i class=\"col-light-green fa fa-servers\"></i> No Servers</h2>" +
+                        "</div><div class=\"body\">" +
+                        "<p>No Bukkit/Sponge servers connected to Plan.</p>" +
+                        "</div></div></div></div>");
+            }
             return serverBoxes.toString();
         });
     }
