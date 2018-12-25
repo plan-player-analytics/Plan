@@ -38,17 +38,35 @@ public class SeleniumDriver extends ExternalResource {
         Assume.assumeNotNull("rules.SeleniumDriver: Chrome driver location not specified for this OS type", driverLocation);
         Assume.assumeTrue("rules.SeleniumDriver: Chrome driver not found at " + driverLocation, new File(driverLocation).exists());
 
-        System.setProperty("webdriver.chrome.driver", driverLocation);
-        driver = new ChromeDriver();
+        driver = getChromeWebDriver();
+    }
+    
+    private WebDriver getChromeWebDriver() {
+        if (System.getProperty("TRAVIS").equals("true")) {
+            final ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.setBinary("/usr/bin/google-chrome-stable");
+            chromeOptions.addArguments("--headless");
+            chromeOptions.addArguments("--disable-gpu");
+
+            final DesiredCapabilities dc = new DesiredCapabilities();
+            dc.setJavascriptEnabled(true);
+            dc.setCapability(
+                ChromeOptions.CAPABILITY, chromeOptions
+            );
+
+            return new ChromeDriver(dc);
+        } else {
+            return new ChromeDriver();
+        }
     }
 
     private String getChromeDriverLocation() {
-        if (SystemUtils.IS_OS_LINUX) {
-            return "/usr/local/share/chromedriver";
-        } else if (SystemUtils.IS_OS_WINDOWS) {
-            return "C:\\chromedriver.exe";
+        if (SystemUtils.IS_OS_WINDOWS) {
+            String driverLocation = "C:\\chromedriver.exe";
+            System.setProperty("webdriver.chrome.driver", driverLocation);
+            return driverLocation;
         }
-        return null;
+        return System.getProperty("webdriver.chrome.driver");
     }
 
     public void newTab() {
