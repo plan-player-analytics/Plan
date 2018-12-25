@@ -90,7 +90,7 @@ subprojects {
 		testCompile "org.junit-pioneer:junit-pioneer:0.3.0"          // TempDirectory, TODO DEPENDENCY TO BE REMOVED ON JUNIT 5.4 RELEASE
         testCompile "org.mockito:mockito-core:2.23.4"                // Mockito Core
 	    testCompile "org.mockito:mockito-junit-jupiter:2.23.4"       // Mockito JUnit 5 Extension
-		testCompile "org.seleniumhq.selenium:selenium-java:3.14.0"   // Selenium (Browser tests)
+		testCompile "org.seleniumhq.selenium:selenium-java:3.141.59"   // Selenium (Browser tests)
 		testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
         
 		// Testing dependencies required by Plan
