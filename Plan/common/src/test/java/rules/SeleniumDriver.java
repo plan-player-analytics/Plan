@@ -25,10 +25,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import static org.openqa.selenium.remote.CapabilityType.SUPPORTS_JAVASCRIPT;
 
 public class SeleniumDriver extends ExternalResource {
 
@@ -42,21 +43,15 @@ public class SeleniumDriver extends ExternalResource {
 
         driver = getChromeWebDriver();
     }
-    
+
     private WebDriver getChromeWebDriver() {
         if (System.getProperty("TRAVIS").equals("true")) {
-            final ChromeOptions chromeOptions = new ChromeOptions();
+            ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.setBinary("/usr/bin/google-chrome-stable");
-            chromeOptions.addArguments("--headless");
-            chromeOptions.addArguments("--disable-gpu");
+            chromeOptions.setHeadless(true);
+            chromeOptions.setCapability(SUPPORTS_JAVASCRIPT, true);
 
-            final DesiredCapabilities dc = new DesiredCapabilities();
-            dc.setJavascriptEnabled(true);
-            dc.setCapability(
-                ChromeOptions.CAPABILITY, chromeOptions
-            );
-
-            return new ChromeDriver(dc);
+            return new ChromeDriver(chromeOptions);
         } else {
             return new ChromeDriver();
         }
