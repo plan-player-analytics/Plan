@@ -32,11 +32,6 @@ public class SessionCacheTest {
     }
 
     @Test
-    public void failingTest() {
-        assertTrue(false);
-    }
-
-    @Test
     public void testAtomity() {
         Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
         assertTrue(cachedSession.isPresent());
