@@ -8,3 +8,5 @@ sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
 
 whereis google-chrome-stable
 whereis chromedriver
+
+mysql -e 'CREATE DATABASE Plan;'
