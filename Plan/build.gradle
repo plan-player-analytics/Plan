@@ -12,6 +12,13 @@ allprojects {
 
     group "com.djrapitops"
     version "4.6.0-SNAPSHOT"
+
+    test {
+        testLogging {
+            events "passed", "failed"
+            exceptionFormat "full"
+        }
+    }
 }
 
 subprojects {
