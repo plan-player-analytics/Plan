@@ -98,7 +98,7 @@ public abstract class CommonDBTest {
 
     @AfterClass
     public static void tearDownClass() {
-        Optional.ofNullable(system).ifPresent(PlanSystem::disable);
+        if (system != null) system.disable();
     }
 
     @Before

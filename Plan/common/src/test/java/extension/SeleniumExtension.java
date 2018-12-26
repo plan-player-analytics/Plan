@@ -9,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import utilities.CIProperties;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
     }
 
     private WebDriver getChromeWebDriver() {
-        if (System.getProperty("TRAVIS").equals("true")) {
+        if (Boolean.parseBoolean(System.getProperty(CIProperties.IS_TRAVIS))) {
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.setBinary("/usr/bin/google-chrome-stable");
             chromeOptions.setHeadless(true);
