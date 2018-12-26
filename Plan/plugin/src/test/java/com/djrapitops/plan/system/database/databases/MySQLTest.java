@@ -3,8 +3,10 @@ package com.djrapitops.plan.system.database.databases;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import utilities.CIProperties;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -30,5 +32,10 @@ public class MySQLTest extends CommonDBTest {
         config.set(DatabaseSettings.TYPE, "MySQL");
 
         handleSetup("MySQL");
+    }
+
+    @Test
+    public void failingTest() {
+        assertTrue(false);
     }
 }
