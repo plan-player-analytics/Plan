@@ -5,5 +5,6 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
 fi
 
 if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then 
+        gradle test
 	gradle sonarqube
 fi
