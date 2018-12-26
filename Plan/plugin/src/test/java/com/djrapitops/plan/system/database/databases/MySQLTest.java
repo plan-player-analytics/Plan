@@ -21,7 +21,7 @@ public class MySQLTest extends CommonDBTest {
 
     @BeforeClass
     public static void setUpDatabase() throws Exception {
-        boolean isTravis = Boolean.parseBoolean(System.getProperty(CIProperties.IS_TRAVIS));
+        boolean isTravis = Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS));
         assumeTrue(isTravis);
 
         PlanConfig config = component.getPlanSystem().getConfigSystem().getConfig();

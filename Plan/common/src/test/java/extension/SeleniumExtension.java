@@ -47,11 +47,12 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         Assume.assumeNotNull("rules.SeleniumDriver: Chrome driver location not specified for this OS type", driverLocation);
         Assume.assumeTrue("rules.SeleniumDriver: Chrome driver not found at " + driverLocation, new File(driverLocation).exists());
 
+        System.setProperty("webdriver.chrome.driver", driverLocation);
         driver = getChromeWebDriver();
     }
 
     private WebDriver getChromeWebDriver() {
-        if (Boolean.parseBoolean(System.getProperty(CIProperties.IS_TRAVIS))) {
+        if (Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS))) {
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.setBinary("/usr/bin/google-chrome-stable");
             chromeOptions.setHeadless(true);
@@ -65,11 +66,9 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
 
     private String getChromeDriverLocation() {
         if (SystemUtils.IS_OS_WINDOWS) {
-            String driverLocation = "C:\\chromedriver.exe";
-            System.setProperty("webdriver.chrome.driver", driverLocation);
-            return driverLocation;
+            return "C:\\chromedriver.exe";
         }
-        return System.getProperty("webdriver.chrome.driver");
+        return System.getenv("webdriver.chrome.driver");
     }
 
     @Override
