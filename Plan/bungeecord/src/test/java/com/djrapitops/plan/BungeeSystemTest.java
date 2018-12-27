@@ -8,6 +8,7 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import org.junit.ClassRule;
@@ -64,6 +65,7 @@ public class BungeeSystemTest {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+            config.set(DatabaseSettings.MYSQL_PORT, "6000");
             config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             config.set(ProxySettings.IP, "0.0.0.0");
 
