@@ -51,6 +51,7 @@ public class SeleniumDriver extends ExternalResource {
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.setBinary("/usr/bin/google-chrome-stable");
             chromeOptions.setHeadless(true);
+            chromeOptions.addArguments("--no-sandbox");
             chromeOptions.setCapability(SUPPORTS_JAVASCRIPT, true);
 
             return new ChromeDriver(chromeOptions);
