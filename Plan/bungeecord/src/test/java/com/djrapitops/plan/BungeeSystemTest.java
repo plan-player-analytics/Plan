@@ -8,7 +8,6 @@ import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
-import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
 import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import org.junit.ClassRule;
@@ -20,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import rules.BungeeComponentMocker;
 import rules.ComponentMocker;
+import utilities.CIProperties;
 import utilities.RandomData;
 
 /**
@@ -60,12 +60,13 @@ public class BungeeSystemTest {
     @Test
     public void bungeeDoesNotEnableWithDefaultIP() throws Exception {
         thrown.expect(EnableException.class);
-        thrown.expectMessage("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
+        if (!Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS))) {
+            thrown.expectMessage("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
+        }
 
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-            config.set(DatabaseSettings.MYSQL_PORT, "6000");
             config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
             config.set(ProxySettings.IP, "0.0.0.0");
 
