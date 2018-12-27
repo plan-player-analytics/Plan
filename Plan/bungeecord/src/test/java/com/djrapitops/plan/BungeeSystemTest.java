@@ -60,9 +60,7 @@ public class BungeeSystemTest {
     @Test
     public void bungeeDoesNotEnableWithDefaultIP() throws Exception {
         thrown.expect(EnableException.class);
-        if (!Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS))) {
-            thrown.expectMessage("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
-        }
+        thrown.expectMessage("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
 
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
@@ -82,7 +80,9 @@ public class BungeeSystemTest {
     @Test
     public void testEnableNoMySQL() throws EnableException {
         thrown.expect(EnableException.class);
-        thrown.expectMessage("Failed to initialize pool: Communications link failure");
+        if (!Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS))) {
+            thrown.expectMessage("Failed to initialize pool: Communications link failure");
+        }
 
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
