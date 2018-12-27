@@ -225,7 +225,7 @@ public abstract class SQLDB extends Database {
      * <p>
      * Updates table columns to latest schema.
      */
-    private void createTables() throws DBInitException {
+    public void createTables() throws DBInitException {
         for (Table table : getAllTables()) {
             table.createTable();
         }

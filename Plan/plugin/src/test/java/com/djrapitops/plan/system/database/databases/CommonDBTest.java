@@ -117,7 +117,7 @@ public abstract class CommonDBTest {
                 dropTable("plan_users");
             }
         }.apply();
-        db.init();
+        db.createTables();
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, serverUUID, "ServerName", "", 20));
