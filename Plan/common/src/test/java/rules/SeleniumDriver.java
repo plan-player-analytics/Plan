@@ -63,7 +63,7 @@ public class SeleniumDriver extends ExternalResource {
         if (SystemUtils.IS_OS_WINDOWS) {
             return "C:\\chromedriver.exe";
         }
-        return System.getenv("webdriver.chrome.driver");
+        return System.getenv(CIProperties.CHROME_DRIVER);
     }
 
     public void newTab() {
