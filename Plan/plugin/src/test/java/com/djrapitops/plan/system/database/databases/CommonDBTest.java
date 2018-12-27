@@ -32,6 +32,7 @@ import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.H2DB;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.patches.Patch;
 import com.djrapitops.plan.system.database.databases.sql.tables.*;
 import com.djrapitops.plan.system.info.server.Server;
 import com.djrapitops.plan.system.settings.config.Config;
@@ -100,7 +101,23 @@ public abstract class CommonDBTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws DBInitException {
+        new Patch(db) {
+            @Override
+            public boolean hasBeenApplied() {
+                return false;
+            }
+
+            @Override
+            public void apply() {
+                dropTable("plan_world_times");
+                dropTable("plan_kills");
+                dropTable("plan_sessions");
+                dropTable("plan_worlds");
+                dropTable("plan_users");
+            }
+        }.apply();
+        db.init();
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, serverUUID, "ServerName", "", 20));
@@ -735,11 +752,11 @@ public abstract class CommonDBTest {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
 
+        SessionsTable sessionsTable = db.getSessionsTable();
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
-        session.setWorldTimes(worldTimes);
-        db.getSessionsTable().saveSession(playerUUID, session);
 
+        Session session = createSession();
+        session.setWorldTimes(worldTimes);
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
         Map<UUID, List<Session>> sessionMap = new HashMap<>();
         List<Session> sessions = new ArrayList<>();
@@ -747,9 +764,10 @@ public abstract class CommonDBTest {
         sessionMap.put(playerUUID, sessions);
         map.put(serverUUID, sessionMap);
 
-        worldTimesTable.saveWorldTimes(map);
+        sessionsTable.insertSessions(map, true);
 
         Map<Integer, WorldTimes> worldTimesBySessionID = worldTimesTable.getAllWorldTimesBySessionID();
+        System.out.println(worldTimesBySessionID);
         assertEquals(worldTimes, worldTimesBySessionID.get(1));
     }
 
@@ -759,7 +777,7 @@ public abstract class CommonDBTest {
 
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
-        Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
+        Session session = createSession();
         session.setWorldTimes(worldTimes);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
