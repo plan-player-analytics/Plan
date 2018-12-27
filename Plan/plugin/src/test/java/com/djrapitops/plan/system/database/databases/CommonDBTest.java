@@ -84,7 +84,6 @@ public abstract class CommonDBTest {
     public Timeout globalTimeout = Timeout.seconds(5);
 
     static void handleSetup(String dbName) throws Exception {
-        System.out.println("--- Test Class Setup     ---");
         system = component.getPlanSystem();
         system.getConfigSystem().getConfig().set(WebserverSettings.PORT, TEST_PORT_NUMBER);
         system.enable();
@@ -93,7 +92,6 @@ public abstract class CommonDBTest {
         db = (SQLDB) dbSystem.getActiveDatabaseByName(dbName);
 
         db.init();
-        System.out.println("--- Class Setup Complete ---\n");
     }
 
     @AfterClass
@@ -103,12 +101,10 @@ public abstract class CommonDBTest {
 
     @Before
     public void setUp() {
-        System.out.println("\n-- Clearing Test Database --");
         db.remove().everything();
         ServerTable serverTable = db.getServerTable();
         serverTable.saveCurrentServerInfo(new Server(-1, serverUUID, "ServerName", "", 20));
         assertEquals(serverUUID, db.getServerUUIDSupplier().get());
-        System.out.println("--     Clear Complete     --\n");
     }
 
     public void commitTest() throws DBInitException {
@@ -390,17 +386,6 @@ public abstract class CommonDBTest {
         commitTest();
 
         Map<UUID, List<Session>> sessions = sessionsTable.getSessions(playerUUID);
-
-        for (Map.Entry<UUID, List<Session>> entry : sessions.entrySet()) {
-            UUID key = entry.getKey();
-            if (key == null) {
-                System.out.print("null");
-            } else {
-                System.out.print(key);
-            }
-            System.out.println(" " + entry.getValue());
-        }
-
         List<Session> savedSessions = sessions.get(serverUUID);
 
         assertNotNull(savedSessions);
@@ -572,7 +557,6 @@ public abstract class CommonDBTest {
     }
 
     private void saveAllData(SQLDB database) throws NoSuchAlgorithmException {
-        System.out.println("Saving all possible data to the Database..");
         UserInfoTable userInfoTable = database.getUserInfoTable();
         UsersTable usersTable = database.getUsersTable();
         SessionsTable sessionsTable = database.getSessionsTable();
@@ -631,7 +615,6 @@ public abstract class CommonDBTest {
         ));
 
         securityTable.addNewUser(new WebUser("Test", "RandomGarbageBlah", 0));
-        System.out.println("Done!\n");
     }
 
     @Test
@@ -672,13 +655,14 @@ public abstract class CommonDBTest {
         saveUserOne();
         saveUserTwo();
 
-        KillsTable killsTable = db.getKillsTable();
+        Session session = createSession();
         List<PlayerKill> expected = createKills();
-        killsTable.savePlayerKills(playerUUID, 1, expected);
+        session.setPlayerKills(expected);
+        db.getSessionsTable().saveSession(playerUUID, session);
 
         commitTest();
 
-        Map<UUID, List<PlayerKill>> playerKills = killsTable.getPlayerKills();
+        Map<UUID, List<PlayerKill>> playerKills = db.getKillsTable().getPlayerKills();
         List<PlayerKill> kills = playerKills.get(playerUUID);
         assertFalse(playerKills.isEmpty());
         assertNotNull(kills);
@@ -686,18 +670,26 @@ public abstract class CommonDBTest {
         assertEquals(expected, kills);
     }
 
+    private Session createSession() {
+        Session session = new Session(
+                playerUUID,
+                serverUUID,
+                System.currentTimeMillis(),
+                "world",
+                GMTimes.getGMKeyArray()[0]
+        );
+        session.endSession(System.currentTimeMillis() + 1L);
+        return session;
+    }
+
     @Test
     public void testBackupAndRestore() throws Exception {
-        System.out.println("- Creating Backup Database -");
         H2DB backup = dbSystem.getH2Factory().usingFile(temporaryFolder.newFile("backup.db"));
         backup.init();
-        System.out.println("- Backup Database Created  -");
 
         saveAllData(db);
 
-        System.out.println("Running backup..");
         db.backup().backup(backup);
-        System.out.println("Backup Complete!");
 
         UserInfoTable userInfoTable = backup.getUserInfoTable();
         UsersTable usersTable = backup.getUsersTable();
@@ -726,9 +718,11 @@ public abstract class CommonDBTest {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
-        worldTimesTable.saveWorldTimes(playerUUID, 1, worldTimes);
 
         Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
+        session.setWorldTimes(worldTimes);
+        db.getSessionsTable().saveSession(playerUUID, session);
+
         Map<Integer, Session> sessions = new HashMap<>();
         sessions.put(1, session);
         worldTimesTable.addWorldTimesToSessions(playerUUID, sessions);
@@ -740,10 +734,11 @@ public abstract class CommonDBTest {
     public void testSaveAllWorldTimes() {
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
-        System.out.println(worldTimes);
+
         WorldTimesTable worldTimesTable = db.getWorldTimesTable();
         Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
+        db.getSessionsTable().saveSession(playerUUID, session);
 
         Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
         Map<UUID, List<Session>> sessionMap = new HashMap<>();
@@ -764,7 +759,6 @@ public abstract class CommonDBTest {
 
         saveUserOne();
         WorldTimes worldTimes = createWorldTimes();
-        System.out.println(worldTimes);
         Session session = new Session(1, playerUUID, serverUUID, 12345L, 23456L, 0, 0, 0);
         session.setWorldTimes(worldTimes);
 
@@ -814,11 +808,6 @@ public abstract class CommonDBTest {
     }
 
     @Test
-    @Ignore("Not yet re-implemented")
-    public void testSettingTransfer() {
-    }
-
-    @Test
     public void testGetNetworkGeolocations() {
         GeoInfoTable geoInfoTable = db.getGeoInfoTable();
         UUID firstUuid = UUID.randomUUID();
@@ -837,7 +826,6 @@ public abstract class CommonDBTest {
         geoInfoTable.saveGeoInfo(thirdUuid, new GeoInfo("-", "Test4", 0, "3"));
 
         List<String> geolocations = geoInfoTable.getNetworkGeolocations();
-        System.out.println(geolocations);
 
         assertNotNull(geolocations);
         assertFalse(geolocations.isEmpty());

@@ -77,7 +77,7 @@ public class WorldTimes {
      */
     public void updateState(String worldName, String gameMode, long changeTime) {
         GMTimes currentGMTimes = times.get(currentWorld);
-        if (worldName.equals(currentWorld)) {
+        if (currentWorld.equals(worldName)) {
             currentGMTimes.changeState(gameMode, changeTime);
         } else {
             GMTimes newGMTimes = times.get(worldName);
