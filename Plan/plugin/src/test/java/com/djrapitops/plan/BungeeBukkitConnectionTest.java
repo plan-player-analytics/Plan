@@ -77,7 +77,7 @@ public class BungeeBukkitConnectionTest {
     }
 
     @Test
-    @Ignore("Causes next BungeeSystem test to fail")
+    @Ignore("InfoRequestFactory not available via getters")
     public void testRequest() throws Exception {
         enable();
 

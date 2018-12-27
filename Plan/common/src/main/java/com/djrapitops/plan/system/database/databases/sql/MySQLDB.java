@@ -32,6 +32,7 @@ import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -108,7 +109,7 @@ public class MySQLDB extends SQLDB {
             this.dataSource = new HikariDataSource(hikariConfig);
 
             getConnection();
-        } catch (SQLException e) {
+        } catch (HikariPool.PoolInitializationException | SQLException e) {
             throw new DBInitException("Failed to set-up HikariCP Datasource: " + e.getMessage(), e);
         }
     }

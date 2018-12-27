@@ -11,7 +11,6 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.ProxySettings;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -32,11 +31,11 @@ public class BungeeSystemTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    @ClassRule
-    public static ComponentMocker component = new BungeeComponentMocker(temporaryFolder);
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
+    @Rule
+    public ComponentMocker component = new BungeeComponentMocker(temporaryFolder);
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -58,7 +57,6 @@ public class BungeeSystemTest {
     }
 
     @Test
-    @Ignore("First test causes config settings to be wrong")
     public void bungeeDoesNotEnableWithDefaultIP() throws Exception {
         thrown.expect(EnableException.class);
         thrown.expectMessage("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
@@ -79,10 +77,9 @@ public class BungeeSystemTest {
     }
 
     @Test
-    @Ignore("MySQL Driver unavailable for some reason.")
     public void testEnableNoMySQL() throws EnableException {
         thrown.expect(EnableException.class);
-        thrown.expectMessage("Database failed to initialize");
+        thrown.expectMessage("Failed to initialize pool: Communications link failure");
 
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
