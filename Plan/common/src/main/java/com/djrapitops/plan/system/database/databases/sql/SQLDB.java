@@ -150,9 +150,13 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public void init() throws DBInitException {
-        open = true;
+        setOpen(true);
         setupDataSource();
         setupDatabase();
+    }
+
+    void setOpen(boolean value) {
+        open = value;
     }
 
     @Override
@@ -175,6 +179,31 @@ public abstract class SQLDB extends Database {
         );
     }
 
+    Patch[] patches() {
+        return new Patch[]{
+                new Version10Patch(this),
+                new GeoInfoLastUsedPatch(this),
+                new SessionAFKTimePatch(this),
+                new KillsServerIDPatch(this),
+                new WorldTimesSeverIDPatch(this),
+                new WorldsServerIDPatch(this),
+                new IPHashPatch(this),
+                new IPAnonPatch(this),
+                new NicknameLastSeenPatch(this),
+                new VersionTableRemovalPatch(this),
+                new DiskUsagePatch(this),
+                new WorldsOptimizationPatch(this),
+                new WorldTimesOptimizationPatch(this),
+                new KillsOptimizationPatch(this),
+                new SessionsOptimizationPatch(this),
+                new PingOptimizationPatch(this),
+                new NicknamesOptimizationPatch(this),
+                new UserInfoOptimizationPatch(this),
+                new GeoInfoOptimizationPatch(this),
+                new TransferTableRemovalPatch(this)
+        };
+    }
+
     /**
      * Ensures connection functions correctly and all tables exist.
      * <p>
@@ -186,28 +215,7 @@ public abstract class SQLDB extends Database {
         try {
             createTables();
 
-            Patch[] patches = new Patch[]{
-                    new Version10Patch(this),
-                    new GeoInfoLastUsedPatch(this),
-                    new SessionAFKTimePatch(this),
-                    new KillsServerIDPatch(this),
-                    new WorldTimesSeverIDPatch(this),
-                    new WorldsServerIDPatch(this),
-                    new IPHashPatch(this),
-                    new IPAnonPatch(this),
-                    new NicknameLastSeenPatch(this),
-                    new VersionTableRemovalPatch(this),
-                    new DiskUsagePatch(this),
-                    new WorldsOptimizationPatch(this),
-                    new WorldTimesOptimizationPatch(this),
-                    new KillsOptimizationPatch(this),
-                    new SessionsOptimizationPatch(this),
-                    new PingOptimizationPatch(this),
-                    new NicknamesOptimizationPatch(this),
-                    new UserInfoOptimizationPatch(this),
-                    new GeoInfoOptimizationPatch(this),
-                    new TransferTableRemovalPatch(this)
-            };
+            Patch[] patches = patches();
 
             try {
                 runnableFactory.create("Database Patch", new PatchTask(patches, locale, logger, errorHandler))
@@ -263,7 +271,7 @@ public abstract class SQLDB extends Database {
 
     @Override
     public void close() {
-        open = false;
+        setOpen(false);
         if (dbCleanTask != null) {
             dbCleanTask.cancel();
         }
