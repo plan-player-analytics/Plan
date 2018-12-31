@@ -110,8 +110,8 @@ public class PatchRegressionMySQL452Test extends PatchRegression452Test {
 
     private void dropAllTables() {
         List<String> tables = underTest.query(new QueryAllStatement<List<String>>("SELECT table_name" +
-                "FROM information_schema.tables" +
-                "WHERE table_schema = db_name;") {
+                " FROM information_schema.tables" +
+                " WHERE table_schema = db_name;") {
             @Override
             public List<String> processResults(ResultSet resultSet) throws SQLException {
                 List<String> names = new ArrayList<>();
