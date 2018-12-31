@@ -1,12 +1,17 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.DBType;
+import com.djrapitops.plan.system.database.databases.sql.patches.Patch;
+import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -15,9 +20,13 @@ import org.junit.rules.TemporaryFolder;
 import rules.PluginComponentMocker;
 import utilities.CIProperties;
 import utilities.OptionalAssert;
+import utilities.RandomData;
 import utilities.TestConstants;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assume.assumeTrue;
 
@@ -27,6 +36,8 @@ import static org.junit.Assume.assumeTrue;
  * @author Rsl1122
  */
 public class PatchRegressionMySQL452Test extends PatchRegression452Test {
+
+    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -57,18 +68,24 @@ public class PatchRegressionMySQL452Test extends PatchRegression452Test {
     }
 
     @Before
-    public void setUpDBWithOldSchema() throws DBInitException, SQLException {
-        PlanConfig config = component.getPlanSystem().getConfigSystem().getConfig();
+    public void setUpDBWithOldSchema() throws DBInitException, EnableException {
+        PlanSystem system = component.getPlanSystem();
+        PlanConfig config = system.getConfigSystem().getConfig();
         config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");
         config.set(DatabaseSettings.MYSQL_USER, "travis");
         config.set(DatabaseSettings.MYSQL_PASS, "");
         config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
         config.set(DatabaseSettings.TYPE, "MySQL");
+        config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
 
-        underTest = (MySQLDB) component.getPlanSystem().getDatabaseSystem().getActiveDatabaseByName(DBType.MYSQL.getName());
+        system.enable();
+
+        underTest = (MySQLDB) system.getDatabaseSystem().getActiveDatabaseByName(DBType.MYSQL.getName());
 
         underTest.setOpen(true);
         underTest.setupDataSource();
+
+        dropAllTables();
 
         // Initialize database with the old table schema
         underTest.execute(serverTable);
@@ -89,6 +106,35 @@ public class PatchRegressionMySQL452Test extends PatchRegression452Test {
         underTest.createTables();
 
         insertData(underTest);
+    }
+
+    private void dropAllTables() {
+        List<String> tables = underTest.query(new QueryAllStatement<List<String>>("SELECT table_name" +
+                "FROM information_schema.tables" +
+                "WHERE table_schema = db_name;") {
+            @Override
+            public List<String> processResults(ResultSet resultSet) throws SQLException {
+                List<String> names = new ArrayList<>();
+                while (resultSet.next()) {
+                    names.add(resultSet.getString("table_name"));
+                }
+                return names;
+            }
+        });
+
+        new Patch(underTest) {
+            @Override
+            public boolean hasBeenApplied() {
+                return false;
+            }
+
+            @Override
+            public void apply() {
+                for (String tableName : tables) {
+                    dropTable(tableName);
+                }
+            }
+        }.apply();
     }
 
     @After
