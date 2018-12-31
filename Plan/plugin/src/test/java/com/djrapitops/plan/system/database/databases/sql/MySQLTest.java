@@ -43,7 +43,7 @@ public class MySQLTest extends CommonDBTest {
     private static void clearDatabase() {
         List<String> tables = db.query(new QueryAllStatement<List<String>>("SELECT table_name" +
                 " FROM information_schema.tables" +
-                " WHERE table_schema = db_name;") {
+                " WHERE") {
             @Override
             public List<String> processResults(ResultSet resultSet) throws SQLException {
                 List<String> names = new ArrayList<>();
