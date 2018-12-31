@@ -187,8 +187,6 @@ public abstract class SQLDB extends Database {
                 new KillsServerIDPatch(this),
                 new WorldTimesSeverIDPatch(this),
                 new WorldsServerIDPatch(this),
-                new IPHashPatch(this),
-                new IPAnonPatch(this),
                 new NicknameLastSeenPatch(this),
                 new VersionTableRemovalPatch(this),
                 new DiskUsagePatch(this),
@@ -200,7 +198,9 @@ public abstract class SQLDB extends Database {
                 new NicknamesOptimizationPatch(this),
                 new UserInfoOptimizationPatch(this),
                 new GeoInfoOptimizationPatch(this),
-                new TransferTableRemovalPatch(this)
+                new TransferTableRemovalPatch(this),
+                new IPHashPatch(this),
+                new IPAnonPatch(this)
         };
     }
 
