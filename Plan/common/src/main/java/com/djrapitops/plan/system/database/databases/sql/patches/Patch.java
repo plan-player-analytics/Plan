@@ -128,10 +128,20 @@ public abstract class Patch {
     }
 
     protected void renameTable(String from, String to) {
-        String sql = dbType.supportsMySQLQueries() ?
-                "RENAME TABLE " + from + " TO " + to :
-                "ALTER TABLE " + from + " RENAME TO " + to;
-        db.execute(sql);
+        db.execute(getRenameTableSQL(from, to));
+    }
+
+    private String getRenameTableSQL(String from, String to) {
+        switch (dbType) {
+            case SQLITE:
+                return "ALTER TABLE " + from + " RENAME TO " + to;
+            case MYSQL:
+                return "RENAME TABLE " + from + " TO " + to;
+            case H2:
+                return "ALTER TABLE " + from + " RENAME TO " + to;
+            default:
+                throw new IllegalArgumentException("DBType: " + dbType.getName() + " does not have rename table sql");
+        }
     }
 
     protected UUID getServerUUID() {
