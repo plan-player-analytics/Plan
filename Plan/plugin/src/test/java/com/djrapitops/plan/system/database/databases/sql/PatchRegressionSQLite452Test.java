@@ -23,12 +23,13 @@ import java.sql.SQLException;
  *
  * @author Rsl1122
  */
-public class SQLite452PatchRegressionTest {
+public class PatchRegressionSQLite452Test extends PatchRegression452Test {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     @Rule
     public PluginComponentMocker component = new PluginComponentMocker(temporaryFolder);
+
     String serverTable = "CREATE TABLE IF NOT EXISTS plan_servers (id integer PRIMARY KEY, uuid varchar(36) NOT NULL UNIQUE, name varchar(100), web_address varchar(100), is_installed boolean NOT NULL DEFAULT 1, max_players integer NOT NULL DEFAULT -1)";
     String usersTable = "CREATE TABLE IF NOT EXISTS plan_users (id integer PRIMARY KEY, uuid varchar(36) NOT NULL UNIQUE, registered bigint NOT NULL, name varchar(16) NOT NULL, times_kicked integer NOT NULL DEFAULT 0)";
     String userInfoTable = "CREATE TABLE IF NOT EXISTS plan_user_info (user_id integer NOT NULL, registered bigint NOT NULL, opped boolean NOT NULL DEFAULT 0, banned boolean NOT NULL DEFAULT 0, server_id integer NOT NULL, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
@@ -43,17 +44,8 @@ public class SQLite452PatchRegressionTest {
     String worldTimesTable = "CREATE TABLE IF NOT EXISTS plan_world_times (user_id integer NOT NULL, world_id integer NOT NULL, server_id integer NOT NULL, session_id integer NOT NULL, survival_time bigint NOT NULL DEFAULT 0, creative_time bigint NOT NULL DEFAULT 0, adventure_time bigint NOT NULL DEFAULT 0, spectator_time bigint NOT NULL DEFAULT 0, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(world_id) REFERENCES plan_worlds(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id), FOREIGN KEY(session_id) REFERENCES plan_sessions(id))";
     String securityTable = "CREATE TABLE IF NOT EXISTS plan_security (username varchar(100) NOT NULL UNIQUE, salted_pass_hash varchar(100) NOT NULL UNIQUE, permission_level integer NOT NULL)";
     String transferTable = "CREATE TABLE IF NOT EXISTS plan_transfer (sender_server_id integer NOT NULL, expiry_date bigint NOT NULL DEFAULT 0, type varchar(100) NOT NULL, extra_variables varchar(255) DEFAULT '', content_64 varchar(1), part bigint NOT NULL DEFAULT 0, FOREIGN KEY(sender_server_id) REFERENCES plan_servers(id))";
-    String insertServer = "INSERT INTO plan_servers (uuid) VALUES ('" + TestConstants.SERVER_UUID + "')";
-    String insertUser = "INSERT INTO plan_users (uuid, name, registered) VALUES ('" + TestConstants.PLAYER_ONE_UUID + "', 'TestName', 1234)";
-    String insertUser2 = "INSERT INTO plan_users (uuid, name, registered) VALUES ('" + TestConstants.PLAYER_TWO_UUID + "', 'TestName2', 1234)";
-    String insertUserInfo = "INSERT INTO plan_user_info (user_id, registered, server_id) VALUES (1, 1234, 1)";
-    String insertIP = "INSERT INTO plan_ips (user_id, ip, geolocation, ip_hash, last_used) VALUES (1, '1.1.1.1', 'Finland', 'hash', 1234)";
-    String insertNickname = "INSERT INTO plan_nicknames (user_id, nickname, server_id, last_used) VALUES (1, 'Nickname', 1, 1234)";
-    String insertSession = "INSERT INTO plan_sessions (user_id, server_id, session_start, session_end, mob_kills, deaths, afk_time) VALUES (1,1,1234,5678,2,2,2)";
-    String insertKill = "INSERT INTO plan_kills (killer_id, session_id, server_id, victim_id,  weapon, date) VALUES (1,1,1, 2, 'Sword', 3456)";
-    String insertWorld = "INSERT INTO plan_worlds (server_id, world_name) VALUES (1, 'World')";
-    String insertWorldTimes = "INSERT INTO plan_world_times (user_id, server_id, world_id, session_id, survival_time) VALUES (1,1,1,1,1234)";
-    SQLiteDB underTest;
+
+    private SQLiteDB underTest;
 
     @Before
     public void setUpDBWithOldSchema() throws DBInitException, SQLException {
@@ -81,17 +73,7 @@ public class SQLite452PatchRegressionTest {
 
         underTest.createTables();
 
-        // Insert data into the database
-        underTest.execute(insertServer);
-        underTest.execute(insertUser);
-        underTest.execute(insertUser2);
-        underTest.execute(insertUserInfo);
-        underTest.execute(insertIP);
-        underTest.execute(insertNickname);
-        underTest.execute(insertSession);
-        underTest.execute(insertKill);
-        underTest.execute(insertWorld);
-        underTest.execute(insertWorldTimes);
+        insertData(underTest);
     }
 
     @After
@@ -100,7 +82,7 @@ public class SQLite452PatchRegressionTest {
     }
 
     @Test
-    public void testPatching() {
+    public void sqlitePatchTaskWorksWithoutErrors() {
         PatchTask patchTask = new PatchTask(underTest.patches(), new Locale(), new TestPluginLogger(), new ErrorHandler() {
             @Override
             public void log(L l, Class aClass, Throwable throwable) {
