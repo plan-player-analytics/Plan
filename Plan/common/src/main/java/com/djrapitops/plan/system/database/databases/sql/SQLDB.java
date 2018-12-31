@@ -211,7 +211,7 @@ public abstract class SQLDB extends Database {
      *
      * @throws DBInitException if something goes wrong.
      */
-    public void setupDatabase() throws DBInitException {
+    private void setupDatabase() throws DBInitException {
         try {
             createTables();
 
@@ -233,7 +233,7 @@ public abstract class SQLDB extends Database {
      * <p>
      * Updates table columns to latest schema.
      */
-    public void createTables() throws DBInitException {
+    void createTables() throws DBInitException {
         for (Table table : getAllTables()) {
             table.createTable();
         }

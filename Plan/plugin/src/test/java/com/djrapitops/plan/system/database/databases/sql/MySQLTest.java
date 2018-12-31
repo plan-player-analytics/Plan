@@ -1,4 +1,4 @@
-package com.djrapitops.plan.system.database.databases;
+package com.djrapitops.plan.system.database.databases.sql;
 
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
