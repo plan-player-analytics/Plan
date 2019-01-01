@@ -46,8 +46,8 @@ public class SessionsOptimizationPatch extends Patch {
     @Override
     public void apply() {
         try {
-            dropForeignKey(WorldTimesTable.TABLE_NAME);
-            dropForeignKey(KillsTable.TABLE_NAME);
+            dropForeignKey(WorldTimesTable.TABLE_NAME, tableName);
+            dropForeignKey(KillsTable.TABLE_NAME, tableName);
 
             tempOldTable();
             db.getSessionsTable().createTable();
