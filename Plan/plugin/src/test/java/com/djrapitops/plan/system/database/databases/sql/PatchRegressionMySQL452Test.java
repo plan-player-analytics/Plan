@@ -1,12 +1,15 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
+import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.api.exceptions.database.DBInitException;
 import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
+import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
+import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
@@ -15,9 +18,8 @@ import org.junit.rules.TemporaryFolder;
 import rules.PluginComponentMocker;
 import utilities.CIProperties;
 import utilities.OptionalAssert;
+import utilities.RandomData;
 import utilities.TestConstants;
-
-import java.sql.SQLException;
 
 import static org.junit.Assume.assumeTrue;
 
@@ -27,6 +29,8 @@ import static org.junit.Assume.assumeTrue;
  * @author Rsl1122
  */
 public class PatchRegressionMySQL452Test extends PatchRegression452Test {
+
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -57,18 +61,24 @@ public class PatchRegressionMySQL452Test extends PatchRegression452Test {
     }
 
     @Before
-    public void setUpDBWithOldSchema() throws DBInitException, SQLException {
-        PlanConfig config = component.getPlanSystem().getConfigSystem().getConfig();
+    public void setUpDBWithOldSchema() throws DBInitException, EnableException {
+        PlanSystem system = component.getPlanSystem();
+        PlanConfig config = system.getConfigSystem().getConfig();
         config.set(DatabaseSettings.MYSQL_DATABASE, "Plan");
         config.set(DatabaseSettings.MYSQL_USER, "travis");
         config.set(DatabaseSettings.MYSQL_PASS, "");
         config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
         config.set(DatabaseSettings.TYPE, "MySQL");
+        config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
 
-        underTest = (MySQLDB) component.getPlanSystem().getDatabaseSystem().getActiveDatabaseByName(DBType.MYSQL.getName());
+        system.enable();
+
+        underTest = (MySQLDB) system.getDatabaseSystem().getActiveDatabaseByName(DBType.MYSQL.getName());
 
         underTest.setOpen(true);
         underTest.setupDataSource();
+
+        dropAllTables();
 
         // Initialize database with the old table schema
         underTest.execute(serverTable);
@@ -89,6 +99,12 @@ public class PatchRegressionMySQL452Test extends PatchRegression452Test {
         underTest.createTables();
 
         insertData(underTest);
+    }
+
+    private void dropAllTables() {
+        underTest.execute("DROP DATABASE Plan");
+        underTest.execute("CREATE DATABASE Plan");
+        underTest.execute("USE Plan");
     }
 
     @After

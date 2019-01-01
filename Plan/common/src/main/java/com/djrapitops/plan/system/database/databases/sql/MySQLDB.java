@@ -36,6 +36,7 @@ import com.zaxxer.hikari.pool.HikariPool;
 import dagger.Lazy;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -45,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Rsl1122
  */
+@Singleton
 public class MySQLDB extends SQLDB {
 
     private static int increment = 1;

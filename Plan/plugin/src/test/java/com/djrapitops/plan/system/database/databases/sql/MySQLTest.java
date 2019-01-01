@@ -30,5 +30,12 @@ public class MySQLTest extends CommonDBTest {
         config.set(DatabaseSettings.TYPE, "MySQL");
 
         handleSetup("MySQL");
+        clearDatabase();
+    }
+
+    private static void clearDatabase() {
+        db.execute("DROP DATABASE Plan");
+        db.execute("CREATE DATABASE Plan");
+        db.execute("USE Plan");
     }
 }

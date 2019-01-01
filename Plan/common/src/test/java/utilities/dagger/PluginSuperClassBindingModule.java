@@ -20,6 +20,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.sql.H2DB;
+import com.djrapitops.plan.system.database.databases.sql.MySQLDB;
 import com.djrapitops.plan.system.database.databases.sql.SQLiteDB;
 import com.djrapitops.plan.system.listeners.ListenerSystem;
 import com.djrapitops.plan.system.locale.Locale;
@@ -52,6 +53,7 @@ public class PluginSuperClassBindingModule {
             Locale locale,
             SQLiteDB.Factory sqLiteDB,
             H2DB.Factory h2Factory,
+            MySQLDB mySQLDB,
             PluginLogger logger,
             Timings timings,
             ErrorHandler errorHandler
@@ -60,6 +62,7 @@ public class PluginSuperClassBindingModule {
             @Override
             public void enable() throws EnableException {
                 databases.add(sqLiteDB.usingDefaultFile());
+                databases.add(mySQLDB);
                 String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();
                 db = getActiveDatabaseByName(dbType);
                 super.enable();
