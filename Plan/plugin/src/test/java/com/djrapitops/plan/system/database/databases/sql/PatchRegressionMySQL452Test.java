@@ -30,7 +30,7 @@ import static org.junit.Assume.assumeTrue;
  */
 public class PatchRegressionMySQL452Test extends PatchRegression452Test {
 
-    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
