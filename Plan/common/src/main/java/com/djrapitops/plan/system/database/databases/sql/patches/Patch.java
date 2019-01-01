@@ -120,11 +120,11 @@ public abstract class Patch {
     }
 
     protected void addColumn(String tableName, String columnInfo) {
-        db.executeUnsafe("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
+        db.execute("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
     }
 
     protected void dropTable(String name) {
-        db.executeUnsafe(TableSqlParser.dropTable(name));
+        db.execute(TableSqlParser.dropTable(name));
     }
 
     protected void renameTable(String from, String to) {
