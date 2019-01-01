@@ -102,8 +102,8 @@ public class PatchRegressionMySQL452Test extends PatchRegression452Test {
     }
 
     private void dropAllTables() {
-        underTest.execute("DROP DATABASE 'Plan'");
-        underTest.execute("CREATE DATABASE 'Plan'");
+        underTest.execute("DROP DATABASE Plan");
+        underTest.execute("CREATE DATABASE Plan");
     }
 
     @After
