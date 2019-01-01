@@ -3,6 +3,9 @@ package com.djrapitops.plan.system.database.databases.sql;
 import com.djrapitops.plan.system.database.databases.sql.patches.Patch;
 import utilities.TestConstants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertTrue;
 
 public abstract class PatchRegression452Test {
@@ -33,8 +36,12 @@ public abstract class PatchRegression452Test {
     }
 
     protected void assertPatchesHaveBeenApplied(SQLDB underTest) {
+        List<String> failed = new ArrayList<>();
         for (Patch patch : underTest.patches()) {
-            assertTrue("Patch " + patch.getClass().getSimpleName() + " was not applied properly.", patch.hasBeenApplied());
+            if (!patch.hasBeenApplied()) {
+                failed.add(patch.getClass().getSimpleName());
+            }
         }
+        assertTrue("Patches " + failed + " were not applied properly.", failed.isEmpty());
     }
 }
