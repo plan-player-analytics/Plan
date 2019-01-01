@@ -1,6 +1,9 @@
 package com.djrapitops.plan.system.database.databases.sql;
 
+import com.djrapitops.plan.system.database.databases.sql.patches.Patch;
 import utilities.TestConstants;
+
+import static org.junit.Assert.assertTrue;
 
 public abstract class PatchRegression452Test {
 
@@ -27,5 +30,11 @@ public abstract class PatchRegression452Test {
         underTest.execute(insertKill);
         underTest.execute(insertWorld);
         underTest.execute(insertWorldTimes);
+    }
+
+    protected void assertPatchesHaveBeenApplied(SQLDB underTest) {
+        for (Patch patch : underTest.patches()) {
+            assertTrue("Patch " + patch.getClass().getSimpleName() + " was not applied properly.", patch.hasBeenApplied());
+        }
     }
 }

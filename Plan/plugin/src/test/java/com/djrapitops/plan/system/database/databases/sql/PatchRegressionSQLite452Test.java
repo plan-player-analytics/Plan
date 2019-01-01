@@ -93,8 +93,13 @@ public class PatchRegressionSQLite452Test extends PatchRegression452Test {
         // Patching might fail due to exception.
         patchTask.run();
 
+        assertPatchesHaveBeenApplied(underTest);
+
         // Make sure that a fetch works.
         ServerContainer server = underTest.fetch().getServerContainer(TestConstants.SERVER_UUID);
         OptionalAssert.equals(1, server.getValue(ServerKeys.PLAYER_KILL_COUNT));
+
+        // Make sure no foreign key checks fail on removal
+        underTest.remove().everything();
     }
 }
