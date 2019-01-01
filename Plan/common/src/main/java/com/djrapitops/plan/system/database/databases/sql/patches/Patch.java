@@ -22,6 +22,7 @@ import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStat
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -120,11 +121,11 @@ public abstract class Patch {
     }
 
     protected void addColumn(String tableName, String columnInfo) {
-        db.executeUnsafe("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
+        db.execute("ALTER TABLE " + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
     }
 
     protected void dropTable(String name) {
-        db.executeUnsafe(TableSqlParser.dropTable(name));
+        db.execute(TableSqlParser.dropTable(name));
     }
 
     protected void renameTable(String from, String to) {
@@ -142,6 +143,45 @@ public abstract class Patch {
             default:
                 throw new IllegalArgumentException("DBType: " + dbType.getName() + " does not have rename table sql");
         }
+    }
+
+    protected void dropForeignKey(String table, String referencedTable, String referencedColumn) {
+        if (dbType != DBType.MYSQL) {
+            return;
+        }
+        String keyName = getForeignKeyConstraintName(table, referencedTable, referencedColumn);
+
+        // Uses information from https://stackoverflow.com/a/34574758
+        db.execute("ALTER TABLE " + table +
+                " DROP FOREIGN KEY " + keyName);
+    }
+
+    private String getForeignKeyConstraintName(String table, String referencedTable, String referencedColumn) {
+        // Uses information from https://stackoverflow.com/a/201678
+        String keySQL = "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE" +
+                " WHERE REFERENCED_TABLE_SCHEMA = ?" +
+                " AND TABLE_NAME = ?" +
+                " AND REFERENCED_TABLE_NAME = ?" +
+                " AND REFERENCED_COLUMN_NAME = ?";
+        String keyName = query(new QueryStatement<String>(keySQL) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, db.getConfig().get(DatabaseSettings.MYSQL_DATABASE));
+                statement.setString(2, table);
+                statement.setString(3, referencedTable);
+                statement.setString(4, referencedColumn);
+            }
+
+            @Override
+            public String processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getString("CONSTRAINT_NAME");
+                } else {
+                    return null;
+                }
+            }
+        });
+        return Verify.nullCheck(keyName, () -> new IllegalArgumentException("No constraint found with " + table + ", " + referencedTable + "." + referencedColumn));
     }
 
     protected UUID getServerUUID() {

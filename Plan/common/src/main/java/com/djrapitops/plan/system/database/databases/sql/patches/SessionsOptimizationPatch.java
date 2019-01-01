@@ -18,8 +18,10 @@ package com.djrapitops.plan.system.database.databases.sql.patches;
 
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.tables.KillsTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.SessionsTable.Col;
+import com.djrapitops.plan.system.database.databases.sql.tables.WorldTimesTable;
 
 public class SessionsOptimizationPatch extends Patch {
 
@@ -44,6 +46,9 @@ public class SessionsOptimizationPatch extends Patch {
     @Override
     public void apply() {
         try {
+            dropForeignKey(WorldTimesTable.TABLE_NAME, tableName, Col.ID.get());
+            dropForeignKey(KillsTable.TABLE_NAME, tableName, Col.ID.get());
+
             tempOldTable();
             db.getSessionsTable().createTable();
 
