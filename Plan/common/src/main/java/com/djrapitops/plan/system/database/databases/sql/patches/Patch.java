@@ -147,7 +147,7 @@ public abstract class Patch {
     protected void dropForeignKey(String table, String referencedTable) {
         switch (dbType) {
             case MYSQL:
-                db.execute("ALTER TABLE " + table + " DROP FOREIGN KEY " + referencedTable + "_ibfk_1");
+                db.execute("ALTER TABLE " + referencedTable + " DROP FOREIGN KEY " + table + "_ibfk_1");
             case SQLITE:
             case H2:
             default:
