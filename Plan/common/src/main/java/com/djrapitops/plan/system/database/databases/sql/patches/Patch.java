@@ -153,8 +153,8 @@ public abstract class Patch {
 
         // Uses information from https://stackoverflow.com/a/34574758
         db.execute("ALTER TABLE " + table +
-                " DROP FOREIGN KEY " + keyName +
-                " DROP KEY " + keyName);
+                " DROP FOREIGN KEY " + keyName + ", " +
+                "DROP KEY " + keyName);
     }
 
     private String getForeignKeyConstraintName(String table, String referencedTable, String referencedColumn) {
