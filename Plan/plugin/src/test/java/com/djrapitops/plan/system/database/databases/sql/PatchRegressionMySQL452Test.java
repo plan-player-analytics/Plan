@@ -6,8 +6,6 @@ import com.djrapitops.plan.data.store.containers.ServerContainer;
 import com.djrapitops.plan.data.store.keys.ServerKeys;
 import com.djrapitops.plan.system.PlanSystem;
 import com.djrapitops.plan.system.database.databases.DBType;
-import com.djrapitops.plan.system.database.databases.sql.patches.Patch;
-import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.locale.Locale;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.DatabaseSettings;
@@ -22,11 +20,6 @@ import utilities.CIProperties;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assume.assumeTrue;
 
@@ -109,31 +102,8 @@ public class PatchRegressionMySQL452Test extends PatchRegression452Test {
     }
 
     private void dropAllTables() {
-        List<String> tables = underTest.query(new QueryAllStatement<List<String>>("SELECT table_name" +
-                " FROM information_schema.tables") {
-            @Override
-            public List<String> processResults(ResultSet resultSet) throws SQLException {
-                List<String> names = new ArrayList<>();
-                while (resultSet.next()) {
-                    names.add(resultSet.getString("table_name"));
-                }
-                return names;
-            }
-        });
-
-        new Patch(underTest) {
-            @Override
-            public boolean hasBeenApplied() {
-                return false;
-            }
-
-            @Override
-            public void apply() {
-                for (String tableName : tables) {
-                    dropTable(tableName);
-                }
-            }
-        }.apply();
+        underTest.execute("DROP DATABASE 'Plan'");
+        underTest.execute("CREATE DATABASE 'Plan'");
     }
 
     @After
