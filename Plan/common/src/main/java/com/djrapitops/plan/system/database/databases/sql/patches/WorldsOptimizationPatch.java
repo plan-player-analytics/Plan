@@ -44,7 +44,7 @@ public class WorldsOptimizationPatch extends Patch {
     @Override
     public void apply() {
         try {
-            dropForeignKey(WorldTimesTable.TABLE_NAME, tableName);
+            dropForeignKey(WorldTimesTable.TABLE_NAME, tableName, Col.ID.get());
 
             tempOldTable();
             db.getWorldTable().createTable();
