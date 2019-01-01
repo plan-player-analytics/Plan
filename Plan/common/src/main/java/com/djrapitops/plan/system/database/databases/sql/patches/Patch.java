@@ -144,15 +144,14 @@ public abstract class Patch {
         }
     }
 
-    protected void dropForeignKey(String tableName, String column) {
+    protected void dropForeignKey(String tableName) {
         switch (dbType) {
             case MYSQL:
-                db.execute("ALTER TABLE " + tableName + "." + column + " DROP FOREIGN KEY " + tableName + "_ibfk_1");
+                db.execute("ALTER TABLE " + tableName + " DROP FOREIGN KEY " + tableName + "_ibfk_1");
             case SQLITE:
             case H2:
             default:
-                return;
-
+                break;
         }
     }
 
