@@ -19,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import rules.BungeeComponentMocker;
 import rules.ComponentMocker;
-import utilities.CIProperties;
 import utilities.RandomData;
 
 /**
@@ -80,9 +79,6 @@ public class BungeeSystemTest {
     @Test
     public void testEnableNoMySQL() throws EnableException {
         thrown.expect(EnableException.class);
-        if (!Boolean.parseBoolean(System.getenv(CIProperties.IS_TRAVIS))) {
-            thrown.expectMessage("Failed to initialize pool: Communications link failure");
-        }
 
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
