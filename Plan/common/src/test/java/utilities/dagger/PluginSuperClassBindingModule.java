@@ -62,6 +62,7 @@ public class PluginSuperClassBindingModule {
             @Override
             public void enable() throws EnableException {
                 databases.add(sqLiteDB.usingDefaultFile());
+                databases.add(h2Factory.usingDefaultFile());
                 databases.add(mySQLDB);
                 String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();
                 db = getActiveDatabaseByName(dbType);

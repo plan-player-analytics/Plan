@@ -40,8 +40,8 @@ import com.djrapitops.plan.utilities.SHA256Hash;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
-import rules.BukkitComponentMocker;
 import rules.ComponentMocker;
+import rules.PluginComponentMocker;
 import utilities.FieldFetcher;
 import utilities.OptionalAssert;
 import utilities.RandomData;
@@ -68,7 +68,10 @@ public abstract class CommonDBTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     @ClassRule
-    public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
+    public static ComponentMocker component = new PluginComponentMocker(temporaryFolder);
+
+
+    public static UUID serverUUID;
 
     public static DBSystem dbSystem;
     public static SQLDB db;
@@ -77,7 +80,6 @@ public abstract class CommonDBTest {
     public final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
     public final UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
     public final UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
-    public final UUID serverUUID = TestConstants.SERVER_UUID;
 
     @Rule
     public Timeout globalTimeout = Timeout.seconds(5);
@@ -91,6 +93,8 @@ public abstract class CommonDBTest {
         db = (SQLDB) dbSystem.getActiveDatabaseByName(dbName);
 
         db.init();
+
+        serverUUID = system.getServerInfo().getServerUUID();
     }
 
     @AfterClass
