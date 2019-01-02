@@ -22,6 +22,8 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
+import static org.junit.Assert.assertTrue;
+
 public class TestResources {
 
     private TestResources() {
@@ -35,11 +37,13 @@ public class TestResources {
     public static void copyResourceIntoFile(File toFile, String resourcePath) {
         createEmptyFile(toFile);
         writeResourceToFile(toFile, resourcePath);
+        assertTrue("Failed to copy resource: '" + resourcePath + "'", toFile.exists());
     }
 
     public static void copyTestResourceIntoFile(File toFile, InputStream testResource) {
         createEmptyFile(toFile);
         copyResourceToFile(toFile, testResource);
+        assertTrue("Failed to copy resource: '" + toFile.getAbsolutePath() + "'", toFile.exists());
     }
 
     private static void copyResourceToFile(File toFile, InputStream testResource) {

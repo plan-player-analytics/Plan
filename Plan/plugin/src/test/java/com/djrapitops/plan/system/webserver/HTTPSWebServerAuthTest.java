@@ -7,14 +7,18 @@ import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.Base64Util;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import rules.BukkitComponentMocker;
 import rules.ComponentMocker;
+import rules.PluginComponentMocker;
 import utilities.HTTPConnector;
 import utilities.RandomData;
+import utilities.TestResources;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +26,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class HTTPSWebServerAuthTest {
@@ -31,21 +37,21 @@ public class HTTPSWebServerAuthTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     @ClassRule
-    public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
+    public static ComponentMocker component = new PluginComponentMocker(temporaryFolder);
 
-    private static PlanSystem bukkitSystem;
+    private static PlanSystem system;
 
     private HTTPConnector connector = new HTTPConnector();
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        URL resource = HTTPSWebServerAuthTest.class.getResource("/Cert.keystore");
-        String keyStore = resource.getPath();
-        String absolutePath = new File(keyStore).getAbsolutePath();
+        File file = temporaryFolder.newFile();
+        TestResources.copyResourceIntoFile(file, "/Cert.keystore");
+        String absolutePath = file.getAbsolutePath();
 
-        bukkitSystem = component.getPlanSystem();
+        system = component.getPlanSystem();
 
-        PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
+        PlanConfig config = system.getConfigSystem().getConfig();
 
         config.set(WebserverSettings.CERTIFICATE_PATH, absolutePath);
         config.set(WebserverSettings.CERTIFICATE_KEYPASS, "MnD3bU5HpmPXag0e");
@@ -54,28 +60,30 @@ public class HTTPSWebServerAuthTest {
 
         config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
 
-        bukkitSystem.enable();
+        system.enable();
 
-        bukkitSystem.getDatabaseSystem().getDatabase().save()
+        system.getDatabaseSystem().getDatabase().save()
                 .webUser(new WebUser("test", PassEncryptUtil.createHash("testPass"), 0));
     }
 
     @AfterClass
     public static void tearDownClass() {
-        if (bukkitSystem != null) {
-            bukkitSystem.disable();
+        if (system != null) {
+            system.disable();
         }
     }
 
     /**
      * Test case against "Perm level 0 required, got 0".
      */
-    @Test
-    @Ignore("HTTPS Start fails due to paths being bad for some reason")
+    @Test(timeout = 5000)
+//    @Ignore("HTTPS Start fails due to paths being bad for some reason")
     public void testHTTPSAuthForPages() throws IOException, WebException, KeyManagementException, NoSuchAlgorithmException {
+        assertTrue("WebServer is not using https", system.getWebServerSystem().getWebServer().isUsingHTTPS());
+
         String address = "https://localhost:" + TEST_PORT_NUMBER;
         URL url = new URL(address);
-        HttpURLConnection connection = connector.getConnection("HET", address);
+        HttpURLConnection connection = connector.getConnection("GET", address);
 
         String user = Base64Util.encode("test:testPass");
         connection.setRequestProperty("Authorization", "Basic " + user);
