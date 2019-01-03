@@ -1,4 +1,4 @@
-cd $HOME/Plan-PlayerAnalytics/Plan
+cd $HOME/Rsl1122/Plan-PlayerAnalytics/Plan
 if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then 
 	gradle sonarqube
 fi
