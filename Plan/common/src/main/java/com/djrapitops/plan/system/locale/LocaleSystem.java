@@ -131,7 +131,7 @@ public class LocaleSystem implements SubSystem {
     private Optional<Locale> loadSettingLocale() {
         try {
             String setting = config.get(PluginSettings.LOCALE);
-            if (!setting.equalsIgnoreCase("default")) {
+            if (!"default".equalsIgnoreCase(setting)) {
                 return Optional.of(Locale.forLangCodeString(plugin, setting));
             }
         } catch (IOException e) {

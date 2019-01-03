@@ -71,7 +71,7 @@ public class ManageImportCommand extends CommandNode {
 
         String importArg = args[0];
 
-        if (importArg.equals("list")) {
+        if ("list".equals(importArg)) {
             sender.sendMessage(locale.getString(ManageLang.IMPORTERS));
             importSystem.getImporterNames().forEach(name -> sender.sendMessage("- " + name));
             return;

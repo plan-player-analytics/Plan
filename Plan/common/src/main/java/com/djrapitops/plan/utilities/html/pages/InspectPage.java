@@ -247,7 +247,7 @@ public class InspectPage implements Page {
 
         String serverName = serverNames.get(serverUUID);
         replacer.put("networkName",
-                serverName.equalsIgnoreCase("bungeecord")
+                "bungeecord".equalsIgnoreCase(serverName)
                         ? config.get(ProxySettings.NETWORK_NAME)
                         : serverName
         );

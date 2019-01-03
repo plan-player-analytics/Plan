@@ -159,7 +159,7 @@ public class WebServer implements SubSystem {
     private boolean startHttpsServer() {
         String keyStorePath = config.get(WebserverSettings.CERTIFICATE_PATH);
 
-        if (keyStorePath.equalsIgnoreCase("proxy")) {
+        if ("proxy".equalsIgnoreCase(keyStorePath)) {
             return true;
         }
 

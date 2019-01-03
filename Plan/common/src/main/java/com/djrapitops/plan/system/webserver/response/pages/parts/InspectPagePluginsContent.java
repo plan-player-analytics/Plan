@@ -51,7 +51,7 @@ public class InspectPagePluginsContent extends PageResponse {
 
     public static InspectPagePluginsContent generateForThisServer(UUID playerUUID, ServerInfo serverInfo, HookHandler hookHandler) {
         String serverName = serverInfo.getServer().getName();
-        String actualServerName = serverName.equals("Plan") ? "Server " + serverInfo.getServer().getId() : serverName;
+        String actualServerName = "Plan".equals(serverName) ? "Server " + serverInfo.getServer().getId() : serverName;
 
         Map<PluginData, InspectContainer> containers = hookHandler.getInspectContainersFor(playerUUID);
         if (containers.isEmpty()) {

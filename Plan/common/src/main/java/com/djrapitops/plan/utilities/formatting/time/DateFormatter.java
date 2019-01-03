@@ -49,7 +49,7 @@ public abstract class DateFormatter implements Formatter<Long> {
     protected String format(long epochMs, String format) {
         boolean useServerTime = config.isTrue(TimeSettings.USE_SERVER_TIME);
         String localeSetting = config.get(PluginSettings.LOCALE);
-        java.util.Locale usedLocale = localeSetting.equalsIgnoreCase("default")
+        java.util.Locale usedLocale = "default".equalsIgnoreCase(localeSetting)
                 ? java.util.Locale.ENGLISH
                 : java.util.Locale.forLanguageTag(localeSetting);
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, usedLocale);
