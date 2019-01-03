@@ -1,3 +1,3 @@
-cd $HOME/Plan
+cd $HOME/Plan-PlayerAnalytics/Plan
 gradle test --info
 cd $HOME
