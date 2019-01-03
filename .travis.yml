@@ -16,10 +16,13 @@ services:
 jobs:
     include:
       - stage: "Tests"
+        name: "Checkstyle"
+        script: bash scripts/runCheckstyle.sh
+      - stage: "Tests"
         name: "Unit tests"
         before_script: bash scripts/prepareTestEnv.sh
         script: bash scripts/runTests.sh
-	after_success: bash scripts/sonar.sh
+        after_success: bash scripts/sonar.sh
       - stage: "System Tests"
         name: "Test environment setup"
         script: bash scripts/prepareServerJars.sh
