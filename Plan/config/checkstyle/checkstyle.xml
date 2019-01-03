@@ -14,6 +14,8 @@
     <module name="TreeWalker">
         <module name="EmptyStatement"/>
         <module name="EqualsAvoidNull"/>
+        <module name="FallThrough"/>
+        <module name="InnerAssignment"/>
     </module>
 
 </module>
