@@ -9,7 +9,11 @@
 
     <module name="RegexpHeader">
         <property name="headerFile" value="config/checkstyle/java.header"/>
+    </module>
 
+    <module name="TreeWalker">
+        <module name="EmptyStatement"/>
+        <module name="EqualsAvoidNull"/>
     </module>
 
 </module>
