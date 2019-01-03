@@ -19,6 +19,7 @@ jobs:
         name: "Unit tests"
         before_script: bash scripts/prepareTestEnv.sh
         script: bash scripts/runTests.sh
+	after_success: bash scripts/sonar.sh
       - stage: "System Tests"
         name: "Test environment setup"
         script: bash scripts/prepareServerJars.sh
