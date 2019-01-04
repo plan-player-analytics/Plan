@@ -44,21 +44,7 @@ public class ConfigSettingKeyTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-    @Test
-    public void serverConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
-        PlanConfig planConfig = createConfig("config.yml");
-        Collection<Setting> settings = getServerSettings();
-        hasValidDefaultValuesForAllSettings(planConfig, settings);
-    }
-
-    @Test
-    public void proxyConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
-        PlanConfig planConfig = createConfig("bungeeconfig.yml");
-        Collection<Setting> settings = getProxySettings();
-        hasValidDefaultValuesForAllSettings(planConfig, settings);
-    }
-
-    private void hasValidDefaultValuesForAllSettings(PlanConfig config, Iterable<Setting> settings) {
+    public static void assertValidDefaultValuesForAllSettings(PlanConfig config, Iterable<Setting> settings) {
         List<String> fails = new ArrayList<>();
         for (Setting setting : settings) {
             checkSettingForFailures(config, setting).ifPresent(fails::add);
@@ -66,7 +52,7 @@ public class ConfigSettingKeyTest {
         assertTrue(fails.isEmpty(), fails::toString);
     }
 
-    private Optional<String> checkSettingForFailures(PlanConfig config, Setting setting) {
+    private static Optional<String> checkSettingForFailures(PlanConfig config, Setting setting) {
         try {
             if (!config.contains(setting.getPath())) {
                 return Optional.of("Did not contain " + setting.getPath());
@@ -79,7 +65,7 @@ public class ConfigSettingKeyTest {
         }
     }
 
-    private Collection<Setting> getServerSettings() throws IllegalAccessException {
+    public static Collection<Setting> getServerSettings() throws IllegalAccessException {
         List<Setting> settings = new ArrayList<>();
         for (Class settingKeyClass : new Class[]{
                 DatabaseSettings.class,
@@ -97,7 +83,7 @@ public class ConfigSettingKeyTest {
         return settings;
     }
 
-    private Collection<Setting> getProxySettings() throws IllegalAccessException {
+    public static Collection<Setting> getProxySettings() throws IllegalAccessException {
         List<Setting> settings = new ArrayList<>();
         for (Class settingKeyClass : new Class[]{
                 DatabaseSettings.class,
@@ -126,6 +112,20 @@ public class ConfigSettingKeyTest {
         settings.remove(DisplaySettings.WORLD_ALIASES);
         settings.remove(TimeSettings.ANALYSIS_REFRESH_PERIOD);
         return settings;
+    }
+
+    @Test
+    public void serverConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
+        PlanConfig planConfig = createConfig("config.yml");
+        Collection<Setting> settings = getServerSettings();
+        assertValidDefaultValuesForAllSettings(planConfig, settings);
+    }
+
+    @Test
+    public void proxyConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
+        PlanConfig planConfig = createConfig("bungeeconfig.yml");
+        Collection<Setting> settings = getProxySettings();
+        assertValidDefaultValuesForAllSettings(planConfig, settings);
     }
 
     private PlanConfig createConfig(String copyDefaultSettingsFrom) throws IOException {

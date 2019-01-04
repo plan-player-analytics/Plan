@@ -33,6 +33,8 @@ import rules.BungeeComponentMocker;
 import rules.ComponentMocker;
 import utilities.RandomData;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Test for Bungee PlanSystem.
  *
@@ -83,6 +85,7 @@ public class BungeeSystemTest {
             dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
 
             bungeeSystem.enable();
+            assertTrue(bungeeSystem.isEnabled());
         } finally {
             bungeeSystem.disable();
         }

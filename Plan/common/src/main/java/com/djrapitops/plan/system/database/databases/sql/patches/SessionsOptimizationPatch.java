@@ -49,7 +49,10 @@ public class SessionsOptimizationPatch extends Patch {
             dropForeignKey(WorldTimesTable.TABLE_NAME, tableName, Col.ID.get());
             dropForeignKey(KillsTable.TABLE_NAME, tableName, Col.ID.get());
 
+            ensureNoForeignKeyConstraints(tableName);
+
             tempOldTable();
+
             db.getSessionsTable().createTable();
 
             db.execute("INSERT INTO " + tableName + " (" +

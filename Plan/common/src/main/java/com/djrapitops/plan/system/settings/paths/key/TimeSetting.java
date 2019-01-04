@@ -40,7 +40,10 @@ public class TimeSetting extends Setting<Long> {
 
     @Override
     public Long getValueFrom(ConfigNode node) {
-        long duration = node.getLong(path);
+        Long duration = node.getLong(path);
+        if (duration == null) {
+            return null;
+        }
         String unitName = node.getString(path + ".Unit");
         try {
             TimeUnit unit = TimeUnit.valueOf(unitName.toUpperCase());

@@ -18,9 +18,13 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.exceptions.EnableException;
 import com.djrapitops.plan.system.PlanSystem;
+import com.djrapitops.plan.system.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.WebserverSettings;
+import com.djrapitops.plan.system.settings.paths.key.Setting;
+import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
@@ -28,6 +32,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import rules.BukkitComponentMocker;
 import rules.ComponentMocker;
 import utilities.RandomData;
+
+import java.util.Collection;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for Bukkit PlanSystem.
@@ -39,20 +47,40 @@ public class BukkitSystemTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
-    @ClassRule
-    public static ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
+
+    @Rule
+    public ComponentMocker component = new BukkitComponentMocker(temporaryFolder);
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private PlanSystem system;
+
+    @Before
+    public void prepareSystem() {
+        system = component.getPlanSystem();
+        system.getConfigSystem().getConfig()
+                .set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+    }
 
     @Test
-    public void testEnable() throws EnableException {
-        PlanSystem bukkitSystem = component.getPlanSystem();
+    public void bukkitSystemEnables() throws EnableException {
         try {
-            PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
-            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
-            bukkitSystem.enable();
+            system.enable();
+            assertTrue(system.isEnabled());
         } finally {
-            bukkitSystem.disable();
+            system.disable();
+        }
+    }
+
+    @Test
+    public void bukkitSystemHasDefaultConfigValuesAfterEnable() throws EnableException, IllegalAccessException {
+        try {
+            system.enable();
+            PlanConfig config = system.getConfigSystem().getConfig();
+
+            Collection<Setting> serverSettings = ConfigSettingKeyTest.getServerSettings();
+            ConfigSettingKeyTest.assertValidDefaultValuesForAllSettings(config, serverSettings);
+        } finally {
+            system.disable();
         }
     }
 }

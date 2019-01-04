@@ -46,6 +46,8 @@ public class WorldsOptimizationPatch extends Patch {
         try {
             dropForeignKey(WorldTimesTable.TABLE_NAME, tableName, Col.ID.get());
 
+            ensureNoForeignKeyConstraints(tableName);
+
             tempOldTable();
             db.getWorldTable().createTable();
 

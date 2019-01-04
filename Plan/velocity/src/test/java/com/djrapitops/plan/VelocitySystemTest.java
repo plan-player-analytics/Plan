@@ -30,6 +30,8 @@ import rules.ComponentMocker;
 import rules.VelocityComponentMocker;
 import utilities.RandomData;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Test for Velocity PlanSystem.
  *
@@ -57,6 +59,7 @@ public class VelocitySystemTest {
             dbSystem.setActiveDatabase(dbSystem.getSqLiteFactory().usingDefaultFile());
 
             velocitySystem.enable();
+            assertTrue(velocitySystem.isEnabled());
         } finally {
             velocitySystem.disable();
         }
