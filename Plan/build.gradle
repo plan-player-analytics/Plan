@@ -119,6 +119,10 @@ subprojects {
     artifacts {
         testArtifacts testJar
     }
+
+    checkstyle {
+        configFile rootProject.file('config/checkstyle/checkstyle.xml')
+    }
 }
 
 sonarqube {
