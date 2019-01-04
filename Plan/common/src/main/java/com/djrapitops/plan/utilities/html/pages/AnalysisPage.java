@@ -23,6 +23,7 @@ import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.update.VersionCheckSystem;
 import com.djrapitops.plan.utilities.formatting.Formatter;
 import com.djrapitops.plan.utilities.formatting.PlaceholderReplacer;
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.benchmarking.Timings;
 
 import java.io.IOException;
@@ -74,6 +75,11 @@ public class AnalysisPage implements Page {
                 TPS_LOW_COLOR, WORLD_MAP_HIGH_COLOR, WORLD_MAP_LOW_COLOR,
                 AVG_PING_COLOR, MAX_PING_COLOR, MIN_PING_COLOR
         );
+        if (Check.isBungeeAvailable() || Check.isVelocityAvailable()) {
+            placeholderReplacer.put("backButton", "<li><a title=\"to Network page\" href=\"/network\"><i class=\"material-icons\">arrow_back</i><i class=\"material-icons\">cloud</i></a></li>");
+        } else {
+            placeholderReplacer.put("backButton", "");
+        }
         placeholderReplacer.put("update", versionCheckSystem.getUpdateHtml().orElse(""));
         playersTable(placeholderReplacer);
         sessionStructures(placeholderReplacer);
