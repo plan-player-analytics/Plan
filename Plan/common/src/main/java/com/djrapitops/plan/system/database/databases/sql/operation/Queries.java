@@ -55,7 +55,7 @@ public class Queries {
                     String table = set.getString("TABLE_NAME");
                     String referencedTable = set.getString("REFERENCED_TABLE_NAME");
                     String column = set.getString("COLUMN_NAME");
-                    String referencedColumn = set.getString("REFERENCED_COLUMN");
+                    String referencedColumn = set.getString("REFERENCED_COLUMN_NAME");
                     String constraintName = set.getString("CONSTRAINT_NAME");
 
                     constraints.add(new ForeignKeyConstraint(
