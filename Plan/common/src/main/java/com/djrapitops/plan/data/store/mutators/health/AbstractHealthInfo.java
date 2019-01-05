@@ -157,13 +157,17 @@ public abstract class AbstractHealthInfo {
             long avgLastTwoWeeks = totalLastTwoWeeks / (long) activeCount;
             String avgLastTwoWeeksString = timeAmountFormatter.apply(avgLastTwoWeeks);
             String avgFourToTwoWeeksString = timeAmountFormatter.apply(avgFourToTwoWeeks);
-            if (avgFourToTwoWeeks >= avgLastTwoWeeks) {
+
+            // Played more or equal amount than 2 weeks ago
+            if (avgLastTwoWeeks >= avgFourToTwoWeeks) {
                 addNote(Icons.GREEN_THUMB + locale.getString(HealthInfoLang.ACTIVE_PLAY_COMPARISON_INCREASE,
                         avgLastTwoWeeksString, avgFourToTwoWeeksString));
+                // Played more than 2 hours less, than 2 weeks ago
             } else if (avgFourToTwoWeeks - avgLastTwoWeeks > TimeUnit.HOURS.toMillis(2L)) {
                 addNote(Icons.RED_WARN + locale.getString(HealthInfoLang.ACTIVE_PLAY_COMPARISON_DECREASE,
                         avgLastTwoWeeksString, avgFourToTwoWeeksString));
                 serverHealth -= 5;
+                // Played less than two weeks ago
             } else {
                 addNote(Icons.YELLOW_FLAG + locale.getString(HealthInfoLang.ACTIVE_PLAY_COMPARISON_DECREASE,
                         avgLastTwoWeeksString, avgFourToTwoWeeksString));
