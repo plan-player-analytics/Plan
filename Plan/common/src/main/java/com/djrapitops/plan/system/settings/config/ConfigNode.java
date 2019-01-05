@@ -91,12 +91,16 @@ public class ConfigNode {
             String key = parts[0];
             String leftover = parts[1];
 
+            // Add a new child
             ConfigNode child;
             if (!childNodes.containsKey(key)) {
                 child = addChild(new ConfigNode(key, newParent, null));
             } else {
                 child = childNodes.get(key);
             }
+
+            // If the path ends return the leaf node
+            // Otherwise continue recursively.
             return leftover.isEmpty() ? child : child.addNode(leftover);
         }
         throw new IllegalArgumentException("Can not add a node with empty path");
@@ -123,6 +127,13 @@ public class ConfigNode {
         updateParent(null);
     }
 
+    /**
+     * Add a new child ConfigNode.
+     *
+     * @param child ConfigNode to add.
+     *              If from another config tree, the parent is 'cut', which breaks the old tree traversal.
+     * @return Return the node given, now part of this tree.
+     */
     protected ConfigNode addChild(ConfigNode child) {
         getNode(child.key).ifPresent(ConfigNode::remove);
         childNodes.put(child.key, child);
@@ -274,37 +285,38 @@ public class ConfigNode {
     }
 
     public void copyMissing(ConfigNode from) {
+        // Override comment conditionally
         if (comment.size() < from.comment.size()) {
             comment = from.comment;
         }
 
+        // Override value conditionally
         if (value == null && from.value != null) {
             value = from.value;
         }
 
+        // Copy all nodes from 'from'
         for (String key : from.nodeOrder) {
             ConfigNode newChild = from.childNodes.get(key);
 
-            if (childNodes.containsKey(key)) {
-                ConfigNode oldChild = childNodes.get(key);
-                oldChild.copyMissing(newChild);
-            } else {
-                addChild(newChild);
-            }
+            // Copy values recursively to children
+            ConfigNode created = addNode(key);
+            created.copyMissing(newChild);
         }
     }
 
     public void copyAll(ConfigNode from) {
+        // Override comment and value unconditionally.
         comment = from.comment;
         value = from.value;
+
+        // Copy all nodes from 'from'
         for (String key : from.nodeOrder) {
             ConfigNode newChild = from.childNodes.get(key);
-            if (childNodes.containsKey(key)) {
-                ConfigNode oldChild = childNodes.get(key);
-                oldChild.copyAll(newChild);
-            } else {
-                addChild(newChild);
-            }
+
+            // Copy values recursively to children
+            ConfigNode created = addNode(key);
+            created.copyAll(newChild);
         }
     }
 

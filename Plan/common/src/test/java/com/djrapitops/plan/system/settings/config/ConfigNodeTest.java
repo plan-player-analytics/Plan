@@ -36,6 +36,7 @@ class ConfigNodeTest {
     private static final String STRING_NODE_WITH_DOUBLE_QUOTES = "String_node_with_double_quotes";
     private static final String FIRST_LEVEL = "1st_level";
     private static final String SECOND_LEVEL = "2nd_level";
+    private static final String THIRD_LEVEL = "3rd_level";
 
     private ConfigNode testTree;
 
@@ -46,8 +47,10 @@ class ConfigNodeTest {
         testTree.addChild(new ConfigNode(STRING_NODE_WITH_QUOTES, testTree, "\"'String'\""));
         testTree.addChild(new ConfigNode(STRING_NODE_WITH_DOUBLE_QUOTES, testTree, "'\"String\"'"));
         ConfigNode emptyNode = new ConfigNode(FIRST_LEVEL, testTree, null);
+        ConfigNode secondLevel = new ConfigNode(SECOND_LEVEL, emptyNode, "String");
         testTree.addChild(emptyNode);
-        emptyNode.addChild(new ConfigNode(SECOND_LEVEL, emptyNode, "String"));
+        emptyNode.addChild(secondLevel);
+        secondLevel.addChild(new ConfigNode(THIRD_LEVEL, secondLevel, "3"));
 
         assertTrue(testTree.childNodes.containsKey(SIMPLE_STRING_NODE), "Tree construction failed, addChild does not work.");
     }
@@ -287,5 +290,46 @@ class ConfigNodeTest {
         ConfigNode adding = testTree.getNode(FIRST_LEVEL).orElseThrow(() -> new AssertionError("Fail"));
         testTree.set(SIMPLE_STRING_NODE, adding);
         assertTrue(testTree.getNode(SIMPLE_STRING_NODE + "." + SECOND_LEVEL).isPresent());
+    }
+
+    @Test
+    void copyAllOverridesAllValues() {
+        ConfigNode overridingWith = testTree.getNode(FIRST_LEVEL).orElseThrow(() -> new AssertionError("Fail"));
+        ConfigNode added = testTree.addNode("Test." + SECOND_LEVEL + "." + THIRD_LEVEL);
+        added.set("ORIGINAL");
+        ConfigNode node = testTree.getNode("Test").orElseThrow(() -> new AssertionError("Fail"));
+        node.copyAll(overridingWith);
+
+        String original = testTree.getString(FIRST_LEVEL);
+        String copied = testTree.getString("Test");
+        assertEquals(original, copied);
+
+        original = testTree.getString(FIRST_LEVEL + "." + SECOND_LEVEL);
+        copied = testTree.getString("Test." + SECOND_LEVEL);
+        assertEquals(original, copied);
+
+        original = testTree.getString(FIRST_LEVEL + "." + SECOND_LEVEL + "." + THIRD_LEVEL);
+        copied = testTree.getString("Test." + SECOND_LEVEL + "." + THIRD_LEVEL);
+        assertEquals(original, copied);
+    }
+
+    @Test
+    void copyDefaultAddsProperValues() {
+        ConfigNode overridingWith = testTree.getNode(FIRST_LEVEL).orElseThrow(() -> new AssertionError("Fail"));
+        ConfigNode added = testTree.addNode("Test." + SECOND_LEVEL + "." + THIRD_LEVEL);
+        added.set("ORIGINAL");
+        ConfigNode node = testTree.getNode("Test").orElseThrow(() -> new AssertionError("Fail"));
+        node.copyMissing(overridingWith);
+
+        String original = testTree.getString(FIRST_LEVEL);
+        String copied = testTree.getString("Test");
+        assertEquals(original, copied);
+
+        original = testTree.getString(FIRST_LEVEL + "." + SECOND_LEVEL);
+        copied = testTree.getString("Test." + SECOND_LEVEL);
+        assertEquals(original, copied);
+
+        copied = testTree.getString("Test." + SECOND_LEVEL + "." + THIRD_LEVEL);
+        assertEquals("ORIGINAL", copied);
     }
 }
