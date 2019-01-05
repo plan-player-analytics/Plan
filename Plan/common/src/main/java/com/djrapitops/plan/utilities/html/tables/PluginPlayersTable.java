@@ -39,24 +39,28 @@ class PluginPlayersTable extends TableContainer {
     private Collection<PlayerContainer> players;
 
     private final int maxPlayers;
+    private final boolean openPlayerPageInNewTab;
 
     PluginPlayersTable(
             Map<PluginData, AnalysisContainer> containers,
             Collection<PlayerContainer> players,
-            int maxPlayers
+            int maxPlayers,
+            boolean openPlayerPageInNewTab
     ) {
-        this(getPluginDataSet(containers), players, maxPlayers);
+        this(getPluginDataSet(containers), players, maxPlayers, openPlayerPageInNewTab);
     }
 
     private PluginPlayersTable(
             TreeMap<String, Map<UUID, ? extends Serializable>> pluginDataSet,
             Collection<PlayerContainer> players,
-            int maxPlayers
+            int maxPlayers,
+            boolean openPlayerPageInNewTab
     ) {
         super(true, getHeaders(pluginDataSet.keySet()));
 
         this.players = players;
         this.maxPlayers = maxPlayers;
+        this.openPlayerPageInNewTab = openPlayerPageInNewTab;
 
         useJqueryDataTables("player-plugin-table");
 
@@ -91,11 +95,13 @@ class PluginPlayersTable extends TableContainer {
             if (i >= maxPlayers) {
                 break;
             }
+
             UUID uuid = profile.getUnsafe(PlayerKeys.UUID);
             String name = profile.getValue(PlayerKeys.NAME).orElse("Unknown");
-            String link = Html.LINK_EXTERNAL.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name);
+            Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
+            String linkHtml = link.parse(PlanAPI.getInstance().getPlayerInspectPageLink(name), name);
 
-            String[] playerData = ArrayUtil.merge(new String[]{link}, rows.getOrDefault(uuid, new String[]{}));
+            String[] playerData = ArrayUtil.merge(new String[]{linkHtml}, rows.getOrDefault(uuid, new String[]{}));
             addRow(ArrayUtils.addAll(playerData));
 
             i++;

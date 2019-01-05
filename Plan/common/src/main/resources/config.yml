@@ -112,6 +112,7 @@ Display_options:
   Players_table:
     Show_on_server_page: 2500
     Show_on_players_page: 25000
+  Open_player_links_in_new_tab: false
   Show_player_IPs: true
   Graphs:
     Show_gaps_in_data: false

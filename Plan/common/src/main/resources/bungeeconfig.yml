@@ -104,6 +104,7 @@ Display_options:
     Order_world_pies_by_percentage: false
   Players_table:
     Show_on_players_page: 25000
+  Open_player_links_in_new_tab: false
   Show_player_IPs: true
   Graphs:
     Show_gaps_in_data: false

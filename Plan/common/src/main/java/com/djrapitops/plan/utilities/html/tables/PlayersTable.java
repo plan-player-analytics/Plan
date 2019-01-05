@@ -43,6 +43,7 @@ class PlayersTable extends TableContainer {
     private final int maxPlayers;
     private final long activeMsThreshold;
     private final int activeLoginThreshold;
+    private final boolean openPlayerPageInNewTab;
 
     private final Formatter<Double> decimalFormatter;
 
@@ -51,6 +52,7 @@ class PlayersTable extends TableContainer {
             int maxPlayers,
             long activeMsThreshold,
             int activeLoginThreshold,
+            boolean openPlayerPageInNewTab,
             Formatter<Long> timeAmountFormatter,
             Formatter<Long> yearLongFormatter,
             Formatter<Double> decimalFormatter
@@ -68,6 +70,7 @@ class PlayersTable extends TableContainer {
         this.maxPlayers = maxPlayers;
         this.activeMsThreshold = activeMsThreshold;
         this.activeLoginThreshold = activeLoginThreshold;
+        this.openPlayerPageInNewTab = openPlayerPageInNewTab;
         this.decimalFormatter = decimalFormatter;
         useJqueryDataTables("player-table");
 
@@ -104,8 +107,10 @@ class PlayersTable extends TableContainer {
 
             String geolocation = GeoInfoMutator.forContainer(player).mostRecent().map(GeoInfo::getGeolocation).orElse("-");
 
+            Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
+
             addRow(
-                    Html.LINK_EXTERNAL.parse(url, name),
+                    link.parse(url, name),
                     activityString,
                     playtime,
                     loginTimes,

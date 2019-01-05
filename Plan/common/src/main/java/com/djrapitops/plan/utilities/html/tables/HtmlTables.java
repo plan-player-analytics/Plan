@@ -157,6 +157,7 @@ public class HtmlTables {
                 config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE),
                 config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
                 config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD),
+                config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
                 formatters.timeAmount(), formatters.yearLong(), formatters.decimals()
         );
     }
@@ -172,6 +173,7 @@ public class HtmlTables {
                 players, config.get(DisplaySettings.PLAYERS_PER_PLAYERS_PAGE),
                 config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD),
                 config.get(TimeSettings.ACTIVE_LOGIN_THRESHOLD),
+                config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
                 formatters.timeAmount(), formatters.yearLong(), formatters.decimals()
         );
     }
@@ -184,6 +186,10 @@ public class HtmlTables {
      * @return a new {@link PluginPlayersTable}.
      */
     public TableContainer pluginPlayersTable(Map<PluginData, AnalysisContainer> containers, Collection<PlayerContainer> players) {
-        return new PluginPlayersTable(containers, players, config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE));
+        return new PluginPlayersTable(
+                containers, players,
+                config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE),
+                config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB)
+        );
     }
 }
