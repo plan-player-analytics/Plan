@@ -20,7 +20,6 @@ import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
 import com.djrapitops.plan.system.database.databases.sql.tables.WorldTable;
 import com.djrapitops.plan.system.database.databases.sql.tables.WorldTable.Col;
-import com.djrapitops.plan.system.database.databases.sql.tables.WorldTimesTable;
 
 public class WorldsOptimizationPatch extends Patch {
 
@@ -44,8 +43,7 @@ public class WorldsOptimizationPatch extends Patch {
     @Override
     public void apply() {
         try {
-            dropForeignKey(WorldTimesTable.TABLE_NAME, tableName, Col.ID.get());
-
+            dropForeignKeys(tableName);
             ensureNoForeignKeyConstraints(tableName);
 
             tempOldTable();

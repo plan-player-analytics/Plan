@@ -19,6 +19,8 @@ package com.djrapitops.plan.system.database.databases.sql.patches;
 import com.djrapitops.plan.api.exceptions.database.DBOpException;
 import com.djrapitops.plan.system.database.databases.DBType;
 import com.djrapitops.plan.system.database.databases.sql.SQLDB;
+import com.djrapitops.plan.system.database.databases.sql.objects.ForeignKeyConstraint;
+import com.djrapitops.plan.system.database.databases.sql.operation.Queries;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryAllStatement;
 import com.djrapitops.plan.system.database.databases.sql.processing.QueryStatement;
 import com.djrapitops.plan.system.database.databases.sql.statements.TableSqlParser;
@@ -28,6 +30,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Patch {
@@ -146,71 +149,30 @@ public abstract class Patch {
         }
     }
 
-    protected void dropForeignKey(String table, String referencedTable, String referencedColumn) {
+    protected void dropForeignKeys(String referencedTable) {
         if (dbType != DBType.MYSQL) {
             return;
         }
-        String keyName = getForeignKeyConstraintName(table, referencedTable, referencedColumn);
-        if (keyName == null) {
-            return;
-        }
 
-        // Uses information from https://stackoverflow.com/a/34574758
-        db.execute("ALTER TABLE " + table +
-                " DROP FOREIGN KEY " + keyName);
+        String schema = db.getConfig().get(DatabaseSettings.MYSQL_DATABASE);
+        List<ForeignKeyConstraint> constraints = query(Queries.foreignKeyConstraintsOf(schema, referencedTable));
+
+        for (ForeignKeyConstraint constraint : constraints) {
+            // Uses information from https://stackoverflow.com/a/34574758
+            db.execute("ALTER TABLE " + constraint.getTable() +
+                    " DROP FOREIGN KEY " + constraint.getConstraintName());
+        }
     }
 
     protected void ensureNoForeignKeyConstraints(String table) {
         if (dbType != DBType.MYSQL) {
             return;
         }
-        String keySQL = "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE" +
-                " WHERE REFERENCED_TABLE_SCHEMA = ?" +
-                " AND TABLE_NAME = ?";
-        String keyName = query(new QueryStatement<String>(keySQL) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, db.getConfig().get(DatabaseSettings.MYSQL_DATABASE));
-                statement.setString(2, table);
-            }
 
-            @Override
-            public String processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getString("CONSTRAINT_NAME");
-                } else {
-                    return null;
-                }
-            }
-        });
-        Verify.isTrue(keyName == null, () -> new DBOpException("Table '" + table + "' has constraint '" + keyName + "'"));
-    }
+        String schema = db.getConfig().get(DatabaseSettings.MYSQL_DATABASE);
+        List<ForeignKeyConstraint> constraints = query(Queries.foreignKeyConstraintsOf(schema, table));
 
-    private String getForeignKeyConstraintName(String table, String referencedTable, String referencedColumn) {
-        // Uses information from https://stackoverflow.com/a/201678
-        String keySQL = "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE" +
-                " WHERE REFERENCED_TABLE_SCHEMA = ?" +
-                " AND TABLE_NAME = ?" +
-                " AND REFERENCED_TABLE_NAME = ?" +
-                " AND REFERENCED_COLUMN_NAME = ?";
-        return query(new QueryStatement<String>(keySQL) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, db.getConfig().get(DatabaseSettings.MYSQL_DATABASE));
-                statement.setString(2, table);
-                statement.setString(3, referencedTable);
-                statement.setString(4, referencedColumn);
-            }
-
-            @Override
-            public String processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return set.getString("CONSTRAINT_NAME");
-                } else {
-                    return null;
-                }
-            }
-        });
+        Verify.isTrue(constraints.isEmpty(), () -> new DBOpException("Table '" + table + "' has constraints '" + constraints + "'"));
     }
 
     protected UUID getServerUUID() {
