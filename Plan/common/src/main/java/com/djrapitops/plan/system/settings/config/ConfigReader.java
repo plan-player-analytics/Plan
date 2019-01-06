@@ -243,7 +243,7 @@ public class ConfigReader implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         scanner.close();
         closed = true;
     }

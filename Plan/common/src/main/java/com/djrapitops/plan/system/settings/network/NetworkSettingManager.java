@@ -185,8 +185,8 @@ public class NetworkSettingManager implements SubSystem {
 
         Database database = dbSystem.getDatabase();
 
-        try {
-            Config config = new ConfigReader(file.toPath()).read();
+        try (ConfigReader reader = new ConfigReader(file.toPath())) {
+            Config config = reader.read();
             database.save().saveConfig(serverUUID, config);
         } catch (IOException e) {
             throw new UncheckedIOException(e);

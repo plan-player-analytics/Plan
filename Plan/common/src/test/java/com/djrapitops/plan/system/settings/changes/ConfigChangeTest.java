@@ -26,8 +26,6 @@ import org.junit.runner.RunWith;
 import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.Scanner;
 
@@ -50,8 +48,6 @@ class ConfigChangeTest {
     private Config prepareConfig(String withValue) {
         try (ConfigReader reader = new ConfigReader(new Scanner(withValue))) {
             return new Config(temporaryFolder.resolve("config.yml").toFile(), reader.read());
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

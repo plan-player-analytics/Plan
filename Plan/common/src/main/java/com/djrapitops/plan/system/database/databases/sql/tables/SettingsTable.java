@@ -152,7 +152,9 @@ public class SettingsTable extends Table {
             @Override
             public Config processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return new ConfigReader(new Scanner(set.getString(Col.CONFIG_CONTENT.get()))).read();
+                    try (ConfigReader reader = new ConfigReader(new Scanner(set.getString(Col.CONFIG_CONTENT.get())))) {
+                        return reader.read();
+                    }
                 } else {
                     return null;
                 }
