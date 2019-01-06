@@ -84,7 +84,7 @@ public class ManageConDebugCommand extends CommandNode {
         setInDepthHelp(locale.getArray(DeepHelpLang.MANAGE_CON));
     }
 
-    private void testServer(Sender sender, String accessAddress, Server server, Locale locale) {
+    private void testServer(Sender sender, Server server, Locale locale) {
         String address = server.getWebAddress().toLowerCase();
         boolean usingHttps = address.startsWith("https");
         boolean local = address.contains("localhost")
@@ -138,7 +138,7 @@ public class ManageConDebugCommand extends CommandNode {
             if (thisServer.equals(server.getUuid())) {
                 continue;
             }
-            testServer(sender, accessAddress, server, locale);
+            testServer(sender, server, locale);
         }
     }
 
