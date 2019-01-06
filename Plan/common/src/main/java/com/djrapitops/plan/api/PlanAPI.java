@@ -44,6 +44,10 @@ public interface PlanAPI {
         static void set(PlanAPI api) {
             PlanAPIHolder.API = api;
         }
+
+        private PlanAPIHolder() {
+            /* Static variable holder */
+        }
     }
 
     void addPluginDataSource(PluginData pluginData);
