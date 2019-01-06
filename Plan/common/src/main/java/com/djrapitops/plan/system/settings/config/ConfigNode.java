@@ -125,6 +125,11 @@ public class ConfigNode {
         parent.childNodes.remove(key);
         parent.nodeOrder.remove(key);
         updateParent(null);
+
+        for (ConfigNode child : childNodes.values()) {
+            child.remove();
+        }
+
     }
 
     /**
