@@ -33,6 +33,7 @@ public class Icons {
     public static final Icon OPERATOR = Icon.called("superpowers").of(Color.BLUE).of(Family.BRAND).build();
     public static final Icon BANNED = Icon.called("gavel").of(Color.RED).build();
     public static final Icon SERVER = Icon.called("server").of(Color.GREEN).build();
+    public static final Icon SIGNAL = Icon.called("signal").build();
 
     public static final Icon GREEN_THUMB = Icon.called("thumbs-up").of(Color.GREEN).build();
     public static final Icon YELLOW_FLAG = Icon.called("flag").of(Color.AMBER).build();
