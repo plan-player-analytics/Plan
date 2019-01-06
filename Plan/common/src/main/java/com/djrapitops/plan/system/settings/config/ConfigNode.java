@@ -126,8 +126,9 @@ public class ConfigNode {
         parent.nodeOrder.remove(key);
         updateParent(null);
 
-        for (ConfigNode child : childNodes.values()) {
-            child.remove();
+        for (String key : nodeOrder) {
+            ConfigNode child = childNodes.get(key);
+            if (child != null) child.remove();
         }
 
     }
