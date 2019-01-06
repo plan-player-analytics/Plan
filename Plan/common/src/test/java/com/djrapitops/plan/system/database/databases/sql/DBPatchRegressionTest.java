@@ -24,7 +24,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-public abstract class PatchRegression452Test {
+public abstract class DBPatchRegressionTest {
 
     String insertServer = "INSERT INTO plan_servers (uuid) VALUES ('" + TestConstants.SERVER_UUID + "')";
     String insertUser = "INSERT INTO plan_users (uuid, name, registered) VALUES ('" + TestConstants.PLAYER_ONE_UUID + "', 'TestName', 1234)";

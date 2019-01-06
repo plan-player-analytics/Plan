@@ -44,7 +44,7 @@ import static org.junit.Assume.assumeTrue;
  *
  * @author Rsl1122
  */
-public class PatchRegressionMySQL452Test extends PatchRegression452Test {
+public class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 

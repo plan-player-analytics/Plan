@@ -41,7 +41,7 @@ import java.sql.SQLException;
  *
  * @author Rsl1122
  */
-public class PatchRegressionH2452Test extends PatchRegression452Test {
+public class DBPatchH2RegressionTest extends DBPatchRegressionTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
