@@ -194,16 +194,58 @@ class ConfigNodeTest {
         testTree.moveChild(oldPath, newPath);
 
         // New has proper values
-        Optional<ConfigNode> newNode = testTree.getNode(newPath);
-        assertTrue(newNode.isPresent());
-        assertEquals(movedNode.value, newNode.get().value);
-        assertEquals(movedNode.comment, newNode.get().comment);
-        assertEquals(movedNode.nodeOrder, newNode.get().nodeOrder);
-        assertSame(oldParent, newNode.get().parent);
+        ConfigNode newNode = testTree.getNode(newPath).orElseThrow(AssertionError::new);
+        assertEquals(movedNode.value, newNode.value);
+        assertEquals(movedNode.comment, newNode.comment);
+        assertEquals(movedNode.nodeOrder, newNode.nodeOrder);
+        assertSame(oldParent, newNode.parent);
 
         // Old has been removed
         assertFalse(testTree.getNode(oldPath).isPresent());
         assertNull(movedNode.parent);
+    }
+
+    @Test
+    void movePreservesParentNodes() {
+        String oldPath = FIRST_LEVEL + "." + SECOND_LEVEL;
+        String newPath = "New_Path";
+
+        String oldValue = "TestValue";
+        ConfigNode node = testTree.getNode(FIRST_LEVEL).orElseThrow(AssertionError::new);
+        node.set(oldValue);
+
+        testTree.moveChild(oldPath, newPath);
+
+        ConfigNode parentNode = testTree.getNode(FIRST_LEVEL).orElseThrow(AssertionError::new);
+        assertEquals(oldValue, parentNode.value);
+    }
+
+    @Test
+    void moveMovesChildNodes() {
+        String oldPath = FIRST_LEVEL + "." + SECOND_LEVEL;
+        String newPath = "New_Path";
+
+        String oldValue = testTree.getNode(oldPath + "." + THIRD_LEVEL)
+                .map(node -> node.value).orElseThrow(AssertionError::new);
+
+        testTree.moveChild(oldPath, newPath);
+
+        ConfigNode childNode = testTree.getNode(newPath + "." + THIRD_LEVEL).orElseThrow(AssertionError::new);
+        assertEquals(oldValue, childNode.value);
+    }
+
+    @Test
+    void moveWithChildNodesCopiesRootValue() {
+        String oldPath = FIRST_LEVEL + "." + SECOND_LEVEL;
+        String newPath = "New_Path";
+
+        String oldValue = testTree.getNode(oldPath)
+                .map(node -> node.value).orElseThrow(AssertionError::new);
+
+        testTree.moveChild(oldPath, newPath);
+
+        ConfigNode node = testTree.getNode(newPath).orElseThrow(AssertionError::new);
+        assertEquals(oldValue, node.value);
     }
 
     @Test
