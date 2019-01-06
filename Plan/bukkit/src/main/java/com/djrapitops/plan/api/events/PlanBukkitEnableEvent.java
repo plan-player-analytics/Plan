@@ -53,6 +53,6 @@ public class PlanBukkitEnableEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return PlanBukkitEnableEvent.getHandlerList();
     }
 }
