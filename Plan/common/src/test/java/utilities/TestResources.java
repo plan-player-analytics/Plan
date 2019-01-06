@@ -19,7 +19,10 @@ package utilities;
 import com.djrapitops.plan.PlanPlugin;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertTrue;
@@ -31,7 +34,10 @@ public class TestResources {
     }
 
     public static File getTestResourceFile(String called, Class testClass) throws URISyntaxException {
-        return Paths.get(testClass.getResource("/" + called).toURI()).toFile();
+        URL resource = testClass.getResource("/" + called);
+        URI resourceURI = resource.toURI();
+        Path resourcePath = Paths.get(resourceURI);
+        return resourcePath.toFile();
     }
 
     public static void copyResourceIntoFile(File toFile, String resourcePath) {
