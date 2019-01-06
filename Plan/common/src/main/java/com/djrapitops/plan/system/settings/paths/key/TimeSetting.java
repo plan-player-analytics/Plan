@@ -17,6 +17,7 @@
 package com.djrapitops.plan.system.settings.paths.key;
 
 import com.djrapitops.plan.system.settings.config.ConfigNode;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -46,6 +47,9 @@ public class TimeSetting extends Setting<Long> {
         }
         String unitName = node.getString(path + ".Unit");
         try {
+            Verify.nullCheck(unitName, () -> new IllegalStateException(
+                    "Config value for " + path + ".Unit has a bad value: 'null'"
+            ));
             TimeUnit unit = TimeUnit.valueOf(unitName.toUpperCase());
             return unit.toMillis(duration);
         } catch (IllegalArgumentException e) {

@@ -160,14 +160,10 @@ public class ConfigNode {
         }
 
         ConfigNode moveFrom = found.get();
-
         ConfigNode moveTo = addNode(newPath);
-        ConfigNode oldParent = moveFrom.parent;
-        ConfigNode newParent = moveTo.parent;
 
-        oldParent.removeChild(moveFrom);
         moveTo.copyAll(moveFrom);
-        newParent.addChild(moveTo);
+        removeNode(oldPath);
 
         return getNode(newPath).isPresent();
     }
