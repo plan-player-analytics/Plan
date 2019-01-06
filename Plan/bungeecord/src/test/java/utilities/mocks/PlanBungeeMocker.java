@@ -26,7 +26,7 @@ import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
+import com.djrapitops.plugin.task.RunnableFactory;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyConfig;
 import net.md_5.bungee.api.ProxyServer;
@@ -35,6 +35,7 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import org.mockito.Mockito;
 import utilities.TestConstants;
 import utilities.mocks.objects.TestLogger;
+import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
 import java.util.HashSet;
@@ -66,7 +67,7 @@ public class PlanBungeeMocker extends Mocker {
         doReturn("1.0.0").when(planMock).getVersion();
 
         TestLogger testLogger = new TestLogger();
-        ThreadRunnableFactory runnableFactory = new ThreadRunnableFactory();
+        RunnableFactory runnableFactory = new TestRunnableFactory();
         PluginLogger testPluginLogger = new TestPluginLogger();
         DebugLogger debugLogger = new CombineDebugLogger(new MemoryDebugLogger());
         ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);

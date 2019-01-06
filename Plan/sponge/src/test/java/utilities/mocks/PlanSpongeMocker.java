@@ -26,7 +26,7 @@ import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
+import com.djrapitops.plugin.task.RunnableFactory;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -35,6 +35,7 @@ import org.spongepowered.api.Platform;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
 import java.net.InetSocketAddress;
@@ -69,7 +70,7 @@ public class PlanSpongeMocker extends Mocker {
         doReturn("1.0.0").when(planMock).getVersion();
 
         Logger logger = Mockito.mock(Logger.class);
-        ThreadRunnableFactory runnableFactory = new ThreadRunnableFactory();
+        RunnableFactory runnableFactory = new TestRunnableFactory();
         PluginLogger testPluginLogger = new TestPluginLogger();
         DebugLogger debugLogger = new CombineDebugLogger(new MemoryDebugLogger());
         ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);

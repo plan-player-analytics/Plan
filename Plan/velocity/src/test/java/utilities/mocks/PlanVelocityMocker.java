@@ -26,9 +26,10 @@ import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
 import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.thread.ThreadRunnableFactory;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.mockito.Mockito;
+import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
 import java.net.InetSocketAddress;
@@ -60,7 +61,7 @@ public class PlanVelocityMocker extends Mocker {
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
         doReturn("1.0.0").when(planMock).getVersion();
 
-        ThreadRunnableFactory runnableFactory = new ThreadRunnableFactory();
+        RunnableFactory runnableFactory = new TestRunnableFactory();
         PluginLogger testPluginLogger = new TestPluginLogger();
         DebugLogger debugLogger = new CombineDebugLogger(new MemoryDebugLogger());
         ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);
