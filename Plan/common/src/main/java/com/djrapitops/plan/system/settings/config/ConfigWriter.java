@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.system.settings.config;
 
+import com.djrapitops.plugin.utilities.Verify;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -37,14 +39,31 @@ public class ConfigWriter {
     private Path outputPath;
     private int indent;
 
+    /**
+     * Create a new ConfigWriter that doesn't write anywhere.
+     */
     public ConfigWriter() {
     }
 
+    /**
+     * Create a new ConfigWriter that writes to a Path.
+     *
+     * @param outputPath Path to write to.
+     */
     public ConfigWriter(Path outputPath) {
         this.outputPath = outputPath;
     }
 
+    /**
+     * Write a {@link ConfigNode} into the given resource.
+     *
+     * @param writing ConfigNode to write.
+     * @throws IOException           If the Path given to constructor can not be written to.
+     * @throws IllegalStateException If the Path is null
+     */
     public void write(ConfigNode writing) throws IOException {
+        Verify.nullCheck(outputPath, () -> new IllegalStateException("Output path was null."));
+
         ConfigNode storedParent = writing.parent;
         writing.updateParent(null);
 
@@ -53,6 +72,14 @@ public class ConfigWriter {
         writing.updateParent(storedParent);
     }
 
+    /**
+     * Parse the lines of a {@link ConfigNode}.
+     * <p>
+     * "Write" the lines into a List.
+     *
+     * @param writing ConfigNode to "write"
+     * @return List of lines that would be written.
+     */
     public List<String> parseLines(ConfigNode writing) {
         List<String> lines = new ArrayList<>();
 
@@ -84,6 +111,8 @@ public class ConfigWriter {
         if (value == null || value.isEmpty()) {
             addKey(key, lines);
         } else if (value.contains("\n")) {
+            // List values include newline characters,
+            // see ConfigValueParser.StringListParser
             addListValue(key, value.split("\\n"), lines);
         } else {
             addNormalValue(key, value, lines);
@@ -91,29 +120,38 @@ public class ConfigWriter {
     }
 
     private void addKey(String key, Collection<String> lines) {
+        // Key:
         lines.add(indentedBuilder().append(key).append(":").toString());
     }
 
     private void addNormalValue(String key, String value, Collection<String> lines) {
+        // Key: value
         StringBuilder lineBuilder = indentedBuilder().append(key).append(": ").append(value);
         lines.add(lineBuilder.toString());
     }
 
     private void addListValue(String key, String[] listItems, Collection<String> lines) {
+        // Key:
+        //   - List item
         addKey(key, lines);
         for (String listItem : listItems) {
             listItem = listItem.trim();
             if (listItem.isEmpty()) {
                 continue;
             }
-            StringBuilder lineBuilder = indentedBuilder()
-                    .append("  ") // Append spaces to adhere to yml format for lists
-                    .append(listItem);
-            lines.add(lineBuilder.toString());
+            addListItem(listItem, lines);
         }
     }
 
+    private void addListItem(String listItem, Collection<String> lines) {
+        StringBuilder lineBuilder = indentedBuilder()
+                .append("  ") // Append 2 spaces to adhere to yml format for lists
+                .append(listItem);
+        lines.add(lineBuilder.toString());
+    }
+
     private void addComment(Iterable<String> comments, Collection<String> lines) {
+        // # Comment line
         for (String comment : comments) {
             StringBuilder lineBuilder = indentedBuilder().append("# ").append(comment);
             lines.add(lineBuilder.toString());
