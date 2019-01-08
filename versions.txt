@@ -1,3 +1,4 @@
+DEV|4.5.2-b3|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.6.0-DEV3/Plan-4.5.2-b3.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.6.0-DEV3
 DEV|4.5.2-b2|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.6.0-DEV2/Plan-4.5.2-b2.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.6.0-DEV2
 DEV|4.5.2-b1|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.6.0-DEV1/Plan-4.5.2-b1.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.6.0-DEV1
 REL|4.5.2|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/download/4.5.2-REL/Plan-4.5.2.jar|https://github.com/Rsl1122/Plan-PlayerAnalytics/releases/tag/4.5.2-REL
