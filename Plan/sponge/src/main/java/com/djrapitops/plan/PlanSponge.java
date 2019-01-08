@@ -106,7 +106,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         command.registerCommands();
         registerCommand("plan", command);
         if (system != null) {
-            system.getListenerSystem().callEnableEvent(this);
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
     }
 

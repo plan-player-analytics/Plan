@@ -97,7 +97,7 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
         command.registerCommands();
         registerCommand("planvelocity", command);
         if (system != null) {
-            system.getListenerSystem().callEnableEvent(this);
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
     }
 

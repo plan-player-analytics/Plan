@@ -74,7 +74,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         registerCommand("plan", command);
         new RegisterCommandFilter().registerFilter();
         if (system != null) {
-            system.getListenerSystem().callEnableEvent(this);
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
     }
 

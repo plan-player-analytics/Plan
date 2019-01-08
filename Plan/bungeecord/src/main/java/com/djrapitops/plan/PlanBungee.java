@@ -71,7 +71,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         command.registerCommands();
         registerCommand("planbungee", command);
         if (system != null) {
-            system.getListenerSystem().callEnableEvent(this);
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
     }
 
