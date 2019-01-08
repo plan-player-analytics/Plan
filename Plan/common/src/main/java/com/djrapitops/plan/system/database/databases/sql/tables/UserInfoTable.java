@@ -327,7 +327,7 @@ public class UserInfoTable extends UserUUIDTable {
             public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Integer> map = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(Col.SERVER_UUID.get());
+                    UUID serverUUID = UUID.fromString(set.getString(Col.SERVER_UUID.get()));
                     int count = set.getInt("count");
                     map.put(serverUUID, count);
                 }
