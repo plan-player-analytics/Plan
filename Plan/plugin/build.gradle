@@ -15,5 +15,6 @@ shadowJar {
     configurations = [project.configurations.compile]
 
     destinationDir = file("$rootDir/builds/")
+    baseName = "Plan"
     classifier = null
 }

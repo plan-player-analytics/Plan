@@ -1,9 +1,3 @@
-/**
- *         Module that includes common functionality between all platforms.
- *         - Contains functionality related dependencies.
- *         - Contains abstractions and interfaces
- */
-
 dependencies {
     compile "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
     compile "com.djrapitops:PlanPluginBridge:$planPluginBridgeVersion"
