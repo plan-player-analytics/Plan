@@ -24,6 +24,7 @@ import com.djrapitops.plan.system.tasks.bukkit.BukkitTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bukkit.PaperTPSCountTimer;
 import com.djrapitops.plan.system.tasks.bukkit.PingCountTimerBukkit;
 import com.djrapitops.plan.system.tasks.server.BootAnalysisTask;
+import com.djrapitops.plan.system.tasks.server.ConfigStoreTask;
 import com.djrapitops.plan.system.tasks.server.PeriodicAnalysisTask;
 import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
@@ -44,6 +45,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
     private final Plan plugin;
     private final ShutdownHook shutdownHook;
     private final PingCountTimerBukkit pingCountTimer;
+    private final ConfigStoreTask configStoreTask;
 
     @Inject
     public BukkitTaskSystem(
@@ -57,7 +59,8 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             PeriodicAnalysisTask periodicAnalysisTask,
             PingCountTimerBukkit pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
-            PlayersPageRefreshTask playersPageRefreshTask
+            PlayersPageRefreshTask playersPageRefreshTask,
+            ConfigStoreTask configStoreTask
     ) {
         super(
                 runnableFactory,
@@ -70,6 +73,7 @@ public class BukkitTaskSystem extends ServerTaskSystem {
         this.plugin = plugin;
         this.shutdownHook = shutdownHook;
         this.pingCountTimer = pingCountTimer;
+        this.configStoreTask = configStoreTask;
     }
 
     @Override
@@ -80,6 +84,10 @@ public class BukkitTaskSystem extends ServerTaskSystem {
             long startDelay = TimeAmount.toTicks(config.get(TimeSettings.PING_SERVER_ENABLE_DELAY), TimeUnit.MILLISECONDS);
             registerTask("PingCountTimer", pingCountTimer)
                     .runTaskTimer(startDelay, 40L);
+
+            // +40 ticks / 2 seconds so that update check task runs first.
+            long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
+            registerTask("Config Store Task", configStoreTask).runTaskLaterAsynchronously(storeDelay);
         } catch (ExceptionInInitializerError | NoClassDefFoundError ignore) {
             // Running CraftBukkit
         }

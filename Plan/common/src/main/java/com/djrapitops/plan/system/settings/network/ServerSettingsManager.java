@@ -86,6 +86,8 @@ public class ServerSettingsManager implements SubSystem {
     @Override
     public void enable() {
         watcher = prepareFileWatcher();
+        watcher.start();
+        logger.debug("Server Settings folder FileWatcher started.");
         scheduleDBCheckTask();
     }
 
@@ -108,13 +110,14 @@ public class ServerSettingsManager implements SubSystem {
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
             Config config = reader.read();
             database.save().saveConfig(serverInfo.getServerUUID(), config);
+            logger.debug("Server config saved to database.");
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
     private void scheduleDBCheckTask() {
-        long checkPeriod = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MINUTES);
+        long checkPeriod = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS);
         taskSystem.registerTask("Config Update DB Checker", new AbsRunnable() {
             @Override
             public void run() {

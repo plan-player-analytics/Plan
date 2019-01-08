@@ -22,15 +22,14 @@ import com.djrapitops.plan.system.database.DBSystem;
 import com.djrapitops.plan.system.database.databases.Database;
 import com.djrapitops.plan.system.file.PlanFiles;
 import com.djrapitops.plan.system.info.server.ServerInfo;
-import com.djrapitops.plan.system.settings.config.Config;
-import com.djrapitops.plan.system.settings.config.ConfigReader;
-import com.djrapitops.plan.system.settings.config.ConfigWriter;
-import com.djrapitops.plan.system.settings.config.PlanConfig;
+import com.djrapitops.plan.system.settings.config.*;
+import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
 import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.file.FileWatcher;
 import com.djrapitops.plan.utilities.file.WatchedFile;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
@@ -63,6 +62,7 @@ public class NetworkSettingManager implements SubSystem {
     private final ServerInfo serverInfo;
     private final TaskSystem taskSystem;
     private PlanConfig config;
+    private final PluginLogger logger;
     private ErrorHandler errorHandler;
 
     private File serverSettingsFolder;
@@ -76,6 +76,7 @@ public class NetworkSettingManager implements SubSystem {
             DBSystem dbSystem,
             ServerInfo serverInfo,
             TaskSystem taskSystem,
+            PluginLogger logger,
             ErrorHandler errorHandler
     ) {
         this.files = files;
@@ -83,6 +84,7 @@ public class NetworkSettingManager implements SubSystem {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.taskSystem = taskSystem;
+        this.logger = logger;
 
         this.errorHandler = errorHandler;
     }
@@ -93,6 +95,7 @@ public class NetworkSettingManager implements SubSystem {
 
         watcher = prepareFileWatcher();
         watcher.start();
+        logger.debug("Server Settings folder FileWatcher started.");
 
         scheduleDBCheckTask();
     }
@@ -130,7 +133,7 @@ public class NetworkSettingManager implements SubSystem {
     }
 
     private void scheduleDBCheckTask() {
-        long checkPeriod = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MINUTES);
+        long checkPeriod = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS);
         taskSystem.registerTask("Config Update DB Checker", new AbsRunnable() {
             @Override
             public void run() {
@@ -170,7 +173,11 @@ public class NetworkSettingManager implements SubSystem {
         Optional<Config> foundConfig = database.fetch().getNewConfig(lastModified, serverUUID);
         if (foundConfig.isPresent()) {
             try {
-                new ConfigWriter(configFile.toPath()).write(foundConfig.get());
+                Config writing = foundConfig.get();
+                String serverName = writing.getNode(PluginSettings.SERVER_NAME.getPath()).map(ConfigNode::getString).orElse("Unknown");
+
+                new ConfigWriter(configFile.toPath()).write(writing);
+                logger.info("Config file for server '" + serverName + "' updated in /Plan/serverConfiguration");
                 addFileToWatchList(watcher, configFile);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
@@ -188,6 +195,8 @@ public class NetworkSettingManager implements SubSystem {
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
             Config config = reader.read();
             database.save().saveConfig(serverUUID, config);
+            String serverName = config.getNode(PluginSettings.SERVER_NAME.getPath()).map(ConfigNode::getString).orElse("Unknown");
+            logger.debug("Server config '" + serverName + "' in db now up to date.");
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
