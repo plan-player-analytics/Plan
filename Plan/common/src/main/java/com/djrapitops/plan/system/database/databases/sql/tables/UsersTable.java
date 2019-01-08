@@ -38,7 +38,7 @@ import java.util.*;
  * <p>
  * Table Name: plan_users
  * <p>
- * For contained columns {@see Col}
+ * For contained columns {@link Col}
  *
  * @author Rsl1122
  */

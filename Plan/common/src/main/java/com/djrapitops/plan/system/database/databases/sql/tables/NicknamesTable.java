@@ -157,8 +157,10 @@ public class NicknamesTable extends UserUUIDTable {
     /**
      * Get nicknames of all users but doesn't map them by Server
      *
+     * See {@link NicknamesTable#getAllNicknames}
+     *
      * @return a {@code Map<UUID, List<Nickname>} with all nicknames of all users
-     * @see NicknamesTable#getAllNicknames();
+     *
      */
     public Map<UUID, List<Nickname>> getAllNicknamesUnmapped() {
         String sql = "SELECT " +

@@ -36,7 +36,7 @@ import java.util.List;
  * <p>
  * Table Name: plan_security
  * <p>
- * For contained columns {@see Col}
+ * For contained columns {@link Col}
  *
  * @author Rsl1122
  * @see WebUser

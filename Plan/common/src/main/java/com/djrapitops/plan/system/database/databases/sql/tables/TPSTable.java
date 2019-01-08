@@ -38,11 +38,11 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Table that is in charge of storing TPS, Players Online & Performance data.
+ * Table that is in charge of storing TPS, Players Online and Performance data.
  * <p>
  * Table Name: plan_tps
  * <p>
- * For contained columns {@see Col}
+ * For contained columns {@link Col}
  *
  * @author Rsl1122
  */
@@ -122,9 +122,6 @@ public class TPSTable extends Table {
         });
     }
 
-    /**
-     * @return @throws SQLException
-     */
     public List<TPS> getTPSData() {
         return getTPSData(getServerUUID());
     }

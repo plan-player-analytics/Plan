@@ -88,7 +88,7 @@ public class HtmlTables {
     /**
      * Create a new Kill table.
      *
-     * @param kills List of {@link PlayerKill]s to be added to the table.
+     * @param kills List of {@link PlayerKill}s to be added to the table.
      * @param color Color the table header should be.
      * @return a new {@link KillsTable}.
      */
