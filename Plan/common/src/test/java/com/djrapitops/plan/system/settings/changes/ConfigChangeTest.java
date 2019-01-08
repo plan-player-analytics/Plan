@@ -71,6 +71,15 @@ class ConfigChangeTest {
     }
 
     @Test
+    void moveChangeRecognizesItDoesNotNeedToBeApplied() {
+        config = prepareConfig("Test: 'value'");
+
+        ConfigChange change = new ConfigChange.Moved("NonExisting", "MovedTo");
+
+        assertTrue(change.hasBeenApplied(config), "Did not recognize it has been applied");
+    }
+
+    @Test
     void stringSettingWithQuotesIsMovedAsString() {
         config = prepareConfig("Test: 'value'");
 

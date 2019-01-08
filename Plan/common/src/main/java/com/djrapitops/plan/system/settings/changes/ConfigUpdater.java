@@ -20,6 +20,7 @@ import com.djrapitops.plan.system.settings.config.Config;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
+import com.google.common.annotations.VisibleForTesting;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,7 +47,14 @@ public class ConfigUpdater {
     }
 
     public void applyConfigUpdate(Config config) throws IOException {
-        ConfigChange[] configEnhancementsPatch = new ConfigChange[]{
+        ConfigChange[] configEnhancementsPatch = configEnhancementPatch();
+        applyChanges(config, configEnhancementsPatch);
+        config.save();
+    }
+
+    @VisibleForTesting
+    ConfigChange[] configEnhancementPatch() {
+        return new ConfigChange[]{
                 new ConfigChange.Moved("Plugin.Locale", "Plugin.Logging.Locale"),
                 new ConfigChange.Moved("Plugin.WriteNewLocaleFileOnEnable", "Plugin.Logging.Create_new_locale_file_on_next_enable"),
                 new ConfigChange.Moved("Plugin.Debug", "Plugin.Logging.Debug"),
@@ -120,7 +128,10 @@ public class ConfigUpdater {
                 new ConfigChange.Removed("Customization"),
                 new ConfigChange.Removed("Theme")
         };
-        for (ConfigChange change : configEnhancementsPatch) {
+    }
+
+    private void applyChanges(Config config, ConfigChange[] changes) {
+        for (ConfigChange change : changes) {
             try {
                 if (!change.hasBeenApplied(config)) {
                     change.apply(config);
@@ -130,6 +141,5 @@ public class ConfigUpdater {
                 errorHandler.log(L.WARN, this.getClass(), new IllegalStateException("Failed to apply config update: '" + change.getAppliedMessage() + "'", e));
             }
         }
-        config.save();
     }
 }

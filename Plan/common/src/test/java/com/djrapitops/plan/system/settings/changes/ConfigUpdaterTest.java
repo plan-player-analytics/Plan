@@ -36,8 +36,16 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+/**
+ * Tests for ConfigUpdater.
+ *
+ * @author Rsl1122
+ */
 @RunWith(JUnitPlatform.class)
 @ExtendWith(TempDirectory.class)
 class ConfigUpdaterTest {
@@ -58,11 +66,11 @@ class ConfigUpdaterTest {
 
         oldConfig = tempDir.resolve("config.yml").toFile();
         File configResource = TestResources.getTestResourceFile("config/4.5.2-config.yml", ConfigUpdater.class);
-        Files.copy(configResource.toPath(), oldConfig.toPath());
+        Files.copy(configResource.toPath(), oldConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         oldBungeeConfig = tempDir.resolve("bungeeconfig.yml").toFile();
         File bungeeConfigResource = TestResources.getTestResourceFile("config/4.5.2-bungeeconfig.yml", ConfigUpdater.class);
-        Files.copy(bungeeConfigResource.toPath(), oldBungeeConfig.toPath());
+        Files.copy(bungeeConfigResource.toPath(), oldBungeeConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         newConfig = tempDir.resolve("newconfig.yml");
         TestResources.copyResourceIntoFile(newConfig.toFile(), "/config.yml");
@@ -76,7 +84,10 @@ class ConfigUpdaterTest {
 
     @Test
     void serverConfigIsPatchedCorrectly() throws IOException, IllegalAccessException {
-        PlanConfig planConfig = new PlanConfig(oldConfig, null);
+        Path config = tempDir.resolve("oldconfig.yml");
+        Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
+
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
 
         UNDER_TEST.applyConfigUpdate(planConfig);
 
@@ -88,8 +99,11 @@ class ConfigUpdaterTest {
     }
 
     @Test
-    void bungeeConfigIsPatchedCorrectly() throws IOException, IllegalAccessException {
-        PlanConfig planConfig = new PlanConfig(oldBungeeConfig, null);
+    void proxyConfigIsPatchedCorrectly() throws IOException, IllegalAccessException {
+        Path config = tempDir.resolve("oldconfig.yml");
+        Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
+
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
 
         UNDER_TEST.applyConfigUpdate(planConfig);
 
@@ -106,4 +120,42 @@ class ConfigUpdaterTest {
         }
     }
 
+    @Test
+    void serverMoveChangesDoNotLeaveNewEmptyValues() throws IOException {
+        Path config = tempDir.resolve("oldconfig.yml");
+        Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
+
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+
+        ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
+        assertMoveChangesAreAppliedProperly(planConfig, changes);
+    }
+
+    @Test
+    void proxyMoveChangesDoNotLeaveNewEmptyValues() throws IOException {
+        Path config = tempDir.resolve("oldconfig.yml");
+        Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
+
+        PlanConfig planConfig = new PlanConfig(config.toFile(), null);
+
+        ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
+        assertMoveChangesAreAppliedProperly(planConfig, changes);
+    }
+
+    private void assertMoveChangesAreAppliedProperly(PlanConfig planConfig, ConfigChange[] changes) {
+        for (ConfigChange change : changes) {
+            if (change.hasBeenApplied(planConfig)) {
+                continue;
+            }
+
+            if (change instanceof ConfigChange.Moved) {
+                ConfigChange.Moved move = (ConfigChange.Moved) change;
+                String expected = planConfig.getString(move.oldPath);
+
+                move.apply(planConfig);
+
+                assertEquals(expected, planConfig.getString(move.newPath));
+            }
+        }
+    }
 }

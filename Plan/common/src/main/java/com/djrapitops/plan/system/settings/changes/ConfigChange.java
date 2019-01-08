@@ -33,7 +33,7 @@ public interface ConfigChange {
 
     class Moved extends Removed {
 
-        private final String newPath;
+        final String newPath;
 
         public Moved(String oldPath, String newPath) {
             super(oldPath);
@@ -55,7 +55,7 @@ public interface ConfigChange {
 
     class Copied extends Removed {
 
-        private final String newPath;
+        final String newPath;
 
         public Copied(String oldPath, String newPath) {
             super(oldPath);
@@ -74,7 +74,7 @@ public interface ConfigChange {
     }
 
     class Removed implements ConfigChange {
-        final String oldPath;
+        String oldPath;
 
         public Removed(String oldPath) {
             this.oldPath = oldPath;
