@@ -41,7 +41,7 @@ subprojects {
     ext.daggerCompilerVersion = "2.20"
 
     ext.abstractPluginFrameworkVersion = "3.4.0"
-    ext.planPluginBridgeVersion = "4.6.0"
+    ext.planPluginBridgeVersion = "4.6.0-1"
 
     ext.bukkitVersion = "1.12.2-R0.1-SNAPSHOT"
     ext.spigotVersion = "1.12.2-R0.1-SNAPSHOT"
