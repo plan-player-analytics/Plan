@@ -87,9 +87,7 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <!-- Call Search (Disabled)
-                <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
-                <!-- #END# Call Search -->
+                ${backButton}
                 <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i
                         class="material-icons">settings</i></a></li>
             </ul>
@@ -909,6 +907,16 @@
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${chunkAverageMonth}</b></span>
                                     </li>
+                                    <li>
+                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <small>(MAX)</small>
+                                        <span class="pull-right"><b>${freeDiskMaximumMonth} Mb</b></span>
+                                    </li>
+                                    <li>
+                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <small>(MIN)</small>
+                                        <span class="pull-right"><b>${freeDiskMinimumMonth} Mb</b></span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -949,6 +957,16 @@
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${chunkAverageWeek}</b></span>
                                     </li>
+                                    <li>
+                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <small>(MAX)</small>
+                                        <span class="pull-right"><b>${freeDiskMaximumWeek} Mb</b></span>
+                                    </li>
+                                    <li>
+                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <small>(MIN)</small>
+                                        <span class="pull-right"><b>${freeDiskMinimumWeek} Mb</b></span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -988,6 +1006,16 @@
                                         <i class="col-blue-grey fa fa-map"></i> Chunks
                                         <small>(AVG.)</small>
                                         <span class="pull-right"><b>${chunkAverageDay}</b></span>
+                                    </li>
+                                    <li>
+                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <small>(MAX)</small>
+                                        <span class="pull-right"><b>${freeDiskMaximumDay} Mb</b></span>
+                                    </li>
+                                    <li>
+                                        <i class="col-green fa fa-hdd"></i> Free Disk
+                                        <small>(MIN)</small>
+                                        <span class="pull-right"><b>${freeDiskMinimumDay} Mb</b></span>
                                     </li>
                                 </ul>
                             </div>
