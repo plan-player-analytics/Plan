@@ -7,7 +7,7 @@ dependencies {
     compile "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     compile "com.h2database:h2:$h2Version"
     compile "com.zaxxer:HikariCP:$hikariVersion"
-    runtime "org.slf4j:slf4j-nop:$slf4jVersion"
+    compile "org.slf4j:slf4j-nop:$slf4jVersion"
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "com.maxmind.geoip2:geoip2:$geoIpVersion"
     compileOnly "com.google.guava:guava:$guavaVersion"
