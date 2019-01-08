@@ -126,11 +126,12 @@ public class ConfigNode {
         parent.nodeOrder.remove(key);
         updateParent(null);
 
-        for (String key : nodeOrder) {
-            ConfigNode child = childNodes.get(key);
-            if (child != null) child.remove();
-        }
-
+        // Remove children recursively to avoid memory leaks
+        nodeOrder.stream()
+                .sorted() // will use internal state and prevent Concurrent modification of underlying list
+                .map(childNodes::get)
+                .filter(Objects::nonNull)
+                .forEach(ConfigNode::remove);
     }
 
     /**
