@@ -78,7 +78,7 @@ public class Config extends ConfigNode {
 
     public void read() throws IOException {
         try (ConfigReader reader = new ConfigReader(Files.newInputStream(configFilePath))) {
-            copyMissing(reader.read());
+            copyAll(reader.read());
         }
     }
 

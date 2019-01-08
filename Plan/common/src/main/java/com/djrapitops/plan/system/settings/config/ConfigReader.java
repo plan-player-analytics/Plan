@@ -108,7 +108,7 @@ public class ConfigReader implements Closeable {
     }
 
     private void handleLine(String line, String trimmed) {
-        if (trimmed.isEmpty()) {
+        if (trimmed.isEmpty() || trimmed.startsWith(":")) {
             // Add an empty row comment in case user wants spacers
             handleCommentLine(" ");
         } else if (trimmed.startsWith("#")) {
