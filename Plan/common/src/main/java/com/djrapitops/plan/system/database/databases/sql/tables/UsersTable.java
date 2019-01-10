@@ -44,8 +44,10 @@ import java.util.*;
  */
 public class UsersTable extends UserUUIDTable {
 
+    public static final String TABLE_NAME = "plan_users";
+
     public UsersTable(SQLDB db) {
-        super("plan_users", db);
+        super(TABLE_NAME, db);
         statementSelectID = "(" + Select.from(tableName, tableName + "." + Col.ID).where(Col.UUID + "=?").toString() + " LIMIT 1)";
         insertStatement = Insert.values(tableName,
                 Col.UUID,

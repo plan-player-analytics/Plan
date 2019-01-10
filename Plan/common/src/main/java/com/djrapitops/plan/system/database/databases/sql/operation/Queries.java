@@ -70,4 +70,21 @@ public class Queries {
         };
     }
 
+    public static QueryStatement<Boolean> doesIndexExist(String indexName, String tableName) {
+        String sql = "SELECT COUNT(1) as IndexIsThere FROM INFORMATION_SCHEMA.STATISTICS " +
+                "WHERE table_schema=DATABASE() AND table_name=? AND index_name=?";
+        return new QueryStatement<Boolean>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, tableName);
+                statement.setString(2, indexName);
+            }
+
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                return set.next() && set.getInt("IndexIsThere") > 0;
+            }
+        };
+    }
+
 }

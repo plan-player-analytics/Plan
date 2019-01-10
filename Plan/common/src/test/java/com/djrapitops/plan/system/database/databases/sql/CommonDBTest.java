@@ -1059,4 +1059,9 @@ public abstract class CommonDBTest {
         assertFalse(settingsTable.fetchNewerConfig(savedMs, serverUUID).isPresent());
     }
 
+    @Test
+    public void indexCreationWorksWithoutErrors() {
+        new CreateIndexTask(db).run();
+    }
+
 }
