@@ -234,7 +234,7 @@ public abstract class SQLDB extends Database {
     private void registerIndexCreationTask() {
         try {
             runnableFactory.create("Database Index Creation", new CreateIndexTask(this))
-                    .runTaskAsynchronously();
+                    .runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
         } catch (Exception ignore) {
             // Task failed to register because plugin is being disabled
         }
