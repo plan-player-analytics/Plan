@@ -214,17 +214,29 @@ public abstract class SQLDB extends Database {
     private void setupDatabase() throws DBInitException {
         try {
             createTables();
-
-            Patch[] patches = patches();
-
-            try {
-                runnableFactory.create("Database Patch", new PatchTask(patches, locale, logger, errorHandler))
-                        .runTaskLaterAsynchronously(TimeAmount.toTicks(5L, TimeUnit.SECONDS));
-            } catch (Exception ignore) {
-                // Task failed to register because plugin is being disabled
-            }
-        } catch (DBOpException e) {
+            registerIndexCreationTask();
+            registerPatchTask();
+        } catch (DBOpException | IllegalArgumentException e) {
             throw new DBInitException("Failed to set-up Database", e);
+        }
+    }
+
+    private void registerPatchTask() {
+        Patch[] patches = patches();
+        try {
+            runnableFactory.create("Database Patch", new PatchTask(patches, locale, logger, errorHandler))
+                    .runTaskLaterAsynchronously(TimeAmount.toTicks(5L, TimeUnit.SECONDS));
+        } catch (Exception ignore) {
+            // Task failed to register because plugin is being disabled
+        }
+    }
+
+    private void registerIndexCreationTask() {
+        try {
+            runnableFactory.create("Database Index Creation", new CreateIndexTask(this))
+                    .runTaskAsynchronously();
+        } catch (Exception ignore) {
+            // Task failed to register because plugin is being disabled
         }
     }
 
