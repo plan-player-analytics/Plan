@@ -20,6 +20,11 @@ allprojects {
             exceptionFormat "full"
         }
     }
+
+    // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 }
 
 subprojects {
