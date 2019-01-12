@@ -25,13 +25,13 @@ import com.djrapitops.plan.system.info.server.ServerInfo;
 import com.djrapitops.plan.system.settings.config.*;
 import com.djrapitops.plan.system.settings.paths.PluginSettings;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
-import com.djrapitops.plan.system.tasks.TaskSystem;
 import com.djrapitops.plan.utilities.file.FileWatcher;
 import com.djrapitops.plan.utilities.file.WatchedFile;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,7 +60,7 @@ public class NetworkSettingManager implements SubSystem {
     private final PlanFiles files;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final TaskSystem taskSystem;
+    private final RunnableFactory runnableFactory;
     private PlanConfig config;
     private final PluginLogger logger;
     private ErrorHandler errorHandler;
@@ -75,7 +75,7 @@ public class NetworkSettingManager implements SubSystem {
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            TaskSystem taskSystem,
+            RunnableFactory runnableFactory,
             PluginLogger logger,
             ErrorHandler errorHandler
     ) {
@@ -83,7 +83,7 @@ public class NetworkSettingManager implements SubSystem {
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.taskSystem = taskSystem;
+        this.runnableFactory = runnableFactory;
         this.logger = logger;
 
         this.errorHandler = errorHandler;
@@ -107,10 +107,16 @@ public class NetworkSettingManager implements SubSystem {
         }
     }
 
+    public static UUID getServerUUIDFromFilename(File file) {
+        String fileName = file.getName();
+        String uuidString = fileName.substring(0, fileName.length() - 4);
+        return UUID.fromString(uuidString);
+    }
+
     private FileWatcher prepareFileWatcher() {
         FileWatcher fileWatcher = new FileWatcher(serverSettingsFolder, errorHandler);
 
-        File[] files = serverSettingsFolder.listFiles((dir, name) -> name.endsWith(".yml"));
+        File[] files = getConfigFiles();
         if (files != null) {
             for (File file : files) {
                 addFileToWatchList(fileWatcher, file);
@@ -120,11 +126,13 @@ public class NetworkSettingManager implements SubSystem {
         return fileWatcher;
     }
 
+    public File[] getConfigFiles() {
+        return serverSettingsFolder.listFiles((dir, name) -> name.endsWith(".yml"));
+    }
+
     private void addFileToWatchList(FileWatcher fileWatcher, File file) {
         try {
-            String fileName = file.getName();
-            String uuidString = fileName.substring(0, fileName.length() - 4);
-            UUID serverUUID = UUID.fromString(uuidString);
+            UUID serverUUID = getServerUUIDFromFilename(file);
 
             fileWatcher.addToWatchlist(new WatchedFile(file, () -> updateConfigInDB(file, serverUUID)));
         } catch (IndexOutOfBoundsException | IllegalArgumentException ignore) {
@@ -134,10 +142,10 @@ public class NetworkSettingManager implements SubSystem {
 
     private void scheduleDBCheckTask() {
         long checkPeriod = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS);
-        taskSystem.registerTask("Config Update DB Checker", new AbsRunnable() {
+        runnableFactory.create("Config Update DB Checker", new AbsRunnable() {
             @Override
             public void run() {
-                checkDBForNewConfigSettings();
+                updateConfigFromDBIfUpdated();
             }
         }).runTaskTimerAsynchronously(checkPeriod, checkPeriod);
     }
@@ -156,17 +164,18 @@ public class NetworkSettingManager implements SubSystem {
         return new File(serverSettingsFolder, serverUUID + ".yml");
     }
 
-    private void checkDBForNewConfigSettings() {
+    private void updateConfigFromDBIfUpdated() {
         Database database = dbSystem.getDatabase();
         List<UUID> serverUUIDs = database.fetch().getServerUUIDs();
+        // Remove the proxy server from the list
         serverUUIDs.remove(serverInfo.getServerUUID());
 
         for (UUID serverUUID : serverUUIDs) {
-            checkDBForNewConfigSettings(database, serverUUID);
+            updateConfigFromDBIfUpdated(database, serverUUID);
         }
     }
 
-    private void checkDBForNewConfigSettings(Database database, UUID serverUUID) {
+    private void updateConfigFromDBIfUpdated(Database database, UUID serverUUID) {
         File configFile = getServerConfigFile(serverUUID);
         long lastModified = configFile.exists() ? configFile.lastModified() : -1;
 
@@ -185,7 +194,7 @@ public class NetworkSettingManager implements SubSystem {
         }
     }
 
-    private void updateConfigInDB(File file, UUID serverUUID) {
+    public void updateConfigInDB(File file, UUID serverUUID) {
         if (!file.exists()) {
             return;
         }

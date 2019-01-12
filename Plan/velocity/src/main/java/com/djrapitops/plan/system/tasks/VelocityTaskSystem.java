@@ -19,6 +19,7 @@ package com.djrapitops.plan.system.tasks;
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.system.settings.config.PlanConfig;
 import com.djrapitops.plan.system.settings.paths.TimeSettings;
+import com.djrapitops.plan.system.tasks.proxy.NetworkConfigStoreTask;
 import com.djrapitops.plan.system.tasks.proxy.NetworkPageRefreshTask;
 import com.djrapitops.plan.system.tasks.velocity.PingCountTimerVelocity;
 import com.djrapitops.plan.system.tasks.velocity.VelocityTPSCountTimer;
@@ -41,6 +42,7 @@ public class VelocityTaskSystem extends TaskSystem {
     private final PingCountTimerVelocity pingCountTimer;
     private final LogsFolderCleanTask logsFolderCleanTask;
     private final PlayersPageRefreshTask playersPageRefreshTask;
+    private final NetworkConfigStoreTask networkConfigStoreTask;
 
     @Inject
     public VelocityTaskSystem(
@@ -51,7 +53,9 @@ public class VelocityTaskSystem extends TaskSystem {
             NetworkPageRefreshTask networkPageRefreshTask,
             PingCountTimerVelocity pingCountTimer,
             LogsFolderCleanTask logsFolderCleanTask,
-            PlayersPageRefreshTask playersPageRefreshTask) {
+            PlayersPageRefreshTask playersPageRefreshTask,
+            NetworkConfigStoreTask networkConfigStoreTask
+    ) {
         super(runnableFactory, velocityTPSCountTimer);
         this.plugin = plugin;
         this.config = config;
@@ -60,6 +64,7 @@ public class VelocityTaskSystem extends TaskSystem {
         this.pingCountTimer = pingCountTimer;
         this.logsFolderCleanTask = logsFolderCleanTask;
         this.playersPageRefreshTask = playersPageRefreshTask;
+        this.networkConfigStoreTask = networkConfigStoreTask;
     }
 
     @Override
@@ -78,5 +83,9 @@ public class VelocityTaskSystem extends TaskSystem {
 
         registerTask(playersPageRefreshTask)
                 .runTaskTimerAsynchronously(TimeAmount.toTicks(5L, TimeUnit.MINUTES), TimeAmount.toTicks(5L, TimeUnit.MINUTES));
+
+        // +40 ticks / 2 seconds so that update check task runs first.
+        long storeDelay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
+        registerTask("Config Store Task", networkConfigStoreTask).runTaskLaterAsynchronously(storeDelay);
     }
 }
