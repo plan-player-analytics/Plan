@@ -31,7 +31,7 @@ public class GeoInfoLastUsedPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         addColumn(GeoInfoTable.TABLE_NAME,
                 GeoInfoTable.Col.LAST_USED + " bigint NOT NULL DEFAULT 0"
         );

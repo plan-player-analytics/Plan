@@ -59,7 +59,7 @@ public class WorldTimesSeverIDPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         Map<Integer, Integer> sessionIDServerIDRelation = db.getSessionsTable().getIDServerIDRelation();
 
         String sql = "UPDATE " + WorldTimesTable.TABLE_NAME + " SET " +

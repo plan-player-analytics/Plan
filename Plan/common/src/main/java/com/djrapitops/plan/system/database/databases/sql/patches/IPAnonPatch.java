@@ -68,7 +68,7 @@ public class IPAnonPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         Map<UUID, List<GeoInfo>> allGeoInfo = db.getGeoInfoTable().getAllGeoInfo();
         anonymizeIPs(allGeoInfo);
         groupHashedIPs();

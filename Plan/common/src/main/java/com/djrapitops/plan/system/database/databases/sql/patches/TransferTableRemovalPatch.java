@@ -30,7 +30,7 @@ public class TransferTableRemovalPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         dropTable("plan_transfer");
     }
 }

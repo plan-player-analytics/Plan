@@ -45,7 +45,21 @@ public abstract class Patch {
 
     public abstract boolean hasBeenApplied();
 
-    public abstract void apply();
+    protected abstract void applyPatch();
+
+    public void apply() {
+        if (dbType == DBType.MYSQL) disableForeignKeyChecks();
+        applyPatch();
+        if (dbType == DBType.MYSQL) enableForeignKeyChecks();
+    }
+
+    private void enableForeignKeyChecks() {
+        db.execute("SET FOREIGN_KEY_CHECKS=1");
+    }
+
+    private void disableForeignKeyChecks() {
+        db.execute("SET FOREIGN_KEY_CHECKS=0");
+    }
 
     public <T> T query(QueryStatement<T> query) {
         return db.query(query);

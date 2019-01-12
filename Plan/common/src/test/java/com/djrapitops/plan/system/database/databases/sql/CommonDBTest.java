@@ -111,7 +111,7 @@ public abstract class CommonDBTest {
             }
 
             @Override
-            public void apply() {
+            public void applyPatch() {
                 dropTable("plan_world_times");
                 dropTable("plan_kills");
                 dropTable("plan_sessions");

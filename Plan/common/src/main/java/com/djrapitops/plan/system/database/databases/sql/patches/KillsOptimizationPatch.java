@@ -44,7 +44,7 @@ public class KillsOptimizationPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         try {
             tempOldTable();
             db.getKillsTable().createTable();

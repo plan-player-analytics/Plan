@@ -41,7 +41,7 @@ public class NicknameLastSeenPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         addColumn(NicknamesTable.TABLE_NAME,
                 NicknamesTable.Col.LAST_USED + " bigint NOT NULL DEFAULT '0'"
         );

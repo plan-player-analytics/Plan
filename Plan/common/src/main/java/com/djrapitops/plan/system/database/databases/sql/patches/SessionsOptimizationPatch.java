@@ -42,7 +42,7 @@ public class SessionsOptimizationPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         try {
             dropForeignKeys(tableName);
             ensureNoForeignKeyConstraints(tableName);

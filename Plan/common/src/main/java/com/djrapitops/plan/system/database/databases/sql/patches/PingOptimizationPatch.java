@@ -42,7 +42,7 @@ public class PingOptimizationPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         try {
             tempOldTable();
             db.getPingTable().createTable();

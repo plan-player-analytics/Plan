@@ -42,7 +42,7 @@ public class NicknamesOptimizationPatch extends Patch {
     }
 
     @Override
-    public void apply() {
+    protected void applyPatch() {
         try {
             tempOldTable();
             db.getNicknamesTable().createTable();
