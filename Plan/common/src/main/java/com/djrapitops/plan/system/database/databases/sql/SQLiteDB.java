@@ -104,10 +104,14 @@ public class SQLiteDB extends SQLDB {
 
     private void startConnectionPingTask() {
         stopConnectionPingTask();
-        // Maintains Connection.
-        connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
-                new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
-        ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
+        try {
+            // Maintains Connection.
+            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
+                    new KeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorHandler)
+            ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
+        } catch (Exception ignored) {
+            // Task failed to register because plugin is being disabled
+        }
     }
 
     private void stopConnectionPingTask() {

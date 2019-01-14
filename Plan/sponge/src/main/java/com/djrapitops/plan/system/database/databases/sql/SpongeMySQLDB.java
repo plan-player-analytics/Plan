@@ -90,15 +90,19 @@ public class SpongeMySQLDB extends MySQLDB {
             return super.getConnection();
         } catch (SQLException e) {
             if (e.getMessage().contains("has been closed")) {
-                try {
-                    setupDataSource();
-                } catch (DBInitException setupException) {
-                    throw new IllegalStateException("Failed to set up a new datasource after connection failure.", setupException);
-                }
+                restartDataSource();
                 return super.getConnection();
             } else {
                 throw e;
             }
+        }
+    }
+
+    private void restartDataSource() {
+        try {
+            setupDataSource();
+        } catch (DBInitException setupException) {
+            throw new IllegalStateException("Failed to set up a new datasource after connection failure.", setupException);
         }
     }
 }
